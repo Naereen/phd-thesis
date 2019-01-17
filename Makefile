@@ -18,7 +18,7 @@ pdf:	$(OUT)
 	-evince $@ >/dev/null 2>/dev/null &
 
 .tex.pdf:
-	latexmk -pdflatex=lualatex -pdf $<
+	latexmk -pdflatex=pdflatex -pdf $<
 	# pdflatex $<
 	# pdflatex $<
 	# # We have to include BibTeX
@@ -37,7 +37,7 @@ compress:
 
 # Cleaner
 clean:
-	-mv -vf *.fls *.fdb_latexmk *.ps *.dvi *.htoc *.tms *.tid *.lg *.log *.id[vx] *.vrb *.toc *.snm *.nav *.htmp *.aux *.tmp *.out *.haux *.hidx *.bbl *.blg *.brf *.lof *.ilg *.ind *.meta *.fdb_latexmk *.fls *.gz*busy* /tmp/ 2>/dev/null
+	-mv -vf *.fls *.fdb_latexmk *.ps *.dvi *.htoc *.tms *.tid *.lg *.log *.id[vx] *.vrb *.toc *.snm *.nav *.htmp *.aux *.tmp *.out *.haux *.hidx *.bbl *.blg *.brf *.lof *.ilg *.ind *.meta *.fdb_latexmk *.fls *.gz*busy* *.loa *.lof *.lot *.maf *.mtc* *.nlo /tmp/ 2>/dev/null
 
 # Sender
 send_zamok:
