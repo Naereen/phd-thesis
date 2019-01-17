@@ -10,7 +10,6 @@ CUED PhD thesis template
 
 ## Author(s)
 *   Krishna Kumar
-*   Krishna Kumar
 
 --------------------------------------------------------------------------------
 ## Features

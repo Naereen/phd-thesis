@@ -7,7 +7,6 @@ quick:	pdf
 all:	clean pdf evince clean
 pdf:	$(OUT)
 
-
 .PHONY:	quick all pdf evince compress clean send_zamok latexstats lint proselint
 
 .SUFFIXES:
@@ -19,12 +18,13 @@ pdf:	$(OUT)
 	-evince $@ >/dev/null 2>/dev/null &
 
 .tex.pdf:
-	pdflatex $<
-	pdflatex $<
-	# We have to include BibTeX
-	+bibtex  $*
-	pdflatex $<
-	pdflatex $<
+	latexmk -pdflatex=lualatex -pdf $<
+	# pdflatex $<
+	# pdflatex $<
+	# # We have to include BibTeX
+	# +bibtex  $*
+	# pdflatex $<
+	# pdflatex $<
 	-pdfinfo $@ | grep -v ':[ \t]\+no' | grep --color=always "^[A-Za-z ]\+:"
 	-evince $@ >/dev/null 2>/dev/null &
 

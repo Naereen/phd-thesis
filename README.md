@@ -26,6 +26,8 @@ TODO
 ## :scroll: License ? [![GitHub license](https://img.shields.io/github/license/Naereen/badges.svg)](https://https://github.com/Naereen/phd-thesis/src/master/LICENSE)
 [MIT Licensed](https://lbesson.mit-license.org/) (file [LICENSE](LICENSE)).
 
+The template is inspired from [@kks32/phd-thesis-template](https://github.com/kks32/phd-thesis-template), also released under the [MIT License](https://github.com/kks32/phd-thesis-template/blob/master/license.md).
+
 © 2019 [Lilian Besson](https://perso.crans.org/besson/) and collaborators.
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://https://github.com/Naereen/phd-thesis/commits/)
