@@ -1,67 +1,58 @@
-\documentclass[a4paper,english,12pt]{book}
+% *******************************************************************************
+% ***               Rémi Bonnefoi's "PhD Thesis" main file                ***
+% ***     Original template: https://github.com/kks32/phd-thesis-template     ***
+% *******************************************************************************
 
-\usepackage{macrosArticle}
-\usepackage{macrosText}
-\usepackage{blindtext}
+% Class (remove "print" for digital version, remove "draft" for final version)
+%\documentclass[a4paper,twoside,index,PageStyleI,custombib,draft]{0-Misc/PhDThesisPSnPDF}
+%\documentclass[a4paper,twoside,index,PageStyleI,custombib]{0-Misc/PhDThesisPSnPDF}
+%\documentclass[a4paper,twoside]{0-Misc/PhDThesisPSnPDF}
+\documentclass[a4paper,twoside,index,PageStyleI,custombib]{0-Misc/PhDThesisPSnPDF}
 
-% % For algorithms
-% \usepackage{algorithm}
-% \usepackage{algorithmic}
+% Packages (add your own packages here)
+\input{0-Misc/packages}
 
-% \usepackage{times}
-% \usepackage{array}
-% \usepackage{float}
-% \usepackage[scale=0.80]{geometry}
-% \usepackage{url}
-% \usepackage{pdflscape}  % https://tex.stackexchange.com/a/354/
-
-% -----------------------------------------------------------------
-\title{
-    My PhD thesis
-}
-
-
-% -----------------------------------------------------------------
-\author{
-    Lilian Besson%
-    \thanks{CentraleSup\'elec (campus of Rennes), IETR,
-        Avenue de la Boulaie - CS $47601$, $35576$ Cesson-S\'evign\'e, France.
-        {Email: \tt lilian.besson at centralesupelec.fr}}
-}
-
-
-% -----------------------------------------------------------------
 \begin{document}
 
-\maketitle{}
-\date{}
+	% ******************************** Preamble *********************************	
+	\frontmatter
+	\input{1-Preamble/preambles}
+	% *************************** TOC & Nomenclature ****************************
+	\begin{spacing}{1}
+		\dominitoc
+		\tableofcontents	
+		\input{Nomenclature/Nomenclature}				
+		\printnomenclature[6em]
+		
+	\end{spacing}	
 
+	% ******************************** Chapters *********************************
+	\mainmatter
 
-% -----------------------------------------------------------------
-\tableofcontents
-\TODO{
-    Remove Table of Contents when finished.
-    % FIXME Maybe bring back table of content for the HAL version?
-}
-\hr{}
+	\input{2-Chapters/chapters}
+	
+	% ******************************* Annexes ********************************
+	\input{3-Appendices/appendices}
+	%
+	\input{4-Listofpublications/Listofpublications}
+	% ********************************* Listes **********************************
+	\backmatter
+	\listoffigures
+	\listoftables
+	\listofalgorithms
+		\addcontentsline{toc}{chapter}{List of Algorithms}
 
+%	\begin{spacing}{1}	
+%		\printbibliography[heading=bibintoc, title={Liste des Publications}, keyword={pub}]
+%		\printbibliography[heading=bibintoc, title={Bibliographie}, keyword={soa}]
+%	\end{spacing}	
+	\printthesisindex
+	
+	\bibliographystyle{ieeetr}
+	\bibliography{all-phd-thesis}
 
-\input{cover.tex}
-
-\input{thanks.tex}
-
-\input{introduction.tex}
-
-\input{chapter1.tex}
-
-\input{chapter2.tex}
-
-\input{chapter3.tex}
-
-\input{chapter4.tex}
-
-\input{chapter5.tex}
-
-\input{conclusion.tex}
-
-\end{document}
+	\clearpage
+	%\clearevenpage
+	\newpage
+	\include{5-Back/back-page}
+\end{document} 

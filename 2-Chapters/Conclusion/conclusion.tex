@@ -1,0 +1,52 @@
+%!TEX root = ../thesis.tex
+
+% First chapter begins here
+\chapter*{General Conclusion and Perspectives}
+\addcontentsline{toc}{chapter}{General Conclusion}
+%\minitoc
+\label{chapter:CCL}
+% Write miniTOC just after the title
+\graphicspath{{2-Chapters/6-Chapter/Images/}}
+
+In this PhD thesis, we focused on studying reception algorithms for SOQPSK-TG under different scenarios. This study first requires a deep understanding of the signal features, which are different from the conventional linear modulations. In fact, SOQPSK-TG is an aeronautical telemetry modulation that has been considered for a long time as a particular CPM due to its ternary alphabet generated using a specific precoder and its long frequency pulse. Moreover, the fact that this modulation is not a linear function of its transmitted symbols makes handling this modulation a hard task. These features have pushed the use of particular decompositions of the signal such as ternary PAM decomposition (PRD) and the XTCQM representation to make the signal more versatile. Each representation has its pros and cons.
+
+On the one hand, the PRD allows approximating the signal as a sum of two linear modulations. However, the resulting pseudo-symbols still inherit the memory effect of the modulation. On the other hand, the XTCQM representation provides an accurate approximation of the signal using a bank of XTCQM waveforms with a small memory. Nevertheless, these waveforms are data dependent and thus we cannot separate contribution of the data independently from the pulse shape. The contrasting features of these representations, which are presented in details in \textbf{Chapter \ref{chapter:1}}, imply a limited use to specific scenarios.   
+
+In this work, we first focused on the SOQPSK precoder structure before tackling the signal representation aspect. We showed that this precoder could be decomposed into a recursive encoder that eliminates the long memory of the modulation and a duobinary encoder that converts the binary symbols to ternary ones to increase the spectral efficiency. Thanks to this new vision of the precoder, we showed that SOQPSK-TG could be seen as a duobinary CPM whose PAM decomposition, namely DBD, retains the key features of the Laurent decomposition of binary CPM. As a consequence, SOQPSK-TG can accurately be approximated as a single PAM or as a sum of two PAMs. Moreover, the presence of the recursive encoder has been exploited to reduce the memory effect in the expressions of the pseudo-symbols and to get a direct mapping between the pseudo-symbols and the binary data. Therefore, we proposed a new representation of SOQPSK that gathers better features than the state of the art representations as fully described in \textbf{Chapter \ref{chapter:2}}. 
+
+As a direct consequence of this new PAM decomposition, we proposed in \textbf{Chapter \ref{chapter:3}} a wide range of reduced complexity detectors via several approaches (Kaleh approach, Ungerboeck approach, and Forney approach). The very near-optimal performance of these detectors confirms the accuracy of the proposed DBD approximations. However, they also show that the main pulse of DBD generates significant inter-symbol interference that should be mitigated at the receiver side. 
+
+In \textbf{Chapter \ref{chapter:4}}, we took advantage of the PAM decomposition (with DBD) to propose a new joint channel estimation and detection algorithm for SOQPSK-TG. This algorithm is inspired by the PSP principle to mitigate the multipath effects, which are present in the aeronautical telemetry environment. This solution operates using two different approximations of the signal and significantly outperforms the constant modulus algorithm. 
+
+In \textbf{Chapter \ref{chapter:5}}, we focused on the scenario where two antennas are mounted on the aircraft to get an omnidirectional transmission to resolve the two-antenna problem. This use case requires creating diversity by using Alamouti encoding. However, it makes the decoding process different from what has been proposed for linear modulations because of the used modulation (SOQPSK-TG) and because of the presence of a differential delay. After presenting the state of the art solutions, we proposed in this chapter two main decoding structures. The first one relies on the first PAM approximation of SOQPSK-TG, i.e., by considering that SOQPSK-TG is a linear modulation (or more precisely, an offset modulation) and provides acceptable BER performance while benefiting from an important complexity reduction compared to the state of the art solution. The second decoding structure considers that SOQPSK-TG can be approximated as a sum of two linear modulations and greatly outperforms the state of the art solution. Both structures take into account the presence of the differential delay and provide soft outputs. 
+In \textbf{Chapter \ref{chapter:5}}, we also considered the presence of multipath in the STC scenario. After formulating the problem using multipath, we proposed a new channel estimator and showed that this solution could be used along with the second decoding structure.
+
+In the final chapter of this dissertation, we explored other solutions to resolve the two-antenna problem. The first proposed solution takes into account the observations made in Chapter \ref{chapter:5} where it has been shown that the standardized encoding scheme does not eliminate the mutual interference of SOQPSK-TG signals. For this reason, we proposed a new encoding scheme that is more suitable for SOQPSK-TG. This scheme allows gathering all the attractive features of a STC system since it provides better transmission rate than the state of the art encoding and results in a reduced complexity decoding structure with attractive BER performance (within $1.1$ dB of the SISO bound). In the second part of \textbf{Chapter \ref{chapter:6}}, we considered the time diversity approach, and we proposed sending one signal over one antenna and its time delayed version over the other. This delay is created artificially to reduce the mutual interference of the signals. The advantage of this approach is that the receiver considers that the transmitted signal is corrupted by a multipath channel whose interference can successfully be mitigated using the techniques introduced in Chapter \ref{chapter:4}. 
+
+\section*{Perspectives}
+We present in the following the possible areas of future studies
+\subsubsection*{Equalization in the SISO scenario:} 
+\begin{itemize}
+\item In this dissertation, the PSP algorithm operates using the duobinary PAM decomposition (DBD) of SOQPSK-TG. However, thanks to the mapping found between the pseudo-symbols and the data bits using PRD (Chapter \ref{chapter:2}), it may be possible to apply the PSP principle to the PRD PAM approximation. Since both PRD and DBD have different characteristics, the resulting algorithms may have different behaviors. 
+\item  To the best of our knowledge, the INET packet structure does not contain any cyclic prefix. However, a new packet structure can be imagined for SOQPSK-TG so that the frequency equalization algorithms introduced in \cite{freq_eqz_cpm1,freq_eqz_cpm2,thillo_eqz,chayot_eqz} can be used, tested in the presence of aeronautical telemetry channels, and compared with the proposed algorithms of this work.
+\end{itemize} 
+
+%\subsubsection*{Channel coding in the SISO scenario:}   
+\subsubsection*{Decoding and Multipath mitigation in the STC scenario:}
+\begin{itemize}
+\item In this work, we proposed two decoding structures for the STC scenario. The first one relies on Ungerboeck/Cavers approach, and the second one uses the least squares approach (which is equivalent to Forney approach in the SISO case). These decoders take advantage of the "linearized" version of SOQPSK-TG but they do not take into account its CPM nature. Thus, it may be relevant to extend Kaleh approach (which exploits the constant envelope nature of CPM when calculating the log-likelihood function) from the SISO case to the MISO one to get a third decoding structure. 
+\item The multipath mitigation technique developed in this dissertation for the STC scenario only works using the second proposed decoding structure. Further works regarding frequency domain or time domain equalizers need to be done for the STC scenario. Ideally, the equalizer should work regardless of the used decoding structure. 
+\end{itemize}
+   
+\subsubsection*{STC estimators:}
+\begin{itemize}
+\item  The complexity of the developed estimators in \cite{STC_part1} is relatively high. More work needs to be done to reduce the complexity, and it may be accomplished using the new PAM decomposition.   
+\item The simulation results given in Section \ref{chap5_sec:multipath} show that the estimators are highly multipath-sensitive. More work needs to be done to improve their performance for this scenario.
+\end{itemize}
+\subsubsection*{New aeronautical telemetry systems:}
+Conceiving power and spectrally efficient systems is a constant challenge for aeronautical telemetry. However, achieving this goal requires evolving the IRIG standard as well as the actual infrastructure. We can imagine for instance 
+\begin{itemize}
+\item Pairing MIMO systems with SOQPSK to increase the spectral efficiency while taking advantage of the constant envelope nature of the modulation. The MISO case has already been standardized in IRIG to resolve the two-antenna problem without increasing the spectral efficiency. Therefore, we can imagine an extension of this concept to reach the latter goal. A feasibility study should also be carried to determine how many antennas can be mounted on board the aircraft and how many receiving antennas can be used. 
+\item  Defining different modes for different CPM modulations as done in the tactical communications standards \cite{nato2}. Each modulation fulfills a certain spectral efficiency and power trade-off. Switching between one mode to the other can be done manually or autonomously (the latter case may require an ulplink mode).  
+\item Adopting non-constant envelope signals, which beget better spectral efficiency than CPM such as COFDM \cite{channel_cband_zds} or APSK \cite{apsk}. 
+\end{itemize}
