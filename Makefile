@@ -41,7 +41,7 @@ clean:
 
 # Sender
 send_zamok:
-	CP $(OUT) besson@zamok.crans.org:~/www/phd/reports/
+	CP $(OUT) besson@zamok.crans.org:~/www/phd/articles/.$(OUT)
 
 # Linters!
 latexstats:

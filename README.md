@@ -1,12 +1,13 @@
 # "My PhD thesis"
-This repository contains the LaTeX code of my PhD thesis, written by [Lilian Besson](https://perso.crans.org/besson/), entitled "Non-Stationary Stochastic Multi-Armed Bandits".
+This repository contains the LaTeX code of my PhD thesis, written by [Lilian Besson](https://perso.crans.org/besson/), entitled "TODO".
 
 Thanks to my advisors [Emilie Kaufmann](http://chercheurs.lille.inria.fr/ekaufman/research.html) and [Christophe Moy](https://moychristophe.wordpress.com/).
+Thanks to the reviewers [? ?]() and [? ?]().
 
 ## Documents
 TODO
 
-- PDF : [PhD_thesis__Lilian_Besson.pdf](https://hal.inria.fr/hal-XXX/document)
+- PDF : [PhD_thesis__Lilian_Besson.pdf](https://perso.crans.org/besson/phd/articles/PhD_thesis__Lilian_Besson.pdf)
 - HAL notice : [PhD_thesis__Lilian_Besson](https://hal.inria.fr/hal-XXX/)
 - BibTeX : [PhD_thesis__Lilian_Besson.bib](https://hal.inria.fr/hal-XXX/bibtex)
 - Source code and documentation: [https://smpybandits.github.io/](https://smpybandits.github.io/).
@@ -20,6 +21,18 @@ TODO
 ----
 
 ## How to compile the PDF?
+- You will need a complete TeX distribution, like TeX Live, and PDFLaTeX, as well as GNU `make`, `git`, and `latexmk`,
+- First, `git clone` this repository,
+```bash
+$ git clone https://github.com/Naereen/phd-thesis/
+$ cd phd-thesis/
+```
+- Then, simply run `make pdf` (or `latexmk -pdflatex=pdflatex -pdf PhD_thesis__Lilian_Besson.tex`)
+```bash
+$ make pdf
+```
+- It should produce the file [`PhD_thesis__Lilian_Besson.pdf`](https://perso.crans.org/besson/phd/articles/PhD_thesis__Lilian_Besson.pdf).
+- It was only tested on a GNU/Linux machine, under XUbuntu 18.04.
 
 ----
 
@@ -36,6 +49,5 @@ The template is inspired from [@kks32/phd-thesis-template](https://github.com/kk
 [![ForTheBadge uses-badges](http://ForTheBadge.com/images/badges/uses-badges.svg)](http://ForTheBadge.com)
 [![ForTheBadge uses-git](http://ForTheBadge.com/images/badges/uses-git.svg)](https://GitHub.com/)
 
-[![forthebadge made-with-overleaf](https://img.shields.io/badge/Made%20with-OverLeaf-1f425f.svg)](https://www.overleaf.com/)
 [![forthebadge made-with-latex](https://img.shields.io/badge/Made%20with-LaTeX-1f425f.svg)](https://www.latex-project.org/)
 [![ForTheBadge built-with-science](http://ForTheBadge.com/images/badges/built-with-science.svg)](https://perso.crans.org/besson/)
