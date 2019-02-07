@@ -1,14 +1,61 @@
 %!TEX root = ../thesis.tex
 
 % First chapter begins here
-\chapter{Chapter 3 Title}
+\chapter{Presentation of SMPyBandits, a Complete MAB Simulation Library}
 \label{chapter:3}
 \minitoc
 \newpage
 % Write miniTOC just after the title
 \graphicspath{{2-Chapters/3-Chapter/Images/}}
 
+This chapter is intended as a long version of the paper presenting SMPyBandits that I wrote in Summer 2018, see https://hal.inria.fr/hal-01840022
+
 % ----------------------------------------------------------------------------
-\section{Blabla}
-\label{sec:blabla}
+\section{Presentation of the library}
+\label{sec:3:presentationLibrary}
+
+I want to show what is SMPyBandits, what problems does it solve, what did I implement, how to use it.
+
+% ----------------------------------------------------------------------------
+\section{Review of state-of-the-art single-player algorithms}
+\label{sec:3:reviewSPAlgorithms}
+
+I want to show that SMPyBandits contains highly documented implementations of all the most important algorithms designed for stationary single-player multi-armed bandit.
+
+I will include here formulas about the main algorithms (klUCB, MOSS, etc).
+I will pick some problems (Bernoulli, Gaussian, others), with fixed means or ``Bayesian'' means (\ie, changing at each time) and I will run extensive numerical simulations to compare the main algorithms.
+
+The take away message is: klUCB beats UCB, Thompson sampling is great too, all the others algorithms are less efficient or comparable, so we only use klUCB for all the rest of this thesis.
+
+I will include graphs showing the mean regret $R_t$ as a function of time $t$, as well as histograms or boxplots showing the distribution of $R_T$.
+
+
+% ----------------------------------------------------------------------------
+\section{Some numerical experiments to compare time and memory costs of various algorithms}
+\label{sec:3:timeAndMemoryCosts}
+
+I want to show the real numerical costs in terms of computation time and storage requirement of the various algorithms for single-player bandits.
+
+Maybe I can pick one simple problem family (\eg, evenly spaced in $[\varepsilon,1-\varepsilon]$), and run experiments for $T=1000,5000,10000$ etc, and $K=2,3,5,9,20,30,50,100,1000$ and show the evolution of time/memory as a function of $T$ and $K$.
+
+The goal is to highlight that the simplest (but most efficient) algorithms have a memory cost bounded by $\bigO{K}$ and a time complexity at each time step $t\in[T]$ bounded by $\bigO{K}$, independent of $t$.
+
+
+% ----------------------------------------------------------------------------
+\section{An example of another model: rested or restless Markov models}
+\label{sec:3:markovModels}
+
+Maybe if I have space at the end of this chapter, I can show another part of the library, maybe introduce the rested/restless Markov models (with maybe just one example) and show simulations in this model?
+
+SMPyBandits also implemented sparse MAB models (with $s<K$ arms with a mean $\mu_i>0$ and $K-s$ arms with a mean $\mu_i \leq 0$), I could also present this model, the various algorithms designed to tackle it, and some numerical experiments.
+
+
+% ----------------------------------------------------------------------------
+\section{Conclusion of Chapter 3}
+\label{sec:3:conclusion}
+
+In this chapter, we saw...
+
+Future works include...
+
 
