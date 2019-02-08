@@ -9,8 +9,194 @@
 \graphicspath{{2-Chapters/2-Chapter/Images/}}
 
 % ----------------------------------------------------------------------------
-\section{Blabla}
-\label{sec:blabla}
+\section{Stationary MAB models}
+\label{sec:2:notations}
+
+% ----------------------------------------------------------------------------
+\subsection{Finite arms and stochastic rewards}
+
+In this thesis, we only consider models with finite arms.
+No linear bandits, no contextual bandits etc.
+
+For now, we only consider stochastic rewards. Piece-wise stochastic models are studied in Chapter~\ref{chapter:6}.
+
+
+% ----------------------------------------------------------------------------
+\subsection{Different hypotheses on rewards distributions}
+
+Everything is implemented and documented at
+https://smpybandits.github.io/docs/Arms.html
+
+Bernoulli, Gaussian, sub-Bernoulli, sub-Gaussian, Exponential, sub-Exponential...
+
+One dimensional exponential family...
+
+Just bounded, in $[a,b]$ but without loss of generality in $[0,1]$ etc.
+
+Markov models: presented later in Section~\ref{sec:3:markovModels}.
+
+
+% ----------------------------------------------------------------------------
+\section{Applications of stationary MAB}
+\label{sec:2:applicationsofStationaryMAB}
+
+\subsection{Various possible applications}
+
+- clinical trial
+- A/B testing of websites
+- online content recommandation
+- wireless communication, lots of possibilities, one is frequency/channel selection in the OSA paradigm, detailed after
+- hyper-parameters tuning of deep neural networks etc
+
+
+\subsection{Applications for Opportunistic Spectrum Access}
+
+Detail the analogy arm = channel in a licensed spectrum, rewards $r_k(t)$ = 1 if no Primary User or 0 if channel $k$ is busy at time $t$.
+
+Detail the previous work from our team SCEE on bandits + OSA : Wassim, Navik
+
+
+% ----------------------------------------------------------------------------
+\section{A short review of famous MAB algorithms}
+\label{sec:2:famousMABalgorithms}
+
+Everything is implemented and documented at
+https://smpybandits.github.io/docs/Policies.html
+
+
+\subsubsection{Why do we need smart algorithms?}
+Why Follow-the-Leader (EmpiricalMeans https://smpybandits.github.io/docs/Policies.EmpiricalMeans.html) don't work, example.
+
+\subsection{Simple but efficient algorithms when well tuned: $\varepsilon$-greedy and Explore-then-Commit}
+
+See
+https://smpybandits.github.io/docs/Policies.EpsilonGreedy.html
+https://smpybandits.github.io/docs/Policies.ExploreThenCommit.html
+
+
+% ----------------------------------------------------------------------------
+\subsection{Index policies: UCB and others}
+
+\subsubsection{UCB}
+Optimism in face of uncertainty, for UCB etc.
+
+
+\subsubsection{klUCB}
+Optimal upper confidence bounds based on Kullback-Leibler divergence and klUCB indexes
+
+\subsubsection{Other policies inspired by UCB}
+
+- UCB-H and klUCB-H
+- UCB-V
+- UCB-dagger
+- UCBoost
+- UCB+ and klUCB+
+
+
+% ----------------------------------------------------------------------------
+\subsection{Bayesian policies: Thompson Sampling and others}
+
+Idea behind Thompson sampling and Bayesian philosophy.
+
+The Beta posterior and others (https://smpybandits.github.io/docs/Policies.Posterior.html) and Thompson Sampling.
+
+
+% ----------------------------------------------------------------------------
+\subsection{Other policies: BESA and others}
+
+It's a good opportunity to show off and say that I worked on my own on some non-standard policies.
+
+- One of the first paper I read in 2016 was defining AdBandits, https://smpybandits.github.io/docs/Policies.AdBandits.html, a mixture between Thompson sampling and BayesUCB (very efficient in practice)
+- I especially love the BESA algorithm by [? and ? and Maillard].
+
+
+% ----------------------------------------------------------------------------
+\subsection{Policies for adversarial bandits: Exp3 and others}
+
+Exp3, Exp3++ etc
+https://smpybandits.github.io/docs/Policies.Exp3.html
+https://smpybandits.github.io/docs/Policies.Exp3PlusPlus.html
+
+Softmax: is it the same, but written differently?
+https://smpybandits.github.io/docs/Policies.Softmax.html
+
+
+% ----------------------------------------------------------------------------
+\subsection{Hybrid policies: MOSS, klUCB++ and klUCB-Switch and others}
+
+Recent work.
+https://smpybandits.github.io/docs/Policies.MOSS.html
+https://smpybandits.github.io/docs/Policies.IMED.html
+https://smpybandits.github.io/docs/Policies.klUCBPlusPlus.html
+https://smpybandits.github.io/docs/Policies.klUCBSwitch.html
+
+Talk about these?
+https://smpybandits.github.io/docs/Policies.OCUCB.html
+https://smpybandits.github.io/docs/Policies.OSSB.html
+
+With perturbation: maybe we don't need optimism in face of uncertainty, we just need uniform sampling!
+Randomized Confidence Bound (RCB) with uniform perturbations performs as well as UCB!
+https://smpybandits.github.io/docs/Policies.RandomizedIndexPolicy.html
+
+
+\subsection{Summary of classification of the most famous algorithms}
+
+A huge table in one page in portrait mode, giving:
+- name
+- reference, year
+- family, classification
+- time/memory complexity ?
+- regret bound for stochastic regret
+
+of about 20/30 algorithms?
+
+
+% ----------------------------------------------------------------------------
+\section{Lower and upper bounds on regret}
+\label{sec:2:lowerUpperBoundsRegret}
+
+
+\subsection{Measuring performance with the (mean) regret}
+Explain what is regret
+
+
+\subsection{Regret lower bounds}
+
+- [Lai and Robbins] lower-bound in $\Omega(\log(T))$
+- Worst case lower in $\Omega(\sqrt{T})$
+
+
+\subsection{Regret upper bounds, tools and different kinds of bounds}
+
+- useful decomposition, with number of samples (see Claire's PhD)
+- different kinds of bounds, problem-dependent with $\bigO{C \log(T)}$ with $C$ a measure of the problem complexity, or problem-independent with $\bigO{\sqrt{KT}}$ ?
+- tools to show regret upper-bounds, concentration inequalities,
+- short proof of UCB or klUCB? just to start to show the tools
+
+
+\subsection{Other measures of performances}
+
+- Quantile regret or just histogram of regrets
+- Worst case regret (max $R_T^{r}$ for $r$ index of Monte-Carlo simulation?)
+- Fairness
+
+
+% ----------------------------------------------------------------------------
+\section{Different approaches on algorithm selection, or ``How to choose your preferred bandit algorithm?''}
+\label{sec:2:chooseYourPreferredBanditAlgorithm}
+
+\subsection{Naive approach: use UCB or Thompson sampling, and forget about the rest!}
+First solution: be naive, only use UCB everywhere
+
+\subsection{Use prior knowledge about the future application to select beforehand the chosen algorithm}
+Second solution, if one has some prior knowledge about the domain or setting for which the learning algorithms will be deployed, she can run synthetic or real-world simulations, compare many algorithms before deployment, and select the best algorithm!
+
+\subsection{Online algorithm selection}
+
+\subsubsection{}
+A last solution is online algorithm selection, inspired from expert aggregation.
+Include here the discussion about expert aggregation and my \textbf{Aggregator} algorithm, see https://hal.inria.fr/hal-01705292
+
 
 
 % ----------------------------------------------------------------------------
@@ -26,4 +212,11 @@ Future works include...
 % ----------------------------------------------------------------------------
 \section{Appendix for Chapter 2}
 \label{sec:2:appendix}
+
+
+\subsection{Numerical computation of Kullback-Leibler divergences and klUCB indexes}
+
+I want to detail the maths behind an implementation of klUCB, see https://smpybandits.github.io/docs/Policies.kullback.html and all what is detailed there.
+
+How to write a fast version of klBern and klucbBern (the two most used functions), using C or Numba or Cython, maybe I can include the speed up simulations here? First piece of code, before really presenting SMPyBandits ?
 
