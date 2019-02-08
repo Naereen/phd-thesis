@@ -1,6 +1,9 @@
 # "My PhD thesis"
 This repository contains the LaTeX code of my PhD thesis, written by [Lilian Besson](https://perso.crans.org/besson/), entitled "TODO".
 
+I started to think about the outline in January 2019, I started to play with the template end of January, and to seriously write middle of February 2019.
+I expect to finish in May 2019.
+
 Thanks to my advisors [Emilie Kaufmann](http://chercheurs.lille.inria.fr/ekaufman/research.html) and [Christophe Moy](https://moychristophe.wordpress.com/).
 Thanks to the reviewers [? ?]() and [? ?]().
 
