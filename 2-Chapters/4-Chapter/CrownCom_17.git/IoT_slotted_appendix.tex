@@ -1,0 +1,43 @@
+\subsection{A missing proof}
+
+This short subsection contains the missing details of the proof of Proposition \ref{prop:41:Lagrangian}.
+%
+First, we need to justify that the objective function is quasi-concave, in each of its coordinates.
+%
+Then, we develop the computation of $D_i^*(\lambda)$, as a closed form expression of the system parameters ($N_c, p$), the repartition of static devices ($S_1,\dots,S_{N_c}$) and the Lagrange multiplier $\lambda$.
+
+\paragraph{Quasi-convexity}
+
+\begin{itemize}
+	\item
+	For $0 < \gamma < 1$, the function: $g: x \mapsto x \gamma^x$ is quasi-convex on $[0,\infty)$, \ie, $g(\eta x + (1-\eta)y) \leq \max(g(x), g(y))$ for any $x,y \in [0,\infty)$ and $\eta \in [0,1]$ (definition from \cite{Luenberger68}).
+    Indeed, $g(\eta x + (1-\eta)y) = \eta \left[ x (\gamma^x)^{\eta} \right] \gamma^{((1-\eta)y)} + (1-\eta)\left[ y (\gamma^y)^{1-\eta}\right] \gamma^{\eta x}$, and $\gamma^{((1-\eta)y)} \leq 1$ and $\gamma^{\eta x} \leq 1$. But also $(\gamma^x)^{\eta} \leq \gamma^x$ as $\eta \leq 1$, and the same holds for $(\gamma^y)^{1-\eta} \leq \gamma^y$. So $g(\eta x + (1-\eta)y) \leq \eta (x \gamma^x) + (1 - \eta) (y \gamma^y)$ which is a convex combination of $x \gamma^x$ and $y \gamma^y$, so smaller than the larger of the two values, and so $g(\eta x + (1-\eta)y) \leq \max(x \gamma^x, y \gamma^y)$.
+
+    \item
+    The function $f: (D_1, \dots, D_{N_c}) \mapsto \sum_{i=1}^{N_c} D_i (1 - p)^{S_i + D_i -1}$ is quasi-convex in each of its coordinates, on $[0,\infty)^{N_c}$, as a sum of component-wise quasi-convex functions (with $\gamma = (1 - p) \in (0, 1)$, thanks to the first point).
+    \hfill{}$\square$
+\end{itemize}
+
+
+\paragraph{Derivation of the Lagrange multiplier solution}
+
+Let us now prove the expression for $D_i^*$ given in \eqref{eq:41:Dilambda}.
+\begin{itemize}
+	\item
+	If $\boldsymbol{D} = (D_1,\dots,D_{N_c})$,
+    the Lagrangian is denoted $\mathcal{L}(\boldsymbol{D}, \lambda) = f(\boldsymbol{D}) + \lambda(D - \sum_{i=1}^{N_c} D_i)$, and its derivative w.r.t. $D_i$ is
+    $\frac{\partial}{\partial D_i} \mathcal{L}(\boldsymbol{D}, \lambda) = (1-p)^{S_i + D_i - 1} + \log(1 - p) D_i (1-p)^{S_i + D_i - 1} - \lambda$.
+
+    \item
+    So the gradient is canceling $\frac{\partial}{\partial D_i} \mathcal{L}(\boldsymbol{D}, \lambda) |_{D_i=D_i^*} = 0$
+    iff $D_i^*$ satisfies $(1-p)^{D_i^*}( 1 + \log(1-p) D_i^*) = \lambda / (1-p)^{S_i - 1}$. Let $x = \log(1-p) D_i^*$ this is equivalent to $\mathrm{e}^{x}(1 + x) = \lambda / (1-p)^{S_i - 1}$
+    and with $y = 1 + x$, we get $\mathrm{e}^{y}y = \lambda\mathrm{e} / (1-p)^{S_i - 1}$.
+
+	\item
+    By using the $\mathcal{W}$-Lambert function $\mathcal{W}$ \cite{Corless96}, reciprocal of $y \mapsto \mathrm{e}^{y}y$, we get $x = y - 1 = \mathcal{W}(\lambda\mathrm{e} / (1-p)^{S_i - 1}) - 1$.
+    So the gradient of the Lagrangian is canceling iff $D_i^* = \max(0, 1/\log(1-p) x) = \left[ \frac{1}{\log(1-p)}\mathcal{W}(\lambda\mathrm{e} / (1-p)^{S_i - 1}) - 1\right]^{\dagger}$, because $D_i^*$ has to be non-negative.
+    This gives the $i$-th coordinate of the unique saddle point of $f(\boldsymbol{D})$,
+    and so the unique solution to the maximization problem \eqref{eq:41:optPb}, thanks to \cite[Theorem 1]{Luenberger68}.
+    \hfill{}$\square$
+\end{itemize}
+
