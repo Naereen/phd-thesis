@@ -27,7 +27,7 @@ compress:
 
 # Cleaner
 clean:
-	-mv -vf *.fls *.fdb_latexmk *.ps *.dvi *.htoc *.tms *.tid *.lg *.log *.id[vx] *.vrb *.toc *.snm *.nav *.htmp *.aux *.tmp *.out *.haux *.hidx *.bbl *.blg *.brf *.lof *.ilg *.ind *.meta *.fdb_latexmk *.fls *.synctex*busy* *.loa *.lof *.lot *.maf *.mtc* *.nlo /tmp/ 2>/dev/null
+	-mv -vf *.fls *.fdb_latexmk *.ps *.dvi *.htoc *.tms *.tid *.lg *.log *.id[vx] *.vrb *.toc *.snm *.nav *.htmp *.aux *.tmp *.out *.haux *.hidx *.bbl *.blg *.brf *.lof *.ilg *.ind *.meta *.fdb_latexmk *.fls *.synctex*busy* *.loa *.lof *.lot *.lol *.maf *.mtc* *.nlo *.nls /tmp/ 2>/dev/null
 
 # Sender
 send_zamok:

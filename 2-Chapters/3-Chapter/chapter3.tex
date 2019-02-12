@@ -1,7 +1,7 @@
 %!TEX root = ../PhD_thesis__Lilian_Besson
 
 % First chapter begins here
-\chapter{SMPyBandits: a state-of-the-art open-source Python library to simulate multi-armed bandit problems}
+\chapter{SMPyBandits: a state-of-the-art open-source Python library to simulate MAB problems}
 \label{chapter:3}
 \minitoc
 \newpage
@@ -67,52 +67,63 @@ Future works include...
 \section{Appendix for Chapter 3}
 \label{sec:3:appendix}
 
-\begin{listing}[H]
-\begin{minted}[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{python3}
-from SMPyBandits.Arms import Bernoulli
-arms = [Bernoulli(0.1), Bernoulli(0.9)]
 
-from SMPyBandits.Environment import MAB
-my_MAB_problem = MAB(arms)
-nbArms = my_MAB_problem.nbArms
+\subsection{Minimalist example of use of SMPyBandits}
 
-from SMPyBandits.Policy import UCB
-my_UCB_algo = UCB(nbArms, alpha=0.5)
+Below is presented in Listing~\ref{lst:3:exampleOfUse} a minimalist example of use of the library, to define a toy bandit problem with $K=2$ Bernoulli distributed arms (of means $\mu=0.1$ and $\mu=0.9$), one \UCB{} algorithm, and play one experiment of horizon $T=1000$.
+Only the mean reward is printed at the end of the simulation.
+%
+With Python 3.6 this example shows that the algorithm got a mean reward very close to the optimal arm, $\hat{\mu} = 0.886 \simeq 0.9 = \mu^* = \mu_2$.
+\begin{verbatim}
+The UCB algorithm obtains here a mean reward = 0.886
+\end{verbatim}
 
-horizon = 1000
-for t in range(horizon):
-    chosen_arm = my_UCB_algo.choice()
-    observed_reward = my_MAB_problem.draw(chosen_arm)
-    my_UCB_algo.getReward(chosen_arm, observed_reward)
-...
-\end{minted}
-\caption{First example of code}
-\label{lst:3:example}
-\end{listing}
+% https://tex.stackexchange.com/a/12430/
+\begin{small}
+% \begin{listing}[h!]
+    \inputminted[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{python3}{2-Chapters/3-Chapter/src/example_of_use_of_SMPyBandits.py}
+    % \caption{Small example of \texttt{main.py} file}
+    \captionof{listing}{Example of use of SMPyBandits \label{lst:3:exampleOfUse}.}
+    % \label{lst:3:exampleOfUse}
+% \end{listing}
+\end{small}
 
-\subsection{Include a minimalist \texttt{main.py} file}
 
-Include verbatim the file
-\texttt{example\_of\_main\_singleplayer.py}
+\subsection{A minimalist \texttt{main.py} file}
 
-\begin{listing}[H]
-% \lstinputlisting[language=Python]{2-Chapters/3-Chapter/src/example_of_main_singleplayer.py}
-\inputminted[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{python3}{2-Chapters/3-Chapter/src/example_of_main_singleplayer.py}
-\caption{Small example of \texttt{main.py} file}
-\label{lst:3:main}
-\end{listing}
+We present below in Listing~\ref{lst:3:main} a full example of a minimalist \texttt{main.py} file,
+which is used to load the configuration, run the experiment and then print and plot various visualizations for the simulation.
 
-\subsection{Include a minimalist \texttt{configuration.py} file}
+% https://tex.stackexchange.com/a/12430/
+\begin{small}
+% \begin{listing}[h!]
+    \inputminted[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{python3}{2-Chapters/3-Chapter/src/example_of_main_singleplayer.py}
+    % \caption{Small example of \texttt{main.py} file}
+    \captionof{listing}{Small example of \texttt{main.py} file\label{lst:3:main}.}
+    % \label{lst:3:main}
+% \end{listing}
+\end{small}
 
-Include verbatim the file
-\texttt{example\_of\_configuration\_singleplayer.py}
+\subsection{A minimalist \texttt{configuration.py} file}
 
-\begin{listing}[H]
-% \lstinputlisting[language=Python]{2-Chapters/3-Chapter/src/example_of_configuration_singleplayer.py}
-\inputminted[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{python3}{2-Chapters/3-Chapter/src/example_of_configuration_singleplayer.py}
-\caption{Small example of \texttt{configuration.py} file}
-\label{lst:3:configuration}
-\end{listing}
+We present below in Listing~\ref{lst:3:configuration} a full example of a minimalist \texttt{configuration.py} file,
+which is used to define the experiment.
+It defines the number of arms $K$ and their distribution, the horizon $T$, the policies to test etc.
+It uses environment variables, so a user can configure some parameters of the simulation when launching them:
+
+\begin{verbatim}
+    (bash) $ T=50000 N=100 K=10 ARM_TYPE=Gaussian python main.py
+\end{verbatim}
+
+% https://tex.stackexchange.com/a/12430/
+\begin{small}
+% \begin{listing}[h!]
+    \inputminted[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{python3}{2-Chapters/3-Chapter/src/example_of_configuration_singleplayer.py}
+    % \caption{Small example of \texttt{configuration.py} file}
+    \captionof{listing}{Small example of \texttt{configuration.py} file\label{lst:3:configuration}.}
+    % \label{lst:3:configuration}
+% \end{listing}
+\end{small}
 
 
 \subsection{Using multi-core to speed-up simulations}
