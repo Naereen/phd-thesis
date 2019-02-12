@@ -18,13 +18,7 @@ pdf:	$(OUT)
 	-evince $@ >/dev/null 2>/dev/null &
 
 .tex.pdf:
-	latexmk -pdflatex=pdflatex -pdf $<
-	# pdflatex $<
-	# pdflatex $<
-	# # We have to include BibTeX
-	# +bibtex  $*
-	# pdflatex $<
-	# pdflatex $<
+	latexmk -pdflatex="pdflatex --shell-escape %O %S" -pdf $<
 	-pdfinfo $@ | grep -v ':[ \t]\+no' | grep --color=always "^[A-Za-z ]\+:"
 	-evince $@ >/dev/null 2>/dev/null &
 
