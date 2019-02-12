@@ -67,35 +67,52 @@ Future works include...
 \section{Appendix for Chapter 3}
 \label{sec:3:appendix}
 
-\begin{minted}[mathescape,
-    linenos,
-    numbersep=5pt,
-    gobble=2,
-    frame=lines,
-    framesep=2mm]{csharp}
-string title = "This is a Unicode π in the sky"
-/*
-Defined as $\pi=\lim_{n\to\infty}\frac{P_n}{d}$ where $P$ is the perimeter
-of an $n$-sided regular polygon circumscribing a
-circle of diameter $d$.
-*/
-const double pi = 3.1415926535
+\begin{listing}[H]
+\begin{minted}[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{python}
+from SMPyBandits.Arms import Bernoulli
+arms = [Bernoulli(0.1), Bernoulli(0.9)]
+
+from SMPyBandits.Environment import MAB
+my_MAB_problem = MAB(arms)
+nbArms = my_MAB_problem.nbArms
+
+from SMPyBandits.Policy import UCB
+my_UCB_algo = UCB(nbArms, alpha=0.5)
+
+horizon = 1000
+for t in range(horizon):
+    chosen_arm = my_UCB_algo.choice()
+    observed_reward = my_MAB_problem.draw(chosen_arm)
+    my_UCB_algo.getReward(chosen_arm, observed_reward)
+...
 \end{minted}
+\caption{First example of code}
+\label{lst:3:example}
+\end{listing}
 
 \subsection{Include a minimalist \texttt{main.py} file}
 
 Include verbatim the file
 \texttt{example\_of\_main\_singleplayer.py}
 
+\begin{listing}[H]
 % \lstinputlisting[language=Python]{2-Chapters/3-Chapter/src/example_of_main_singleplayer.py}
-
+\inputminted[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{Python}{2-Chapters/3-Chapter/src/example_of_main_singleplayer.py}
+\caption{Small example of \texttt{main.py} file}
+\label{lst:3:main}
+\end{listing}
 
 \subsection{Include a minimalist \texttt{configuration.py} file}
 
 Include verbatim the file
 \texttt{example\_of\_configuration\_singleplayer.py}
 
+\begin{listing}[H]
 % \lstinputlisting[language=Python]{2-Chapters/3-Chapter/src/example_of_configuration_singleplayer.py}
+\inputminted[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{Python}{2-Chapters/3-Chapter/src/example_of_configuration_singleplayer.py}
+\caption{Small example of \texttt{configuration.py} file}
+\label{lst:3:configuration}
+\end{listing}
 
 
 \subsection{Using multi-core to speed-up simulations}

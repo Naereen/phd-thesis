@@ -3,20 +3,16 @@ FILE = PhD_thesis__Lilian_Besson
 IN   = $(FILE).tex
 OUT  = $(FILE).pdf
 
-quick:	pdf
 all:	clean pdf evince clean
+quick:	pdf
 pdf:	$(OUT)
 
 .PHONY:	quick all pdf evince compress clean send_zamok latexstats lint proselint
 
 .SUFFIXES:
-.SUFFIXES: .md .tex .pdf
+.SUFFIXES: .tex .pdf
 
 # Construction rules
-.md.pdf:
-	pandoc --verbose --include-in-header header.tex -s -t latex -o $@ $<
-	-evince $@ >/dev/null 2>/dev/null &
-
 .tex.pdf:
 	latexmk -pdflatex="pdflatex --shell-escape %O %S" -pdf $<
 	-pdfinfo $@ | grep -v ':[ \t]\+no' | grep --color=always "^[A-Za-z ]\+:"
