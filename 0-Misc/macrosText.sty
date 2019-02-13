@@ -10,6 +10,10 @@
 % ----------------------------------------------------------------------
 
 % Generic maths
+\newcommand\norm[1]{\left\lVert#1\right\rVert}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+% \DeclareMathOperator{\Tr}{Tr}
 \newcommand{\limInf}{\underline{\lim}}
 \newcommand{\e}{\mathrm{e}}
 \newcommand{\eps}{\varepsilon}
@@ -176,6 +180,49 @@
 \newcommand{\modeldeux}{(II)}
 \newcommand{\modeltrois}{(III)}
 \newcommand{\modelquatre}{(IV)}
+
+% ----------------------------------------------------------------------
+\makeatletter
+% Thanks to https://tex.stackexchange.com/a/110981/
+\providecommand*{\cupdot}{%
+    \mathbin{%
+        \mathpalette\@cupdot{}%
+    }%
+}
+\newcommand*{\@cupdot}[2]{%
+    \ooalign{%
+        $\m@th#1\cup$\cr
+        \hidewidth$\m@th#1\cdot$\hidewidth
+    }%
+}
+\makeatother
+% ----------------------------------------------------------------------
+
+% ----------------------------------------------------------------------
+\makeatletter
+% Thanks to https://tex.stackexchange.com/a/53691/
+\newcommand{\mytag}[2]{%
+    \text{#1}%
+    \@bsphack
+    \begingroup
+        \@onelevel@sanitize\@currentlabelname
+        \edef\@currentlabelname{%
+        \expandafter\strip@period\@currentlabelname\relax.\relax\@@@%
+        }%
+        \protected@write\@auxout{}{%
+        \string\newlabel{#2}{%
+            {#1}%
+            {\thepage}%
+            {\@currentlabelname}%
+            {\@currentHref}{}%
+        }%
+        }%
+    \endgroup
+    \@esphack
+}
+\makeatother
+% ----------------------------------------------------------------------
+
 
 % ----------------------------------------------------------------------
 % Chapter 6 on GLR klUCB
