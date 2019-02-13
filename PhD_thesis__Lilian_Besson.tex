@@ -5,10 +5,9 @@
 % *******************************************************************************
 
 % Class (remove "print" for digital version, remove "draft" for final version)
-% \documentclass[a4paper,twoside,index,PageStyleI,draft]{0-Misc/PhDThesisPSnPDF}
-\documentclass[a4paper,twoside,index,PageStyleI]{0-Misc/PhDThesisPSnPDF}
-% \documentclass[a4paper,twoside]{0-Misc/PhDThesisPSnPDF}
-% \documentclass[a4paper,twoside,index,PageStyleI]{0-Misc/PhDThesisPSnPDF}
+% \documentclass[a4paper,twoside,index,PageStyleII,draft]{0-Misc/PhDThesisPSnPDF}
+\documentclass[a4paper,twoside,index,PageStyleII]{0-Misc/PhDThesisPSnPDF}
+% \documentclass[a4paper,twoside,index,PageStyleII,print]{0-Misc/PhDThesisPSnPDF}
 
 % --- Draft Mode
 \SetDraftVersion{v0.1}
@@ -30,25 +29,33 @@
 		\printnomenclature[6em]
 	\end{spacing}
 
-	% ******************************** Chapters *********************************
+	% *************** Chapters ****************
 	\mainmatter
 
 	\input{2-Chapters/chapters}
 
-	% ******************************* Annexes ********************************
+	% *************** Appendices ****************
 	\input{3-Appendices/appendices}
 	%
 
 	% FIXME the next pages still show the title of the last appendix in the header, that's ugly, fix it!
 	\backmatter
 	\input{4-Listofpublications/Listofpublications}
-	% ********************************* Listes **********************************
+	% **************** Listes *****************
 	\listoffigures
-	\listoftables
 	\listofalgorithms
 		\addcontentsline{toc}{chapter}{List of Algorithms}
 	\listoflistings
 		\addcontentsline{toc}{chapter}{List of Listings}
+	\listoftables
+
+	% *************** Bibliography ****************
+	% \begin{spacing}{0.9}
+		% \bibliographystyle{ieeetr}
+		\bibliographystyle{alpha}
+		\cleardoublepage
+		\bibliography{all-phd-thesis}
+	% \end{spacing}
 
 	% \begin{spacing}{1}
 	% 	\printbibliography[heading=bibintoc, title={Liste des Publications}, keyword={pub}]
@@ -56,11 +63,9 @@
 	% \end{spacing}
 	\printthesisindex
 
-	\bibliographystyle{ieeetr}
-	\bibliography{all-phd-thesis.bib}
-
-	\clearpage
-	\clearevenpage
+	% \clearpage
+	% \clearevenpage
+	\cleardoublepage
 	\newpage
 	\include{5-Back/back-page}
 \end{document}
