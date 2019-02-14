@@ -12,17 +12,17 @@ We implement an IoT network the following way: one gateway, one or several intel
 and a traffic generator that emulates radio interference from many other objects.
 Intelligent objects communicate with the gateway with a wireless ALOHA-based protocol, which does not require any specific overhead for the learning.
 %
-Similarly to the previous section, network access is modelled as a discrete sequential decision making problem, and using the framework and algorithms from MAB learning, we show that intelligent objects can improve their access to the network by using low complexity and decentralized algorithms, such as \UCB{} and Thompson Sampling.
+Similarly to the previous Section, network access is modelled as a discrete sequential decision making problem, and using the framework and algorithms from MAB learning, we show that intelligent objects can improve their access to the network by using low complexity and decentralized algorithms, such as \UCB{} and Thompson Sampling.
 %
 This solution could be added in a straightforward and costless manner in LoRaWAN networks, just by adding this feature in some or all the devices, without any modification on the network side.
 
 
 % ----------------------------------------------------------------------
-\subsection{Motivation for this demonstration}
+\subsection{Context of this demonstration}
 \label{sub:42:motivation}
 % ----------------------------------------------------------------------
 
-In this Section, we describe the way we implemented a demo where we evaluate MAB algorithms, used in combination with a pure ALOHA-based protocol, such as the ones employed in LPWAN.
+We describe the way we implemented a demo where we evaluate MAB algorithms, used in combination with a pure ALOHA-based protocol, such as the ones employed in LPWAN.
 This demonstration is the first implementation which aims at assessing the potential gain of MAB learning algorithms in IoT scenarios.
 %
 We use a TestBed designed in 2017 by our team SCEE \cite[Appendix~3]{Bodinier17}, containing different USRP boards \cite{USRPDocumentation}, controlled by a single laptop using GNU Radio \cite{GNURadioDocumentation},
@@ -55,7 +55,7 @@ Our implementation is presented in Section~\ref{sub:42:implementation}, with det
 \label{sub:42:implementation}
 % ----------------------------------------------------------------------
 
-In this section, we present our implementation of MAB algorithms in the model of IoT networks presented in Section~\ref{sub:41:systemModel}.
+In this Section, we present our implementation of MAB algorithms in the model of IoT networks presented in Section~\ref{sub:41:systemModel}.
 We first describe the simplified physical layer of this demo, then we present our GNU Radio implementation.
 
 
@@ -159,7 +159,7 @@ $(3)$ The last part is the interface of the gateway, where we can see the traffi
 \label{sec:42:results}
 % ----------------------------------------------------------------------
 
-We compare the two algorithms described in Section~\ref{sub:42:UCB} against a uniform access algorithm, that uniformly selects its channel at random.
+We compare the two algorithms described in Section~\ref{sec:2:famousMABalgorithms} against a uniform access algorithm, that uniformly selects its channel at random.
 Three objects are compared by their mean successful communication rates, on a horizon of $2000$ communication slots, and were using three algorithms: uniform random access (in \textcolor{cyan}{cyan}), Thompson Sampling (in \textcolor{green}{green}) and \UCB{} (in \textcolor{red}{red}).
 Figure~\ref{fig:42:plot_datafile_append_Uniform_vs_UCB_vs_TS} shows the results averaged on $10$ repetitions using the same conditions.
 %
@@ -180,7 +180,7 @@ Such results are very encouraging, and illustrate well the various strong possib
 
 \begin{figure}[!t]
 	\centering
-    \includegraphics[height=8.0cm]{plot_datafile_append_Uniform_vs_UCB_vs_TS.eps}
+    \includegraphics[height=9.0cm]{plot_datafile_append_Uniform_vs_UCB_vs_TS.eps}
     \caption{Less than $400$ communication slots (\emph{i.e.}, less than $100$ trials in each channel) suffice for the two learning objects to reach a successful communication rate close to $80\%$, which is \textbf{twice as much} as the non-learning (uniform) object, which stays around $40\%$ of success. Similar gains of performance were obtained in many different scenarios.}
     \label{fig:42:plot_datafile_append_Uniform_vs_UCB_vs_TS}
 \end{figure}
@@ -208,9 +208,14 @@ Such results are very encouraging, and illustrate well the various strong possib
 
 The source code of our demonstration is fully available online, open-sourced under GPLv3 license, at
 \href{https://bitbucket.org/scee_ietr/malin-multi-arm-bandit-learning-for-iot-networks-with-grc}{\texttt{bitbucket.org/scee\_ietr/\\malin-multi-arm-bandit-learning-for-iot-networks-with-grc/}}.
-It contains both the GNU Radio Companion flowcharts and blocks, with ready-to-use \texttt{Makefiles} to easily compile, install and launch the demonstration.
 
-A $6$-minute \textbf{video} showing our demonstration is at \texttt{\url{youtu.be/HospLNQhcMk}}.
+It contains both the GNU Radio Companion flowcharts and blocks, with ready-to-use \texttt{Makefiles} to easily compile, install and launch the demonstration.
+The demonstration only requires a laptop and free tools,
+as the laptop should run GNU/Linux and a distribution like Ubuntu or Debian.
+
+\paragraph{Video}
+
+A $6$-minute \textbf{video} showing our demonstration is available online at \texttt{\url{youtu.be/HospLNQhcMk}}.
 It shows examples of $3$ dynamic devices learning simultaneously, confirming the results of Fig.~\ref{fig:42:plot_datafile_append_Uniform_vs_UCB_vs_TS} for overlapping channels.
 It especially shows the connections between the USRP boards, the Octoclock, and the master laptop.
 
