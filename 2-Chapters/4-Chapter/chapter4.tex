@@ -1,8 +1,10 @@
 %!TEX root = ../PhD_thesis__Lilian_Besson
 
+% ----------------------------------------------------------------------
 \chapter{More Efficient Spectrum Usage of IoT Networks with Selfish MAB Learning}
 \label{chapter:4}
 \minitoc
+% ----------------------------------------------------------------------
 
 In this Chapter~\ref{chapter:4}, we present two models of Internet of Things networks, composed of many independent devices that are able to run MAB algorithm to learn and improve their access to the network.
 The two models are presented mathematically, and numerical simulations justify the interest of the proposed algorithms.
@@ -22,12 +24,11 @@ In this second model, we compare different heuristic, all based on the UCB algor
 % Write miniTOC just after the title
 \graphicspath{{2-Chapters/4-Chapter/Images/}}
 
-\TODOL{Write a nice introduction for this chapter.}
-
 
 % ----------------------------------------------------------------------------
 \section{Motivations for Selfish MAB Learning for IoT Networks}
 \label{sec:4:motivations}
+% ----------------------------------------------------------------------
 
 Unlicensed bands are more and more used and considered for mobile and LAN communication standards (WiFi, LTE-U), and for Internet of Things (IoT) standards for short-range (ZigBee, Z-Wave, Bluetooth) and long-range (LoRaWAN, SIGFOX, Ingenu, Weightless) communications \cite{Centenaro16}.
 This heavy use of unlicensed bands will cause performance drop, and could even compromise IoT promises.
@@ -50,16 +51,17 @@ As far as we know, we provide the first study to confirm robustness of the use o
 
 We also present an extension of this model to take into account another aspect of the ALOHA protocol, that is the possibility for dynamic devices to retransmit their packet if the \emph{Ack} was not received.
 
-\TODOL{Present outline of the chapter.}
+% \TODOL{Present outline of the chapter.}
 
-% \TODOL{Give list of publications associated with this chapter.}
 \paragraph{Publications}
+
 This Chapter is based on the following publications: \cite{Bonnefoi17,Besson2018ICT,Besson2019WCNC,Bonnefoi2019WCNC}.
 
 
 % ----------------------------------------------------------------------------
 \section{Selfish learning for many dynamic devices with low activation probabilities in an IoT network}
 \label{sec:4:firstModel}
+% ----------------------------------------------------------------------
 
 % - ``Multi-Armed Bandit Learning in IoT Networks and non-stationary settings'', see https://hal.inria.fr/hal-01575419
 
@@ -69,6 +71,7 @@ This Chapter is based on the following publications: \cite{Bonnefoi17,Besson2018
 % ----------------------------------------------------------------------------
 \section{Test-bed implementation of our model for real-world validation}
 \label{sec:4:gnuradio}
+% ----------------------------------------------------------------------
 
 % - ``MALIN: Multi-Arm bandit Learning for Iot Networks with GRC: A TestBed Implementation and Demonstration that Learning Helps'', demo at ICT, and the companion paper ``GNU Radio Implementation of MALIN: "Multi-Armed bandits Learning for Internet-of-things Network"'', see https://hal.inria.fr/hal-02006825
 
@@ -79,6 +82,7 @@ This Chapter is based on the following publications: \cite{Bonnefoi17,Besson2018
 % ----------------------------------------------------------------------------
 \section{Extension of our model to account for retransmissions}
 \label{sec:4:retransmissions}
+% ----------------------------------------------------------------------
 
 % - ``Upper-Confidence Bound for Channel Selection in LPWA Networks with Retransmissions'', see \texttt{https://perso.crans.org/besson/articles/BMBM\_\_IEEE\_WCNC\_2019.pdf}
 
@@ -88,10 +92,14 @@ This Chapter is based on the following publications: \cite{Bonnefoi17,Besson2018
 % ----------------------------------------------------------------------------
 \section{Conclusion of Chapter~\ref{chapter:4}}
 \label{sec:4:conclusion}
+% ----------------------------------------------------------------------
 
-\TODOL{Write a conclusion, and future works}
+We give in this Section conclusions about the two models presented above and about our demonstration, as well as many directions of future works, some of which are currently being studied by researchers of our team.
 
-\subsection{Summary of the first model}\label{sub:41:conclusion}
+
+% ----------------------------------------------------------------------
+\paragraph{Summary of the first model}
+\label{sub:41:conclusion}
 
 In Section~\ref{sec:4:firstModel}, we proposed an evaluation of the performance of MAB learning algorithms in IoT networks,
 with a focus on the convergence of algorithms, in terms of successful transmission rates, when the proportion of intelligent dynamic devices changes.
@@ -104,8 +112,9 @@ We will investigate this behavior in order to understand it better theoretically
 We will also experiment more with adversarial algorithms, to confirm that they work less efficiently than stochastic bandit algorithms in our non-stochastic setting.
 
 
-\subsection{Conclusions taken from the demonstration}
-\label{sec:42:conclusionFromDemonstration}
+% ----------------------------------------------------------------------
+\paragraph{Conclusions taken from the demonstration}
+\label{sub:42:conclusionFromDemonstration}
 
 We presented in Section~\ref{sec:4:gnuradio} a demonstration, showed in $2018$ at the ICT conference \cite{Besson2018ICT}, and further detailed in the companion paper \cite{Besson2019WCNC}.
 We gave all the necessary details on both the PHY and the MAC layer, as well as details on the User Interface developed for the demo.
@@ -114,13 +123,28 @@ Results obtained in practice were discussed, to highlight the interest of using 
 By using such low-cost algorithms, we demonstrated empirically that a dynamically reconfigurable object can learn on its own to favor a certain channel, if the environment traffic is not uniform between the $K$ different channels.
 
 
+% ----------------------------------------------------------------------
+\paragraph{Conclusion about this second model}
+\label{sub:43:conclusion}
 
-\subsection{Future works}
-Future works include...
+In Section~\ref{sec:4:retransmissions}, we presented an extension of our model of LPWA networks based on an ALOHA protocol, slotted both in time and frequency, in which dynamic IoT devices can use machine learning algorithms, to improve their Packet Loss Ratio (PLR) when accessing the network.
+The main novelty of this model is to address the packet retransmissions upon radio collision, by using a Multi-Armed Bandit framework.
+We presented and evaluated several learning heuristic that try to learn how to transmit and retransmit in a smarter way, by using the \UCB{} algorithm for channel selection for first transmission, and different proposals based on \UCB{} for the retransmissions upon collisions.
+
+We showed that incorporating learning for the transmission is needed to achieve optimal performance, with significant gain in terms of successful transmission rate in networks with a large number of devices (up-to $30\%$ in the example network).
+Our empirical simulations show that each of our proposed heuristic outperforms a naive random access scheme.
+Surprisingly, the main take-away message is that a simple \UCB{} learning approach, that retransmit in the same channel, turns out to perform as well as more complicated heuristics.
+
+
+% ----------------------------------------------------------------------
+\paragraph{Future works}
+\label{sub:4:futureWorks}
+
+Future works related to this Chapter include the following directions.
 
 
 \paragraph{Possible extensions of the first model}
-%
+
 The first model presented in Section~\ref{sec:4:firstModel} could easily be generalized with two probabilities $p_S$ and $p_D$, if static and dynamic devices had different transmission pattern, and less easily with one probability per device. Also, other emission pattern could be considered, instead of a Bernoulli process for each user.
 We prefer to consider that all devices have the same probability to transmit to keep the notation as simple as possible.
 
@@ -131,6 +155,7 @@ So additionally to deciding the channel for communication, each device has to al
 This is another direction of research, that we will investigate in the future.
 
 \paragraph{Extensions of the demonstration}
+
 Possible future extensions of our demonstration include the following points.
 We could consider more dynamic objects (\emph{e.g.}, $100$) but it would either cost more in terms of equipment, or in terms of software engineering to simulation more objects with the same card.
 We could also implement a real-world IoT communication protocol (like the LoRaWAN standard), which we prefer not to do as it would cost a significant effort of development.
@@ -140,9 +165,27 @@ Finally, we could also study the interference in case of other gateways located 
 % We are also interested in studying the possible gain of using a learning step when the transmission model follows ALOHA-like retransmissions, and this is presented in the next Section~\ref{sec:4:retransmissions}.
 
 
+\paragraph{Possible extensions for the second model}
+
+The utility and impact of the proposed approaches for LPWA networks motivates us to address several subjects as future works. Among them, the non-stationarity of the channel occupancy caused by the learning policy employed by the IoT devices.
+%
+For that end, modifications of MAB algorithms have been proposed, such as Sliding-Window-\UCB{} or Discounted-\UCB{} \cite{Garivier11UCBDiscount}
+or more recently M-\UCB{} \cite{CaoZhenKvetonXie18},
+or more recently GLR-\UCB{} \cite{Besson2019GLRT} which is presented in Chapter~\ref{chapter:6},
+that nevertheless have not been explored for the targeted problem.
+Chapter~\ref{chapter:6} is focusing on this direction, but we did not have enough time to explore the possible applications of MAB policies designed for non-stationary problems to the model with retransmissions presented in this section.
+
+In order to validate our results in a realistic experimental setting and not only with simulations, future works include a hardware implementation of the analyzed models to complete our demonstration \cite{Besson2019WCNC}.
+Note that Julio César Mango-Vasquez is currently working on this direction, for the EPHYL project, in collaboration with Carlos Faouzi Bader at IETR and CentraleSupélec campus of Rennes, and Christophe Moy at IETR and University Rennes 1.
+%
+A hardware demonstrator could be also benefit to study other settings by removing some hypotheses, for instance by studying a similar model in non-slotted time.
+
+
 % ----------------------------------------------------------------------------
 \section{Appendix for Chapter~\ref{chapter:4}}
 \label{sec:4:appendix}
+% ----------------------------------------------------------------------------
 
-% \TODOL{Include here additional results (proof in Section from CROWNCOM ?)}
+We include here a missing proof from Section~\ref{sec:4:firstModel}.
+
 \input{2-Chapters/4-Chapter/CrownCom_17.git/IoT_slotted_appendix.tex}
