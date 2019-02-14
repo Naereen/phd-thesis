@@ -8,7 +8,7 @@ We evaluate the performance of two classical MAB learning algorithms, \UCB{} and
 We show that using learning algorithms does help to fit more devices in such networks, even when all end-devices are intelligent and are dynamically changing channel.
 In the studied scenario, stochastic MAB learning provides a up to $16\%$ gain in term of successful transmission probabilities, and has near optimal performance even in non-stationary and non-\iid{} settings with a majority of intelligent devices.
 
-\TODOL{Based on the publication, ``Multi-Armed Bandit Learning in IoT Networks and non-stationary settings'', see https://hal.inria.fr/hal-01575419}
+% \TODOL{Based on the publication, ``Multi-Armed Bandit Learning in IoT Networks and non-stationary settings'', see https://hal.inria.fr/hal-01575419}
 
 \TODOL{TODO:
 
@@ -56,7 +56,7 @@ Numerical results are presented in \ref{sub:41:numericalResults}.
 % ------------------------------------------------------------------------
 \subsection{System model and notations}\label{sub:41:systemModel}
 
-As illustrated in Figure \ref{fig:41:protocol}, we suppose a slotted protocol.
+As illustrated in Figure \ref{fig:41:protocol}, we suppose a slotted protocol, in both time and frequency.
 All devices share a synchronized time, and know in advance the finite number of available RF channels.
 In each time slot, devices try to send packets to the unique Base Station, which listens continuously to all channels, following an ALOHA-based communication (no sensing).
 Each time slot is divided in two parts: first for uplink communications in which data packets are sent by end-devices to the base station. If only one packet is sent in this part of the slot, the base station can decode it and sends an acknowledgement to the device in the second part.
@@ -65,7 +65,7 @@ This way, no collision can occur on the downlink messages, easing the analysis o
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[scale=0.28]{2-Chapters/4-Chapter/CrownCom_17.git/protocol.eps}
+    \includegraphics[scale=0.50]{2-Chapters/4-Chapter/CrownCom_17.git/protocol.eps}
     \caption{The considered time-frequency slotted protocol. Each frame is composed by a fix-duration uplink slot in which the end-devices transmit their packets. If a packet is well received, the base station replies by transmitting an \emph{Ack}, after the ack delay.}
     \label{fig:41:protocol}
 \end{figure}
@@ -78,14 +78,14 @@ There are two types of end-devices in the network:
     \emph{Dynamic} (or \emph{smart}) end-devices have richer RF abilities, they can use all the available channels, by quickly reconfiguring their RF transceiver on the fly. They can also store communication successes or failures they experienced in each channel, in order to change channel, possibly at every time slot.
 \end{itemize}
 
-There are $N_c \geq 1$ channels, $D \geq 0$ dynamic end-devices, and $S \geq 0$ static devices.
-Furthermore, in channel $i \in \llbracket 1; N_c \rrbracket$ there are $0 \leq S_i \leq S$ static devices (so $S = \sum_{i=1}^{N_c} S_i$).
-We focus on \emph{dense networks}, in which the number of devices $S + D$ is very large compared to $N_c$ (about $1000$ to $10000$, while $N_c$ is about $10$ to $50$).
+There are $K \geq 1$ channels, $D \geq 0$ dynamic end-devices, and $S \geq 0$ static devices.
+Furthermore, in channel $i \in \llbracket 1; K \rrbracket$ there are $0 \leq S_i \leq S$ static devices (so $S = \sum_{i=1}^{K} S_i$).
+We focus on \emph{dense networks}, in which the number of devices $S + D$ is very large compared to $K$ (about $1000$ to $10000$, while $K$ is about $10$ to $50$).
 As this problem is only interesting if devices are able to communicate reasonably efficiently with the base station, we assume devices only communicate occasionally, \ie, with a low \emph{duty cycle}, as it is always considered for IoT.
-We prefer this choice rather than non-crowded networks, \ie, where $S + D \leq N_c$, as the former makes more sense for IoT networks\footnote{Here, $N_c$ will typically be about $20$ different radio channels, usually in the same RF band and with separate mean carrier frequencies, and the number of devices will be of the order of $1000$ to $10000$.}.
+We prefer this choice rather than non-crowded networks, \ie, where $S + D \leq K$, as the former makes more sense for IoT networks\footnote{Here, $K$ will typically be about $20$ different radio channels, usually in the same RF band and with separate mean carrier frequencies, and the number of devices will be of the order of $1000$ to $10000$.}.
 
 We suppose that all devices follow the same emission pattern, being fixed in time, and we choose to model it as a simple Bernoulli process:
-all devices have the same probability to send a packet in any (discrete) temporal slot, and we denote $p \in (0, 1)$ this probability\footnote{In the experiments below, $p$ is about $10^{-3}$, because in a crowded network $p$ should be smaller than $N_c / (S + D)$ for all devices to communicate successfully (in average).}.
+all devices have the same probability to send a packet in any (discrete) temporal slot, and we denote $p \in (0, 1)$ this probability\footnote{In the experiments below, $p$ is about $10^{-3}$, because in a crowded network $p$ should be smaller than $K / (S + D)$ for all devices to communicate successfully (in average).}.
 The parameter $p$ essentially controls the frequency of communication for each device, once the time scale is fixed (\ie, real time during two messages), and $1/p$ is proportional to the \emph{duty cycle}.
 For instance for IoT objects, a ``smart'' refrigerator could have to send a daily message, and if a message can be sent every second, then $p = 1 / (12 \times 60 \times 60) \simeq 1.5 \times 10^{-5}$.
 
@@ -103,25 +103,25 @@ The first one is naive but can be used in practice, while the two others are ver
 
 \paragraph{Naive policy: Random Channel Selection}
 
-We derive here the probability of having a successful transmission, for a dynamic device, in the case where all the dynamic devices make a purely random channel selection (\ie, uniform on $i \in \llbracket 1; N_c \rrbracket = \{1, \dots, N_c\}$).
+We derive here the probability of having a successful transmission, for a dynamic device, in the case where all the dynamic devices make a purely random channel selection (\ie, uniform on $i \in \llbracket 1; K \rrbracket = \{1, \dots, K\}$).
 % every time they communicate
 % This reflects a very naive policy that could be implemented by all the dynamic devices, and it provides a reference scenario to compare against.
 
 In this case, for one dynamic device, a successful transmission happens if it is the only device to choose channel $i$, at that time slot.
 The probability of successful transmission is computed as follows, because the $S_i$ static devices in each channel $i$ are assumed to be independent, and static and dynamic devices are assumed to \emph{not} transmit at each time $t$ with a fixed probability $1-p$ :
 \begin{equation}
-    \Pr(\text{success}|\text{sent}) = \sum_{i=1}^{N_c} \underbrace{\Pr(\text{success}|\text{sent in channel}\;i)}_{\text{No one else sent in channel}\; i} \; \underbrace{\Pr(\text{sent in channel}\,i)}_{= 1/N_c, \text{by uniform choice}}
+    \Pr(\text{success}|\text{sent}) = \sum_{i=1}^{K} \underbrace{\Pr(\text{success}|\text{sent in channel}\;i)}_{\text{No one else sent in channel}\; i} \; \underbrace{\Pr(\text{sent in channel}\,i)}_{= 1/K, \text{by uniform choice}}
 \end{equation}
 
-All dynamic devices follow the same policy in this case, so the probability of transmitting at that time in channel $i$ for any dynamic device is $p / N_c$, and there are $D-1$ other dynamic devices.
+All dynamic devices follow the same policy in this case, so the probability of transmitting at that time in channel $i$ for any dynamic device is $p / K$, and there are $D-1$ other dynamic devices.
 As they are independent, the probability that no other dynamic device sent in $i$
 % $\Pr(\text{no other dynamic device sent in}\;i)$,
-is $q = \Pr(\bigcap_{k=1}^{D-1} \text{device}\;k\;\text{did not sent in}\;i) = \prod_{k=1}^{D-1} \Pr(\text{device}\;k\;\text{did not sent in}\;i)$. And $\Pr(\text{device}\;k\;\text{sent in}\;i) = p \times 1 / N_c$, by uniform choice on channels and the Bernoulli emission hypothesis. So $q = \prod_{k=1}^{D-1} (1 - p/N_c) = (1-p/N_c)^{D-1}$. Thus we can conclude,
+is $q = \Pr(\bigcap_{k=1}^{D-1} \text{device}\;k\;\text{did not sent in}\;i) = \prod_{k=1}^{D-1} \Pr(\text{device}\;k\;\text{did not sent in}\;i)$. And $\Pr(\text{device}\;k\;\text{sent in}\;i) = p \times 1 / K$, by uniform choice on channels and the Bernoulli emission hypothesis. So $q = \prod_{k=1}^{D-1} (1 - p/K) = (1-p/K)^{D-1}$. Thus we can conclude,
 %
 \begin{align}\label{eq:41:strategynaive}
     \Pr(\text{success}|\text{sent})
-    & = \sum_{i=1}^{N_c} \underbrace{(1 - p / N_c)^{D-1}}_{\text{No other dynamic device}} \times \underbrace{(1-p)^{S_i}}_{\text{No static device}} \times\; \frac{1}{N_c} \nonumber \\
-    & = \frac{1}{N_c} \left(1-\frac{p}{N_c}\right)^{D-1} \sum_{i=1}^{N_c} (1-p)^{S_i} .
+    & = \sum_{i=1}^{K} \underbrace{(1 - p / K)^{D-1}}_{\text{No other dynamic device}} \times \underbrace{(1-p)^{S_i}}_{\text{No static device}} \times\; \frac{1}{K} \nonumber \\
+    & = \frac{1}{K} \left(1-\frac{p}{K}\right)^{D-1} \sum_{i=1}^{K} (1-p)^{S_i} .
 \end{align}
 This expression \eqref{eq:41:strategynaive} is constant (in time), and easy to compute numerically, but comparing the successful transmission rate of any policy against this naive policy is important, as any efficient learning algorithm should outperform it.
 
@@ -135,17 +135,17 @@ If the oracle draws once uniformly at random a configuration of dynamic devices,
 then this probability is computed as before:
 \begin{align}\label{eq:41:prob_col}
     \Pr(\text{success}|\text{sent})
-    & = \sum_{i=1}^{N_c} \Pr(\text{success}|\text{sent in channel}\;i) \; \Pr(\text{sent in channel}\;i) \nonumber \\
-    & = \sum_{i=1}^{N_c} \underbrace{(1 - p)^{D_i - 1}}_{\;\;D_i - 1 \;\text{others}\;\;} \times \underbrace{(1 - p)^{S_i}}_{\;\;\text{No static device}\;\;} \times \underbrace{ D_i / D }_{\;\;\text{Sent in channel}\; i\;\;}.
+    & = \sum_{i=1}^{K} \Pr(\text{success}|\text{sent in channel}\;i) \; \Pr(\text{sent in channel}\;i) \nonumber \\
+    & = \sum_{i=1}^{K} \underbrace{(1 - p)^{D_i - 1}}_{\;\;D_i - 1 \;\text{others}\;\;} \times \underbrace{(1 - p)^{S_i}}_{\;\;\text{No static device}\;\;} \times \underbrace{ D_i / D }_{\;\;\text{Sent in channel}\; i\;\;}.
 \end{align}
 
-Consequently, the optimal allocation vector $(D_1,\dots,D_{N_c})$ is the solution of the following real-valued constraint optimization problem :
+Consequently, the optimal allocation vector $(D_1,\dots,D_{K})$ is the solution of the following real-valued constraint optimization problem :
 \begin{subequations}
 \label{eq:41:prob}
 \begin{align}
-\underset{D_1,\dots,D_{N_c}}{\arg\max}\; & \sum_{i=1}^{N_c} D_i (1 - p)^{S_i + D_i -1}, \label{eq:41:optPb}\\
-\text{such that}\;\; & \sum_{i=1}^{N_c} D_i = D, \label{eq:41:eqCstr}\\
-& D_i \geq 0 \qquad \forall i\in\llbracket 1;N_c\rrbracket . \label{eq:41:ineqCstr}
+\underset{D_1,\dots,D_{K}}{\arg\max}\; & \sum_{i=1}^{K} D_i (1 - p)^{S_i + D_i -1}, \label{eq:41:optPb}\\
+\text{such that}\;\; & \sum_{i=1}^{K} D_i = D, \label{eq:41:eqCstr}\\
+& D_i \geq 0 \qquad \forall i\in\llbracket 1;K\rrbracket . \label{eq:41:ineqCstr}
 \end{align}
 \end{subequations}
 
@@ -161,8 +161,8 @@ D_i^*(\lambda) = \left(\frac{1}{\log(1-p)}\left[ \mathcal{W}\left(\frac{\lambda 
 \begin{proof}
 \begin{itemize}
     \item
-    In a realistic scenario, we can assume that $D_i\leq \frac{-2}{\ln\left(1-p\right)} \approx \frac{2}{p},\quad \forall i\in\llbracket 1;N_c \rrbracket$. For such values for $D_i$, the objective function $f: (D_1, \dots, D_{N_c}) \mapsto \sum_{i=1}^{N_c} D_i (1 - p)^{S_i + D_i -1}$ is concave as the sum of concave functions
-    \footnote{It worth noting that $f$ is neither concave nor quasi-concave on $[0,\infty)^{N_c}$ \cite{Luenberger68,Yaari77}.}.
+    In a realistic scenario, we can assume that $D_i\leq \frac{-2}{\ln\left(1-p\right)} \approx \frac{2}{p},\quad \forall i\in\llbracket 1;K \rrbracket$. For such values for $D_i$, the objective function $f: (D_1, \dots, D_{K}) \mapsto \sum_{i=1}^{K} D_i (1 - p)^{S_i + D_i -1}$ is concave as the sum of concave functions
+    \footnote{It worth noting that $f$ is neither concave nor quasi-concave on $[0,\infty)^{K}$ \cite{Luenberger68,Yaari77}.}.
         \item
 The Lagrange multipliers method can be applied to the optimization problem \eqref{eq:41:optPb}, with a concave objective function $f$, linear equality constraints \eqref{eq:41:eqCstr} and linear inequality constraints \eqref{eq:41:ineqCstr}. The strong duality condition is satisfied in this case \cite{BoydVanderberghe04}, so finding the saddle points will be enough to find the maximizers.
     \hfill{}$\square$
@@ -172,14 +172,14 @@ The Lagrange multipliers method can be applied to the optimization problem \eqre
 Where $(a)^{\dag} = \max(a,0)$, and $\mathcal{W}$ denotes the $\mathcal{W}$-Lambert function which is the reciprocal bijection of $x \mapsto xe^x$ on $\mathbb{R^+} = [0, +\infty)$ \cite{Corless96}.
 Moreover, condition \eqref{eq:41:eqCstr} implies that the Lagrange multiplier $\lambda$ is the solution of the constraint
 \begin{equation}\label{eq:41:constraintLambda}
- \sum_{i=1}^{N_c} D_i^*(\lambda) = D.
+ \sum_{i=1}^{K} D_i^*(\lambda) = D.
 \end{equation}
 
 
 Equation \eqref{eq:41:constraintLambda} can be solved numerically, with simple one-dimensional root finding algorithms.
 Solving the optimization problem provides the optimal real number value for $D_i^*$, which has to be rounded to find the optimal number of devices for channel $i$ :
 % Any rounding choice will give about the same repartition, up-to a difference of only one device by channel, and so we chose to round from below for the first channels:
-$\widehat{D_i} = \lfloor D_i^* \rfloor$ for $1 \leq i < N_c$, and $\widehat{D_{N_c}} = D - \sum_{i=1}^{N_c - 1} \widehat{D_i}$.
+$\widehat{D_i} = \lfloor D_i^* \rfloor$ for $1 \leq i < K$, and $\widehat{D_{K}} = D - \sum_{i=1}^{K - 1} \widehat{D_i}$.
 
 \paragraph{A greedy approach of the oracle strategy}
 
@@ -202,7 +202,7 @@ While the stochastic MAB model has been used to describe some aspects of Cogniti
 % \paragraph{Stochastic Multi-Armed Bandits}
 
 % A Multi-Armed Bandit problem is defined as follows \cite{Thompson33,Robbins52,LaiRobbins85}.
-% There is a fixed number $N_c \geq 1$ of levers, or ``arms'', and a player has to choose one lever at each discrete time $t \geq 1, t \in \mathbb{N}$, denoted as $A(t) = k \in\{1,\dots,N_c\}$.
+% There is a fixed number $K \geq 1$ of levers, or ``arms'', and a player has to choose one lever at each discrete time $t \geq 1, t \in \mathbb{N}$, denoted as $A(t) = k \in\{1,\dots,K\}$.
 % Selecting arm $k$ at time $t$ yields a (random) \emph{reward}, $r_k(t) \in \mathbb{R}$, and the goal of the player is to maximize the sum of his rewards, $r_{1 \dots T} = \sum_{t = 1}^T r_{A(t)}(t)$.
 
 % A well-studied version of this problem is the so-called ``stochastic'' MAB, where the sequence of rewards drawn from a given arm $k$ is assumed to be independent and identically distributed (\emph{i.i.d}) under some distribution $\nu_k$, that has a mean $\mu_k$. Several types of reward distributions have been considered, for example distributions that belong to a one-dimensional exponential family (\emph{e.g.}, Gaussian, Exponential, Poisson or Bernoulli distributions).
@@ -289,12 +289,12 @@ More is left on this aspect for our future work.
 % Simulation parameters
 We suppose a network with $S + D = 2000$ end-devices, and one IoT base station.
 Each device sends packets following a Bernoulli process, of probability $p = 10^{-3}$ (\emph{e.g.}, this is realistic: one packet sent about every $20$ minutes, for time slots of $1\mathrm{s}$).
-The RF band is divided in $N_c = 10$ channels.
-Each static device only uses one channel, and their uneven repartition in the $10$ channels is: $(S_1,\cdots, S_{N_c}) = S\times(0.3, \, 0.2, \, 0.1, \, 0.1, \, 0.05, \, 0.05, \, 0.02, \, 0.08, \, 0.01,$ $0.09)$, to keep the same proportions when $S$ decreases. The dynamic devices have access to all the channels, and use learning algorithms.
+The RF band is divided in $K = 10$ channels.
+Each static device only uses one channel, and their uneven repartition in the $10$ channels is: $(S_1,\cdots, S_{K}) = S\times(0.3, \, 0.2, \, 0.1, \, 0.1, \, 0.05, \, 0.05, \, 0.02, \, 0.08, \, 0.01,$ $0.09)$, to keep the same proportions when $S$ decreases. The dynamic devices have access to all the channels, and use learning algorithms.
 %to find the least loaded.
 %
 We simulate the network during $10^6$ discrete time slots, during which each device transmits on average $1000$ packets (\ie, the learning time is about $1000$ steps, for each algorithm).
-We tried similar experiments with other values for $N_c$ and this repartition vector, and results were similar for non-homogeneous repartitions. Clearly, the problem is less interesting for homogeneous repartition, as all channels appear the same for dynamic devices, and so even with $D$ small in comparison to $S$, the system behaves like in Fig.\ref{fig:41:100intelligent}, where the performance of the five approaches are very close.
+We tried similar experiments with other values for $K$ and this repartition vector, and results were similar for non-homogeneous repartitions. Clearly, the problem is less interesting for homogeneous repartition, as all channels appear the same for dynamic devices, and so even with $D$ small in comparison to $S$, the system behaves like in Fig.\ref{fig:41:100intelligent}, where the performance of the five approaches are very close.
 
 Figure \ref{fig:41:from10to100} presents the evolution of the successful transmission rate, as a function of time. %($x$ axis is labeled by hundreds of transmissions). % I will change the x axis
 The two MAB algorithms, \UCB{} and Thompson Sampling (TS), are compared against the naive random policy from below, and the two oracle policies (optimal and greedy) from above.
