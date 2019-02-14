@@ -24,11 +24,35 @@ In this second model, we compare different heuristic, all based on the UCB algor
 
 \TODOL{Write a nice introduction for this chapter.}
 
+
+% ----------------------------------------------------------------------------
+\section{Motivations for Selfish MAB Learning for IoT Networks}
+\label{sec:4:motivations}
+
+Unlicensed bands are more and more used and considered for mobile and LAN communication standards (WiFi, LTE-U), and for Internet of Things (IoT) standards for short-range (ZigBee, Z-Wave, Bluetooth) and long-range (LoRaWAN, SIGFOX, Ingenu, Weightless) communications \cite{Centenaro16}.
+This heavy use of unlicensed bands will cause performance drop, and could even compromise IoT promises.
+
+Efficient Medium Access (MAC) policies allow devices to avoid interfering traffic and can significantly reduce the spectrum contention problem in unlicensed bands.
+As end-devices battery life is a key constraint of IoT networks,
+this leads to IoT protocols using as low signaling overhead as possible and simple ALOHA-based mechanisms.
+%
+In this Section, we analyze the performance of Multi-Armed Bandits (MAB) algorithms, used in combination with a time-frequency slotted ALOHA-based protocol.
+We consider the Upper-Confidence Bound (\UCB) \cite{Auer02}, and the Thompson-Sampling (TS) algorithms \cite{Thompson33,AgrawalGoyal11,
+Kaufmann12Thompson}.
+
+MAB learning has already been proposed in Cognitive Radio (CR) \cite{Haykin05}, and in particular, for sensing-based Dynamic Spectrum Access (DSA) in licensed bands \cite{Jouini10}.
+For example, \cite{Jouini10} presents the OSA setting, and \cite{Maghsudi16} shows how MAB learning can be applied for small cell management in licensed 5G networks.
+Recently, TS and \UCB{} algorithms have been used for improving the spectrum access in (unlicensed) WiFi networks \cite{Toldov16}, and the \UCB{} algorithm was used in a unlicensed and frequency- and time-slotted IoT network \cite{Bonnefoi17}.
+Many recent works show that MAB algorithms work well for real-world radio signal.
+However, even with only one dynamic user using the learning algorithm, the background traffic or the traffic of the other devices is never really stationary or \iid{}.
+In recent works like \cite{Bonnefoi17}, several devices are using bandit algorithms, and the assumptions made by the stochastic bandit algorithms are not satisfied: as several agents learn simultaneously, their behavior is neither stationary nor \iid.
+As far as we know, we provide the first study to confirm robustness of the use of stochastic bandit algorithms for decision making in IoT networks with a large number of intelligent devices in the network, which makes the environment not stationary at all, violating the hypothesis required for mathematical proofs of bandit algorithms convergence and efficiency.
+
+We also present an extension of this model to take into account another aspect of the ALOHA protocol, that is the possibility for dynamic devices to retransmit their packet if the \emph{Ack} was not received.
+
 \TODOL{Present outline of the chapter.}
 
-\TODOL{Give list of publications associated with this chapter.}
-
-
+% \TODOL{Give list of publications associated with this chapter.}
 \paragraph{Publications}
 This Chapter is based on the following publications: \cite{Bonnefoi17,Besson2018ICT,Besson2019WCNC,Bonnefoi2019WCNC}.
 
@@ -67,11 +91,53 @@ This Chapter is based on the following publications: \cite{Bonnefoi17,Besson2018
 
 \TODOL{Write a conclusion, and future works}
 
-\paragraph{Summary}
-In this chapter, we saw...
+\subsection{Summary of the first model}\label{sub:41:conclusion}
 
-\paragraph{Future works}
+In Section~\ref{sec:4:firstModel}, we proposed an evaluation of the performance of MAB learning algorithms in IoT networks,
+with a focus on the convergence of algorithms, in terms of successful transmission rates, when the proportion of intelligent dynamic devices changes.
+Concretely, increasing this probability allows to insert more objects in the same network, while maintaining a good Quality of Service.
+We show that \UCB{} and TS have near-optimal performance, even when their underlying \iid{} assumption is violated by the many ``intelligent'' end-devices.
+
+This is both a surprising and a very encouraging result, showing that application of bandit algorithms tailored for a stochastic model is still useful in broader settings.
+The fully \emph{decentralized} application of classic stochastic MAB algorithms are almost as efficient as the best possible centralized policy in this setting, after a short learning period, even though the dynamic devices \emph{can not} communicate with each others, and \emph{do not} know the system parameters.
+We will investigate this behavior in order to understand it better theoretically.
+We will also experiment more with adversarial algorithms, to confirm that they work less efficiently than stochastic bandit algorithms in our non-stochastic setting.
+
+
+\subsection{Conclusions taken from the demonstration}
+\label{sec:42:conclusionFromDemonstration}
+
+We presented in Section~\ref{sec:4:gnuradio} a demonstration, showed in $2018$ at the ICT conference \cite{Besson2018ICT}, and further detailed in the companion paper \cite{Besson2019WCNC}.
+We gave all the necessary details on both the PHY and the MAC layer, as well as details on the User Interface developed for the demo.
+Results obtained in practice were discussed, to highlight the interest of using learning algorithms for radio online optimization problem, and especially multi-armed bandit learning algorithms.
+%
+By using such low-cost algorithms, we demonstrated empirically that a dynamically reconfigurable object can learn on its own to favor a certain channel, if the environment traffic is not uniform between the $K$ different channels.
+
+
+
+\subsection{Future works}
 Future works include...
+
+
+\paragraph{Possible extensions of the first model}
+%
+The first model presented in Section~\ref{sec:4:firstModel} could easily be generalized with two probabilities $p_S$ and $p_D$, if static and dynamic devices had different transmission pattern, and less easily with one probability per device. Also, other emission pattern could be considered, instead of a Bernoulli process for each user.
+We prefer to consider that all devices have the same probability to transmit to keep the notation as simple as possible.
+
+Moreover, for sake of simplicity we supposed that all devices use the same standard. Our future work will consider more realistic interference scenarios and IoT networks, with, \emph{e.g.}, non-slotted time, more than one base station etc.
+
+Another extension could be to not have a Bernoulli process (or any random process), but a fixed rate of transmission, \emph{e.g.}, one transmission a day.
+So additionally to deciding the channel for communication, each device has to also decide when to communicate.
+This is another direction of research, that we will investigate in the future.
+
+\paragraph{Extensions of the demonstration}
+Possible future extensions of our demonstration include the following points.
+We could consider more dynamic objects (\emph{e.g.}, $100$) but it would either cost more in terms of equipment, or in terms of software engineering to simulation more objects with the same card.
+We could also implement a real-world IoT communication protocol (like the LoRaWAN standard), which we prefer not to do as it would cost a significant effort of development.
+Finally, we could also study the interference in case of other gateways located nearby, and this could be done without needing new hardware.
+%
+% Pub pour notre autre article
+% We are also interested in studying the possible gain of using a learning step when the transmission model follows ALOHA-like retransmissions, and this is presented in the next Section~\ref{sec:4:retransmissions}.
 
 
 % ----------------------------------------------------------------------------
