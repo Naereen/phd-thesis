@@ -42,11 +42,11 @@ Multi-Armed Bandit (MAB) algorithms have been recently proposed as a solution to
 In this paper, we describe the way we implemented a demo where we evaluate MAB algorithms, used in combination with a pure ALOHA-based protocol (such as the ones employed in LPWAN).
 %
 %\todo[inline]{Contributions et interets de la demo}
-% MAB learning has already been proposed in Cognitive Radio (CR) \cite{Haykin}, and in particular, for sensing-based Dynamic Spectrum Access (DSA) in licensed bands \cite{Jouini}.
-% Recently, TS and UCB{} algorithms have been used for improving the spectrum access in (unlicensed) WiFi networks \cite{Toldov}, and the UCB{} algorithm was used in a unlicensed and frequency- and time-slotted IoT network \cite{Bonnefoi}.
+% MAB learning has already been proposed in Cognitive Radio (CR) \cite{Haykin05}, and in particular, for sensing-based Dynamic Spectrum Access (DSA) in licensed bands \cite{Jouini10}.
+% Recently, TS and UCB{} algorithms have been used for improving the spectrum access in (unlicensed) WiFi networks \cite{Toldov16}, and the UCB{} algorithm was used in a unlicensed and frequency- and time-slotted IoT network \cite{Bonnefoi17}.
 % Many recent works show that MAB algorithms work well for real-world radio signal.
 % However, even with only one dynamic user using the learning algorithm, the background traffic or the traffic of the other objects is never really stationary or \emph{i.i.d.} (independent and identically distributed).
-% In recent works like \cite{Bonnefoi}, several objects are using bandit algorithms, and the assumptions made by the stochastic bandit algorithms are not satisfied: as several agents learn simultaneously, their behavior is neither stationary nor \emph{i.i.d.}.
+% In recent works like \cite{Bonnefoi17}, several objects are using bandit algorithms, and the assumptions made by the stochastic bandit algorithms are not satisfied: as several agents learn simultaneously, their behavior is neither stationary nor \emph{i.i.d.}.
 % As far as we know, we provide the first study to confirm robustness of the use of stochastic bandit algorithms for decision making in IoT networks with a large number of intelligent objects in the network, which makes the environment not stationary at all, violating the hypothesis required for mathematical proofs of bandit algorithms convergence and efficiency.
 %
 This demonstration is the first implementation which aims at assessing the potential gain of MAB learning algorithms in IoT scenarios.
@@ -58,8 +58,8 @@ This demonstration is the first implementation which aims at assessing the poten
 % \todo[inline]{(Remi) Si on parle de non stationarity, il faut donner un resultat a deux utilisateurs.}
 Following our recent work presented in the previous Section~\ref{sec:4:firstModel}, we propose to model this problem as Non-Stationary\footnote{~Note that non-stationarity only comes from the presence of more than one dynamic object, as the background traffic is assumed independent and identically distributed \emph{i.i.d.}.} MAB.
 We suggest to use low-cost algorithms, focusing on two well-known algorithms: a frequentist one (\UCB{}) and a Bayesian one (TS).
-We consider the Upper-Confidence Bound (\UCB{}) \cite{Auer}, and the Thompson Sampling (TS) algorithms \cite{Thompson33}. Both algorithms have already been applied with success in the context of wireless decision making, both empirically for Opportunistic Spectrum Access \cite{Jouini},
-and more recently for multi-users Cognitive Radio problems \cite{BessonALT18} with a more theoretical approach.
+We consider the Upper-Confidence Bound (\UCB{}) \cite{Auer02}, and the Thompson Sampling (TS) algorithms \cite{Thompson33}. Both algorithms have already been applied with success in the context of wireless decision making, both empirically for Opportunistic Spectrum Access \cite{Jouini10},
+and more recently for multi-users Cognitive Radio problems \cite{Besson2018ALT} with a more theoretical approach.
 
 We use a TestBed designed in 2017 by our team SCEE \cite{Bodinier17}, containing different USRP boards \cite{USRPDocumentation}, controlled by a single laptop using GNU Radio \cite{GNURadioDocumentation},
 and where the intelligence of each object corresponds to a learning algorithm, implemented as a GNU Radio block \cite{GNURadioCompanionDocumentation} and written in Python or \texttt{C++}.
@@ -122,7 +122,7 @@ The problem parameters $\mu_1,\dots,\mu_K$ are of course unknown to the end-user
 This requires to tackle the so-called \emph{exploration-exploitation dilemma}: a player has to try all arms a sufficient number of times to get a robust estimate of their qualities, while not selecting the worst arms too many times.
 
 % In a Cognitive Radio application, arms model the \emph{channels}, and players are the \emph{dynamic end-devices}.
-% For example in the classical OSA setting with sensing \cite{Jouini}, a single dynamic device (a player) sequentially tries to access channels (the arms), and collects a reward of 1 if the channel is available %(as there is no primary user, we can assume the transmission to be successful),
+% For example in the classical OSA setting with sensing \cite{Jouini10}, a single dynamic device (a player) sequentially tries to access channels (the arms), and collects a reward of 1 if the channel is available %(as there is no primary user, we can assume the transmission to be successful),
 % and 0 otherwise. So rewards represent the \emph{availability} of channels, and
 % the parameter $\mu_k$ represents the mean availability of channel $k$.
 
@@ -155,7 +155,7 @@ which are both known to be efficient for stationary \emph{i.i.d.} rewards and ar
 % giving the upper confidence bound $U_k(t) = \widehat{\mu_k}(t) + B_k(t)$, which is used by the end-user to decide the channel for communicating at time step $t+1$: $C(t+1) = \arg\max_{1\leq k \leq K} U_k(t)$.
 % \UCB{} is called an \emph{index policy}.
 
-The \UCB{} algorithm uses a parameter $\alpha > 0$, originally $\alpha$ was set to $2$ \cite{Auer}, but empirically $\alpha = 1/2$ is known to work better (uniformly across problems), and $\alpha > 1/2$ is advised by the theory \cite{bubeck2012regret}.
+The \UCB{} algorithm uses a parameter $\alpha > 0$, originally $\alpha$ was set to $2$ \cite{Auer02}, but empirically $\alpha = 1/2$ is known to work better (uniformly across problems), and $\alpha > 1/2$ is advised by the theory \cite{Bubeck12}.
 % This algorithm is simple to implement and use in practice, even on embedded micro-processors with limited computation and memory capabilities.
 %
 % \todo[inline]{Maybe in the implementation of UCB the $t$ $\log(t)$ should be the total amount of time the user tried to communicate? It is already the case, but we should say so.}
@@ -173,7 +173,7 @@ For one end-user, the time $t$ is the total number of sent messages from the beg
 % Then, the decision is done by \emph{sampling} an \emph{index} for each arm, at each time step $t$, from the arm posteriors: $X_k(t) \sim \mathrm{Beta}(a_k(t), b_k(t))$, and the chosen channel is simply the channel $C(t+1)$ with highest index $X_k(t)$. For this reason, Thompson Sampling is called a \emph{randomized index policy}.
 
 The TS algorithm, although being simple and easy to implement, is known to perform well for stochastic problems, for which it was proven to be asymptotically optimal \cite{AgrawalGoyal11,Kaufmann12}.
-It is known to be empirically efficient, and for these reasons it has been used successfully in various applications, including on problems from Cognitive Radio \cite{Toldov,Mitton}, and also in previous work on decentralized IoT-like networks \cite{Darak16}.
+It is known to be empirically efficient, and for these reasons it has been used successfully in various applications, including on problems from Cognitive Radio \cite{Toldov16,Mitton16}, and also in previous work on decentralized IoT-like networks \cite{Darak16}.
 
 
 
