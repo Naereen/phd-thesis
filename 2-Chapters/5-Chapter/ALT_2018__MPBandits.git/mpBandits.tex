@@ -1,12 +1,9 @@
 % - ``Multi-Player Bandits Revisited'', see https://hal.inria.fr/hal-01629733
 
-\TODOL{This chapter is basically a raw include from my paper ``Multi-Player Bandits Revisited'', see https://hal.inria.fr/hal-01629733}
-
-
 Multi-player Multi-Armed Bandits (MAB) have been extensively studied in the literature, motivated by applications to Cognitive Radio systems.
-Driven by such applications as well, we motivate the introduction of several levels of feedback for multi-player MAB algorithms. Most existing work assume
-that \emph{sensing information} is available to the algorithm. Under this assumption, we improve the state-of-the-art lower bound for the regret of any decentralized algorithms
-and introduce two algorithms, \RandTopM{} and \MCTopM{}, that are shown to empirically outperform existing algorithms. Moreover, we provide strong theoretical guarantees for these algorithms, including
+Driven by such applications as well, we motivate the introduction of several levels of feedback for multi-player MAB algorithms.
+Existing works assume that \emph{sensing information} is available to the algorithm. Under this assumption, we improve the state-of-the-art lower bound for the regret of any decentralized algorithms of a certain class.
+We introduce two algorithms, \RandTopM{} and \MCTopM{}, that are shown to empirically outperform existing algorithms. Moreover, we provide strong theoretical guarantees for these algorithms, including
 a notion of asymptotic optimality in terms of the number of selections of bad arms.
 We then introduce a promising heuristic, called \Selfish{}, that can operate
 without sensing information, which is crucial for emerging applications to Internet of Things networks. We investigate the empirical performance of this algorithm
@@ -16,32 +13,31 @@ and provide some first theoretical elements for the understanding of its behavio
 
 
 % -----------------------------------------------------------------
-% -----------------------------------------------------------------
-\section{Introduction}
+\section{Motivation for multi-player MAB models}
 \label{sec:5:introduction}
-% the paragraph below may be useful to state in the intro or early in the paper
+% -----------------------------------------------------------------
 
 
-% general intro, UCB
+% % general intro, UCB
 
-Several sequential decision making problems under the constraint of partial information
-have been studied since the 1950s under the name of Multi-Armed Bandit (MAB) problems \citep{Robbins52,LaiRobbins85}.
-In a stochastic MAB model, an agent is facing $K$ unknown probability distributions, called arms in reference to the arms of a one-armed bandit (or slot machine) in a casino.
-Each time she selects (or draws) an arm, she receives a reward drawn from the associated distribution.
-Her goal is to build a sequential selection strategy that maximizes the total reward received.
-A class of algorithms to solve this problem is based on Upper Confidence Bounds (UCB), first proposed by \cite{LaiRobbins85,Agrawal95} and further popularized by \cite{Auer02}.
-The field has been very active since then, with several algorithms proposed and analyzed, both theoretically and empirically, even beyond the stochastic assumption on arms, as explained in the survey by \cite{Bubeck12}.
+% Several sequential decision making problems under the constraint of partial information
+% have been studied since the 1950s under the name of Multi-Armed Bandit (MAB) problems \citep{Robbins52,LaiRobbins85}.
+% In a stochastic MAB model, an agent is facing $K$ unknown probability distributions, called arms in reference to the arms of a one-armed bandit (or slot machine) in a casino.
+% Each time she selects (or draws) an arm, she receives a reward drawn from the associated distribution.
+% Her goal is to build a sequential selection strategy that maximizes the total reward received.
+% A class of algorithms to solve this problem is based on Upper Confidence Bounds (UCB), first proposed by \cite{LaiRobbins85,Agrawal95} and further popularized by \cite{Auer02}.
+% The field has been very active since then, with several algorithms proposed and analyzed, both theoretically and empirically, even beyond the stochastic assumption on arms, as explained in the survey by \cite{Bubeck12}.
 
-% appli, from clinical trials to cognitive radios
+% % appli, from clinical trials to cognitive radios
 
-The initial motivation to study MAB problems arose from clinical trials (the first MAB model can be traced back to $1933$, by \citeauthor{Thompson33}), in which a doctor sequentially allocates treatments (arms) to patients and observes their efficacy (reward).
-More recently, applications of MAB have shifted towards sequential content recommendation, \eg{} sequential display of advertising to customers or A/B testing \citep{Li10,Chapelleetal14Ad}.
-%
-In the mean time, MAB were found to be relevant to the field of Cognitive Radio (CR, \cite{Mitola99}),
-and \cite{Jouini09,Jouini10} first proposed to use \UCB{} for the Opportunistic Spectrum Access (OSA) problem,
-and successfully conducted experiments on real radio networks demonstrating its usefulness.
-For CR applications, each arm models the quality or availability of a radio channel (a frequency band) in which there is some background traffic (\eg, primary users paying to have a guaranteed access to the channel in the case of OSA).
-A smart radio device needs to insert itself in the background traffic, by sequentially choosing a channel to access and try to communicate on, seeking to optimize the quality of its global transmissions.
+% The initial motivation to study MAB problems arose from clinical trials (the first MAB model can be traced back to $1933$, by \citeauthor{Thompson33}), in which a doctor sequentially allocates treatments (arms) to patients and observes their efficacy (reward).
+% More recently, applications of MAB have shifted towards sequential content recommendation, \eg{} sequential display of advertising to customers or A/B testing \citep{Li10,Chapelleetal14Ad}.
+% %
+% In the mean time, MAB were found to be relevant to the field of Cognitive Radio (CR, \cite{Mitola99}),
+% and \cite{Jouini09,Jouini10} first proposed to use \UCB{} for the Opportunistic Spectrum Access (OSA) problem,
+% and successfully conducted experiments on real radio networks demonstrating its usefulness.
+% For CR applications, each arm models the quality or availability of a radio channel (a frequency band) in which there is some background traffic (\eg, primary users paying to have a guaranteed access to the channel in the case of OSA).
+% A smart radio device needs to insert itself in the background traffic, by sequentially choosing a channel to access and try to communicate on, seeking to optimize the quality of its global transmissions.
 
 % the need for multiple players in cognitive radio
 
@@ -83,9 +79,9 @@ Section~\ref{sec:5:experiments}. Theoretical elements are then presented in Sect
 
 
 % -----------------------------------------------------------------
-% -----------------------------------------------------------------
 \section{Multi-Player Bandit Model with Different Feedback Levels}
 \label{sec:5:model}
+% -----------------------------------------------------------------
 
 % describe our stochastic assumptions
 We consider a $K$-armed Bernoulli bandit model, % (for $K\geq2$),
@@ -141,7 +137,7 @@ More precisely, depending on the application, one may consider the following thr
     with a device from the background traffic $(Y_{A^j(t),t}=0)$,
     or to a collision with one of the others players ($C^j(t)$).
     However, the sensing and collision information are censored.
-    Recently, \cite{Bonnefoi17} presented the first (bandit-based) algorithmic solutions under this (harder) feedback model, in a slightly different setup, more suited to large scale IoT applications. %\footnote{\cite{Bonnefoi17} considers a different setting, more suited for large-scale IoT networks, and a future work will be to extend our work to this setting with more than $K$ players but small probability of activations.}.
+    Recently, our work presented in Chapter~\ref{chapter:4} \cite{Bonnefoi17} presented the first (bandit-based) algorithmic solutions under this (harder) feedback model, in a slightly different setup, more suited to large scale IoT applications. %\footnote{\cite{Bonnefoi17} considers a different setting, more suited for large-scale IoT networks, and a future work will be to extend our work to this setting with more than $K$ players but small probability of activations.}.
 \end{itemize}
 \noindent Under each of these three models, we define $\cF^j_t$ to be the filtration generated by the observations gathered by player $j$ up to time $t$ (which contains different information under models \modelun, \modeldeux{} and \modeltrois).
 While a \emph{centralized} algorithm may select the vector of actions for all players $(A^1(t),\dots,A^M(t))$ based on all the observations from $\bigcup_j \cF^j_{t-1}$, under a \emph{decentralized} algorithm the arm selected at time $t$ by player $j$ only depends on the past observation of this player.
@@ -171,9 +167,11 @@ Maximizing the expected sum of global reward of the system is indeed equivalent 
 
 
 % -----------------------------------------------------------------
-% -----------------------------------------------------------------
-\section{An Asymptotic Regret Lower Bound}
+\section{An Asymptotic Regret Lower Bound for a certain class of algorithms}
 \label{sec:5:lowerbound}
+% -----------------------------------------------------------------
+
+\TODOL{Rewrite this to include new knowledge presented in Appendix of \cite{KaufmannAbbas19}.}
 
 In this section, we provide a useful decomposition of the regret (Lemma~\ref{lem:5:DecompositionRegret}) that permits to establish a new problem-dependent lower bound on the regret (Theorem~\ref{thm:5:BetterLowerBound}), and also provides key insights on the derivation of regret upper bounds (Lemma~\ref{lem:5:1stUpperBound}).
 
@@ -305,6 +303,8 @@ for every $M \in \{2,\dots,K\}$ and $\boldsymbol{\mu} \in \cP_M$.
 
 A lower bound on the minimal number of collisions experienced by any strongly uniformly efficient decentralized algorithm would thus be a nice complement to our Theorem~\ref{thm:5:BetterLowerBound}, and it is left as future work.
 
+\TODOL{Rewrite this to include new knowledge presented in Appendix of \cite{KaufmannAbbas19}.}
+
 
 % -----------------------------------------------------------------
 \subsection{Towards Regret Upper Bounds}
@@ -338,9 +338,9 @@ while ensuring that the number of sub-optimal selections is matching the lower b
 
 
 % -----------------------------------------------------------------
-% -----------------------------------------------------------------
 \section{New Algorithms for Multi-Player Bandits}
 \label{sec:5:algorithms}
+% -----------------------------------------------------------------
 
 When sensing is possible, that is under observation models \modelun{} and \modeldeux, most existing strategies build on a \emph{single-player bandit algorithm} (usually an \emph{index policy}) that relies on the sensing information, together with an \emph{orthogonalization strategy} to deal with collisions. We present this approach in more details in Section~\ref{sub:5:RandTopM_and_MCTopM} and introduce two new algorithms of this kind, \RandTopM{} and \MCTopM.
 %
@@ -552,9 +552,9 @@ As such, practitioners may still be interested by the algorithm, especially for 
 
 
 % -----------------------------------------------------------------
-% -----------------------------------------------------------------
 \section{Empirical performances}
 \label{sec:5:experiments}
+% -----------------------------------------------------------------
 
 
 % Select one problems, max two cases ($M=K$ and $M < K$), and illustrate what we want to discuss in plots with regret in normal scale, one with semi-$\log x$ scale, and at least one histogram showing the bad luck for \Selfish...
@@ -565,13 +565,16 @@ As such, practitioners may still be interested by the algorithm, especially for 
 % Put most of them in appendix.
 
 
-We illustrate here the empirical performances of the algorithms presented in Section~\ref{sec:5:algorithms}, used in combination with the \klUCB{} indices. %used with two index policies, \UCB{} and \klUCB.
+We illustrate here the empirical performances of the algorithms presented in Section~\ref{sec:5:algorithms}, used in combination with the \klUCB{} indices.
 Some plots are at pages \pageref{fig:5:MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems} and \pageref{fig:5:MP__K9_M6_T10000_N1000__4_algos} and most of them in Appendix~\ref{app:5:plotsFromSec5}.
-% but observations and conclusions from the experiments are discussed here.
+
+\TODOL{Rewrite appendix to include all simulations here!}
+
+\TODOL{Include here some plots showing \RhoRand{} with \UCB{} and \klUCB{} vs \MCTopM{} with \UCB{} and \klUCB{}.}
 
 In experiments that are not reported here, we could observe that using \klUCB{} rather than \UCB{} indices always yield better practical performance.
 %, as the theoretical guarantees for single player suggested,
-As the prupose of this work is not to optimize on the index policy, but rather propose new ways of using indices in a decentralized setting,
+As the purpose of this work is not to optimize on the index policy, but rather propose new ways of using indices in a decentralized setting,
 % And for some configurations, using a decentralized approach with a more efficient index family (\klUCB{} instead of \UCB) has better performances than the centralized approach.
 we only report results for \klUCB.
 In a first set of experiments, \MCTopM{}, \RandTopM{} and \Selfish{} are benchmarked against the state-of-the-art \RhoRand{} algorithm.
@@ -611,11 +614,11 @@ we verified that \MCTopM{} outperforms the state-of-the-art algorithms in many d
 \begin{figure}[!h]
   \centering
   % \begin{subfigure}[!h]{0.49\textwidth}
-  %   \includegraphics[width=1.10\textwidth]{MP__K9_M2_T5000_N500__4_algos/all_RegretCentralized____env1-1_3251433209347345969.pdf}
+  %   \includegraphics[width=1.00\textwidth]{MP__K9_M2_T5000_N500__4_algos/all_RegretCentralized____env1-1_3251433209347345969.pdf}
   % \end{subfigure}
   % % ~
   % \begin{subfigure}[!h]{0.49\textwidth}
-    \includegraphics[width=0.8\textwidth]{MP__K9_M6_T5000_N500__4_algos/all_RegretCentralized____env1-1_8318947830261751207.pdf}
+    \includegraphics[width=1.00\textwidth]{MP__K9_M6_T5000_N500__4_algos/all_RegretCentralized____env1-1_8318947830261751207.pdf}
   % \end{subfigure}
   \caption[Regret for $M=6$ players, $K=9$ arms, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled]{Regret for $M=6$ players, $K=9$ arms, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled in $[0,1]^K$. \rhoRand{} (top \textcolor{blue}{blue} curve) is outperformed by the other algorithms (and the gain increases with $M$). \MCTopM{} (bottom \textcolor{gold}{yellow}) outperforms all the other algorithms is most cases.}
   % \label{fig:5:MP__K9_M2-6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems}
@@ -658,9 +661,9 @@ can be considered out of the scope of online sequential learning.
 
 
 % -----------------------------------------------------------------
-% -----------------------------------------------------------------
 \section{Theoretical elements}
 \label{sec:5:upperbounds}
+% -----------------------------------------------------------------
 
 
 Section~\ref{sub:5:UpperBoundSelections} gives
@@ -798,9 +801,9 @@ with means $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$, the histograms in Figure~\ref{f
 
 
 % -----------------------------------------------------------------
-% -----------------------------------------------------------------
 \section{Conclusion and future work}
 \label{sec:5:conclusion}
+% -----------------------------------------------------------------
 
 To summarize, we presented three variants of Multi-Player Multi-Arm Bandits,
 with different level of feedback being available to the decentralized players, under which we proposed efficient algorithms.

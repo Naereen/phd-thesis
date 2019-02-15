@@ -1,11 +1,45 @@
 %!TEX root = ../PhD_thesis__Lilian_Besson
 
-% First chapter begins here
-\chapter{Multi-Player Multi-Armed Bandits Models}
+\chapter[Multi-Player Multi-Armed Bandits Models]{Multi-Player Multi-Armed Bandits Models and Algorithms}
 \label{chapter:5}
 \minitoc
 
-Abstract for Chapter 5.
+In this Chapter~\ref{chapter:5}, we are interested in a more formal approach to the decentralized learning problem presented in Chapter~\ref{chapter:4}.
+We consider $M$ identical dynamic IoT devices, communicating with a unique gateway, in $K$ orthogonal channels and in a acknowledgment-based wireless protocol slotted in time.
+A perfect time and frequency synchronization is assumed,
+and some \iid{} background traffic is assumed to be non-uniformly in the $K$ channels.
+As before, if two or more devices decide to use the same channel at the same time, a \emph{collision} arises and none of sent uplink packet can be received by the gateway.
+%
+Such networks can be modelled using a decentralized multi-player multi-armed bandit problem, where arms are channels and players are dynamic IoT devices.
+Unfortunately, it is very hard to formally analyze the IoT network model we presented in Chapter~\ref{chapter:4}, mainly because of the random activation process of all the dynamic learning devices, Even if there is many identical bandit algorithms learning independently and in a decentralized way, the difficulty mainly comes from the fact that all of them are only communicating at some (random) time steps, and at each time step even the number of communicating devices is random and varies a lot.
+
+Mainly for these two reasons, for this Chapter~\ref{chapter:5} we prefer to only consider the easier case of at most $M \leq K$ devices, communicating at each time step.
+Each device will use a Multi-Armed Bandit algorithm, to maximize its number of successful communications, by using the received acknowledgement \Ack{} as a (random) binary reward at each time step.
+%
+We start by reviewing previous works on multi-player MAB models, which all considered the easier case of \emph{sensing feedback}.
+Each time frame is separated as before in a \emph{sensing} phase (during which the device senses for the background traffic),
+an \emph{uplink} phase (during which the device sends a packet to the gateway if it sensed the chosen channel to be free),
+and a \emph{downlink} phase (during which it waits for an \Ack{} from the gateway).
+In this first model, the binary reward is $1$ only if the channel was sensed to be free of background traffic \textbf{and} if \Ack{} was received, and the device has access to both information.
+For this first model, we present two algorithms, \RandTopM{} and \MCTopM, based on the combination of an efficient MAB index policy (we chose \klUCB) and a smart orthogonalization procedure, based on a random hoping procedure called Musical Chair.
+Like in previous works, we consider the centralized system regret (multi-player regret), or simply referred to as regret.
+We start by showing an improved asymptotical regret lower-bound for any algorithm of a certain class, including previous solutions such as \rhoRand{} and our two solutions..
+We then analyze our \MCTopM{} algorithm and we show that its regret upper-bound asymptotically matches the improved lower-bound, with a regret bounded by $\bigO{\log(T)}$ for a game at horizon $T$.
+We also present extensive numerical simulations that show that our proposal outperforms all previous solutions and is much more efficient in this easier model of sensing feedback with a fixed and known number of players $M$ accessing $K \geq M$ channels.
+
+We are also interested to consider the harder model where devices do not have access to the two feedback information (sensing and \Ack) but only have access to the \Ack.
+Our article \cite{Besson2018ALT} was the first to propose this ``no sensing'' model, for which we only proposed an heuristic, the naive \Selfish{} strategy as it was already used in Chapter~\ref{chapter:4}.
+Even if empirical simulations showed that \Selfish-\klUCB{} performs very well, it is a mistake to only consider mean regret, as we find on numerical simulations as well as formal derivation on a simple example of $K=M=2$ that the \Selfish{} heuristic can has a linear regret with a low probability (and so asymptotically it has linear regret and fails to solve the no sensing multi-player MAB problem).
+We did not propose any other efficient algorithm, but our work presented in April~$2018$ inspired some other articles \cite{LugosiMehrabian18,BoursierPerchet18}.
+Two articles confirmed our finding that \Selfish{} has a linear regret, and they all proposed new algorithms.
+We do not include numerical simulations to compare all of them, but we present in details the current state-of-the-art of research on multi-player MAB models without sensing.
+
+Finally, another interesting extension is to consider different channels utility for each devices. It is a very interesting extension of our model, for instance the devices can be located on different parts of a building or a field and suffer from different mean qualities of access to each channels.
+This extension is not studied per say but we quickly review the existing literature \cite{Bistritz18,KaufmannAbbas19} and discuss the possible real-world usage of the existing algorithms.
+
+
+\TODOL{Get bibtex of the article by Sumit J. Darak}
+
 
 \newpage
 % Write miniTOC just after the title
@@ -13,23 +47,19 @@ Abstract for Chapter 5.
 \graphicspath{{2-Chapters/5-Chapter/ALT_2018__MPBandits.git/figures/}}
 
 % ----------------------------------------------------------------------------
-\section{Blabla}
-\label{sec:blabla}
-
-\TODOL{I also need to include additional simulations from the latest research articles, and discussions about the new works that took inspiration in our paper.}
-
-% ----------------------------------------------------------------------------
 \input{2-Chapters/5-Chapter/ALT_2018__MPBandits.git/mpBandits.tex}
 
 
 % ----------------------------------------------------------------------------
-\section{Towards efficient algorithms solving the "no sensing" case}
-\label{sec:5:XXX}
+\section{Literature review of algorithms solving the ``no sensing'' case}
+\label{sec:5:noSensingCase}
+
+\TODOL{I also need to include additional simulations from the latest research articles, and discussions about the new works that took inspiration in our paper.}
 
 
 
 % ----------------------------------------------------------------------------
-\section{Conclusion of Chapter 5}
+\section{Conclusion of Chapter~\ref{chapter:5}}
 \label{sec:5:conclusion}
 
 In this chapter, we saw...
@@ -39,8 +69,10 @@ Future works include...
 
 
 % ----------------------------------------------------------------------------
-\section{Appendix for Chapter 5}
+\section{Appendix for Chapter~\ref{chapter:5}}
 \label{sec:5:appendix}
+
+We include here some missing proofs and additional simulation results for this Chapter.
 
 % ----------------------------------------------------------------------------
 \input{2-Chapters/5-Chapter/ALT_2018__MPBandits.git/mpBandits_appendix.tex}

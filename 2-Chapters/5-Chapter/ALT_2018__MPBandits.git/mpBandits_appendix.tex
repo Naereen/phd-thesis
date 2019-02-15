@@ -102,7 +102,9 @@ Recall that we want to upper bound
 $ (b) : = \sum_{k \in \Mbest} (\mu_k - \mu_{M*}) \left(T - \E_{\mu}[T_k(T)]\right)$.
 First, we observe that, for all $k\in \Mbest$,
 \begin{eqnarray*}
-T - \E_{\mu}[T_k(T)] & \leq & T - \E_{\mu}\left[\sum_{t=1}^T \indic(\exists j : A^j(t) = k)\right] = \E_{\mu}\left[\sum_{t=1}^T \indic(\forall j, A_j(t) \neq k)\right] = \E_{\mu}\left[\sum_{t=1}^T \indic(k \notin \widehat{S}_t)\right],\end{eqnarray*}
+  T - \E_{\mu}[T_k(T)] & \leq T - \E_{\mu}\left[\sum_{t=1}^T \indic(\exists j : A^j(t) = k)\right] \\
+  & = \E_{\mu}\left[\sum_{t=1}^T \indic(\forall j, A_j(t) \neq k)\right] = \E_{\mu}\left[\sum_{t=1}^T \indic(k \notin \widehat{S}_t)\right],
+\end{eqnarray*}
 where we denote by $\widehat{S}_t = \{A^j(t), j \in \{1,\dots,M\}\}$ the set of selected arms at time $t$ (with no repetition). With this notation one can write
 \begin{eqnarray*}
  (b) & \leq & (\mu_1 - \mu_{M^*})  \sum_{k \in \Mbest} \left(T - \E_{\mu}[T_k(T)]\right) \leq  (\mu_1 - \mu_{M^*})  \E_{\mu}\left[\sum_{k \in \Mbest} \sum_{t = 1}^T \indic(k \notin \widehat{S}_t)\right] \\
@@ -119,6 +121,9 @@ and Lemma~\ref{lem:5:1stUpperBound} follows.
 % -----------------------------------------------------------------
 \section{Lower Bound: Proof of Theorem~\ref{thm:5:BetterLowerBound}}
 \label{proof:5:BetterLowerBound}
+
+\TODOL{Rewrite this to include new knowledge presented in Appendix of \cite{KaufmannAbbas19}.}
+
 
 % -----------------------------------------------------------------
 \subsection{Proof of Theorem~\ref{thm:5:BetterLowerBound}}
@@ -215,6 +220,10 @@ where $I_{t-1}^{j'}$ denote the information available to player $j' \neq j$.
 Knowing the information available to all other players player $C_t$ is an almost surely constant random variable, whose distribution is the same under $\mu$ and $\lambda$.
 Hence the inner expectation is zero and so does $\KL\left(\Pr_{\mu}^{C_t | I_{t-1}},\Pr_{\lambda}^{C_t | I_{t-1}}\right)$.
 
+
+\TODOL{This is wrong as explained in \cite{BoursierPerchet18}! Rewrite this to include new knowledge presented in Appendix of \cite{KaufmannAbbas19}.}
+
+
 Putting things together, we showed that
 \[\KL\left(\Pr_{\mu}^{I_t},\Pr_{\lambda}^{I_t}\right) = \KL\left(\Pr_{\mu}^{I_{t-1}},\Pr_{\lambda}^{I_{t-1}}\right) + \E_\mu  \left[\sum_{k=1}^K \indic{(A^j(t)=k)} \kl \left(\mu_{k},\lambda_{k}\right)\right].\]
 Iterating this equality and using that $\KL\left(\Pr_{\mu}^{I_{0}},\Pr_{\lambda}^{I_{0}}\right)=0$ yields that
@@ -226,6 +235,8 @@ for all $A \in \sigma(I_T)$, in particular for all $A \in \cF^j_T$.
 % -----------------------------------------------------------------
 \section{The \RandTopM{} algorithm}
 \label{app:5:RandTopM}
+
+\TODOL{I should include this in the main text, it makes more sense to present RandTopM and then MCTopM !}
 
 We now state precisely the \RandTopM{} algorithm below in Algorithm~\ref{algo:5:RandTopM} (page \pageref{algo:5:RandTopM}).
 It is essentially the same algorithm as \MCTopM,
@@ -486,7 +497,8 @@ Finally, we use that the length of a sequence of consecutive transitions $(2)$ i
 with explicit constants depending on $\boldsymbol{\mu}$ and $M$.
 
 \begin{figure}[h!]
-  \begin{tikzpicture}[>=latex',line join=bevel,scale=3.8]
+  \resizebox{0.98\textwidth}{!}{
+  \begin{tikzpicture}[>=latex',line join=bevel,scale=5]
       %
       \node (start) at (1.5,0.30) {$(0)$ Start $t=0$};
       \node (notfixed) at (1,0) [draw,rectangle,thick] {Not fixed, $\overline{s^j(t)}$};
@@ -500,6 +512,7 @@ with explicit constants depending on $\boldsymbol{\mu}$ and $M$.
       \draw [color=red,thick,->] (fixed) to[bend right] node[midway,below,text centered,black] {\small $(5)$  $A^j(t) \notin \TopM(t)$} (notfixed);
       %
   \end{tikzpicture}
+  }
   \caption[``State-machine'' representation of \MCTopM]{Player $j$ using \MCTopM, represented as ``state machine'' with $5$ transitions.
   Taking one of the five transitions means playing one round of the Algorithm~\ref{algo:5:MCTopM}, to decide $A^j(t+1)$ using information of previous steps.}
   \label{fig:5:StateMachineAlgorithm_MCTopM}
@@ -699,6 +712,7 @@ and optimal for the term \ref{eq:5:term1}.
 \section{Additional Discussions on \Selfish}
 \label{app:5:SelfishFails}
 
+\TODOL{Maybe we can completely remove this, and just points to the paper \cite{Besson2018ALT}?}
 
 % OBSERVATION
 % Empirically it works fine in average of regrets on lots of simulations, but on worst case regret (or in a histogram) we can see it does not have a logarithmic average regret
@@ -758,7 +772,7 @@ and so two players colliding in such a setting will continue to do so infinitely
 we denote such configurations as \emph{absorbing}.
 
 We wrote a script
-\footnote{\url{banditslilian.gforge.inria.fr/docs/complete_tree_exploration_for_MP_bandits.html}}
+\footnote{~See online \texttt{\url{smpybandits.github.io/docs/complete_tree_exploration_for_MP_bandits.html}}}
 that explores formally all the possible runs,
 up-to a certain small time horizon,
 by exploring the complete \emph{game tree},
@@ -828,6 +842,7 @@ as well as some additional numerical results.
 \subsection{Illustration of the lower bound}
 \label{app:5:illustrationLowerBound}
 
+\TODOL{Maybe we can not include this part and just points to the paper \cite{Besson2018ALT}?}
 
 We proved in Theorem~\ref{thm:5:BetterLowerBound} that the normalized regret, \ie, $R_T$ divided by
 $\log T$, is asymptotically lower bounded by a constant $\mathrm{LB}(\boldsymbol{\mu}, M)$
