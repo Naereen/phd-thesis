@@ -8,14 +8,15 @@ from SMPyBandits.Environment import Evaluator
 configuration['showplot'] = True
 evaluation = Evaluator(configuration)
 
-# Start the evaluation and then print final ranking and plot, for each environment
+# Start the evaluation and then print final ranking
+# and do and show plot, for each environment
 for envId, env in enumerate(evaluation.envs):
     # Evaluate just that env
     evaluation.startOneEnv(envId, env)
 
 # Compare them
 for envId, env in enumerate(evaluation.envs):
-    evaluation.plotHistoryOfMeans(envId)  # XXX To plot without saving
+    evaluation.plotHistoryOfMeans(envId)
 
     print("\nGiving all the vector of final regrets ...")
     evaluation.printLastRegrets(envId)
@@ -39,7 +40,7 @@ for envId, env in enumerate(evaluation.envs):
     print("\n\n- Plotting the regret...")
     evaluation.plotRegrets(envId)
 
-    print("\n- Plotting the probability of picking the best arm of time...")
+    print("\n- Plotting the probability of picking the best arm...")
     evaluation.plotBestArmPulls(envId)
 
     print("\n- Plotting the histograms of regrets...")
