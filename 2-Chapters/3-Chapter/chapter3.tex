@@ -96,12 +96,12 @@ SMPyBandits implements all collision models found in the literature (in the modu
 %
 It includes
 \texttt{rhoRand} (\texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html}{PoliciesMultiPlayers.rhoRand}}) from \cite{Anandkumar11},
-\texttt{MEGA} (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html}{Policies.MEGA}}) \cite{Avner15},
+\texttt{MEGA} (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html}{Policies.MEGA}}) from \cite{Avner15},
 \texttt{MusicalChair} (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html}{Policies.MusicalChair}}) from \cite{Rosenski16},
 and our state-of-the-art algorithms
 \texttt{RandTopM} (\texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html}{PoliciesMultiPlayers.RandTopM}}) and
 \texttt{MCTopM} (\texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{PoliciesMultiPlayers.MCTopM}}) from \cite{Besson2018ALT}.
-For comparison, realistic or full-knowledge centralized algorithms are also implemented.
+For comparison, realistic (\eg, \UCB{} for multiple play) or full-knowledge centralized algorithms are also implemented.
 
 Any simulation library targeting multi-player bandit problems must implement at least another component:
 a collision model, and a simulation loop that essentially looks like this.
@@ -184,6 +184,7 @@ It takes about $20$ minutes, on a standard $4$-cores $64$ bits GNU/Linux laptop.
 Using environment variables (\texttt{N=1000} etc) in the command line is not required, but it is convenient:
 
 % https://tex.stackexchange.com/a/12430/
+\begin{small}
 \begin{listing}[h!]
     \begin{minted}[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{bash}
 # 3. run a single-player simulation
@@ -195,6 +196,7 @@ python3 main.py configuration.py
     % \captionof{listing}{Small snippet of Bash to run a simple experiment with SMPyBandits \label{lst:3:howToRunBasicLibrary}.}
     \label{lst:3:howToRunBasicLibrary}
 \end{listing}
+\end{small}
 
 
 \subsection{Example of a simulation and illustration}
@@ -204,6 +206,7 @@ Choosing the algorithms is easy by customizing the \texttt{configuration["polici
 For instance, one can compare the standard anytime \klUCB{} algorithm (class \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.klUCB.html}{Policies.klUCB}}) against the non-anytime variant $\klUCB^{++}$ algorithm (class \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.klUCBPlusPlus.html}{Policies.klUCBPlusPlus}}), and also \UCB{} with $\alpha=1$ (class \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.UCBalpha.html}{Policies.UCB}}) and Thompson sampling (class \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Thompson.html}{Policies.Thompson}}) with a Beta posterior (class \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Posterior.Beta.html}{Policies.Posterior.Beta}})).
 
 % https://tex.stackexchange.com/a/12430/
+\begin{small}
 \begin{listing}[h!]
     \begin{minted}[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{python3}
 configuration["policies"] = [
@@ -217,8 +220,9 @@ configuration["policies"] = [
     % \captionof{listing}{Small snippet of Python code to configure the list of algorithms tested on a problem. \label{lst:3:howToConfigureAlgorithms}.}
     \label{lst:3:howToConfigureAlgorithms}
 \end{listing}
+\end{small}
 
-Running the simulation as shown above will save figures in a sub-folder, as well as save data (pulls, rewards and regret) in a HDF5 file (\cite{h5py}, \texttt{\href{http://docs.h5py.org/en/stable/high/file.html}{docs.h5py.org/en/stable/high/file.html}})\footnote{~For example, this simulation produces this HDF5 file \texttt{\href{https://github.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5}{GitHub.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5}}.}.
+Running the simulation as shown above will save figures in a sub-folder, as well as save data (pulls, rewards and regret) in a HDF5 file (\cite{h5py}, \texttt{\href{http://docs.h5py.org/en/stable/high/file.html}{docs.h5py.org/en/stable/high/file.html}})\footnote{~For example, this simulation produces this HDF5 file\\\texttt{\href{https://github.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5}{GitHub.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5}}}.
 Figure~\ref{fig:3:firstPlot} below shows the average regret for these $4$ algorithms.
 The regret is the difference between the cumulated rewards of the best fixed-armed strategy (which is the oracle strategy for stationary bandits), and the cumulated rewards of the considered algorithms.
 The Figure~\ref{fig:3:firstPlot_hist} shows the histogram of regret for the same experiment.
@@ -257,7 +261,7 @@ In \cite{Besson2018WCNC} (see Chapter~\ref{chapter:2}), we used SMPyBandits to i
 
 - For \cite{Besson2018ALT} (see Chapter~\ref{chapter:5}), we used SMPyBandits for all the simulations for multi-player bandit algorithms\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/MultiPlayers.html}{SMPyBandits.GitHub.io/MultiPlayers.html}} on the documentation.}. We designed the two \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html}{RandTopM}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{MCTopM}} algorithms and proved than they enjoy logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (\ie, \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html}{rhoRand}}, \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html}{MEGA}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html}{MusicalChair}}).
 
-In \cite{Besson2018DoublingTricks}, we used SMPyBandits to illustrate and compare different "doubling trick" schemes\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/DoublingTrick.html}{SMPyBandits.GitHub.io/DoublingTrick.html}} on the documentation.}. In sequential learning, an algorithm is anytime if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any non-anytime algorithm to an anytime variant is the "Doubling Trick": start with an horizon $T_0\in\mathbb{N}^$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to conserve minimax regret bounds (in $R_T = \mathcal{O}(\sqrt{T})$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to conserve a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to conserve logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can conserve minimax bounds, or "weak" minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
+In \cite{Besson2018DoublingTricks}, we used SMPyBandits to illustrate and compare different "doubling trick" schemes\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/DoublingTrick.html}{SMPyBandits.GitHub.io/DoublingTrick.html}} on the documentation.}. In sequential learning, an algorithm is anytime if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any non-anytime algorithm to an anytime variant is the ``Doubling Trick'': start with an horizon $T_0\in\mathbb{N}^*$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to conserve minimax regret bounds (in $R_T = \mathcal{O}(\sqrt{T})$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to conserve a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to conserve logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can conserve minimax bounds, or "weak" minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
 
 In \cite{Besson2019GLRT} (see Chapter~\ref{chapter:6}), we used SMPyBandits for piece-wise stationary MAB models (single-player). We illustrate and compare different algorithms designed for this family of non-stationary problems\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/NonStationary.html}{SMPyBandits.GitHub.io/NonStationary.html}} on the documentation.}. XXX
 
@@ -327,14 +331,14 @@ The UCB algorithm obtains here a mean reward = 0.886
 \end{verbatim}
 
 % https://tex.stackexchange.com/a/12430/
-% \begin{small}
+\begin{small}
 % \begin{listing}[h!]
     \inputminted[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{python3}{2-Chapters/3-Chapter/src/example_of_use_of_SMPyBandits.py}
     % \caption{Small example of \texttt{main.py} file}
     \captionof{listing}{Example of use of SMPyBandits\label{lst:3:exampleOfUse}.}
     % \label{lst:3:exampleOfUse}
 % \end{listing}
-% \end{small}
+\end{small}
 
 
 \subsection{A minimalist \texttt{main.py} file}
@@ -343,12 +347,14 @@ We present below in Listing~\ref{lst:3:main} a full example of a minimalist \tex
 which is used to load the configuration, run the experiment and then print and plot various visualizations for the simulation.
 
 % https://tex.stackexchange.com/a/12430/
+\begin{small}
 % \begin{listing}[h!]
     \inputminted[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{python3}{2-Chapters/3-Chapter/src/example_of_main_singleplayer.py}
     % \caption{Small example of \texttt{main.py} file}
     \captionof{listing}{Small example of \texttt{main.py} file\label{lst:3:main}.}
     % \label{lst:3:main}
 % \end{listing}
+\end{small}
 
 
 \subsection{A minimalist \texttt{configuration.py} file}
@@ -373,12 +379,14 @@ $ T=50000 N=100 K=10 ARM_TYPE=Gaussian python main.py
 \end{listing}
 
 % https://tex.stackexchange.com/a/12430/
+\begin{small}
 % \begin{listing}[h!]
     \inputminted[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{python3}{2-Chapters/3-Chapter/src/example_of_configuration_singleplayer.py}
     % \caption{Small example of \texttt{configuration.py} file}
     \captionof{listing}{Small example of \texttt{configuration.py} file\label{lst:3:configuration}.}
     % \label{lst:3:configuration}
 % \end{listing}
+\end{small}
 
 
 \subsection{Using multi-core to speed-up simulations}
