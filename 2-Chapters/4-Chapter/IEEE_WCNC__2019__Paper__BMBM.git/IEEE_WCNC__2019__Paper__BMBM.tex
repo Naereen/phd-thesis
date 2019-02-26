@@ -1,4 +1,4 @@
-% https://perso.crans.org/besson/articles/BMBM__IEEE_WCNC_2019.pdf
+% - ``Upper-Confidence Bound for Channel Selection in LPWA Networks with Retransmissions'', see  https://hal.inria.fr/hal-02049824
 
 \graphicspath{{2-Chapters/4-Chapter/IEEE_WCNC__2019__Paper__BMBM.git/}}
 
@@ -10,15 +10,16 @@ For that end, several heuristics employing \UCB{} algorithms are examined, to ex
 Our results show that approaches based on \UCB{} obtain a significant improvement in terms of successful transmission probabilities, compared to a naive approach which does not learn.
 Furthermore, it also reveals that a pure \UCB{} channel access is as efficient as more sophisticated learning strategies.
 
-% \TODOL{This Section is based on the publication ``Upper-Confidence Bound for Channel Selection in LPWA Networks with Retransmissions'', see \texttt{https://perso.crans.org/besson/articles/BMBM\_\_IEEE\_WCNC\_2019.pdf}}
+% \TODOL{This Section is based on the publication ``Upper-Confidence Bound for Channel Selection in LPWA Networks with Retransmissions'', see \texttt{https://hal.inria.fr/hal-02049824}}
 
-\TODOL{TODO:
+% \TODOL{TODO:
 
-- Include the modifications suggested by the reviewers of our paper!
-- Be sure to not repeat any motivations / maths / explanations given before
-}
+% - Include the modifications suggested by the reviewers of our paper!
+% - Be sure to not repeat any motivations / maths / explanations given before
+% }
 
 % https://edas.info/showPaper.php?m=1570524364
+% https://hal.inria.fr/hal-02049824
 
 
 % ----------------------------------------------------------------------
@@ -48,7 +49,7 @@ The contributions of this Section are summarized as follows:
 	By doing this, we highlight the need to develop a learning approach for channel selection upon collision.
 
 	\item
-	Secondly, several heuristics are proposed to cope with retransmissions.
+	Secondly, different heuristics are proposed to cope with retransmissions.
 
 	\item Lastly, we conduct simulations in order to compare the performance of the proposed heuristics with a naive uniform random approach, and a \UCB{} strategy (\ie, without any learning for the retransmissions).
 \end{itemize}
@@ -61,7 +62,7 @@ First the system model is introduced in Section~\ref{sub:43:model},
 % A formal description of the MAB learning algorithms is given in Section~\ref{sub:43:motivations},
 and our motivations are exposed in Section~\ref{sub:43:MABalgo}.
 The proposed \UCB-based heuristics are presented in Section~\ref{sub:43:heuristics}, while the corresponding numerical results are shown in Section~\ref{sub:43:numExp}.
-Finally, some conclusions are drawn in Section~\ref{sub:43:conclusion}.
+Finally, some conclusions are drawn later in Section~\ref{sub:43:conclusion}.
 
 
 % ----------------------------------------------------------------------
@@ -75,11 +76,12 @@ Finally, some conclusions are drawn in Section~\ref{sub:43:conclusion}.
 Like before in this chapter, we consider an LPWA network composed of a gateway and a large number of end-devices that regularly send short data packets, where $K$ channels ($K>1$) are available for the transmission of their packets.
 %
 We assume that this network is constituted by two types of devices:
-on the one hand, we have \emph{static} devices that operate in one channel\footnote{~Note that, for unlicensed bands, this definition also encompasses any device following a different standard or trying to establish communication with gateways of other networks.} in order to communicate with the gateway.
+on one hand, we have \emph{static} devices that operate in one channel\footnote{~Note that, for unlicensed bands, this definition also encompasses any device following a different standard or trying to establish communication with gateways of other networks.} in order to communicate with the gateway.
 %
 On the other hand, there are  IoT devices, that possess the additional advantage of being able to select any of the $K$ available channels to perform their transmissions.
 
-Regardless the type of devices, each of them follows a slotted ALOHA protocol \cite{Roberts75}, and has a probability $p>0$ to transmit a packet in a time slot.
+Like in the previous model presented in Section~\ref{sec:4:firstModel},
+regardless the type of devices, each of them follows a slotted ALOHA protocol \cite{Roberts75}, and has a probability $p>0$ to transmit a packet in a time slot.
 We make the hypothesis that the transmission is successful if the channel is available, otherwise upon radio collision, these devices will attempt to retransmit their packet up-to $M$ times, with $M \in\mathbb{N}$.
 Note that, every retransmission is carried out after a random back-off time, uniformly distributed in $\llbracket 0, m-1 \rrbracket$, where $m \in\mathbb{N}, m>0$ is the length of the back-off interval.
 
@@ -88,11 +90,12 @@ Note that, every retransmission is carried out after a random back-off time, uni
 \paragraph{Model of our IoT devices}
 
 The aforementioned contention process can be described by a Markov chain model \cite{Norris98} similar to the one presented in \cite{Yang12}, as it is depicted in Fig.~\ref{fig:43:Markov_model}.
-A device containing a packet for transmission goes from an idle state to a transmission state, while considering retransmissions due to different collision probabilities, \ie, $\{p_{c}, p_{c1}, \dots, p_{M-2} \}$, at each $M$ back-off stage.
+When a device have a packet to transmit, it goes from an idle state to a transmission state, while considering retransmissions due to different collision probabilities, \ie, $\{p_{c}, p_{c1}, \dots, p_{M-2} \}$, at each $M$ back-off stage.
 At each time slot, a transition from an idle state to a transmission state (denoted as \texttt{Trans.}) occurs if a packet transmission is required, while waiting states (denoted as \texttt{Wait}), correspond to a $m$ back-off interval.
 
-A device aims to select a channel with the highest probability of a successful transmission, for which it resorts to a reinforcement learning approach. It is formulated as MAB problem, where each channel (also called arms) is viewed as a gambling machine (bandit), and each bandit has a \emph{reward}. Then, at every trial, a device chooses a channel that maximizes the sum of the collected rewards. These \emph{rewards} are the \emph{acknowledgment} (\emph{Ack}) signals received after transmitting packets to the gateway. In this way, a transmission is considered successful when an acknowledgment is received, and a learning approach is employed to select the best channel.
-
+A device aims to select a channel with the highest probability of a successful transmission, for which it resorts to a reinforcement learning approach, formulated as a MAB problem.
+% , where each channel (also called arms) is viewed as a gambling machine (bandit), and each bandit has a \emph{reward}. Then, at every trial, a device chooses a channel that maximizes the sum of the collected rewards. These \emph{rewards} are the \emph{acknowledgment} (\emph{Ack}) signals received after transmitting packets to the gateway. In this way, a transmission is considered successful when an acknowledgment is received, and a learning approach is employed to select the best channel.
+%
 We address the problem of channel selection taking into account the described Markov model for the retransmissions of end-devices.
 % It motivates our present work for which we consider the retransmissions in the analysis of MAB algorithms.
 It motivates our present work for which we consider the number of retransmissions, carried out by each device to address several MAB algorithms.
@@ -149,7 +152,7 @@ We consider $N$ active devices following the same policy.
 We assume to be in the steady state \cite{Norris98}, in our Markov chain model depicted in Figure~\ref{fig:43:Markov_model}, and thus the probabilities no longer depend on the slot number $t$ (\ie, $\forall t, x_t=x$).
 Therefore, the probability that this device has a collision at the first transmission is $p_c$, and has the following expression
 \begin{equation}\label{eq:43:1}
-	p_c = 1-\left(1-x_t\right)^{N-1} \iff x_t = 1-\left(1-p_c\right)^{\frac{1}{N-1}}.
+	p_c = 1-\left(1-x\right)^{N-1} \iff x = 1-\left(1-p_c\right)^{\frac{1}{N-1}}.
 \end{equation}
 
 Moreover, from \eqref{eq:43:1} we define the probability $p_{cp}(n)$ that involves the collision of $n$ packets sent by each IoT device (for any $1\leq n \leq N-1$), during the first transmission slot, and is defined by the following equation
@@ -235,7 +238,7 @@ We interpret this fact in two different situations.
 \end{itemize}
 
 
-\TODOL{Remove this part or compress}
+\TODOL{Remove this part or compress: I will remove as soon as I have clear equations in Chapter~\ref{chapter:2} as references for the \UCB{} algorithm.}
 
 %-----------------------------------------------------------------
 \subsection{The \UCB{} algorithm as a building block for different heuristics}
@@ -365,7 +368,7 @@ related to the \UCB{} algorithm employed for the retransmission.
 			\uIf{First packet transmission}{
 				Use first-stage \UCB. %as in Algorithm~\ref{algo:43:UCB}.
 			}
-			\Else(\tcp*[f]{Packet retransmission}){
+			\Else(\tcp*[f]{Packet retransmission with $\mathrm{UCB}^r$}){
 				Compute for each channel $U^r_k(t) = \widehat{\mu^r_k}(t) + B^r_k(t)$ following Eqs.~\eqref{eq:43:Nkt},~\eqref{eq:43:mukt}, and~\eqref{eq:43:Bkt}\;
 				Transmit in channel $C^r(t) = \arg\max_{1\leq k \leq K} U^r_k(t)$\;
 				Reward $r^r_{C^r(t)}(t) = 1$, if \emph{Ack} is received, else $0$\;
@@ -386,10 +389,10 @@ Meaning that after a failed first transmission in channel $j$, the device relies
 The corresponding algorithm is depicted in Algorithm~\ref{algo:43:UCBthenKp1}.
 Each of these algorithms are denoted using the subscript $({}^{j})$, for $j\in\llbracket 1, K \rrbracket$.
 
-Although, this approach increases the complexity and store requirements (of order $\mathcal{O}(K^2)$).
+Although, this approach increases the complexity and storage requirements (of order $\mathcal{O}(K^2)$).
 For our LPWA networks of interest, such as LoRaWAN, the cost of its implementation is still affordable, since a small number of channels is used.
 For instance, for $K=4$ channels,
-the memory to store $K+1=5$ algorithms is of the order of the requirements to storing one.
+the memory to store $K+1=5$ algorithms is of the order of the requirements to store one.
 
 Note that for other networks this heuristic could not be practical, for instance Sigfox consist in a large number of very narrow-band channels.
 The storage requirements and time complexity is now quadratic in $K$, and as such we no longer consider this heuristic to be a practical proposal in some LPWA networks, as for instance Sigfox networks consist in a large number of very narrow-band channels. But for LoRaWAN networks with $K=4$, storing $K+1=5$ algorithms does not cost much more than storing $2$.
@@ -406,7 +409,7 @@ The storage requirements and time complexity is now quadratic in $K$, and as suc
 				\uIf{First packet transmission}{
 					Use first-stage \UCB. %as in Algorithm~\ref{algo:43:UCB}.
 				}
-				\Else(\tcp*[f]{Packet retransmission}){ % Retr. after trying channel $j$
+				\Else(\tcp*[f]{Packet retransmission with $\mathrm{UCB}^j$}){ % Retr. after trying channel $j$
 					j $\leftarrow$ last channel selected by first-stage \UCB\;
 					Compute for each channel $U_k^j(t) = \widehat{\mu_k}^j(t) + B_k^j(t)$ following Eqs.~\eqref{eq:43:Nkt},~\eqref{eq:43:mukt}, and~\eqref{eq:43:Bkt}\;
 					Transmit in channel $C^j(t) = \arg\max_{1\leq k \leq K} U^j_k(t)$\;
@@ -447,7 +450,7 @@ related to the delayed second-stage \UCB{} algorithm.
 				\uIf{First packet transmission}{
 			 		Use first-stage \UCB. %as in Algorithm~\ref{algo:43:UCB}.
 				}
-				\uElseIf(\tcp*[f]{Random retransmission}){$t \leq \Delta$}{
+				\uElseIf(\tcp*[f]{Random retransmission with $\mathrm{UCB}^d$}){$t \leq \Delta$}{
 					Transmit randomly in a channel $C(t) \sim \mathcal{U}(1,\ldots,K)$.
 				}
 				\Else(\tcp*[f]{Delayed \UCB{}}){
@@ -465,14 +468,14 @@ related to the delayed second-stage \UCB{} algorithm.
 
 
 % ----------------------------------------------------------------------
-\subsection{Simulations to compare our heuristics}
+\subsection{Numerical results}
 \label{sub:43:numExp}
 % ----------------------------------------------------------------------
 
 We simulate our network considering $N$ devices following the contention Markov process described in Section \ref{sub:43:model}, and a LoRa standard with $K=4$ channels.
 Each device is set to transmit with a fixed probability $p=10^{-3}$, \ie, a packet about every $20$ minutes for time slots of $1\;\mathrm{s}$.
 %
-For the evaluation of the proposed heuristics, a total number of $T=10^{6}$ time slots is considered, and the results are averaged over $10^{3}$ independent random simulations.
+For the evaluation of the proposed heuristics, a total number of $T=20 \times 10^4$ time slots is considered, and the results are averaged over $10^{3}$ independent random simulations.
 %In this way, it allows us to evaluate the learning rate, as well as the convergence of each learning approach.
 
 In a first scenario, we consider a total number of $N=1000$ IoT devices, with a non-uniform repartition of static devices given by $10\%,30\%,30\%,30\%$ for the four channels.
@@ -501,9 +504,7 @@ The corresponding results are depicted in Fig.~\ref{fig:43:mainExperiment2}.
 In this case the successful transmission rate is degraded compared with achieved results in Fig.~\ref{fig:43:mainExperiment1}, this can be explained with the fact that we are considering in our network more devices that increase the collision probability.
 It is important to highlight,that the ``Random" retransmission heuristic shows a poor performance in comparison to the other heuristics, and it can be attributed to the fact that the number of retransmission is increased, and consequently a
 learning approach is able to take advantage of it.
-Furthermore, the ``Delayed \UCB'' and  the``\UCB'' heuristics show quite similar results, after converging.
-%
-%Random, \UCB{}, $K$ \UCB{}, Delayed \UCB{} obtain similar results. The less efficient one is the $K$ \UCB{}, and this makes sense as having more learning algorithm needs more for each of them to learn. The most efficient one is the simple \UCB{} procedure, and this was quite surprising.
+Furthermore, the ``\UCB'', ``$K$ \UCB'' and ``Delayed \UCB'' heuristics behave similarly than ``Only \UCB'', after a similar convergence time.
 
 \begin{figure}[h!]  % [htbp]
 	\centering
