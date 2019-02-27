@@ -1,31 +1,35 @@
 %!TEX root = ../PhD_thesis__Lilian_Besson
 
 % ----------------------------------------------------------------------
-\chapter{More Efficient Spectrum Usage of IoT Networks with Selfish MAB Learning}
+\chapter{Improving Spectrum Usage of IoT Networks with Selfish MAB Learning}
 \label{chapter:4}
 \minitoc
 % ----------------------------------------------------------------------
+
+\paragraph{Abstract}
 
 In this Chapter~\ref{chapter:4}, we present two models of Internet of Things networks, composed of many independent devices that are able to run MAB algorithm to learn and improve their access to the network.
 The two models are presented mathematically, and numerical simulations justify the interest of the proposed algorithms.
 We also present a proof-of-concept real-world validation of the advantage of using Multi-Armed Bandit algorithms for the first model, by showing and explaining a demonstration implemented on USRP cards \cite{USRPDocumentation}.
 
 More precisely, on one hand, we start by motivating this idea of independent ``selfish'' learning for IoT devices in Section~\ref{sec:4:motivations}.
-We then present in Section~\ref{sec:4:firstModel} a model where independent devices use an IoT network composed of different channels, used by static devices.
-Devices do not use any sensing, but use acknowledgements sent by the Base Station to know if their communication messages were successfully received.
+We then present in Section~\ref{sec:4:firstModel} a model where independent devices use an IoT network composed of different channels, occupied by static devices.
+Devices do not use any sensing, but use acknowledgements sent by the Base Station to know if their uplink messages were successfully received.
 We consider the case when many independent ``dynamic'' devices all have a small probability of communicating at every discrete time. If they use simple MAB algorithms in a decentralized and independent fashion (what we call ``selfish'' learning),
-we show in simulations that in the case of non-uniform repartition of static devices in the channels, the dynamic devices can improve a lot the network efficiency.
+we show in simulations that in the case of a non-uniform repartition of the static devices in the channels, the dynamic devices can drastically improve the network efficiency.
 %
 On a simple example, we present in Section~\ref{sec:4:gnuradio} a demonstration that implements and validates the proposed approach, using real radio hardware.
 
-On the other hand, we present in Section~\ref{sec:4:retransmissions} a second model extending the first one, when devices can retransmit their messages for a fixed number of maximum retransmission (like in the ALOHA protocol).
+On the other hand, we present in Section~\ref{sec:4:retransmissions} a second model extending our first model, when devices can retransmit their messages for a fixed number of maximum retransmission (like in the ALOHA protocol).
 In this second model, we compare five different heuristics, all based on the UCB algorithm, and numerical simulation show that all the non-naive heuristics succeed in significantly improving the network efficiency.
 Interestingly, the simpler heuristic is found to be the most efficient one, as its simplicity implies a faster learning and convergence time.
 
 
+\vfill{}
+
 \paragraph{Publications}
 
-This Chapter is based on the following publications: \cite{Bonnefoi17,Besson2018ICT,Besson2019WCNC,Bonnefoi2019WCNC}.
+This Chapter is mainly based on the following publications: \cite{Bonnefoi17,Besson2018ICT,Besson2019WCNC,Bonnefoi2019WCNC}.
 
 \newpage
 % Write miniTOC just after the title
@@ -37,7 +41,8 @@ This Chapter is based on the following publications: \cite{Bonnefoi17,Besson2018
 \label{sec:4:motivations}
 % ----------------------------------------------------------------------
 
-Unlicensed bands are more and more used and considered for mobile and LAN communication standards (WiFi, LTE-U), and for Internet of Things (IoT) standards for short-range (ZigBee, Z-Wave, Bluetooth) and long-range (LoRaWAN, SIGFOX, Ingenu, Weightless) communications \cite{Centenaro16}.
+We already explained in Chapter~\ref{chapter:1} that
+unlicensed bands are more and more used and considered for mobile and LAN communication standards (WiFi, LTE-U), and for Internet of Things (IoT) standards for short-range (ZigBee, Z-Wave, Bluetooth) and long-range (LoRaWAN, SIGFOX, Ingenu, Weightless) communications \cite{Centenaro16}.
 This heavy use of unlicensed bands will cause performance drop, and could even compromise IoT promises.
 
 Efficient Medium Access (MAC) policies allow devices to avoid interfering traffic and can significantly reduce the spectrum contention problem in unlicensed bands.

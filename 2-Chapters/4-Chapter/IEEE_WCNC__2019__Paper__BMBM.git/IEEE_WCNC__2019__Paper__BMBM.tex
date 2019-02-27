@@ -132,15 +132,13 @@ To do so, we study the collision probabilities considering the Markov process de
 As it is well known, having a collision during an access time can be overcome by a retransmission procedure (this can take several retransmission attempts).
 What interest us here, is to obtain a mathematical approximation of the collision probability at the second transmission slot $p_{c1}$, as a function of the first collision probability $p_{c}$.
 
-We consider two hypotheses $\cH_{1}$ and $\cH_{2}$ defined as,
+We consider two hypotheses $\mathcal{H}_{1}$ and $\mathcal{H}_{2}$ defined as,
 \begin{itemize}
-	\item $\cH_{1}$:
-    The probability $p_{c1}$ is composed by the sum of two probabilities: i)
+	\item $\mathcal{H}_{1}$:
+    The probability $p_{c1}$, is composed by the sum of two probabilities: i)
     the probability of colliding consecutively twice, \ie, the devices that collide at a given time slot and collide again when retransmitting their packets,
-    and ii) the probability of collision related with devices that attempt to transmit in this channel for first time.
-    In addition, we suppose that the number of devices that attempt to retransmit is small in comparison to the total number of devices sharing the same channel.
-
-	\item $\cH_{2}$:
+    and ii) the probability of collision among devices that did not collide in the same previous collision. Moreover, we suppose that the number of devices involved in a collision is small in comparison to the total number of devices.
+	\item $\mathcal{H}_{2}$:
 	The total number of the back-off stages at time $t$ is constant, and it is assumed to be large enough to consider that no device will ever be in the last failure state (this case is the one on the right side in Figure~\ref{fig:43:Markov_model}), after $M$ successive failed retransmissions.
 \end{itemize}
 
@@ -148,6 +146,11 @@ Considering one device and a channel,
 we denote $x_t^i$ the probability that it is transmitting a packet for the $i+1$ time in a given time slot $t$ (with $i\in \llbracket 0, M-1 \rrbracket$),
 and let $x_t = \sum_{i=0}^{M-1}x_t^i$ be the probability that it transmits a packet.
 We consider $N$ active devices following the same policy.
+
+%{\color{red}Considering one device and a channel,
+%we denote $x_t^i$ the packet transmission probability for the $i+1$ time in a given time slot $t$ (with $i\in \llbracket 0, M-1 \rrbracket$).}
+%
+%{\color{red}Considering one device and a channel, we denote $x_t^i$ the transmission probability for the $i+1$ time, with $i\in \llbracket 0, M-1 \rrbracket$, in a given time slot $t$}
 
 We assume to be in the steady state \cite{Norris98}, in our Markov chain model depicted in Figure~\ref{fig:43:Markov_model}, and thus the probabilities no longer depend on the slot number $t$ (\ie, $\forall t, x_t=x$).
 Therefore, the probability that this device has a collision at the first transmission is $p_c$, and has the following expression
@@ -160,35 +163,70 @@ Moreover, from \eqref{eq:43:1} we define the probability $p_{cp}(n)$ that involv
 	p_{cp}(n) = {N-1 \choose n} \; x^n \left(1-x\right)^{N-1-n}.
 \end{equation*}
 
-As explained above, if an IoT device is experiencing a collision at the first transmission, it proceeds for the retransmission of its packet after a random back-off interval.
+As explained above, if an IoT device experiences a collision at the first transmission, it proceeds for the retransmission of its packet after a random back-off interval.
 We denote $p_{ca}$ the probability to have a collision with a packet involved in the previous collision.
-Under assumption $\cH_{1}$, the probability that the same device's packet is experiencing again a collision at the second time slot is
+Under the $\mathcal{H}_{1}$ assumption, the number of packets involved in the same previous collision remains very small in comparison to the total number of devices that may transmit during this time. In other words, this collision probability does not depend on previous retransmissions and is equal to $p_c$.
+So, the probability that the same device's packet experiences again a collision at the second time slot is
+%
 \begin{equation}\label{eq:43:decomppc1}
 	p_{c1} = p_{ca}+\left(1-p_{ca} \right)p_c.
 \end{equation}
 
-If the device had a collision, we consider $p_{bp}(n)$ the probability that it had a collision with \emph{exactly} $n$ packets (for any $1\leq n \leq N-1$), and that \emph{at least one} of the $n$ devices involved in the previous collision chose the same back-off interval.
-Hence, under hypothesis $\cH_{2}$, we can relate $p_{ca}$ with $p_{bp}(n)$, and the different probabilities that a device experienced a collision during the first slot and has the same back-off interval for its retransmission is,
+
+If the device has a collision at the first attempt, we consider $p_{bp}(n)$ the probability that it has a collision with \emph{exactly} $n$ packets (for any $1\leq n \leq N-1$), and that \emph{at least one} of the $n$ devices involved in this first collision chooses the same back-off interval,
+%
+\begin{equation}
+    p_{bp}(n) = {N-1 \choose n} x^n \left(1-x\right)^{N-1-n}\left[1-\left( 1-\frac{1}{m}\right)^n \right].
+\end{equation}
+
+
+Besides, $p_{ca}$ is the conditional probability of collision with a packet sent by a device involved in the previous collision given that the packet experienced collision at its first transmission.
+Hence, under hypothesis $\mathcal{H}_{2}$, we can use Bayes theorem and the law of total probability to relate $p_{ca}$ with $p_{bp}(n)$, and the different probabilities that a device experienced a collision during the first slot and has the same back-off interval for its retransmission is,
+%{\color{red}Hence, under hypothesis $\mathcal{H}_{2}$,
+%the collision probability with the same packets after a retransmission, $p_{ca}$, is given  the sum of collision probabilities with $n$ devices choose the same back-off interval for their retransmissions, }
 %
 \begin{equation}\label{eq:43:sumpca}
-	p_{ca} = \sum_{n=1}^{N-1} p_{bp}(n).
+	p_{ca} = \frac{1}{p_c}\sum_{n=1}^{N-1} p_{bp}(n).
 \end{equation}
+
+% \begin{figure}[htp!]  % [htbp]
+% 	\centering
+% 	% \includegraphics[width=1.00\linewidth]{Approximation_m10.eps}
+% 	\includegraphics[width=1.00\linewidth]{Approximation_m10-eps-converted-to.pdf}
+% 	\caption{Our proposed approximation for the probability of collision at the second transmission. It is more precise for smaller values of $N$.}
+% 	\label{fig:43:Approximation_m10}
+% \end{figure}
 
 Therefore, the expression of $p_{ca}$ is
-\begin{equation}\label{eq:43:sumpc2}
-	\frac{1}{p_c} \sum_{n=1}^{N-1}{N-1 \choose n} x^n \left(1-x\right)^{N-1-n}\left[1-\left( 1-\frac{1}{m}\right)^n \right].
+\begin{align}\label{eq:43:sumpc2}
+	& \frac{1}{p_c} \sum_{n=1}^{N-1}{N-1 \choose n} x^n \left(1-x\right)^{N-1-n}\left[1-\left( 1-\frac{1}{m}\right)^n \right]\nonumber \\
+	& = 1- \frac{1}{p_c}\sum_{n=1}^{N-1}{N-1 \choose n} x^n \left(1-x\right)^{N-1-n}\left( 1-\frac{1}{m}\right)^n.
+\end{align}
+
+Once again under $\mathcal{H}_{1}$, assuming that the number of devices involved in the first collision is small compared to $N-1$, the first $N_0 \ll N-1$ terms of the sum in \eqref{eq:43:sumpc2} are predominant. We derive,
+%
+\begin{equation}\label{eq:43:sumpca2}
+	p_{ca} \simeq  1- \frac{1}{p_c}\sum_{n=1}^{N_0}{N-1 \choose n} x^n\left(1-x\right)^{N-1-n} \left( 1-\frac{1}{m}\right)^n.
 \end{equation}
 
-Once again under $\cH_{1}$, assuming that the number of devices involved in the first collision is small compared to $N-1$, the first terms of the sum in \eqref{eq:43:sumpc2} are predominant. Moreover, for these terms, $n$ is small compared to $N-1$, and so $N-1-n$ can be approximated to $N-1$. Thus it gives,
-\begin{align}\label{eq:43:sumpca2}
-	p_{ca} = & 1- \frac{1}{p_c}\sum_{n=1}^{N-1}{N-1 \choose n} x^n \left(1-x\right)^{N-1-n}\left( 1-\frac{1}{m}\right)^n,\nonumber\\
-	\simeq & 1- \frac{\left(1-x\right)^{N-1}}{p_c}\sum_{n=1}^{N-1}{N-1 \choose k} x^n \left( 1-\frac{1}{m}\right)^n.
-\end{align}
 
-We use the binomial theorem to compute the sum in \eqref{eq:43:sumpca2}, and so the expression of $p_{ca}$ becomes
-\begin{align}\label{eq:43:pca}
-	p_{ca} \simeq \frac{1}{p_c} - \left(\frac{1}{p_c}-1\right)\left[ 1+\left(1-\left(1-p_c\right)^{\frac{1}{N-1}}\right)\left(1-\frac{1}{m}\right)\right]^{N-1}.
-\end{align}
+Moreover, for these terms, $n$ is small compared to $N-1$, and so $N-1-n$ can be approximated to $N-1$. Thus it gives,
+%
+\begin{equation}\label{eq:43:sumpca3}
+	p_{ca} \simeq  1- \frac{\left(1-x\right)^{N-1}}{p_c}\sum_{n=1}^{N_0}{N-1 \choose n} x^n \left( 1-\frac{1}{m}\right)^n.
+\end{equation}
+
+Assuming $\mathcal{H}_{1}$ amounts to consider that $x\ll 1$. As a consequence, the sum in equation \eqref{eq:43:sumpca3} can be supplemented by negligible terms,
+
+\begin{equation}\label{eq:43:sumpca4}
+	p_{ca} \simeq  1 - \frac{\left(1-x\right)^{N-1}}{p_c}\sum_{n=1}^{N-1}{N-1 \choose n} x^n \left( 1-\frac{1}{m}\right)^n.
+\end{equation}
+
+We use the binomial theorem to compute the sum in \eqref{eq:43:sumpca4}, and we rewrite the expression of $p_{ca}$ as
+\begin{multline}\label{eq:43:pca}
+	p_{ca} \simeq 1 -\\
+	\left(\frac{1}{p_c}-1\right)\left[ 1+\left(1-\left(1-p_c\right)^{\frac{1}{N-1}}\right)\left(1-\frac{1}{m}\right)\right]^{N-1}.
+\end{multline}
 
 Finally, our approximation of $p_{c1}$ can be obtained by inserting \eqref{eq:43:pca} in \eqref{eq:43:decomppc1}.
 
