@@ -51,21 +51,21 @@ this leads to IoT protocols using as low signaling overhead as possible and simp
 %
 In this Chapter, we analyze the performance of Multi-Armed Bandits (MAB) algorithms, used in combination with a time-frequency slotted ALOHA-based protocol.
 We consider the Upper-Confidence Bound (\UCB) \cite{Auer02}, and the Thompson-Sampling (TS) algorithms \cite{Thompson33,AgrawalGoyal11,
-Kaufmann12Thompson}, for the first model. For the demonstration and the second model, we preferred to focus on heuristics based on the simplest algorithm (\ie, \UCB), to give a clear presentation of the different ideas explored for to solve the problem of learning to retransmit efficiently.
+Kaufmann12Thompson}, for the first model. For the demonstration as well as for the second model, we preferred to focus on heuristics based on the simplest algorithm (\ie, \UCB), to give a clear presentation of the different ideas explored for to solve the problem of learning to retransmit efficiently.
 
 As detailed in Chapter~\ref{chapter:1},
 MAB learning has already been proposed in Cognitive Radio (CR) \cite{Haykin05}, and in particular, for sensing-based Dynamic Spectrum Access (DSA) in licensed bands \cite{Jouini10}.
 % For example, \cite{Jouini10} presents the OSA setting, and \cite{Maghsudi16} shows how MAB learning can be applied for small cell management in licensed 5G networks.
-Recently, TS and \UCB{} algorithms have been used for improving the spectrum access in (unlicensed) WiFi networks, for instance by \cite{Toldov16}.
-Many recent works show that MAB algorithms work well for real-world radio signal.
+Recently, TS and \UCB{} algorithms have been used for improving the spectrum access in (unlicensed) WiFi networks, for instance by \cite{Toldov16} or \cite{Wilhelmi19collaborative,Wilhelmi19potential}.
+Many recent works show that stationary MAB algorithms work well for real-world radio signal.
 However, even with only one dynamic user using the learning algorithm, the background traffic or the traffic of the other devices is never really stationary or \iid{}.
 
-We present in Section~\ref{sec:4:firstModel} how the MAB algorithms can be used in a unlicensed and frequency- and time-slotted IoT network \cite{Bonnefoi17}.
-Several devices are using bandit algorithms, and the assumptions made by the stochastic bandit algorithms are not satisfied: as several agents learn simultaneously, their behavior is not stationary.
-As far as we know, we provide the first study to confirm robustness of the use of stochastic bandit algorithms for decision making in IoT networks with a large number of intelligent devices in the network, which makes the environment not stationary at all, violating the hypothesis required for mathematical proofs of bandit algorithms convergence and efficiency.
-We then validate the model with a hardware implementation, detailed in Section~\ref{sec:4:gnuradio}.
+We present in Section~\ref{sec:4:firstModel} how the MAB algorithms can be used in a unlicensed but frequency- and time-slotted IoT network.
+Several devices are using bandit algorithms, and the assumptions made by the stochastic bandit algorithms are not satisfied: as several agents learn simultaneously and their activation processes are random, their behavior is not stationary.
+As far as we know, we provide the first study to confirm robustness of the use of stochastic bandit algorithms for decision making in IoT networks with a large number of intelligent devices in the network, which makes the environment ``highly'' not stationary, making it very hard to give mathematical proofs of  convergence and efficiency for bandit algorithms.
+We then validate the model with a hardware implementation on real radio signals, detailed in Section~\ref{sec:4:gnuradio}.
 %
-We conclude this Chapter by presenting an extension of this model to take into account another aspect of the ALOHA protocol, that is the possibility for dynamic devices to retransmit their packet if the \emph{Ack} was not received.
+We conclude this Chapter by presenting in Section~\ref{sec:4:retransmissions} an extension of this model to take into account another aspect of the ALOHA protocol, that is the possibility for dynamic devices to retransmit their packet if the \emph{Ack} was not received.
 
 
 % ----------------------------------------------------------------------------
@@ -129,7 +129,7 @@ We presented in Section~\ref{sec:4:gnuradio} a demonstration, showed in $2018$ a
 We gave all the necessary details on both the PHY and the MAC layer, as well as details on the User Interface developed for the demo.
 Results obtained in practice were discussed, to highlight the interest of using learning algorithms for radio online optimization problem, and especially multi-armed bandit learning algorithms.
 %
-By using such low-cost algorithms, we demonstrated empirically that a dynamically reconfigurable object can learn on its own to favor a certain channel, if the environment traffic is not uniform between the $K$ different channels.
+By using such low-cost algorithms, we demonstrated empirically that a dynamically re-configurable object can learn on its own to favor a certain channel, if the environment traffic is not uniform between the $K$ different channels.
 
 
 % ----------------------------------------------------------------------
