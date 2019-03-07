@@ -241,7 +241,7 @@ $\cH_1 : (\exists \mu_0 \neq \mu_1, \tau \in \N^*: \ \  X_1, \ldots, X_\tau \ \o
 The Generalized Likelihood Ratio statistic for this test is defined by
 \[\GLR(n) :=\frac{\sup\limits_{\mu_0,\mu_1,\tau < t}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_t ; \mu_0)},\]
 %
-where $\ell(X_1, \ldots, X_t ; \mu_0)$ and $\ell(X_1, \ldots, X_t ; \mu_0,\mu_1,\tau)$ denote the likelihoods of the first $n$ observations under a model in $\cH_0$ and $\cH_1$.
+where $\ell(X_1, \ldots, X_t ; \mu_0)$ and $\ell(X_1, \ldots, X_t ; \mu_0,\mu_1,\tau)$ denote the likelihoods of the first $t$ observations under a model in $\cH_0$ and $\cH_1$.
 High values of this statistic tend to indicate rejection of $\cH_0$.
 Using the form of the likelihood for Bernoulli distribution, this statistic can be written with the binary relative entropy $\kl$,
 %
@@ -249,11 +249,11 @@ Using the form of the likelihood for Bernoulli distribution, this statistic can 
     \kl(x,y) := x \ln\left(\frac{x}{y}\right) + (1-x)\ln\left(\frac{1-x}{1-y}\right).
 \end{equation}
 %
-Indeed, one can show that $\GLR(t) = \sup_{s \in [1,n]} \left[s \times \kl\left(\hat{\mu}_{1:s},\hat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\hat{\mu}_{s+1:n},\hat{\mu}_{1:t}\right)\right]$,
+Indeed, one can show that $\GLR(t) = \sup_{s \in [1,t]} \left[s \times \kl\left(\hat{\mu}_{1:s},\hat{\mu}_{1:t}\right) + (t-s) \times \kl\left(\hat{\mu}_{s+1:t},\hat{\mu}_{1:t}\right)\right]$,
 where for $k \leq k'$, $\hat{\mu}_{k:k'}$ denotes the average of the observations collected between the instants $k$ and $k'$. This motivates the definition of the Bernoulli GLR change point detector.
 
 \begin{definition}\label{def:6:GLRDef}
-    The Bernoulli GLR change point detector with threshold function $\beta(t,\delta)$ is
+    The Bernoulli GLR change point detector with threshold function $\beta(n,\delta)$ is
     % \vspace*{-5pt}% WARNING
     \begin{equation}\label{def:6:GLR}
         \hat\tau_{\delta} := \inf \left\{ n \in \N^* : \sup_{s \in [1,t]} \left[s \times \kl\left(\hat{\mu}_{1:s},\hat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\hat{\mu}_{s+1:n},\hat{\mu}_{1:n}\right)\right] \geq \beta(n,\delta)\right\}.
