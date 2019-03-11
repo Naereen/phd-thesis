@@ -2,30 +2,24 @@
 
 \graphicspath{{2-Chapters/4-Chapter/IEEE_WCNC__2019__Paper__BMBM.git/}}
 
-In this Section, we extend the model presented before in order to take into account the possibility for retransmission of a message after a collision.
+In this section, we extend the model presented before in order to take into account the possibility for retransmission of a message after a collision.
+This extension is of major importance as most protocols for real-world IoT networks use retransmissions, and it is for instance the case of the LoRa standard.
 As before, we propose and evaluate different learning strategies based on MAB algorithms.
 
 The presented strategies allow IoT devices to improve their access to the network and their autonomy, while taking into account the impact of encountered radio collisions.
-For that end, several heuristics employing \UCB{} algorithms are examined, to explore the contextual information provided by the number of retransmissions.
-In this Section, our results show that approaches based on \UCB{} obtain a significant improvement in terms of successful transmission probabilities, compared to a naive approach which does not learn.
+For that end, several heuristics employing \UCB{} algorithms are examined, to explore the information provided by the number of retransmissions.
+In this section, our results show that approaches based on \UCB{} obtain a significant improvement in terms of successful transmission probabilities, compared to a naive approach which does not learn.
 Furthermore, it also reveals that a pure \UCB{} channel access is as efficient as more sophisticated learning strategies.
 
-% \TODOL{This Section is based on the publication ``Upper-Confidence Bound for Channel Selection in LPWA Networks with Retransmissions'', see \texttt{https://hal.inria.fr/hal-02049824}}
+% \TODOL{This section is based on the publication ``Upper-Confidence Bound for Channel Selection in LPWA Networks with Retransmissions'', see \texttt{https://hal.inria.fr/hal-02049824}}
 
-% \TODOL{TODO:
-
-% - Include the modifications suggested by the reviewers of our paper!
-% - Be sure to not repeat any motivations / maths / explanations given before
-% }
-
-% https://edas.info/showPaper.php?m=1570524364
 % https://hal.inria.fr/hal-02049824
 
 
-% ----------------------------------------------------------------------
-\subsection{Retransmissions in an ALOHA like protocol}
-\label{sub:43:introduction}
-% ----------------------------------------------------------------------
+% % ----------------------------------------------------------------------
+% \subsection{Retransmissions in an ALOHA like protocol}
+% \label{sub:43:introduction}
+% % ----------------------------------------------------------------------
 
 % In the context of Cognitive Radio \cite{Mitola99,Haykin05},
 % Multi-Arm Bandit (MAB) algorithms \cite{Auer02,Auer02,Bubeck12} have been recently proposed as a potential solution for channel access in LPWA networks \cite{Bonnefoi18,Azari18,Bonnefoi17}.
@@ -39,12 +33,12 @@ and finally applications to multi-hoping networks \cite{Mitton16,Toldov16} or ot
 %
 None of the above mentioned works discusses in detail the impact of retransmissions on the performance of MAB learning algorithms as we do now.
 
-The aim of this Section is to assess the performance of MAB algorithms for channel selection in LPWA networks, while taking into account the impact of retransmissions on the network performance.
+The aim of this section is to assess the performance of MAB algorithms for channel selection in LPWA networks, while taking into account the impact of retransmissions on the network performance.
 For this reason, several decision making strategies are applied after a first retransmission (\ie, when a collision occurs).
 The proposed approach employs contextual information provided by the number of retransmissions, and is again implemented independently by each device, so that no coordination among them is needed.
 Moreover, our \UCB{}-based heuristics show low complexity making them suitable for being embedded in LPWA devices.
 
-The contributions of this Section are summarized as follows:
+The contributions of this section are summarized as follows:
 \begin{itemize}
 	\item
 	Firstly, we provide a close form approximation of the radio collision probability after a first retransmission.
@@ -59,7 +53,7 @@ The contributions of this Section are summarized as follows:
 
 \paragraph{Outline}
 
-The rest of the Section is organized as follows.
+The rest of the section is organized as follows.
 First the system model is introduced in Section~\ref{sub:43:model},
 % A formal description of the MAB learning algorithms is given in Section~\ref{sub:43:motivations},
 and our motivations are exposed in Section~\ref{sub:43:MABalgo}.
@@ -68,7 +62,8 @@ Finally, some conclusions are drawn later in Section~\ref{sub:43:conclusion}.
 
 
 % ----------------------------------------------------------------------
-\subsection{Extending our model with retransmissions}
+% \subsection{Extending our model with retransmissions}
+\subsection{Presentation of the model with retransmissions}
 \label{sub:43:model}
 % ----------------------------------------------------------------------
 
@@ -85,28 +80,32 @@ On the other hand, there are  IoT devices, that possess the additional advantage
 Like in the previous model presented in Section~\ref{sec:4:firstModel},
 regardless the type of devices, each of them follows a slotted ALOHA protocol \cite{Roberts75}, and has a probability $p>0$ to transmit a packet in a time slot.
 We make the hypothesis that the transmission is successful if the channel is available, otherwise upon radio collision, these devices will attempt to retransmit their packet up-to $M$ times, with $M \in\mathbb{N}$.
-Note that, every retransmission is carried out after a random back-off time, uniformly distributed in $\llbracket 0, m-1 \rrbracket$, where $m \in\mathbb{N}, m>0$ is the length of the back-off interval.
+It is important to note that, every retransmission is carried out after a random back-off time, uniformly distributed in $\llbracket 0, m-1 \rrbracket$, where $m \in\mathbb{N}, m>0$ is the length of the back-off interval
+(note the difference between $m$ and $M$).
 
 
 % ----------------------------------------------------------------------
-\paragraph{Model of our IoT devices}
+\paragraph{Model of IoT devices}
 
 The aforementioned contention process can be described by a Markov chain model \cite{Norris98} similar to the one presented in \cite{Yang12}, as it is depicted in Figure~\ref{fig:43:Markov_model}.
 When a device have a packet to transmit, it goes from an idle state to a transmission state, while considering retransmissions due to different collision probabilities, $\{p_{c}, p_{c1}, \dots, p_{M-2} \}$, at each $M$ back-off stage.
 At each time slot, a transition from an idle state to a transmission state (denoted as \texttt{Trans.}) occurs if a packet transmission is required, while waiting states (denoted as \texttt{Wait}), correspond to a $m$ back-off interval.
 
 A device aims to select a channel with the highest probability of successful transmissions, for which it resorts to a reinforcement learning approach, formulated as a MAB problem.
+Contrarily to what may appear at first sight,
+the goal is not to minimize the number of retransmission, but to maximize the probability of successful transmission, considering both the first transmission of a message and the retransmissions of the same message, because the objective of each device is to maximize its battery life by minimizing its number of failed transmissions.
 % , where each channel (also called arms) is viewed as a gambling machine (bandit), and each bandit has a \emph{reward}. Then, at every trial, a device chooses a channel that maximizes the sum of the collected rewards. These \emph{rewards} are the \emph{acknowledgment} (\emph{Ack}) signals received after transmitting packets to the gateway. In this way, a transmission is considered successful when an acknowledgment is received, and a learning approach is employed to select the best channel.
 %
 We address the problem of channel selection taking into account the described Markov model for the retransmissions of end-devices.
 % It motivates our present work for which we consider the retransmissions in the analysis of MAB algorithms.
-It motivates our present work for which we consider the number of retransmissions, carried out by each device to address several MAB algorithms.
+It motivates our present work for which we consider the number of retransmissions, carried out by each device.
+% to address several MAB algorithms.
 
 \begin{figure}[htp!]  % [htbp]
 	\centering
 	% \includegraphics[width=0.65\linewidth]{Markov_model.eps}
 	\includegraphics[width=0.70\linewidth]{Markov_model-eps-converted-to.pdf}
-	\caption{The considered Markov model for the behavior of all the devices in the network.}
+	\caption{The Markov model of the behavior of all devices paired to the considered IoT network using the ALOHA protocol.}
 	\label{fig:43:Markov_model}
 \end{figure}
 %
@@ -120,13 +119,13 @@ When a device experiments a collision, it goes in a back-off state to retransmit
 If all devices remain in the same channel for retransmissions, it could result in a sequence of successive collisions with the same packets' devices that previously collided.
 %
 Thus, it seems interesting to consider in the decision making policy the possibility for a device to retransmit in a different channel.
-One of our motivations to develop new MAB algorithms for our problem is this option of using a different communication channels between the first transmission and the next retransmissions.
+One of our motivations to develop new MAB algorithms for our problem is this option of using a different communication channel between the first transmission and the next retransmissions.
 
 By considering this possibility, the device will have to learn more, thus, we expect the learning time to be longer, but it could be possible that the final performance gain increases too, in terms of network performance.
-The next Section~\ref{sub:43:numExp} presents analysis to check this performance gain, for various heuristics based on the \UCB{} algorithm.
+We present in Section~\ref{sub:43:numExp} an analysis to check this performance gain, for various heuristics based on the \UCB{} algorithm.
 %
 Here after, we start by presenting a mathematical derivation that backups this idea.
-To do so, we study the collision probabilities considering the Markov process depicted in Figure~\ref{fig:43:Markov_model}, and foresee the impact of addressing bandit strategies, as well as setting guidelines for the design of heuristic approaches.
+To do so, we study the collision probabilities considering the Markov process depicted in Figure~\ref{fig:43:Markov_model}, and foresee the impact of using bandit strategies, as well as setting guidelines for the design of heuristic approaches.
 
 
 \paragraph{Probability of collision at a second transmission slot}
@@ -134,7 +133,7 @@ To do so, we study the collision probabilities considering the Markov process de
 As it is well known \cite{Abramson1970,Roberts75}, having a collision during an access time can be overcome by a retransmission procedure (this can take several retransmission attempts).
 What interest us, here, is to obtain a mathematical approximation of the collision probability at the second transmission slot $p_{c1}$, as a function of the first collision probability $p_{c}$.
 
-We consider two hypotheses $\mathcal{H}_{1}$ and $\mathcal{H}_{2}$ defined as,
+We make two approximations $\mathcal{H}_{1}$ and $\mathcal{H}_{2}$ defined as,
 \begin{itemize}
 	\item $\mathcal{H}_{1}$:
     The probability $p_{c1}$, is composed by the sum of two probabilities: i)
@@ -364,7 +363,8 @@ For that end, all of our heuristics comprise two stages:
 the first stage is a \UCB{} algorithm employed for the first attempt to transmit,
 and the second stage is another algorithm used for channel selections for the next retransmissions.
 %
-We present below four heuristics for this second stage (short names in ``quotes'' correspond to the legend on Figures~\ref{fig:43:mainExperiment1}, \ref{fig:43:mainExperiment2}).
+We present below four heuristics for this second stage.
+Their short names are used in the legend on Figures~\ref{fig:43:mainExperiment1}, \ref{fig:43:mainExperiment2}), and are given in ``quotes'' in the corresponding paragraphs.
 
 
 % --- --- --- --- --- --- --- --- --- ---
@@ -372,6 +372,7 @@ We present below four heuristics for this second stage (short names in ``quotes'
 
 In this first proposal, the device uses a random channel selection, following a uniform distribution (in $\llbracket 1, K \rrbracket$).
 It is described below in Algorithm~\ref{algo:43:UCBthenRandom}.
+More precisely, the first-stage \UCB{} use rewards built from the acknowledgments that the device received or not for its first-stage transmission, but do not use any feedback about any of the retransmissions of any message.
 
 \vspace*{-3pt}
 \begin{figure}[h!]
@@ -396,7 +397,7 @@ It is described below in Algorithm~\ref{algo:43:UCBthenRandom}.
 % --- --- --- --- --- --- --- --- --- ---
 \paragraph{\UCB{} for retransmission (``Only \UCB{}'')}\label{sub:43:TwoUCB}
 
-Instead of applying a random channel selection,
+Instead of applying a random channel selection for retransmission,
 another heuristic is to use a second \UCB{} algorithm in the second stage.
 In other words, we expect that this algorithm is able to learn the best channel to retransmit a packet.
 It is described in Algorithm~\ref{algo:43:TwoUCB}, and it is still a practical approach, since the storage requirements and time complexity remains linear w.r.t. the number of channels $K$ (\ie, of order $\mathcal{O}(K)$).
@@ -515,6 +516,12 @@ related to the delayed second-stage \UCB{} algorithm.
 % \end{small} % XXX remove if needed
 
 
+\paragraph{A last idea that we did not explore}
+%
+Instead of considering a first-stage \UCB{} followed by a random channel retransmission, we could have considered a random first-stage channel retransmission followed by a second-stage \UCB.
+This was not considered in our study \cite{Bonnefoi2019WCNC}, and we preferred to not add it to the experiments presented below, for two reasons: to avoid clutter in the plots, and to win some time as these experiments had to run for quite a long time.
+
+
 % ----------------------------------------------------------------------
 \subsection{Numerical results}
 \label{sub:43:numExp}
@@ -531,7 +538,7 @@ In other words, the channels are occupied respectively $10\%$, $30\%$, $30\%$, a
 In Figure~\ref{fig:43:mainExperiment1}, we show the successful transmission rate versus the number of slots, for all the proposed heuristics.
 
 A first result is that all the heuristics clearly outperform the non-learning approach that simply uses random channel selection for both transmissions and retransmissions (\ie, the ``\textbf{no \UCB{}}'' curve).
-The improvement of the heuristics over the non-learning approach is evident, and for every heuristic that uses a kind of learning mechanism it can observed the successful transmission rate increases rapidly (or equivalently the PLR decreases).
+The improvement of the heuristics over the non-learning approach is clear, and for every heuristic that uses a kind of learning mechanism it can observed the successful transmission rate increases rapidly (or equivalently the PLR decreases).
 Moreover, all of these approaches show a fast convergence making them suitable for the targeted application.
 It is also worths mentioning that the employment of the same \UCB{} algorithm for retransmissions, denoted here as ``Only \UCB{}'', achieves a better performance, while a ``Random'' retransmission features a slight degradation. This result can be explained as follows: the loss of performance related to the separation of information for several algorithms is greater than the gain obtained by considering the first transmissions and retransmissions separately.
 
@@ -572,5 +579,5 @@ A second conclusion that can be highlighted is that, using learning mechanisms f
 
 \paragraph{Note on the simulation code}
 %
-The source code (MATLAB or Octave) used for the simulations and the figures of this Section is open-sourced under the MIT License, and published at \href{https://Bitbucket.org/scee_ietr/ucb_smart_retrans}{\texttt{Bitbucket.org/scee\_ietr/ucb\_smart\_retrans}}.
+The source code (MATLAB or Octave) used for the simulations and the figures of this section is open-sourced under the MIT License, and published at \href{https://Bitbucket.org/scee_ietr/ucb_smart_retrans}{\texttt{Bitbucket.org/scee\_ietr/ucb\_smart\_retrans}}.
 It was written in collaboration with Rémi Bonnefoi and Julio César Mango-Vasquez, in July and August $2018$.
