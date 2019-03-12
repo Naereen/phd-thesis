@@ -154,11 +154,11 @@ and even if it has the advantage of not requiring a parameter $M$,
 it has no theoretical guarantee, so we do not include \PHT-\UCB{} in the experiments presented below.
 %
 On the other hand, \MUCB{} uses a much simpler test, based on the $w$ most recent observations on one arm (for a fixed and even number $w$), and compares with a fixed threshold $h$ the different of the sum of rewards for the first half and the second half. It is numerically much simpler, and has the advantage of using only a bounded memory (of the order $\bigO{K w}$ for $K$ arms).
-
+%
 Both approaches also introduced a mechanism to force a uniform exploration of each arm, parametered by $\alpha\in(0,1)$.
-\CUSUMUCB{} uses a randomized exploration, by sampling arm $i$ with probability $\alpha/K$ at each time step,
-and \MUCB{} uses a more deterministic scheme, to force exploring the $K$ arms (when the time since the last restart, $t - \tau$, is found to be in $\{1,\dots,K\}$ modulo $\lceil 1/\alpha \rceil$).
-Both solutions ensure that all arms are sampled enough on each stationary sequence, in order for the CD algorithm to have enough \iid{} samples to detect changes.
+% \CUSUMUCB{} uses a randomized exploration, by sampling arm $i$ with probability $\alpha/K$ at each time step,
+% and \MUCB{} uses a more deterministic scheme, to force exploring the $K$ arms (when the time since the last restart, $t - \tau$, is found to be in $\{1,\dots,K\}$ modulo $\left\lceil 1/\alpha \right\rceil$).
+% Both solutions ensure that all arms are sampled enough on each stationary sequence, in order for the CD algorithm to have enough \iid{} samples to detect changes.
 
 When all their parameters are tuned correctly, both approaches are proved to achieve a good regret upper-bound.
 As both results are valid under different assumptions, we consider the two results to be the current state-of-the-art.
@@ -469,7 +469,7 @@ The forced exploration scheme used in \GLRklUCB{} (lines $3$-$5$) generalizes th
 We mimic the deterministic exploration introduced for \MUCB, while \CUSUMUCB{} is using a uniform exploration with probability $\alpha$.
 Both approaches also require a mechanism to add exploration, parameterized by $\alpha\in(0,1)$.
 \CUSUMUCB{} uses a randomized exploration, by sampling arm $i$ with probability $\alpha/K$ at each time step,
-and \MUCB{} uses a more deterministic scheme, to force exploring the $K$ arms (when the time since the last restart, $t - \tau$, is found to be in $\{1,\dots,K\}$ modulo $\lceil 1/\alpha \rceil$).
+and \MUCB{} uses a more deterministic scheme, to force exploring the $K$ arms (when the time since the last restart, $t - \tau$, is found to be in $\{1,\dots,K\}$ modulo $\left\lceil 1/\alpha \right\rceil$).
 Both solutions ensure that all arms are sampled enough on each stationary sequence, in order for the CD algorithm to have enough \iid{} samples to detect changes.
 %
 A consequence of this forced exploration is given in Proposition~\ref{prop:6:EnoughSamples}, proved below.
@@ -522,9 +522,10 @@ Recall that the regret is defined as $R_T = \bE\left[\sum_{t=1}^T(\mu_{i^*_t}(t)
 %
 Introducing some \emph{good event} $\cE_T$ to be specified in each case, one can write
 %
-\begin{eqnarray*}
-R_T \leq T \bP\left(\cE_T^c\right) + \alpha T + \underbrace{\bE\left[\indic(\cE_T) \sum_{t=1}^T \indic\left(\UCB_{i^*_t}(t) \leq \mu_{i^*_t}(t)\right)\right]}_{(A)} + \ \underbrace{\bE\left[\indic(\cE_T)\sum_{t=1}^T (\mu_{i^*_t}(t) - \mu_{I_t}(t))\indic\left(\UCB_{I_t}(t) \geq \mu_{i^*_t}(t)\right)\right]}_{(B)}.
-\end{eqnarray*}
+\begin{align*}
+    R_T \leq T \bP\left(\cE_T^c\right) + \alpha T & + \underbrace{\bE\left[\indic(\cE_T) \sum_{t=1}^T \indic\left(\UCB_{i^*_t}(t) \leq \mu_{i^*_t}(t)\right)\right]}_{(A)} \\
+    & + \underbrace{\bE\left[\indic(\cE_T)\sum_{t=1}^T (\mu_{i^*_t}(t) - \mu_{I_t}(t))\indic\left(\UCB_{I_t}(t) \geq \mu_{i^*_t}(t)\right)\right]}_{(B)}.
+\end{align*}
 %
 Each analysis requires to define an \emph{appropriate good event}, stating that \emph{some} change-points are detected within a reasonable delay. Each regret bound then follows from upper bounds on term $(A)$, term $(B)$, and on the failure probability $\bP(\cE_T^c)$.
 %
@@ -568,7 +569,7 @@ and the $\Delta^{(k)}$ terms expressing the hardness of the change-point detecti
 \begin{assumption}\label{ass:6:LongPeriodsGlobal}
     Define
     \begin{equation}\label{def:6:DelayGlobal}
-        d^{(k)} = d^{(k)}(\alpha,\delta) = \lceil \frac{4K}{\alpha\left(\Delta^{(k)}\right)^2}\beta(T,\delta) + \frac{K}{\alpha} \rceil.
+        d^{(k)} = d^{(k)}(\alpha,\delta) = \left\lceil \frac{4K}{\alpha\left(\Delta^{(k)}\right)^2}\beta(T,\delta) + \frac{K}{\alpha} \right\rceil.
     \end{equation}
     %
     Then we assume that for all $k \in \{1,\dots,\Upsilon_T\}$,
@@ -597,10 +598,10 @@ and the $\Delta^{(k)}$ terms expressing the hardness of the change-point detecti
 
 We gave in Section~\ref{sec:6:RegretAnalysis} the following decomposition of the regret $R_T$,
 %
-\begin{eqnarray}\label{eq:6:GeneRegretBound}
-    R_T &\leq& T \bP\left(\cE_T^c\right) + \alpha T + \underbrace{\bE\left[\indic(\cE_T) \sum_{t=1}^T \indic\left(\UCB_{i^*_t}(t) \leq \mu_{i^*_t}(t)\right)\right]}_{(A)} \nonumber \\
-    & & + \underbrace{\bE\left[\indic(\cE_T)\sum_{t=1}^T (\mu_{i^*_t}(t) - \mu_{I_t}(t))\indic\left(\UCB_{I_t}(t) \geq \mu_{i^*_t}(t)\right)\right]}_{(B)}.
-\end{eqnarray}
+\begin{align}\label{eq:6:GeneRegretBound}
+    R_T \leq T \bP\left(\cE_T^c\right) + \alpha T &+ \underbrace{\bE\left[\indic(\cE_T) \sum_{t=1}^T \indic\left(\UCB_{i^*_t}(t) \leq \mu_{i^*_t}(t)\right)\right]}_{(A)} \nonumber \\
+    & + \underbrace{\bE\left[\indic(\cE_T)\sum_{t=1}^T (\mu_{i^*_t}(t) - \mu_{I_t}(t))\indic\left(\UCB_{I_t}(t) \geq \mu_{i^*_t}(t)\right)\right]}_{(B)}.
+\end{align}
 
 
 \subsubsection{Proof of Theorem~\ref{thm:6:mainRegretBoundGlobal}.}
@@ -793,7 +794,7 @@ Hence the probability of a false alarm occurring is upper bounded as
 %
 where $\widehat{\mu}_{s}$ and $\widehat{\mu}'_{r}$ are the empirical means of respectively $s$ and $r$ \iid{} observations with mean $\mu_0$ and distribution $\nu$, that are independent from the previous ones.
 As $\nu$ is sub-Bernoulli, the conclusion follows from Lemma~\ref{lem:6:ConcFirst} below and from the definition of $\beta(n,\delta)$:
-
+%
 \begin{align*}
     &\bP_{\mu_0}\left(T_{\delta} < \infty\right) \\
     & \leq \sum_{s =1}^{\infty} \bP_{\mu_0}\left(\exists r \in \N^* : s \, \kl\left(\widehat{\mu}_{s},\mu_0\right) + r \, \kl\left(\widehat{\mu}'_{r},\mu_0\right) > 6\ln(1+\ln(s+r))+ 2 \cT\left(\frac{\ln(3(s+r)^{3/2}/\delta)}{2}\right)\right)\\
