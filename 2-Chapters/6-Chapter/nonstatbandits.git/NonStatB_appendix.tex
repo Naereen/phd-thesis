@@ -1,16 +1,123 @@
 % ----------------------------------------------------------------------------
-\subsection{Other Useful Results}\label{proof:6:Conc}
+% ----------------------------------------------------------------------------
+\subsection{Proofs of useful lemmas}\label{proof:6:Conc}
+% ----------------------------------------------------------------------------
+
+
+\subsubsection{Simplified expression for the GLR statistic in one-dimensional exponential families}\label{app:6:GLR_with_kl}
+
+\TODOL{I need to give a proof of the result that links the GLR with a ratio of two sup and the GLR with a sup of parametric kl}
+
+Consider $(Y_i)_{i\in\N}$ some data, and $t_0\in\N$, $t\in\N$ and any $s\in[t_0,t)$.
+For any $a<b$, define $\mu_{a:b} := \frac{1}{b-a+1} \sum_{i=a}^{b} Y_i$ the mean of samples from $a$ to $b$.
+
+In a one dimensional exponential family, \eg, Gaussian distributions of known variance ($\sigma=1$) or Bernoulli distributions, the Kullback-Leibler divergence of two distributions is expressed with a $\kl$ function of their mean.
+That is, for two distributions $\nu_1,\nu_2$ of means $\mu_1,\mu_2$,
+$$\KL(\nu_1,\nu_2) = \kl(\mu_1,\mu_2).$$
+
+The \GLR{} test is defined in \cite{Maillard2018GLR}, and is written like this.
+$$\GLR^{\kl}_{t_0 : s : t} = (s-t_0+1) \kl(\mu_{t_0:s}, \mu_{t_0:t}) + (t-s) \kl(\mu_{s+1:t}, \mu_{t_0:t}).$$
+
+% \TODOL{Remove all this, it's useless!}
+
+
+% \begin{lemma}[Simplified expression for $\GaussianGLR$]\label{lem:XXX}
+%     For $\cN_1$, the exponential family of Gaussian distributions of variance $\sigma^2=1$,
+%     the \GLR{} test can be simplified:
+%     \begin{align}
+%         \forall t_0 \leq s < t,\; \GaussianGLR_{t_0 : s : t} &= (s-t_0+1) \kl(\mu_{t_0:s}, \mu_{t_0:t}) + (t-s) \kl(\mu_{s+1:t}, \mu_{t_0:t})\\
+%         &= \frac{(s-t_0+1)(t-s)}{t-t_0+1} \kl(\mu_{s+1:t}, \mu_{t_0:s}) = \frac{(s-t_0+1)(t-s)}{t-t_0+1} \frac{(\mu_{s+1:t}, \mu_{t_0:s})^2}{2}.
+%     \end{align}
+% \end{lemma}
+% \begin{proof}
+%     Define $k_1 := \kl(\mu_{t_0:s}, \mu_{t_0:t})$,
+%     $k_2 := \kl(\mu_{s+1:t}, \mu_{t_0:t})$,
+%     and $k_3 := \kl(\mu_{s+1:t}, \mu_{t_0:s})$.
+%     In this family $\cN_1$, $\kl(x,y) = \frac{(x-y)^2}{2}$. Let us multiply everything by $2$ to avoid having this $\frac{1}{2}$ on every line.
+%     % \begin{small}
+%     \begin{align*}
+%         &2 (s-t_0+1) k_1 + (t-s) k_2 \\
+%         &=
+%         (s-t_0+1)\mu_{t_0:s}^2 + (t-s)\mu_{s+1:t}^2 + (s-t_0+1+t-s)\mu_{t_0:t}^2 \\
+%         &\;\;\;\;\;\;\;\;\;- 2 (s-t_0+1)\mu_{t_0:s}\mu_{t_0:t}
+%         - 2 (t-s)\mu_{s+1:t}\mu_{t_0:t} \\
+%         &= (s-t_0+1)\mu_{t_0:s}^2 + (t-s)\mu_{s+1:t}^2 + (t-t_0+1)\mu_{t_0:t}^2 \\
+%         &\;\;\;\;\;\;\;\;\;- 2 (\underbrace{(s-t_0+1)\mu_{t_0:s}+(t-s)\mu_{s+1:t}}_{=\sum_{i=t_0}^{t} Y_i = (t-t_0+1) \mu_{t_0:t}})\mu_{t_0:t} \\
+%         &= (s-t_0+1)\mu_{t_0:s}^2 + (t-s)\mu_{s+1:t}^2 - (t-t_0+1)\mu_{t_0:t}^2 \\
+%         &= \frac{\left(\sum_{i=t_0}^{s} Y_i \right)^2}{s-t_0+1} + \frac{\left(\sum_{i=s+1}^{t} Y_i \right)^2}{t-s} - \frac{\left(\sum_{i=t_0}^{t} Y_i \right)^2}{t-t_0+1} \\
+%         &= \frac{1}{t-t_0+1} \Bigl( \frac{(s-t_0+1) + (t-s)}{s-t_0+1} \left(\sum_{i=t_0}^{s} Y_i \right)^2 + \frac{(s-t_0+1) + (t-s)}{t-s} \left(\sum_{i=s+1}^{t} Y_i \right)^2 \\
+%         &\;\;\;\;\;\;\;\;\;- \left(\sum_{i=t_0}^{s} Y_i + \sum_{i=s+i}^{t} Y_i \right)^2 \Bigr) \\
+%         &= \frac{1}{t-t_0+1} \Bigl( \left(\sum_{i=t_0}^{s} Y_i \right)^2 + \frac{t-s}{s-t_0+1} \left(\sum_{i=t_0}^{s} Y_i \right)^2 + \left(\sum_{i=s+1}^{t} Y_i \right)^2 + \frac{s-t_0+1}{t-s} \left(\sum_{i=s+1}^{t} Y_i \right)^2 \\
+%         &\;\;\;\;\;\;\;\;- \left(\sum_{i=t_0}^{s} Y_i \right)^2 - \left(\sum_{i=s+i}^{t} Y_i \right)^2 - 2 \left(\sum_{i=t_0}^{s} Y_i \right) \left(\sum_{i=s+i}^{t} Y_i \right) \Bigr) \\
+%         &= \frac{1}{t-t_0+1} \Bigl(\frac{t-s}{s-t_0+1} \left(\sum_{i=t_0}^{s} Y_i \right)^2 + \frac{s-t_0+1}{t-s} \left(\sum_{i=s+1}^{t} Y_i \right)^2 - 2 \left(\sum_{i=t_0}^{s} Y_i \right) \left(\sum_{i=s+i}^{t} Y_i \right) \Bigr) \\
+%         &= \frac{(s-t_0+1)(t-s)}{t-t_0+1} \Bigl( \frac{1}{(s-t_0+1)^2} \left(\sum_{i=t_0}^{s} Y_i \right)^2 + \frac{1}{(t-s)^2} \left(\sum_{i=s+1}^{t} Y_i \right)^2 \\
+%         &\;\;\;\;\;\;\;\;\;- 2 \left(\frac{1}{s-t_0+1} \sum_{i=t_0}^{s} Y_i \right) \left(\frac{1}{t-s} \sum_{i=s+1}^{t} Y_i \right) \Bigr) \\
+%         &= \frac{(s-t_0+1)(t-s)}{t-t_0+1} (\mu_{s+1:t} - \mu_{t_0:s})^2 = 2 \frac{(s-t_0+1)(t-s)}{t-t_0+1} k_3.
+%     \end{align*}
+%     as wanted.
+%     % \end{small}
+% \end{proof}
+
+% This is not true for all one dimensional exponential family, for instance for Bernoulli distributions it is almost never the case.
+% Imagine $t_0=0, t=2, s=1$ and data $Y_i = [0,1]$.
+% Then $\mu_{t_0:s}=0$, $\mu_{s+1:t}=1$, $\mu_{t_0:t}=0.5$, and so $k_1 = \kl(0,0.5) = \log(2)$ and $k_2 = \kl(1,0.5)=\log(2)$ and $k_3=\kl(0,1)=-\infty$ so we do not have
+% $(s-t_0+1) \kl(\mu_{t_0:s}, \mu_{t_0:t}) + (t-s) \kl(\mu_{s+1:t}, \mu_{t_0:t}) = \frac{(s-t_0+1)(t-s)}{t-t_0+1} \kl(\mu_{s+1:t}, \mu_{t_0:s})$.
+
+
+
+% ----------------------------------------------------------------------------
+\subsubsection{Proof of Lemma~\ref{lem:6:ConcFirst}.}
+%
+Using the same construction as in the proof of Theorem~14 in \cite{KK18Martingales}, one can prove that for every $\lambda \in I$ (for an interval $I$), there exists a non-negative super-martingale $M^\lambda (s)$ with respect to the filtration $\cF_t = \sigma(X_1,\dots,X_t)$ that satisfies $\bE[M^\lambda(s)] \leq 1$ and
+\[\forall s \in \N^*, \ \ M^\lambda (s) \geq e^{\lambda [s\kl(\widehat{\mu}_s,\mu) - 3\ln(1+\ln(s))] - g(\lambda)}\]
+for some function $g : I \rightarrow \R$. This super-martingale is of the form
+\[M^\lambda (s) = \int e^{\eta\sum_{i=1}^s X_i - \phi_\mu(\lambda)s} d\pi(\eta)\]
+for a well-chosen probability distribution $\pi$, and the function $g$ can be chosen to be any
+\begin{eqnarray*}
+    g_{\xi} : \left[0; 1/(1+\xi)\right] & \longrightarrow & \R \\
+    \lambda & \mapsto & \lambda(1+\xi) \ln \left(\frac{\pi^2}{3(\ln(1+\xi))^2}\right) -  \ln(1 - \lambda(1 + \xi))
+\end{eqnarray*}
+for a parameter $\xi \in [0,1/2]$.
+
+Similarly, there exists an independent super-martingale $W^\lambda (r)$ w.r.t. the filtration $\cF_r' = \sigma(Y_1,\dots,Y_r)$ such that
+\[\forall r \in \N^*, \ \ W^\lambda (r) \geq e^{\lambda [r\kl(\widehat{\mu}'_r,\mu) - 3\ln(1+\ln(r))] - g(\lambda)},\]
+for the same function $g(\lambda)$. In the terminology of \cite{KK18Martingales}, the processes $\bm{X}(s) = s \, \kl(\widehat{\mu}_s,\mu) - 3\ln(1+\ln(s))$ and $\bm{Y}(s) = r \, \kl(\widehat{\mu}_r,\mu) - 3\ln(1+\ln(r))$ are called $g$-DCC for Doob-Cram\'er-Chernoff, as Doob's inequality can be applied in combination with the Cram\'er-Chernoff method to obtain deviation inequalities that are uniform in time.
+
+Here we have to modify the technique used in their Lemma 4 in order to take into account the two stochastic processes, and the presence of super-martingales instead of martingales (for which Doob inequality still works).
+One can write
+%
+\begin{align*}
+    &\bP\left(\exists r \in \N^* : s \, \kl\left(\widehat{\mu}_{s},\mu\right) + r \, \kl\left(\widehat{\mu}_r',\mu'\right) > 3\ln(1+\ln(s)) + 3\ln(1+\ln(r)) + u\right) \\
+    & \leq \bP\left(\exists r \in \N^* : M^\lambda(s)W^\lambda(r) > e^{\lambda u - 2g(\lambda)}\right) \\
+    & = \lim_{n \rightarrow \infty} \bP\left(\exists r \in \{1,\dots,n\} :  M^\lambda(s)W^\lambda(r) > e^{\lambda u - 2g(\lambda)}\right) \\
+    & = \lim_{n \rightarrow \infty} \bP\left(\sup_{r \in \{1,\dots,n\}}  M^\lambda(s)W^\lambda(r) > e^{\lambda u - 2g(\lambda)}\right).
+\end{align*}
+%
+Using that $\tilde{M}(r) = M^\lambda(s)W^\lambda(r)$ is a super-martingale with respect to the filtration \[\tilde{\cF}_r = \sigma(X_1,\dots,X_s, Y_1,\dots,Y_r),\] one can apply Doob's maximal inequality to obtain
+\begin{eqnarray*}
+    \bP\left(\sup_{r \in \{1,\dots,n\}}  M^\lambda(s)W^\lambda(r) > e^{\lambda u - 2g(\lambda)}\right) &\leq& e^{-(\lambda u - 2g(\lambda))}\bE[\tilde{M}(1))] \\
+    & = & e^{-(\lambda u - 2g(\lambda))}\bE[M^\lambda(s)W^\lambda(1)] \\
+    & \leq & e^{-(\lambda u - 2g(\lambda))},
+\end{eqnarray*}
+using that $M^\lambda(s)$ and $W^\lambda(1)$ are independent and have an expectation smaller than $1$.
+
+Putting things together yields
+\[\bP\left(\exists r \in \N^* : s \, \kl\left(\widehat{\mu}_{s},\mu\right) + r \, \kl\left(\widehat{\mu}_r',\mu'\right) > 3\ln(1+\ln(s)) + 3\ln(1+\ln(r)) + u\right) \leq e^{-\left(\lambda u - 2g_{\xi}(\lambda)\right)},\]
+for any function $g_{\xi}$ defined above.
+%
+The conclusion follows by optimizing for both $\lambda$ and $\xi$, using Lemma~18 in \cite{KK18Martingales}.
+
 
 % ----------------------------------------------------------------------------
 \subsubsection{A Concentration Result Involving Two Arms}\label{proof:6:Chernoff2arms}
 
 The following result is useful to control the probability of the good event in our two regret analyzes.
-Its proof follows from a straightforward application of the Cram\'er-Chernoff method (\cite{Boucheron2013}), and is given below.
+Its proof follows from a straightforward application of the Cram\'er-Chernoff method \cite{Boucheron2013}, and is given below.
 
 \begin{lemma}\label{lem:6:Chernoff2arms}
-    Let $\hat{\mu}_{i,s}$ be the empirical mean of $s$ \iid{} observations with mean $\mu_i$, for $i \in \{a,b\}$, that are $\sigma^2$-sub-Gaussian. Define $\Delta = \mu_a - \mu_b$. Then for any $s,r > 0$, we have
+    Let $\widehat{\mu}_{i,s}$ be the empirical mean of $s$ \iid{} observations with mean $\mu_i$, for $i \in \{a,b\}$, that are $\sigma^2$-sub-Gaussian. Define $\Delta = \mu_a - \mu_b$. Then for any $s,r > 0$, we have
     \begin{equation}
-        \bP\left(\frac{sr}{s+r}\Big(\hat{\mu}_{a,s} - \hat{\mu}_{b,r} - \Delta\Big)^2 \geq u \right) &\leq& 2\exp\left(- \frac{u}{2\sigma^2}\right).
+        \bP\left(\frac{sr}{s+r}\Big(\widehat{\mu}_{a,s} - \widehat{\mu}_{b,r} - \Delta\Big)^2 \geq u \right) &\leq& 2\exp\left(- \frac{u}{2\sigma^2}\right).
     \end{equation}
 \end{lemma}
 
@@ -19,15 +126,15 @@ Its proof follows from a straightforward application of the Cram\'er-Chernoff me
 
 We first note that
 \begin{align}\label{eq:6:Preparation}
-	&\bP\left(\frac{sr}{s+r}\Big(\hat{\mu}_{a,s} - \hat{\mu}_{b,r} - \Delta\Big)^2 \geq u \right) \nonumber\\
-	&\leq \bP\left(\hat{\mu}_{a,s} - \hat{\mu}_{b,r} \geq \Delta + \sqrt{\frac{s+r}{sr}u} \right) + \bP\left(\hat{\mu}_{b,r} - \hat{\mu}_{a,s} \geq -\Delta + \sqrt{\frac{s+r}{sr}u} \right),
+	&\bP\left(\frac{sr}{s+r}\Big(\widehat{\mu}_{a,s} - \widehat{\mu}_{b,r} - \Delta\Big)^2 \geq u \right) \nonumber\\
+	&\leq \bP\left(\widehat{\mu}_{a,s} - \widehat{\mu}_{b,r} \geq \Delta + \sqrt{\frac{s+r}{sr}u} \right) + \bP\left(\widehat{\mu}_{b,r} - \widehat{\mu}_{a,s} \geq -\Delta + \sqrt{\frac{s+r}{sr}u} \right),
 \end{align}
 and those two quantities can be upper-bounded similarly using the Cram\'er-Chernoff method.
 
-Let $(X_i)$ and $(Y_i)$ be two \iid{} sequences that are $\sigma^2$ sub-Gaussian with mean $\mu_1$ and $\mu_2$ respectively. Let $n_1$ and $n_2$ be two integers and $\hat\mu_{1,n_1}$ and $\hat{\mu}_{2,n_2}$ denote the two empirical means based on $n_1$ observations from $X_i$, and $n_2$ observations from $Y_i$ respectively.
+Let $(X_i)$ and $(Y_i)$ be two \iid{} sequences that are $\sigma^2$ sub-Gaussian with mean $\mu_1$ and $\mu_2$ respectively. Let $n_1$ and $n_2$ be two integers and $\widehat{\mu}_{1,n_1}$ and $\widehat{\mu}_{2,n_2}$ denote the two empirical means based on $n_1$ observations from $X_i$, and $n_2$ observations from $Y_i$ respectively.
 Then for every $\lambda > 0$, we have
 \begin{eqnarray*}
-    \bP\left(\hat\mu_{1,n_1} - \hat\mu_{2,n_2} \geq \mu_1 - \mu_2 + x \right) & \leq & \bP\left(\frac{1}{n_1}\sum_{i=1}^{n_1} (X_i-\mu_1) - \frac{1}{n_2}\sum_{i=1}^{n_2} (Y_i - \mu_2) \geq x \right)\\
+    \bP\left(\widehat{\mu}_{1,n_1} - \widehat{\mu}_{2,n_2} \geq \mu_1 - \mu_2 + x \right) & \leq & \bP\left(\frac{1}{n_1}\sum_{i=1}^{n_1} (X_i-\mu_1) - \frac{1}{n_2}\sum_{i=1}^{n_2} (Y_i - \mu_2) \geq x \right)\\
     & \leq & \bP\left(e^{\lambda \left(\frac{1}{n_1}\sum\limits_{i=1}^{n_1} (X_i-\mu_1) - \frac{1}{n_2}\sum\limits_{i=1}^{n_2} (Y_i - \mu_2)\right)} \geq e^{\lambda x} \right) \\
     \text{(using Markov's inequality)}
     & \leq & e^{-\lambda x}\bE\left[e^{\lambda \frac{1}{n_1}\sum\limits_{i=1}^{n_1} (X_i-\mu_1)}\right]\bE\left[e^{-\lambda \frac{1}{n_2}\sum\limits_{i=1}^{n_2} (Y_i-\mu_2)}\right] \\
@@ -37,8 +144,11 @@ Then for every $\lambda > 0$, we have
 %
 where the last inequality uses the sub-Gaussian property.
 %
-Choosing the value $\lambda = \frac{x}{2\left[\sigma^2/(2n_1) + \sigma^2/(2n_2)\right]}$ which minimizes the right-hand side of the inequality yields
-\[\bP\left(\hat\mu_{1,n_1} - \hat\mu_{2,n_2} \geq \mu_1 - \mu_2 + x \right) \leq \exp\left(- \frac{n_1n_2}{n_1+n_2}\frac{x^2}{2\sigma^2}\right).\]
+Choosing the value
+\[\lambda = \frac{x}{2\left[\sigma^2/(2n_1) + \sigma^2/(2n_2)\right]}\]
+which minimizes the right-hand side of the inequality yields
+\[\bP\left(\widehat{\mu}_{1,n_1} - \widehat{\mu}_{2,n_2} \geq \mu_1 - \mu_2 + x \right) \leq \exp\left(- \frac{n_1n_2}{n_1+n_2}\frac{x^2}{2\sigma^2}\right).\]
+%
 Using this inequality twice in the right hand side of \eqref{eq:6:Preparation} concludes the proof.
 
 
@@ -185,10 +295,10 @@ These measurements validate the upper-bound we gave on their memory costs, $\big
 
 
 %-----------------------------------------------------------------------------
-\subsubsection{Two ideas of numerical optimization}\label{sub:6:IdeasOptimizations}
+\subsection{Two ideas of numerical optimization}\label{sub:6:IdeasOptimizations}
 
-In order to empirically improve this weakness of our proposal,
-we suggest two simple optimizations tweaks on \GLRklUCB{} (see Algorithm~\ref{algo:6:GLRklUCB}) to drastically speed-up its computation time.
+In order to empirically improve the main weakness of our proposal, that is its numerical efficiency as shown in Tables~\ref{table:6:TimeCosts},
+we suggest here two simple optimizations tweaks on \GLRklUCB{} (see Algorithm~\ref{algo:6:GLRklUCB}) to drastically speed-up its computation time.
 
 \begin{enumerate}
     \item
@@ -263,6 +373,8 @@ With such numerical optimization, \GLRklUCB{} is not significantly slower than \
 % ----------------------------------------------------------------------------
 \subsection{Sensibility analysis of the exploration probability $\alpha$}\label{sec:6:choosingAlpha0}
 
+
+\TODOL{Maybe I should keep this, and do the same for the confidence level $\delta$}
 \TODOL{Maybe I can completely remove this part, and only refer to the paper \cite{Besson2019GLRT}.}
 
 As demonstrated in our experiments,
@@ -294,6 +406,26 @@ However, the analysis of \GLRklUCB{} is based on the forced exploration, and we 
     \caption{Mean regret $\pm$ $1$ standard-deviation, for different choices of $\alpha_0\in[0,1]$ on three problems of horizon $T=5000$, for \GLRklUCB{} with $\alpha_T = \alpha_0\sqrt{\Upsilon_T \log(T)/T}$.}
     \label{table:6:sensibilityAlpha0}
 \end{table}
+
+
+% ----------------------------------------------------------------------------
+\subsection{Exploring different threshold functions}\label{sec:6:exploringDifferentThresholdFunctions}
+
+\TODOL{In only one or two short numerical experiment, for example Pb 1 and 2, I can present in a table the regret obtained by \GLRklUCB, both local and global or only local, for different values of the threshold functions.
+
+    % This is already coded, see https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.threshold_BernoulliGLR
+}
+
+
+% ----------------------------------------------------------------------------
+\subsection{Exploring different mechanisms to enforce uniform exploration of all arms}\label{sec:6:exploringDifferentForcedExplorationMechanisms}
+
+\TODOL{In only one or two short numerical experiment, for example Pb 1 and 2, I can present in a table the regret obtained by \GLRklUCB, both local and global or only local, for different options of the forced exploration mechanism (uniform random, tracking, deterministic).
+
+    % This is already coded, see
+    % https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.GLR_IndexPolicy_WithTracking
+    % https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.GLR_IndexPolicy_WithDeterministicExploration
+}
 
 
 % ----------------------------------------------------------------------------

@@ -9,33 +9,36 @@
 \paragraph{Abstract}
 
 In this last chapter, we study a generalization of the stationary multi-armed bandit model,
-to account for possible non-stationarity of MAB models.
-Instead of dealing with changes happening possibly at every time step, like in adversarial models, we consider a finite number $\Upsilon_T$ of \emph{change-points}, and we consider problems that are stationary on any interval between two consecutive change-points.
+to account for possible non-stationarity of the problems that could be tackled with MAB algorithms.
+Instead of dealing with changes happening possibly at every time step, like in adversarial models, we rather consider a finite number $\Upsilon_T$ of \emph{change-points}, and we consider problems that are stationary on any interval between two consecutive change-points.
+
+We start by reviewing the previous work on piece-wise stationary MAB models, for which the two main families of proposed solutions are either passively or actively adaptive. In practice, it was already observed that actively adaptive strategies usually greatly outperform the passively adaptive ones.
+The more efficient strategies from the current state-of-the-art are based on a combination of an efficient algorithm for the stationary problem with an efficient online change detection algorithm, like CUSUM, PHT or the Generalized Likelihood Ratio Test (GLRT), and so we pursue on this direction.
 %
-We start by reviewing the existing previous work on piece-wise stationary MAB models, for which the two main families of proposed solutions are either passively adaptive or actively adaptive. In practice, actively adaptive strategies usually greatly outperform the passively adaptive ones.
-The more efficient strategies from the current state-of-the-art are based on a combination of an efficient algorithm for the stationary problem with an efficient online change detection algorithm, like CUSUM, PHT or the Generalized Likelihood Ratio Test (GLRT).
-Using finite-time results of a recent paper studying the GLRT for sub-Gaussian distributions, we then extend the results to the GLRT for any sub-Bernoulli distributions, which include distributions of bounded support. Our test, B-GLRT, enjoys finite-time guarantees in terms of both its false alarm probability (in a stationary model, the test should not detect any change), and its detection delay (in a model with a change-point, the test should detect within a reasonable delay).
-%
+Using finite-time results of a recent paper studying the GLRT for sub-Gaussian distributions, we then extend the results to the GLRT for any sub-Bernoulli distributions, which include bounded distributions. Our test, B-GLRT, enjoys finite-time guarantees in terms of two quantities:
+its \emph{false alarm probability}, meaning that in a stationary model, the test should not detect any change,
+and its \emph{detection delay}, meaning that in a model with a change-point, the test should detect within a reasonable delay.
+
 Thanks to these two non-asymptotic properties, the B-GLRT test can be combined with an efficient bandit policy, the \klUCB{} index policy, to propose an efficient algorithm for piece-wise stationary bandit problems, that we design \GLRklUCB.
 Our policy takes ideas from the two most recent and most efficient policies, \CUSUMUCB{} and \MUCB, that enjoys good regret bounds of the order of $R_T = \bigO{\sqrt{\Upsilon_T T \log(T)}}$, if $T$ is the horizon and $\Upsilon_T$ the number of change-points (known before hand).
 \MUCB{} restarts the underlying \UCB{} bandit policy on all arms when a change is detected, while \CUSUMUCB{} restarts the observations of only the arm on which a change is detected.
 %
 We give the first unified analysis of a piece-wise stationary bandit algorithm for the two variants, and our analysis is completely non-asymptotic and yield regret bounds with explicit constants.
 Moreover, our regret bounds are the first ones to be of the order $\bigO{\sqrt{\Upsilon_T T \log(T)}}$ with no prior knowledge of the problem other than the horizon $T$ and the number of change-points $\Upsilon_T$ (both \MUCB{} and \CUSUMUCB{} require to know before hand a certain measure $\Delta^{\text{change}}$ of the difficulty of the problem).
-%
+
 Finally, we give extensive numerical experiments to compare our approach, in its two variants, against the current state-of-the-art policies, on different piece-wise stationary bandit problems, of increasing difficulty.
 %
 We also include additional details about our policy \GLRklUCB, including a sensibility analysis of its two parameters, a numerical evaluation of its time and memory costs, as well as details on an easy but efficient way to speed up the B-GLRT test while not loosing too much in terms of regrets.
 
 
-\vfill{}
+% \vfill{}
 
 \paragraph{Publications}
 
 This chapter is based on the following publications: \cite{Besson2019GLRT,Besson2019Gretsi}.
 
 
-\newpage
+% \newpage
 % Write miniTOC just after the title
 \graphicspath{{2-Chapters/6-Chapter/Images/}}
 
@@ -58,5 +61,7 @@ This chapter is based on the following publications: \cite{Besson2019GLRT,Besson
 % ----------------------------------------------------------------------------
 \section{Appendix}
 \label{sec:6:appendix}
+
+We start by giving some additional useful results, along with their proofs, and then we give complementary numerical experiments to justify some choices made in the presentation of our proposal \GLRklUCB.
 
 \input{2-Chapters/6-Chapter/nonstatbandits.git/NonStatB_appendix.tex}
