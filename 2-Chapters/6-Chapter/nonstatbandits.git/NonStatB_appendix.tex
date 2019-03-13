@@ -6,17 +6,17 @@
 
 \subsubsection{Simplified expression for the GLR statistic in one-dimensional exponential families}\label{app:6:GLR_with_kl}
 
-\TODOL{I need to give a proof of the result that links the GLR with a ratio of two sup and the GLR with a sup of parametric kl}
+\TODOL{Do I need to give a proof of the result that links the GLR with a ratio of two sup and the GLR with a sup of parametric kl ?}
 
-Consider $(Y_i)_{i\in\N}$ some data, and $t_0\in\N$, $t\in\N$ and any $s\in[t_0,t)$.
-For any $a<b$, define $\mu_{a:b} := \frac{1}{b-a+1} \sum_{i=a}^{b} Y_i$ the mean of samples from $a$ to $b$.
+% Consider $(Y_i)_{i\in\N}$ some data, and $t_0\in\N$, $t\in\N$ and any $s\in[t_0,t)$.
+% For any $a<b$, define $\mu_{a:b} := \frac{1}{b-a+1} \sum_{i=a}^{b} Y_i$ the mean of samples from $a$ to $b$.
 
-In a one dimensional exponential family, \eg, Gaussian distributions of known variance ($\sigma=1$) or Bernoulli distributions, the Kullback-Leibler divergence of two distributions is expressed with a $\kl$ function of their mean.
-That is, for two distributions $\nu_1,\nu_2$ of means $\mu_1,\mu_2$,
-$$\KL(\nu_1,\nu_2) = \kl(\mu_1,\mu_2).$$
+% In a one dimensional exponential family, \eg, Gaussian distributions of known variance ($\sigma=1$) or Bernoulli distributions, the Kullback-Leibler divergence of two distributions is expressed with a $\kl$ function of their mean.
+% That is, for two distributions $\nu_1,\nu_2$ of means $\mu_1,\mu_2$,
+% $$\KL(\nu_1,\nu_2) = \kl(\mu_1,\mu_2).$$
 
-The \GLR{} test is defined in \cite{Maillard2018GLR}, and is written like this.
-$$\GLR^{\kl}_{t_0 : s : t} = (s-t_0+1) \kl(\mu_{t_0:s}, \mu_{t_0:t}) + (t-s) \kl(\mu_{s+1:t}, \mu_{t_0:t}).$$
+% The \GLR{} test is defined in \cite{Maillard2018GLR}, and is written like this.
+% $$\GLR^{\kl}_{t_0 : s : t} = (s-t_0+1) \kl(\mu_{t_0:s}, \mu_{t_0:t}) + (t-s) \kl(\mu_{s+1:t}, \mu_{t_0:t}).$$
 
 % \TODOL{Remove all this, it's useless!}
 
@@ -118,7 +118,7 @@ Its proof follows from a straightforward application of the Cram\'er-Chernoff me
 \begin{lemma}\label{lem:6:Chernoff2arms}
     Let $\widehat{\mu}_{i,s}$ be the empirical mean of $s$ \iid{} observations with mean $\mu_i$, for $i \in \{a,b\}$, that are $\sigma^2$-sub-Gaussian. Define $\Delta = \mu_a - \mu_b$. Then for any $s,r > 0$, we have
     \begin{equation}
-        \bP\left(\frac{sr}{s+r}\Big(\widehat{\mu}_{a,s} - \widehat{\mu}_{b,r} - \Delta\Big)^2 \geq u \right) &\leq& 2\exp\left(- \frac{u}{2\sigma^2}\right).
+        \bP\left(\frac{s \; r}{s+r}\Big(\widehat{\mu}_{a,s} - \widehat{\mu}_{b,r} - \Delta\Big)^2 \geq u \right) &\leq& 2\exp\left(- \frac{u}{2\sigma^2}\right).
     \end{equation}
 \end{lemma}
 
@@ -127,7 +127,7 @@ Its proof follows from a straightforward application of the Cram\'er-Chernoff me
 
 We first note that
 \begin{align}\label{eq:6:Preparation}
-	&\bP\left(\frac{sr}{s+r}\Big(\widehat{\mu}_{a,s} - \widehat{\mu}_{b,r} - \Delta\Big)^2 \geq u \right) \nonumber\\
+	&\bP\left(\frac{s \; r}{s+r}\Big(\widehat{\mu}_{a,s} - \widehat{\mu}_{b,r} - \Delta\Big)^2 \geq u \right) \nonumber\\
 	&\leq \bP\left(\widehat{\mu}_{a,s} - \widehat{\mu}_{b,r} \geq \Delta + \sqrt{\frac{s+r}{sr}u} \right) + \bP\left(\widehat{\mu}_{b,r} - \widehat{\mu}_{a,s} \geq -\Delta + \sqrt{\frac{s+r}{sr}u} \right),
 \end{align}
 and those two quantities can be upper-bounded similarly using the Cram\'er-Chernoff method.
@@ -151,6 +151,7 @@ which minimizes the right-hand side of the inequality yields
 \[\bP\left(\widehat{\mu}_{1,n_1} - \widehat{\mu}_{2,n_2} \geq \mu_1 - \mu_2 + x \right) \leq \exp\left(- \frac{n_1n_2}{n_1+n_2}\frac{x^2}{2\sigma^2}\right).\]
 %
 Using this inequality twice in the right hand side of \eqref{eq:6:Preparation} concludes the proof.
+\hfill{} $\qed$  % WARNING manually write this is a bad idea!
 
 % -----------------------------------------------------------------
 
@@ -161,7 +162,7 @@ Using this inequality twice in the right hand side of \eqref{eq:6:Preparation} c
 
 % \subsubsection{Proof of Theorem~\ref{thm:6:mainRegretBound}}
 
-Our analysis for the other variant of \GLRklUCB{} also relies on the general regret decomposition~\eqref{eq:6:GeneRegretBound} and follows the same skeleton, with the following appropriate good event.
+Our analysis for the other variant of \GLRklUCB{} also relies on the general regret decomposition~\eqref{eq:6:GeneRegretBound} and follows the proof skeleton presented in Section~\ref{sub:6:proofSkeleton}, with the following appropriate ``good event'', that is shown to be likely in Lemma~\ref{lem:6:GoodEvent} below.
 %
 \begin{equation}\label{def:6:GoodEvenLocal}
     \cE_T(\alpha,\delta) = \left(\forall i \in \{1, \ldots, K\}, \forall \ell \in \{1, \ldots, \NCi\}, \hat{\tau}^{(\ell)}_i \in \left[\tau_i^{(\ell)} + 1, \tau_i^{(\ell)} + d_i^{(\ell)}\right] \right),
@@ -169,7 +170,7 @@ Our analysis for the other variant of \GLRklUCB{} also relies on the general reg
 where $\widehat{\tau}_i^{(\ell)}$ is defined as the $\ell$-th change detected by the algorithm on arm $i$ and $d_i^{(\ell)}=d_i^{(\ell)}(\alpha,\delta)$ is defined as in Assumption~\ref{ass:6:LongPeriods}. Using this assumption, one can prove the following.
 
 \begin{lemma}\label{lem:6:GoodEvent}
-    The ``bad event'' is highly unlikely, as it satisfies $\bP((\cE_T(\alpha,\delta))^c) \leq 2\delta \EffChange$.
+    The ``bad event'' is highly unlikely, as it satisfies $\bP((\cE_T(\alpha,\delta))^c) \leq 2 \; \delta \; \EffChange$.
 \end{lemma}
 
 
@@ -189,14 +190,14 @@ where we introduce the event $\cC_i^{(\ell)}$ that all the changes up to the $\e
 Clearly, $\cE_T \subseteq \cC_i^{(\ell)}$ and $\cC_i^{(\ell)}$ is $\cF_{\widehat{\tau}_i^{(\ell)}}$-measurable. Observe that conditionally to $\cF_{\widehat{\tau}_i^{(\ell)}}$, when $\indic(\cC_i^{(\ell)})$ holds, $\widehat{\mu}_{i}(t)$ is the average of samples that have all mean $\mu_i^{(\ell)}$. Thus, introducing $\widehat{\mu}_s$ as a sequence of \iid{} random variables with mean $\mu_i^{(\ell)}$, one can write
 \begin{align*}
     &\bE\left[\left.\indic(\cC_i^{(\ell)}) \sum_{t=\hat{\tau}_i^{(\ell)}}^{\tau_i^{(\ell+1)}} \indic\left(n_{i}(t) \kl\left(\widehat{\mu}_{i}(t), \mu_{i}\right) \geq f(t - \widehat{\tau}_{i}^{(\ell)})\right) \right| \cF_{\widehat{\tau}_i^{(\ell)}}\right]\\
-    & = \indic(\cC_i^{(\ell)}) \sum_{t=\hat{\tau}_i^{(\ell)}}^{\tau_i^{(\ell+1)}} \bE\left[\indic\left(n_{i}(t) \kl\left(\widehat{\mu}_{i}(t), \mu_{i}\right) \geq f(t - \widehat{\tau}_{i}^{(\ell)})\right) \;|\; \cF_{\widehat{\tau}_i^{(\ell)}}\right]
+    & = \indic(\cC_i^{(\ell)}) \sum_{t=\hat{\tau}_i^{(\ell)}}^{\tau_i^{(\ell+1)}} \bE\left[\indic\left(n_{i}(t) \kl\left(\widehat{\mu}_{i}(t), \mu_{i}\right) \geq f(t - \widehat{\tau}_{i}^{(\ell)})\right) \;|\; \cF_{\widehat{\tau}_i^{(\ell)}}\right] \\
 % \end{align*}%
 % \begin{align*}
     & \leq \indic(\cC_i^{(\ell)}) \sum_{t=1}^{\tau_i^{(\ell+1)} - \hat{\tau}_i^{(\ell)}} \bP\left(\exists s \leq t' : s \times \kl(\widehat{\mu}_{s},\mu_i^{(\ell)}) \geq f(t')\right) \\
     & \leq \sum_{t=1}^T \frac{1}{t\ln(t)} \leq \ln(\ln(T)),
 \end{align*}%
 %
-where the last but one inequality relies on the concentration inequality given in Lemma 2 of \cite{KLUCBJournal}, and the fact that $f(t) = \ln(t) + 3 \ln(\ln(t))$. Finally, using the law of total expectation yields
+where the last but one inequality relies on the concentration inequality given in Lemma 2 of \cite{KLUCBJournal}, and the fact that $f(t) = \ln(t) + 3 \ln(\ln(t))$. Finally, the law of total expectation gives
 \begin{equation}
     (A) \leq \sum_{i=1}^K \sum_{\ell=0}^{\NCi}\left[d_i^{(\ell+1)}(T) + \ln(\ln(T))\right].
     \label{eq:6:TermAFinal}
@@ -204,9 +205,9 @@ where the last but one inequality relies on the concentration inequality given i
 
 \paragraph{Upper bound on term $\bm{(B)}$.}
 %
-Recall that $\mu^*_{i,\ell}$ is defined from the statement of Theorem~\ref{thm:6:mainRegretBound} as the smallest value that still outperforms arm $i$ on the the interval between the $\ell$ and $(\ell+1)$-st change of $i$. We let $\tilde{\mu}_{i,s}^{(\ell)}$ denote the empirical mean of the first $s$ observations of arm $i$ made after time $t=\hat{\tau}_i^{(\ell)}+1$. To upper bound Term B, we introduce a sum over all arms and rewrite the sum in $t$ as a sum of consecutive intervals $[\tau_i^{(\ell)}+1, \tau_i^{(\ell+1)}]$.
+Recall that $\mu^*_{i,\ell}$ is defined from the statement of Theorem~\ref{thm:6:mainRegretBound} as the smallest value that still outperforms arm $i$ on the interval between the $\ell$ and $(\ell+1)$-st change of $i$. We let $\tilde{\mu}_{i,s}^{(\ell)}$ denote the empirical mean of the first $s$ observations of arm $i$ made after time $t=\hat{\tau}_i^{(\ell)}+1$. To upper bound Term B, we introduce a sum over all arms and rewrite the sum in $t$ as a sum of consecutive intervals $[\tau_i^{(\ell)}+1, \tau_i^{(\ell+1)}]$.
 %
-The decomposition using furthermore that on $\cE_T$, $\tau_i^{\ell} \leq \hat \tau_i^ \ell \leq \tau_i^{\ell+1}$ for all changes, by Assumption~\ref{ass:6:LongPeriods}.
+The decomposition follows by using furthermore that on $\cE_T$, we have $\tau_i^{\ell} \leq \hat \tau_i^ \ell \leq \tau_i^{\ell+1}$ for all changes, by Assumption~\ref{ass:6:LongPeriods}.
 %
 \begin{align*}
     (B) & \leq \sum_{i=1}^K\bE\Big[\indic(\cE_T)\sum_{\ell=1}^{\NCi} \sum_{t=\tau_i^{(\ell)}}^{\tau_i^{(\ell+1)}}\left(\mu_{i^*_t}(t) - \overline{\mu}_{i}^{(\ell)}\right)\indic\left(I_t = i, \UCB_i(t) \geq \mu^*_{i,\ell}\right)\Big] \\
@@ -293,7 +294,7 @@ Using Pinsker's inequality and introducing the gap $\Delta_i^{(\ell)} = \mu_i^{(
 %
 
 Using Lemma~\ref{lem:6:Chernoff2arms} stated in Appendix~\ref{proof:6:Chernoff2arms}, and a union bound, the first term in the right hand side is upper bounded by $\delta$ (as $\beta(r+s,\delta) \geq \beta(r,\delta) \geq \log(3s\sqrt{s}/\delta)$). For the second term, we use the observation
-\[\frac{2s\overline{r}}{s+\overline{r}}\left(\widehat{\mu}_{a,s} - \widehat{\mu}_{b,\overline{r}} - \Delta_i^{(\ell)}\right)^2  \leq \beta(s+\overline{r},\delta) \ \ \Rightarrow \ \ |\widehat{\mu}_{a,s} - \widehat{\mu}_{b,\overline{r}}| \geq |\Delta_i^{(\ell)}| - \sqrt{\frac{s+\overline{r}}{2\overline{r}s}\beta(s+\overline{r},\delta)}\]
+\[\frac{2s \; \overline{r}}{s+\overline{r}}\left(\widehat{\mu}_{a,s} - \widehat{\mu}_{b,\overline{r}} - \Delta_i^{(\ell)}\right)^2  \leq \beta(s+\overline{r},\delta) \ \ \Rightarrow \ \ |\widehat{\mu}_{a,s} - \widehat{\mu}_{b,\overline{r}}| \geq |\Delta_i^{(\ell)}| - \sqrt{\frac{s+\overline{r}}{2\overline{r}s}\beta(s+\overline{r},\delta)}\]
 and finally get
 %
 \begin{equation}\label{eq:6:FromHere}
@@ -302,14 +303,14 @@ and finally get
 %
 Define $s_{\min} = \left\lfloor \frac{\alpha}{K} (\tau_i^{(\ell)}-\tau_i^{(\ell-1)})/2\right\rfloor$. Using that the mappings $s \mapsto (s+\overline{r})/s\overline{r}$ and $s \mapsto \beta(s + \overline{r},\delta)$ are respectively decreasing and increasing in $s$, one has, for all $s\in \cI_k$,
 \begin{eqnarray*}
-    2\frac{s+\overline{r}}{s\overline{r}}\beta\left(s+\overline{r}, \delta\right) & \leq &
-    2\frac{s_{\min}+\overline{r}}{s_{\min}\overline{r}}\beta\left(T, \delta\right) \leq \frac{4\beta(T,\delta)}{\left\lfloor \frac{\alpha}{K}d_i^{(\ell)}\right\rfloor},
+    2\frac{s+\overline{r}}{s \; \overline{r}}\beta\left(s+\overline{r}, \delta\right) & \leq &
+    2\frac{s_{\min}+\overline{r}}{s_{\min} \; \overline{r}}\beta\left(T, \delta\right) \leq \frac{4\beta(T,\delta)}{\left\lfloor \frac{\alpha}{K}d_i^{(\ell)}\right\rfloor},
 \end{eqnarray*}
 %
 where the last inequality follows from the fact that $\overline{r} \leq s_{\min}$ as $d_i^{(\ell)} \leq (\tau_i^{(\ell)} - \tau_i^{(\ell-1)})/2$ by Assumption~\ref{ass:6:LongPeriods}. Now the definition of $d_i^{(\ell)}$ readily implies that
 \[\left\lfloor \frac{\alpha}{K}d_i^{(\ell)}\right\rfloor > 4\beta(T,\delta) / \left(\Delta_i^{(\ell)}\right)^2,\]
 which yields
-\[\forall s \in \cI_k, \ \ 2\frac{s+\overline{r}}{s\overline{r}}\beta\left(s+\overline{r}, \delta\right) \leq \left(\Delta_i^{(\ell)}\right)^2.\]
+\[\forall s \in \cI_k, \ \ 2\frac{s+\overline{r}}{s \; \overline{r}}\beta\left(s+\overline{r}, \delta\right) \leq \left(\Delta_i^{(\ell)}\right)^2.\]
 Hence, the probability in the right-hand side of \eqref{eq:6:FromHere} is zero, which yields $(b) \leq \delta$.
 
 
@@ -318,7 +319,7 @@ Hence, the probability in the right-hand side of \eqref{eq:6:FromHere} is zero, 
 \subsection{Time and memory costs of \GLRklUCB}
 \label{app:6:EmpiricalPerformances}
 
-As demonstrated, our proposal is empirically efficient in terms of regret, but it is important to also evaluate its cost in terms of both \emph{time} and \emph{memory}.
+As demonstrated in Section~\ref{sec:6:NumericalExperiments}, our proposal is empirically efficient in terms of regret, but it is important to also evaluate its cost in terms of both \emph{time} and \emph{memory}.
 Remember that $\Upsilon_T$ denotes the number of change-points.
 If we denote $d_{\max}$ the longest duration of a stationary sequence, the worst case is $d_{\max} = T$ for a stationary problem, and the easiest case is $d_{\max} \simeq T / \Upsilon_T$ typically for $\Upsilon_T$ evenly spaced change-points.
 %
@@ -386,7 +387,7 @@ and the costs of actively adaptive algorithms, for both computation time and mem
 We include here an extensive comparison of memory costs of the different algorithms.
 %
 For instance on the same experiment as the one used for Table~\ref{table:6:effectOptimizations}, that is problem 1 with $T=5000$, and then with $T=10000$ and $T=20000$, and $100$ independent runs,
-in our Python implementation (using the SMPyBandits library, \cite{SMPyBandits}), we can measure the (mean) real memory cost\footnote{We used one core of a Intel $i5$ Core CPU, GNU/Linux machine running Ubuntu $18.04$ and Python v$3.6$, with $8$ Gb of RAM.} of the different algorithms.
+in our Python implementation (using the SMPyBandits library, \cite{SMPyBandits}), we can measure the (mean) real memory cost\footnote{We used one core of an Intel $i5$ Core CPU, with GNU/Linux Ubuntu $18.04$, Python v$3.6$, and $8$ Gb of RAM.} of the different algorithms.
 The Tables \ref{table:6:TimeCosts} and \ref{table:6:MemoryCosts} included below give the mean ($\pm$ 1 standard-deviation) of real computation time and memory consumption, used by the algorithms.
 The computation time is normalized by the horizon, to reflect the (mean) time used for each time steps $t\in\{1,\dots,T\}$.
 %
@@ -457,7 +458,7 @@ These measurements validate the upper-bound we gave on their memory costs, $\big
 
 
 %-----------------------------------------------------------------------------
-\subsection{Two ideas of numerical optimization}\label{sub:6:IdeasOptimizations}
+\subsection{Two numerical optimization tricks for \GLRklUCB}\label{sub:6:IdeasOptimizations}
 
 In order to empirically improve the main weakness of our proposal, that is its numerical efficiency as shown in Tables~\ref{table:6:TimeCosts},
 we suggest here two simple optimizations tweaks on \GLRklUCB{} (see Algorithm~\ref{algo:6:GLRklUCB}) to drastically speed-up its computation time.
@@ -537,10 +538,9 @@ With such numerical optimization, \GLRklUCB{} is not significantly slower than \
 
 
 \TODOL{Maybe I should keep this, and do the same for the confidence level $\delta$}
-\TODOL{Maybe I can completely remove this part, and only refer to the paper \cite{Besson2019GLRT}.}
 
 As demonstrated in our experiments,
-% presented before in Section~\ref{sec:6:NumericalExperiments},
+presented above in Section~\ref{sec:6:NumericalExperiments},
 the choice of $\alpha=\alpha_0\sqrt{\Upsilon_T\log(T)/T}$ for the exploration probability is a good choice for \GLRklUCB{} to be efficient.
 The dependency w.r.t. the horizon $T$ comes from Corollary~\ref{cor:6:Local} when $\Upsilon_T$ is unknown, and we observe in the Table~\ref{table:6:sensibilityAlpha0} below that the value of $\alpha_0$ does not influence much the performance of our proposal, as long as $\alpha_0\leq1$.
 Different values of $\alpha_0$ are explored, for problems $1$, $2$ and $4$, and we average over $100$ independent runs.
@@ -578,6 +578,19 @@ However, the analysis of \GLRklUCB{} is based on the forced exploration, and we 
     % This is already coded, see https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.threshold_BernoulliGLR
 }
 
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{c|cccccc}
+        \textbf{Choice of threshold function} \textbackslash \textbf{Problems} & Problem $1$ & Problem $2$ & Problem $4$ \\
+        \hline
+        $\beta(n,\delta)$ = XXX     & $51 \pm 29$ & $79 \pm 35$ & $82 \pm 45$ \\
+        $\beta(n,\delta)$ = XXX   & $38 \pm 29$ & $70 \pm 35$ & $76 \pm 39$ \\
+        $\beta(n,\delta)$ = XXX   & $33 \pm 29$ & $69 \pm 31$ & $68 \pm 32$
+    \end{tabular}
+    \caption{Mean regret $\pm$ $1$ standard-deviation, for different choices of threshold function $\beta(n,\delta)$, on three problems of horizon $T=5000$, for \GLRklUCB.}
+    \label{table:6:exploringDifferentThresholdFunctions}
+\end{table}
+
 
 % ----------------------------------------------------------------------------
 \subsection{Comparison of mechanisms used to enforce uniform exploration}\label{sec:6:exploringDifferentForcedExplorationMechanisms}
@@ -588,6 +601,19 @@ However, the analysis of \GLRklUCB{} is based on the forced exploration, and we 
     % https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.GLR_IndexPolicy_WithTracking
     % https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.GLR_IndexPolicy_WithDeterministicExploration
 }
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{c|cccccc}
+        \textbf{Choice of exploration mechanism} \textbackslash \textbf{Problems} & Problem $1$ & Problem $2$ & Problem $4$ \\
+        \hline
+        Uniform random exploration & $51 \pm 29$ & $79 \pm 35$ & $82 \pm 45$ \\
+        Deterministic exploration & $38 \pm 29$ & $70 \pm 35$ & $76 \pm 39$ \\
+        Tracking-based exploration & $33 \pm 29$ & $69 \pm 31$ & $68 \pm 32$
+    \end{tabular}
+    \caption{Mean regret $\pm$ $1$ standard-deviation, for different choices of exploration mechanisms, on three problems of horizon $T=5000$, for \GLRklUCB.}
+    \label{table:6:exploringDifferentThresholdFunctions}
+\end{table}
 
 
 % ----------------------------------------------------------------------------
