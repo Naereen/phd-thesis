@@ -578,18 +578,46 @@ However, the analysis of \GLRklUCB{} is based on the forced exploration, and we 
     % This is already coded, see https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.threshold_BernoulliGLR
 }
 
+We compare the following threshold functions that can be used in the B-GLRT test used for the \GLRklUCB{} algorithm.
+
+\begin{enumerate}
+    \item
+    The first variant is the default one, advised in for \GLRklUCB{}:
+    \[ \beta_1(t, \delta) := \log\left(\frac{3 t^{3/2}}{\delta}\right) = \log(\frac{1}{\delta}) + \log(3) + 3/2 \log(t). \]
+
+    \item
+    The second variant is smaller and does not use this power $3/2$:
+    \[ \beta_2(t, \delta) := \log(\frac{1}{\delta}) + \log(1 + \log(t)). \]
+
+    \item
+    The third variant is using the function $\cT$, as introduced by \eqref{def:6:function_T}.
+    The function $\cT$ is computed with a numerical approximation of the Lambert function $\W$, as explained in Section~\ref{par:6:falseAlarm},
+    \[ \beta_3(t, \delta) := 2 \mathcal{T}\left(\frac{\log(2 t^{3/2}) / \delta}{2}\right) + 6 \log(1 + \log(t)). \]
+
+    \item
+    The last variant is using a $\tilde{\mathcal{T}}(x) = x + 4 \log(1 + x + \sqrt{2x})$ a simply approximation of $\cT(x)$, which is valid and quite accurate as soon as $x \geq 5$,
+    \[ \beta_4(t, \delta) := 2 \tilde{\mathcal{T}}(x)\left(\frac{\log(2 t^{3/2}) / \delta}{2}\right) + 6 \log(1 + \log(t)). \]
+\end{enumerate}
+
+As before, we consider the three problems $1$, $2$ and $4$, with time horizon $T=5000$,
+and we present in Table~\ref{table:6:exploringDifferentThresholdFunctions} the mean results of $1000$ independent runs.
+
 \begin{table}[ht]
     \centering
     \begin{tabular}{c|cccccc}
         \textbf{Choice of threshold function} \textbackslash \textbf{Problems} & Problem $1$ & Problem $2$ & Problem $4$ \\
         \hline
-        $\beta(n,\delta)$ = XXX     & $51 \pm 29$ & $79 \pm 35$ & $82 \pm 45$ \\
-        $\beta(n,\delta)$ = XXX   & $38 \pm 29$ & $70 \pm 35$ & $76 \pm 39$ \\
-        $\beta(n,\delta)$ = XXX   & $33 \pm 29$ & $69 \pm 31$ & $68 \pm 32$
+        $\beta_1(n,\delta)$ & $51 \pm 29$ & $79 \pm 35$ & $82 \pm 45$ \\
+        $\beta_2(n,\delta)$ & $38 \pm 29$ & $70 \pm 35$ & $76 \pm 39$ \\
+        $\beta_3(n,\delta)$ & $33 \pm 29$ & $69 \pm 31$ & $68 \pm 32$ \\
+        $\beta_4(n,\delta)$ & $33 \pm 29$ & $69 \pm 31$ & $68 \pm 32$
     \end{tabular}
     \caption{Mean regret $\pm$ $1$ standard-deviation, for different choices of threshold function $\beta(n,\delta)$, on three problems of horizon $T=5000$, for \GLRklUCB.}
     \label{table:6:exploringDifferentThresholdFunctions}
 \end{table}
+
+The sum-up of these experiments is that it sufficient to use the simplest and most explicit threshold $\beta_1$, instead of the more complicated one that was used for the analysis,
+and that this choice of threshold function $\beta_1$ gives good performance for our proposal \GLRklUCB.
 
 
 % ----------------------------------------------------------------------------
@@ -602,6 +630,23 @@ However, the analysis of \GLRklUCB{} is based on the forced exploration, and we 
     % https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.GLR_IndexPolicy_WithDeterministicExploration
 }
 
+We compare the following threshold functions that can be used in the B-GLRT test used for the \GLRklUCB{} algorithm.
+
+As before, we consider the three problems $1$, $2$ and $4$, with time horizon $T=5000$,
+and we present in Table~\ref{table:6:exploringDifferentForcedExplorationMechanisms} the mean results of $1000$ independent runs.
+
+\begin{enumerate}
+    \item
+    \textbf{Uniform random exploration}:
+    FIXME describe it precisely!
+    \item
+    \textbf{Deterministic exploration}:
+    FIXME describe it precisely!
+    \item
+    \textbf{Tracking-based exploration}:
+    FIXME describe it precisely!
+\end{enumerate}
+
 \begin{table}[ht]
     \centering
     \begin{tabular}{c|cccccc}
@@ -612,8 +657,11 @@ However, the analysis of \GLRklUCB{} is based on the forced exploration, and we 
         Tracking-based exploration & $33 \pm 29$ & $69 \pm 31$ & $68 \pm 32$
     \end{tabular}
     \caption{Mean regret $\pm$ $1$ standard-deviation, for different choices of exploration mechanisms, on three problems of horizon $T=5000$, for \GLRklUCB.}
-    \label{table:6:exploringDifferentThresholdFunctions}
+    \label{table:6:exploringDifferentForcedExplorationMechanisms}
 \end{table}
+
+The sum-up of these experiments is that it sufficient to use the simplest and most explicit threshold $\beta_1$, instead of the more complicated one that was used for the analysis,
+and that this choice of threshold function $\beta_1$ gives good performance for our proposal \GLRklUCB.
 
 
 % ----------------------------------------------------------------------------
