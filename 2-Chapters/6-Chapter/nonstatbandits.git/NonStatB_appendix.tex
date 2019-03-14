@@ -3,6 +3,7 @@
 \subsection{Proofs of useful lemmas}\label{proof:6:Conc}
 % ----------------------------------------------------------------------------
 
+This Appendix gives some proofs omitted in the main text of this chapter.
 
 \subsubsection{Simplified expression for the GLR statistic in one-dimensional exponential families}\label{app:6:GLR_with_kl}
 
@@ -364,6 +365,7 @@ However, they need to store all past rewards and pulls history, to be able to re
 They are also costly in terms of computation time, as at current time $t$, when trying to detect a change with $n_i$ observations of arm $i$ (\ie, $(Z_{i,n})_{1\leq n \leq n_i}$ in Algorithm~\ref{algo:6:GLRklUCB}), the CPD algorithm (\CUSUM{} or \GLR) costs a time $\bigO{n_i}$.
 Indeed, it needs to compute sliding averages for every $s$ in an interval of size $n_i$ (\ie, $\mu_{\text{left}}=\mu_{1:s}$ and $\mu_{\text{right}}=\mu_{s+1:n_i}$) and a test for each $s$ which costs a constant time $\bigO{1}$ (\eg, computing two $\kl$ and checking for a threshold for our \GLR{} test).
 So for every $s$, the running time is $\bigO{1}$, if the sliding averages are computed iteratively based on a simple scheme: first, one compute the total average $\mu_{t_0:t}$ and set $\mu_{\text{left}}=0$ and $\mu_{\text{right}}=\mu_{t_0:t}$. Then for every successive values of $s$, both the left and right sliding window means can be updated with a single memory access and two computations (\ie, $\bigO{1}$):
+%
 \begin{equation}
     z \leftarrow Z_{i, s + 1},\,\,
     \mu_{\text{left}} \leftarrow \frac{s \mu_{\text{left}} + z}{s + 1},\,\,
@@ -396,10 +398,12 @@ We also found that our two optimizations described below in \ref{sub:6:IdeasOpti
 The conclusions to draw for these two Tables \ref{table:6:TimeCosts} and \ref{table:6:MemoryCosts} are twofold.
 
 
+\begin{small} %XXX WARNING
 \begin{table}[ht]
+    \begin{small} %XXX WARNING
     \centering
     \begin{tabular}{c|cccccc}
-    \textbf{Algorithms} \textbackslash \textbf{Problems} & $T=5000$ & $T=10000$ & $T=20000$ \\
+    \textbf{Algorithms} $\;$ \textbackslash $\;$ \textbf{Problems} & $T=5000$ & $T=10000$ & $T=20000$ \\
         \hline
         Thompson sampling & $\boldsymbol{55 \,\mu\text{\textbf{s}} \pm 11\, \mu\text{\textbf{s}}}$ & $\boldsymbol{51 \,\mu\text{\textbf{s}} \pm 6\, \mu\text{\textbf{s}}}$ & $\boldsymbol{49 \,\mu\text{\textbf{s}} \pm 4 \,\mu\text{\textbf{s}}}$ \\
         DTS & $62 \,\mu\text{s} \pm 11 \,\mu\text{s}$ & $60 \,\mu\text{s} \pm 8\, \mu\text{s}$ & $59 \,\mu\text{s} \pm 7 \,\mu\text{s}$ \\
@@ -417,12 +421,16 @@ The conclusions to draw for these two Tables \ref{table:6:TimeCosts} and \ref{ta
     \end{tabular}
     \caption{\textbf{Normalized} computation time, for each time step $t\in\{1,\dots,T\}$, for different horizons.}
     \label{table:6:TimeCosts}
+    \end{small} %XXX WARNING
 \end{table}
+\end{small} %XXX WARNING
 
+\begin{small} %XXX WARNING
 \begin{table}[ht]
+    \begin{small} %XXX WARNING
     \centering
     \begin{tabular}{c|cccccc}
-    \textbf{Algorithms} \textbackslash \textbf{Problems} & $T=5000$ & $T=10000$ & $T=20000$ \\
+    \textbf{Algorithms} $\;$ \textbackslash $\;$ \textbf{Problems} & $T=5000$ & $T=10000$ & $T=20000$ \\
         \hline
         Thompson sampling & $813$ B $\pm$ $63$ B & $819$ B $\pm$ 27 B & $818$ B $\pm$ $35$ B \\\
         DTS & $946$ B $\pm$ $38$ B & $946$ B $\pm$ $38$ B & $946$ B $\pm$ $39$ B \\
@@ -439,7 +447,9 @@ The conclusions to draw for these two Tables \ref{table:6:TimeCosts} and \ref{ta
     \end{tabular}
     \caption{\textbf{Non normalized} memory costs, for the same problem (Pb 1) with different horizons.}
     \label{table:6:MemoryCosts}
+    \end{small} %XXX WARNING
 \end{table}
+\end{small} %XXX WARNING
 
 
 First, we verify the results stated above for the time complexity of different algorithms.
@@ -502,11 +512,13 @@ Choosing small values, like $\Delta n = 20, \Delta s = 20$, can speed-up \GLRklU
 It is very satisfying to see that the use of these optimizations do not reduce much the regret of \GLRklUCB, as it still outperforms most state-of-the-art algorithms, and significantly reduces the computation time as wanted.
 With such numerical optimization, \GLRklUCB{} is not significantly slower than \klUCB{} while being much more efficient for piece-wise stationary problems.
 
+\begin{small} %XXX WARNING
 \begin{table}[ht]
+    \begin{small} %XXX WARNING
     \centering
     % \begin{minipage}[b]{0.49\linewidth}\centering
         \begin{tabular}{c|cccc}
-            $\Delta n$ \textbackslash $\Delta s$ & $1$ & $5$ & $10$ & $20$ \\
+            $\Delta n$ $\;$ \textbackslash $\;$ $\Delta s$ & $1$ & $5$ & $10$ & $20$ \\
             \hline
             $1$ & $44 \pm 29$ & $44 \pm 28$ & $50 \pm 31$ & $53 \pm 28$ \\
             $5$ & $48 \pm 29$ & $41 \pm 30$ & $44 \pm 28$ & $47 \pm 31$ \\
@@ -519,7 +531,7 @@ With such numerical optimization, \GLRklUCB{} is not significantly slower than \
     % \begin{minipage}[b]{0.49\linewidth}\centering
         \begin{tabular}{c|cccc}
             % \backslashbox{$\Delta n$}{$\Delta s$}
-            $\Delta n$ \textbackslash $\Delta s$
+            $\Delta n$ $\;$ \textbackslash $\;$ $\Delta s$
             & $1$ & $5$ & $10$ & $20$ \\
             \hline
             $1$ & $\mathbf{50 \,\text{s}\, \pm 4.5 \,\text{s}}$ & $11.1$ s $\pm$ $1.16$ s & $5.8$ s $\pm$ $0.5$ s & $3.3$ s $\pm$ $0.3$ s \\
@@ -530,7 +542,9 @@ With such numerical optimization, \GLRklUCB{} is not significantly slower than \
     % \end{minipage}
     \caption{Effects of the two optimizations parameters $\Delta n$ and $\Delta s$, on the mean regret $R_T$ (top) and mean computation time (bottom) for \GLRklUCB{} on a simple problem. Using the optimizations with $\Delta n = \Delta s = 20$ does not reduce the regret much but speeds up the computations by about a \textbf{factor} $\mathbf{50}$.}
     \label{table:6:effectOptimizations}
+    \end{small} %XXX WARNING
 \end{table}
+\end{small} %XXX WARNING
 
 
 % ----------------------------------------------------------------------------
@@ -548,10 +562,12 @@ We observe in Table~\ref{table:6:sensibilityAlpha0} that the parameter $\alpha_0
 and that surprisingly, choosing $\alpha_0 = 0$ does not reduce the empirical performance of \GLRklUCB, which means that on some problems there is no need of a forced exploration.
 However, the analysis of \GLRklUCB{} is based on the forced exploration, and we found that for a larger number of arms, or for problems when the optimal arm change constantly, the forced exploration is required.
 
+\begin{small} %XXX WARNING
 \begin{table}[ht]
+    \begin{small} %XXX WARNING
     \centering
     \begin{tabular}{c|cccccc}
-        \textbf{Choice of} $\alpha_0$ \textbackslash \textbf{Problems} & Problem $1$ & Problem $2$ & Problem $4$ \\
+        \textbf{Choice of} $\alpha_0$ $\;$ \textbackslash $\;$ \textbf{Problems} & Problem $1$ & Problem $2$ & Problem $4$ \\
         \hline
         $\alpha_0=1$     & $51 \pm 29$ & $79 \pm 35$ & $82 \pm 45$ \\
         $\alpha_0=0.5$   & $38 \pm 29$ & $70 \pm 35$ & $76 \pm 39$ \\
@@ -562,9 +578,11 @@ However, the analysis of \GLRklUCB{} is based on the forced exploration, and we 
         $\alpha_0=0.001$ & $38 \pm 30$ & $69 \pm 34$ & $67 \pm 34$ \\
         $\alpha_0=0$     & $36 \pm 32$ & $66 \pm 36$ & $67 \pm 33$
     \end{tabular}
-    \caption{Mean regret $\pm$ $1$ standard-deviation, for different choices of $\alpha_0\in[0,1]$ on three problems of horizon $T=5000$, for \GLRklUCB{} with \textbf{local restarts}, with $\alpha_T = \alpha_0\sqrt{\Upsilon_T \log(T)/T}$.}
+    \caption{Mean regret $\pm$ $1$ std-dev, for different choices of scaling factor for the forced exploration probability $\alpha_0\in[0,1]$ (\ie, $\alpha=\alpha_0 \alpha_T$), on three problems of horizon $T=5000$, for \GLRklUCB{} with \textbf{local restarts}, with $\alpha_T = \alpha_0\sqrt{\Upsilon_T \log(T)/T}$.}
     \label{table:6:sensibilityAlpha0}
+    \end{small} %XXX WARNING
 \end{table}
+\end{small} %XXX WARNING
 
 
 % ----------------------------------------------------------------------------
@@ -575,34 +593,35 @@ The dependency w.r.t. the horizon $T$ comes from Corollary~\ref{cor:6:Local} whe
 Different values of $\delta_0$ are explored, for problems $1$, $2$ and $4$, and we average the results over $100$ independent runs.
 Other parameters are set to \textbf{Local} restarts, $\alpha_T = 0.1 \sqrt{\Upsilon_T\log(T)/T}$, and $\Delta n = \Delta s = 10$ to speed-up the experiments.
 %
-% In the three experiments, \GLRklUCB{} performs closely to the Oracle-Restart \klUCB{}, and outperforms all or almost all the other approaches, for all choices of $\delta_0$.
-We observe in Table~\ref{table:6:sensibilityDelta} that the parameter $\delta_0$ has a significative impact on the performance,
-and that choosing $\delta_0 = 1$ is indeed the optimal choice.
+We observe in Table~\ref{table:6:sensibilityDelta} that the parameter $\delta_0$ has no significative impact on the performance,
+and that choosing $\delta_0 = 1$ is indeed a valid choice.
 
-\TODOL{I should do the same for the confidence level $\delta$}
-
+\begin{small} %XXX WARNING
 \begin{table}[ht]
+    \begin{small} %XXX WARNING
     \centering
     \begin{tabular}{c|cccccc}
-        \textbf{Choice of} $\delta_0$ \textbackslash \textbf{Problems} & Problem $1$ & Problem $2$ & Problem $4$ \\
+        \textbf{Choice of} $\delta_0$ $\;$ \textbackslash $\;$ \textbf{Problems} & Problem $1$ & Problem $2$ & Problem $4$ \\
         \hline
-        $\delta_0=1000$       & $65 \pm 31$ & $106 \pm 35$ & $XXX$ \\
-        $\delta_0=500$        & $70 \pm 28$ & $104 \pm 35$ & $XXX$ \\
-        $\delta_0=100$        & $72 \pm 32$ & $105 \pm 34$ & $XXX$ \\
-        $\delta_0=50$         & $72 \pm 32$ & $112 \pm 31$ & $XXX$ \\
-        $\delta_0=10$         & $75 \pm 32$ & $107 \pm 31$ & $XXX$ \\
-        $\delta_0=5$          & $76 \pm 31$ & $103 \pm 30$ & $XXX$ \\
-        $\mathbf{\delta_0=1}$  & $72 \pm 32$ & $111 \pm 30$ & $XXX$ \\
-        $\delta_0=0.5$        & $72 \pm 30$ & $117 \pm 35$ & $XXX$ \\
-        $\delta_0=0.1$        & $70 \pm 29$ & $111 \pm 29$ & $XXX$ \\
-        $\delta_0=0.05$       & $68 \pm 29$ & $116 \pm 37$ & $XXX$ \\
-        $\delta_0=0.01$       & $74 \pm 29$ & $114 \pm 32$ & $XXX$ \\
-        $\delta_0=0.005$      & $76 \pm 26$ & $114 \pm 34$ & $XXX$ \\
-        $\delta_0=0.001$      & $76 \pm 29$ & $117 \pm 34$ & $XXX$ \\
+        $\delta_0=1000$       & $\mathbf{65 \pm 31}$ & $106 \pm 35$ & $\mathbf{93 \pm 34}$ \\
+        $\delta_0=500$        & $70 \pm 28$ & $104 \pm 35$ & $94 \pm 33$ \\
+        $\delta_0=100$        & $72 \pm 32$ & $105 \pm 34$ & $95 \pm 32$ \\
+        $\delta_0=50$         & $72 \pm 32$ & $112 \pm 31$ & $94 \pm 31$ \\
+        $\delta_0=10$         & $75 \pm 32$ & $107 \pm 31$ & $97 \pm 33$ \\
+        $\delta_0=5$          & $76 \pm 31$ & $\mathbf{103 \pm 30}$ & $97 \pm 32$ \\
+        \textcolor{blue}{$\delta_0=1$}  & $72 \pm 32$ & $111 \pm 30$ & $96 \pm 31$ \\
+        $\delta_0=0.5$        & $72 \pm 30$ & $117 \pm 35$ & $97 \pm 31$ \\
+        $\delta_0=0.1$        & $70 \pm 29$ & $111 \pm 29$ & $99 \pm 32$ \\
+        $\delta_0=0.05$       & $68 \pm 29$ & $116 \pm 37$ & $101 \pm 30$ \\
+        $\delta_0=0.01$       & $74 \pm 29$ & $114 \pm 32$ & $101 \pm 32$ \\
+        $\delta_0=0.005$      & $76 \pm 26$ & $114 \pm 34$ & $101 \pm 31$ \\
+        $\delta_0=0.001$      & $76 \pm 29$ & $117 \pm 34$ & $102 \pm 32$
     \end{tabular}
-    \caption{Mean regret $\pm$ $1$ standard-deviation, for different choices of $\delta_0\in(0,100]$ on three problems of horizon $T=5000$, for \GLRklUCB{} with $\delta=\delta_0 / \sqrt{\Upsilon_T T}$.}
+    \caption{Mean regret $\pm$ $1$ std-dev, for different choices of scaling factor for the confidence level $\delta_0$ (\ie, $\delta=\delta_0 \delta_T$), on three problems of horizon $T=5000$, for \GLRklUCB{} with $\delta=\delta_0 / \sqrt{\Upsilon_T T}$.}
     \label{table:6:sensibilityDelta}
+    \end{small} %XXX WARNING
 \end{table}
+\end{small} %XXX WARNING
 
 
 % ----------------------------------------------------------------------------
@@ -612,13 +631,17 @@ and that choosing $\delta_0 = 1$ is indeed the optimal choice.
 %
 % This is already coded, see https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.threshold_BernoulliGLR
 
-We compare the following threshold functions that can be used in the B-GLRT test used for the \GLRklUCB{} algorithm (see the detail in equation \eqref{eq:whenDoesGLRklUCBrestart} and in Algorithm~\ref{algo:6:GLRklUCB}).
+We compare the following threshold functions, $\beta(n,\delta)$ for $n\in\N^*$ and $\delta>0$, that can be used in the B-GLRT test used for the \GLRklUCB{} algorithm (see the details in equation \eqref{eq:whenDoesGLRklUCBrestart} and in Algorithm~\ref{algo:6:GLRklUCB}).
+%
+In the B-GLRT test, there is a $\sup$ on $s\in[2,n-1]$, and this $\sup$ is compared with the threshold $\beta(n,\delta)$. The threshold function was chosen in order to have Lemma~\ref{lem:6:FalseAlarm}, that is a false alarm probability bounded by $\delta$.
+We note that we considered the possibility of using a threshold that could be a function of both $n$ the sample size as well as $s\in[2,n-1]$ the ``splitting index'' between means $\widehat{\mu}_{1:s}$ and $\widehat{\mu}_{s+1:n}$.
+We did some preliminary experiments to explore this direction and did not find a difference, in terms of numerical efficient of the resulting \GLRklUCB{} algorithm, and mathematically the analysis presented in Section~\ref{subsec:6:PropGLR}
 
 \begin{enumerate}
     \item
-    The first variant is the default one, and it is the one we advised to use in practice for \GLRklUCB{}.
-    It is very simple to compute numerically:
-    \[ \beta_1(n, \delta) := \log\left(\frac{3 n^{3/2}}{\delta}\right) = \log(\frac{1}{\delta}) + \log(3) + 3/2 \log(n). \]
+    The first variant is the one we advised to use in practice for \GLRklUCB,
+    it is very simple to compute numerically:
+    \[ \beta_1(n, \delta) := \log\left(\frac{3 n^{3/2}}{\delta}\right) = -\log(\delta) + \log(3) + 3/2 \log(n). \]
 
     \item
     The second variant is smaller and does not use this power $3/2$:
@@ -626,7 +649,7 @@ We compare the following threshold functions that can be used in the B-GLRT test
 
     \item
     The third variant is using the function $\cT$, as introduced by \eqref{def:6:function_T}.
-    The function $\cT$ is computed with a numerical approximation\footnote{~The Lambert $\cW$ function is provided in Python with \texttt{scipy.special.lambertw} from the \texttt{scipy} module \cite{scipy}.} of the Lambert function $\cW$, as explained in Section~\ref{par:6:falseAlarm},
+    The function $\cT$ is computed with a numerical approximation\footnote{~The Lambert $\cW$ function is available in Python as \texttt{scipy.special.lambertw} from \texttt{scipy} \cite{scipy}.} of the Lambert function $\cW$, as explained in Section~\ref{par:6:falseAlarm},
     \[ \beta_3(n, \delta) := 2 \mathcal{T}\left(\frac{\log(2 n^{3/2}) / \delta}{2}\right) + 6 \log(1 + \log(n)). \]
 
     \item
@@ -639,10 +662,12 @@ and we present in Table~\ref{table:6:exploringDifferentThresholdFunctions} the m
 We only consider the variant of \GLRklUCB{} based on \textbf{Local restarts}, and we used the parameters $\alpha_T,\delta_T$ as given by the Corollary~\ref{cor:6:Local},
 and with the deterministic exploration scheme.
 
+\begin{small} %XXX WARNING
 \begin{table}[ht]
+    \begin{small} %XXX WARNING
     \centering
     \begin{tabular}{c|cccccc}
-        \textbf{Choice of threshold function} \textbackslash \textbf{Problems} & Problem $1$ & Problem $2$ & Problem $4$ \\
+        \textbf{Threshold function} $\;$ \textbackslash $\;$ \textbf{Problems} & Problem $1$ & Problem $2$ & Problem $4$ \\
         \hline
         $\beta_1(n,\delta)$ & $\mathbf{70 \pm 30}$ & $109 \pm 32$ & $99 \pm 29$ \\
         $\beta_2(n,\delta)$ & $73 \pm 28$ & $99 \pm 32$ & $\mathbf{88 \pm 32}$ \\
@@ -651,12 +676,14 @@ and with the deterministic exploration scheme.
     \end{tabular}
     \caption{Mean regret $\pm$ $1$ standard-deviation, for different choices of threshold function $\beta(n,\delta)$, on three problems of horizon $T=5000$, for \GLRklUCB.}
     \label{table:6:exploringDifferentThresholdFunctions}
+    \end{small} %XXX WARNING
 \end{table}
+\end{small} %XXX WARNING
 
 As we could expect, the two choices $\beta_1$ and $\beta_2$ give similar results, as well as $\beta_3$ and $\beta_4$. The first two choices give better performance in most cases, and they are computationally less costly.
 The threshold $\beta_1$ is closer mathematically to the threshold $\beta_3$, that was used in the analysis, and thus it is the one we advise to use in practice.
 The sum-up of these experiments is that it sufficient to use the simplest and most explicit threshold $\beta_1$, instead of the more complicated one that was used for the analysis.
-Therefore, the choice of threshold function $\beta_1(n, \delta) := \log\left(\frac{3 n^{3/2}}{\delta}\right)$ for our proposal \GLRklUCB{} presented in Algorithm~\ref{algo:6:GLRklUCB} is validated by these experiments, and this choice gives good empirical performance.
+Therefore, the choice of threshold function $\beta_1(n, \delta) := \log\left(3 n^{3/2} / \delta\right)$ for our proposal \GLRklUCB{} presented in Algorithm~\ref{algo:6:GLRklUCB} is validated by these experiments, and this choice gives good empirical performance.
 
 
 % ----------------------------------------------------------------------------
@@ -701,21 +728,27 @@ As before, we consider the three problems $1$, $2$ and $4$, with time horizon $T
 and we present in Table~\ref{table:6:exploringDifferentForcedExplorationMechanisms} the mean results of $100$ independent runs.
 We include the two variants of \GLRklUCB, based on \textbf{Local restarts} or \textbf{Global restarts}, for which we used the parameters $\alpha_T,\delta_T$ as given by the two Corollaries~\ref{cor:6:Global} and \ref{cor:6:Local}.
 
+\begin{small} %XXX WARNING
 \begin{table}[ht]
+    \begin{small} %XXX WARNING
     \centering
     \begin{tabular}{c|cccccc}
-        \textbf{Choice of exploration mechanism} \textbackslash \textbf{Problems} & Problem $1$ & Problem $2$ & Problem $4$ \\
+        \textbf{Exploration mechanism} $\;$ \textbackslash $\;$ \textbf{Problems} & Problem $1$ & Problem $2$ & Problem $4$ \\
         \hline
-        Deterministic exploration (\textbf{Local})   & $\mathbf{68 \pm 33}$ & $116 \pm 36$ & $99 \pm 33$ \\
-        Deterministic exploration (\textbf{Global})  & $97 \pm 28$ & $134 \pm 36$ & $131 \pm 32$ \\
-        Uniform random exploration (\textbf{Local})  & $74 \pm 30$ & $\mathbf{108 \pm 33}$ & $106 \pm 31$ \\
-        Uniform random exploration (\textbf{Global}) & $91 \pm 30$ & $134 \pm 33$ & $129 \pm 33$ \\
-        Tracking-based exploration (\textbf{Local})  & $73 \pm 32$ & $104 \pm 33$ & $\mathbf{89 \pm 29}$ \\
-        Tracking-based exploration (\textbf{Global}) & $96 \pm 26$ & $133 \pm 32$ & $120 \pm 30$
+        Deterministic exploration (Local)   & $\mathbf{68 \pm 33}$ & $116 \pm 36$ & $99 \pm 33$ \\
+        Deterministic exploration (Global)  & $97 \pm 28$ & $134 \pm 36$ & $131 \pm 32$ \\
+        \hline
+        Uniform random exploration (Local)  & $74 \pm 30$ & $\mathbf{108 \pm 33}$ & $106 \pm 31$ \\
+        Uniform random exploration (Global) & $91 \pm 30$ & $134 \pm 33$ & $129 \pm 33$ \\
+        \hline
+        Tracking-based exploration (Local)  & $73 \pm 32$ & $104 \pm 33$ & $\mathbf{89 \pm 29}$ \\
+        Tracking-based exploration (Global) & $96 \pm 26$ & $133 \pm 32$ & $120 \pm 30$
     \end{tabular}
-    \caption{Mean regret $\pm$ $1$ standard-deviation, for different choices of exploration mechanisms, on three problems of horizon $T=5000$, for \GLRklUCB.}
+    \caption{Mean regret $\pm$ $1$ standard-deviation, for different choices of exploration mechanisms, on three problems of horizon $T=5000$, for \GLRklUCB, with local or global restarts.}
     \label{table:6:exploringDifferentForcedExplorationMechanisms}
+    \end{small} %XXX WARNING
 \end{table}
+\end{small} %XXX WARNING
 
 As expected, all options give similar results, and each of the three options was found to outperform the two others in one of the three problems considered for this experiments (problems $1$, $2$ and $4$).
 The result highlighted in \textbf{bold} in Table~\ref{table:6:exploringDifferentForcedExplorationMechanisms} shows the best algorithm in each problem (\ie, the algorithm and its option that obtains the smaller mean regret in the considered column).
