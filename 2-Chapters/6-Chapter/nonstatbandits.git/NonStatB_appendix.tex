@@ -118,7 +118,7 @@ Its proof follows from a straightforward application of the Cram\'er-Chernoff me
 \begin{lemma}\label{lem:6:Chernoff2arms}
     Let $\widehat{\mu}_{i,s}$ be the empirical mean of $s$ \iid{} observations with mean $\mu_i$, for $i \in \{a,b\}$, that are $\sigma^2$-sub-Gaussian. Define $\Delta = \mu_a - \mu_b$. Then for any $s,r > 0$, we have
     \begin{equation}
-        \bP\left(\frac{s \; r}{s+r}\Big(\widehat{\mu}_{a,s} - \widehat{\mu}_{b,r} - \Delta\Big)^2 \geq u \right) &\leq& 2\exp\left(- \frac{u}{2\sigma^2}\right).
+        \bP\left(\frac{s \; r}{s+r}\Big(\widehat{\mu}_{a,s} - \widehat{\mu}_{b,r} - \Delta\Big)^2 \geq u \right) \leq 2\exp\left(- \frac{u}{2\sigma^2}\right).
     \end{equation}
 \end{lemma}
 
@@ -536,17 +536,14 @@ With such numerical optimization, \GLRklUCB{} is not significantly slower than \
 % ----------------------------------------------------------------------------
 \subsection{Sensibility analysis of the exploration probability $\alpha$}\label{sec:6:choosingAlpha0}
 
-
-\TODOL{Maybe I should keep this, and do the same for the confidence level $\delta$}
-
 As demonstrated in our experiments,
 presented above in Section~\ref{sec:6:NumericalExperiments},
-the choice of $\alpha=\alpha_0\sqrt{\Upsilon_T\log(T)/T}$ for the exploration probability is a good choice for \GLRklUCB{} to be efficient.
+the choice of $\alpha=\alpha_0\sqrt{\Upsilon_T\log(T)/T}$ for the exploration probability is a good choice for \GLRklUCB{} to be efficient (for the \textbf{local restarts} option).
 The dependency w.r.t. the horizon $T$ comes from Corollary~\ref{cor:6:Local} when $\Upsilon_T$ is unknown, and we observe in the Table~\ref{table:6:sensibilityAlpha0} below that the value of $\alpha_0$ does not influence much the performance of our proposal, as long as $\alpha_0\leq1$.
-Different values of $\alpha_0$ are explored, for problems $1$, $2$ and $4$, and we average over $100$ independent runs.
+Different values of $\alpha_0$ are explored, for problems $1$, $2$ and $4$, and we average the results over $100$ independent runs.
 Other parameters are set to \textbf{Local} restarts, $\delta_T=1/\sqrt{\Upsilon_T T}$, and $\Delta n = \Delta s = 10$ to speed-up the experiments.
 %
-In the three experiments, \GLRklUCB{} performs close to the Oracle-Restart \klUCB{}, and outperforms all or almost all the other approaches, for all choices of $\alpha_0$.
+In the three experiments, \GLRklUCB{} performs closely to the Oracle-Restart \klUCB{}, and outperforms all or almost all the other approaches, for all choices of $\alpha_0$.
 We observe in Table~\ref{table:6:sensibilityAlpha0} that the parameter $\alpha_0$ does not have a significative impact on the performance,
 and that surprisingly, choosing $\alpha_0 = 0$ does not reduce the empirical performance of \GLRklUCB, which means that on some problems there is no need of a forced exploration.
 However, the analysis of \GLRklUCB{} is based on the forced exploration, and we found that for a larger number of arms, or for problems when the optimal arm change constantly, the forced exploration is required.
@@ -565,17 +562,54 @@ However, the analysis of \GLRklUCB{} is based on the forced exploration, and we 
         $\alpha_0=0.001$ & $38 \pm 30$ & $69 \pm 34$ & $67 \pm 34$ \\
         $\alpha_0=0$     & $36 \pm 32$ & $66 \pm 36$ & $67 \pm 33$
     \end{tabular}
-    \caption{Mean regret $\pm$ $1$ standard-deviation, for different choices of $\alpha_0\in[0,1]$ on three problems of horizon $T=5000$, for \GLRklUCB{} with $\alpha_T = \alpha_0\sqrt{\Upsilon_T \log(T)/T}$.}
+    \caption{Mean regret $\pm$ $1$ standard-deviation, for different choices of $\alpha_0\in[0,1]$ on three problems of horizon $T=5000$, for \GLRklUCB{} with \textbf{local restarts}, with $\alpha_T = \alpha_0\sqrt{\Upsilon_T \log(T)/T}$.}
     \label{table:6:sensibilityAlpha0}
+\end{table}
+
+
+% ----------------------------------------------------------------------------
+\subsection{Sensibility analysis of the confidence level $\delta$}\label{sec:6:choosingDelta}
+
+Similarly, the choice of $\delta=\delta_0 / \sqrt{\Upsilon_T T}$ for the confidence level is a good choice for \GLRklUCB{} to be efficient (for the \textbf{local restarts} option).
+The dependency w.r.t. the horizon $T$ comes from Corollary~\ref{cor:6:Local} when $\Upsilon_T$ is unknown, and we observe in the Table~\ref{table:6:sensibilityDelta} below that the value of $\delta_0$ does not influence much the performance of our proposal, as long as $\delta_0\leq1$.
+Different values of $\delta_0$ are explored, for problems $1$, $2$ and $4$, and we average the results over $100$ independent runs.
+Other parameters are set to \textbf{Local} restarts, $\alpha_T = 0.1 \sqrt{\Upsilon_T\log(T)/T}$, and $\Delta n = \Delta s = 10$ to speed-up the experiments.
+%
+% In the three experiments, \GLRklUCB{} performs closely to the Oracle-Restart \klUCB{}, and outperforms all or almost all the other approaches, for all choices of $\delta_0$.
+We observe in Table~\ref{table:6:sensibilityDelta} that the parameter $\delta_0$ has a significative impact on the performance,
+and that choosing $\delta_0 = 1$ is indeed the optimal choice.
+
+\TODOL{I should do the same for the confidence level $\delta$}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{c|cccccc}
+        \textbf{Choice of} $\delta_0$ \textbackslash \textbf{Problems} & Problem $1$ & Problem $2$ & Problem $4$ \\
+        \hline
+        $\delta_0=1000$       & $65 \pm 31$ & $106 \pm 35$ & $XXX$ \\
+        $\delta_0=500$        & $70 \pm 28$ & $104 \pm 35$ & $XXX$ \\
+        $\delta_0=100$        & $72 \pm 32$ & $105 \pm 34$ & $XXX$ \\
+        $\delta_0=50$         & $72 \pm 32$ & $112 \pm 31$ & $XXX$ \\
+        $\delta_0=10$         & $75 \pm 32$ & $107 \pm 31$ & $XXX$ \\
+        $\delta_0=5$          & $76 \pm 31$ & $103 \pm 30$ & $XXX$ \\
+        $\mathbf{\delta_0=1}$  & $72 \pm 32$ & $111 \pm 30$ & $XXX$ \\
+        $\delta_0=0.5$        & $72 \pm 30$ & $117 \pm 35$ & $XXX$ \\
+        $\delta_0=0.1$        & $70 \pm 29$ & $111 \pm 29$ & $XXX$ \\
+        $\delta_0=0.05$       & $68 \pm 29$ & $116 \pm 37$ & $XXX$ \\
+        $\delta_0=0.01$       & $74 \pm 29$ & $114 \pm 32$ & $XXX$ \\
+        $\delta_0=0.005$      & $76 \pm 26$ & $114 \pm 34$ & $XXX$ \\
+        $\delta_0=0.001$      & $76 \pm 29$ & $117 \pm 34$ & $XXX$ \\
+    \end{tabular}
+    \caption{Mean regret $\pm$ $1$ standard-deviation, for different choices of $\delta_0\in(0,100]$ on three problems of horizon $T=5000$, for \GLRklUCB{} with $\delta=\delta_0 / \sqrt{\Upsilon_T T}$.}
+    \label{table:6:sensibilityDelta}
 \end{table}
 
 
 % ----------------------------------------------------------------------------
 \subsection{Comparison of different threshold functions $\beta$}\label{sec:6:exploringDifferentThresholdFunctions}
 
-% \TODOL{In only one or two short numerical experiment, for example Pb 1 and 2, I can present in a table the regret obtained by \GLRklUCB, both local and global or only local, for different values of the threshold functions.
-%     TODO: run the experiments!
-% }
+% In only one or two short numerical experiment, for example Pb 1 and 2, I can present in a table the regret obtained by \GLRklUCB, both local and global or only local, for different values of the threshold functions.
+%
 % This is already coded, see https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.threshold_BernoulliGLR
 
 We compare the following threshold functions that can be used in the B-GLRT test used for the \GLRklUCB{} algorithm (see the detail in equation \eqref{eq:whenDoesGLRklUCBrestart} and in Algorithm~\ref{algo:6:GLRklUCB}).
@@ -584,24 +618,24 @@ We compare the following threshold functions that can be used in the B-GLRT test
     \item
     The first variant is the default one, and it is the one we advised to use in practice for \GLRklUCB{}.
     It is very simple to compute numerically:
-    \[ \beta_1(t, \delta) := \log\left(\frac{3 t^{3/2}}{\delta}\right) = \log(\frac{1}{\delta}) + \log(3) + 3/2 \log(t). \]
+    \[ \beta_1(n, \delta) := \log\left(\frac{3 n^{3/2}}{\delta}\right) = \log(\frac{1}{\delta}) + \log(3) + 3/2 \log(n). \]
 
     \item
     The second variant is smaller and does not use this power $3/2$:
-    \[ \beta_2(t, \delta) := \log(\frac{1}{\delta}) + \log(1 + \log(t)). \]
+    \[ \beta_2(n, \delta) := \log\left(\frac{1}{\delta}\right) + \log(1 + \log(n)). \]
 
     \item
     The third variant is using the function $\cT$, as introduced by \eqref{def:6:function_T}.
     The function $\cT$ is computed with a numerical approximation\footnote{~The Lambert $\cW$ function is provided in Python with \texttt{scipy.special.lambertw} from the \texttt{scipy} module \cite{scipy}.} of the Lambert function $\cW$, as explained in Section~\ref{par:6:falseAlarm},
-    \[ \beta_3(t, \delta) := 2 \mathcal{T}\left(\frac{\log(2 t^{3/2}) / \delta}{2}\right) + 6 \log(1 + \log(t)). \]
+    \[ \beta_3(n, \delta) := 2 \mathcal{T}\left(\frac{\log(2 n^{3/2}) / \delta}{2}\right) + 6 \log(1 + \log(n)). \]
 
     \item
-    The forth variant is using the function $\tilde{\mathcal{T}}(x) = x + 4 \log(1 + x + \sqrt{2x})$, as a simple approximation of $\cT(x)$, which is valid and quite accurate as soon as $x \geq 5$,
-    \[ \beta_4(t, \delta) := 2 \tilde{\mathcal{T}}(x)\left(\frac{\log(2 t^{3/2}) / \delta}{2}\right) + 6 \log(1 + \log(t)). \]
+    The forth variant is using the function $\widetilde{\mathcal{T}}(x) = x + 4 \log(1 + x + \sqrt{2x})$, as a simple approximation of $\cT(x)$, which is valid and quite accurate as soon as $x \geq 5$,
+    \[ \beta_4(n, \delta) := 2 \widetilde{\mathcal{T}}\left(\frac{\log(2 n^{3/2}) / \delta}{2}\right) + 6 \log(1 + \log(n)). \]
 \end{enumerate}
 
 As before, we consider the three problems $1$, $2$ and $4$, with time horizon $T=5000$,
-and we present in Table~\ref{table:6:exploringDifferentThresholdFunctions} the mean results of $1000$ independent runs.
+and we present in Table~\ref{table:6:exploringDifferentThresholdFunctions} the mean results of $100$ independent runs.
 We only consider the variant of \GLRklUCB{} based on \textbf{Local restarts}, and we used the parameters $\alpha_T,\delta_T$ as given by the Corollary~\ref{cor:6:Local},
 and with the deterministic exploration scheme.
 
@@ -610,25 +644,26 @@ and with the deterministic exploration scheme.
     \begin{tabular}{c|cccccc}
         \textbf{Choice of threshold function} \textbackslash \textbf{Problems} & Problem $1$ & Problem $2$ & Problem $4$ \\
         \hline
-        $\beta_1(n,\delta)$ & $70 \pm 30$ & $109 \pm 32$ & $99 \pm 29$ \\
-        $\beta_2(n,\delta)$ & $73 \pm 28$ & $99 \pm 32$ & $88 \pm 32$ \\
-        $\beta_3(n,\delta)$ & $77 \pm 27$ & $89 \pm 32$ & $134 \pm 35$ \\
+        $\beta_1(n,\delta)$ & $\mathbf{70 \pm 30}$ & $109 \pm 32$ & $99 \pm 29$ \\
+        $\beta_2(n,\delta)$ & $73 \pm 28$ & $99 \pm 32$ & $\mathbf{88 \pm 32}$ \\
+        $\beta_3(n,\delta)$ & $77 \pm 27$ & $\mathbf{89 \pm 32}$ & $134 \pm 35$ \\
         $\beta_4(n,\delta)$ & $77 \pm 30$ & $101 \pm 30$ & $135 \pm 30$
     \end{tabular}
     \caption{Mean regret $\pm$ $1$ standard-deviation, for different choices of threshold function $\beta(n,\delta)$, on three problems of horizon $T=5000$, for \GLRklUCB.}
     \label{table:6:exploringDifferentThresholdFunctions}
 \end{table}
 
+As we could expect, the two choices $\beta_1$ and $\beta_2$ give similar results, as well as $\beta_3$ and $\beta_4$. The first two choices give better performance in most cases, and they are computationally less costly.
+The threshold $\beta_1$ is closer mathematically to the threshold $\beta_3$, that was used in the analysis, and thus it is the one we advise to use in practice.
 The sum-up of these experiments is that it sufficient to use the simplest and most explicit threshold $\beta_1$, instead of the more complicated one that was used for the analysis.
-Therefore, our choice of threshold function $\beta_1$ for our proposal \GLRklUCB{} presented in Algorithm~\ref{algo:6:GLRklUCB} is validated by these experiments, and this choice gives good performance for our proposal.
+Therefore, the choice of threshold function $\beta_1(n, \delta) := \log\left(\frac{3 n^{3/2}}{\delta}\right)$ for our proposal \GLRklUCB{} presented in Algorithm~\ref{algo:6:GLRklUCB} is validated by these experiments, and this choice gives good empirical performance.
 
 
 % ----------------------------------------------------------------------------
 \subsection{Comparison of mechanisms used to enforce uniform exploration}\label{sec:6:exploringDifferentForcedExplorationMechanisms}
 
-% \TODOL{In only one or two short numerical experiment, for example Pb 1 and 2, I can present in a table the regret obtained by \GLRklUCB, both local and global or only local, for different options of the forced exploration mechanism (uniform random, tracking, deterministic).
-%     TODO run and finish the experiments!
-% }
+% In only one or two short numerical experiment, for example Pb 1 and 2, I can present in a table the regret obtained by \GLRklUCB, both local and global or only local, for different options of the forced exploration mechanism (uniform random, tracking, deterministic).
+%
 % This is already coded, see
 % https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.GLR_IndexPolicy_WithTracking
 % https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.GLR_IndexPolicy_WithDeterministicExploration
@@ -663,7 +698,7 @@ Note that the analysis we gave in Section~\ref{sec:6:RegretAnalysis} is based on
 \end{enumerate}
 
 As before, we consider the three problems $1$, $2$ and $4$, with time horizon $T=5000$,
-and we present in Table~\ref{table:6:exploringDifferentForcedExplorationMechanisms} the mean results of $1000$ independent runs.
+and we present in Table~\ref{table:6:exploringDifferentForcedExplorationMechanisms} the mean results of $100$ independent runs.
 We include the two variants of \GLRklUCB, based on \textbf{Local restarts} or \textbf{Global restarts}, for which we used the parameters $\alpha_T,\delta_T$ as given by the two Corollaries~\ref{cor:6:Global} and \ref{cor:6:Local}.
 
 \begin{table}[ht]
@@ -682,12 +717,12 @@ We include the two variants of \GLRklUCB, based on \textbf{Local restarts} or \t
     \label{table:6:exploringDifferentForcedExplorationMechanisms}
 \end{table}
 
-As expected, all options give similar results, we each of the three options was found to outperform the two other in one of the three problems considered for this experiments (problems $1$, $2$ and $4$).
+As expected, all options give similar results, and each of the three options was found to outperform the two others in one of the three problems considered for this experiments (problems $1$, $2$ and $4$).
 The result highlighted in \textbf{bold} in Table~\ref{table:6:exploringDifferentForcedExplorationMechanisms} shows the best algorithm in each problem (\ie, the algorithm and its option that obtains the smaller mean regret in the considered column).
 We note that in terms of its average regret on the different problems, the tracking-based exploration is the best choice.
 %
 The sum-up of these experiments is that it sufficient to use the simplest exploration scheme based on a deterministic exploration,
 rather than a more complicated exploration scheme based on tracking.
-Therefore, our choice of the deterministic exploration scheme for our proposal \GLRklUCB{} presented in Algorithm~\ref{algo:6:GLRklUCB} is validated by these experiments, and this choice gives good performance for our proposal.
+Therefore, our choice of the deterministic exploration scheme for our proposal \GLRklUCB{} presented in Algorithm~\ref{algo:6:GLRklUCB} is validated by these experiments, and this choice gives good empirical performance.
 
 % ----------------------------------------------------------------------------

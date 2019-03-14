@@ -473,7 +473,7 @@ Note that for sub-Gaussian distributions, results from \cite{Maillard2018GLR} sh
 $\beta(n,\delta) = \left(1 + \frac{1}{n}\right)\ln\left(\frac{3n\sqrt{n}}{\delta}\right)$,
 can be used to prove an upper bound of $\delta$ for the false alarm probability of the GLR, with quadratic divergence $\kl(x,y)=2(x-y)^2$.
 %
-For the B-GLRT, numerical simulations suggest that the threshold \eqref{def:6:beta} is a bit conservative (see Appendix~\ref{sec:6:exploringDifferentThresholdFunctions}), and in practice we recommend to keep only the leading term and use $\beta(n,\delta) = \ln(3n\sqrt{n}/\delta)$.
+For the B-GLRT, numerical simulations suggest that the threshold \eqref{def:6:beta} is a bit conservative (see Appendix~\ref{sec:6:exploringDifferentThresholdFunctions}), and in practice we recommend to keep only the leading term and use $\beta(n,\delta) = \ln(3n^{3/2}/\delta) = \ln(3) + 3/2\log(n) - \log(\delta)$.
 
 Also note that, as any test based on scan-statistics, the B-GLRT can be costly to implement as at every time step, it considers all previous time steps as a possible positions for a change-point. Thus, in practice the following adaptation may be interesting, based on down-sampling the possible time steps:
 %
@@ -570,9 +570,9 @@ To be fully specific, $\GLR_\delta(Z_1,\dots,Z_n) = \mathrm{True}$ if and only i
 %
 with $\beta(n,\delta)$ defined in \eqref{def:6:beta}, or $\beta(n,\delta) = \ln(3n^{3/2}/\delta)$, as recommended in practice, see Section~\ref{sub:6:PracticalConsiderations}. We define the (\klUCB{} like) index used by our algorithm, by denoting
 $\tau_i(t)$ the last restart that happened for arm $i$ before time $t$,
-\[n_i(t) = \sum_{s=\tau_i(t)+1}^{t} \indic(A_s=i)\]
+$n_i(t) = \sum_{s=\tau_i(t)+1}^{t} \indic(A_s=i)$
 the number of selections of arm $i$, and
-\[\widehat{\mu}_i(t) = \frac{1}{n_i(t)} \sum_{s=\tau_i(t)+1}^{t}X_{i,s} \indic(A_s=i)\]
+$\widehat{\mu}_i(t) = \frac{1}{n_i(t)} \sum_{s=\tau_i(t)+1}^{t}X_{i,s} \indic(A_s=i)$
 their empirical mean (if $n_i(t)\neq0$).
 %
 With the exploration function $f(t) = \ln(t) + 3 \ln(\ln(t))$ if $t>1$ and $f(t)=0$ otherwise,
@@ -599,9 +599,9 @@ $f(t-\tau_i(t))$ is replaced by $f(n_t)$ with $n_t = \sum_{i=1}^K n_i(t)$.
 
 We present in Appendix~\ref{sec:6:exploringDifferentThresholdFunctions} numerical simulations that compare different choices of threshold functions $\beta$.
 We compare the complicated value used in Lemma~\ref{lem:6:FalseAlarm}, using a numerical approximation of the function $\cT$,
-with the simpler value $\beta(n,\delta) = \ln(3n\sqrt{n}/\delta)$,
-as well as a few other choices.
-The sum-up of these simulations is that it is enough to use a simpler and more explicit threshold to have an efficient change-point detection algorithm, and an efficient \GLRklUCB{} policy.
+with the simpler value $\beta(n,\delta) = \ln(3n\sqrt{n}/\delta)$, as well as two other choices.
+The sum-up of these simulations is that it is enough to use a simpler and more explicit threshold, thus we recommend in practice to use $\beta_1(n,\delta) = \ln(3n\sqrt{n}/\delta)$.
+%  to have an efficient change-point detection algorithm, and an efficient \GLRklUCB{} policy.
 
 % \TODOL{I should link to Appendix~\ref{sec:6:exploringDifferentThresholdFunctions} where I present two experiments which justifies this choice of the threshold function $\beta(n,\delta)$: it works fine and it's much simpler to implement numerically than the one we chose to analyze mathematically!}
 
@@ -673,7 +673,9 @@ In this section, we sketch a unified proof for the two Theorems \ref{thm:6:mainR
 We emphasize that our approach is significantly different from those proposed by \cite{CaoZhenKvetonXie18} for \MUCB{} and by \cite{LiuLeeShroff17} for \CUSUMUCB.
 
 Recall that the regret is defined as $R_T = \bE\left[\sum_{t=1}^T(\mu_{i^*_t}(t) - \mu_{I_t}(t))\right]$.
-Introducing $\cD(T,\alpha)$ the (deterministic) set of time steps at which the forced exploration is performed before time $T$ (see lines $3$-$4$ in Algorithm~\ref{algo:6:GLRklUCB}), one can write, using notably that $\mu_{i^*_t} - \mu_{I_t} \leq 1$, due to the bounded rewards,
+Introducing $\cD(T,\alpha)$ the (deterministic) set of time steps at which the forced exploration is performed before time $T$ (see lines $3$-$4$ in Algorithm~\ref{algo:6:GLRklUCB}),
+we observe that we have $\mu_{i^*_t} - \mu_{I_t} \leq 1$ because rewards are assumed to be bounded in $[0,1]$,
+and thus we can write a first decomposition of the regret,
 \begin{align*}
  & \sum_{t=1}^T (\mu_{i^*_t}(t) - \mu_{I_t}(t)) \\
  & \hspace{1cm} \leq  \sum_{t=1}^{T} \indic(t \in \cD(T,\alpha)) + \sum_{t=1}^T (\mu_{i^*_t}(t) - \mu_{I_t}(t))\indic\left(t \notin\cD(T,\alpha), \UCB_{I_t}(t) \geq \UCB_{i^*_t}(t)\right) \\
@@ -684,7 +686,7 @@ Introducing some \emph{good event} $\cE_T$, to be specified in each case, and it
 %
 \begin{align}\label{eq:6:GeneRegretBound}
     R_T \leq T \bP\left(\cE_T^c\right) + \alpha T & + \underbrace{\bE\left[\indic(\cE_T) \sum_{t=1}^T \indic\left(\UCB_{i^*_t}(t) \leq \mu_{i^*_t}(t)\right)\right]}_{(A)} \\
-    & + \underbrace{\bE\left[\indic(\cE_T)\sum_{t=1}^T (\mu_{i^*_t}(t) - \mu_{I_t}(t))\indic\left(\UCB_{I_t}(t) \geq \mu_{i^*_t}(t)\right)\right]}_{(B)}. \nonumer
+    & + \underbrace{\bE\left[\indic(\cE_T)\sum_{t=1}^T (\mu_{i^*_t}(t) - \mu_{I_t}(t))\indic\left(\UCB_{I_t}(t) \geq \mu_{i^*_t}(t)\right)\right]}_{(B)}. \nonumber
 \end{align}
 %
 Each analysis requires to define an \emph{appropriate good event}, stating that \emph{some} change-points are detected within a reasonable delay. Each regret bound then follows from upper bounds on term $(A)$, term $(B)$, and on the failure probability $\bP(\cE_T^c)$.
@@ -699,7 +701,7 @@ The tricky part of each proof, which crucially exploits Assumption~\ref{ass:6:Lo
 where $\widehat{\tau}_i^{(\ell)}$ is defined as the $\ell$-th change detected by the algorithm on arm $i$ and $d_i^{(\ell)}=d_i^{(\ell)}(\alpha,\delta)$ is defined in Assumption~\ref{ass:6:LongPeriods}.
 Introducing the event
 \[\cC_i^{(\ell)} = \left\{\forall j \leq \ell, \widehat{\tau}_i^{(\ell)} \in \left[\tau_i^{(j)} + 1, \tau_i^{(j)} + d_i^{(j)} \right] \right\},\]
-that all the changes up to the $\ell$-th have been detected, a union bound yields the following decomposition
+that all the changes up to the $\ell$-th have been detected, a union bound yields this decomposition
 %
 \begin{align}
     \bP(\cE_T(\alpha,\delta)^c) & \leq \sum\limits_{i=1}^K\sum\limits_{\ell=1}^{\NCi} \underbrace{\bP\left(\widehat{\tau}_i^{(\ell)} \leq \tau_i^{(\ell)} \;|\; \cC_i^{(\ell-1)}\right)}_{(a)} + \sum\limits_{i=1}^K\sum\limits_{\ell=1}^{\NCi} \underbrace{\bP\left(\widehat{\tau}_i^{(\ell)} \geq \tau_i^{(\ell)} + d_i^{(\ell)} \;|\; \cC_i^{(\ell-1)}\right)}_{(b)}.
@@ -1082,8 +1084,9 @@ and
 $\delta = 1/\sqrt{K \Upsilon_T T}$, $\alpha = \alpha_0\sqrt{K \Upsilon_T \log(T) / T}$
 from Corollaries \ref{cor:6:Global} and \ref{cor:6:Local}.
 Both choices of $\alpha$ appear to be too large empirically, as they come from minimizing the regret upper-bound rather than the regret itself, thus
-the constant is set to $\alpha_0 = 0.05$
-(we show in Appendix~\ref{sec:6:choosingAlpha0} a certain robustness, with similar regret as soon as $\alpha\leq0.1$).
+the constant is set to $\alpha_0 = 0.05$.
+We show in Appendix~\ref{sec:6:choosingAlpha0} a certain robustness, with similar regret as soon as $\alpha\leq0.1$.
+We do not use a constant $\delta_0$ to change the confidence level to $\delta = \delta_0 \delta_T$, as we show in Appendix~\ref{sec:6:choosingDelta} that $\delta_0=1$ is uniformly better for different problems.
 %
 To speed up our simulations, two optimizations are used, with $\Delta n = \Delta s = 10$,
 and \CUSUM{} also uses the first trick with $\Delta n = 10$ (see Appendix~\ref{sub:6:IdeasOptimizations} for more details).
