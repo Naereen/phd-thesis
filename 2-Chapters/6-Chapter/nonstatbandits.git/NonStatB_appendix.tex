@@ -5,9 +5,102 @@
 
 This Appendix gives some proofs omitted in the main text of this chapter.
 
-\subsubsection{Simplified expression for the GLR statistic in one-dimensional exponential families}\label{app:6:GLR_with_kl}
 
-\TODOL{Do I need to give a proof of the result that links the GLR with a ratio of two sup and the GLR with a sup of parametric kl ?}
+% ----------------------------------------------------------------------------
+\subsubsection{Simplified expression for the GLR statistic}\label{app:6:GLR_with_kl}
+
+% Remember that the Generalized Likelihood Ratio statistic for the test presented in \eqref{eq:6:firstDefGLRT} in Section~\ref{sub:6:presentationOfGLRTest} is
+% \[\GLR(n) := \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_n ; \mu_0)},\]
+% %
+% where $\ell(X_1, \ldots, X_n ; \mu_0)$ and $\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)$ respectively denote the likelihoods of the first $n$ observations under a model in $\cH_0$ and $\cH_1$.
+
+The Generalized Likelihood Ratio statistic for the test is presented above in \eqref{eq:6:firstDefGLRT} in Section~\ref{sub:6:presentationOfGLRTest}.
+%
+We refer to \cite{Basseville93} for the generic proof, but we prove here the specific case of Bernoulli distributions.
+% For any $k \leq k'$, we denote $\widehat{\mu}_{k:k'} := \frac{1}{k - k' + 1} \sum_{l=k}^{k'} X_l$ denotes the average of the observations $X_l$ collected between the instants $k$ and $k'$.
+%
+We prove below that the GLR test is equivalent to
+\[\GLR(n) = \exp\Bigl[ \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right], \Bigr]. \]
+%
+% Remember that the binary relative entropy $\kl$, defined for $x,y\in[0,1]$
+% by $\kl(x,y) := x \ln\left(\frac{x}{y}\right) + (1-x)\ln\left(\frac{1-x}{1-y}\right)$,
+% with the usual convention that $t \log(t) = 0$ if $t=0$.
+
+\begin{proof}
+    First, we consider the denominator in the expression of $\GLR(n)$ \eqref{eq:6:firstDefGLRT}, that is the $\sup$ on $\mu_0$.
+    We have $\ell(X_1, \ldots, X_n ; \mu_0) = \prod_{i=1}^n \ell(X_i ; \mu_0)$ by independence of the observations $X_i$,
+    and $\ell(X_i ; \mu_0) = \mu_0^{X_i} (1-\mu_0)^{1-X_i}$ for Bernoulli distributions.
+    Therefore, taking the logarithm gives
+    \begin{align*}
+        \log\ell(X_1, \ldots, X_n ; \mu_0)
+        &= \sum_{i=1}^n X_i \log(\mu_0) + (1-X_i) \log(1-\mu_0) \\
+        &= \log(\mu_0) \times \left( \sum_{i=1}^n X_i \right) + \log(1-\mu_0) \times \left( n - \sum_{i=1}^n X_i \right) \\
+        &= n \left[ \widehat{\mu}_{1:n} \log(\mu_0) + (1 - \widehat{\mu}_{1:n}) \log(1-\mu_0) \right].
+    \end{align*}
+    %
+    For a constant $a\in[0,1]$, let $h(x) := a \log(x) + (1-a) \log(1-x)$ on $(0,1)$,
+    and we are trying to solve $\sup_{x\in[0,1]} h(x)$.
+    If $a=0$ or $a=1$, $h$ is maximum at $x=a$.
+    Now if $a\neq0$, As $h$ is of class $\cC^1$, we can just differentiate and find the root of its derivative:
+    $h'(x) = a/x - (1-a)/(1-x)$, so $h'(x) = 0$ if and only if $x=a$.
+    Thus in all cases, $\sup_{x\in[0,1]} h(x) = h(a)$.
+    %
+    Here, we have $a = \widehat{\mu}_{1:n}$, and thus we solve the $\sup_{\mu_0}$ optimization problem found in the denominator of the $\GLR(n)$ expression.
+    By replacing $\mu_0 = \widehat{\mu}_{1:n}$, we obtained the following (unique) solution,
+    \begin{equation}\label{eq:6:solutionPbOpt_for_1n}
+        \sup_{\mu_0} \log\ell(X_1, \ldots, X_n ; \mu_0) = n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right).
+    \end{equation}
+
+    Now let us consider the nominator of the $\GLR(n)$ expression.
+    We can again work with log-likelihoods, and so we have
+    \begin{align*}
+        \log\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)
+        &= \sum_{i=1}^{\tau} X_i \log(\mu_0) + (1-X_i) \log(1-\mu_0) + \sum_{i=\tau+1}^n X_i \log(\mu_1) + (1-X_i) \log(1-\mu_1) \\
+        &= s \left( \widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0) \right) \\
+        & \;\;\;\; + (n-s) \left( \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1) \right).
+    \end{align*}
+    Because we solved in \eqref{eq:6:solutionPbOpt_for_1n} the $\sup$ for the denominator,
+    we have
+    \begin{align*}
+        \GLR(n)
+        &= \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_n ; \mu_0)}, \\
+        &= \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\mu_0) + (1 - \widehat{\mu}_{1:n}) \log(1-\mu_0) \right) \right] }, \\
+        &= \sup\limits_{\mu_0,\mu_1,\tau < n} \frac{\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right) \right] }, \\
+        &= \exp \Bigl[ \sup\limits_{\mu_0,\mu_1,\tau < n} \log\Bigl\{ \frac{\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right) \right] } \Bigr\} \Bigr],  \\
+        &= \exp \Bigl[ \sup\limits_{\mu_0,\mu_1,\tau < n}
+            s \left( \widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0) \right) \\
+            & \hspace{20pt} + (n-s) \left( \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1) \right) \\
+            & \hspace{20pt} - n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right)
+        \Bigr].
+    \end{align*}
+    By linearity and independence, we can separate the optimization problem in two optimizations problems for $\mu_0,\tau$ and $\mu_1,\tau$, and then we can first solve for $\mu_0$ (resp. $\mu_1$).
+    As $n = s + (n-s)$, the right hand side (negative) part involving $\widehat{\mu}_{1:n}$ is distributed in the two left hand side (positive) terms,
+    which are both handled similarly.
+    For instance for $\mu_0$, we use the same computation as above with the function $h$ to find the optimum:
+    $\widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0)$
+    is optimum for $\mu_0 = \widehat{\mu}_{1:s}$.
+    Similarly, the term for $\mu_1$ gives that $\sup_{\mu_1} \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1)$
+    is attained for $\mu_1 = \widehat{\mu}_{s+1:n}$.
+    Finally, by replacing the two expressions of the solutions for $\mu_0$ and $\mu_1$,
+    we obtain
+    \begin{align*}
+        \GLR(n)
+        &= \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_n ; \mu_0)}, \\
+        &= \exp \Bigl[ \sup\limits_{1 < s < n} \Bigl[
+            s \bigl(
+                    \widehat{\mu}_{1:s} \log(\widehat{\mu}_{1:s}) + (1 - \widehat{\mu}_{1:s}) \log(1-\widehat{\mu}_{1:s})
+                    - \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n} \log(1-\widehat{\mu}_{1:n})
+            \bigr) \\
+            & \;\;\;\; + (n-s) \bigl(
+                \widehat{\mu}_{s+1:n} \log(\widehat{\mu}_{s+1:n}) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\widehat{\mu}_{s+1:n})
+                - \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n})
+            \bigr)
+        \Bigr] \Bigr].
+    \end{align*}
+    We recognize the expressions of $s \times \kl(\widehat{\mu}_{1:s}, \widehat{\mu}_{1:n})$
+    and $(n-s) \times \kl(\widehat{\mu}_{s+1:n}, \widehat{\mu}_{1:n})$.
+\end{proof}
+
 
 % Consider $(Y_i)_{i\in\N}$ some data, and $t_0\in\N$, $t\in\N$ and any $s\in[t_0,t)$.
 % For any $a<b$, define $\mu_{a:b} := \frac{1}{b-a+1} \sum_{i=a}^{b} Y_i$ the mean of samples from $a$ to $b$.
@@ -18,9 +111,6 @@ This Appendix gives some proofs omitted in the main text of this chapter.
 
 % The \GLR{} test is defined in \cite{Maillard2018GLR}, and is written like this.
 % $$\GLR^{\kl}_{t_0 : s : t} = (s-t_0+1) \kl(\mu_{t_0:s}, \mu_{t_0:t}) + (t-s) \kl(\mu_{s+1:t}, \mu_{t_0:t}).$$
-
-% \TODOL{Remove all this, it's useless!}
-
 
 % \begin{lemma}[Simplified expression for $\GaussianGLR$]\label{lem:XXX}
 %     For $\cN_1$, the exponential family of Gaussian distributions of variance $\sigma^2=1$,
@@ -561,6 +651,8 @@ In the three experiments, \GLRklUCB{} performs closely to the Oracle-Restart \kl
 We observe in Table~\ref{table:6:sensibilityAlpha0} that the parameter $\alpha_0$ does not have a significative impact on the performance,
 and that surprisingly, choosing $\alpha_0 = 0$ does not reduce the empirical performance of \GLRklUCB, which means that on some problems there is no need of a forced exploration.
 However, the analysis of \GLRklUCB{} is based on the forced exploration, and we found that for a larger number of arms, or for problems when the optimal arm change constantly, the forced exploration is required.
+%
+The same observations can be made for other variants of our algorithm, for instance with \textbf{Global} restarts, or other values of $\Delta n$, $\Delta s$, or other values of $\delta$.
 
 \begin{small} %XXX WARNING
 \begin{table}[ht]
@@ -595,6 +687,8 @@ Other parameters are set to \textbf{Local} restarts, $\alpha_T = 0.1 \sqrt{\Upsi
 %
 We observe in Table~\ref{table:6:sensibilityDelta} that the parameter $\delta_0$ has no significative impact on the performance,
 and that choosing $\delta_0 = 1$ is indeed a valid choice.
+%
+The same observations can be made for other variants of our algorithm, for instance with \textbf{Global} restarts, or other values of $\Delta n$, $\Delta s$, or other values of $\alpha$.
 
 \begin{small} %XXX WARNING
 \begin{table}[ht]

@@ -309,7 +309,7 @@ We refer to Lemma~1 of \cite{KLUCBJournal} that establishes that any bounded dis
 Our work can be applied to any bounded distribution without loss of generality, as a reward in $r\in[a,b]$ can clearly be mapped to $[0,1]$ simply by using $r' = (r-a)/(b-a)$ (we assume that the decision maker or the algorithm know before hand the values of $a,b$).
 
 
-\subsection{Presentation of the test}
+\subsection{Presentation of the test}\label{sub:6:presentationOfGLRTest}
 
 If the samples $(X_t)$ were all drawn from a Bernoulli distribution, our change-point detection problem would reduce to a parametric sequential test of
 \[\cH_0 : (\exists \mu_0: \forall i\in\N, X_i \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_0)),\]
@@ -317,7 +317,9 @@ against the alternative
 \[\cH_1 : (\exists \mu_0 \neq \mu_1, \tau \in \N^*: \ \  X_1, \ldots, X_\tau \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_0) \ \ \text{and} \ \ X_{\tau+1}, X_{\tau+2}, \ldots \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_1)).\]
 
 The Generalized Likelihood Ratio statistic for this test is defined by
-\[\GLR(n) :=\frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_n ; \mu_0)},\]
+\begin{equation}\label{eq:6:firstDefGLRT}
+    \GLR(n) :=\frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_n ; \mu_0)},
+\end{equation}
 %
 where $\ell(X_1, \ldots, X_n ; \mu_0)$ and $\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)$ respectively denote the likelihoods of the first $n$ observations under a model in $\cH_0$ and $\cH_1$.
 High values of this statistic tend to indicate rejection of $\cH_0$ over $\cH_1$.
@@ -328,8 +330,8 @@ By using the form of the likelihood for Bernoulli distributions, this statistic 
     \kl(x,y) := x \ln\left(\frac{x}{y}\right) + (1-x)\ln\left(\frac{1-x}{1-y}\right).
 \end{equation}
 %
-Indeed, as proved in Appendix~\ref{app:6:GLR_with_kl}, we can show that in any one-dimensional exponential family, we have
-\[\GLR(n) = \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right],\]
+Indeed, as proved in Appendix~\ref{app:6:GLR_with_kl} (see also equation $(1.9)$ from \cite{LaiXing10}), we can show that in any one-dimensional exponential family, we have
+\[\GLR(n) = \exp\Bigl[ \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right], \Bigr] \]
 %
 where for $k \leq k'$, $\widehat{\mu}_{k:k'} := \frac{1}{k - k' + 1} \sum_{l=k}^{k'} X_l$ denotes the average of the observations $X_l$ collected between the instants $k$ and $k'$.
 %
@@ -339,7 +341,7 @@ This motivates the following definition of the Bernoulli GLRT change point detec
     The Bernoulli GLRT (B-GLRT) change point detector with threshold function $\beta(n,\delta)$ is the stopping time $\widehat{\tau}_{\delta}$ defined by
     %
     \begin{equation}\label{def:6:GLR}
-        \widehat{\tau}_{\delta} := \inf \left\{ n \in \N^* : \sup_{s \in [1,t]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right] \geq \beta(n,\delta)\right\}.
+        \widehat{\tau}_{\delta} := \inf \left\{ n \in \N^* : \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right] \geq \beta(n,\delta)\right\}.
     \end{equation}
 \end{definition}
 
@@ -399,8 +401,7 @@ where $\phi_\mu(\lambda)$ is the $\mathrm{log}$ moment generating of some one-di
 
 Let us go back to the Bernoulli case with divergence given in \eqref{eq:6:BernoulliDivergence}.
 We first observe that
-% A first key observation is
-\[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right) = \inf_{\mu \in [0,1]}\left[s \times \kl\left(\widehat{\mu}_{1:s},\lambda\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\lambda\right)\right].\]
+\[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right) = \inf_{\lambda \in [0,1]}\left[s \times \kl\left(\widehat{\mu}_{1:s},\lambda\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\lambda\right)\right].\]
 Hence the probability of a false alarm occurring is upper bounded as
 %
 \begin{align*}
@@ -409,7 +410,7 @@ Hence the probability of a false alarm occurring is upper bounded as
 % \end{align*}%FIXME uncomment this if needed
 % \begin{align*}
     & \leq \sum_{s =1}^{\infty} \bP_{\mu_0}\left(\exists n > s:  s \, \kl\left(\widehat{\mu}_{1:s},\mu_0\right) + (n-s) \, \kl\left(\widehat{\mu}_{s+1:n},\mu_0\right) > \beta(n,\delta)\right)\\
-    & =   \sum_{s =1}^{\infty} \bP_{\mu_0}\left(\exists r \in \N:  s \, \kl\left(\widehat{\mu}_{s},\mu_0\right) + r \, \kl\left(\widehat{\mu}'_{r},\mu_0\right) > \beta(s+r,\delta)\right),
+    & =   \sum_{s =1}^{\infty} \bP_{\mu_0}\left(\exists r \in \N^*:  s \, \kl\left(\widehat{\mu}_{s},\mu_0\right) + r \, \kl\left(\widehat{\mu}'_{r},\mu_0\right) > \beta(s+r,\delta)\right),
 \end{align*}
 %
 where $\widehat{\mu}_{s}$ and $\widehat{\mu}'_{r}$ are the empirical means of respectively $s$ and $r$ \iid{} observations with mean $\mu_0$ and distribution $\nu$, that are independent from the previous ones.
