@@ -1,6 +1,6 @@
 % ----------------------------------------------------------------------------
 % ----------------------------------------------------------------------------
-\subsection{Proofs of useful lemmas}\label{proof:6:Conc}
+\subsection{Omitted proofs}\label{proof:6:Conc}
 % ----------------------------------------------------------------------------
 
 This Appendix gives some proofs omitted in the main text of this chapter.
@@ -16,11 +16,15 @@ This Appendix gives some proofs omitted in the main text of this chapter.
 
 The Generalized Likelihood Ratio statistic for the test is presented above in \eqref{eq:6:firstDefGLRT} in Section~\ref{sub:6:presentationOfGLRTest}.
 %
-We refer to \cite{Basseville93} for the generic proof, but we prove here the specific case of Bernoulli distributions.
+We refer to \cite{Basseville93} and reference therein for the generic proof, but we prove here the specific case of Bernoulli distributions.
 % For any $k \leq k'$, we denote $\widehat{\mu}_{k:k'} := \frac{1}{k - k' + 1} \sum_{l=k}^{k'} X_l$ denotes the average of the observations $X_l$ collected between the instants $k$ and $k'$.
 %
 We prove below that the GLR test is equivalent to
-\[\GLR(n) = \exp\Bigl[ \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right], \Bigr]. \]
+\begin{align*}
+    \GLR(n)
+    &= \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_n ; \mu_0)} \\
+    &= \exp\Bigl[ \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right] \Bigr].
+\end{align*}
 %
 % Remember that the binary relative entropy $\kl$, defined for $x,y\in[0,1]$
 % by $\kl(x,y) := x \ln\left(\frac{x}{y}\right) + (1-x)\ln\left(\frac{1-x}{1-y}\right)$,
@@ -56,25 +60,25 @@ We prove below that the GLR test is equivalent to
     \begin{align*}
         \log\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)
         &= \sum_{i=1}^{\tau} X_i \log(\mu_0) + (1-X_i) \log(1-\mu_0) + \sum_{i=\tau+1}^n X_i \log(\mu_1) + (1-X_i) \log(1-\mu_1) \\
-        &= s \left( \widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0) \right) \\
-        & \;\;\;\; + (n-s) \left( \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1) \right).
+        &= s \bigl( \widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0) \bigr) \\
+        & \;\;\;\; + (n-s) \bigl( \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1) \bigr).
     \end{align*}
     Because we solved in \eqref{eq:6:solutionPbOpt_for_1n} the $\sup$ for the denominator,
     we have
     \begin{align*}
         \GLR(n)
-        &= \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_n ; \mu_0)}, \\
+        % &= \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_n ; \mu_0)}, \\
         &= \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\mu_0) + (1 - \widehat{\mu}_{1:n}) \log(1-\mu_0) \right) \right] }, \\
         &= \sup\limits_{\mu_0,\mu_1,\tau < n} \frac{\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right) \right] }, \\
-        &= \exp \Bigl[ \sup\limits_{\mu_0,\mu_1,\tau < n} \log\Bigl\{ \frac{\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right) \right] } \Bigr\} \Bigr],  \\
-        &= \exp \Bigl[ \sup\limits_{\mu_0,\mu_1,\tau < n}
-            s \left( \widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0) \right) \\
-            & \hspace{20pt} + (n-s) \left( \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1) \right) \\
-            & \hspace{20pt} - n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right)
-        \Bigr].
+        &= \exp \Bigl[ \sup\limits_{\mu_0,\mu_1,\tau < n} \Bigl[ \log\Bigl[ \frac{\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right) \right] } \Bigr] \Bigr] \Bigr],  \\
+        &= \exp \Bigl[ \sup\limits_{\mu_0,\mu_1, 1 < s < n} \Bigl[
+            s \bigl( \widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0) \bigr) \\
+            & \hspace{35pt} + (n-s) \bigl( \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1) \bigr) \\
+            & \hspace{35pt} - n \bigl( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \bigr)
+        \Bigr] \Bigr].
     \end{align*}
-    By linearity and independence, we can separate the optimization problem in two optimizations problems for $\mu_0,\tau$ and $\mu_1,\tau$, and then we can first solve for $\mu_0$ (resp. $\mu_1$).
-    As $n = s + (n-s)$, the right hand side (negative) part involving $\widehat{\mu}_{1:n}$ is distributed in the two left hand side (positive) terms,
+    By linearity and independence, we can separate the joint optimization problem on $\mu_0,\mu_1,s$ in two optimizations problems for $\mu_0,s$ and $\mu_1,s$, that can first be solved explicitly for $\mu_0$ (resp. $\mu_1$) and then left to be solved for $s$.
+    By definition, $n \; \widehat{\mu}_{1:n} = \sum_{i=1}^n X_i = s \;\widehat{\mu}_{1:s} + (n-s) \;\widehat{\mu}_{s+1:n}$, so the right hand side (negative) part involving $\widehat{\mu}_{1:n}$ can be distributed in the two left hand side (positive) terms,
     which are both handled similarly.
     For instance for $\mu_0$, we use the same computation as above with the function $h$ to find the optimum:
     $\widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0)$
@@ -85,19 +89,18 @@ We prove below that the GLR test is equivalent to
     we obtain
     \begin{align*}
         \GLR(n)
-        &= \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_n ; \mu_0)}, \\
-        &= \exp \Bigl[ \sup\limits_{1 < s < n} \Bigl[
-            s \bigl(
-                    \widehat{\mu}_{1:s} \log(\widehat{\mu}_{1:s}) + (1 - \widehat{\mu}_{1:s}) \log(1-\widehat{\mu}_{1:s})
-                    - \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n} \log(1-\widehat{\mu}_{1:n})
-            \bigr) \\
-            & \;\;\;\; + (n-s) \bigl(
-                \widehat{\mu}_{s+1:n} \log(\widehat{\mu}_{s+1:n}) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\widehat{\mu}_{s+1:n})
-                - \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n})
-            \bigr)
+        = \exp \Bigl[ \sup\limits_{1 < s < n} \Bigl[
+            s \times \Bigl(
+                    & \widehat{\mu}_{1:s} \log(\widehat{\mu}_{1:s}) + (1 - \widehat{\mu}_{1:s}) \log(1-\widehat{\mu}_{1:s}) \\
+                    & - \widehat{\mu}_{1:s} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:s}) \log(1-\widehat{\mu}_{1:n})
+            \Bigr) \\
+            + (n-s) \times \Bigl(
+                & \widehat{\mu}_{s+1:n} \log(\widehat{\mu}_{s+1:n}) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\widehat{\mu}_{s+1:n}) \\
+                & - \widehat{\mu}_{s+1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\widehat{\mu}_{1:n})
+            \Bigr)
         \Bigr] \Bigr].
     \end{align*}
-    We recognize the expressions of $s \times \kl(\widehat{\mu}_{1:s}, \widehat{\mu}_{1:n})$
+    We conclude by recognizing the expressions of $s \times \kl(\widehat{\mu}_{1:s}, \widehat{\mu}_{1:n})$
     and $(n-s) \times \kl(\widehat{\mu}_{s+1:n}, \widehat{\mu}_{1:n})$.
 \end{proof}
 
@@ -554,7 +557,7 @@ Second, we also verify the results for the memory costs of the different algorit
 Similarly, stationary and passively adaptive algorithms based on a discount factor (D-UCB, DTS) have a memory cost constant w.r.t. the horizon $T$, as stated above,
 while algorithms based on a sliding-window have a memory cost increasing w.r.t. the horizon $T$.
 The Oracle-Restart and the actively adaptive algorithms see their memory costs increase similarly.
-These measurements validate the upper-bound we gave on their memory costs, $\bigO{K d_{\max}}$, as $d_{\max} \simeq T / \Upsilon$ for this problem with evenly-spaced change-points.
+These measurements validate the upper-bound we gave on their memory costs, $\bigO{K d_{\max}}$, as $d_{\max} \simeq T / \Upsilon$ for this problem with evenly spaced change-points.
 
 
 %-----------------------------------------------------------------------------
@@ -687,6 +690,7 @@ Other parameters are set to \textbf{Local} restarts, $\alpha_T = 0.1 \sqrt{\Upsi
 %
 We observe in Table~\ref{table:6:sensibilityDelta} that the parameter $\delta_0$ has no significative impact on the performance,
 and that choosing $\delta_0 = 1$ is indeed a valid choice.
+Inspired by Occam's razor, we recommend this choice of $\delta_0=1$ in practice.
 %
 The same observations can be made for other variants of our algorithm, for instance with \textbf{Global} restarts, or other values of $\Delta n$, $\Delta s$, or other values of $\alpha$.
 
@@ -727,9 +731,10 @@ The same observations can be made for other variants of our algorithm, for insta
 
 We compare the following threshold functions, $\beta(n,\delta)$ for $n\in\N^*$ and $\delta>0$, that can be used in the B-GLRT test used for the \GLRklUCB{} algorithm (see the details in equation \eqref{eq:whenDoesGLRklUCBrestart} and in Algorithm~\ref{algo:6:GLRklUCB}).
 %
-In the B-GLRT test, there is a $\sup$ on $s\in[2,n-1]$, and this $\sup$ is compared with the threshold $\beta(n,\delta)$. The threshold function was chosen in order to have Lemma~\ref{lem:6:FalseAlarm}, that is a false alarm probability bounded by $\delta$.
-We note that we considered the possibility of using a threshold that could be a function of both $n$ the sample size as well as $s\in[2,n-1]$ the ``splitting index'' between means $\widehat{\mu}_{1:s}$ and $\widehat{\mu}_{s+1:n}$.
-We did some preliminary experiments to explore this direction and did not find a difference, in terms of numerical efficient of the resulting \GLRklUCB{} algorithm, and mathematically the analysis presented in Section~\ref{subsec:6:PropGLR}
+In the B-GLRT test, there is a $\sup$ optimization problem on $s\in[2,n-1]$, and this $\sup$ is compared with the threshold $\beta(n,\delta)$. The threshold function given in \eqref{def:6:beta} was chosen to have Lemma~\ref{lem:6:FalseAlarm}, that is a false alarm probability bounded by $\delta$.
+%
+We note that we also considered the possibility of using a threshold that could be a function of both $n$ the sample size as well as $s\in[2,n-1]$ the ``splitting index'' between means $\widehat{\mu}_{1:s}$ and $\widehat{\mu}_{s+1:n}$.
+We did some preliminary experiments to explore this direction and did not find a significant difference, in terms of numerical efficient of the resulting \GLRklUCB{} algorithm, and mathematically the analysis presented in Section~\ref{subsec:6:PropGLR} is simpler to follow if the threshold are uniform on $s$.
 
 \begin{enumerate}
     \item
@@ -765,6 +770,7 @@ and with the deterministic exploration scheme.
         \hline
         $\beta_1(n,\delta)$ & $\mathbf{70 \pm 30}$ & $109 \pm 32$ & $99 \pm 29$ \\
         $\beta_2(n,\delta)$ & $73 \pm 28$ & $99 \pm 32$ & $\mathbf{88 \pm 32}$ \\
+        \hline
         $\beta_3(n,\delta)$ & $77 \pm 27$ & $\mathbf{89 \pm 32}$ & $134 \pm 35$ \\
         $\beta_4(n,\delta)$ & $77 \pm 30$ & $101 \pm 30$ & $135 \pm 30$
     \end{tabular}

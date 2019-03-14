@@ -55,7 +55,8 @@ Numerical experiments are presented in Section~\ref{sec:6:NumericalExperiments},
 \section{The Piece-Wise Stationary Bandit Model}
 \label{sec:6:BanditSetting}
 
-A \emph{piece-wise stationary bandit model} is characterized by a set of $K$ arms.  A (random) stream of rewards $(X_{i,t})_{t\in\N^*}$ is associated to each arm $i \in \{1,\dots,K\}$. We assume that the rewards are bounded, and without loss of generality we assume that $X_{i,t} \in [0,1]$. We denote by $\mu_{i}(t) :=  \bE[X_{i,t}]$ the mean reward of arm $i$ at round $t$. At each round $t$, a decision maker has to select an arm $I_t\in\{1,\dots,K\}$, based on past observation and receives the corresponding reward $r(t) = X_{I_t,t}$. At time $t$, we denote by $i_t^*$ an arm with maximal expected reward, \ie, $\mu_{i_t^*}(t) = \max_i \mu_i(t)$, called an optimal arm (possibly not unique).
+A \emph{piece-wise stationary bandit model} is characterized by a set of $K$ arms.
+A (random) stream of rewards $(X_{i,t})_{t\in\N^*}$ is associated to each arm $i \in \{1,\dots,K\}$. We assume that the rewards are bounded, and without loss of generality we assume that $X_{i,t} \in [0,1]$. We denote by $\mu_{i}(t) :=  \bE[X_{i,t}]$ the mean reward of arm $i$ at round $t$. At each round $t$, a decision maker has to select an arm $I_t\in\{1,\dots,K\}$, based on past observation and receives the corresponding reward $r(t) = X_{I_t,t}$. At time $t$, we denote by $i_t^*$ an arm with maximal expected reward, \ie, $\mu_{i_t^*}(t) = \max_i \mu_i(t)$, called an optimal arm (possibly not unique).
 
 A policy $\pi$ chooses the next arm to play based on the sequence of past plays and obtained rewards.
 The performance of $\pi$ is measured by its (piece-wise stationary) \emph{regret}, the difference between the expected reward obtained by an oracle policy playing an optimal arm $i^*_t$ at time $t$, and that of the policy $\pi$,
@@ -330,12 +331,15 @@ By using the form of the likelihood for Bernoulli distributions, this statistic 
     \kl(x,y) := x \ln\left(\frac{x}{y}\right) + (1-x)\ln\left(\frac{1-x}{1-y}\right).
 \end{equation}
 %
-Indeed, as proved in Appendix~\ref{app:6:GLR_with_kl} (see also equation $(1.9)$ from \cite{LaiXing10}), we can show that in any one-dimensional exponential family, we have
-\[\GLR(n) = \exp\Bigl[ \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right], \Bigr] \]
+Indeed, we show in Appendix~\ref{app:6:GLR_with_kl} that in any one-dimensional exponential family, we have
+\begin{equation}\label{eq:6:secondDefGLRT}
+    \GLR(n) = \exp\Bigl[ \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right], \Bigr].
+\end{equation}
 %
 where for $k \leq k'$, $\widehat{\mu}_{k:k'} := \frac{1}{k - k' + 1} \sum_{l=k}^{k'} X_l$ denotes the average of the observations $X_l$ collected between the instants $k$ and $k'$.
 %
 This motivates the following definition of the Bernoulli GLRT change point detector.
+Note that the $\exp$ appearing in the \eqref{eq:6:secondDefGLRT} is absorbed as a $\log$ in the threshold function $\beta$.
 
 \begin{definition}\label{def:6:GLRDef}
     The Bernoulli GLRT (B-GLRT) change point detector with threshold function $\beta(n,\delta)$ is the stopping time $\widehat{\tau}_{\delta}$ defined by
@@ -445,8 +449,6 @@ And so we have $\bP_{\mu_0}\left(T_{\delta} < \infty\right) \leq \sum_{s =1}^{\i
 
 Another key feature of a change-point detector is its \emph{detection delay} under a model in which a change from $\mu_0$ to $\mu_1$ occurs at time $\tau$. We already observed that from Pinsker's inequality, the B-GLRT stops earlier than a Gaussian GLR. Hence, one can leverage some techniques from \cite{Maillard2018GLR} to upper bound the detection delay of the B-GLRT. Letting $\Delta = |\mu_0 - \mu_1|$, one can essentially establish that for $\tau$ larger than $(1/\Delta^2)\ln(1/\delta)$ (\ie, enough samples before the change), the delay can be of the same magnitude (\ie, enough samples after the change). In our bandit analysis to follow, the detection delay will be crucially used to control the probability of the good event (in Lemma~\ref{lem:6:GoodEventGlobal} and \ref{lem:6:GoodEvent}).
 
-\TODOL{Include in Appendix a formal statement and a proof of Pinsker's inequality?}
-
 \begin{lemma}\label{lem:6:Delay}
     Let be $\bP_{\mu_0,\mu_1,\tau}$ a probabilistic model under which $X_t \in [0,1]$, and $X_t$ has an average of $\mu_0$ for all $t \leq \tau$, and $\mu_1$ for all $t > \tau$, with $\mu_0 \neq \mu_1$,
     and let $\Delta = |\mu_0 - \mu_1|$.
@@ -455,9 +457,9 @@ Another key feature of a change-point detector is its \emph{detection delay} und
         \bP_{\mu_0,\mu_1,\tau} (\widehat{\tau}_{\delta} \geq \tau + u) \leq \exp\left( -\frac{2\tau u}{\tau + u}\left(\max\left[ 0, \Delta - \sqrt{\frac{\tau + u}{2\tau u} \beta(\tau + u,\delta)} \right]\right)^2 \right).
     \end{equation}
 \end{lemma}
-
+%
 \begin{proof}
-    \TODOL{Write it ?}
+    It is actually not used as such in the proofs of the regret upper bound given below, but a similar result is used and proved in the proofs.
 \end{proof}
 
 For a threshold $\beta$ chosen as in the Lemma~\ref{lem:6:FalseAlarm}, we can show that a consequence of the Lemma~\ref{lem:6:Delay} is that if the break-point $\tau$ takes place after $\Delta^{-2} \ln(1/\delta)$ samples, the detection time may be of the same magnitude (with high probability).
@@ -479,7 +481,7 @@ For the B-GLRT, numerical simulations suggest that the threshold \eqref{def:6:be
 Also note that, as any test based on scan-statistics, the B-GLRT can be costly to implement as at every time step, it considers all previous time steps as a possible positions for a change-point. Thus, in practice the following adaptation may be interesting, based on down-sampling the possible time steps:
 %
 \begin{equation}\label{def:6:GLRTricks}
-    \widetilde{\tau}_{\delta} = \inf \left\{ n \in \cN : \sup_{s \in \cS_n} \left[s \times d\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times d\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right] \geq \beta(n,\delta)\right\},
+    \widetilde{\tau}_{\delta} = \inf \left\{ n \in \cN : \sup_{s \in \cS_n} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right] \geq \beta(n,\delta)\right\},
 \end{equation}
 %
 for subsets $\cN$ and $\cS_n$. Following the proof of Lemma~\ref{lem:6:FalseAlarm}, we can easily see that this variant enjoys the same false-alarm control.
@@ -498,8 +500,8 @@ We start by giving the pseudo-code of our algorithm, by explaining every part, t
 The analysis in both cases is using a unified proof technique, that we present before giving more details about the two proofs.
 
 
-%-----------------------------------------------------------------------------
-\paragraph{Details about the algorithm.}
+% %-----------------------------------------------------------------------------
+% \paragraph{Details about the algorithm.}
 
 Our proposed algorithm, \GLRklUCB{}, combines a bandit algorithm with a change-point detector running on each arm.
 It also needs a third ingredient, some forced exploration parameterized by $\alpha\in(0,1)$ to ensure each arm is sampled enough and changes can also be detected on arms currently under-sampled by the bandit algorithm.
@@ -631,9 +633,9 @@ A consequence of this forced exploration is given in Proposition~\ref{prop:6:Eno
     We consider one arm $i\in\{1,\dots,K\}$, and when the \GLRklUCB{} algorithm is running,
     we consider two time steps $s\leq t\in\N^*$, chosen between two restart times for that arm $i$.
     Lines~$3$-$4$ state that $A_u = u \mod \lceil \frac{K}{\alpha} \rceil$
-    if $u \mod \lceil \frac{K}{\alpha} \rceil \in \{1,\dots,K\}$
-    (see Algorithm~\ref{algo:6:GLRklUCB} for details).
-    Thus we have
+    if $u \mod \lceil \frac{K}{\alpha} \rceil \in \{1,\dots,K\}$,
+    % (see Algorithm~\ref{algo:6:GLRklUCB} for details).
+    thus we directly find
     \begin{align*}
         n_i(t) - n_i(s)
         & = \sum_{u=s+1}^{t} \indic(A_u = i) \\
@@ -642,11 +644,11 @@ A consequence of this forced exploration is given in Proposition~\ref{prop:6:Eno
         & = \bigl(t - (s+1) + 1\bigr) / \left\lceil \frac{K}{\alpha} \right\rceil
         \geq \left\lfloor \frac{\alpha}{K} (t - s) \right\rfloor.
     \end{align*}
-    Hence we have the result of Proposition~\ref{prop:6:EnoughSamples}.
+    % Hence we have the result of Proposition~\ref{prop:6:EnoughSamples}.
 \end{proof}
 
 
-\paragraph{Other forced exploration schemes.}
+\paragraph{Other forced exploration schemes?}
 %
 We present in Appendix~\ref{sec:6:exploringDifferentForcedExplorationMechanisms} numerical simulations that compare three different options of forced exploration schemes.
 We compare the uniformly random exploration used by \CUSUMUCB, against the deterministic scheme used in Algorithm~\ref{algo:6:GLRklUCB}, and against a more complicated scheme based on \emph{tracking}.
@@ -662,8 +664,7 @@ As it is the simplest and less numerically costly one, this is the one we chose 
 \label{sec:6:RegretAnalysis}
 %-----------------------------------------------------------------------------
 
-This Section starts by giving a unified analysis of regret of the two variants of our algorithm, then we give the finite-time regret bounds for the two variants, with their proofs, which both follow the skeleton of the unified analysis.
-% We highlight that our results are all non-asymptotic, contrarily to what is given for \MUCB{} \cite{CaoZhenKvetonXie18} and \CUSUMUCB{} \cite{LiuLeeShroff17}.
+This Section starts by giving a unified analysis of regret of the two variants of our algorithm, then we give the finite-time regret bounds for the two variants, with the proof of the first one (the second one is proved in Appendix~\ref{proof:6:mainRegretBound}), which both follows the skeleton of the unified analysis.
 
 
 %-----------------------------------------------------------------------------
@@ -739,7 +740,7 @@ $\forall t \in \{ \tau^{(k-1)}+1, \dots, \tau^{(k)} \}, \mu_{i}(t) = \mu_i^{(k)}
         d^{(k)} = d^{(k)}(\alpha,\delta) = \left\lceil \frac{4K}{\alpha\left(\Delta^{(k)}\right)^2}\beta(T,\delta) + \frac{K}{\alpha} \right\rceil.
     \end{equation}
     %
-    Then we assume that for all $k \in \{1,\dots,\Upsilon_T\}$,
+    Then \emph{we assume} that for all change $k \in \{1,\dots,\Upsilon_T\}$,
     $\tau^{(k)} - \tau^{(k-1)} \geq 2\max (d^{(k)},d^{(k-1)})$.
 \end{assumption}
 
@@ -786,7 +787,7 @@ This last term does not mean the whole inequality is only valid for $T\to\infty$
 
 % \subsubsection{Proof of Theorem~\ref{thm:6:mainRegretBoundGlobal}.}
 
-We first introduce some notation for the proof:
+We first introduce some notations for the proof:
 let $\widehat{\tau}^{(k)}$ be the $k$-th change detected by the algorithm, leading to the $k$-th (full) restart and let $\widehat{\tau}(t)$ be the last time before $t$ that the algorithm restarted.
 We denote $n_i(t) = \sum_{s=\tau(t)+1}^{t}\indic(A_s = i)$ the number of selections of arm $i$ since the last (global) restart, and $\widehat{\mu}_i(t) = \frac{1}{n_i(t)}\sum_{s=\tau(t)+1}^{t}X_{i,s}\indic(A_s = i)$ their empirical average (if $n_i(t) \neq 0$).
 
@@ -906,7 +907,8 @@ From the definition of $\Delta^{(k)}$, there exists an arm $i$ such that $\Delta
 
 First, it follows from Proposition~\ref{prop:6:EnoughSamples} that there exists $\overline{t} \in \{\tau^{(k)}, \dots, \tau^{(k)} + d^{(k)} \}$ such that
 $n_i(\overline{t}) - n_i(\tau^{(k)}) = \overline{r}$ where $\overline{r} = \lfloor \frac{\alpha}{K} d^{(k)}\rfloor$
-(as the mapping $t\mapsto n_i(t) - n_i(\tau^{(k)})$ is non-decreasing, is $0$ at $t=\tau^{(k)}$ and its value at $\tau^{(k)}+d^{(k)}$ is larger than $\overline{r}$).  Using that \[\left(\widehat{\tau}^{(k)} \geq \tau^{(k)} + d^{(k)}\right) \subseteq \left(\widehat{\tau}^{(k)} \geq \overline{t}\right)\]
+(as the mapping $t\mapsto n_i(t) - n_i(\tau^{(k)})$ is non-decreasing, is $0$ at $t=\tau^{(k)}$ and its value at $\tau^{(k)}+d^{(k)}$ is larger than $\overline{r}$).
+Using that \[\left(\widehat{\tau}^{(k)} \geq \tau^{(k)} + d^{(k)}\right) \subseteq \left(\widehat{\tau}^{(k)} \geq \overline{t}\right)\]
 the event $\left(\widehat{\tau}^{(k)} \geq \tau^{(k)} + d^{(k)}\right)$ further implies that
 \[
     n_i(\tau^{(k)}) \, \kl\left(\tilde{\mu}^{k-1}_{i,n_i(\tau^{(k)})},\tilde{\mu}^{k-1}_{i,n_i(\overline{t})}\right)
@@ -964,9 +966,11 @@ Hence, the probability in the right-hand side of \eqref{eq:6:FromHereGlobal} is 
 
 \subsection{Results for \GLRklUCB{} using Local Changes}
 
-Some new notations are needed to state a regret bound for \GLRklUCB{} using local changes. We let $\tau_i^{(\ell)}$ denote the position of the $\ell$-th change point \emph{for arm $i$}: $\tau_i^{(\ell)} = \inf \{ t > \tau_i^{(\ell - 1)} : \mu_i(t) \neq \mu_i(t+1)\}$,
-with the convention $\tau_i^{(0)}=0$, and let $\overline{\mu}_i^{(\ell)}$ be the $\ell$-th value for the mean of arm $i$, such that $\forall t \in [\tau_i^{(\ell-1)}+1, \tau_i^{(\ell)}], \ \ \mu_i(t) = \overline{\mu}_i^{(\ell)}$. We also introduce the gap $\Delta_i^{(\ell)} = \overline{\mu}_i^{\ell} - \overline{\mu}_i^{\ell-1} > 0$.
-% ($\ell$ is used instead of $k$ to distinguish notations between local and global changes)
+Some new notations are needed to state a regret bound for \GLRklUCB{} using local changes,
+and to distinguish notations between local and global changes, we denote $\ell$ instead of $k$ for the indexes of change-points.
+We let $\tau_i^{(\ell)}$ denote the position of the $\ell$-th change point \emph{for arm $i$}: $\tau_i^{(\ell)} = \inf \{ t > \tau_i^{(\ell - 1)} : \mu_i(t) \neq \mu_i(t+1)\}$,
+with the convention $\tau_i^{(0)}=0$, and let $\overline{\mu}_i^{(\ell)}$ be the $\ell$-th value for the mean of arm $i$, such that $\forall t \in [\tau_i^{(\ell-1)}+1, \tau_i^{(\ell)}], \ \ \mu_i(t) = \overline{\mu}_i^{(\ell)}$.
+We also introduce the gap $\Delta_i^{(\ell)} = \overline{\mu}_i^{\ell} - \overline{\mu}_i^{\ell-1} > 0$.
 
 \begin{assumption}[Enough samples between two local change-points]
     \label{ass:6:LongPeriods}
@@ -975,7 +979,7 @@ with the convention $\tau_i^{(0)}=0$, and let $\overline{\mu}_i^{(\ell)}$ be the
         d_i^{(\ell)} = d_i^{(\ell)}(\alpha,\delta) = \lceil \frac{4K}{\alpha\left(\Delta_i^{(\ell)}\right)^2}\beta(T,\delta) + \frac{K}{\alpha}\rceil.
     \end{equation}
     %
-    We assume that for all arm $i$ and all $\ell \in \{1,\dots,\NCi\}$, $\tau_i^{(\ell)} - \tau_i^{(\ell-1)} \geq 2\max (d_i^{(\ell)},d_i^{(\ell-1)})$.
+    Then \emph{we assume} that for all arm $i$ and all change-point of that arm $\ell \in \{1,\dots,\NCi\}$, $\tau_i^{(\ell)} - \tau_i^{(\ell-1)} \geq 2\max (d_i^{(\ell)},d_i^{(\ell-1)})$.
 \end{assumption}
 
 Assumption~\ref{ass:6:LongPeriods} is again easy to interpret, like Assumption~\ref{ass:6:LongPeriodsGlobal}, but it is non standard in non-stationary bandits, and to our knowledge our analysis is the first one to be given for such assumption on the problem difficulty.
@@ -1015,7 +1019,7 @@ The proof of \GLRklUCB{} with Local Changes is only given in Appendix~\ref{proof
 
 
 % ----------------------------------------------------------------------------
-\subsection{Interpretation of the results}
+\subsection{Interpretation and comparison of the results}
 \label{sub:6:interpretationRegretBounds}
 
 The regret bounds we obtain for the two variants of our proposal \GLRklUCB{},
