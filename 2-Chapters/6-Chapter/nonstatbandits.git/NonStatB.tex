@@ -1052,6 +1052,7 @@ In this section we report results of numerical simulations performed on syntheti
 %
 For simplicity, we restrict to rewards generated from Bernoulli distributions, even if \GLRklUCB{} can be applied to any bounded distributions.
 
+
 We report results obtained on five different piece-wise stationary bandit problems, illustrated in Figures~\ref{fig:6:Problem_1} and \ref{fig:6:Problem_2} above, and Figures~\ref{fig:6:Problem_5}, \ref{fig:6:Problem_4} and \ref{fig:6:Problem_6} below, and described in more details below.
 Results are reported with regret tables and regret plots.
 For each experiment, the regret was estimated using $1000$ independent runs.
@@ -1101,6 +1102,94 @@ and \CUSUM{} also uses the first trick with $\Delta n = 10$ (see Appendix~\ref{s
 % \TODOE{On est d'accord que le speed-up tu ne l'as fait que pour les problèmes long ? Ca vaut le coup d'être écrit, sinon les lecteurs vont penser que notre algorithme est tellement compliqué qu'on ne l'a jamais implémenté réellement...}
 
 
+% -----------------------------------------------------------------
+\paragraph{Examples of detection delays \emph{on one run} for two simple problems.}
+
+Before giving larger results that compare our approach against other algorithms, we consider the two problems $1$ and $2$ presented above in Figures~\ref{fig:6:Problem_1} and \ref{fig:6:Problem_2} (for $T=5000$).
+\emph{For one (random) simulation}, we give below examples of the efficiency of the change-point detection algorithm used by \GLRklUCB{} as well as \CUSUMklUCB{} and \MklUCB,
+by giving the times at which they detected a change and reinitialized their memory of observations of one or all the arms.
+We also give the number of observations (since the last restart) of the arm on which the change was detected.
+As shown below in the summary of our experiments, the three change-point detection algorithm give similar performances in terms of regret, but they have different behaviors.
+The test in \MUCB{} usually detects less changes, while the test in \CUSUMUCB{} usually detects more changes and even unnecessary changes.
+%
+On the examples presented below as well as large scale examples, all the tests appear to have no false alarm, and always a small detection delay for changes that are ``easy enough'' to be efficiently detected.
+The four algorithms are presented in the order of decreasing performance (\ie, the first one is empirically the most efficient, that is, it obtains a smaller regret in average).
+
+\TODOL{Je ne suis pas sur que cette forme soit la meilleure pour présenter ces exemples, mais je n'aime vraiment pas la forme graphique qu'on avait suggéré ensemble avec Emilie, en fait on voit rien si on met plus d'un algo...}
+
+
+\textbf{Problem $\bm{1}$} has only local changes, and important changes, that denote here changes on the current optimal arm, happen only at $t=2000$ when arm $2$ becomes sub-optimal ($\mu_2$ goes from $0.9$ to $0.1$) and arm $0$ becomes optimal, and at $t=3000$ when arm $0$ stays optimal but sees its mean change from $0.3$ to $0.7$.
+Other changes concern arm $1$ at $t=1000$ and $t=4000$.
+
+\begin{itemize}
+    \item
+    \GLRklUCB{} with \emph{local restarts} restarted at $2014$ from a change detected on arm $2$, after $1970$ pulls of this arm, and at time $3032$ on arm $0$ (after $840$ pulls), and did not restart then. It successfully detects both important changes, and obtains a good performance in terms of regret, with $R_T = 63$ (on only one run).
+    % For a player GLR-klUCB_forGLR(Local, $\Delta n=1$, $\Delta s=1$) a change was detected at time 2014 for arm 2, after 1969 pulls of that arm (giving mean reward = 0.888). Last restart on that arm was at tau = 0
+    % For a player GLR-klUCB_forGLR(Local, $\Delta n=1$, $\Delta s=1$) a change was detected at time 3032 for arm 0, after 771 pulls of that arm (giving mean reward = 0.336). Last restart on that arm was at tau = 0
+
+    \item
+    \GLRklUCB{} with \emph{global restarts} restarted at $2009$ from a change detected on arm $2$, after $1972$ pulls of this arm, and at time $3031$ on arm $0$ (after $827$ pulls), and did not restart then. It successfully detects both important changes, and obtains a good performance in terms of regret, with $R_T = 71$.
+    Surprisingly, we do not observe a significant difference with the \emph{local restarts} variant.
+    % For a player GLR-klUCB_forGLR(Global, $\Delta n=1$, $\Delta s=1$) a change was detected at time 2009 for arm 2, after 1972 pulls of that arm (giving mean reward = 0.896). Last restart on that arm was at tau = 0
+    % For a player GLR-klUCB_forGLR(Global, $\Delta n=1$, $\Delta s=1$) a change was detected at time 3031 for arm 0, after 827 pulls of that arm (giving mean reward = 0.32). Last restart on that arm was at tau = 2009
+
+    \item
+    \CUSUMklUCB{} restarted at $2011$ from a change detected on arm $2$, after $1861$ pulls of this arm, at time $2512$ on arm $1$ (after $249$ pulls), at time $3027$ on arm $0$ (after $825$ pulls) and again at time $3505$ on arm $0$ (after $466$ pulls), at time $4383$ on arm $1$ (after $123$ pulls), and a last time at $t=4914$ on arm $0$ (after $1304$ pulls), and did not restart then.
+    It restarted too many times on arm $0$ after its last change at $t=3000$, but except this weakness, it successfully detected the two important changes, and obtains a final regret $R_T = 150$.
+    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 2011 for arm 2, after 1861 pulls of that arm (giving mean reward = 0.895). Last restart on that arm was at tau = 0
+    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 2512 for arm 1, after 249 pulls of that arm (giving mean reward = 0.265). Last restart on that arm was at tau = 0
+    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 3027 for arm 0, after 825 pulls of that arm (giving mean reward = 0.33). Last restart on that arm was at tau = 0
+    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 3505 for arm 0, after 466 pulls of that arm (giving mean reward = 0.717). Last restart on that arm was at tau = 3027
+    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 4383 for arm 1, after 123 pulls of that arm (giving mean reward = 0.268). Last restart on that arm was at tau = 2512
+    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 4914 for arm 0, after 1304 pulls of that arm (giving mean reward = 0.699). Last restart on that arm was at tau = 3505
+
+    \item
+    \MklUCB{} restarted at $2055$ from a change detected on arm $2$, after $1811$ pulls of this arm, and at time $3080$ on arm $0$ (after $868$ pulls), and did not restart then.
+    It successfully detects both important changes, and obtains a rather bad performance in terms of regret, with $R_T = 280$.
+    % For a player M-klUCB($w=150$, Global) a change was detected at time 2055 for arm 2, after 1811 pulls of that arm (giving mean reward = 0.0552). Last restart on that arm was at tau = 0
+    % For a player M-klUCB($w=150$, Global) a change was detected at time 1025 for arm 0, after 868 pulls of that arm (giving mean reward = 0.0806). Last restart on that arm was at tau = 2055
+\end{itemize}
+
+
+\textbf{Problem $\bm{2}$} has only global changes, and important changes happen only at $t=1000$ when arm $2$ sees its mean change from $0.9$ to $0.7$, then at $t=2000$ when it becomes sub-optimal ($\mu_2$ goes from $0.7$ to $0.5$) and arm $0$ becomes optimal, and at $t=3000$ and $t=4000$ when arm $0$ stays optimal but sees its mean change from $0.6$ to $0.7$ and then from $0.7$ to $0.8$.
+
+\begin{itemize}
+    \item
+    \GLRklUCB{} with \emph{local restarts} restarted at $1070$ from a change detected on arm $2$, after $1030$ pulls of this arm, again at time $2367$ on arm $0$ (after $1006$ pulls), and at time $4203$ on arm $0$ (after $1873$ pulls), and did not restart then.
+    It successfully detects the important change, and obtains a good performance in terms of regret, with a final regret $R_T = 115$.
+    % For a player GLR-klUCB_forGLR(Local, $\Delta n=1$, $\Delta s=1$) a change was detected at time 1070 for arm 2, after 1030 pulls of that arm (giving mean reward = 0.89). Last restart on that arm was at tau = 0
+    % For a player GLR-klUCB_forGLR(Local, $\Delta n=1$, $\Delta s=1$) a change was detected at time 2367 for arm 2, after 1006 pulls of that arm (giving mean reward = 0.654). Last restart on that arm was at tau = 1070
+    % For a player GLR-klUCB_forGLR(Local, $\Delta n=1$, $\Delta s=1$) a change was detected at time 4203 for arm 0, after 1873 pulls of that arm (giving mean reward = 0.666). Last restart on that arm was at tau = 0
+
+    \item
+    \GLRklUCB{} with \emph{global restarts} restarted at time $1111$ from a change detected on arm $2$, after $1060$ pulls of this arm, and at time $2705$ on arm $0$ (after $1038$ pulls), and did not restart then.
+    It successfully detects the important changes, but with a larger delay than the \emph{local restarts} variant, and also obtains a good performance in terms of regret, with a final regret $R_T = 125$.
+    Here again we do not observe a significant difference with the \emph{local restarts} variant.
+    % For a player GLR-klUCB_forGLR(Global, $\Delta n=1$, $\Delta s=1$) a change was detected at time 1111 for arm 2, after 1060 pulls of that arm (giving mean reward = 0.888). Last restart on that arm was at tau = 0
+    % For a player GLR-klUCB_forGLR(Global, $\Delta n=1$, $\Delta s=1$) a change was detected at time 2705 for arm 2, after 1038 pulls of that arm (giving mean reward = 0.637). Last restart on that arm was at tau = 1111
+
+    \item
+    \CUSUMklUCB{} restarted at $1055$ from a change detected on arm $2$, after $963$ pulls of this arm, at time $2051$ again on arm $2$ (after $922$ pulls), at time $2305$ on arm $0$ (after $185$ pulls), at time $2591$ on arm $0$ (after $272$ pulls), at time $3387$ on arm $0$ (after $770$ pulls), at time $3677$ on arm $1$ (after $169$ pulls), and did not restart then.
+    It missed some changes but detected the two ones, and obtained a final regret $R_T=142$ on this run.
+    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 1055 for arm 2, after 963 pulls of that arm (giving mean reward = 0.916). Last restart on that arm was at tau = 0
+    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 2051 for arm 2, after 922 pulls of that arm (giving mean reward = 0.682). Last restart on that arm was at tau = 1055
+    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 2305 for arm 0, after 185 pulls of that arm (giving mean reward = 0.53). Last restart on that arm was at tau = 0
+    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 2591 for arm 0, after 272 pulls of that arm (giving mean reward = 0.618). Last restart on that arm was at tau = 2305
+    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 3387 for arm 0, after 770 pulls of that arm (giving mean reward = 0.653). Last restart on that arm was at tau = 2591
+    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 3677 for arm 1, after 169 pulls of that arm (giving mean reward = 0.373). Last restart on that arm was at tau = 0
+
+    \item
+    \MklUCB{} did not detect any change, thus it obtains bad performance in terms of regret, with $R_T = 570$ (on this run).
+\end{itemize}
+
+In these two examples, we compare the two variants of our proposal with the two state-of-the-art policies \CUSUMklUCB{} and \MklUCB,
+that are all based on combining \klUCB{} with a change-point detection algorithm.
+The results given above should be taken carefully, they only have the purpose of being an illustration of the possible behaviors of these algorithms, as they are the results of \emph{only one (random) simulation}!
+But it is still interesting to compare the final regret in one run, as given above, with the mean regret for $1000$ independent runs, as given below in Table~\ref{table:6:totalResults1}.
+The values are not the same, but the ranking is: our proposal outperforms both \CUSUMklUCB{} and \MklUCB, and the test based on \CUSUM{} seems more efficient than the test based of \MklUCB{} in our problems at hand.
+
+
+% -----------------------------------------------------------------
 \paragraph{Illustrations of the rest of our benchmark.}\label{par:6:benchmark2}
 
 We continue here the presentation of the other problems of our benchmark, see Figures~\ref{fig:6:Problem_1} and \ref{fig:6:Problem_2} above for the two problems $1$ and $2$.
@@ -1238,7 +1327,7 @@ thus our experiments confirm that an efficient bandit algorithm (\eg, \klUCB) co
 \paragraph{Regret plots.}
 \label{subsub:6:regretPlots}
 
-We also include below figures showing the simulation results for the five problems.
+We also include in Appendix~\ref{app:6:moreFigures} some figures showing the simulation results for the five problems.
 The results in terms of mean regret $R_T$ are given above in Tables~\ref{table:6:totalResults1} and \ref{table:6:totalResults2}, but it is also interesting to observe two plots for each experiments.
 %
 First, we show the mean regret as a function of time (\ie, $R_t$ for $1 \leq t \leq T$), for the $9$ algorithms considered (Discounted-\klUCB{} is removed as it is always the most inefficient and suffers high regret).
@@ -1255,55 +1344,6 @@ We note that, sadly, all actively adaptive policies fail to outperform stationar
 We can also verify that the two options, \textbf{Local} and \textbf{Global} restart, for \GLRklUCB, give close results, and that the \textbf{Local} option is always better.
 
 We also show the empirical distribution of the regret $R_T$, on Figure~\ref{fig:6:histogramRegretPb1}. It shows that all algorithms have a rather small variance on their regret, except Thompson Sampling which has a large tail due to its large mean regret on this (easy) non-stationary problems.
-
-
-\begin{figure}[h!]  % [htbp]
-    \centering
-    \includegraphics[width=1.09\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/SP__K3_T5000_N1000__9_algos_pb1/main____env1-1_1316297932259102962.pdf}
-    \caption{Mean regret as a function of time, $R_t$ ($1 \leq t \leq T = 5000$) for problem 1.}
-    \label{fig:6:meanRegretPb1}
-\end{figure}
-
-% -----------------------------------------------------------------
-\begin{figure}[h!]  % [htbp]
-    \centering
-    \includegraphics[width=1.09\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/SP__K3_T5000_N1000__9_algos_pb1/main_HistogramsRegret_shareX____env1-1_1316297932259102962.pdf}
-    \caption{Histograms of the distributions of regret $R_T$ ($T=5000$) for problem 1.}
-    \label{fig:6:histogramRegretPb1}
-\end{figure}
-
-% -----------------------------------------------------------------
-\begin{figure}[h!]  % [htbp]
-    \centering
-    \includegraphics[width=1.09\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/SP__K3_T5000_N1000__9_algos_pb2/main____env1-1_7882655236216606305.pdf}
-    \caption{Mean regret as a function of time, $R_t$ ($1 \leq t \leq T = 5000$) for problem $2$.}
-    \label{fig:6:meanRegretPb2}
-\end{figure}
-
-% -----------------------------------------------------------------
-\begin{figure}[h!]  % [htbp]
-    \centering
-    \includegraphics[width=1.09\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/SP__K6_T20000_N500__9_algos_pb3/main____env1-1_8638317743626238996.pdf}
-    \caption{Mean regret as a function of time, $R_t$ ($1 \leq t \leq T = 20000$) for problem 3.}
-    \label{fig:6:meanRegretPb3}
-\end{figure}
-
-% -----------------------------------------------------------------
-\begin{figure}[h!]  % [htbp]
-    \centering
-    \includegraphics[width=1.09\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/SP__K3_T5000_N1000__9_algos_pb4/main____env1-1_7471744535647872376.pdf}
-    \caption{Mean regret as a function of time, $R_t$ ($1 \leq t \leq T = 5000$) for problem 4.}
-    \label{fig:6:meanRegretPb4}
-\end{figure}
-
-
-% -----------------------------------------------------------------
-\begin{figure}[h!]  % [htbp]
-    \centering
-    \includegraphics[width=1.09\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/SP__K5_T100000_N500__9_algos_pb5/main____env1-1_950848333706043320.pdf}
-    \caption{Mean regret as a function of time, $R_t$ ($1 \leq t \leq T = 100000$) for problem 5.}
-    \label{fig:6:meanRegretPb5}
-\end{figure}
 
 
 
