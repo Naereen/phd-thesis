@@ -573,16 +573,17 @@ However, the analysis of \GLRklUCB{} is based on the forced exploration, and we 
 % ----------------------------------------------------------------------------
 \subsection{Comparison of different threshold functions $\beta$}\label{sec:6:exploringDifferentThresholdFunctions}
 
-\TODOL{In only one or two short numerical experiment, for example Pb 1 and 2, I can present in a table the regret obtained by \GLRklUCB, both local and global or only local, for different values of the threshold functions.
+% \TODOL{In only one or two short numerical experiment, for example Pb 1 and 2, I can present in a table the regret obtained by \GLRklUCB, both local and global or only local, for different values of the threshold functions.
+%     TODO: run the experiments!
+% }
+% This is already coded, see https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.threshold_BernoulliGLR
 
-    % This is already coded, see https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.threshold_BernoulliGLR
-}
-
-We compare the following threshold functions that can be used in the B-GLRT test used for the \GLRklUCB{} algorithm.
+We compare the following threshold functions that can be used in the B-GLRT test used for the \GLRklUCB{} algorithm (see the detail in equation \eqref{eq:whenDoesGLRklUCBrestart} and in Algorithm~\ref{algo:6:GLRklUCB}).
 
 \begin{enumerate}
     \item
-    The first variant is the default one, advised in for \GLRklUCB{}:
+    The first variant is the default one, and it is the one we advised to use in practice for \GLRklUCB{}.
+    It is very simple to compute numerically:
     \[ \beta_1(t, \delta) := \log\left(\frac{3 t^{3/2}}{\delta}\right) = \log(\frac{1}{\delta}) + \log(3) + 3/2 \log(t). \]
 
     \item
@@ -591,77 +592,102 @@ We compare the following threshold functions that can be used in the B-GLRT test
 
     \item
     The third variant is using the function $\cT$, as introduced by \eqref{def:6:function_T}.
-    The function $\cT$ is computed with a numerical approximation of the Lambert function $\W$, as explained in Section~\ref{par:6:falseAlarm},
+    The function $\cT$ is computed with a numerical approximation\footnote{~The Lambert $\cW$ function is provided in Python with \texttt{scipy.special.lambertw} from the \texttt{scipy} module \cite{scipy}.} of the Lambert function $\cW$, as explained in Section~\ref{par:6:falseAlarm},
     \[ \beta_3(t, \delta) := 2 \mathcal{T}\left(\frac{\log(2 t^{3/2}) / \delta}{2}\right) + 6 \log(1 + \log(t)). \]
 
     \item
-    The last variant is using a $\tilde{\mathcal{T}}(x) = x + 4 \log(1 + x + \sqrt{2x})$ a simply approximation of $\cT(x)$, which is valid and quite accurate as soon as $x \geq 5$,
+    The forth variant is using the function $\tilde{\mathcal{T}}(x) = x + 4 \log(1 + x + \sqrt{2x})$, as a simple approximation of $\cT(x)$, which is valid and quite accurate as soon as $x \geq 5$,
     \[ \beta_4(t, \delta) := 2 \tilde{\mathcal{T}}(x)\left(\frac{\log(2 t^{3/2}) / \delta}{2}\right) + 6 \log(1 + \log(t)). \]
 \end{enumerate}
 
 As before, we consider the three problems $1$, $2$ and $4$, with time horizon $T=5000$,
 and we present in Table~\ref{table:6:exploringDifferentThresholdFunctions} the mean results of $1000$ independent runs.
+We only consider the variant of \GLRklUCB{} based on \textbf{Local restarts}, and we used the parameters $\alpha_T,\delta_T$ as given by the Corollary~\ref{cor:6:Local},
+and with the deterministic exploration scheme.
 
 \begin{table}[ht]
     \centering
     \begin{tabular}{c|cccccc}
         \textbf{Choice of threshold function} \textbackslash \textbf{Problems} & Problem $1$ & Problem $2$ & Problem $4$ \\
         \hline
-        $\beta_1(n,\delta)$ & $51 \pm 29$ & $79 \pm 35$ & $82 \pm 45$ \\
-        $\beta_2(n,\delta)$ & $38 \pm 29$ & $70 \pm 35$ & $76 \pm 39$ \\
-        $\beta_3(n,\delta)$ & $33 \pm 29$ & $69 \pm 31$ & $68 \pm 32$ \\
-        $\beta_4(n,\delta)$ & $33 \pm 29$ & $69 \pm 31$ & $68 \pm 32$
+        $\beta_1(n,\delta)$ & $70 \pm 30$ & $109 \pm 32$ & $99 \pm 29$ \\
+        $\beta_2(n,\delta)$ & $73 \pm 28$ & $99 \pm 32$ & $88 \pm 32$ \\
+        $\beta_3(n,\delta)$ & $77 \pm 27$ & $89 \pm 32$ & $134 \pm 35$ \\
+        $\beta_4(n,\delta)$ & $77 \pm 30$ & $101 \pm 30$ & $135 \pm 30$
     \end{tabular}
     \caption{Mean regret $\pm$ $1$ standard-deviation, for different choices of threshold function $\beta(n,\delta)$, on three problems of horizon $T=5000$, for \GLRklUCB.}
     \label{table:6:exploringDifferentThresholdFunctions}
 \end{table}
 
-The sum-up of these experiments is that it sufficient to use the simplest and most explicit threshold $\beta_1$, instead of the more complicated one that was used for the analysis,
-and that this choice of threshold function $\beta_1$ gives good performance for our proposal \GLRklUCB.
+The sum-up of these experiments is that it sufficient to use the simplest and most explicit threshold $\beta_1$, instead of the more complicated one that was used for the analysis.
+Therefore, our choice of threshold function $\beta_1$ for our proposal \GLRklUCB{} presented in Algorithm~\ref{algo:6:GLRklUCB} is validated by these experiments, and this choice gives good performance for our proposal.
 
 
 % ----------------------------------------------------------------------------
 \subsection{Comparison of mechanisms used to enforce uniform exploration}\label{sec:6:exploringDifferentForcedExplorationMechanisms}
 
-\TODOL{In only one or two short numerical experiment, for example Pb 1 and 2, I can present in a table the regret obtained by \GLRklUCB, both local and global or only local, for different options of the forced exploration mechanism (uniform random, tracking, deterministic).
+% \TODOL{In only one or two short numerical experiment, for example Pb 1 and 2, I can present in a table the regret obtained by \GLRklUCB, both local and global or only local, for different options of the forced exploration mechanism (uniform random, tracking, deterministic).
+%     TODO run and finish the experiments!
+% }
+% This is already coded, see
+% https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.GLR_IndexPolicy_WithTracking
+% https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.GLR_IndexPolicy_WithDeterministicExploration
 
-    % This is already coded, see
-    % https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.GLR_IndexPolicy_WithTracking
-    % https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.GLR_IndexPolicy_WithDeterministicExploration
-}
-
-We compare the following threshold functions that can be used in the B-GLRT test used for the \GLRklUCB{} algorithm.
-
-As before, we consider the three problems $1$, $2$ and $4$, with time horizon $T=5000$,
-and we present in Table~\ref{table:6:exploringDifferentForcedExplorationMechanisms} the mean results of $1000$ independent runs.
+We compare the following exploration mechanisms that can be used to enforce a sufficient exploration of all arms in the \GLRklUCB{} algorithm.
+All options are parametrized by a constant $\alpha\in(0,1)$, which represents the fraction of time steps spent in the forced exploration, either in average or in total.
+%
+Note that the analysis we gave in Section~\ref{sec:6:RegretAnalysis} is based on the deterministic exploration, but with a careful handling of random events and if we prove a result similar to Proposition~\ref{prop:6:EnoughSamples}, we believe our analysis could also be extended to another exploration mechanism.
 
 \begin{enumerate}
     \item
-    \textbf{Uniform random exploration}:
-    FIXME describe it precisely!
+    The \textbf{deterministic exploration}
+    corresponds to one described in Algorithm~\ref{algo:6:GLRklUCB}.
+    At time $t$, if $t \mod \left\lfloor \frac{K}{\alpha}\right\rfloor \in \{1,\dots,K\}$, then the arm $A_t \leftarrow t \mod \left\lfloor \frac{K}{\alpha}\right\rfloor$ is played.
+    It is the simplest, both the compute numerically and to handle mathematically, as the proof of Proposition~\ref{prop:6:EnoughSamples} is short and simple.
+    Its deterministic nature makes it the easiest choice for the proof skeleton given in Section~\ref{sub:6:proofSkeleton}, as the set $\cD(T,\alpha)$ used in the decomposition \eqref{eq:6:GeneRegretBound} of the regret is deterministic and thus it greatly simplifies the manipulation of expectations and random events.
+    Note that this mechanism is also the one used by \MUCB{} \cite{CaoZhenKvetonXie18}.
+
     \item
-    \textbf{Deterministic exploration}:
-    FIXME describe it precisely!
+    The \textbf{uniform random exploration} is the one proposed for \CUSUMUCB{} \cite{LiuLeeShroff17}.
+    At time $t$, a random arm is played with probability $\alpha/K$. That is, first we sample a boolean variable from a Bernoulli law of mean $\alpha$, so that $0$ indicates a random play, and $1$ indicates a play using the $\UCB$ indexes. Then if it is a random play, arm $i\in\{1,\dots,K\}$ is selected uniformly at random (with probability $1/K$), and arm $A_t = i$ is played.
+    Proving a result like Proposition~\ref{prop:6:EnoughSamples} is not much harder for this second mechanism,
+    but the difficulty lies in extending the proof skeleton we give in Section~\ref{sub:6:proofSkeleton} to have a random set $\cD(T,\alpha)$.
+
     \item
-    \textbf{Tracking-based exploration}:
-    FIXME describe it precisely!
+    The \textbf{tracking-based exploration} mechanism is inspired by the tracking trick used in \cite{Garivier16BAI}, and it is actually quite intuitive.
+    At any time $t$, instead of having a uniform probability of sampling forcing an exploration of every arm, it can make sense to force exploring arms that are not explored enough. This way, we actively enforce that each arm have enough samples.
+    At time $t$, the goal is for any arm $i$ to have been sampled more than $\alpha (t - \tau_i)$ time, if $t - \tau_i$ represents the number of time steps since the last restart on this arm.
+    So the tracking-based exploration samples an arm $i$ uniformly at random among the set of arms $i$ such that $n_i(t) < \alpha (t - \tau_i)$, if it is not empty, otherwise it plays according to the $\UCB$ indexes.
+    Numerically, it is more complicated than the two previous solutions but it stays reasonably efficient.
+    It was the first direction we pursued for our analysis, but we dropped it since mathematically, it was harder to prove a result like Proposition~\ref{prop:6:EnoughSamples}, and it was also harder to incorporate the randomness of this exploration scheme in the regret decomposition \eqref{eq:6:GeneRegretBound}.
 \end{enumerate}
+
+As before, we consider the three problems $1$, $2$ and $4$, with time horizon $T=5000$,
+and we present in Table~\ref{table:6:exploringDifferentForcedExplorationMechanisms} the mean results of $1000$ independent runs.
+We include the two variants of \GLRklUCB, based on \textbf{Local restarts} or \textbf{Global restarts}, for which we used the parameters $\alpha_T,\delta_T$ as given by the two Corollaries~\ref{cor:6:Global} and \ref{cor:6:Local}.
 
 \begin{table}[ht]
     \centering
     \begin{tabular}{c|cccccc}
         \textbf{Choice of exploration mechanism} \textbackslash \textbf{Problems} & Problem $1$ & Problem $2$ & Problem $4$ \\
         \hline
-        Uniform random exploration & $51 \pm 29$ & $79 \pm 35$ & $82 \pm 45$ \\
-        Deterministic exploration & $38 \pm 29$ & $70 \pm 35$ & $76 \pm 39$ \\
-        Tracking-based exploration & $33 \pm 29$ & $69 \pm 31$ & $68 \pm 32$
+        Deterministic exploration (\textbf{Local})   & $\mathbf{68 \pm 33}$ & $116 \pm 36$ & $99 \pm 33$ \\
+        Deterministic exploration (\textbf{Global})  & $97 \pm 28$ & $134 \pm 36$ & $131 \pm 32$ \\
+        Uniform random exploration (\textbf{Local})  & $74 \pm 30$ & $\mathbf{108 \pm 33}$ & $106 \pm 31$ \\
+        Uniform random exploration (\textbf{Global}) & $91 \pm 30$ & $134 \pm 33$ & $129 \pm 33$ \\
+        Tracking-based exploration (\textbf{Local})  & $73 \pm 32$ & $104 \pm 33$ & $\mathbf{89 \pm 29}$ \\
+        Tracking-based exploration (\textbf{Global}) & $96 \pm 26$ & $133 \pm 32$ & $120 \pm 30$
     \end{tabular}
     \caption{Mean regret $\pm$ $1$ standard-deviation, for different choices of exploration mechanisms, on three problems of horizon $T=5000$, for \GLRklUCB.}
     \label{table:6:exploringDifferentForcedExplorationMechanisms}
 \end{table}
 
-The sum-up of these experiments is that it sufficient to use the simplest and most explicit threshold $\beta_1$, instead of the more complicated one that was used for the analysis,
-and that this choice of threshold function $\beta_1$ gives good performance for our proposal \GLRklUCB.
-
+As expected, all options give similar results, we each of the three options was found to outperform the two other in one of the three problems considered for this experiments (problems $1$, $2$ and $4$).
+The result highlighted in \textbf{bold} in Table~\ref{table:6:exploringDifferentForcedExplorationMechanisms} shows the best algorithm in each problem (\ie, the algorithm and its option that obtains the smaller mean regret in the considered column).
+We note that in terms of its average regret on the different problems, the tracking-based exploration is the best choice.
+%
+The sum-up of these experiments is that it sufficient to use the simplest exploration scheme based on a deterministic exploration,
+rather than a more complicated exploration scheme based on tracking.
+Therefore, our choice of the deterministic exploration scheme for our proposal \GLRklUCB{} presented in Algorithm~\ref{algo:6:GLRklUCB} is validated by these experiments, and this choice gives good performance for our proposal.
 
 % ----------------------------------------------------------------------------
