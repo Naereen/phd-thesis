@@ -777,8 +777,145 @@ As it is the simplest one to handle in our proofs, this is the one we chose for 
 \label{sec:6:RegretAnalysis}
 %-----------------------------------------------------------------------------
 
-This Section starts by giving a unified analysis of regret of the two variants of our algorithm, then we give the finite-time regret bounds for the two variants, with the proof of the first one (the second one is proved in Appendix~\ref{proof:6:mainRegretBound}), which both follows the skeleton of the unified analysis.
+This section give the finite-time regret bounds for the two variants, and interpretations of the different results.
 
+% ----------------------------------------------------------------------------
+\subsection{Results for \GLRklUCB{} using Global Changes}
+
+Recall that $\tau^{(k)}$ denotes the position of the $k$-th break-point and let $\mu_i^{(k)}$ be the mean of arm $i$ on the segment between the $k$ and $(k+1)$-th breakpoint:
+$\forall t \in \{ \tau^{(k-1)}+1, \dots, \tau^{(k)} \}, \mu_{i}(t) = \mu_i^{(k)}$. We also introduce $k^* = \arg\max_i \mu_i^{(k)} $ and the largest gap at break-point $k$ as $\Delta^{(k)} := \max_{i=1,\dots,K} |\mu_i^{(k)} - \mu_i^{(k-1)}| >0$.
+
+
+\begin{assumption}[Enough samples between two global change-points]
+    \label{ass:6:LongPeriodsGlobal}
+    Define
+    \begin{equation}\label{def:6:DelayGlobal}
+        d^{(k)} = d^{(k)}(\alpha,\delta) = \Bigl\lceil \frac{4K}{\alpha\left(\Delta^{(k)}\right)^2}\beta(T,\delta) + \frac{K}{\alpha} \Bigr\rceil.
+    \end{equation}
+    %
+    Then \emph{we assume} that for all change $k \in \{1,\dots,\Upsilon_T\}$,
+    $\tau^{(k)} - \tau^{(k-1)} \geq 2\max (d^{(k)},d^{(k-1)})$.
+\end{assumption}
+
+Assumption~\ref{ass:6:LongPeriodsGlobal} is easy to interpret and standard in non-stationary bandits.
+It requires that the distance between two consecutive breakpoints is large enough: how large depends on the magnitude of the largest change that happen at those two breakpoints.
+Under this assumption, we provide in Theorem~\ref{thm:6:mainRegretBoundGlobal} a finite time problem-dependent regret upper bound.
+It features the parameters $\alpha$ and $\delta$,
+the KL-divergence terms $\kl(\mu_{i}^{(k)},\mu_{k^*}^{(k)})$ expressing the hardness of the (stationary) MAB problem between two breakpoints,
+and the $\Delta^{(k)}$ terms expressing the hardness of the change-point detection problem.
+
+\begin{theorem}\label{thm:6:mainRegretBoundGlobal}
+    For $\alpha$ and $\delta$ for which Assumption~\ref{ass:6:LongPeriodsGlobal} is satisfied, the regret of \GLRklUCB{} with parameters $\alpha$ and $\delta$ based on \textbf{Global} Restart satisfies
+    \begin{align}
+        R_T \;\; \leq \;\; & 2\sum_{k=1}^{\Upsilon_T} \frac{4K}{\alpha \left(\Delta^{(k)}\right)^2}\beta(T,\delta) +\alpha T + \delta (K+1)\Upsilon_T \\
+        & + \sum_{k=1}^{\Upsilon_T}\sum_{i : \mu_i^{(k)} \neq \mu_{k^*}^{(k)}} \frac{\left( \mu_{k^*}^{(k)}-\mu_i^{(k)}\right)}{\kl\left(\mu_i^{(k)},\mu_{k^*}^{(k)}\right)}\ln(T) + \bigO{\sqrt{\ln(T)}}. \nonumber
+    \end{align}
+\end{theorem}
+
+We highlight that \emph{this result is finite-time} and not asymptotic, even if it uses the notation $\bigO{\sqrt{\ln(T)}}$.
+This last term does not mean the whole inequality is only valid for $T\to\infty$, but it rather means that at finite time, the inequality is valid with the last term being a function $g(T)$, which is upper-bounded by a constant times $\sqrt{\ln(T)}$ from a certain time $T_0$.
+
+\begin{corollary}\label{cor:6:Global}
+    For ``easy'' problems satisfying the corresponding Assumption~\ref{ass:6:LongPeriodsGlobal},
+    let $\Delta^{\text{opt}}$ denote the smallest value of a sub-optimality gap on one of the stationary segments, and $\Delta^{\text{change}}$ be the smallest magnitude of any change point on any arm.
+    \begin{enumerate}
+        \item Choosing $\alpha = \sqrt{\frac{\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{T}}$ gives $R_T = \bigO{\frac{K}{\left(\Delta^{\text{change}}\right)^2} \Upsilon_T\sqrt{T\ln(T)} + \frac{(K-1)}{\Delta^{\text{opt}}} \Upsilon_T\ln(T)}$,
+        \item Choosing $\alpha = \sqrt{\frac{\Upsilon_T\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{\Upsilon_T T}}$ gives $R_T = \bigO{\frac{K}{\left(\Delta^{\text{change}}\right)^2}\sqrt{\Upsilon_T T \ln(T)} + \frac{(K-1)}{\Delta^{\text{opt}}} \Upsilon_T\ln(T)}$.
+    \end{enumerate}
+\end{corollary}
+
+
+% ----------------------------------------------------------------------------
+\subsection{Results for \GLRklUCB{} using Local Changes}
+
+Some new notations are needed to state a regret bound for \GLRklUCB{} using local changes,
+and to distinguish notations between local and global changes, we denote $\ell$ instead of $k$ for the indexes of change-points.
+We let $\tau_i^{(\ell)}$ denote the position of the $\ell$-th change point \emph{for arm $i$}: $\tau_i^{(\ell)} = \inf \{ t > \tau_i^{(\ell - 1)} : \mu_i(t) \neq \mu_i(t+1)\}$,
+with the convention $\tau_i^{(0)}=0$, and let $\overline{\mu}_i^{(\ell)}$ be the $\ell$-th value for the mean of arm $i$, such that $\forall t \in [\tau_i^{(\ell-1)}+1, \tau_i^{(\ell)}], \ \ \mu_i(t) = \overline{\mu}_i^{(\ell)}$.
+We also introduce the gap $\Delta_i^{(\ell)} = \overline{\mu}_i^{\ell} - \overline{\mu}_i^{\ell-1} > 0$.
+
+\begin{assumption}[Enough samples between two local change-points]
+    \label{ass:6:LongPeriods}
+    Define
+    \begin{equation}\label{def:6:DelayLocal}
+        d_i^{(\ell)} = d_i^{(\ell)}(\alpha,\delta) = \Bigl\lceil \frac{4K}{\alpha\left(\Delta_i^{(\ell)}\right)^2}\beta(T,\delta) + \frac{K}{\alpha} \Bigr\rceil.
+    \end{equation}
+    %
+    Then \emph{we assume} that for all arm $i$ and all change-point of that arm $\ell \in \{1,\dots,\NCi\}$, $\tau_i^{(\ell)} - \tau_i^{(\ell-1)} \geq 2\max (d_i^{(\ell)},d_i^{(\ell-1)})$.
+\end{assumption}
+
+Assumption~\ref{ass:6:LongPeriods} is again easy to interpret, like Assumption~\ref{ass:6:LongPeriodsGlobal}, but it is non standard in non-stationary bandits, and to the best of the authors knowledge,our analysis is the first one to be given for such assumption on the problem difficulty.
+%
+It requires that any two consecutive change-points \emph{on a given arm} are sufficiently spaced (relatively to the magnitude of those two change-points). Under that assumption, Theorem~\ref{thm:6:mainRegretBound} provides a regret upper bound that scales with similar quantities as that of Theorem~\ref{thm:6:mainRegretBoundGlobal}, except that the number of breakpoints $\Upsilon_T$ is replaced with the \emph{total} number of change points $\EffChange = \sum_{i=1}^K \NCi \leq K \Upsilon_T$.
+
+\begin{theorem}\label{thm:6:mainRegretBound}
+    For $\alpha$ and $\delta$ for which Assumption~\ref{ass:6:LongPeriods} is satisfied, the regret of \GLRklUCB{} with parameters $\alpha$ and $\delta$ based on Local Restart satisfies
+    %
+    \begin{equation}
+        R_T \leq 2\sum_{i=1}^K\sum_{\ell=1}^{\NCi} \frac{4K}{\alpha \left(\Delta_i^{(\ell)}\right)^2}\beta(T,\delta) +\alpha T + 2 \delta \EffChange  + \sum_{i=1}^K\sum_{\ell=1}^{\NCi} \frac{\ln(T)}{\kl(\overline{\mu}_i^{(\ell)},{\mu}^*_{i,\ell})} +\bigO{\sqrt{\ln(T)}},
+    \end{equation}
+    where
+    \begin{equation}
+        {\mu}^*_{i,\ell} = \inf \left\{ \mu_{i_t^*}(t) : \mu_{i_t^*}(t) \neq \overline{\mu}_i^{(\ell)}, t \in [\tau_i^{(\ell)}+1, \tau_i^{(\ell+1)}]\right\}.
+    \end{equation}
+\end{theorem}
+
+Like for the first Theorem~\ref{thm:6:mainRegretBoundGlobal},
+we highlight that \emph{this result is finite-time}.
+%
+We can directly obtain different regret upper-bounds for different choices of the two parameters $\alpha$ and $\delta$.
+We prefer to state the four cases, to highlight the modularity of the result given by Theorem~\ref{thm:6:mainRegretBound}.
+
+\begin{corollary}\label{cor:6:Local}
+    For ``easy'' problems satisfying the corresponding Assumption~\ref{ass:6:LongPeriods},
+    with $\Delta^{\text{opt}}$ and ${\Delta}^{\text{change}}$ defined as in Corollary~\ref{cor:6:Global}, the following holds.
+    \begin{enumerate}
+        \item Choosing $\alpha = \sqrt{\frac{\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{T}}$ gives $R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2} \EffChange\sqrt{T\ln(T)} + \frac{1}{\left(\Delta^{\text{opt}}\right)^2} \EffChange\ln(T)}$,
+        \item Choosing $\alpha = \sqrt{\frac{\Upsilon_T\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{\Upsilon_T T}}$ gives $R_T = \bigO{\frac{K^2}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\Upsilon_T T\ln(T)} + \frac{K\Upsilon_T}{\left(\Delta^{\text{opt}}\right)^2}\ln(T)}$,
+        \item Choosing $\alpha = \sqrt{\frac{\EffChange\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{\EffChange T}}$ gives $R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\EffChange T\ln(T)} + \frac{\EffChange}{\left(\Delta^{\text{opt}}\right)^2}\ln(T)}$,
+        \item Choosing $\alpha = \sqrt{\frac{K\Upsilon_T\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{K\Upsilon_T T}}$ gives $R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\EffChange T\ln(T)} + \frac{1}{\left(\Delta^{\text{opt}}\right)^2} \EffChange\ln(T)}$.
+    \end{enumerate}
+\end{corollary}
+
+The proof of \GLRklUCB{} with Local Changes is only given in Appendix~\ref{proof:6:mainRegretBound}, as it is quite similar to the proof for Global changes given above. The main difficulty relies in defining the ``good event'' $\cE_T$, and proving that it happens with high probability (by showing that the complementary event $\cE_T^c$ is highly unlikely).
+
+
+% ----------------------------------------------------------------------------
+\subsection{Interpretation and comparison of the results}
+\label{sub:6:interpretationRegretBounds}
+
+The regret bounds we obtain for the two variants of our proposal \GLRklUCB{},
+Theorems~\ref{thm:6:mainRegretBoundGlobal} and \ref{thm:6:mainRegretBound} respectively,
+both show that there exists a tuning of $\alpha$ and $\delta$ as a function and $T$ \emph{and the number of changes} such that the regret is of order $\cO_h(K\sqrt{\Upsilon_T T \ln(T)})$ and $\cO_h(K\sqrt{\EffChange T \ln(T)})$ respectively, where the $\cO_h$ notations ignore the gap terms.
+%
+For very particular instances such that $\Upsilon_T = \EffChange$, \ie, at each break-point only one arm changes (\eg, problem $1$ from Figure~\ref{fig:6:Problem_1}), the theory advocates the use of local changes.
+%
+Indeed, while the regret guarantees obtained are similar, those obtained for local changes hold for a wider variety of problems as Assumption~\ref{ass:6:LongPeriods} is less stringent than Assumption~\ref{ass:6:LongPeriodsGlobal}.
+%
+Besides those specific instances, our results are essentially worse for local than global changes. However, we only obtain regret upper bounds -- thus providing a theoretical safety net for both variants of our algorithm, and the practical story is different, as discussed in Section~\ref{sec:6:NumericalExperiments}.
+We find that \GLRklUCB{} performs better with local restarts, uniformly on all problems.
+
+One can note that with the tuning of $\alpha$ and $\delta$ prescribed by Corollaries~\ref{cor:6:Global} and \ref{cor:6:Local}, the regret bounds of \GLRklUCB{} hold for problem instances for which two consecutive breakpoints (or change-points on an arm) are separated by more than (about) $\sqrt{T\log(T)}/(\Delta^{\text{change}})^2$ time steps.
+Hence those guarantees are valid on ``easy'' problem instances only, with few changes of a large magnitude, and in particular they do not hold for the harder problems $3$ or $5$ presented in Section~\ref{sec:6:NumericalExperiments}.
+%
+However, this does not prevent our algorithms from performing well on more realistic instances, and numerical experiments support this claim,
+as illustrated for instance with problem $3$ presented in the next Section~\ref{sec:6:NumericalExperiments}).
+%
+Note that \MUCB{} \cite{CaoZhenKvetonXie18} is also analyzed for the same type of unrealistic assumptions, while its practical performance is illustrated beyond those.
+
+
+% ----------------------------------------------------------------------------
+% ----------------------------------------------------------------------------
+
+
+%-----------------------------------------------------------------------------
+\subsection{Proof of the regret upper-bounds}
+\label{sec:6:proofRegret}
+
+\TODOL{Write intro}
+
+This Section starts by giving a unified analysis of regret of the two variants of our algorithm, then we give the proof of the finite-time regret bound for the variant using ``global restarts''.
+The proof of the other variant using ``local restarts'' follows the skeleton of the unified analysis, and can be found in Appendix~E of \cite{Besson2019GLRT}.
 
 %-----------------------------------------------------------------------------
 \subsection{Sketch of the unified regret analysis}
@@ -840,49 +977,7 @@ By putting together the three pieces, that are a bound on $(A)$, on $(B)$ and on
 
 
 %-----------------------------------------------------------------------------
-\subsection{Results for \GLRklUCB{} using Global Changes}
 
-Recall that $\tau^{(k)}$ denotes the position of the $k$-th break-point and let $\mu_i^{(k)}$ be the mean of arm $i$ on the segment between the $k$ and $(k+1)$-th breakpoint:
-$\forall t \in \{ \tau^{(k-1)}+1, \dots, \tau^{(k)} \}, \mu_{i}(t) = \mu_i^{(k)}$. We also introduce $k^* = \arg\max_i \mu_i^{(k)} $ and the largest gap at break-point $k$ as $\Delta^{(k)} := \max_{i=1,\dots,K} |\mu_i^{(k)} - \mu_i^{(k-1)}| >0$.
-
-
-\begin{assumption}[Enough samples between two global change-points]
-    \label{ass:6:LongPeriodsGlobal}
-    Define
-    \begin{equation}\label{def:6:DelayGlobal}
-        d^{(k)} = d^{(k)}(\alpha,\delta) = \left\lceil \frac{4K}{\alpha\left(\Delta^{(k)}\right)^2}\beta(T,\delta) + \frac{K}{\alpha} \right\rceil.
-    \end{equation}
-    %
-    Then \emph{we assume} that for all change $k \in \{1,\dots,\Upsilon_T\}$,
-    $\tau^{(k)} - \tau^{(k-1)} \geq 2\max (d^{(k)},d^{(k-1)})$.
-\end{assumption}
-
-Assumption~\ref{ass:6:LongPeriodsGlobal} is easy to interpret and standard in non-stationary bandits.
-It requires that the distance between two consecutive breakpoints is large enough: how large depends on the magnitude of the largest change that happen at those two breakpoints.
-Under this assumption, we provide in Theorem~\ref{thm:6:mainRegretBoundGlobal} a finite time problem-dependent regret upper bound.
-It features the parameters $\alpha$ and $\delta$,
-the KL-divergence terms $\kl(\mu_{i}^{(k)},\mu_{k^*}^{(k)})$ expressing the hardness of the (stationary) MAB problem between two breakpoints,
-and the $\Delta^{(k)}$ terms expressing the hardness of the change-point detection problem.
-
-\begin{theorem}\label{thm:6:mainRegretBoundGlobal}
-    For $\alpha$ and $\delta$ for which Assumption~\ref{ass:6:LongPeriodsGlobal} is satisfied, the regret of \GLRklUCB{} with parameters $\alpha$ and $\delta$ based on \textbf{Global} Restart satisfies
-    \begin{align}
-        R_T \;\; \leq \;\; & 2\sum_{k=1}^{\Upsilon_T} \frac{4K}{\alpha \left(\Delta^{(k)}\right)^2}\beta(T,\delta) +\alpha T + \delta (K+1)\Upsilon_T \\
-        & + \sum_{k=1}^{\Upsilon_T}\sum_{i : \mu_i^{(k)} \neq \mu_{k^*}^{(k)}} \frac{\left( \mu_{k^*}^{(k)}-\mu_i^{(k)}\right)}{\kl\left(\mu_i^{(k)},\mu_{k^*}^{(k)}\right)}\ln(T) + \bigO{\sqrt{\ln(T)}}. \nonumber
-    \end{align}
-\end{theorem}
-
-We highlight that \emph{this result is finite-time} and not asymptotic, even if it uses the notation $\bigO{\sqrt{\ln(T)}}$.
-This last term does not mean the whole inequality is only valid for $T\to\infty$, but it rather means that at finite time, the inequality is valid with the last term being a function $g(T)$, which is upper-bounded by a constant times $\sqrt{\ln(T)}$ from a certain time $T_0$.
-
-\begin{corollary}\label{cor:6:Global}
-    For ``easy'' problems satisfying the corresponding Assumption~\ref{ass:6:LongPeriodsGlobal},
-    let $\Delta^{\text{opt}}$ denote the smallest value of a sub-optimality gap on one of the stationary segments, and $\Delta^{\text{change}}$ be the smallest magnitude of any change point on any arm.
-    \begin{enumerate}
-        \item Choosing $\alpha = \sqrt{\frac{\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{T}}$ gives $R_T = \bigO{\frac{K}{\left(\Delta^{\text{change}}\right)^2} \Upsilon_T\sqrt{T\ln(T)} + \frac{(K-1)}{\Delta^{\text{opt}}} \Upsilon_T\ln(T)}$,
-        \item Choosing $\alpha = \sqrt{\frac{\Upsilon_T\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{\Upsilon_T T}}$ gives $R_T = \bigO{\frac{K}{\left(\Delta^{\text{change}}\right)^2}\sqrt{\Upsilon_T T \ln(T)} + \frac{(K-1)}{\Delta^{\text{opt}}} \Upsilon_T\ln(T)}$.
-    \end{enumerate}
-\end{corollary}
 
 
 \subsection{Proof for \GLRklUCB{} with Global Changes}
@@ -1077,86 +1172,6 @@ Hence, the probability in the right-hand side of \eqref{eq:6:FromHereGlobal} is 
 
 % \TODOE{note that in this corollary $\Delta^{\text{change}}$ could be defined as the smallest value of $\Delta^{(k)}$ which can be larger than the smallest change on any arm... But for the sake of uniformity between the two corollaries, we may prefer to keep it like that}
 
-\subsection{Results for \GLRklUCB{} using Local Changes}
-
-Some new notations are needed to state a regret bound for \GLRklUCB{} using local changes,
-and to distinguish notations between local and global changes, we denote $\ell$ instead of $k$ for the indexes of change-points.
-We let $\tau_i^{(\ell)}$ denote the position of the $\ell$-th change point \emph{for arm $i$}: $\tau_i^{(\ell)} = \inf \{ t > \tau_i^{(\ell - 1)} : \mu_i(t) \neq \mu_i(t+1)\}$,
-with the convention $\tau_i^{(0)}=0$, and let $\overline{\mu}_i^{(\ell)}$ be the $\ell$-th value for the mean of arm $i$, such that $\forall t \in [\tau_i^{(\ell-1)}+1, \tau_i^{(\ell)}], \ \ \mu_i(t) = \overline{\mu}_i^{(\ell)}$.
-We also introduce the gap $\Delta_i^{(\ell)} = \overline{\mu}_i^{\ell} - \overline{\mu}_i^{\ell-1} > 0$.
-
-\begin{assumption}[Enough samples between two local change-points]
-    \label{ass:6:LongPeriods}
-    Define
-    \begin{equation}\label{def:6:DelayLocal}
-        d_i^{(\ell)} = d_i^{(\ell)}(\alpha,\delta) = \lceil \frac{4K}{\alpha\left(\Delta_i^{(\ell)}\right)^2}\beta(T,\delta) + \frac{K}{\alpha}\rceil.
-    \end{equation}
-    %
-    Then \emph{we assume} that for all arm $i$ and all change-point of that arm $\ell \in \{1,\dots,\NCi\}$, $\tau_i^{(\ell)} - \tau_i^{(\ell-1)} \geq 2\max (d_i^{(\ell)},d_i^{(\ell-1)})$.
-\end{assumption}
-
-Assumption~\ref{ass:6:LongPeriods} is again easy to interpret, like Assumption~\ref{ass:6:LongPeriodsGlobal}, but it is non standard in non-stationary bandits, and to the best of the authors knowledge,our analysis is the first one to be given for such assumption on the problem difficulty.
-%
-It requires that any two consecutive change-points \emph{on a given arm} are sufficiently spaced (relatively to the magnitude of those two change-points). Under that assumption, Theorem~\ref{thm:6:mainRegretBound} provides a regret upper bound that scales with similar quantities as that of Theorem~\ref{thm:6:mainRegretBoundGlobal}, except that the number of breakpoints $\Upsilon_T$ is replaced with the \emph{total} number of change points $\EffChange = \sum_{i=1}^K \NCi \leq K \Upsilon_T$.
-
-\begin{theorem}\label{thm:6:mainRegretBound}
-    For $\alpha$ and $\delta$ for which Assumption~\ref{ass:6:LongPeriods} is satisfied, the regret of \GLRklUCB{} with parameters $\alpha$ and $\delta$ based on Local Restart satisfies
-    %
-    \begin{equation}
-        R_T \leq 2\sum_{i=1}^K\sum_{\ell=1}^{\NCi} \frac{4K}{\alpha \left(\Delta_i^{(\ell)}\right)^2}\beta(T,\delta) +\alpha T + 2 \delta \EffChange  + \sum_{i=1}^K\sum_{\ell=1}^{\NCi} \frac{\ln(T)}{\kl(\overline{\mu}_i^{(\ell)},{\mu}^*_{i,\ell})} +\bigO{\sqrt{\ln(T)}},
-    \end{equation}
-    where
-    \begin{equation}
-        {\mu}^*_{i,\ell} = \inf \left\{ \mu_{i_t^*}(t) : \mu_{i_t^*}(t) \neq \overline{\mu}_i^{(\ell)}, t \in [\tau_i^{(\ell)}+1, \tau_i^{(\ell+1)}]\right\}.
-    \end{equation}
-\end{theorem}
-
-Like for the first Theorem~\ref{thm:6:mainRegretBoundGlobal},
-we highlight that \emph{this result is finite-time}.
-%
-We can directly obtain different regret upper-bounds for different choices of the two parameters $\alpha$ and $\delta$.
-We prefer to state the four cases, to highlight the modularity of the result given by Theorem~\ref{thm:6:mainRegretBound}.
-
-\begin{corollary}\label{cor:6:Local}
-    For ``easy'' problems satisfying the corresponding Assumption~\ref{ass:6:LongPeriods},
-    with $\Delta^{\text{opt}}$ and ${\Delta}^{\text{change}}$ defined as in Corollary~\ref{cor:6:Global}, the following holds.
-    \begin{enumerate}
-        \item Choosing $\alpha = \sqrt{\frac{\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{T}}$ gives $R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2} \EffChange\sqrt{T\ln(T)} + \frac{1}{\left(\Delta^{\text{opt}}\right)^2} \EffChange\ln(T)}$,
-        \item Choosing $\alpha = \sqrt{\frac{\Upsilon_T\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{\Upsilon_T T}}$ gives $R_T = \bigO{\frac{K^2}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\Upsilon_T T\ln(T)} + \frac{K\Upsilon_T}{\left(\Delta^{\text{opt}}\right)^2}\ln(T)}$,
-        \item Choosing $\alpha = \sqrt{\frac{\EffChange\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{\EffChange T}}$ gives $R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\EffChange T\ln(T)} + \frac{\EffChange}{\left(\Delta^{\text{opt}}\right)^2}\ln(T)}$,
-        \item Choosing $\alpha = \sqrt{\frac{K\Upsilon_T\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{K\Upsilon_T T}}$ gives $R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\EffChange T\ln(T)} + \frac{1}{\left(\Delta^{\text{opt}}\right)^2} \EffChange\ln(T)}$.
-    \end{enumerate}
-\end{corollary}
-
-The proof of \GLRklUCB{} with Local Changes is only given in Appendix~\ref{proof:6:mainRegretBound}, as it is quite similar to the proof for Global changes given above. The main difficulty relies in defining the ``good event'' $\cE_T$, and proving that it happens with high probability (by showing that the complementary event $\cE_T^c$ is highly unlikely).
-
-
-% ----------------------------------------------------------------------------
-\subsection{Interpretation and comparison of the results}
-\label{sub:6:interpretationRegretBounds}
-
-The regret bounds we obtain for the two variants of our proposal \GLRklUCB{},
-Theorems~\ref{thm:6:mainRegretBoundGlobal} and \ref{thm:6:mainRegretBound} respectively,
-both show that there exists a tuning of $\alpha$ and $\delta$ as a function and $T$ \emph{and the number of changes} such that the regret is of order $\cO_h(K\sqrt{\Upsilon_T T \ln(T)})$ and $\cO_h(K\sqrt{\EffChange T \ln(T)})$ respectively, where the $\cO_h$ notations ignore the gap terms.
-%
-For very particular instances such that $\Upsilon_T = \EffChange$, \ie, at each break-point only one arm changes (\eg, problem $1$ from Figure~\ref{fig:6:Problem_1}), the theory advocates the use of local changes.
-%
-Indeed, while the regret guarantees obtained are similar, those obtained for local changes hold for a wider variety of problems as Assumption~\ref{ass:6:LongPeriods} is less stringent than Assumption~\ref{ass:6:LongPeriodsGlobal}.
-%
-Besides those specific instances, our results are essentially worse for local than global changes. However, we only obtain regret upper bounds -- thus providing a theoretical safety net for both variants of our algorithm, and the practical story is different, as discussed in Section~\ref{sec:6:NumericalExperiments}.
-We find that \GLRklUCB{} performs better with local restarts, uniformly on all problems.
-
-One can note that with the tuning of $\alpha$ and $\delta$ prescribed by Corollaries~\ref{cor:6:Global} and \ref{cor:6:Local}, the regret bounds of \GLRklUCB{} hold for problem instances for which two consecutive breakpoints (or change-points on an arm) are separated by more than (about) $\sqrt{T\log(T)}/(\Delta^{\text{change}})^2$ time steps.
-Hence those guarantees are valid on ``easy'' problem instances only, with few changes of a large magnitude, and in particular they do not hold for the harder problems $3$ or $5$ presented in Section~\ref{sec:6:NumericalExperiments}.
-%
-However, this does not prevent our algorithms from performing well on more realistic instances, and numerical experiments support this claim,
-as illustrated for instance with problem $3$ presented in the next Section~\ref{sec:6:NumericalExperiments}).
-%
-Note that \MUCB{} \cite{CaoZhenKvetonXie18} is also analyzed for the same type of unrealistic assumptions, while its practical performance is illustrated beyond those.
-
-
-% ----------------------------------------------------------------------------
-% ----------------------------------------------------------------------------
 \section{Experimental Results}
 \label{sec:6:NumericalExperiments}
 % ----------------------------------------------------------------------------
@@ -1166,9 +1181,10 @@ In this section we report results of numerical simulations performed on syntheti
 For simplicity, we restrict to rewards generated from Bernoulli distributions, even if \GLRklUCB{} can be applied to any bounded distributions.
 
 
-We report results obtained on five different piece-wise stationary bandit problems, illustrated in Figures~\ref{fig:6:Problem_1} and \ref{fig:6:Problem_2} above, and Figures~\ref{fig:6:Problem_5}, \ref{fig:6:Problem_4} and \ref{fig:6:Problem_6} below, and described in more details below.
-Results are reported with regret tables and regret plots.
-For each experiment, the regret was estimated using $1000$ independent runs.
+We report results obtained on five different piece-wise stationary bandit problems, illustrated in Figures~\ref{fig:6:Problem_1} and \ref{fig:6:Problem_2} above, and Figures~\ref{fig:6:Problem_5}, \ref{fig:6:Problem_4} and \ref{fig:6:Problem_6} below.
+% , and described in more details below.
+We present regret tables and regret plots,
+for which the regret was estimated using $1000$ independent runs.
 
 
 % -----------------------------------------------------------------
@@ -1220,8 +1236,8 @@ and \CUSUM{} also uses the first trick with $\Delta n = 10$ (see Appendix~\ref{s
 
 Before giving larger results that compare our approach against other algorithms, we consider the two problems $1$ and $2$ presented above in Figures~\ref{fig:6:Problem_1} and \ref{fig:6:Problem_2} (for $T=5000$).
 \emph{For one (random) simulation}, we give below examples of the efficiency of the change-point detection algorithm used by \GLRklUCB{} as well as \CUSUMklUCB{} and \MklUCB,
-by giving the times at which they detected a change and reinitialized their memory of observations of one or all the arms.
-We also give the number of observations (since the last restart) of the arm on which the change was detected.
+by showing the times at which they detect a change and reinitialize their memory of observations of one or all the arms.
+We also display the number of observations (since the last restart) of the arm on which the change was detected.
 As shown below, in the experiments summary, the three change-point detection algorithm give similar performances in terms of regret, but they have different behaviors.
 The test in \MUCB{} usually detects less changes, while the test in \CUSUMUCB{} usually detects more changes and even unnecessary changes.
 %
@@ -1263,6 +1279,8 @@ Other changes concern arm $1$ at $t=1000$ and $t=4000$.
     % For a player M-klUCB($w=150$, Global) a change was detected at time 1025 for arm 0, after 868 pulls of that arm (giving mean reward = 0.0806). Last restart on that arm was at tau = 2055
 \end{itemize}
 
+\TODOL{Conclusion à tirer de cet exemple !}
+
 
 \textbf{Problem $\bm{2}$} has only global changes, and important changes happen only at $t=1000$ when arm $2$ sees its mean change from $0.9$ to $0.7$, then at $t=2000$ when it becomes sub-optimal ($\mu_2$ goes from $0.7$ to $0.5$) and arm $0$ becomes optimal, and at $t=3000$ and $t=4000$ when arm $0$ stays optimal but sees its mean change from $0.6$ to $0.7$ and then from $0.7$ to $0.8$.
 
@@ -1294,6 +1312,8 @@ Other changes concern arm $1$ at $t=1000$ and $t=4000$.
     \item
     \MklUCB{} did not detect any change, thus it obtains bad performance in terms of regret, with $R_T = 570$ (on this run).
 \end{itemize}
+
+\TODOL{Conclusion à tirer de cet exemple !}
 
 In these two examples, we compare the two variants of our proposal with the two state-of-the-art policies \CUSUMklUCB{} and \MklUCB,
 that are all based on combining \klUCB{} with a change-point detection algorithm.
