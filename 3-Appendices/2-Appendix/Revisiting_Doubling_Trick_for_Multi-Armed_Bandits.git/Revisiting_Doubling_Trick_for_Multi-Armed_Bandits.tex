@@ -221,6 +221,7 @@ It is formally stated below as Algorithm~\ref{algo:DTr} and depends on a non-dec
 % Documentation at http://mirror.ctan.org/tex-archive/macros/latex/contrib/algorithm2e/doc/algorithm2e.pdf if needed
 % Or https://en.wikibooks.org/wiki/LaTeX/Algorithms#Typesetting_using_the_algorithm2e_package
 % \removelatexerror% Nullify \@latex@error % Cf. http://tex.stackexchange.com/a/82272/
+\begin{framed}
 \begin{algorithm}[H]
         % XXX Options
         \LinesNumbered  % XXX Option to number the line
@@ -246,6 +247,7 @@ It is formally stated below as Algorithm~\ref{algo:DTr} and depends on a non-dec
         \caption{The Generic Doubling Trick Algorithm, $\cA' = \DTr(\cA, (T_i)_{i\in\N})$.}
 \label{algo:DTr}
 \end{algorithm}
+\end{framed}
 % \vspace*{-5pt}  % XXX remove if problem
 \vspace*{5pt}  % XXX remove if problem
 
@@ -1999,31 +2001,33 @@ or \KLUCBpp{} (cf. Eq.~\eqref{eq:index_KLUCBpp}).
 % Documentation at http://mirror.ctan.org/tex-archive/macros/latex/contrib/algorithm2e/doc/algorithm2e.pdf if needed
 % Or https://en.wikibooks.org/wiki/LaTeX/Algorithms#Typesetting_using_the_algorithm2e_package
 % \removelatexerror% Nullify \@latex@error % Cf. http://tex.stackexchange.com/a/82272/
+\begin{framed}
 \begin{algorithm}[H]
-        % XXX Options
-        \LinesNumbered  % XXX Option to number the line
-        \DontPrintSemicolon
-        % \RestyleAlgo{boxed}
-        % XXX Input, data and output
-        \KwIn{Bandit algorithm $\cA$, and sequence $(T_i)_{i\in\N}$\;}
-        % \KwData{Data}
-        % \KwResult{Result}
-        \BlankLine
-        % XXX Algorithm
-        Let $i = 0$, and initialize algorithm $\cA^{(0)} = \cA_{T_0}$.\\
-        \For{$t = 1, \dots, T$}{
-            \If(\tcp*[f]{Next horizon $T_{i+1}$ from the sequence}){
-                $t > T_i$
-            }{
-                Let $i = i + 1$.\;
-                Initialize algorithm $\cA^{(i)} = A_{T_i - T_{i-1}}$.\;
-                Update internal memory of $\cA^{(i)}$ with the history of plays and rewards from $\cA_{i-1}$.
-            }
-            Play with $\cA^{(i)}$: play arm $A'(t) := A^{(i)}(t - T_i)$, observe reward $r(t) = Y_{A'(t), t}$. \nllabel{line:internalTimer_DTnr}
+    % XXX Options
+    \LinesNumbered  % XXX Option to number the line
+    \DontPrintSemicolon
+    % \RestyleAlgo{boxed}
+    % XXX Input, data and output
+    \KwIn{Bandit algorithm $\cA$, and sequence $(T_i)_{i\in\N}$\;}
+    % \KwData{Data}
+    % \KwResult{Result}
+    \BlankLine
+    % XXX Algorithm
+    Let $i = 0$, and initialize algorithm $\cA^{(0)} = \cA_{T_0}$.\\
+    \For{$t = 1, \dots, T$}{
+        \If(\tcp*[f]{Next horizon $T_{i+1}$ from the sequence}){
+            $t > T_i$
+        }{
+            Let $i = i + 1$.\;
+            Initialize algorithm $\cA^{(i)} = A_{T_i - T_{i-1}}$.\;
+            Update internal memory of $\cA^{(i)}$ with the history of plays and rewards from $\cA_{i-1}$.
         }
-        \caption{The Non-Restarting Doubling Trick Algorithm, $\cA' = \DTnr(\cA, (T_i)_{i\in\N})$.}
+        Play with $\cA^{(i)}$: play arm $A'(t) := A^{(i)}(t - T_i)$, observe reward $r(t) = Y_{A'(t), t}$. \nllabel{line:internalTimer_DTnr}
+    }
+    \caption{The Non-Restarting Doubling Trick Algorithm, $\cA' = \DTnr(\cA, (T_i)_{i\in\N})$.}
 \label{algo:DTnr}
 \end{algorithm}
+\end{framed}
 % \vspace*{-5pt}  % XXX remove if problem
 \vspace*{10pt}  % XXX remove if problem
 

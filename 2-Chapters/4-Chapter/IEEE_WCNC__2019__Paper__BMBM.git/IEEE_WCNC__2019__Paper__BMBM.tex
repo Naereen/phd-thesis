@@ -333,6 +333,7 @@ Note that a device using this first approach is only able to select a channel fo
 % \begin{small} % XXX remove if needed
 \begin{figure}[h!]
 	\centering
+    \begin{framed}
 	\begin{algorithm}[H]
 		% \begin{small} % XXX remove if needed
 		\For(){$t = 0, \dots, T$}{
@@ -344,6 +345,7 @@ Note that a device using this first approach is only able to select a channel fo
 		\label{algo:43:UCB}
 		% \end{small} % XXX remove if needed
 	\end{algorithm}
+	\end{framed}
 \end{figure}
 % \end{small} % XXX remove if needed
 
@@ -377,6 +379,7 @@ More precisely, the first-stage \UCB{} use rewards built from the acknowledgment
 \vspace*{-3pt}
 \begin{figure}[h!]
 	\centering
+    \begin{framed}
 	\begin{algorithm}[H]
 	% \begin{small} % XXX remove if needed
 	\For(){$t = 0, \dots, T$}{
@@ -390,7 +393,8 @@ More precisely, the first-stage \UCB{} use rewards built from the acknowledgment
 		\caption{Heuristic: uniform random retransmission.}    % A naive
 		\label{algo:43:UCBthenRandom}
 	% \end{small} % XXX remove if needed
-\end{algorithm}
+	\end{algorithm}
+	\end{framed}
 \end{figure}
 
 
@@ -410,6 +414,7 @@ related to the \UCB{} algorithm employed for the retransmission.
 % \begin{small} % XXX remove if needed
 \begin{figure}[h!]
 	\centering
+    \begin{framed}
 	\begin{algorithm}[H]
 		% \begin{small} % XXX remove if needed
 		\For(){$t = 0, \dots, T$}{
@@ -425,7 +430,8 @@ related to the \UCB{} algorithm employed for the retransmission.
 		\caption{Heuristic: \UCB{} for retransmission.}    % A naive
 		\label{algo:43:TwoUCB}
 		% \end{small} % XXX remove if needed
-		\end{algorithm}
+	\end{algorithm}
+	\end{framed}
 \end{figure}
 % \end{small} % XXX remove if needed
 
@@ -448,28 +454,30 @@ But for LoRaWAN networks with $K=4$, storing $K+1=5$ algorithms does not cost mu
 
 \vspace*{-3pt}
 % \begin{small} % XXX remove if needed
-	\begin{figure}[h!]
-		\centering
-		\begin{algorithm}[H]
-			% \begin{small} % XXX remove if needed
-			% \KwData{$\forall k,j\in[\![1;K]\!]$, $N_k^j(t)$, $\widehat{\mu_k}^j(t)$, $B_k^j(t)$ and $U_k^j(t)$}
-			\For(\tcp*[f]{At every time step})
-			{$t = 0, \dots, T$}{
-				\uIf{First packet transmission}{
-					Use first-stage \UCB. %as in Algorithm~\ref{algo:43:UCB}.
-				}
-				\Else(\tcp*[f]{Packet retransmission with $\mathrm{UCB}^j$}){ % Retr. after trying channel $j$
-					j $\leftarrow$ last channel selected by first-stage \UCB\;
-					Compute $\forall k, U_k^j(t) = \widehat{\mu_k}^j(t) + B_k^j(t)$ following Eqs.~\eqref{eq:43:Nkt},~\eqref{eq:43:mukt}, and~\eqref{eq:43:Bkt}\;
-					Transmit in channel $C^j(t) = \arg\max_{1\leq k \leq K} U^j_k(t)$\;
-					Reward $r^j_{C^j(t)}(t) = 1$ if \emph{Ack} is received, else $0$\;
-				}
+\begin{figure}[h!]
+	\centering
+\begin{framed}
+	\begin{algorithm}[H]
+		% \begin{small} % XXX remove if needed
+		% \KwData{$\forall k,j\in[\![1;K]\!]$, $N_k^j(t)$, $\widehat{\mu_k}^j(t)$, $B_k^j(t)$ and $U_k^j(t)$}
+		\For(\tcp*[f]{At every time step})
+		{$t = 0, \dots, T$}{
+			\uIf{First packet transmission}{
+				Use first-stage \UCB. %as in Algorithm~\ref{algo:43:UCB}.
 			}
-			\caption{Heuristic: $K$ different {\UCB}s for retransmission.}
-			\label{algo:43:UCBthenKp1}
-			% \end{small} % XXX remove if needed
-		\end{algorithm}
-	\end{figure}
+			\Else(\tcp*[f]{Packet retransmission with $\mathrm{UCB}^j$}){ % Retr. after trying channel $j$
+				j $\leftarrow$ last channel selected by first-stage \UCB\;
+				Compute $\forall k, U_k^j(t) = \widehat{\mu_k}^j(t) + B_k^j(t)$ following Eqs.~\eqref{eq:43:Nkt},~\eqref{eq:43:mukt}, and~\eqref{eq:43:Bkt}\;
+				Transmit in channel $C^j(t) = \arg\max_{1\leq k \leq K} U^j_k(t)$\;
+				Reward $r^j_{C^j(t)}(t) = 1$ if \emph{Ack} is received, else $0$\;
+			}
+		}
+		\caption{Heuristic: $K$ different {\UCB}s for retransmission.}
+		\label{algo:43:UCBthenKp1}
+		% \end{small} % XXX remove if needed
+	\end{algorithm}
+	\end{framed}
+\end{figure}
 % \end{small} % XXX remove if needed
 
 % --- --- --- --- --- --- --- --- --- ---
@@ -490,29 +498,31 @@ related to the delayed second-stage \UCB{} algorithm.
 
 \vspace*{-3pt}
 % \begin{small} % XXX remove if needed
-	\begin{figure}[h!]
-		\centering
-		\begin{algorithm}[H]
-			% \begin{small} % XXX remove if needed
-			\For(\tcp*[f]{At every time step})
-			{$t = 0, \dots, T$}{
-				\uIf{First packet transmission}{
-			 		Use first-stage \UCB. %as in Algorithm~\ref{algo:43:UCB}.
-				}
-				\uElseIf(\tcp*[f]{Random retransmission}){$t \leq \Delta$}{
-					Transmit randomly in a channel $C(t) \sim \mathcal{U}(1,\ldots,K)$.
-				}
-				\Else(\tcp*[f]{retransmission with delayed $\mathrm{UCB}^d$}){
-					Compute $\forall k, U^d_k(t) = \widehat{\mu^d_k}(t) + B^d_k(t)$ following Eqs.~\eqref{eq:43:Nkt},~\eqref{eq:43:mukt}, and~\eqref{eq:43:Bkt}\;
-					Transmit in channel $C^d(t) = \arg\max_{1\leq k \leq K} U^d_k(t)$\;
-					Reward $r^d_{C^d(t)}(t) = 1$ if \emph{Ack} is received, else $0$\;
-				}
+\begin{figure}[h!]
+	\centering
+	\begin{framed}
+	\begin{algorithm}[H]
+		% \begin{small} % XXX remove if needed
+		\For(\tcp*[f]{At every time step})
+		{$t = 0, \dots, T$}{
+			\uIf{First packet transmission}{
+				Use first-stage \UCB. %as in Algorithm~\ref{algo:43:UCB}.
 			}
-			\caption{Heuristic: Delayed \UCB{} for retransmission.}
-			\label{algo:43:UCBwithDelay}
-			% \end{small} % XXX remove if needed
-		\end{algorithm}
-	\end{figure}
+			\uElseIf(\tcp*[f]{Random retransmission}){$t \leq \Delta$}{
+				Transmit randomly in a channel $C(t) \sim \mathcal{U}(1,\ldots,K)$.
+			}
+			\Else(\tcp*[f]{retransmission with delayed $\mathrm{UCB}^d$}){
+				Compute $\forall k, U^d_k(t) = \widehat{\mu^d_k}(t) + B^d_k(t)$ following Eqs.~\eqref{eq:43:Nkt},~\eqref{eq:43:mukt}, and~\eqref{eq:43:Bkt}\;
+				Transmit in channel $C^d(t) = \arg\max_{1\leq k \leq K} U^d_k(t)$\;
+				Reward $r^d_{C^d(t)}(t) = 1$ if \emph{Ack} is received, else $0$\;
+			}
+		}
+		\caption{Heuristic: Delayed \UCB{} for retransmission.}
+		\label{algo:43:UCBwithDelay}
+		% \end{small} % XXX remove if needed
+	\end{algorithm}
+	\end{framed}
+\end{figure}
 % \end{small} % XXX remove if needed
 
 

@@ -9,7 +9,7 @@
 
 
 % -----------------------------------------------------------------
-\section{Introduction}
+\section{Motivation}
 \label{sec:6:Introduction}
 
 % \TODOL{Be much more concise: in the thesis, MAB models and applications have already been introduced, motivated etc!}
@@ -21,9 +21,9 @@
 % Regret minimization in stochastic bandits has been extensively studied since the works of \cite{Robbins52} and \cite{LaiRobbins85}, and several algorithms with a $\cO(\log(T))$ \emph{problem-dependent} regret upper bound have been proposed (see, \eg, \cite{LattimoreBanditAlgorithmsBook} for a survey). Among those, the \klUCB{} algorithm \cite{KLUCBJournal} has been shown to be asymptotically optimal for Bernoulli distributions (in that it exactly matches the lower bound given by \cite{LaiRobbins85}) and can also be employed when the rewards are assumed to be bounded in $[0,1]$.
 % \emph{Problem-independent} upper bounds of the form $R_T=\Omega(\sqrt{KT})$ (with no hidden constant depending on the arms distributions) have also been established for stochastic algorithms, like MOSS, or \klUCB-Switch by \cite{Garivier18}, while \klUCB{} is known to enjoy a sub-optimal $\cO(\sqrt{KT\ln(T)})$ problem-independent regret.
 
-Stochastic bandits were historically introduced as a simple model for clinical trials, where arms correspond to some treatments with unknown efficacy \cite{Thompson33}.
-More recently, MAB models have been proved useful for different applications, like cognitive radio, where arms can model the vacancy of radio channels, as presented in Chapter~\ref{chapter:4}, or parameters of a dynamically configurable radio hardware \cite{Maghsudi16,Bonnefoi17,KerkoucheAlami18}.
-Another application is the design of recommender systems, where arms model the popularity of different items (\eg, news recommendation, \cite{Li10}).
+% Stochastic bandits were historically introduced as a simple model for clinical trials, where arms correspond to some treatments with unknown efficacy \cite{Thompson33}.
+% More recently, MAB models have been proved useful for different applications, like cognitive radio, where arms can model the vacancy of radio channels, as presented in Chapter~\ref{chapter:4}, or parameters of a dynamically configurable radio hardware \cite{Maghsudi16,Bonnefoi17,KerkoucheAlami18}.
+% Another application is the design of recommender systems, where arms model the popularity of different items (\eg, news recommendation, \cite{Li10}).
 %
 For both cognitive radio and recommender systems, the assumption that the arms distribution \emph{do not change over time} may be a big limitation. Indeed, in cognitive radio new devices can enter or leave the network, which impacts the availability of the radio channel they use to communicate; whereas in online recommendation, the popularity of items is also subject to trends. Hence, there has been some interest on how to take those \emph{non-stationary} aspects into account within a multi-armed bandit model.
 
@@ -33,11 +33,13 @@ It is sometimes referred to as the abruptly changing \cite{WeiSrivastava18Abrupt
 %
 In this model, described in full details in Section~\ref{sec:6:BanditSetting}, the (random) reward of arm $i$ at round $t$ has some mean $\mu_i(t)$, that is constant on intervals between two \emph{breakpoints}, and the regret is measured with respect to the \emph{current} best arm $i_t^* = \arg\max_{i} \mu_i(t)$.
 
-In this chapter, we propose a new algorithm for the piece-wise stationary bandit problem with bounded rewards, called \GLRklUCB. Like previous approaches -- \CUSUM{} \cite{LiuLeeShroff17} and \MUCB{} \cite{CaoZhenKvetonXie18} -- our algorithm relies on combining a standard multi-armed bandit algorithm with a change-point detector. For the bandit component, we propose the use of the \klUCB{} algorithm, that is known to outperform {\UCB}1 used in previous works. For the change-point detector, we propose the Bernoulli Generalized Likelihood Ratio Test (GLRT), for which we provide new non-asymptotic properties that are of independent interest. This choice is particularly appealing because unlike previous approaches, the Bernoulli GLRT is \emph{parameter-free}: it does not need the tuning of a window size ($w$ in \MUCB), or the knowledge of a lower bound on the magnitude of the smallest change ($\varepsilon$ in \CUSUM).
+\TODOL{I need to write a paragraph about using the ``adversarial setting'' for piece-wise stationary. It is very important to state that EXP3.S from \cite{Auer02NonStochastic} (Section~8) achieves $\bigO{\sqrt{K \Upsilon_T T}}$ regret with prior knowledge of $T$ and $\Upsilon_T$.}
 
-In this chapter we jointly investigate, both in theory and in practice, two possible combinations of the bandit algorithm with a change-point detector, namely the use of \emph{local restarts} (resetting the history of an arm each time a change-point is detected on that arm) and \emph{global restarts} (resetting the history of \emph{all} arms once a change-point is detected on one of them).
-We provide a regret upper bound scaling in $\cO(\sqrt{\Upsilon_T T \log(T)})$ for both versions of \GLRklUCB{}, matching existing results (when $\Upsilon_T$ is known).
-Our numerical simulations reveal that using local restart leads to better empirical performance, and show that our approach often outperforms existing competitors.
+% In this chapter, we propose a new algorithm for the piece-wise stationary bandit problem with bounded rewards, called \GLRklUCB. Like previous approaches -- \CUSUM{} \cite{LiuLeeShroff17} and \MUCB{} \cite{CaoZhenKvetonXie18} -- our algorithm relies on combining a standard multi-armed bandit algorithm with a change-point detector. For the bandit component, we propose the use of the \klUCB{} algorithm, that is known to outperform {\UCB}1 used in previous works. For the change-point detector, we propose the Bernoulli Generalized Likelihood Ratio Test (GLRT), for which we provide new non-asymptotic properties that are of independent interest. This choice is particularly appealing because unlike previous approaches, the Bernoulli GLRT is \emph{parameter-free}: it does not need the tuning of a window size ($w$ in \MUCB), or the knowledge of a lower bound on the magnitude of the smallest change ($\varepsilon$ in \CUSUM).
+
+% In this chapter we jointly investigate, both in theory and in practice, two possible combinations of the bandit algorithm with a change-point detector, namely the use of \emph{local restarts} (resetting the history of an arm each time a change-point is detected on that arm) and \emph{global restarts} (resetting the history of \emph{all} arms once a change-point is detected on one of them).
+% We provide a regret upper bound scaling in $\cO(\sqrt{\Upsilon_T T \log(T)})$ for both versions of \GLRklUCB{}, matching existing results (when $\Upsilon_T$ is known).
+% Our numerical simulations reveal that using local restart leads to better empirical performance, and show that our approach often outperforms existing competitors.
 
 
 \paragraph{Outline.}
@@ -76,7 +78,7 @@ Hence for $t\in[\tau^{(k)} + 1,\tau^{(k+1)}]$, that is on any stationary segment
 
 Note than when a breakpoint occurs, we do not assume that all the arms means  change, but that \emph{there exists} an arm whose mean has changed.
 Depending on the application, many scenario can be meaningful: changes occurring on all arms simultaneously (due to some exogenous event), or only one or a few arms change at each breakpoint.
-For instance, for a cognitive radio application in a IoT-like network, we can imagine that all the objects of one company use a fix channel or subset of channels, and on a particular day in a particular city, if the company deploys a lot of new objects, then one or some channels see their mean occupancy rates abruptly change.
+For instance, for a cognitive radio application in a IoT-like network, we can imagine that all the objects of one company use a fixed channel or subset of channels, and on a particular day in a particular city, if the company deploys a lot of new objects, then one or some channels see their mean occupancy rates abruptly change.
 
 We define the \emph{number of change-points} on arm $i$,
 $\NCi := \sum_{t=1}^{T-1} \indic\left(\mu_t(i) \neq \mu_{t+1}(i)\right)$,
@@ -87,12 +89,17 @@ We illustrate the two extreme cases in problems $1$ and $2$ presented in Figures
 
 \paragraph{An interesting interpolation.}
 %
-The piece-wise stationary bandit model can be viewed as an interpolation between stationary and adversarial models, as the stationary model corresponds to $\Upsilon_T = 0$, while the adversarial model can be considered as a special (worst) case, with $\Upsilon_T = T$. However, analyzing an algorithm for the piece-wise stationary bandit model requires to assume a small number of changes, typically $\Upsilon_T = o(\sqrt{T})$.
+The piece-wise stationary bandit model can be viewed as an interpolation between stationary and adversarial models, as the stationary model corresponds to $\Upsilon_T = 0$, while some adversarial models can be considered as a special (worst) case, with $\Upsilon_T = T$ (when considering an adaptive or an oblivious adversary).
+However, analyzing an algorithm for the piece-wise stationary bandit model requires to assume a small number of changes, typically $\Upsilon_T = o(\sqrt{T})$.
+Note that the adversarial model of \cite{Auer02NonStochastic} is quite powerful, and the authors presented in Section~8 of their paper the EXP3.S algorithm for the piece-wise stationary problem.
+\TODOL{Explain here that we should have been more careful regarding this sentence?}
 
 
 \paragraph{Illustrations of two problems.}\label{par:6:benchmark1}
 
-To illustrate the setup presented above, we give here two problems of our benchmark, used for the numerical experiments presented in Section~\ref{sec:6:NumericalExperiments}.
+To illustrate the setup presented above, we give here two examples of piece-wise stationary problems.
+% problems of our benchmark,
+used for the numerical experiments presented in Section~\ref{sec:6:NumericalExperiments}.
 
 % - Pb 1 changes are only on one arm at a time
 \textbf{Problem $\bm 1$.}
@@ -100,7 +107,8 @@ We consider $K=3$ arms changing $\Upsilon_T=4$ times until $T=5000$.
 The arm means $(\mu_i(t))_{1\leq i\leq K,1\leq t\leq T}$ are shown in Figure~\ref{fig:6:Problem_1}.
 % (and Figure~\ref{fig:6:Problem_1} in Appendix),
 Note that changes happen on only one arm (\ie, $C_T=\Upsilon_T=4$),
-and the optimal arm changes once at $\tau_2^{(1)}=2000$, with a large gap of $0.6$.
+and the optimal arm changes once at $\tau_2^{(1)}=2000$.
+%  with a large gap of $0.6$.
 
 \begin{figure}[h!]  % [htbp]
     \centering
@@ -112,9 +120,9 @@ and the optimal arm changes once at $\tau_2^{(1)}=2000$, with a large gap of $0.
 
 % - Pb 2 changes are on all arms at a time
 \textbf{Problem $\bm 2$.}
-This problem is close to Problem 1, with a minimum optimality gap of $0.1$,
+This problem is close to Problem 1, with a minimum optimality gap of $0.1$ (at any time, the smallest difference between two means is at least $0.1$),
 and shown in Figure~\ref{fig:6:Problem_2}.
-However, all arms change at every breakpoint (\ie, $C_T=K\Upsilon_T=12$), with identical gaps of $0.1$.
+However, all arms change at every breakpoint (\ie, $C_T=K\Upsilon_T=12$), with identical gaps of $0.1$ for arms $0$ and $1$, and of $0.2$ for arm $2$ (between two breakpoints, the mean change of $+0.1$ for arm $0$ and $-0.1$ for arm $1$ and $-0.2$ for arm $2$).
 The first optimal arm decreases at every change (\textcolor{blue}{$2$ with $\nabla$ markers}), and one arm stays the worst (\textcolor{darkgreen}{$1$ with $\diamond$ markers}).
 
 \begin{figure}[h!]  % [htbp]
@@ -133,39 +141,40 @@ We review previous works that studied the piece-wise stationary bandit model, or
 To our knowledge, all the previous works are based on the idea of combining a classical bandit policy, such as Thompson sampling, \UCB{} or EXP3, with a strategy to account for changes in arms' distributions.
 Following the vocabulary used in previous works, we make the distinction between passively and actively adaptive strategies.
 Active strategies monitors the rewards of each arm by using a change detection algorithm \cite{Basseville93}, and reset the history of pulls and rewards of one or all the arms as soon as a change is detected.
-Passive strategies are tuned, with a discount factor or a limited memory size, while active strategies are usually tuned with a threshold for the statistical test.
+Passive strategies use a (fixed) discount factor or a limited memory size, while most active strategies use a growing memory.
+% , while active strategies are usually tuned with a threshold for the statistical test.
 
 
 \paragraph{Passively adaptive algorithms.}
 %
-Their common idea is to adapt a classical policy into forgetting old rewards.
+Their common idea is to adapt a classical policy into forgetting old rewards, .
 If the forgetting behavior is done efficiently, then the policy can efficiently focus mostly on the most recent rewards, and passively adapt to changes when they happen.
 %
 The Discounted UCB (D-UCB) algorithm was first introduced in \cite{Kocsis06}, and it is an adaptation of the \UCB{} algorithm, with a discount factor $\gamma\in(0,1)$. It works by decreasing all the past rewards by a multiplicative factor, when receiving a new reward from an arm, so that the recent rewards weight more in the (discounted) empirical mean used for the computation of the \UCB{} indexes.
 The regret of D-UCB was proved to be upper-bounded by $\cO(\sqrt{\Upsilon_T T }\log(T))$ in \cite{Garivier11UCBDiscount}, with a tuning $\gamma = 1 - \sqrt{\Upsilon_T/T}/4$, dependent on $\Upsilon_T$.
 %
 The Sliding-Window UCB (SW-UCB) uses a sliding window of a fixed size $\tau$, to store only the most $\tau$ recent rewards for each arm,
-and it was proposed by \cite{Garivier11UCBDiscount}. They proved that tuning its window-size to $\tau = 2 \sqrt{T\log(T)/\Upsilon_T}$, gives a bound on its regret of the form $\cO(\sqrt{\Upsilon_T T \log(T)})$.
+and it was proposed by \cite{Garivier11UCBDiscount}.
+They prove that tuning its window-size to $\tau = 2 \sqrt{T\log(T)/\Upsilon_T}$, gives a bound on the regret of SW-UCB of the form $\cO(\sqrt{\Upsilon_T T \log(T)})$.
 
-Both D-UCB and SW-UCB builds on a stationary policy,but for example EXP3.S from \cite{Auer02NonStochastic}
-builds on the EXP3 policy, which is designed for the adversarial case,
-and achieves a larger regret upper-bound.
-We also found in our experiments that it always performed worse that the reference stationary algorithms (\eg, \klUCB), so we do not include it in Section~\ref{sec:6:NumericalExperiments}.
+Both D-UCB and SW-UCB builds on a stationary policy, but for example EXP3.S from \cite{Auer02NonStochastic}
+builds on the EXP3 policy, which is designed for the adversarial case.
+EXP3.S actually achieves a good regret upper-bound, of the form $\cO(\sqrt{K \Upsilon_T T})$, with no additional prior knowledge except that of $T$ and $\Upsilon_T$.
+It constitues a good baseline for our numerical experiments in ,
+even if we did find that EXP3.S performs worse that the most of the other approaches based on extensions of stationary bandit algorithms (\eg, SW-UCB).
+% , so we do not include it in .
 Similarly, previous works showed that older algorithms have no or weaker regret guarantees, and have been proved to be less efficient empirically, or are designed for more specific settings.
-%
-For instance, Windowed-Mean Shift from \cite{YuMannor09} is generic and combines any efficient bandit policy with a CD test based on a sliding window, but there approach is not applicable to the bandit setting as they consider side observations.
-%
-A different setting where the quantity of interest is not $\Upsilon_T$ but $V_T$ the total variational budget, was introduced by \cite{Besbes14stochastic}, for which they proposed the RExp3 algorithm.
-%
-It can also be qualified as passively adaptive: it is based on (non-adaptive) restarts of the EXP3 algorithm. Note that this algorithm is introduced for a different setting, where the quantity of interest is not $\Upsilon_T$ but a quantity $V_T$ called the total variational budget (satisfying $\Delta^{\text{change}} \Upsilon_T \leq V_T \leq \Upsilon_T$ with $\Delta^{\text{change}}$ the minimum magnitude of a change-point).
-A regret bound of the order of $\cO(V_T^{1/3} T^{2/3})$ is proved, which is weaker than existing results in our setting. Hence we do no include this algorithm in our experiments.
 
 
 The idea of using a simple discount factor, as for D-UCB, was recently adapted to a Bayesian policy, with the Discounted Thompson sampling (DTS) algorithm presented by \cite{RajKalyani17}.
-Even if no theoretical guarantee was given, it can be empirically very efficient, but we found that DTS is not robust in the choice of if its discount factor $\gamma\in(0,1)$, contrarily to what was highlighted in their paper.
-The DTS algorithm can perform well in practice, for instance with $\gamma=0.75$ on our Problems $1$ and $2$ (see Section~\ref{sec:6:NumericalExperiments}). However, no theoretical guarantees are given for this strategy, and our experiments did not really confirm the robustness to $\gamma$.
+Even if no theoretical guarantee was given, it can be empirically very efficient, but we found that DTS is not robust in the choice of if its discount factor $\gamma\in(0,1)$, contrarily to what was highlighted in the paper.
+The DTS algorithm can perform well in practice, for instance with $\gamma=0.75$ on Problems $1$ and $2$ (see Section~\ref{sec:6:NumericalExperiments}). However, no theoretical guarantees are given for this strategy, and our experiments did not really confirm the robustness to $\gamma$.
 %
 In general, we found that passively adaptive approaches can be efficient when their parameters are well tuned, but our experiments show that actively adaptive algorithms perform significantly better.
+
+Finally, XXX use two discount factors at the same time, see the NEWMA algorithm from \cite{Keriven2018}.
+
+\TODOL{Talk about NEWMA and its possible application to generalize/improve D-UCB, \cite{Keriven2018}.}
 
 
 \paragraph{Actively adaptive algorithms.}
@@ -174,7 +183,10 @@ We distinguish two families,
 the first line of research uses frequentist change-point detectors \cite{Basseville93}, combined with stationary policies, usually index policies like \UCB.
 When using an efficient CD algorithm with an efficient index policy, these approaches usually perform more efficiently than the passively algorithms.
 %
-The Adapt-EVE algorithm from \cite{Hartland06} uses a Page-Hikley Test and the \UCB{} policy, but no theoretical guarantee was given.
+The Adapt-EVE algorithm from \cite{Hartland06} uses a Page-Hikley (PH) Test and the \UCB{} policy, but no theoretical guarantee was given.
+%
+The Windowed-Mean Shift algorithm from \cite{YuMannor09} is more generic and combines any efficient bandit policy with a CD test based on a sliding window, but there approach is not applicable to the bandit setting of interest in this chapter, as they consider side observations.
+%
 The EXP3.R algorithm from \cite{Allesiardo15,Allesiardo17} combines a CD algorithm with EXP3, and the history of all arms are reset as soon as a suboptimal arm is detecting to become optimal.
 A regret bound of $\cO(\Upsilon_T \sqrt{T \log(T)})$ was proved, even when $\Upsilon_T$ is known.
 
@@ -182,41 +194,43 @@ Two recent and related works use
 the two-sided \CUSUM{} CD algorithm for \CUSUMUCB{} in \cite{LiuLeeShroff17}
 or a specific and simpler CD algorithm for the Monitored UCB (\MUCB) algorithm introduced in \cite{CaoZhenKvetonXie18}.
 %
-On the first hand,
-the \CUSUM{} test is rather complicated and parametric, as it uses the first $M$ samples (for a fixed $M$) from one arm to compute an average $\hat{u_0}$, and then builds two random walks, using the remaining observations for this arm. A change is detected when either random walks cross a threshold $h$.
+The \CUSUM{} test is rather complicated and parametric: it uses the first $M$ samples (for a fixed $M$) from one arm to compute an average $\hat{u_0}$, and then builds two random walks, using the remaining observations for this arm. A change is detected when either random walks cross a threshold $h$.
 It requires the tuning of three parameters, $M$ and $h$ as well as a drift correction parameter $\varepsilon\in(0,1)$.
-The PH test is similarly complex, and it is also studied in \cite{LiuLeeShroff17},
-and we found that \PHT-\UCB{} perform very similarly to \CUSUMUCB{} in our experiments,
-and even if it has the advantage of not requiring a parameter $M$,
+The PH test, also studied in \cite{LiuLeeShroff17}, is similarly complex,
+and we found that \PHT-\UCB{} perform very similarly to \CUSUMUCB{} in our experiments.
+Even if it has the advantage of not requiring a parameter $M$,
 it has no theoretical guarantee, so we do not include \PHT-\UCB{} in the experiments presented below.
 %
-On the other hand, \MUCB{} uses a much simpler test, based on the $w$ most recent observations on one arm (for a fixed and even number $w$), and compares with a fixed threshold $h$ the different of the sum of rewards for the first half and the second half. It is numerically much simpler, and has the advantage of using only a bounded memory (of the order $\bigO{K w}$ for $K$ arms).
+In comparison, \MUCB{} uses a much simpler test, based on the $w$ most recent observations on one arm (for a fixed and even number $w$), and compares with a fixed threshold $h$ the difference of the sum of rewards for the first half and the second half. It is numerically much simpler, and has the advantage of using only a bounded memory (of the order $\bigO{K w}$ for $K$ arms).
 %
 Both approaches also introduced a mechanism to force a uniform exploration of each arm, parametered by $\alpha\in(0,1)$.
 % \CUSUMUCB{} uses a randomized exploration, by sampling arm $i$ with probability $\alpha/K$ at each time step,
 % and \MUCB{} uses a more deterministic scheme, to force exploring the $K$ arms (when the time since the last restart, $t - \tau$, is found to be in $\{1,\dots,K\}$ modulo $\left\lceil 1/\alpha \right\rceil$).
 % Both solutions ensure that all arms are sampled enough on each stationary sequence, in order for the CD algorithm to have enough \iid{} samples to detect changes.
 
-When all their parameters are tuned correctly, both approaches are proved to achieve a good regret upper-bound.
+When all their parameters are tuned correctly, both approaches are proved to achieve a good regret upper-bound, of order $\cO(K \sqrt{\Upsilon_T T \log(K T)})$.
 As both results are valid under different assumptions, we consider the two results to be the current state-of-the-art.
-As for previous works, tuning their parameters requires to know both the horizon $T$ and the number of breakpoints $\Upsilon_T$, but most importantly it requires a prior knowledge of the problem difficulty, by assuming to know a lower bound on both the time between changes (\eg, $L$ for \MUCB) and on the changes on the means of arms (\eg, $\varepsilon$ for \CUSUM).
+As for previous works, tuning their parameters requires to know both the horizon $T$ and the number of breakpoints $\Upsilon_T$, but most importantly it requires a prior knowledge of the problem difficulty, by assuming to know a lower bound on both the length of stationary segments (\eg, $L$ for \MUCB) and on the changes on the means of arms (\eg, $\varepsilon$ for \CUSUM).
 %
 \CUSUMUCB{} achieves a better regret upper bound, of the order of $\cO(\sqrt{\Upsilon_T T \log(T / \Upsilon_T)})$, but \emph{only} for Bernoulli distributions,
 and when its $4$ parameters ($\alpha,\varepsilon,M,h$) are tuned based on problem-dependent knowledge.
 %
-\MUCB{} achieves a regret bounded by $\cO(\sqrt{\Upsilon_T T \log(T)})$, for bounded distributions, and when its $4$ parameters ($\alpha,w,b,\gamma$) are also tuned based on a problem-dependent knowledge of $\tilde{\delta}$ and $L$ (see Assumption~1 and Remark~1 in their paper).
+\MUCB{} achieves a regret bounded by $\cO(\sqrt{\Upsilon_T T \log(T)})$, for bounded distributions, and when its $4$ parameters ($\alpha,w,b,\gamma$) are also tuned based on a problem-dependent knowledge of $\tilde{\delta}$ and $L$ (see Assumption~1 and Remark~1 in \cite{CaoZhenKvetonXie18}).
 
 
-\CUSUMUCB{} is based on a rather complicated two-sided \CUSUM{} test, that uses the first $M$ samples from one arm to compute an initial average, and then detects whether a drift of size larger than $\varepsilon$ occurred from this value by checking whether a random walk based on the remaining observations crosses a threshold $h$. Thus it requires the tuning of three parameters, $M$, $\varepsilon$ and $h$. \CUSUMUCB{} performs \emph{local restarts} using this test, to reset the history of \emph{one arm} for which the test detects a change.
-\MUCB{} uses a much simpler test, based on the $w$ most recent observations from an arm: a change is detected if the absolute difference between the empirical means of the first and second halves of those $w$ observations exceeds a threshold $h$. So it requires the tuning of two parameters, $w$ and $h$. \MUCB{} performs \emph{global restarts} using this test, to reset the history of \emph{all arms} whenever the test detects a change on one of the arms.
+% \CUSUMUCB{} is based on a rather complicated two-sided \CUSUM{} test, that uses the first $M$ samples from one arm to compute an initial average, and then detects whether a drift of size larger than $\varepsilon$ occurred from this value by checking whether a random walk based on the remaining observations crosses a threshold $h$. Thus it requires the tuning of three parameters, $M$, $\varepsilon$ and $h$.
+On the one hand, \CUSUMUCB{} performs \emph{local restarts} using this test, to reset the history of \emph{one arm} for which the test detects a change.
+% \MUCB{} uses a much simpler test, based on the $w$ most recent observations from an arm: a change is detected if the absolute difference between the empirical means of the first and second halves of those $w$ observations exceeds a threshold $h$. So it requires the tuning of two parameters, $w$ and $h$.
+On the other hand, \MUCB{} performs \emph{global restarts} using this test, to reset the history of \emph{all arms} whenever the test detects a change on one of the arms.
 Compared to \CUSUMUCB{}, note that \MUCB{} is numerically much simpler as it only uses a bounded memory, of order $\bigO{K w}$ for $K$ arms.
 
 
 \paragraph{Expert aggregation.}
 %
-The second line of research of actively adaptive algorithms uses a Bayesian point of view.
+Another of research on actively adaptive algorithms uses a Bayesian point of view.
 A Bayesian CD algorithm is combined with Thompson Sampling in \cite{MellorShapiro13},
-and more recently \cite{Alami17} introduced the Memory Bandit algorithm. It is presented as efficient empirically, but no theoretical guarantee are given, and due to its complexity, we do not include it in our experiments.
+and more recently \cite{Alami17} introduced the Memory Bandit algorithm.
+It is presented as efficient empirically, but no theoretical guarantee are given for these two works, and due to its complexity, we do not include it in our experiments.
 The idea behind Memory Bandit is to use an expert aggregation algorithm, like EXP4 from \cite{Auer02}, modified to efficiently aggregate an growing number of experts from techniques presented in \cite{Mourtada17}.
 At each time step, a new expert is introduced, and experts corresponds to different Thompson sampling algorithms, each using a different history of pulls and rewards. Intuitively, after a change-point the newest experts will soon become the most efficient, as they are learning by using rewards drawn from the new distribution(s).
 %
@@ -225,7 +239,39 @@ and they are computationally more costly,
 therefore we choose to not include them in our experiments.
 
 
-\paragraph{Advantages of our approach.}
+\paragraph{Slowly-varying model.}
+
+A different setting where the quantity of interest is not $\Upsilon_T$ but the total variational budget $V_T$, was introduced by \cite{Besbes14stochastic}, for which they proposed the RExp3 algorithm.
+The total variation budget $V_T$ is defined as $\sum_{t=1}^{T-1} \sum_{i=1}^K D(\nu_i(t), \nu_i(t+1))$, for a certain measure of difference $D$, which measures how much the two distributions of any arm $i$ have changed from time $t$ to time $t+1$.
+Two examples can be the total variation distance $\|\cdot\|_{TV}$ or the Kullback-Leibler divergence.
+%
+The RExp3 algorithm can also be qualified as passively adaptive: it is based on (non-adaptive) restarts of the EXP3 algorithm. Note that this algorithm is introduced for a different setting, where the quantity of interest is not $\Upsilon_T$ but a quantity $V_T$ called the total variational budget (satisfying $\Delta^{\text{change}} \Upsilon_T \leq V_T \leq \Upsilon_T$ with $\Delta^{\text{change}}$ the minimum magnitude of a change-point).
+A regret bound of the order of $\cO(V_T^{1/3} T^{2/3})$ is proved, which is weaker than existing results in our setting.
+
+Three recent works proposed algorithms that achieve a small regret under the two models.
+For simple bandits, \cite{WeiSrivastava18Abruptly} proposed the SW-UCB\# and LM-DSEE algorithms FIXME.
+For contextual bandits, \cite{Luo18} and \cite{ChenLeeLuoWei2019} FIXME.
+\TODOL{Parler de ces travaux là, qui sont très forts mais pas non plus encore parfaits.}
+
+This setting is quite different from the setting we are interested by in this chapter, and even if the most recent works on slowly-varying MAB models are very interesting, we preferred to focus on the piece-wise stationary (or abruptly changing) model,
+hence we do no include any of these algorithms in the experiments presented in Section~\ref{sec:6:NumericalExperiments}.
+
+
+\paragraph{Another point-of-view on prior knowledge of $\Upsilon_T$.}
+%
+In this chapter, like in our two main inspirational works \cite{CaoZhenKvetonXie18,LiuLeeShroff17},
+we assume that the algorithm know in advance the number of break-points $\Upsilon_T$.
+Another interesting point-of-view is the one presented by \cite{WeiSrivastava18Abruptly,WeiSrivastava18Distributed},
+where the authors assume that there exists a number $\nu\in(0,1)$ for which $\Upsilon_T = \smallO{T^{\nu}}$,
+and they also assume that any algorithm tackling such problems can know in advance the value of $\nu$ (or an upper-bound on $\nu$), and tweak its parameters from this value $\nu$, but cannot know the exact value of $\Upsilon_T$.
+%
+This interpretation is interesting too, but due to time and space constraints, we preferred to not explore it further.
+Empirically, we found that the SW-UCB\# algorithm proposed in \cite{WeiSrivastava18Abruptly} performs comparably to SW-UCB, and thus we did not include it in the experiments presented below in Section~\ref{sec:6:NumericalExperiments}.
+
+% \TODOL{Speak about the article \cite{WeiSrivastava18Abruptly,WeiSrivastava18Distributed} and their point of view on $\Upsilon_T = \bigO{T^{\nu}}$ with known $\nu$ but unknown $\Upsilon_T$}
+
+
+\paragraph{Positionning of our results.}
 %
 \CUSUMUCB{} and \MUCB{} are both analyzed under some reasonable assumptions on the problem parameters --the means $(\mu_i(t))$-- mostly saying that the breakpoints are sufficiently far away from each other.
 %
@@ -244,15 +290,15 @@ Problem $1$ has only \emph{local changes}, meaning that at any change-point, onl
 They illustrate both the extreme cases of having $C_T = \Upsilon_T$ (for problem $1$) and $C_T = K \Upsilon_T$ (for problem $2$).
 \begin{itemize}
     \item
-On one hand, we expect the \emph{local restart} variant of \GLRklUCB{} to outperform the \emph{global restart} variant for problem $1$, as the intuition suggests that it is sub-optimal to reinitialize the memory of the observations of the $K-1$ arms whose distributions did not change after a change-point is detected (as the \emph{global restart} variant do).
+On the one hand, we expect the \emph{local restart} variant of \GLRklUCB{} to outperform the \emph{global restart} variant for problem $1$, as the intuition suggests that it is sub-optimal to reinitialize the memory of the observations of the $K-1$ arms whose distributions did not change after a change-point is detected (as the \emph{global restart} variant do).
     \item
 On the other hand, we expect the \emph{global restart} variant to outperform the \emph{local restart} variant for problem $2$, as detecting a change one any arm is enough to know that all arms changed and to reinitialize the memory of all arms, and thus the intuition suggests that it is sub-optimal to reinitialize only the memory of the observation of the arm on which the change-point was detected (as the \emph{local restart} variant do).
 \end{itemize}
 %
 Of course, on a given problem, without additional prior knowledge on the difficulty of the problem at hand, the algorithm cannot know which situation is more likely to happen, only local changes ($C_T = \Upsilon_T$) or only global changes ($C_T = K \Upsilon_T$) or any intermediate setting between the two extreme cases.
-Thus we do not believe to be able to design a policy that could be uniformly better than the two variants of our proposal \GLRklUCB.
+Thus we do not believe to be able to design a policy that could be uniformly better than the two variants of \GLRklUCB.
 %
-Surprisingly, our numerical experiments show that the \emph{local} variant of \GLRklUCB{} actually outperforms the \emph{glocal} variant for both problem $1$ and $2$, as shown below in Table~\ref{table:6:totalResults1}, and in other problems as shown in Table~\ref{table:6:totalResults2}.
+Surprisingly, numerical experiments show that the \emph{local} variant of \GLRklUCB{} actually outperforms the \emph{glocal} variant for both problem $1$ and $2$, as shown below in Table~\ref{table:6:totalResults1}, and in other problems as shown in Table~\ref{table:6:totalResults2}.
 %
 Understanding this difference in terms of numerical performance of the two variants is left as future work.
 
@@ -266,20 +312,6 @@ Previous works focussed on using \UCB{} \cite{LiuLeeShroff17,CaoZhenKvetonXie18}
 but we propose to use \klUCB{} instead, as it is known to be more efficient for Bernoulli rewards as well as for a more generic case of bounded or one-dimensional exponential families \cite{KLUCBJournal}.
 Theoretical results for these works were only given for \UCB, but they both suggest that extending the results to \klUCB{} (or other efficient stationary policies) should not be difficult.
 For a fair comparison, we therefore chose to compare the different change-point detector algorithms combined with \klUCB.
-
-
-\paragraph{Another point-of-view on prior knowledge of $\Upsilon_T$.}
-%
-In this chapter, like in our two main inspirational works \cite{CaoZhenKvetonXie18,LiuLeeShroff17},
-we will assume that the algorithm know in advance the number of break-points $\Upsilon_T$.
-Another interesting point-of-view is the one presented by \cite{WeiSrivastava18Abruptly,WeiSrivastava18Distributed},
-where the authors assume that there exists a number $\nu\in(0,1)$ for which $\Upsilon_T = \smallO{T^{\nu}}$,
-and they also assume that any algorithm tackling such problems can know in advance the value of $\nu$ (or an upper-bound on $\nu$), and tweak its parameters from this value $\nu$, but cannot know the exact value of $\Upsilon_T$.
-
-This interpretation is interesting too, but due to time and space constraints, we preferred to not explore it further.
-Empirically, we found that the SW-UCB\# algorithm proposed in \cite{WeiSrivastava18Abruptly} performs comparably to SW-UCB, and thus we did not include it in the experiments presented below in Section~\ref{sec:6:NumericalExperiments}.
-
-% \TODOL{Speak about the article \cite{WeiSrivastava18Abruptly,WeiSrivastava18Distributed} and their point of view on $\Upsilon_T = \bigO{T^{\nu}}$ with known $\nu$ but unknown $\Upsilon_T$}
 
 
 % -----------------------------------------------------------------
@@ -298,7 +330,7 @@ A sequential change-point detector is a stopping time $\widehat{\tau}$ with resp
 $\cH_0 : \left(\exists \mu_0 \in [0,1]: \forall i\in\N^*, \bE[X_i] = \mu_0\right)$.
 
 Generalized Likelihood Ratio tests date back to the seminal work of \cite{Wilks1938}, and were for instance studied for change-point detection by \cite{barnard1959control,siegmund1995using}.
-Exploiting the fact that bounded distribution are $(1/4)$-sub Gaussian (\ie, their moment generating function is dominated by that of a Gaussian distribution with the same mean and a variance $1/4$), the (Gaussian) GLRT, recently studied in depth by \cite{Maillard2018GLR}, can be used for our problem.
+Exploiting the fact that bounded distribution are $(1/4)$-sub Gaussian (\ie, their moment generating function is dominated by that of a Gaussian distribution with the same mean and a variance $1/4$), the (Gaussian) GLRT, recently studied in depth by \cite{Maillard2018GLR}, can be used for this problem.
 We propose instead to exploit the fact that bounded distributions are also dominated by Bernoulli distributions.
 
 \begin{definition}[Sub-Bernoulli distributions]
@@ -306,13 +338,13 @@ We propose instead to exploit the fact that bounded distributions are also domin
     $\ln \bE_{X\sim\nu}\left[e^{\lambda X}\right] \leq \phi_{\mu}(\lambda)$ with $\mu=\bE_{X\sim \nu}[X]$ and $\phi_{\mu}(\lambda) = \ln(1-\mu + \mu e^\lambda)$ is the log moment generating function of a Bernoulli distribution with mean $\mu$, for any $\mu\in[0,1]$.
 \end{definition}
 
-We refer to Lemma~1 of \cite{KLUCBJournal} that establishes that any bounded distribution supported in $[0,1]$ is a sub-Bernoulli distribution.
+Lemma~1 of \cite{KLUCBJournal} establishes that any bounded distribution supported in $[0,1]$ is a sub-Bernoulli distribution.
 Our work can be applied to any bounded distribution without loss of generality, as a reward in $r\in[a,b]$ can clearly be mapped to $[0,1]$ simply by using $r' = (r-a)/(b-a)$ (we assume that the decision maker or the algorithm know before hand the values of $a,b$).
 
 
 \subsection{Presentation of the test}\label{sub:6:presentationOfGLRTest}
 
-If the samples $(X_t)$ were all drawn from a Bernoulli distribution, our change-point detection problem would reduce to a parametric sequential test of
+If the samples $(X_t)$ were all drawn from a Bernoulli distribution, this change-point detection problem introduced above would reduce to a parametric sequential test of
 \[\cH_0 : (\exists \mu_0: \forall i\in\N, X_i \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_0)),\]
 against the alternative
 \[\cH_1 : (\exists \mu_0 \neq \mu_1, \tau \in \N^*: \ \  X_1, \ldots, X_\tau \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_0) \ \ \text{and} \ \ X_{\tau+1}, X_{\tau+2}, \ldots \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_1)).\]
@@ -322,8 +354,8 @@ The Generalized Likelihood Ratio statistic for this test is defined by
     \GLR(n) :=\frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_n ; \mu_0)},
 \end{equation}
 %
-where $\ell(X_1, \ldots, X_n ; \mu_0)$ and $\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)$ respectively denote the likelihoods of the first $n$ observations under a model in $\cH_0$ and $\cH_1$.
-High values of this statistic tend to indicate rejection of $\cH_0$ over $\cH_1$.
+where $\ell(X_1, \ldots, X_n ; \mu_0)$ and $\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)$ respectively denote the \emph{likelihoods} of the first $n$ observations under a model in $\cH_0$ and $\cH_1$.
+High values of this statistic tend to indicate rejection of $\cH_0$.
 %
 By using the form of the likelihood for Bernoulli distributions, this statistic can be written with the binary relative entropy $\kl$, defined for $x,y\in[0,1]$ (with the usual convention that $t \log(t) = 0$ if $t=0$).
 %
@@ -331,15 +363,93 @@ By using the form of the likelihood for Bernoulli distributions, this statistic 
     \kl(x,y) := x \ln\left(\frac{x}{y}\right) + (1-x)\ln\left(\frac{1-x}{1-y}\right).
 \end{equation}
 %
-Indeed, we show in Appendix~\ref{app:6:GLR_with_kl} that in any one-dimensional exponential family, we have
+Indeed, we show below
+% in Appendix~\ref{app:6:GLR_with_kl}
+that in any one-dimensional exponential family, we have
 \begin{equation}\label{eq:6:secondDefGLRT}
-    \GLR(n) = \exp\Bigl[ \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right], \Bigr].
+    \log \GLR(n) = \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right].
 \end{equation}
 %
 where for $k \leq k'$, $\widehat{\mu}_{k:k'} := \frac{1}{k - k' + 1} \sum_{l=k}^{k'} X_l$ denotes the average of the observations $X_l$ collected between the instants $k$ and $k'$.
-%
+
+
+\begin{proof}
+    First, we consider the denominator in the expression of $\GLR(n)$ \eqref{eq:6:firstDefGLRT}, that is the $\sup$ on $\mu_0$.
+    We have $\ell(X_1, \ldots, X_n ; \mu_0) = \prod_{i=1}^n \ell(X_i ; \mu_0)$ by independence of the observations $X_i$,
+    and $\ell(X_i ; \mu_0) = \mu_0^{X_i} (1-\mu_0)^{1-X_i}$ for Bernoulli distributions.
+    Therefore, taking the logarithm gives
+    \begin{align*}
+        \log\ell(X_1, \ldots, X_n ; \mu_0)
+        &= \sum_{i=1}^n X_i \log(\mu_0) + (1-X_i) \log(1-\mu_0) \\
+        &= \log(\mu_0) \times \left( \sum_{i=1}^n X_i \right) + \log(1-\mu_0) \times \left( n - \sum_{i=1}^n X_i \right) \\
+        &= n \left[ \widehat{\mu}_{1:n} \log(\mu_0) + (1 - \widehat{\mu}_{1:n}) \log(1-\mu_0) \right].
+    \end{align*}
+    %
+    For a constant $a\in[0,1]$, let $h(x) := a \log(x) + (1-a) \log(1-x)$ on $(0,1)$,
+    and we are trying to solve $\sup_{x\in[0,1]} h(x)$.
+    If $a=0$ or $a=1$, $h$ is maximum at $x=a$.
+    Now if $a\neq0$, As $h$ is of class $\cC^1$, we can just differentiate and find the root of its derivative:
+    $h'(x) = a/x - (1-a)/(1-x)$, so $h'(x) = 0$ if and only if $x=a$.
+    Thus in all cases, $\sup_{x\in[0,1]} h(x) = h(a)$.
+    %
+    Here, we have $a = \widehat{\mu}_{1:n}$, and thus we solve the $\sup_{\mu_0}$ optimization problem found in the denominator of the $\GLR(n)$ expression.
+    By replacing $\mu_0 = \widehat{\mu}_{1:n}$, we obtained the following (unique) solution,
+    \begin{equation}\label{eq:6:solutionPbOpt_for_1n}
+        \sup_{\mu_0} \log\ell(X_1, \ldots, X_n ; \mu_0) = n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right).
+    \end{equation}
+
+    Now let us consider the nominator of the $\GLR(n)$ expression.
+    We can again work with log-likelihoods, and so we have
+    \begin{align*}
+        \log\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)
+        &= \sum_{i=1}^{\tau} X_i \log(\mu_0) + (1-X_i) \log(1-\mu_0) + \sum_{i=\tau+1}^n X_i \log(\mu_1) + (1-X_i) \log(1-\mu_1) \\
+        &= s \bigl( \widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0) \bigr) \\
+        & \;\;\;\; + (n-s) \bigl( \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1) \bigr).
+    \end{align*}
+    Because we solved in \eqref{eq:6:solutionPbOpt_for_1n} the $\sup$ for the denominator,
+    we have
+    \begin{align*}
+        \GLR(n)
+        % &= \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_n ; \mu_0)}, \\
+        &= \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\mu_0) + (1 - \widehat{\mu}_{1:n}) \log(1-\mu_0) \right) \right] }, \\
+        &= \sup\limits_{\mu_0,\mu_1,\tau < n} \frac{\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right) \right] }, \\
+        &= \exp \Bigl[ \sup\limits_{\mu_0,\mu_1,\tau < n} \Bigl[ \log\Bigl[ \frac{\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right) \right] } \Bigr] \Bigr] \Bigr],  \\
+        &= \exp \Bigl[ \sup\limits_{\mu_0,\mu_1, 1 < s < n} \Bigl[
+            s \bigl( \widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0) \bigr) \\
+            & \hspace{35pt} + (n-s) \bigl( \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1) \bigr) \\
+            & \hspace{35pt} - n \bigl( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \bigr)
+        \Bigr] \Bigr].
+    \end{align*}
+    By linearity and independence, we can separate the joint optimization problem on $\mu_0,\mu_1,s$ in two optimizations problems for $\mu_0,s$ and $\mu_1,s$, that can first be solved explicitly for $\mu_0$ (resp. $\mu_1$) and then left to be solved for $s$.
+    By definition, $n \; \widehat{\mu}_{1:n} = \sum_{i=1}^n X_i = s \;\widehat{\mu}_{1:s} + (n-s) \;\widehat{\mu}_{s+1:n}$, so the right hand side (negative) part involving $\widehat{\mu}_{1:n}$ can be distributed in the two left hand side (positive) terms,
+    which are both handled similarly.
+    For instance for $\mu_0$, we use the same computation as above with the function $h$ to find the optimum:
+    $\widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0)$
+    is optimum for $\mu_0 = \widehat{\mu}_{1:s}$.
+    Similarly, the term for $\mu_1$ gives that $\sup_{\mu_1} \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1)$
+    is attained for $\mu_1 = \widehat{\mu}_{s+1:n}$.
+    Finally, by replacing the two expressions of the solutions for $\mu_0$ and $\mu_1$,
+    we obtain
+    \begin{align*}
+        \GLR(n)
+        = \exp \Bigl[ \sup\limits_{1 < s < n} \Bigl[
+            s \times \Bigl(
+                    & \widehat{\mu}_{1:s} \log(\widehat{\mu}_{1:s}) + (1 - \widehat{\mu}_{1:s}) \log(1-\widehat{\mu}_{1:s}) \\
+                    & - \widehat{\mu}_{1:s} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:s}) \log(1-\widehat{\mu}_{1:n})
+            \Bigr) \\
+            + (n-s) \times \Bigl(
+                & \widehat{\mu}_{s+1:n} \log(\widehat{\mu}_{s+1:n}) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\widehat{\mu}_{s+1:n}) \\
+                & - \widehat{\mu}_{s+1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\widehat{\mu}_{1:n})
+            \Bigr)
+        \Bigr] \Bigr].
+    \end{align*}
+    We conclude by recognizing the expressions of $s \times \kl(\widehat{\mu}_{1:s}, \widehat{\mu}_{1:n})$
+    and $(n-s) \times \kl(\widehat{\mu}_{s+1:n}, \widehat{\mu}_{1:n})$.
+\end{proof}
+
+
 This motivates the following definition of the Bernoulli GLRT change point detector.
-Note that the $\exp$ appearing in the \eqref{eq:6:secondDefGLRT} is absorbed as a $\log$ in the threshold function $\beta$.
+% Note that the $\exp$ appearing in the \eqref{eq:6:secondDefGLRT} is absorbed as a $\log$ in the threshold function $\beta$.
 
 \begin{definition}\label{def:6:GLRDef}
     The Bernoulli GLRT (B-GLRT) change point detector with threshold function $\beta(n,\delta)$ is the stopping time $\widehat{\tau}_{\delta}$ defined by
@@ -387,7 +497,8 @@ The use of $\cT$ for the construction of concentration inequalities that are uni
 $\cT (x) \simeq x + 4 \ln\big(1 + x + \sqrt{2x}\big)$ for $x\geq 5$ and $\cT(x) \sim x$ when $x$ is large.
 
 \begin{lemma}\label{lem:6:FalseAlarm}
-    Assume that there exists $\mu_0 \in [0,1]$ such that $\bE[X_t] = \mu_0$ and that $X_i \in [0,1]$ for all $i$.
+    Let be $\bP_{\mu_0}$ a probabilistic model under which $X_t \in [0,1]$, and $X_t$ has an average of $\mu_0$ for all $t$.
+    % Assume that there exists $\mu_0 \in [0,1]$ such that $\bE[X_t] = \mu_0$ and that $X_i \in [0,1]$ for all $i$.
     Then the B-GLRT test given in Definition~\ref{def:6:GLRDef} satisfies
     $\bP_{\mu_0}(\widehat{\tau}_\delta < \infty) \leq \delta$, with the threshold function
     %
@@ -447,7 +558,8 @@ And so we have $\bP_{\mu_0}\left(T_{\delta} < \infty\right) \leq \sum_{s =1}^{\i
 %-----------------------------------------------------------------------------
 \paragraph{Detection delay.}
 
-Another key feature of a change-point detector is its \emph{detection delay} under a model in which a change from $\mu_0$ to $\mu_1$ occurs at time $\tau$. We already observed that from Pinsker's inequality (Lemma~\ref{lem:6:Pinsker}), the B-GLRT stops earlier than a Gaussian GLR. Hence, one can leverage some techniques from \cite{Maillard2018GLR} to upper bound the detection delay of the B-GLRT. Letting $\Delta = |\mu_0 - \mu_1|$, one can essentially establish that for $\tau$ larger than $(1/\Delta^2)\ln(1/\delta)$ (\ie, enough samples before the change), the delay can be of the same magnitude (\ie, enough samples after the change). In our bandit analysis to follow, the detection delay will be crucially used to control the probability of the good event (in Lemma~\ref{lem:6:GoodEventGlobal} and \ref{lem:6:GoodEvent}).
+Another key feature of a change-point detector is its \emph{detection delay} under a model in which a change from $\mu_0$ to $\mu_1$ occurs at time $\tau$. We already observed that from Pinsker's inequality (Lemma~\ref{lem:6:Pinsker}), the B-GLRT stops earlier than a Gaussian GLR. Hence, one can leverage some techniques from \cite{Maillard2018GLR} to upper bound the detection delay of the B-GLRT. Letting $\Delta = |\mu_0 - \mu_1|$, one can essentially establish that for $\tau$ larger than $(1/\Delta^2)\ln(1/\delta)$ (\ie, enough samples before the change), the delay can be of the same magnitude (\ie, enough samples after the change).
+In the bandit analysis to follow, the detection delay will be crucially used to control the probability of the good event (in Lemma~\ref{lem:6:GoodEventGlobal} and \ref{lem:6:GoodEvent}).
 
 \begin{lemma}\label{lem:6:Delay}
     Let be $\bP_{\mu_0,\mu_1,\tau}$ a probabilistic model under which $X_t \in [0,1]$, and $X_t$ has an average of $\mu_0$ for all $t \leq \tau$, and $\mu_1$ for all $t > \tau$, with $\mu_0 \neq \mu_1$,
@@ -460,6 +572,7 @@ Another key feature of a change-point detector is its \emph{detection delay} und
 %
 \begin{proof}
     It is actually not used as such in the proofs of the regret upper bound given below, but a similar result is used and proved in the proofs.
+    \TODOL{We have to give the proof? I was fine with this sentence...}
 \end{proof}
 
 For a threshold $\beta$ chosen as in the Lemma~\ref{lem:6:FalseAlarm}, we can show that a consequence of the Lemma~\ref{lem:6:Delay} is that if the break-point $\tau$ takes place after $\Delta^{-2} \ln(1/\delta)$ samples, the detection time may be of the same magnitude (with high probability).
@@ -471,7 +584,7 @@ its delay $\widehat{\tau}_\delta$ is in the order of $O(\Delta^{-2} \ln(1/\delta
 % ----------------------------------------------------------------------------
 \subsection{Practical considerations}\label{sub:6:PracticalConsiderations}
 
-Lemma~\ref{lem:6:FalseAlarm} provides the first control of false alarm for the B-GLRT employed for bounded data. However, the threshold \eqref{def:6:beta} is not fully explicit as the function $\cT(x)$ can only be computed numerically.
+Lemma~\ref{lem:6:FalseAlarm} provides the first non-asymptotic control of false alarm for the B-GLRT employed for bounded data. However, the threshold \eqref{def:6:beta} is not fully explicit as the function $\cT(x)$ can only be computed numerically.
 Note that for sub-Gaussian distributions, results from \cite{Maillard2018GLR} show that the smaller and more explicit threshold
 $\beta(n,\delta) = \left(1 + \frac{1}{n}\right)\ln\left(\frac{3n\sqrt{n}}{\delta}\right)$,
 can be used to prove an upper bound of $\delta$ for the false alarm probability of the GLR, with quadratic divergence $\kl(x,y)=2(x-y)^2$.
@@ -486,7 +599,8 @@ Also note that, as any test based on scan-statistics, the B-GLRT can be costly t
 %
 for subsets $\cN$ and $\cS_n$. Following the proof of Lemma~\ref{lem:6:FalseAlarm}, we can easily see that this variant enjoys the same false-alarm control.
 However, the detection delay may be slightly increased.
-In Appendix~\ref{sub:6:IdeasOptimizations} we show that using these practical speedups has little impact on the regret.
+In Appendix~\ref{sub:6:IdeasOptimizations} we show that using these practical speedups
+has little impact on the regret of the bandit strategy introduced below.
 
 
 
@@ -496,23 +610,23 @@ In Appendix~\ref{sub:6:IdeasOptimizations} we show that using these practical sp
 \label{sec:6:GLRklUCB_Algorithm}
 %-----------------------------------------------------------------------------
 
-We start by giving the pseudo-code of our algorithm, by explaining every part, then we give our finite-time regret upper bounds, for the two variants of using local or global restarts.
-The analysis in both cases is using a unified proof technique, that we present before giving more details about the two proofs.
+We start by giving the pseudo-code of our algorithm, by explaining every part, then we give its finite-time regret upper bounds, for the two variants of using local or global restarts.
+The analysis in both cases is using a unified proof technique, that we present before giving more details about the proof of half of the results (the other proof can be found in \cite{Besson2019GLRT}).
 
 
 % %-----------------------------------------------------------------------------
 % \paragraph{Details about the algorithm.}
 
-Our proposed algorithm, \GLRklUCB{}, combines a bandit algorithm with a change-point detector running on each arm.
+We now present the \GLRklUCB{} algorithm, which combines a bandit algorithm with a change-point detector running on each arm.
 It also needs a third ingredient, some forced exploration parameterized by $\alpha\in(0,1)$ to ensure each arm is sampled enough and changes can also be detected on arms currently under-sampled by the bandit algorithm.
 %
 \GLRklUCB{} combines the \klUCB{} algorithm as it is given and analyzed by \cite{KLUCBJournal}, known to be optimal for Bernoulli bandits, with the B-GLRT change-point detector introduced in Section~\ref{sec:6:ChangePointDetector}.
 %
-This algorithm, formally stated as Algorithm~\ref{algo:6:GLRklUCB}, can be used in any bandit model with bounded rewards, and is expected to be very efficient for Bernoulli distributions, which are relevant for practical applications.
-
+This algorithm, formally stated as Algorithm~\ref{algo:6:GLRklUCB}, can be used in any bandit model with bounded rewards, and we expect it to be very efficient for Bernoulli distributions, which are relevant for practical applications.
 
 \begin{figure}[h!]
     \centering
+    \begin{framed}
     % \begin{small}
     % Documentation at http://mirror.ctan.org/tex-archive/macros/latex/contrib/algorithm2e/doc/algorithm2e.pdf if needed
     % Or https://en.wikibooks.org/wiki/LaTeX/Algorithms#Typesetting_using_the_algorithm2e_package
@@ -558,6 +672,7 @@ This algorithm, formally stated as Algorithm~\ref{algo:6:GLRklUCB}, can be used 
         \label{algo:6:GLRklUCB}
     \end{algorithm}
     % \end{small}
+    \end{framed}
 \end{figure}
 
 
@@ -601,9 +716,9 @@ $f(t-\tau_i(t))$ is replaced by $f(n_t)$ with $n_t = \sum_{i=1}^K n_i(t)$.
 \paragraph{Threshold function $\beta$.}
 
 We present in Appendix~\ref{sec:6:exploringDifferentThresholdFunctions} numerical simulations that compare different choices of threshold functions $\beta$.
-We compare the complicated value used in Lemma~\ref{lem:6:FalseAlarm}, using a numerical approximation of the function $\cT$,
+We compare the non-explicit function used in Lemma~\ref{lem:6:FalseAlarm} (that make use of a numerical approximation of the function $\cT$),
 with the simpler value $\beta(n,\delta) = \ln(3n\sqrt{n}/\delta)$, as well as two other choices.
-The sum-up of these simulations is that it is enough to use a simpler and more explicit threshold, thus we recommend in practice to use $\beta_1(n,\delta) = \ln(3n\sqrt{n}/\delta)$.
+To sum-up these simulations, they validate the use of a simpler and more explicit threshold, thus we recommend in practice to use $\beta_1(n,\delta) = \ln(3n\sqrt{n}/\delta)$.
 %  to have an efficient change-point detection algorithm, and an efficient \GLRklUCB{} policy.
 
 % \TODOL{I should link to Appendix~\ref{sec:6:exploringDifferentThresholdFunctions} where I present two experiments which justifies this choice of the threshold function $\beta(n,\delta)$: it works fine and it's much simpler to implement numerically than the one we chose to analyze mathematically!}
@@ -612,15 +727,13 @@ The sum-up of these simulations is that it is enough to use a simpler and more e
 %-----------------------------------------------------------------------------
 \paragraph{Forced exploration.}
 
-The forced exploration scheme used in \GLRklUCB{} (lines $3$-$5$) generalizes the deterministic exploration scheme proposed for \MUCB{} by \cite{CaoZhenKvetonXie18}, whereas \CUSUMUCB{} performs randomized exploration.
-%
-We mimic the deterministic exploration introduced for \MUCB, while \CUSUMUCB{} is using a uniform exploration with probability $\alpha$.
-Both approaches also require a mechanism to add exploration, parameterized by $\alpha\in(0,1)$.
-\CUSUMUCB{} uses a randomized exploration, by sampling arm $i$ with probability $\alpha/K$ at each time step,
-and \MUCB{} uses a more deterministic scheme, to force exploring the $K$ arms (when the time since the last restart, $t - \tau$, is found to be in $\{1,\dots,K\}$ modulo $\left\lceil 1/\alpha \right\rceil$).
+The forced exploration scheme used in \GLRklUCB{} (lines $3$-$5$) generalizes the deterministic exploration scheme proposed for \MUCB{} by \cite{CaoZhenKvetonXie18}, whereas \CUSUMUCB{} performs a uniform random exploration.
+Both approaches are parameterized by $\alpha\in(0,1)$.
+More precisely, \CUSUMUCB{} samples arm $i$ with probability $\alpha/K$ at each time step,
+and \MUCB{} uses a deterministic scheme, to force exploring the $K$ arms: when the time since the last restart, $t - \tau$, is found to be in $\{1,\dots,K\}$ modulo $\left\lceil 1/\alpha \right\rceil$.
 Both solutions ensure that all arms are sampled enough on each stationary sequence, in order for the CD algorithm to have enough \iid{} samples to detect changes.
 %
-A consequence of this forced exploration is given in Proposition~\ref{prop:6:EnoughSamples}, proved below.
+A consequence of this forced exploration is given in Proposition~\ref{prop:6:EnoughSamples} below.
 
 \begin{proposition}\label{prop:6:EnoughSamples}
     For every pair of instants $s \leq t\in\N^*$ between two restarts on arm $i$ (\ie, for a $k\in\{1,\dots,\NCi\}$, one has $\tau_i^{(k)} = \tau_i(t) < s \leq t < \tau_i^{(k+1)}$) it holds that
@@ -652,8 +765,8 @@ A consequence of this forced exploration is given in Proposition~\ref{prop:6:Eno
 %
 We present in Appendix~\ref{sec:6:exploringDifferentForcedExplorationMechanisms} numerical simulations that compare three different options of forced exploration schemes.
 We compare the uniformly random exploration used by \CUSUMUCB, against the deterministic scheme used in Algorithm~\ref{algo:6:GLRklUCB}, and against a more complicated scheme based on \emph{tracking}.
-The sum-up of these simulations is that it is enough to use the deterministic scheme to have an efficient change-point detection algorithm, and an efficient \GLRklUCB{} policy.
-As it is the simplest and less numerically costly one, this is the one we chose for Algorithm~\ref{algo:6:GLRklUCB}.
+To sum-up these simulations, the deterministic scheme gives an efficient change-point detection algorithm, and an efficient \GLRklUCB{} policy.
+As it is the simplest one to handle in our proofs, this is the one we chose for Algorithm~\ref{algo:6:GLRklUCB}.
 
 % \TODOL{I should link to Appendix~\ref{sec:6:exploringDifferentForcedExplorationMechanisms} where I present two experiments which justifies this choice of the forced exploration mechanism: it works fine and it's the simplest to implement numerically and to analyze mathematically!}
 
@@ -982,7 +1095,7 @@ We also introduce the gap $\Delta_i^{(\ell)} = \overline{\mu}_i^{\ell} - \overli
     Then \emph{we assume} that for all arm $i$ and all change-point of that arm $\ell \in \{1,\dots,\NCi\}$, $\tau_i^{(\ell)} - \tau_i^{(\ell-1)} \geq 2\max (d_i^{(\ell)},d_i^{(\ell-1)})$.
 \end{assumption}
 
-Assumption~\ref{ass:6:LongPeriods} is again easy to interpret, like Assumption~\ref{ass:6:LongPeriodsGlobal}, but it is non standard in non-stationary bandits, and to our knowledge our analysis is the first one to be given for such assumption on the problem difficulty.
+Assumption~\ref{ass:6:LongPeriods} is again easy to interpret, like Assumption~\ref{ass:6:LongPeriodsGlobal}, but it is non standard in non-stationary bandits, and to the best of the authors knowledge,our analysis is the first one to be given for such assumption on the problem difficulty.
 %
 It requires that any two consecutive change-points \emph{on a given arm} are sufficiently spaced (relatively to the magnitude of those two change-points). Under that assumption, Theorem~\ref{thm:6:mainRegretBound} provides a regret upper bound that scales with similar quantities as that of Theorem~\ref{thm:6:mainRegretBoundGlobal}, except that the number of breakpoints $\Upsilon_T$ is replaced with the \emph{total} number of change points $\EffChange = \sum_{i=1}^K \NCi \leq K \Upsilon_T$.
 
@@ -1033,7 +1146,7 @@ Indeed, while the regret guarantees obtained are similar, those obtained for loc
 Besides those specific instances, our results are essentially worse for local than global changes. However, we only obtain regret upper bounds -- thus providing a theoretical safety net for both variants of our algorithm, and the practical story is different, as discussed in Section~\ref{sec:6:NumericalExperiments}.
 We find that \GLRklUCB{} performs better with local restarts, uniformly on all problems.
 
-One can note that with the tuning of $\alpha$ and $\delta$ prescribed by Corollaries~\ref{cor:6:Global} and \ref{cor:6:Local}, our regret bounds hold for problem instances for which two consecutive breakpoints (or change-points on an arm) are separated by more than (about) $\sqrt{T\log(T)}/(\Delta^{\text{change}})^2$ time steps.
+One can note that with the tuning of $\alpha$ and $\delta$ prescribed by Corollaries~\ref{cor:6:Global} and \ref{cor:6:Local}, the regret bounds of \GLRklUCB{} hold for problem instances for which two consecutive breakpoints (or change-points on an arm) are separated by more than (about) $\sqrt{T\log(T)}/(\Delta^{\text{change}})^2$ time steps.
 Hence those guarantees are valid on ``easy'' problem instances only, with few changes of a large magnitude, and in particular they do not hold for the harder problems $3$ or $5$ presented in Section~\ref{sec:6:NumericalExperiments}.
 %
 However, this does not prevent our algorithms from performing well on more realistic instances, and numerical experiments support this claim,
@@ -1062,11 +1175,11 @@ For each experiment, the regret was estimated using $1000$ independent runs.
 \paragraph{Algorithms and parameters tuning.}
 \label{sub:6:ParametersTuning}
 
-We include in our study two algorithms designed for the classical MAB, \klUCB{} \cite{Garivier11KL}, and Thompson sampling \cite{AgrawalGoyal11,Kaufmann12Thompson},
+We include in this study two algorithms designed for the classical MAB, \klUCB{} \cite{Garivier11KL}, and Thompson sampling \cite{AgrawalGoyal11,Kaufmann12Thompson},
 as well as an ``oracle'' version of \klUCB, that we call Oracle-Restart. This algorithm knows the exact locations of the breakpoints, and restarts \klUCB{} at those locations (without any delay).
 
 Then, we compare our algorithms to several competitor designed for a piece-wise stationary model. For a fair comparison, all algorithms that use  \UCB{} as a sub-routine were adapted to use \klUCB{} instead, which yields better performance\footnote{\cite{LiuLeeShroff17,CaoZhenKvetonXie18} both mention that extending their analysis to the use of \klUCB{} should not be too difficult.}. Moreover, all the algorithms are tuned as described in the corresponding paper, using in particular the knowledge of the number of breakpoints $\Upsilon_T$ and the horizon $T$. We first include three \emph{passively adaptive algorithms}:
-Discounted \klUCB{} (D-\klUCB, \cite{Kocsis06}), with discount factor $\gamma = 1 - \sqrt{\Upsilon_T/T}/4$; Sliding-Window \klUCB{} (SW-\klUCB,  \cite{Garivier11UCBDiscount}) using window-size $\tau = 2 \sqrt{T\log(T)/\Upsilon_T}$ and Discounted Thompson sampling (DTS, \cite{RajKalyani17}) with discount factor $\gamma = 0.95$. For this last algorithm, the discount factor $\gamma=0.75$ suggested by the authors was performing significantly worse on our problem instances.
+Discounted \klUCB{} (D-\klUCB, \cite{Kocsis06}), with discount factor $\gamma = 1 - \sqrt{\Upsilon_T/T}/4$; Sliding-Window \klUCB{} (SW-\klUCB,  \cite{Garivier11UCBDiscount}) using window-size $\tau = 2 \sqrt{T\log(T)/\Upsilon_T}$ and Discounted Thompson sampling (DTS, \cite{RajKalyani17}) with discount factor $\gamma = 0.95$. For this last algorithm, the discount factor $\gamma=0.75$ suggested by the authors was performing significantly worse on the problem instances we tried.
 More precisely, we found that $\gamma\leq0.95$ gives better performances for short-term problems (pbs $1,2,4$) and $\gamma\geq0.95$ is better suited for long experiments (pbs $3,5$).
 
 % \TODOE{Tu confirmes bien que $\gamma=0.75$ ne marchait sur AUCUN problème ? Car ta phrase actuelle n'exclut pas que ce choix marche pour les probèmes courts}
@@ -1094,7 +1207,7 @@ the constant is set to $\alpha_0 = 0.05$.
 We show in Appendix~\ref{sec:6:choosingAlpha0} a certain robustness, with similar regret as soon as $\alpha\leq0.1$.
 We do not use a constant $\delta_0$ to change the confidence level to $\delta = \delta_0 \delta_T$, as we show in Appendix~\ref{sec:6:choosingDelta} that $\delta_0=1$ is uniformly better for different problems.
 %
-To speed up our simulations, two optimizations are used, with $\Delta n = \Delta s = 10$,
+To speed up the simulations, two optimizations are used, with $\Delta n = \Delta s = 10$,
 and \CUSUM{} also uses the first trick with $\Delta n = 10$ (see Appendix~\ref{sub:6:IdeasOptimizations} for more details).
 
 % \TODOE{Je l'ai déjà dit, mais vraiment on va nous accuser d'avoir optimisé un paramètre chez nous et pas chez les autres. Est-ce qu'avec $\alpha_0=1$ on a des résultats comparables ou bien on est complètement à côté ?}
@@ -1109,7 +1222,7 @@ Before giving larger results that compare our approach against other algorithms,
 \emph{For one (random) simulation}, we give below examples of the efficiency of the change-point detection algorithm used by \GLRklUCB{} as well as \CUSUMklUCB{} and \MklUCB,
 by giving the times at which they detected a change and reinitialized their memory of observations of one or all the arms.
 We also give the number of observations (since the last restart) of the arm on which the change was detected.
-As shown below in the summary of our experiments, the three change-point detection algorithm give similar performances in terms of regret, but they have different behaviors.
+As shown below, in the experiments summary, the three change-point detection algorithm give similar performances in terms of regret, but they have different behaviors.
 The test in \MUCB{} usually detects less changes, while the test in \CUSUMUCB{} usually detects more changes and even unnecessary changes.
 %
 On the examples presented below as well as large scale examples, all the tests appear to have no false alarm, and always a small detection delay for changes that are ``easy enough'' to be efficiently detected.
@@ -1186,11 +1299,11 @@ In these two examples, we compare the two variants of our proposal with the two 
 that are all based on combining \klUCB{} with a change-point detection algorithm.
 The results given above should be taken carefully, they only have the purpose of being an illustration of the possible behaviors of these algorithms, as they are the results of \emph{only one (random) simulation}!
 But it is still interesting to compare the final regret in one run, as given above, with the mean regret for $1000$ independent runs, as given below in Table~\ref{table:6:totalResults1}.
-The values are not the same, but the ranking is: our proposal outperforms both \CUSUMklUCB{} and \MklUCB, and the test based on \CUSUM{} seems more efficient than the test based of \MklUCB{} in our problems at hand.
+The values are not the same, but the ranking is: our proposal outperforms both \CUSUMklUCB{} and \MklUCB, and the test based on \CUSUM{} seems more efficient than the test based of \MklUCB{} in the problems at hand.
 
 
 % -----------------------------------------------------------------
-\paragraph{Illustrations of the rest of our benchmark.}\label{par:6:benchmark2}
+\paragraph{Illustrations of the rest of the benchmark.}\label{par:6:benchmark2}
 
 We continue here the presentation of the other problems of our benchmark, see Figures~\ref{fig:6:Problem_1} and \ref{fig:6:Problem_2} above for the two problems $1$ and $2$.
 
@@ -1198,7 +1311,7 @@ We continue here the presentation of the other problems of our benchmark, see Fi
 Most arms change at almost every time steps,
 and means are bounded in $[0.01, 0.07]$.
 The gaps $\Delta$ are much smaller than for the first problems, with amplitudes ranging from $0.02$ to $0.001$.
-Note that the assumptions of our regret upper bounds are violated, as well as the assumptions for the analysis of \MUCB{} and \CUSUMUCB.
+Note that the assumptions of the regret upper bounds for \GLRklUCB{} are violated, as well as the assumptions for the analysis of \MUCB{} and \CUSUMUCB.
 It is interesting to say that this problem is inspired from Figure~3 of \cite{CaoZhenKvetonXie18}, where the synthetic data was obtained from manipulations on a real-world database of clicks from \emph{Yahoo!}.
 
 \begin{figure}[h!]  % [htbp]
@@ -1229,7 +1342,7 @@ We observe below in Table~\ref{table:6:totalResults2} that they can suffer highe
 % - Pb 6 is Yahoo! example from Figure~3 in CUSUM-UCB paper \cite{LiuLeeShroff17}
 \paragraph{Problem 5.}
 
-Like problem $3$, this harder problem is also inspired from synthetic data obtained from a real-world database of clicks from \emph{Yahoo!}, but from our other competitor paper, see Figure~3 from \cite{LiuLeeShroff17}.
+Like problem $3$, this harder problem is also inspired from synthetic data obtained from a real-world database of clicks from \emph{Yahoo!}, but from another competitor paper, see Figure~3 from \cite{LiuLeeShroff17}.
 %
 It is much harder, with $\Upsilon=81$ change-points on $K=5$ arms for a longer horizon of $T=100000$.
 Some arms change at almost every time steps, for a total number of breakpoints $C=179$, but the optimal arm is almost always the same one (\textcolor{red}{arm $0$, with $\bullet$}).
@@ -1265,7 +1378,7 @@ and better than Discounted-\klUCB{} which is very inefficient.
 DTS and SW-\klUCB{} can sometimes be more efficient than their stationary counterparts, but perform worse than the Oracle and most actively adaptive algorithms.
 M-\klUCB{} and \CUSUMklUCB{} outperform the previous algorithms, but \GLRklUCB{} is often better.
 %
-On these problems, our proposal with \textbf{Local} restarts is always more efficient than with \textbf{Global} restarts. Note that on problem 2, all means change at every breakpoint, hence one could expect global restart to be more efficient, yet our experiments show the superiority of local restarts on every instances.
+On these problems, \GLRklUCB{} with \textbf{Local} restarts is always more efficient than with \textbf{Global} restarts. Note that on problem 2, all means change at every breakpoint, hence one could expect global restart to be more efficient, yet the experiments show the superiority of local restarts on every instances.
 
 \begin{table}[ht]
 % \begin{footnotesize}
@@ -1321,7 +1434,7 @@ On these problems, our proposal with \textbf{Local} restarts is always more effi
 \end{table}
 
 One can note that the best non-oracle strategies are actively adaptive,
-thus our experiments confirm that an efficient bandit algorithm (\eg, \klUCB) combined with an efficient change point detector (\eg, \GLR) provides efficient strategies for the piece-wise stationary model.
+thus the experiments confirm that an efficient bandit algorithm (\eg, \klUCB) combined with an efficient change point detector (\eg, \GLR) provides efficient strategies for the piece-wise stationary model.
 
 
 \paragraph{Regret plots.}
@@ -1340,7 +1453,7 @@ Our approach, with the two options of \textbf{Local} or \textbf{Global} restarts
 
 Finally, in the case of hard problems, like problems $3$ and $5$, that have a lot of changes but where the optimal arm barely changes, we verify in Figure~\ref{fig:6:meanRegretPb5} that \klUCB{} and TS can outperform the oracle policy.
 Indeed the oracle policy is suboptimal as it restarts as soon as one arm change but is unaware of the meaningful changes, and stationary policies which quickly identify the best arm will play it most of the times, achieving a smaller regret.
-We note that, sadly, all actively adaptive policies fail to outperform stationary policies on such hard problems, because they do not observe enough rewards from each arm between two restarts (\ie, the Assumptions~\ref{ass:6:LongPeriodsGlobal} and \ref{ass:6:LongPeriods} for our Theorems~\ref{thm:6:mainRegretBoundGlobal} and \ref{thm:6:mainRegretBound} are not satisfied).
+We note that, sadly, all actively adaptive policies fail to outperform stationary policies on such hard problems, because they do not observe enough rewards from each arm between two restarts (\ie, the Assumptions~\ref{ass:6:LongPeriodsGlobal} and \ref{ass:6:LongPeriods} for the two Theorems~\ref{thm:6:mainRegretBoundGlobal} and \ref{thm:6:mainRegretBound} are not satisfied).
 We can also verify that the two options, \textbf{Local} and \textbf{Global} restart, for \GLRklUCB, give close results, and that the \textbf{Local} option is always better.
 
 We also show the empirical distribution of the regret $R_T$, on Figure~\ref{fig:6:histogramRegretPb1}. It shows that all algorithms have a rather small variance on their regret, except Thompson Sampling which has a large tail due to its large mean regret on this (easy) non-stationary problems.
@@ -1356,8 +1469,8 @@ In this chapter, we studied and presented the piece-wise stationary bandit model
 We proposed a new algorithm for this problem, \GLRklUCB, which combines the \klUCB{} algorithm with the Bernoulli GLR change-point detector. This actively adaptive method attains state-of-the-art regret upper-bounds when tuned with a prior knowledge of the number of changes $\Upsilon_T$, but \emph{without any other prior knowledge on the problem}, unlike \CUSUMUCB{} and \MUCB{} that require to know a lower bound on the smallest magnitude of a change. We also gave numerical evidence of the efficiency of our proposal.
 
 We believe that our new proof technique could be used to analyze \GLRklUCB{} under less stringent assumptions than the one made in this chapter (and in previous work), that would require only a few ``meaningful'' changes to be detected. This interesting research direction is left for future work,  but the hope is that the regret would be expressed in term of this number of meaningful changes instead of $\Upsilon_T$. We shall also investigate whether actively adaptive approaches can attain a $\cO(\sqrt{\Upsilon_T T})$ regret upper-bound without the knowledge of $\Upsilon_T$.
-We also believe that combining change-point \emph{localization} with an efficient change-point detection algorithm, such as our proposal \GLRklUCB, could lead to an interesting class of algorithms, as suggested by \cite{Maillard2018GLR}.
-Finally, we would like to study in the future possible extension of our approach to the slowly varying model, as introduced in \cite{WeiSrivastava18Abruptly}.
+We also believe that combining change-point \emph{localization} with an efficient change-point detection algorithm, such as \GLRklUCB, could lead to an interesting class of algorithms, as suggested by \cite{Maillard2018GLR}.
+Finally, we would like to study in the future possible extension of our approach to the slowly varying model, as studied in \cite{Besbes14stochastic,WeiSrivastava18Abruptly}.
 
 \TODOL{Evoke here the possibility of study the piece-wise stationary distributed multi-player bandit model introduced in \cite{WeiSrivastava18Distributed} by using \MCTopM{} and \GLRklUCB{} with each other? }
 
