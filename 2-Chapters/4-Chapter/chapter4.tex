@@ -15,7 +15,7 @@ We also present a proof-of-concept real-world validation of the advantage of usi
 More precisely, we start by motivating the idea of independent ``selfish'' learning for IoT devices in Section~\ref{sec:4:motivations}.
 We then present in Section~\ref{sec:4:firstModel} a model where independent devices use an IoT network composed of different channels, occupied by static devices.
 Devices do not use any sensing, but use acknowledgements sent by the Base Station to know if their uplink messages were successfully received.
-We consider the case when many independent ``dynamic'' devices all have a small probability of communicating at every discrete time. If they use simple MAB algorithms in a decentralized and independent fashion (what we call ``selfish'' learning),
+We consider the case when many independent ``dynamic'' devices all have a small probability of communicating at every instant. If they use simple MAB algorithms in a decentralized and independent fashion (what we call ``selfish'' learning),
 we show in simulations that in the case of a non-uniform repartition of the static devices in the channels, the dynamic devices can drastically improve the network efficiency.
 %
 On a simple example, we present in Section~\ref{sec:4:gnuradio} a demonstration that implements and validates the proposed approach, using real wireless radio hardware.
@@ -23,6 +23,9 @@ On a simple example, we present in Section~\ref{sec:4:gnuradio} a demonstration 
 Then we present in Section~\ref{sec:4:retransmissions} a second model, extending our first model, in which devices can retransmit their messages for a fixed number of maximum retransmission, like in the ALOHA protocol.
 In this second model, we compare five different heuristics, all based on the UCB algorithm, and numerical simulation show that all the non-naive heuristics succeed in significantly improving the network efficiency.
 Interestingly, the simplest heuristic is found to be the most efficient one, as its simplicity implies a faster learning and convergence time.
+
+On the first hand, the first model, without retransmission of packets, is interesting for its simplicity, and because considering no retransmission can improve the battery life of IoT objects, at the cost of a lower Quality of Service (QoS).
+On the other hand, the second model is more interesting if the main target is an improvement of the QoS of the IoT networks rather than a longer battery life.
 
 
 \vfill{}
@@ -233,10 +236,19 @@ We study this other direction in the next Chapter~\ref{chapter:5}.
 % ----------------------------------------------------------------------------
 \section{Appendix}
 \label{sec:4:appendix}
-% \section{Proof of Proposition \ref{prop:41:Lagrangian}}
-\label{sec:5:proofLagrangian}
+
+\subsection{Proof of Proposition \ref{prop:41:Lagrangian}}
+\label{sec:4:proofLagrangian}
 % ----------------------------------------------------------------------------
 
 % We include here a missing proof from Section~\ref{sec:4:firstModel}.
 
 \input{2-Chapters/4-Chapter/CrownCom_17.git/IoT_slotted_appendix.tex}
+
+
+\newpage
+\subsection{Illustration of the GNU Radio Companion Flowcharts}
+\label{sec:4:IllustrationFlowcharts}
+% ----------------------------------------------------------------------------
+
+\input{2-Chapters/4-Chapter/IEEE_WCNC_2019__DemoICT.git/main_appendix.tex}
