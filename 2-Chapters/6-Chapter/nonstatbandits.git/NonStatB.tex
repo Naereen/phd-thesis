@@ -401,7 +401,7 @@ where for $k \leq k'$, $\widehat{\mu}_{k:k'} := \frac{1}{k - k' + 1} \sum_{l=k}^
     Now let us consider the nominator of the $\GLR(n)$ expression.
     We can again work with log-likelihoods, and so we have
     \begin{align*}
-        \log\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)
+        & \log\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau) \\
         &= \sum_{i=1}^{\tau} X_i \log(\mu_0) + (1-X_i) \log(1-\mu_0) + \sum_{i=\tau+1}^n X_i \log(\mu_1) + (1-X_i) \log(1-\mu_1) \\
         &= s \bigl( \widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0) \bigr) \\
         & \;\;\;\; + (n-s) \bigl( \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1) \bigr).
@@ -637,7 +637,7 @@ This algorithm, formally stated as Algorithm~\ref{algo:6:GLRklUCB}, can be used 
         % \RestyleAlgo{boxed}
         % XXX Input, data and output
         \KwIn{\emph{Problem parameters}: $T\in\N^*$, $K\in\N^*$\;}
-        \KwIn{\emph{Algorithm parameters}: exploration probability $\alpha \in (0, 1)$, confidence level $\delta>0$\;}
+        \KwIn{\emph{Parameters}: exploration probability $\alpha \in (0, 1)$, confidence level $\delta>0$\;}
         \KwIn{\emph{Option}: \textbf{Local} or \textbf{Global} restart\;}
         % \KwData{Data}
         % \KwResult{Result}
@@ -694,7 +694,7 @@ $\widehat{\mu}_i(t) = \frac{1}{n_i(t)} \sum_{s=\tau_i(t)+1}^{t}X_{i,s} \indic(A_
 their empirical mean (if $n_i(t)\neq0$).
 %
 With the exploration function $f(t) = \ln(t) + 3 \ln(\ln(t))$ if $t>1$ and $f(t)=0$ otherwise,
-the index is defined using the binary relative entropy as
+the index is defined using the binary relative entropy $\kl$ as
 %
 \begin{equation}\label{def:6:UCB}
     \UCB_i(t) := \max \Bigl\{ q\in[0,1] : n_i(t) \times \kl\left(\widehat{\mu}_i(t),q\right) \leq f(t - \tau_i(t)) \Bigr\}.
@@ -1397,6 +1397,13 @@ DTS and SW-\klUCB{} can sometimes be more efficient than their stationary counte
 M-\klUCB{} and \CUSUMklUCB{} outperform the previous algorithms, but \GLRklUCB{} is often better.
 %
 On these problems, \GLRklUCB{} with \textbf{Local} restarts is always more efficient than with \textbf{Global} restarts. Note that on problem 2, all means change at every breakpoint, hence one could expect global restart to be more efficient, yet the experiments show the superiority of local restarts on every instances.
+
+\TODOL{I could add the following algorithms, just to illustrate more:
+
+- OracleRestart with UCB
+- M- and CUSUM- with UCB (as defined in the papers)
+- Exp3.S
+}
 
 \begin{table}[ht]
 % \begin{footnotesize}

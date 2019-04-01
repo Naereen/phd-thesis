@@ -67,7 +67,7 @@ This Appendix gives some proofs omitted in the main text of this chapter.
 
 We state the Pinsker's inequality precisely in Lemma~\ref{lem:6:Pinsker} below, and prove it with simple real analysis arguments\footnote{~The proof is inspired by Lemma~10.2 from \cite{LattimoreBanditAlgorithmsBook} (version $1699$ of January $2019$).}.
 
-\begin{lemma}[Pinkser'es inequality]\label{lem:6:Pinsker}
+\begin{lemma}[Pinsker's inequality]\label{lem:6:Pinsker}
     Let $p,q\in[0,1]$, and $\kl(p,q) = p \ln\left(\frac{p}{q}\right) + (1-p)\ln\left(\frac{1-p}{1-q}\right)$.
     Then $\kl(p,q) \geq 2 (p-q)^2$.
 \end{lemma}
@@ -75,11 +75,11 @@ We state the Pinsker's inequality precisely in Lemma~\ref{lem:6:Pinsker} below, 
     Fix $p$, and consider the function $g(x) := \kl(p, p+x) - 2 x^2$ ($x$ will be $q-p$), for $x\in(-p, 1-p)$.
     We first observe that $g(0) = 0$, and we easily prove that $x=0$ is the unique minimizer of $g$ over its domain.
     By definition, $\kl$ is of class $\cC^1$ on its two variables, on $(0,1)$, so $g$ is of class $\cC^1$ on the interior of its domain, $(-p, 1-p)$.
-    Let's compute its derivative, $g'(x) = (\frac{\partial \kl}{\partial 2})(p, p + x) - 4x$.
-    And
-    \[ \left(\frac{\partial \kl}{\partial 2}\right) (p, p + x) = - \frac{p}{p+x} + \frac{1-p}{1-(p+x)} =  = -x \frac{(2(p + x) - 1)^2}{(p + x)(p + x - 1)}. \]
+    Let us compute its derivative, $g'(x) = (\frac{\partial \; \kl}{\partial 2})(p, p + x) - 4x$.
+    Simple calculations yield
+    \[ \left(\frac{\partial \; \kl}{\partial 2}\right) (p, p + x) = - \frac{p}{p+x} + \frac{1-p}{1-(p+x)} =  = -x \frac{(2(p + x) - 1)^2}{(p + x)(p + x - 1)}. \]
     % https://www.wolframalpha.com/input/?i=diff(p+*+log(p%2F(p%2Bx))+%2B+(1-p)+*+log((1-p)%2F(1-(p%2Bx)))+-+2*x**2,+x)
-    We can verify that $g'(0) = -1 + 1 - 4*0 = 0$, and it has the sign of $-x$ on its domain, as $p + x - 1 < 0$ because $x < 1 - p$, and $p + x > 0$.
+    We can verify that $g'(0) = -1 + 1 - 4 \times 0 = 0$, and it has the sign of $-x$ on its domain, as $p + x - 1 < 0$ because $x < 1 - p$, and $p + x > 0$.
     So $g'$ is first positive then negative, so $g$ is increasing then decreasing on its domain, with a change in its monotony at $x=0$, and thus it indeed has a unique minimizer.
     We conclude that $g(x) \geq g(0) = 0$ on $(-p, 1-p)$, and so $\kl(p,q) \geq 2 (p-q)^2$ if $x = q-p$.
 
@@ -737,7 +737,7 @@ With such numerical optimization, \GLRklUCB{} is not significantly slower than \
 
 
 % ----------------------------------------------------------------------------
-\subsection{Sensibility analysis of the exploration probability $\alpha$}\label{sec:6:choosingAlpha0}
+\subsection{Sensitivity analysis of the exploration probability $\alpha$}\label{sec:6:choosingAlpha0}
 
 As demonstrated in our experiments,
 presented above in Section~\ref{sec:6:NumericalExperiments},
@@ -777,7 +777,7 @@ The same observations can be made for other variants of our algorithm, for insta
 
 
 % ----------------------------------------------------------------------------
-\subsection{Sensibility analysis of the confidence level $\delta$}\label{sec:6:choosingDelta}
+\subsection{Sensitivity analysis of the confidence level $\delta$}\label{sec:6:choosingDelta}
 
 Similarly, the choice of $\delta=\delta_0 / \sqrt{\Upsilon_T T}$ for the confidence level is a good choice for \GLRklUCB{} to be efficient (for the \textbf{local restarts} option).
 The dependency w.r.t. the horizon $T$ comes from Corollary~\ref{cor:6:Local} when $\Upsilon_T$ is unknown, and we observe in the Table~\ref{table:6:sensibilityDelta} below that the value of $\delta_0$ does not influence much the performance of our proposal, as long as $\delta_0\leq1$.
