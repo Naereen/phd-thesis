@@ -1,120 +1,120 @@
-% -----------------------------------------------------------------
-\section{Regret Decompositions}
-\label{app:5:regretdec}
+% % -----------------------------------------------------------------
+% \section{Regret Decompositions}
+% \label{app:5:regretdec}
 
-% -----------------------------------------------------------------
-\subsection{Proof of Lemma~\ref{lem:5:DecompositionRegret}}
-\label{proof:5:DecompositionRegret}
+% % -----------------------------------------------------------------
+% \subsection{Proof of Lemma~\ref{lem:5:DecompositionRegret}}
+% \label{proof:5:DecompositionRegret}
 
-    Using the definition of regret $R_T$ from \eqref{eq:5:regret}, and this collision indicator $\eta^j(t):=\indic(\overline{C^j(t)})$,
-    \begin{align*}
-      R(T)
-      &= \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M Y_{A^j(t),t} \eta^j(t) \right]
-       = \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M \mu_{A^j(t)} \eta^j(t)\right]
-      \shortintertext{The last equality comes from the linearity of expectations, and the fact that $\E_{\mu}[Y_{k,t}] = \mu_k$ (for all $t$, from the \iid{} hypothesis), and the independence from $A^j(t)$, $\eta^j(t)$ and $Y_{k,t}$ (observed \emph{after} playing $A^j(t)$). So $\E_{\mu}[Y_{A^j(t),t} \eta^j(t)] = \sum_{k} \E_{\mu}[\mu_k \indic(A^j(t),t) \eta^j(t)] = \E_{\mu}[\mu_{A^j(t)} \eta^j(t)]$. And so}
-      R(T)
-      &= \E_{\mu}\left[ \sum_{t=1}^{T}\sum_{j \in \Mbest} \mu_j
-        - \sum_{t=1}^{T} \sum_{j=1}^{M} \mu_{A^j(t)} \eta^j(t) \right] \\
-        % &= \underbrace{\left( \frac{1}{M} \sum_{j \in \Mbest} \mu_j \right)}_{:= \overline{\mu}^*} (T M)
-      &= \left( \frac{1}{M} \sum_{j \in \Mbest} \mu_j \right)
-        - \sum_{k=1}^{K} \sum_{j=1}^{M} \mu_k \E_{\mu}\left[ T^j_k(T) \right]
-        + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
-      %
-      \shortintertext{For the first term, we have $T M = \sum\limits_{k=1}^{K} \sum\limits_{j=1}^{M} \E_{\mu}\left[ T^j_k(T)\right]$, and if we denote $\overline{\mu}^* := \frac{1}{M} \sum\limits_{j \in \Mbest} \mu_j$ the average mean of the $M$-best arms, then,}
-      %
-      &= \sum_{k=1}^{K} \sum_{j=1}^{M} (\overline{\mu}^* - \mu_k) \E_{\mu}\left[ T^j_k(T) \right]
-        + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
-      %
-      \shortintertext{Let $\overline{\Delta_k} := \overline{\mu}^* - \mu_k$ be the gap between the mean of the arm $k$ and the $M$-best average mean, and if $M^*$ denotes the index of the worst of the $M$-best arms (\ie, $M^* = \arg\min_{k\in\Mbest}(\mu_k)$), then by splitting $\{1,\dots,K\}$ into three disjoint sets $\Mbest \cupdot \Mworst = (\Mbest\setminus\{M^*\}) \cupdot \{M^*\} \cupdot \Mworst$, we get}
-      %
-      &= \sum_{k \in \Mbest\setminus\{M\}} \overline{\Delta_k} \E_{\mu}\left[ T_k(T) \right]
-        + \overline{\Delta_{M^*}} \E_{\mu}\left[ T_{M^*}(T) \right] \\
-        &\;\;\;\;\;\;\;\; + \sum_{k \in \Mworst} \overline{\Delta_k} \E_{\mu}\left[ T_k(T) \right]
-        + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
-      %
-      \shortintertext{But for $k = M^*$, $T_{M^*}(T) = T M^* - \sum\limits_{k \in \Mbest\setminus\{M\}} \E_{\mu}\left[ T_k(T) \right] - \sum\limits_{k \in \Mworst} \E_{\mu}\left[ T_k(T) \right]$, so by recombining the terms, we obtain,}
-      %
-      &= \sum_{k \in \Mbest\setminus\{M\}} (\overline{\Delta_k} - \overline{\Delta_{M^*}}) \E_{\mu}\left[ T_k(T) \right]
-        + \overline{\Delta_{M^*}} T M^* \\
-        &\;\;\;\;\;\;\;\; + \sum_{k \in \Mworst} (\overline{\Delta_k} - \overline{\Delta_{M^*}}) \E_{\mu}\left[ T_k(T) \right]
-        + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
-    \end{align*}
-    %
-    The term $\overline{\Delta_k} - \overline{\Delta_{M^*}}$ simplifies to $\mu_{M^*} - \mu_k$, and so $\overline{\Delta_{M^*}} = \frac{1}{M} \sum_{k=1}^{M} \mu_k - \mu_{M^*}$ by definition of $\overline{\mu}^*$. And for $k=M^*$, $\mu_{M^*} - \mu_k = 0$, so the first sum can be written for $k = 1,\dots,M$ only, so
-    %
-    % \vspace*{5pt}
-    \begin{align*}
-      R(T)
-      &= \sum_{k \in \Mbest} (\mu_{M^*} - \mu_k) \E_{\mu}\left[ T_k(T) \right]
-        + \sum_{k \in \Mbest} (\mu_k - \mu_{M^*}) T \\
-        &\;\;\;\;\;\;\;\; + \sum_{k \in \Mworst} (\mu_{M^*} - \mu_k) \E_{\mu}\left[ T_k(T) \right]
-        + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right]
-    \end{align*}
-    And so we obtain the decomposition with three terms \ref{eq:5:term1}, \ref{eq:5:term2} and \ref{eq:5:term3}.
-    \begin{align*}
-    R(T)
-      &= \sum_{k \in \Mbest} (\mu_k - \mu_{M^*}) \left(T - \E_{\mu}\left[ T_k(T) \right]\right)
-        + \sum_{k \in \Mworst} (\mu_{M^*} - \mu_k) \E_{\mu}\left[ T_k(T) \right]
-        + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
-    \end{align*}
-    % Which is exactly the decomposition we wanted to prove.
-
-
-% -----------------------------------------------------------------
-\subsection{Proof of Lemma~\ref{lem:5:1stLowerBound}}
-\label{proof:5:1stLowerBound}
+%     Using the definition of regret $R_T$ from \eqref{eq:5:regret}, and this collision indicator $\eta^j(t):=\indic(\overline{C^j(t)})$,
+%     \begin{align*}
+%       R(T)
+%       &= \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M Y_{A^j(t),t} \eta^j(t) \right]
+%        = \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M \mu_{A^j(t)} \eta^j(t)\right]
+%       \intertext{The last equality comes from the linearity of expectations, and the fact that $\E_{\mu}[Y_{k,t}] = \mu_k$ (for all $t$, from the \iid{} hypothesis), and the independence from $A^j(t)$, $\eta^j(t)$ and $Y_{k,t}$ (observed \emph{after} playing $A^j(t)$). So $\E_{\mu}[Y_{A^j(t),t} \eta^j(t)] = \sum_{k} \E_{\mu}[\mu_k \indic(A^j(t),t) \eta^j(t)] = \E_{\mu}[\mu_{A^j(t)} \eta^j(t)]$. And so}
+%       R(T)
+%       &= \E_{\mu}\left[ \sum_{t=1}^{T}\sum_{j \in \Mbest} \mu_j
+%         - \sum_{t=1}^{T} \sum_{j=1}^{M} \mu_{A^j(t)} \eta^j(t) \right] \\
+%         % &= \underbrace{\left( \frac{1}{M} \sum_{j \in \Mbest} \mu_j \right)}_{:= \overline{\mu}^*} (T M)
+%       &= \left( \frac{1}{M} \sum_{j \in \Mbest} \mu_j \right)
+%         - \sum_{k=1}^{K} \sum_{j=1}^{M} \mu_k \E_{\mu}\left[ T^j_k(T) \right]
+%         + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
+%       %
+%       \intertext{For the first term, we have $T M = \sum\limits_{k=1}^{K} \sum\limits_{j=1}^{M} \E_{\mu}\left[ T^j_k(T)\right]$, and if we denote $\overline{\mu}^* := \frac{1}{M} \sum\limits_{j \in \Mbest} \mu_j$ the average mean of the $M$-best arms, then,}
+%       %
+%       &= \sum_{k=1}^{K} \sum_{j=1}^{M} (\overline{\mu}^* - \mu_k) \E_{\mu}\left[ T^j_k(T) \right]
+%         + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
+%       %
+%       \intertext{Let $\overline{\Delta_k} := \overline{\mu}^* - \mu_k$ be the gap between the mean of the arm $k$ and the $M$-best average mean, and if $M^*$ denotes the index of the worst of the $M$-best arms (\ie, $M^* = \arg\min_{k\in\Mbest}(\mu_k)$), then by splitting $\{1,\dots,K\}$ into three disjoint sets $\Mbest \cupdot \Mworst = (\Mbest\setminus\{M^*\}) \cupdot \{M^*\} \cupdot \Mworst$, we get}
+%       %
+%       &= \sum_{k \in \Mbest\setminus\{M\}} \overline{\Delta_k} \E_{\mu}\left[ T_k(T) \right]
+%         + \overline{\Delta_{M^*}} \E_{\mu}\left[ T_{M^*}(T) \right] \\
+%         &\;\;\;\;\;\;\;\; + \sum_{k \in \Mworst} \overline{\Delta_k} \E_{\mu}\left[ T_k(T) \right]
+%         + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
+%       %
+%       \intertext{But for $k = M^*$, $T_{M^*}(T) = T M^* - \sum\limits_{k \in \Mbest\setminus\{M\}} \E_{\mu}\left[ T_k(T) \right] - \sum\limits_{k \in \Mworst} \E_{\mu}\left[ T_k(T) \right]$, so by recombining the terms, we obtain,}
+%       %
+%       &= \sum_{k \in \Mbest\setminus\{M\}} (\overline{\Delta_k} - \overline{\Delta_{M^*}}) \E_{\mu}\left[ T_k(T) \right]
+%         + \overline{\Delta_{M^*}} T M^* \\
+%         &\;\;\;\;\;\;\;\; + \sum_{k \in \Mworst} (\overline{\Delta_k} - \overline{\Delta_{M^*}}) \E_{\mu}\left[ T_k(T) \right]
+%         + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
+%     \end{align*}
+%     %
+%     The term $\overline{\Delta_k} - \overline{\Delta_{M^*}}$ simplifies to $\mu_{M^*} - \mu_k$, and so $\overline{\Delta_{M^*}} = \frac{1}{M} \sum_{k=1}^{M} \mu_k - \mu_{M^*}$ by definition of $\overline{\mu}^*$. And for $k=M^*$, $\mu_{M^*} - \mu_k = 0$, so the first sum can be written for $k = 1,\dots,M$ only, so
+%     %
+%     % \vspace*{5pt}
+%     \begin{align*}
+%       R(T)
+%       &= \sum_{k \in \Mbest} (\mu_{M^*} - \mu_k) \E_{\mu}\left[ T_k(T) \right]
+%         + \sum_{k \in \Mbest} (\mu_k - \mu_{M^*}) T \\
+%         &\;\;\;\;\;\;\;\; + \sum_{k \in \Mworst} (\mu_{M^*} - \mu_k) \E_{\mu}\left[ T_k(T) \right]
+%         + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right]
+%     \end{align*}
+%     And so we obtain the decomposition with three terms \ref{eq:5:term1}, \ref{eq:5:term2} and \ref{eq:5:term3}.
+%     \begin{align*}
+%     R(T)
+%       &= \sum_{k \in \Mbest} (\mu_k - \mu_{M^*}) \left(T - \E_{\mu}\left[ T_k(T) \right]\right)
+%         + \sum_{k \in \Mworst} (\mu_{M^*} - \mu_k) \E_{\mu}\left[ T_k(T) \right]
+%         + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
+%     \end{align*}
+%     % Which is exactly the decomposition we wanted to prove.
 
 
-  Note that term \ref{eq:5:term3} is clearly lower bounded by $0$
-  but it is not obvious for \ref{eq:5:term2} as there is no reason for $T_k(T)$ to be upper bounded by $T$.
-  %
-  Let $T_k^{!}(T) := \sum_{t=1}^{T} \indic(\exists! j, A^j(t)=k)$,
-  where the notation $\exists!$ stands for ``there exists a unique''.
-  Then $T_k(T) = \sum_{t=1}^{T} \sum_{j=1}^{M} \indic(A^j(t) = k)$ can be decomposed as
-  \begin{equation*}
-    T_k(T) = \sum_{t=1}^{T} \indic(\exists! j, A^j(t) = k) + \sum_{t=1}^{T} \sum_{j=1}^{M} c_{k,t} \indic(A^j(t) = k)
-    = T_k^{!}(T) + C_k(T).
-  \end{equation*}
-  By focusing on the two terms $\ref{eq:5:term2} + \ref{eq:5:term3}$ from the decomposition of $R_T(\boldsymbol{\mu}, M, \rho)$ from Lemma~\ref{lem:5:DecompositionRegret}, we have
-  \begin{align*}
-    \ref{eq:5:term2} + \ref{eq:5:term3} &=
-    \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[T_k^!(T)])
-    + \sum_{k \in \Mbest} \mu_M^* \E_{\mu}[C_k(T)] \\
-    & \;\;\;\;\;\; + \sum_{k=1}^{M} \mu_k \E_{\mu}[C_k(T)]
-    - \sum_{k \in \Mbest} \mu_k \E_{\mu}[C_k(T)] \\
-    &=
-    \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[T_k^!(T)])
-    + \sum_{k \in \Mbest} \mu_M^* \E_{\mu}[C_k(T)]
-    + \sum_{k \in \Mworst} \mu_k \E_{\mu}[C_k(T)] \\
-    &=
-    \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[T_k^!(T)])
-    + \sum_{k=1}^{M} \min(\mu_M^*, \mu_k) \E_{\mu}[C_k(T)].
-  \end{align*}
-  And now both terms are non-negative, as $T_k^!(T) \leq T$, $\min(\mu_M^*, \mu_k)\geq 0$, and $C_k(T) \geq 0$, so $\ref{eq:5:term2} + \ref{eq:5:term3} \geq 0$
-  which proves that $R_T(\boldsymbol{\mu}, M, \rho) \geq \ref{eq:5:term1}$, as wanted.
+% % -----------------------------------------------------------------
+% \subsection{Proof of Lemma~\ref{lem:5:1stLowerBound}}
+% \label{proof:5:1stLowerBound}
 
 
-% -----------------------------------------------------------------
-\subsection{Proof of Lemma~\ref{lem:5:1stUpperBound}}
-\label{proof:5:1stUpperBound}
+%   Note that term \ref{eq:5:term3} is clearly lower bounded by $0$
+%   but it is not obvious for \ref{eq:5:term2} as there is no reason for $T_k(T)$ to be upper bounded by $T$.
+%   %
+%   Let $T_k^{!}(T) := \sum_{t=1}^{T} \indic(\exists! j, A^j(t)=k)$,
+%   where the notation $\exists!$ stands for ``there exists a unique''.
+%   Then $T_k(T) = \sum_{t=1}^{T} \sum_{j=1}^{M} \indic(A^j(t) = k)$ can be decomposed as
+%   \begin{equation*}
+%     T_k(T) = \sum_{t=1}^{T} \indic(\exists! j, A^j(t) = k) + \sum_{t=1}^{T} \sum_{j=1}^{M} c_{k,t} \indic(A^j(t) = k)
+%     = T_k^{!}(T) + C_k(T).
+%   \end{equation*}
+%   By focusing on the two terms $\ref{eq:5:term2} + \ref{eq:5:term3}$ from the decomposition of $R_T(\boldsymbol{\mu}, M, \rho)$ from Lemma~\ref{lem:5:DecompositionRegret}, we have
+%   \begin{align*}
+%     \ref{eq:5:term2} + \ref{eq:5:term3} &=
+%     \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[T_k^!(T)])
+%     + \sum_{k \in \Mbest} \mu_M^* \E_{\mu}[C_k(T)] \\
+%     & \;\;\;\;\;\; + \sum_{k=1}^{M} \mu_k \E_{\mu}[C_k(T)]
+%     - \sum_{k \in \Mbest} \mu_k \E_{\mu}[C_k(T)] \\
+%     &=
+%     \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[T_k^!(T)])
+%     + \sum_{k \in \Mbest} \mu_M^* \E_{\mu}[C_k(T)]
+%     + \sum_{k \in \Mworst} \mu_k \E_{\mu}[C_k(T)] \\
+%     &=
+%     \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[T_k^!(T)])
+%     + \sum_{k=1}^{M} \min(\mu_M^*, \mu_k) \E_{\mu}[C_k(T)].
+%   \end{align*}
+%   And now both terms are non-negative, as $T_k^!(T) \leq T$, $\min(\mu_M^*, \mu_k)\geq 0$, and $C_k(T) \geq 0$, so $\ref{eq:5:term2} + \ref{eq:5:term3} \geq 0$
+%   which proves that $R_T(\boldsymbol{\mu}, M, \rho) \geq \ref{eq:5:term1}$, as wanted.
 
-Recall that we want to upper bound
-$ (b) : = \sum_{k \in \Mbest} (\mu_k - \mu_{M*}) \left(T - \E_{\mu}[T_k(T)]\right)$.
-First, we observe that, for all $k\in \Mbest$,
-\begin{eqnarray*}
-  T - \E_{\mu}[T_k(T)] & \leq T - \E_{\mu}\left[\sum_{t=1}^T \indic(\exists j : A^j(t) = k)\right] \\
-  & = \E_{\mu}\left[\sum_{t=1}^T \indic(\forall j, A_j(t) \neq k)\right] = \E_{\mu}\left[\sum_{t=1}^T \indic(k \notin \widehat{S}_t)\right],
-\end{eqnarray*}
-where we denote by $\widehat{S}_t = \{A^j(t), j \in \{1,\dots,M\}\}$ the set of selected arms at time $t$ (with no repetition). With this notation one can write
-\begin{eqnarray*}
- (b) & \leq & (\mu_1 - \mu_{M^*})  \sum_{k \in \Mbest} \left(T - \E_{\mu}[T_k(T)]\right) \leq  (\mu_1 - \mu_{M^*})  \E_{\mu}\left[\sum_{k \in \Mbest} \sum_{t = 1}^T \indic(k \notin \widehat{S}_t)\right] \\
- & = &  (\mu_1 - \mu_{M^*})  \E_{\mu}\left[ \sum_{t = 1}^T \sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t)\right].
-\end{eqnarray*}
-The quantity $\sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t)$ counts the number of optimal arms that have not been selected at time $t$. For each mis-selection of an optimal arm, there either exists a sub-optimal arm that has been selected, or an arm in $\Mbest$ on which a collision occurs. Hence
-\[\sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t) = \sum_{k \in \Mbest}\indic(C_k(t)) + \sum_{k \in \Mworst} \indic(\exists j : A^j(t) = k),\]
-which yields
-\[\E_{\mu}\left[ \sum_{t = 1}^T \sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t)\right] \leq \sum_{k \in \Mbest}\E_{\mu}\left[\cC_k(T)\right] + \sum_{k \in \Mworst} \E_{\mu}\left[T_k(T)\right]\]
-and Lemma~\ref{lem:5:1stUpperBound} follows.
+
+% % -----------------------------------------------------------------
+% \subsection{Proof of Lemma~\ref{lem:5:1stUpperBound}}
+% \label{proof:5:1stUpperBound}
+
+% Recall that we want to upper bound
+% $ (b) : = \sum_{k \in \Mbest} (\mu_k - \mu_{M*}) \left(T - \E_{\mu}[T_k(T)]\right)$.
+% First, we observe that, for all $k\in \Mbest$,
+% \begin{eqnarray*}
+%   T - \E_{\mu}[T_k(T)] & \leq T - \E_{\mu}\left[\sum_{t=1}^T \indic(\exists j : A^j(t) = k)\right] \\
+%   & = \E_{\mu}\left[\sum_{t=1}^T \indic(\forall j, A_j(t) \neq k)\right] = \E_{\mu}\left[\sum_{t=1}^T \indic(k \notin \widehat{S}_t)\right],
+% \end{eqnarray*}
+% where we denote by $\widehat{S}_t = \{A^j(t), j \in \{1,\dots,M\}\}$ the set of selected arms at time $t$ (with no repetition). With this notation one can write
+% \begin{eqnarray*}
+%  (b) & \leq & (\mu_1 - \mu_{M^*})  \sum_{k \in \Mbest} \left(T - \E_{\mu}[T_k(T)]\right) \leq  (\mu_1 - \mu_{M^*})  \E_{\mu}\left[\sum_{k \in \Mbest} \sum_{t = 1}^T \indic(k \notin \widehat{S}_t)\right] \\
+%  & = &  (\mu_1 - \mu_{M^*})  \E_{\mu}\left[ \sum_{t = 1}^T \sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t)\right].
+% \end{eqnarray*}
+% The quantity $\sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t)$ counts the number of optimal arms that have not been selected at time $t$. For each mis-selection of an optimal arm, there either exists a sub-optimal arm that has been selected, or an arm in $\Mbest$ on which a collision occurs. Hence
+% \[\sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t) = \sum_{k \in \Mbest}\indic(C_k(t)) + \sum_{k \in \Mworst} \indic(\exists j : A^j(t) = k),\]
+% which yields
+% \[\E_{\mu}\left[ \sum_{t = 1}^T \sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t)\right] \leq \sum_{k \in \Mbest}\E_{\mu}\left[\cC_k(T)\right] + \sum_{k \in \Mworst} \E_{\mu}\left[T_k(T)\right]\]
+% and Lemma~\ref{lem:5:1stUpperBound} follows.
 
 
 % -----------------------------------------------------------------
@@ -233,67 +233,6 @@ for all $A \in \sigma(I_T)$, in particular for all $A \in \cF^j_T$.
 
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
-\section{The \RandTopM{} algorithm}
-\label{app:5:RandTopM}
-
-\TODOL{I should include this in the main text, it makes more sense to present RandTopM and then MCTopM !}
-
-We now state precisely the \RandTopM{} algorithm below in Algorithm~\ref{algo:5:RandTopM} (page \pageref{algo:5:RandTopM}).
-It is essentially the same algorithm as \MCTopM,
-but in a simpler version as the ``Chair'' aspect is removed, that is, there is no notion of state $s^j(t)$ (\cf{} Algorithm~\ref{algo:5:MCTopM}).
-%
-Player $j$ is always considered ``not fixed'',
-and a \emph{collision always forces a uniform sampling of the next arm} from $\TopM(t)$
-in the case of \RandTopM.
-
-
-\vspace*{-5pt}  % XXX remove if problem
-% \begin{small}  % XXX remove if problem
-  \begin{figure}[h!]
-      \begin{framed}  % XXX remove if problem
-      % \begin{small}  % XXX remove if problem
-      \centering
-      % Documentation at http://mirror.ctan.org/tex-archive/macros/latex/contrib/algorithm2e/doc/algorithm2e.pdf if needed
-      % Or https://en.wikibooks.org/wiki/LaTeX/Algorithms#Typesetting_using_the_algorithm2e_package
-      % \removelatexerror% Nullify \@latex@error % Cf. http://tex.stackexchange.com/a/82272/
-      \begin{algorithm}[H]
-          % XXX Options
-          % \LinesNumbered  % XXX Option to number the line
-          % \RestyleAlgo{boxed}
-          % XXX Input, data and output
-          % \KwIn{$K$ and policy $P^j$ for arms set $\{1,\dots,K\}$\;}
-          % \KwData{Data}
-          % \KwResult{Result}
-          % XXX Algorithm
-              Let $A^j(1) \sim \cU(\{1,\dots,K\})$ and $C^j(1)=\mathrm{False}$ \\
-              \For{$t = 0, \dots, T - 1$}{
-                  %
-                  \eIf{$A^j(t) \notin \TopM(t)$}{
-                    \eIf(\tcp*[f]{collision}){$C^j(t)$}{
-                      $A^j(t+1) \sim \cU \left(\TopM(t)\right)$
-                      \tcp*[f]{randomly switch}
-                      }(\tcp*[f]{randomly switch on an arm that had smaller UCB at $t-1$}){
-                        $A^j(t+1) \sim \cU \left(\TopM(t) \cap \left\{k : g_k^j(t-1) \leq g^j_{A^j(t)}(t-1)\right\}\right)$
-                      }
-                    }{
-                      $A^j(t+1) = A^j(t)$
-                      \tcp*[f]{stays on the same arm}
-                    }
-                  Play arm $A^j(t+1)$, get new observations (sensing and collision), \\
-                  Compute the indices $g^j_k(t+1)$ and set $\TopM(t+1)$ for next step.
-              }
-              \caption[The \RandTopM{} decentralized learning policy]{The \RandTopM{} decentralized learning policy (for a fixed underlying index policy $g^j$).}
-          \label{algo:5:RandTopM}
-      \end{algorithm}
-      % \end{small}  % XXX remove if problem
-      \end{framed}  % XXX remove if problem
-  \end{figure}
-% \end{small}  % XXX remove if problem
-\vspace*{-5pt}  % XXX remove if problem
-
-
-% -----------------------------------------------------------------
-% -----------------------------------------------------------------
 
 \section{Proofs Elements Related to Regret Upper Bounds}
 \label{proof:5:RegretUpperBounds}
@@ -326,7 +265,7 @@ Using \eqref{eq:5:KeyInclusion}, one can then upper bound the number of selectio
 %&= \sum_{t=1}^T \Pr\left( A^j(t) = k,\;\; \exists m \in\Mbest,\; g_m(t) < g_k(t) \right) \\
 &= \sum_{t=1}^T \Pr\left( A^j(t) = k,\;\; \exists m \in\{1,\dots,M\}:\; g_{m^*}^j(t) < g_k^j(t) \right).
 %
-\shortintertext{Considering the relative position of the upper-confidence bound $g_{m^*}^j(t)$ and the corresponding mean $\mu_m^* = \mu_{m^*}$, one can write the decomposition}
+\intertext{Considering the relative position of the upper-confidence bound $g_{m^*}^j(t)$ and the corresponding mean $\mu_m^* = \mu_{m^*}$, one can write the decomposition}
 \E_{\mu}[T_k^j(T)] &\leq \sum_{t=1}^T\Pr\left(A^j(t) = k,\;\; \exists m \in\{1,\dots,M\}:\; g_{m^*}(t) \leq g_k(t) , \forall m \in \{1,\dots,M\}: \;  g_{m^*}(t) \geq \mu_m^* \right)\\
 &\;\;\;\;\;\;\;\; + \sum_{t=1}^T\Pr\left( \exists m \in\{1,\dots,M\}: \; g_{m^*}(t) < \mu_m^* \right) \\
 &\leq \sum_{t=1}^T\Pr\left(A^j(t) = k,\;\; \exists m \in\{1,\dots,M\}:\; \mu_{m}^* \leq g_k(t)\right)+ \sum_{m=1}^M\sum_{t=1}^T\Pr\left(g_{m^*}(t) < \mu_m^* \right) \\

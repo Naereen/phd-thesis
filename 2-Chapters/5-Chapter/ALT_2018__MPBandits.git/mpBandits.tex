@@ -1,13 +1,13 @@
 % - ``Multi-Player Bandits Revisited'', see https://hal.inria.fr/hal-01629733
 
-Multi-player Multi-Armed Bandits (MAB) have been extensively studied in the literature, motivated by applications to Cognitive Radio systems.
-Driven by such applications as well, we motivate the introduction of several levels of feedback for multi-player MAB algorithms.
-Existing works assume that \emph{sensing information} is available to the algorithm. Under this assumption, we improve the state-of-the-art lower bound for the regret of any decentralized algorithms of a certain class.
-We introduce two algorithms, \RandTopM{} and \MCTopM{}, that are shown to empirically outperform existing algorithms. Moreover, we provide strong theoretical guarantees for these algorithms, including
-a notion of asymptotic optimality in terms of the number of selections of bad arms.
-We then introduce a promising heuristic, called \Selfish{}, that can operate
-without sensing information, which is crucial for emerging applications to Internet of Things networks. We investigate the empirical performance of this algorithm
-and provide some first theoretical elements for the understanding of its behavior.
+% Multi-player Multi-Armed Bandits (MAB) have been extensively studied in the literature, motivated by applications to Cognitive Radio systems.
+% Driven by such applications as well, we motivate the introduction of several levels of feedback for multi-player MAB algorithms.
+% Existing works assume that \emph{sensing information} is available to the algorithm. Under this assumption, we improve the state-of-the-art lower bound for the regret of any decentralized algorithms (of a certain class).
+% We introduce two algorithms, \RandTopM{} and \MCTopM{}, that are shown to empirically outperform existing algorithms. Moreover, we provide strong theoretical guarantees for these algorithms, including
+% a notion of asymptotic optimality in terms of the number of selections of bad arms.
+% We then introduce a promising heuristic, called \Selfish{}, that can operate
+% without sensing information, which is crucial for emerging applications to Internet of Things networks. We investigate the empirical performance of this algorithm
+% and provide some first theoretical elements for the understanding of its behavior.
 
 
 
@@ -41,9 +41,9 @@ and provide some first theoretical elements for the understanding of its behavio
 
 % the need for multiple players in cognitive radio
 
-For the development of CR, a crucial step is to insert \emph{multiple} $M \geq 2$ smart devices in the \emph{same} background traffic.
+For the development of Cognitive Radio, a crucial step is to insert \emph{multiple} smart devices in the \emph{same} background traffic (at least $M \geq 2$).
 With the presence of a central controller that can assign the devices to separate channels, this amounts to choosing at each time step \emph{several} arms of a MAB in order to maximize the global rewards, and can thus be viewed as an application of the multiple-play bandit, introduced by \cite{Anantharam87a} and recently studied by \cite{Komiyama15}.
-%who essentially proved that existing algorithms can be easily extended to the multiple-play case, with provable guarantees on their regret.
+They essentially proved that existing algorithms can be easily extended to the multiple-play case, with provable guarantees on their regret.
 % In the context of CR, this first extension can model a centralized agent taking decisions for end-devices, for instance a base station affecting devices to channels.
 % Multiple-Play MAB algorithms successfully used for other Cognitive Radio tasks,
 % for instance by \cite{Maghsudi16} for 5G small-cells or by \cite{Bonnefoi16} for Internet-of-Things (IoT) networks.
@@ -69,12 +69,17 @@ Thus, to take into account these new applications, algorithms with additional co
 Especially, the typical approach that combines a (single-player) bandit algorithm based on the sensing information --to learn the quality of the channels while targeting the best ones-- with a low-complexity decentralized collision avoidance protocol, is no longer possible.
 
 
-In this section, we take a step back and present the different feedback levels possible for multi-player MAB algorithms. For each of them, we propose algorithmic solutions supported by both experimental and theoretical guarantees. In the presence of sensing information, our contributions are a new problem-dependent regret lower bound, tighter than previous work, and the introduction of two algorithms, \RandTopM{} and \MCTopM{}. Both are shown to achieve an asymptotically optimal number of selections of the sub-optimal arms, and for \MCTopM{} we furthermore establish a logarithmic upper bound on the regret, that follows from a careful control of the number of collisions. In the absence of sensing information, we propose the \Selfish{} heuristic and investigate its performance. Our study of  this algorithm is supported by (promising) empirical performance and some first (disappointing) theoretical elements.
+In this chapter, we take a step back and present the different feedback levels possible for multi-player MAB algorithms. For each of them, we propose algorithmic solutions supported by both experimental and theoretical guarantees. In the presence of sensing information, our contributions are a new problem-dependent regret lower bound, tighter than previous work, and the introduction of two algorithms, \RandTopM{} and \MCTopM{}. Both are shown to achieve an asymptotically optimal number of selections of the sub-optimal arms, and for \MCTopM{} we furthermore establish a logarithmic upper bound on the regret, that follows from a careful control of the number of collisions. In the absence of sensing information, we propose the \Selfish{} heuristic and investigate its performance. Our study of this algorithm is supported by (promising) empirical performance and some first (disappointing) theoretical elements.
 
-The rest of the section is organized as follows.
+
+
+\paragraph{Outline.}
+%
+The rest of the chapter is organized as follows.
 We introduce the multi-player bandit model with three feedback levels in Section~\ref{sec:5:model}, and give a new regret lower bound in Section~\ref{sec:5:lowerbound}.
-The \RandTopM, \MCTopM{} and \Selfish{} algorithms are introduced in Section~\ref{sec:5:algorithms}, with the result of our experimental study reported in
-Section~\ref{sec:5:experiments}. Theoretical elements are then presented in Section~\ref{sec:5:upperbounds}.
+The \RandTopM, \MCTopM{} and \Selfish{} algorithms are introduced in Section~\ref{sec:5:algorithms},
+for which we present our theoretical analysis in Section~\ref{sec:5:upperbounds}.
+Finally, the result of our experimental study reported in Section~\ref{sec:5:experiments}.
 % and finally Section~\ref{sec:5:conclusion} concludes.
 
 
@@ -100,28 +105,35 @@ However we mention that our lower bound and all our algorithms (and their analys
 In the multi-player MAB setting, there are $M \in \{1,\dots,K\}$ players (or agents),
 that have to make decisions at some pre-specified time instants.
 At time step $t \in\mathbb{N},t\geq1$, player $j$ selects an arm $A^j(t)$, independently from the other players' selections.
-A \emph{collision} occurs at time $t$ if at least two players choose the same arm.
-We introduce the two events, for $j\in\{1,\dots,M\}$ and $k\in\{1,\dots,K\}$,
-\begin{equation}
-  C^j(t) :=  \{ \exists j' \neq j : A^{j'}(t) = A^j(t) \}
-  \ \ \ \text{and} \ \ \ C_k(t) :=  \left\{ \# \{ j : A^j(t) = k\} > 1 \right\},
-\end{equation}
-that respectively indicate that a collision occurs at time $t$ for player $j$ and that a collision occurs at time $t$ on arm $k$.
+
+\begin{definition}
+  A \emph{collision} occurs at time $t$ if at least two players choose the same arm.
+  We introduce the two events, for $j\in\{1,\dots,M\}$ and $k\in\{1,\dots,K\}$,
+  \begin{equation}
+    C^j(t) :=  \{ \exists j' \neq j : A^{j'}(t) = A^j(t) \}
+    \ \ \ \text{and} \ \ \ C_k(t) :=  \left\{ \# \{ j : A^j(t) = k\} > 1 \right\},
+  \end{equation}
+  that respectively indicate that a collision occurs at time $t$ for player $j$ and that a collision occurs at time $t$ on arm $k$.
+\end{definition}
+
 Each player $j$ then receives (and observes) the \emph{binary rewards}
 $r^j(t) \in \{0,1\}$,
 \begin{equation}
   r^j(t) := Y_{A^j(t),t} \; \indic(\overline{C^j(t)}).
 \end{equation}
-In words, she receives the reward of the selected arm if she is the only one to select this arm, and a reward zero otherwise\footnote{This provides another reason to focus on the Bernoulli model. It is the hardest model, in the sense that receiving a reward zero is not enough to detect collisions. For other models, the data streams $(Y_{k,s})_s$ are usually continuously distributed, with no mass at zero. Hence receiving $r^j(t) = 0$ directly gives $\indic(C^j(t)) = 1$.}.
-Other models for rewards loss have been proposed in the literature (\eg, the reward is randomly allocated to one of the players selecting it), but we focus on full reward occlusion in this Section.
+In words, she receives the reward of the selected arm if she is the only one to select this arm, and a reward zero otherwise.
+This provides another reason to focus on the Bernoulli model. It is the hardest model, in the sense that receiving a reward zero is not enough to detect collisions. For other models, the data streams $(Y_{k,s})_s$ are usually continuously distributed, with no mass at zero. Hence receiving $r^j(t) = 0$ directly gives $\indic(C^j(t)) = 1$.
+Other models for rewards loss have been proposed in the literature, for instance the reward is randomly allocated to one of the players selecting it, but we focus on full reward occlusion in this chapter.
 
 
-A multi-player MAB strategy is a tuple $\rho = (\rho^1,\dots,\rho^M)$ of arm selection strategies for each player, and the goal is to propose a strategy that maximizes the total reward of the system, under some constraints.
+A multi-player MAB strategy is a tuple $\rho = (\rho^1,\dots,\rho^M)$ of arm selection strategies for of each of the $M$ players, and the goal is to propose a strategy that maximizes the total reward of the system, under some constraints.
 First, each player $j$ should adopt a \emph{sequential} strategy $\rho^j$, that decides which arm to select at time $t$ based on \emph{previous observations}.
 Previous observations for player $j$ at time $t$ always include the previously chosen arms $A^j(s)$ and received rewards $r^j(s)$ for $s<t$, but may also include the \emph{sensing information} $Y_{A^j(t),t}$ or the \emph{collision information} $C^j(t)$.
 More precisely, depending on the application, one may consider the following three observation models, \modelun, \modeldeux{} and \modeltrois.
-%
-% If the arms have continuous distributions (or are such that  $\Pr(Y_{k,s}=0)=0$), the \emph{sensing information} $Y_{A^j(t),t}$ and \emph{collision information} $C^j(t)$ can always be extracted from the reward information. But for Bernoulli distribution, one may consider the following three observation models, that are not equivalent:
+
+If the arms have continuous distributions (or are such that  $\Pr(Y_{k,s}=0)=0$), the \emph{sensing information} $Y_{A^j(t),t}$ and \emph{collision information} $C^j(t)$ can always be extracted from the reward information.
+But for Bernoulli distributions, one may consider the following three observation models, that are not equivalent:
+
 \begin{itemize}
   \item[\modelun]
     \textbf{Simultaneous sensing and collision}: player $j$ observes  $Y_{A^j(t),t}$ \emph{and} $C^j(t)$ (not previously studied).
@@ -139,7 +151,8 @@ More precisely, depending on the application, one may consider the following thr
     However, the sensing and collision information are censored.
     Recently, our work presented in Chapter~\ref{chapter:4} \cite{Bonnefoi17} presented the first (bandit-based) algorithmic solutions under this (harder) feedback model, in a slightly different setup, more suited to large scale IoT applications. %\footnote{\cite{Bonnefoi17} considers a different setting, more suited for large-scale IoT networks, and a future work will be to extend our work to this setting with more than $K$ players but small probability of activations.}.
 \end{itemize}
-\noindent Under each of these three models, we define $\cF^j_t$ to be the filtration generated by the observations gathered by player $j$ up to time $t$ (which contains different information under models \modelun, \modeldeux{} and \modeltrois).
+
+Under each of these three models, we define $\cF^j_t$ to be the filtration generated by the observations gathered by player $j$ up to time $t$ (which contains different information under models \modelun, \modeldeux{} and \modeltrois).
 While a \emph{centralized} algorithm may select the vector of actions for all players $(A^1(t),\dots,A^M(t))$ based on all the observations from $\bigcup_j \cF^j_{t-1}$, under a \emph{decentralized} algorithm the arm selected at time $t$ by player $j$ only depends on the past observation of this player.
 More formally, $A^j(t)$ is assumed to be $\cF^j_{t-1}$-measurable.
 
@@ -151,18 +164,22 @@ More formally, $A^j(t)$ is assumed to be $\cF^j_{t-1}$-measurable.
   %
   Similarly, \Mworst{} denotes the set of indices of the $K-M$ arms with smallest means (\emph{worst arms}),
   $\{1, \dots, K\} \setminus \Mbest$.
-  %
+
   Note that they are both uniquely defined if $\mu_M^* > \mu_{M+1}^*$.
 \end{definition}
 
 Following a natural approach in the bandit literature, we evaluate the performance of a multi-player strategy using the \emph{expected regret} (later simply referred to as regret), that measures the performance gap with respect to the best possible strategy.
 The regret of the strategy $\rho$ at horizon $T$ is the difference between the cumulated reward of an oracle strategy, assigning in this case the $M$ players to \Mbest,
 and the cumulated reward of strategy $\rho$:
-\begin{equation}\label{eq:5:regret}
-  R_T(\boldsymbol{\mu}, M, \rho) := \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M r^j(t)\right].
-\end{equation}
-Maximizing the expected sum of global reward of the system is indeed equivalent to minimizing the regret, and we now investigate the best possible \emph{regret rate} of a decentralized multi-player algorithm.
 
+\begin{definition}
+  The excepted centralized multi-player regret is defined by
+  \begin{equation}\label{eq:5:regret}
+    R_T(\boldsymbol{\mu}, M, \rho) := \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M r^j(t)\right].
+  \end{equation}
+\end{definition}
+
+With this definition, maximizing the expected sum of global reward of the system is indeed equivalent to minimizing the regret, and we investigate the best possible \emph{regret rate} of a decentralized multi-player algorithm in the next section.
 
 
 
@@ -191,72 +208,164 @@ We introduce additional notations in the following definition.
 % \end{definition}
 
 % \begin{definition}[]\label{def:5:nbCollisions}
-  Let $\cC_k(T)$ be the \emph{number of colliding players}\footnote{When $n$ players choose arm $k$ at time $t$, this counts as $n$ collisions, not just one. So $\cC_k(T)$ counts the total \emph{number of colliding players} rather than the number of collision events. Hence there is small abuse of notation when calling it a number of collisions.}
-  on arm $k\in\{1,\dots,K\}$ up to horizon $T$:
-  \vspace*{-5pt}  % XXX
+  Let $\cC_k(T)$ be the \emph{number of colliding players} on arm $k\in\{1,\dots,K\}$ up to horizon $T$:
+  % \vspace*{-5pt}  % XXX
   \begin{equation}
     \cC_k(T) :=
     \sum_{t=1}^{T} \sum_{j=1}^{M} \indic(C^j(t)) \indic(A^j(t) = k).
   \end{equation}
 \end{definition}
 
+Note that when $n$ players choose arm $k$ at time $t$, this counts as $n$ collisions, not just one. So $\cC_k(T)$ counts the total \emph{number of colliding players} rather than the number of collision events. Hence there is small abuse of notation when calling it a number of collisions.
+
 Letting $\cP_M = \left\{ \boldsymbol{\mu} \in [0,1]^K : \mu_M^* > \mu_{M+1}^*\right\}$
 be the set of bandit instances such that there is a strict gap between the $M$ best arms and the other arms, we now provide a regret decomposition for any $\boldsymbol{\mu} \in \cP_M$.
 
 \begin{lemma}\label{lem:5:DecompositionRegret}
   For any bandit instance $\boldsymbol{\mu}\in\cP_M$ such that $\mu_M^* > \mu_{M+1}^*$, it holds that
-  \hfill{}
-  (Proved in App.\ref{proof:5:DecompositionRegret})
-  \vspace*{-5pt}  % XXX
-  \begin{small}
-    \begin{equation*}\label{eq:5:termeundeuxtermetrois}
-      R_T(\boldsymbol{\mu}, M, \rho) =
-      \underbrace{\sum_{k \in \Mworst} (\mu_M^* -  \mu_k) \E_{\mu}[T_k(T)]}_{\emph{\mytag{(a)}{eq:5:term1}}}
-      + \underbrace{\sum_{k \in \Mbest} (\mu_k -  \mu_M^*) (T - \E_{\mu}[T_k(T)])}_{\emph{\mytag{(b)}{eq:5:term2}}}
-      + \underbrace{\sum_{k=1}^{K} \mu_k \E_{\mu}[\cC_k(T)]}_{\emph{\mytag{(c)}{eq:5:term3}}}.
-    \end{equation*}
-  \end{small}
+  % \vspace*{-5pt}  % XXX
+  % \begin{small}
+    \begin{align}\label{eq:5:termeundeuxtermetrois}
+      R_T(\boldsymbol{\mu}, M, \rho) &=
+      \underbrace{\sum_{k \in \Mworst} (\mu_M^* -  \mu_k) \E_{\mu}[T_k(T)]}_{\emph{\mytag{(a)}{eq:5:term1}}} \\
+      & \;\;\;\;\;\;
+      + \;\; \underbrace{\sum_{k \in \Mbest} (\mu_k -  \mu_M^*) (T - \E_{\mu}[T_k(T)])}_{\emph{\mytag{(b)}{eq:5:term2}}}
+      + \;\; \underbrace{\sum_{k=1}^{K} \mu_k \E_{\mu}[\cC_k(T)]}_{\emph{\mytag{(c)}{eq:5:term3}}}. \nonumber
+    \end{align}
+  % \end{small}
 \end{lemma}
 
-In this decomposition, term \ref{eq:5:term1} counts the lost rewards due to \emph{sub-optimal arms} selections ($k \in \Mworst$), term \ref{eq:5:term2} counts the number of times the \emph{best arms} were \emph{not} selected ($k \in \Mbest$), and term \ref{eq:5:term3} counts the weighted number of collisions, on \emph{all arms}. It is valid for both centralized and decentralized algorithms. For centralized algorithms, due to the absence of collisions, \ref{eq:5:term3} is obviously zero, and \ref{eq:5:term2} is non-negative, as $T_k(T) \leq T$. For decentralized algorithms, \ref{eq:5:term3} may be significantly large, and term \ref{eq:5:term2} may be negative, as many collisions on arm $k$ may lead to $T_k(T) > T$. However, a careful manipulation of this decomposition (see Appendix~\ref{proof:5:1stLowerBound}) shows that the regret is always lower bounded by term \ref{eq:5:term1}.
+In this decomposition, term \ref{eq:5:term1} counts the lost rewards due to \emph{sub-optimal arms} selections ($k \in \Mworst$), term \ref{eq:5:term2} counts the number of times the \emph{best arms} were \emph{not} selected ($k \in \Mbest$), and term \ref{eq:5:term3} counts the weighted number of collisions, on \emph{all arms}.
+
+\begin{proof}
+  Using the definition of regret $R_T$ from \eqref{eq:5:regret}, and this collision indicator $\eta^j(t):=\indic(\overline{C^j(t)})$,
+  \begin{align*}
+    R(T)
+    &= \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M Y_{A^j(t),t} \eta^j(t) \right]
+     = \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M \mu_{A^j(t)} \eta^j(t)\right]
+    \intertext{The last equality comes from the linearity of expectations, and the fact that $\E_{\mu}[Y_{k,t}] = \mu_k$ (for all $t$, from the \iid{} hypothesis), and the independence from $A^j(t)$, $\eta^j(t)$ and $Y_{k,t}$ (observed \emph{after} playing $A^j(t)$). So $\E_{\mu}[Y_{A^j(t),t} \eta^j(t)] = \sum_{k} \E_{\mu}[\mu_k \indic(A^j(t),t) \eta^j(t)] = \E_{\mu}[\mu_{A^j(t)} \eta^j(t)]$. And so}
+    R(T)
+    &= \E_{\mu}\left[ \sum_{t=1}^{T}\sum_{j \in \Mbest} \mu_j
+      - \sum_{t=1}^{T} \sum_{j=1}^{M} \mu_{A^j(t)} \eta^j(t) \right] \\
+      % &= \underbrace{\left( \frac{1}{M} \sum_{j \in \Mbest} \mu_j \right)}_{:= \overline{\mu}^*} (T M)
+    &= \left( \frac{1}{M} \sum_{j \in \Mbest} \mu_j \right)
+      - \sum_{k=1}^{K} \sum_{j=1}^{M} \mu_k \E_{\mu}\left[ T^j_k(T) \right]
+      + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
+    %
+    \intertext{For the first term, we have $T M = \sum\limits_{k=1}^{K} \sum\limits_{j=1}^{M} \E_{\mu}\left[ T^j_k(T)\right]$, and if we denote $\overline{\mu}^* := \frac{1}{M} \sum\limits_{j \in \Mbest} \mu_j$ the average mean of the $M$-best arms, then,}
+    %
+    &= \sum_{k=1}^{K} \sum_{j=1}^{M} (\overline{\mu}^* - \mu_k) \E_{\mu}\left[ T^j_k(T) \right]
+      + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
+    %
+    \intertext{Let $\overline{\Delta_k} := \overline{\mu}^* - \mu_k$ be the gap between the mean of the arm $k$ and the $M$-best average mean, and if $M^*$ denotes the index of the worst of the $M$-best arms (\ie, $M^* = \arg\min_{k\in\Mbest}(\mu_k)$), then by splitting $\{1,\dots,K\}$ into three disjoint sets $\Mbest \cupdot \Mworst = (\Mbest\setminus\{M^*\}) \cupdot \{M^*\} \cupdot \Mworst$, we get}
+    %
+    &= \sum_{k \in \Mbest\setminus\{M\}} \overline{\Delta_k} \E_{\mu}\left[ T_k(T) \right]
+      + \overline{\Delta_{M^*}} \E_{\mu}\left[ T_{M^*}(T) \right] \\
+      &\;\;\;\;\;\;\;\; + \sum_{k \in \Mworst} \overline{\Delta_k} \E_{\mu}\left[ T_k(T) \right]
+      + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
+    %
+    \intertext{But for $k = M^*$, $T_{M^*}(T) = T M^* - \sum\limits_{k \in \Mbest\setminus\{M\}} \E_{\mu}\left[ T_k(T) \right] - \sum\limits_{k \in \Mworst} \E_{\mu}\left[ T_k(T) \right]$, so by recombining the terms, we obtain,}
+    %
+    &= \sum_{k \in \Mbest\setminus\{M\}} (\overline{\Delta_k} - \overline{\Delta_{M^*}}) \E_{\mu}\left[ T_k(T) \right]
+      + \overline{\Delta_{M^*}} T M^* \\
+      &\;\;\;\;\;\;\;\; + \sum_{k \in \Mworst} (\overline{\Delta_k} - \overline{\Delta_{M^*}}) \E_{\mu}\left[ T_k(T) \right]
+      + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
+  \end{align*}
+  %
+  The term $\overline{\Delta_k} - \overline{\Delta_{M^*}}$ simplifies to $\mu_{M^*} - \mu_k$, and so $\overline{\Delta_{M^*}} = \frac{1}{M} \sum_{k=1}^{M} \mu_k - \mu_{M^*}$ by definition of $\overline{\mu}^*$. And for $k=M^*$, $\mu_{M^*} - \mu_k = 0$, so the first sum can be written for $k = 1,\dots,M$ only, soIt
+  %
+  % \vspace*{5pt}
+  \begin{align*}
+    R(T)
+    &= \sum_{k \in \Mbest} (\mu_{M^*} - \mu_k) \E_{\mu}\left[ T_k(T) \right]
+      + \sum_{k \in \Mbest} (\mu_k - \mu_{M^*}) T \\
+      &\;\;\;\;\;\;\;\; + \sum_{k \in \Mworst} (\mu_{M^*} - \mu_k) \E_{\mu}\left[ T_k(T) \right]
+      + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right]
+  \end{align*}
+  And so we obtain the decomposition with three terms \ref{eq:5:term1}, \ref{eq:5:term2} and \ref{eq:5:term3}.
+  \begin{align*}
+  R(T)
+    & = \sum_{k \in \Mbest} (\mu_k - \mu_{M^*}) \left(T - \E_{\mu}\left[ T_k(T) \right]\right) \\
+      & \;\; + \sum_{k \in \Mworst} (\mu_{M^*} - \mu_k) \E_{\mu}\left[ T_k(T) \right]
+      + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
+  \end{align*}
+  Which is exactly the decomposition we wanted to prove.
+\end{proof}
+
+
+The regret decomposition in Lemma~\ref{lem:5:DecompositionRegret} is valid for both centralized and decentralized algorithms.
+For centralized algorithms, due to the absence of collisions, \ref{eq:5:term3} is obviously zero, and \ref{eq:5:term2} is non-negative, as $T_k(T) \leq T$. For decentralized algorithms, \ref{eq:5:term3} may be significantly large, and term \ref{eq:5:term2} may be negative, as many collisions on arm $k$ may lead to $T_k(T) > T$.
+However, a careful manipulation of this decomposition shows that the regret is always lower bounded by term \ref{eq:5:term1}.
 
 \begin{lemma}\label{lem:5:1stLowerBound}
     For any strategy $\rho$ and $\boldsymbol{\mu}\in\cP_M$, it holds that
-    $ R_T(\boldsymbol{\mu}, M, \rho)    \geq \sum\limits_{k \in \Mworst} (\mu_M^*- \mu_k) \E_{\mu}[T_k(T)]$.
+    \begin{align*}
+        R_T(\boldsymbol{\mu}, M, \rho)    \geq \sum\limits_{k \in \Mworst} (\mu_M^*- \mu_k) \E_{\mu}[T_k(T)].
+    \end{align*}
 \end{lemma}
+
+\begin{proof}
+  Note that term \ref{eq:5:term3} is clearly lower bounded by $0$
+  but it is not obvious for \ref{eq:5:term2} as there is no reason for $T_k(T)$ to be upper bounded by $T$.
+  %
+  Let $T_k^{!}(T) := \sum_{t=1}^{T} \indic(\exists! j, A^j(t)=k)$,
+  where the notation $\exists!$ stands for ``there exists a unique''.
+  Then $T_k(T) = \sum_{t=1}^{T} \sum_{j=1}^{M} \indic(A^j(t) = k)$ can be decomposed as
+  \begin{equation*}
+    T_k(T) = \sum_{t=1}^{T} \indic(\exists! j, A^j(t) = k) + \sum_{t=1}^{T} \sum_{j=1}^{M} c_{k,t} \indic(A^j(t) = k)
+    = T_k^{!}(T) + C_k(T).
+  \end{equation*}
+  By focusing on the two terms $\ref{eq:5:term2} + \ref{eq:5:term3}$ from the decomposition of $R_T(\boldsymbol{\mu}, M, \rho)$ from Lemma~\ref{lem:5:DecompositionRegret}, we have
+  \begin{align*}
+    \ref{eq:5:term2} + \ref{eq:5:term3} &=
+    \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[T_k^!(T)])
+    + \sum_{k \in \Mbest} \mu_M^* \E_{\mu}[C_k(T)] \\
+    & \;\;\;\;\;\; + \sum_{k=1}^{M} \mu_k \E_{\mu}[C_k(T)]
+    - \sum_{k \in \Mbest} \mu_k \E_{\mu}[C_k(T)] \\
+    &=
+    \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[T_k^!(T)])
+    + \sum_{k \in \Mbest} \mu_M^* \E_{\mu}[C_k(T)]
+    + \sum_{k \in \Mworst} \mu_k \E_{\mu}[C_k(T)] \\
+    &=
+    \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[T_k^!(T)])
+    + \sum_{k=1}^{M} \min(\mu_M^*, \mu_k) \E_{\mu}[C_k(T)].
+  \end{align*}
+  And now both terms are non-negative, as $T_k^!(T) \leq T$, $\min(\mu_M^*, \mu_k)\geq 0$, and $C_k(T) \geq 0$, so $\ref{eq:5:term2} + \ref{eq:5:term3} \geq 0$
+  which proves that $R_T(\boldsymbol{\mu}, M, \rho) \geq \ref{eq:5:term1}$, as wanted.
+\end{proof}
 
 
 % -----------------------------------------------------------------
 \subsection{An improved asymptotic lower bound on the regret}
 \label{sub:5:betterLowerBound}
 
-To express our lower bound, we need to introduce $\kl(x,y)$ as the Kullback-Leibler divergence between the Bernoulli distribution of mean $x \neq 0,1$ and that of mean $y \neq 0,1$, so that $\kl(x,y) := x\log(x/y) + (1-x)\log((1-x)/(1-y))$.
+To express our lower bound, we need to introduce $\kl(x,y)$ as the Kullback-Leibler divergence between the Bernoulli distribution of mean $x$ and that of mean $y$, so that $\kl(x,y) := x\log(x/y) + (1-x)\log((1-x)/(1-y))$.
 %
 We first introduce the assumption under which we derive a regret lower bound, that generalizes a classical assumption made by \cite{LaiRobbins85} in single-player bandit models.
 
 \begin{definition}\label{def:5:DecentralizedUniformEfficiency}
   A strategy $\rho$  is \emph{\textbf{strongly uniformly efficient}} if for all $\boldsymbol{\mu} \in \cP_M$ and for all $\alpha \in (0,1)$,
-  \vspace*{-5pt}  % XXX
-  \begin{equation}
-    R_T(\boldsymbol{\mu},M,\rho) \mathop{=}\limits_{T \to +\infty} o(T^\alpha) \ \ \ \text{and } \ \
+  % \vspace*{-5pt}  % XXX
+  \begin{align}
+    & R_T(\boldsymbol{\mu},M,\rho) \mathop{=}\limits_{T \to +\infty} o(T^\alpha) \\
+    \text{and} & \;
     \forall j \in \{1,\dots,M\}, k \in \Mbest, \;\;
     % a_{j,k}
     \frac{T}{M}
     - \E_{\mu}[T^j_k(T)] \mathop{=}\limits_{T \to +\infty} o(T^{\alpha}).
     \label{eq:5:SUE}
-  \end{equation}
+  \end{align}
 \end{definition}
 
 
-Having a small regret on every problem instance,
-\ie, uniform efficiency,
+Having a small regret on every problem instance, \ie, being uniformly efficient,
 is a natural assumption for algorithms,
 that rules out algorithms tuned to perform well on specific instances only.
 %
 From this assumption $\left(R_T(\boldsymbol{\mu},M,\rho)=o(T^\alpha)\right)$ and the decomposition of Lemma~\ref{lem:5:DecompositionRegret} one can see\footnote{With some arguments used in the proof of Lemma~\ref{lem:5:1stLowerBound} to circumvent the fact that \ref{eq:5:term2} may be negative.} that for every $k \in \Mbest$,
 ${T}- \E_{\mu}[T_k(T)] {=} o(T^{\alpha})$, and so
 \begin{equation}\label{eq:5:intermediate}
-  \vspace*{-5pt}  % XXX
+  % \vspace*{-5pt}  % XXX
   \sum_{j =1}^M\left(\frac{T}{M} - \E_{\mu}[T^j_k(T)]\right) = o(T^{\alpha}).
   % \vspace*{-5pt}  % XXX
 \end{equation}
@@ -267,14 +376,14 @@ This result, proved in Appendix~\ref{proof:5:BetterLowerBound}, yields an asympt
 
 \begin{theorem}\label{thm:5:BetterLowerBound}
   Under observation models $\modelun$ and $\modeldeux$, for any strongly uniformly efficient \emph{decentralized} policy $\rho$ and $\boldsymbol{\mu}\in\cP_M$,
-  \vspace*{-10pt}  % XXX
+  % \vspace*{-10pt}  % XXX
   \begin{equation}\label{eq:5:LBDraws}
     \forall j \in \{1,\dots,M\}, \ \forall k \in \Mworst, \ \ \ \liminf_{T\to \infty} \frac{\E_{\mu}[T_k^j(T)]}{\log(T)} \geq \frac{1}{\kl(\mu_k, \mu_M^*)}.
   \end{equation}
 
   % \vspace{-0.3cm}  % XXX
   \noindent From Lemma~\ref{lem:5:1stLowerBound}, it follows that
-  \vspace*{-5pt}  % XXX
+  % \vspace*{-5pt}  % XXX
   \begin{equation}\label{eq:5:ourLowerBound}
     \mathop{\lim\inf}\limits_{T \to +\infty} \frac{R_T(\boldsymbol{\mu}, M, \rho)}{\log(T)}
     \geq M \times \left( \sum_{k \in \Mworst} \frac{(\mu_M^* -  \mu_k)}{\kl(\mu_k, \mu_M^*)} \right) .
@@ -301,7 +410,9 @@ Indeed, for an algorithm to attain the lower bound \eqref{eq:5:ourLowerBound}, t
 To the best of our knowledge, no algorithm has been shown to experience only $o(\log(T))$ collisions so far,
 for every $M \in \{2,\dots,K\}$ and $\boldsymbol{\mu} \in \cP_M$.
 
-A lower bound on the minimal number of collisions experienced by any strongly uniformly efficient decentralized algorithm would thus be a nice complement to our Theorem~\ref{thm:5:BetterLowerBound}, and it is left as future work.
+Since our article \cite{Besson2018ALT}, we kept as a future work the following question.
+A lower bound on the minimal number of collisions experienced by any strongly uniformly efficient decentralized algorithm would thus be a nice complement to our Theorem~\ref{thm:5:BetterLowerBound}.
+
 
 \TODOL{Rewrite this to include new knowledge presented in Appendix of \cite{KaufmannAbbas19}.}
 
@@ -310,24 +421,44 @@ A lower bound on the minimal number of collisions experienced by any strongly un
 \subsection{Towards regret upper bounds}
 
 A natural approach to obtain an upper bound on the regret of an algorithm is to upper bound separately each of the three terms defined in Lemma~\ref{lem:5:DecompositionRegret}.
-The following result shows that term $(b)$ can be related to the number of sub-optimal selections and the number of collisions that occurs on the $M$ best arms.
+The following result shows that term \ref{eq:5:term2} can be related to the number of sub-optimal selections and the number of collisions that occurs on the $M$ best arms.
 
 % \vspace*{-15pt}  % XXX remove if problem
 \begin{lemma}\label{lem:5:1stUpperBound}
-  The term $(b)$ in Lemma~\ref{lem:5:DecompositionRegret} is upper bounded as
-  \hfill{}
-  (Proved in Appendix~\ref{proof:5:1stUpperBound})
+  The term \ref{eq:5:term2} in Lemma~\ref{lem:5:DecompositionRegret} is upper bounded as
+  % \hfill{}
+  % (Proved in Appendix~\ref{proof:5:1stUpperBound})
   %
   \begin{equation}\label{eq:5:1stUpperBound}
-    (b) \leq (\mu_1^* - \mu_M^*) \Bigl(    \sum_{k \in \Mworst} \E_{\mu}[T_k(T)]
+    \ref{eq:5:term2} \leq (\mu_1^* - \mu_M^*) \Bigl(    \sum_{k \in \Mworst} \E_{\mu}[T_k(T)]
     + \sum_{k \in \Mbest} \E_{\mu}[C_{k}(T)]
     \Bigr).
   \end{equation}
-  \vspace*{-5pt}  % XXX
+  % \vspace*{-5pt}  % XXX
 \end{lemma}
 
+\begin{proof}
+  Recall that we want to upper bound
+  $ \ref{eq:5:term2} : = \sum_{k \in \Mbest} (\mu_k - \mu_{M*}) \left(T - \E_{\mu}[T_k(T)]\right)$.
+  First, we observe that, for all $k\in \Mbest$,
+  \begin{eqnarray*}
+    T - \E_{\mu}[T_k(T)] & \leq T - \E_{\mu}\left[\sum_{t=1}^T \indic(\exists j : A^j(t) = k)\right] \\
+    & = \E_{\mu}\left[\sum_{t=1}^T \indic(\forall j, A_j(t) \neq k)\right] = \E_{\mu}\left[\sum_{t=1}^T \indic(k \notin \widehat{S}_t)\right],
+  \end{eqnarray*}
+  where we denote by $\widehat{S}_t = \{A^j(t), j \in \{1,\dots,M\}\}$ the set of selected arms at time $t$ (with no repetition). With this notation one can write
+  \begin{eqnarray*}
+  \ref{eq:5:term2} & \leq & (\mu_1 - \mu_{M^*})  \sum_{k \in \Mbest} \left(T - \E_{\mu}[T_k(T)]\right) \leq  (\mu_1 - \mu_{M^*})  \E_{\mu}\left[\sum_{k \in \Mbest} \sum_{t = 1}^T \indic(k \notin \widehat{S}_t)\right] \\
+  & = &  (\mu_1 - \mu_{M^*})  \E_{\mu}\left[ \sum_{t = 1}^T \sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t)\right].
+  \end{eqnarray*}
+  The quantity $\sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t)$ counts the number of optimal arms that have not been selected at time $t$. For each mis-selection of an optimal arm, there either exists a sub-optimal arm that has been selected, or an arm in $\Mbest$ on which a collision occurs. Hence
+  \[\sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t) = \sum_{k \in \Mbest}\indic(C_k(t)) + \sum_{k \in \Mworst} \indic(\exists j : A^j(t) = k),\]
+  which yields
+  \[\E_{\mu}\left[ \sum_{t = 1}^T \sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t)\right] \leq \sum_{k \in \Mbest}\E_{\mu}\left[\cC_k(T)\right] + \sum_{k \in \Mworst} \E_{\mu}\left[T_k(T)\right]\]
+  and Lemma~\ref{lem:5:1stUpperBound} follows.
+\end{proof}
 
-This result can also be used to recover Proposition 1 from \cite{Anandkumar11}, giving an upper bound on the regret that only depends on
+
+This result can also be used to recover Proposition~1 from \cite{Anandkumar11}, giving an upper bound on the regret that only depends on
 the \emph{expected number of sub-optimal selections} -- $\E_{\mu}[T_k(T)]$ for $k \in \Mworst$ --
 and the \emph{expected number of colliding players on the optimal arms} -- $\E_{\mu}[\cC_k(T)]$ for $k \in \Mbest$. Note that, in term (c) the number of colliding players on the sub-optimal arm $k$ may be upper bounded as $\E_{\mu}[\cC_k(T)] \leq M \E_{\mu}[T_k(T)]$.
 %
@@ -378,8 +509,10 @@ To circumvent this problem, several coordination mechanisms have emerged, that r
 
 % RhoRand
 
-While the \TDFS{} algorithm \citep{Zhao10} relies on the player agreeing in advance on the time steps at which they will target each of the $M$ best indices  (even though some alternative without pre-agreement are proposed),
-the \rhoRand{} algorithm \citep{Anandkumar11} relies on randomly selected \emph{ranks}. %\footnote{\rhoRand{} only works if $M$ is known, and \cite{Anandkumar11} extended it to the case of an unknown $U$, with \rhoRandEst. Extending our algorithms for the case of unknown number of players $M$ is an interesting future work.}.
+On the first hand, the \TDFS{} algorithm \citep{Zhao10} relies on the player agreeing in advance on the time steps at which they will target each of the $M$ best indices.
+Even though some alternative without pre-agreement are proposed, they are quite complicated and we prefer to focus on other approaches.
+%
+On the other hand, the \rhoRand{} algorithm \citep{Anandkumar11} relies on randomly selected \emph{ranks}. %\footnote{\rhoRand{} only works if $M$ is known, and \cite{Anandkumar11} extended it to the case of an unknown $U$, with \rhoRandEst. Extending our algorithms for the case of unknown number of players $M$ is an interesting future work.}.
 %
 More formally, letting $\pi(k,\mathbf{g})$ be the index of the $k$-th largest entry in a vector $\mathbf{g}$,
 % (for $k\in\{1,\dots,K\}$),
@@ -388,24 +521,83 @@ and selects at time $t$,
 \begin{equation}
   A^j(t) := \pi\left(R^j(t), [g^j_\ell(t)]_{\ell=1,\dots,K}\right).
 \end{equation}
-If a collision occurs, a new rank is drawn uniformly at random: $R^j(t+1) \sim \cU(\{1,\dots,M\})$.
+If a collision occurs, a new rank is drawn uniformly at random, $R^j(t+1) \sim \cU(\{1,\dots,M\})$.
 
 
 % Now, our algorithms !!
 
-We now propose two alternatives to this strategy, that do not rely on ranks and rather randomly fix themselves on one \emph{arm} in $\TopM(t)$, that is defined as the set of arms that have the $M$ largest indices:
+We now propose two alternatives to this strategy, that do not rely on ranks and rather randomly fix themselves on one \emph{arm} in $\TopM(t)$, that is defined as the set of arms that have the $M$ largest indices (at the current time $t$ and for player $j$),
 \begin{equation}
   \TopM(t) := \left\{ \pi\left(k, \{g^j_\ell(t)\}_{\ell=1,\dots,K}\right), k=1,\dots,M\right\}.
 \end{equation}
 
-Our proposal \MCTopM{} is stated below as Algorithm~\ref{algo:5:MCTopM},
-while a simpler variant, called \RandTopM{},
-is stated as Algorithm~\ref{algo:5:RandTopM} in Appendix~\ref{app:5:RandTopM}.
-We focus on \MCTopM{} as it is easier to analyze and performs better.
+
+% \vspace*{-5pt}  % XXX remove if problem
+% \begin{small}  % XXX remove if problem
+  \begin{figure}[h!]
+      \begin{framed}  % XXX remove if problem
+      % \begin{small}  % XXX remove if problem
+      \centering
+      % Documentation at http://mirror.ctan.org/tex-archive/macros/latex/contrib/algorithm2e/doc/algorithm2e.pdf if needed
+      % Or https://en.wikibooks.org/wiki/LaTeX/Algorithms#Typesetting_using_the_algorithm2e_package
+      % \removelatexerror% Nullify \@latex@error % Cf. http://tex.stackexchange.com/a/82272/
+      \begin{algorithm}[H]
+          % XXX Options
+          % \LinesNumbered  % XXX Option to number the line
+          % \RestyleAlgo{boxed}
+          % XXX Input, data and output
+          % \KwIn{$K$ and policy $P^j$ for arms set $\{1,\dots,K\}$\;}
+          % \KwData{Data}
+          % \KwResult{Result}
+          % XXX Algorithm
+              Let $A^j(1) \sim \cU(\{1,\dots,K\})$ and $C^j(1)=\mathrm{False}$ \\
+              \For{$t = 0, \dots, T - 1$}{
+                  %
+                  \eIf{$A^j(t) \notin \TopM(t)$}{
+                    \eIf(\tcp*[f]{collision}){$C^j(t)$}{
+                      $A^j(t+1) \sim \cU \left(\TopM(t)\right)$
+                      \tcp*[f]{randomly switch}
+                      }(\tcp*[f]{randomly switch on an arm that had smaller UCB at $t-1$}){
+                        $A^j(t+1) \sim \cU \left(\TopM(t) \cap \left\{k : g_k^j(t-1) \leq g^j_{A^j(t)}(t-1)\right\}\right)$
+                      }
+                    }{
+                      $A^j(t+1) = A^j(t)$
+                      \tcp*[f]{stays on the same arm}
+                    }
+                  Play arm $A^j(t+1)$, get new observations (sensing and collision), \\
+                  Compute the indices $g^j_k(t+1)$ and set $\TopM(t+1)$ for next step.
+              }
+              \caption[The \RandTopM{} decentralized learning policy]{The \RandTopM{} decentralized learning policy (for a fixed underlying index policy $g^j$).}
+          \label{algo:5:RandTopM}
+      \end{algorithm}
+      % \end{small}  % XXX remove if problem
+      \end{framed}  % XXX remove if problem
+  \end{figure}
+% \end{small}  % XXX remove if problem
+% \vspace*{-5pt}  % XXX remove if problem
+
+
+\paragraph{The \RandTopM{} algorithm.}
+%
+First, we precisely state the \RandTopM{} algorithm above in Algorithm~\ref{algo:5:RandTopM}.
+It is essentially a refinement over the \RhoRand{} algorithm, and a simpler version of \MCTopM.
+The difference with \MCTopM{} is that the later algorithm introduces a concept of a ``Chair'', by considering a binary ``being fixed'' state $s^j(t)$, as presented in Algorithm~\ref{algo:5:MCTopM} below.
+%
+In \RandTopM{}, player $j$ is always considered ``not fixed'',
+and a \emph{collision always forces a uniform sampling of the next arm} from $\TopM(t)$.
+
+
+
+
+\paragraph{The \MCTopM{} algorithm.}
+%
+Our second proposal \MCTopM{} is stated below as Algorithm~\ref{algo:5:MCTopM},
+it is a slightly more complex extension of the \RandTopM{} algorithm.
+From there on, we focus on \MCTopM{} as it is easier to analyze and performs better.
 %
 Both algorithms ensure that player $j$ always
-selects at time $t+1$ an arm from $\TopM(t)$. When a collision occurs \RandTopM{} randomly switches arm within $\TopM$, while \MCTopM{} uses a more sophisticated mechanism, that is reminiscent of ``Musical Chair'' (MC) and inspired by the work of \cite{Rosenski16}: players tend to fix themselves on arms (``chairs'') and ignore future collision when this happens.
-
+selects at time $t+1$ an arm from $\TopM(t)$.
+When a collision occurs for a player implementing the \RandTopM{} algorithm, that player randomly switches arm within $\TopM$, while \MCTopM{} uses a more sophisticated mechanism, that is reminiscent of ``Musical Chair'' (MC) and inspired by the work of \cite{Rosenski16}: players tend to fix themselves on arms (``chairs'') and ignore future collision when this happens.
 
 
 % \vspace*{-5pt}  % XXX remove if problem
@@ -458,7 +650,7 @@ selects at time $t+1$ an arm from $\TopM(t)$. When a collision occurs \RandTopM{
       \end{framed}  % XXX remove if problem
   \end{figure}
 % \end{small}  % XXX remove if problem
-\vspace*{-5pt}  % XXX remove if problem
+% \vspace*{-5pt}  % XXX remove if problem
 
 
 More precisely, under \MCTopM,
@@ -488,7 +680,29 @@ In this case, a new arm is sampled uniformly from $\TopM(t)$ (Lines~$6$-$8$).
 This stationary aspect helps to minimize the number of collisions,
 as well as the number of switches of arm.
 %
-The five different transitions $(1)$, $(2)$, $(3)$, $(4)$, $(5)$ refer to the notations used in the analysis of \MCTopM{} (see Figure~\ref{fig:5:StateMachineAlgorithm_MCTopM} in Appendix~\ref{proof:5:collisionsMCTopM}).
+The five different transitions $(1)$, $(2)$, $(3)$, $(4)$, $(5)$ refer to the notations used in the analysis of \MCTopM, and they are illustrated in Figure~\ref{fig:5:StateMachineAlgorithm_MCTopM} below.
+
+\begin{figure}[h!]
+  \resizebox{1.00\textwidth}{!}{
+  \begin{tikzpicture}[>=latex',line join=bevel,scale=5]
+      %
+      \node (start) at (1.5,0.30) {$(0)$ Start $t=0$};
+      \node (notfixed) at (1,0) [draw,rectangle,thick] {Not fixed, $\overline{s^j(t)}$};
+      \node (fixed) at (0,0) [draw,rectangle,thick] {Fixed, $s^j(t)$};
+      %
+      \draw [black,->] (start) -> (notfixed.20);
+      \draw [color=cyan,thick,->] (notfixed) to[bend right] node[midway,above,text width=5cm,text centered,black] {\small $(1)$ $\overline{C^j(t)}, A^j(t) \in \TopM(t)$} (fixed);
+      \path [color=blue,thick,->] (notfixed) edge[loop right] node[right,text width=4cm,text badly centered,black] {\small $(2)$  $C^j(t), A^j(t) \in \TopM(t)$} (1);
+      \path [color=red,thick,->] (notfixed) edge[loop below] node[below,text centered,black] {\small $(3)$  $A^j(t) \notin \TopM(t)$} (1);
+      \path [color=darkgreen,thick,->] (fixed) edge[loop left] node[left,text width=2.9cm,text badly centered,black] {\small $(4)$ $A^j(t) \in \TopM(t)$} (fixed);
+      \draw [color=red,thick,->] (fixed) to[bend right] node[midway,below,text centered,black] {\small $(5)$  $A^j(t) \notin \TopM(t)$} (notfixed);
+      %
+  \end{tikzpicture}
+  }
+  \caption[``State-machine'' representation of \MCTopM]{Player $j$ using \MCTopM, represented as ``state machine'' with $5$ transitions.
+  Taking one of the five transitions means playing one round of the Algorithm~\ref{algo:5:MCTopM}, to decide $A^j(t+1)$ using information of previous steps.}
+  \label{fig:5:StateMachineAlgorithm_MCTopM}
+\end{figure}
 
 
 
@@ -543,135 +757,24 @@ However, in most cases it empirically performs similarly to all the algorithms d
 and usually outperforms \rhoRand,
 even if it neither exploits the sensing information, nor the knowledge of the number of players $M$.
 %
-As such, practitioners may still be interested by the algorithm, especially for Cognitive Radio applications in which sensing is hard or not considered.
-
-
+Practitioners may still be interested by the algorithm, especially for Cognitive Radio applications in which sensing is hard or not considered.
 
 % -----------------------------------------------------------------
 
 
 
 % -----------------------------------------------------------------
-\section{Numerical simulations}
-\label{sec:5:experiments}
-% -----------------------------------------------------------------
-
-
-% Select one problems, max two cases ($M=K$ and $M < K$), and illustrate what we want to discuss in plots with regret in normal scale, one with semi-$\log x$ scale, and at least one histogram showing the bad luck for \Selfish...
-
-% Selfish is awesome... unless $K=M=2$! Not only, we found other case of failure.
-
-% Chose one problem $\boldsymbol{\mu}$, and vary $M \leq K$ for let say $K=3$ and $K=9$. Not more figures.
-% Put most of them in appendix.
-
-
-We illustrate here the empirical performances of the algorithms presented in Section~\ref{sec:5:algorithms}, used in combination with the \klUCB{} indices.
-Some plots are at pages \pageref{fig:5:MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems} and \pageref{fig:5:MP__K9_M6_T10000_N1000__4_algos} and most of them in Appendix~\ref{app:5:plotsFromSec5}.
-
-\TODOL{Rewrite appendix to include all simulations here!}
-
-\TODOL{Include here some plots showing \RhoRand{} with \UCB{} and \klUCB{} vs \MCTopM{} with \UCB{} and \klUCB{}.}
-
-In experiments that are not reported here, we could observe that using \klUCB{} rather than \UCB{} indices always yield better practical performance.
-%, as the theoretical guarantees for single player suggested,
-As the purpose of this work is not to optimize on the index policy, but rather propose new ways of using indices in a decentralized setting,
-% And for some configurations, using a decentralized approach with a more efficient index family (\klUCB{} instead of \UCB) has better performances than the centralized approach.
-we only report results for \klUCB.
-In a first set of experiments, \MCTopM{}, \RandTopM{} and \Selfish{} are benchmarked against the state-of-the-art \RhoRand{} algorithm.
-We also include a centralized multiple-play \klUCB{} algorithm,
-%as defined by \cite{Anantharam87a},
-essentially to check that the \emph{``price of decentralized learning''} is not too large.
-
-%
-
-We present results for two bandit instance: one with $K=3$ arms and means %\footnote{But of course the means are unknown to the algorithms, and their order is not important.}
-$\boldsymbol{\mu} = [0.1, 0.5, 0.9]$, for which two cases $M=2$ and $M=3$ are presented in Figure~\ref{fig:5:selfish_fail1}. For the second instance $K=9$ and $\boldsymbol{\mu} = [0.1, 0.2, \dots, 0.9]$,
-three cases are presented: $M=6$ in Figure~\ref{fig:5:MP__K9_M6_T10000_N1000__4_algos},
-and for the two limit cases $M=2$ and $M=9=K$ in Figure~\ref{fig:5:MP__K9_M2-6-9_T10000_N200__4_algos}.
-% Note the different algorithms know the number of players $M$.
-Performance is measured with the \emph{expected} regret up to horizon $T=10000$, estimated based on $1000$ repetitions on the same bandit instance. %, from $t=1$ to the horizon $T=10000$ (also unknown by the algorithms),
-We also include histograms showing the \emph{distribution} of regret at $t=T$,
-as this allows to check if the regret is indeed small for \emph{each} run of the simulation.
-%
-For the plots showing the regret, our \emph{asymptotic} lower bound from Theorem~\ref{thm:5:BetterLowerBound} is displayed.
-% and it should be surprising to see it being larger than some regret values: it is only asymptotic.
-
-Experiments with a different problem for each repetition (uniformly sampled $\boldsymbol{\mu} \sim \cU([0,1]^K)$),
-are also considered, in Figure~\ref{fig:5:MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems} and \ref{fig:5:MP__K9_M2_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems}.
-This helps to check that no matter the \emph{complexity} of the considered problem (one measure of complexity being the constant in our lower bound),
-\MCTopM{} performs similarly or better than all the other algorithms,
-and \Selfish{} outperforms \rhoRand{} in most cases.
-%Figure~\ref{fig:5:MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems} is a good example
-%of outstanding performances of \MCTopM{} and \Selfish{} in comparison to \rhoRand{}.
-Empirically, our proposals were found to almost always outperform \rhoRand{}, and except for \Selfish{} that can fail badly on problems with small $K$,
-we verified that \MCTopM{} outperforms the state-of-the-art algorithms in many different problems, and is more and more efficient as $M$ and $K$ grows.
-
-
-
-%
-% Regular plots of centralized regrets
-%
-\begin{figure}[!h]
-  \centering
-  % \begin{subfigure}[!h]{0.49\textwidth}
-  %   \includegraphics[width=1.00\textwidth]{MP__K9_M2_T5000_N500__4_algos/all_RegretCentralized____env1-1_3251433209347345969.pdf}
-  % \end{subfigure}
-  % % ~
-  % \begin{subfigure}[!h]{0.49\textwidth}
-    \includegraphics[width=1.00\textwidth]{MP__K9_M6_T5000_N500__4_algos/all_RegretCentralized____env1-1_8318947830261751207.pdf}
-  % \end{subfigure}
-  \caption[Regret for $M=6$ players, $K=9$ arms, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled]{Regret for $M=6$ players, $K=9$ arms, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled in $[0,1]^K$. \rhoRand{} (top \textcolor{blue}{blue} curve) is outperformed by the other algorithms (and the gain increases with $M$). \MCTopM{} (bottom \textcolor{gold}{yellow}) outperforms all the other algorithms is most cases.}
-  % \label{fig:5:MP__K9_M2-6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems}
-  \label{fig:5:MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems}
-  % \vspace*{-15pt}  % XXX remove if problem
-\end{figure}
-
-
-
-% Dynamic settings, when $M$ can change in time,
-% were considered in the analysis of both
-In the presence of sensing (observation model \modeldeux), we also compared our algorithms to  %multi-player multi-armed bandits algorithms
-with \MEGA{} \citep{Avner15} and \MusicalChair{} \citep{Rosenski16}. Yet these two algorithms were found hard to use efficiently in practice and we show in
-% that were also proposed
-%
-Figure~\ref{fig:5:MP__K9_M3_T123456_N100__8_algos} that they perform poorly in comparison to \rhoRand, \RandTopM{} and \MCTopM.
-%
-\MEGA{} needs a careful tuning of \emph{five} parameters ($c$, $d$, $p_0$, $\alpha$ and $\beta$) to attain reasonable performances. No good guideline for tuning them is provided and using cross validation, as suggested,
-can be considered out of the scope of online sequential learning.
-%In practice, on a fixed instance, the authors do not indicate how to select the parameters, even with a perfect knowledge of the parameters ($\boldsymbol{\mu}$ and $T$).
-%
-\MusicalChair{} consists of a random exploration phase of length $T_0$ after which the players quickly converge to orthogonal strategies targeting the $M$ best arms. With probability $1-\delta$, its regret is proved to be ``constant'' (of order $\log(1/\delta)$). The theoretical minimal value for $T_0$ depends on $\delta$, on the horizon $T$ and on a lower bound $\epsilon$ on the gap $\Delta = \mu^*_M - \mu^*_{M+1}$, and the practical tuning is hard too. %% which are both unavailable in our setting.
-
-
-
-\begin{figure}[!h]
-  \centering
-  % \begin{subfigure}[!h]{0.85\textwidth}
-    \includegraphics[width=1.00\textwidth]{MP__K9_M6_T10000_N1000__4_algos/all_RegretCentralized_loglog____env1-1_8200873569864822246.pdf}
-  % \end{subfigure}
-  % ~
-  % \begin{subfigure}[!h]{0.85\textwidth}
-    \includegraphics[width=1.00\textwidth]{MP__K9_M6_T10000_N1000__4_algos/all_HistogramsRegret____env1-1_8200873569864822246.pdf}
-  % \end{subfigure}
-  \caption[Regret for $M=6$ players for $K=9$ arms, horizon $T=5000$, for $1000$ repetitions on a fixed problem]{Regret (in log-log scale), for $M=6$ players for $K=9$ arms, horizon $T=5000$, for $1000$ repetitions on problem $\boldsymbol{\mu}=[0.1,\dots,0.9]$. \RandTopM{} (\textcolor{gold}{yellow} curve) outperforms \Selfish{} (\textcolor{darkgreen}{green}), both clearly outperform \rhoRand. The regret of \MCTopM{} is logarithmic, empirically with the same slope as the lower bound. The $x$ axis on the regret histograms have different scale for each algorithm.}
-  \label{fig:5:MP__K9_M6_T10000_N1000__4_algos}
-\end{figure}
-
-
-
-
-% -----------------------------------------------------------------
-\section{Theoretical elements}
+\section{Theoretical elements and order optimal regret upper bound for \MCTopM}
 \label{sec:5:upperbounds}
 % -----------------------------------------------------------------
 
 
 Section~\ref{sub:5:UpperBoundSelections} gives
 an asymptotically optimal analysis of the expected number of sub-optimal draws
-for \RandTopM, \MCTopM{} and \rhoRand{} combined with \klUCB{} indices,
-and Section~\ref{sub:5:UpperBoundCollisions} proves that the number of  collisions, hence the regret of \MCTopM{} are also logarithmic.
+for our two proposals \RandTopM{} and \MCTopM{} as well as for \rhoRand{}, when they are combined with \klUCB{} indices,
+and Section~\ref{sub:5:UpperBoundCollisions} proves that the number of collisions are logarithmic, and hence the regret of \MCTopM{} is also logarithmic.
 %
-Section~\ref{sub:5:SelfishFails} shortly discusses a disappointing result regarding \Selfish{}, with more insights provided in Appendix~\ref{app:5:SelfishFails}.
+Finally, Section~\ref{sub:5:SelfishFails} shortly discusses a disappointing result regarding \Selfish{}, with more insights provided in Appendix~\ref{app:5:SelfishFails}.
 
 
 % -----------------------------------------------------------------
@@ -748,10 +851,12 @@ that we can then bound by the number of changes of arms
 An interesting consequence of the proof of this result is that
 it also bounds the number of \emph{switches of arms}, $\sum_{t=1}^T \Pr(A^j(t+1) \neq A^j(t))$,
 and this additional guarantee was never clearly stated for previous state-of-the-art works, like \rhoRand.
-Even though minimizing switching was not a goal\footnote{Introducing \emph{switching costs}, like it was done in previous works, \eg, \cite{Koren17}, could be an interesting future work.},
+Even though minimizing the number of arms switching was not a goal,
 this guarantee is interesting for Cognitive Radio applications,
 where switching arms means re-configuring a radio hardware, an operation that costs energy.
-%and thus an algorithm guaranting a small number of switches is interesting.
+An algorithm guaranteeing a small number of switches is interesting.
+%
+We note that introducing \emph{switching costs}, like it was done in previous works like \cite{Koren17}, could be an interesting future work.
 
 \begin{lemma}\label{lem:5:collisionsMCTopM}
   For any $\boldsymbol{\mu}\in\cP_M$,
@@ -797,6 +902,115 @@ it follows from our regret decomposition (Lemma~\ref{lem:5:DecompositionRegret})
 
 The analysis of \Selfish{} is harder, but we tried our best to obtain some understanding of the behavior of this algorithm, that seems to be doing surprisingly well in many contexts, as in our experiments with $K=9$ arms and in extensive experiments not reported in this section. However, a disappointing result is that we found simple problems, usually with small number of arms, for which the algorithm may fail. For example with $M=2$ or $M=3$ players competing for $K=3$ arms,
 with means $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$, the histograms in Figure~\ref{fig:5:selfish_fail1} suggests that with a small probability, the regret $R_T$ of \Selfish-\klUCB{} can be very large. We provide a discussion in Appendix~\ref{app:5:SelfishFails} about when such situations may happen, including a conjectured (constant, but small) lower bound on the probability that \Selfish{} experience collision almost at every round. This result would then prevent \Selfish{} from having a logarithmic regret. However, it is to be noted that the lower bound of Theorem~\ref{thm:5:BetterLowerBound} does not apply to the censored observation model \modeltrois{} under which \Selfish{} operates, and it is not known yet whether logarithmic regret is at all possible.
+
+
+
+% -----------------------------------------------------------------
+\section{Numerical simulations}
+\label{sec:5:experiments}
+% -----------------------------------------------------------------
+
+
+% Select one problems, max two cases ($M=K$ and $M < K$), and illustrate what we want to discuss in plots with regret in normal scale, one with semi-$\log x$ scale, and at least one histogram showing the bad luck for \Selfish...
+
+% Selfish is awesome... unless $K=M=2$! Not only, we found other case of failure.
+
+% Chose one problem $\boldsymbol{\mu}$, and vary $M \leq K$ for let say $K=3$ and $K=9$. Not more figures.
+% Put most of them in appendix.
+
+
+We illustrate here the empirical performances of the algorithms presented in Section~\ref{sec:5:algorithms}, used in combination with the \klUCB{} indices.
+Some plots are at pages \pageref{fig:5:MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems} and \pageref{fig:5:MP__K9_M6_T10000_N1000__4_algos} and most of them in Appendix~\ref{app:5:plotsFromSec5}.
+
+\TODOL{Rewrite appendix to include all simulations here!}
+
+\TODOL{Include here some plots showing \RhoRand{} with \UCB{} and \klUCB{} vs \MCTopM{} with \UCB{} and \klUCB{}.}
+
+In experiments that are not reported here, we could observe that using \klUCB{} rather than \UCB{} indices always yield better practical performance.
+%, as the theoretical guarantees for single player suggested,
+As the purpose of this work is not to optimize on the index policy, but rather propose new ways of using indices in a decentralized setting,
+% And for some configurations, using a decentralized approach with a more efficient index family (\klUCB{} instead of \UCB) has better performances than the centralized approach.
+we only report results for \klUCB.
+In a first set of experiments, \MCTopM{}, \RandTopM{} and \Selfish{} are benchmarked against the state-of-the-art \RhoRand{} algorithm.
+We also include a centralized multiple-play \klUCB{} algorithm,
+%as defined by \cite{Anantharam87a},
+essentially to check that the \emph{``price of decentralized learning''} is not too large.
+
+%
+
+We present results for two bandit instance: one with $K=3$ arms and means %\footnote{But of course the means are unknown to the algorithms, and their order is not important.}
+$\boldsymbol{\mu} = [0.1, 0.5, 0.9]$, for which two cases $M=2$ and $M=3$ are presented in Figure~\ref{fig:5:selfish_fail1}. For the second instance $K=9$ and $\boldsymbol{\mu} = [0.1, 0.2, \dots, 0.9]$,
+three cases are presented: $M=6$ in Figure~\ref{fig:5:MP__K9_M6_T10000_N1000__4_algos},
+and for the two limit cases $M=2$ and $M=9=K$ in Figure~\ref{fig:5:MP__K9_M2-6-9_T10000_N200__4_algos}.
+% Note the different algorithms know the number of players $M$.
+Performance is measured with the \emph{expected} regret up to horizon $T=10000$, estimated based on $1000$ repetitions on the same bandit instance. %, from $t=1$ to the horizon $T=10000$ (also unknown by the algorithms),
+We also include histograms showing the \emph{distribution} of regret at $t=T$,
+as this allows to check if the regret is indeed small for \emph{each} run of the simulation.
+%
+For the plots showing the regret, our \emph{asymptotic} lower bound from Theorem~\ref{thm:5:BetterLowerBound} is displayed.
+% and it should be surprising to see it being larger than some regret values: it is only asymptotic.
+
+Experiments with a different problem for each repetition,
+that is uniformly sampled $\boldsymbol{\mu} \sim \cU([0,1]^K)$,
+are also considered, in Figure~\ref{fig:5:MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems} and \ref{fig:5:MP__K9_M2_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems}.
+This helps to check that no matter the \emph{complexity} of the considered problem (one measure of complexity being the constant in our lower bound),
+\MCTopM{} performs similarly or better than all the other algorithms,
+and \Selfish{} outperforms \rhoRand{} in most cases.
+%Figure~\ref{fig:5:MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems} is a good example
+%of outstanding performances of \MCTopM{} and \Selfish{} in comparison to \rhoRand{}.
+Empirically, our proposals were found to almost always outperform \rhoRand{}, and except for \Selfish{} that can fail badly on problems with small $K$,
+we verified that \MCTopM{} outperforms the state-of-the-art algorithms in many different problems, and is more and more efficient as $M$ and $K$ grows.
+
+
+
+%
+% Regular plots of centralized regrets
+%
+\begin{figure}[!h]
+  % \centering
+  % \begin{subfigure}[!h]{0.49\textwidth}
+  %   \includegraphics[width=1.00\textwidth]{MP__K9_M2_T5000_N500__4_algos/all_RegretCentralized____env1-1_3251433209347345969.pdf}
+  % \end{subfigure}
+  % % ~
+  % \begin{subfigure}[!h]{0.49\textwidth}
+    \includegraphics[width=1.10\textwidth]{MP__K9_M6_T5000_N500__4_algos/all_RegretCentralized____env1-1_8318947830261751207.pdf}
+  % \end{subfigure}
+  \caption[Regret for $M=6$ players, $K=9$ arms, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled]{Regret for $M=6$ players, $K=9$ arms, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled in $[0,1]^K$. \rhoRand{} (top \textcolor{blue}{blue} curve) is outperformed by the other algorithms (and the gain increases with $M$). \MCTopM{} (bottom \textcolor{gold}{yellow}) outperforms all the other algorithms is most cases.}
+  % \label{fig:5:MP__K9_M2-6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems}
+  \label{fig:5:MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems}
+  % \vspace*{-15pt}  % XXX remove if problem
+\end{figure}
+
+
+
+% Dynamic settings, when $M$ can change in time,
+% were considered in the analysis of both
+In the presence of sensing (observation model \modeldeux), we also compared our algorithms to  %multi-player multi-armed bandits algorithms
+with \MEGA{} \citep{Avner15} and \MusicalChair{} \citep{Rosenski16}. Yet these two algorithms were found hard to use efficiently in practice and we show in
+% that were also proposed
+%
+Figure~\ref{fig:5:MP__K9_M3_T123456_N100__8_algos} that they perform poorly in comparison to \rhoRand, \RandTopM{} and \MCTopM.
+%
+\MEGA{} needs a careful tuning of \emph{five} parameters ($c$, $d$, $p_0$, $\alpha$ and $\beta$) to attain reasonable performances. No good guideline for tuning them is provided and using cross validation, as suggested,
+can be considered out of the scope of online sequential learning.
+%In practice, on a fixed instance, the authors do not indicate how to select the parameters, even with a perfect knowledge of the parameters ($\boldsymbol{\mu}$ and $T$).
+%
+\MusicalChair{} consists of a random exploration phase of length $T_0$ after which the players quickly converge to orthogonal strategies targeting the $M$ best arms. With probability $1-\delta$, its regret is proved to be ``constant'' (of order $\log(1/\delta)$). The theoretical minimal value for $T_0$ depends on $\delta$, on the horizon $T$ and on a lower bound $\epsilon$ on the gap $\Delta = \mu^*_M - \mu^*_{M+1}$, and the practical tuning is hard too. %% which are both unavailable in our setting.
+
+
+
+\begin{figure}[!h]
+  \centering
+  % \begin{subfigure}[!h]{0.85\textwidth}
+    \includegraphics[width=1.00\textwidth]{MP__K9_M6_T10000_N1000__4_algos/all_RegretCentralized_loglog____env1-1_8200873569864822246.pdf}
+  % \end{subfigure}
+  % ~
+  % \begin{subfigure}[!h]{0.85\textwidth}
+    \includegraphics[width=1.00\textwidth]{MP__K9_M6_T10000_N1000__4_algos/all_HistogramsRegret____env1-1_8200873569864822246.pdf}
+  % \end{subfigure}
+  \caption[Regret for $M=6$ players for $K=9$ arms, horizon $T=5000$, for $1000$ repetitions on a fixed problem]{Regret (in log-log scale), for $M=6$ players for $K=9$ arms, horizon $T=5000$, for $1000$ repetitions on problem $\boldsymbol{\mu}=[0.1,\dots,0.9]$. \RandTopM{} (\textcolor{gold}{yellow} curve) outperforms \Selfish{} (\textcolor{darkgreen}{green}), both clearly outperform \rhoRand. The regret of \MCTopM{} is logarithmic, empirically with the same slope as the lower bound. The $x$ axis on the regret histograms have different scale for each algorithm.}
+  \label{fig:5:MP__K9_M6_T10000_N1000__4_algos}
+\end{figure}
 
 
 
