@@ -119,14 +119,14 @@
 
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
-\section{Lower Bound: Proof of Theorem~\ref{thm:5:BetterLowerBound}}
+\subsection{Lower Bound: Proof of Theorem~\ref{thm:5:BetterLowerBound}}
 \label{proof:5:BetterLowerBound}
 
 \TODOL{Rewrite this to include new knowledge presented in Appendix of \cite{KaufmannAbbas19}.}
 
 
 % -----------------------------------------------------------------
-\subsection{Proof of Theorem~\ref{thm:5:BetterLowerBound}}
+\subsubsection{Proof of Theorem~\ref{thm:5:BetterLowerBound}}
 
 The lower bound that we present relies on the following \emph{change-of-distribution} lemma that we prove in the next section, following recent arguments from \cite{Garivier16TrueShape} that have to be adapted to incorporate the collision information.
 
@@ -184,7 +184,7 @@ Letting $\varepsilon$ go to zero gives the conclusion (as $\kl$ is continuous).
 
 % -----------------------------------------------------------------
 
-\subsection{Proof of Lemma~\ref{lem:5:CD}}
+\subsubsection{Proof of Lemma~\ref{lem:5:CD}}
 
 Under observation model \modelun{} and \modeldeux, the strategy $A^j(t)$ decides which arm to play based on the information contained in $I_{t-1}$, where $I_0 = U_0$ and
 \[\forall t > 0, \ \ I_t = (U_0,Y_1,C_1,U_1,\dots,Y_t,C_t,U_t)\]
@@ -234,112 +234,112 @@ for all $A \in \sigma(I_T)$, in particular for all $A \in \cF^j_T$.
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
 
-\section{Proofs Elements Related to Regret Upper Bounds}
-\label{proof:5:RegretUpperBounds}
+% \section{Proofs Elements Related to Regret Upper Bounds}
+% \label{proof:5:RegretUpperBounds}
 
-This Appendix includes the main proofs, missing from the content of the article,
-that yield the regret upper bound.
-We start by controlling the sub-optimal draws when the \klUCB{} indices are used (instead of \UCB),
-with any of our proposed algorithms (\MCTopM, \RandTopM) or \rhoRand{}. Then we focus on controlling collisions for \MCTopM-\klUCB.
+% This Appendix includes the main proofs, missing from the content of the article,
+% that yield the regret upper bound.
+% We start by controlling the sub-optimal draws when the \klUCB{} indices are used (instead of \UCB),
+% with any of our proposed algorithms (\MCTopM, \RandTopM) or \rhoRand{}. Then we focus on controlling collisions for \MCTopM-\klUCB.
 
-\subsection{Control of the Sub-optimal Draws for \klUCB: Proof of Lemma~\ref{lem:5:SubOptimalSelections}}
-\label{proof:5:SubOptimalSelections}
+% \subsection{Control of the Sub-optimal Draws for \klUCB: Proof of Lemma~\ref{lem:5:SubOptimalSelections}}
+% \label{proof:5:SubOptimalSelections}
 
-%
-%     Recall $g_k^j(t) \in \mathbb{R}$ denote the index of arm $k$ for user $j$ at time $t$.
-%     As only user $j$ is considered here, the superscript $j$ is dropped.
-%
-Fix $k\in\Mworst$ and a player $j \in \{1,\dots,M\}$.
-The key observation is that for \MCTopM, \RandTopM{} as well as the \rhoRand{} algorithm, it holds that
-\begin{equation}\left(A^j(t) = k\right) = \left(A^j(t) = k , \exists m \in \Mbest : g_m^j(t) < g_k^j(t) \right).\label{eq:5:KeyInclusion}\end{equation}
-Indeed, for the three algorithms, an arm selected at time $t+1$ belongs to the set $\TopM(t)$ of arms with $M$ largest indices.
-If the sub-optimal arm $k$ is selected at time $t$, it implies that $k \in \TopM(t)$, and, because there are $M$ arms in both \Mbest{} and $\TopM(t)$, one of the arms in \Mbest{} must be excluded from $\TopM(t)$.
-In particular, the index of arm $k$ must be larger than the index of this particular arm $m$.
-
-
-Using \eqref{eq:5:KeyInclusion}, one can then upper bound the number of selections of arm $k$ by user $j$ up to round $T$ as
-\begin{align*}
-\E_{\mu}[T_k^j(T)]
-&= \E_{\mu}\left[ \sum_{t=1}^T \mathbbm{1}\left( A^j(t) = k \right) \right]
-= \sum_{t=1}^T \Pr\left( A^j(t) = k \right).\\
-%&= \sum_{t=1}^T \Pr\left( A^j(t) = k,\;\; \exists m \in\Mbest,\; g_m(t) < g_k(t) \right) \\
-&= \sum_{t=1}^T \Pr\left( A^j(t) = k,\;\; \exists m \in\{1,\dots,M\}:\; g_{m^*}^j(t) < g_k^j(t) \right).
-%
-\intertext{Considering the relative position of the upper-confidence bound $g_{m^*}^j(t)$ and the corresponding mean $\mu_m^* = \mu_{m^*}$, one can write the decomposition}
-\E_{\mu}[T_k^j(T)] &\leq \sum_{t=1}^T\Pr\left(A^j(t) = k,\;\; \exists m \in\{1,\dots,M\}:\; g_{m^*}(t) \leq g_k(t) , \forall m \in \{1,\dots,M\}: \;  g_{m^*}(t) \geq \mu_m^* \right)\\
-&\;\;\;\;\;\;\;\; + \sum_{t=1}^T\Pr\left( \exists m \in\{1,\dots,M\}: \; g_{m^*}(t) < \mu_m^* \right) \\
-&\leq \sum_{t=1}^T\Pr\left(A^j(t) = k,\;\; \exists m \in\{1,\dots,M\}:\; \mu_{m}^* \leq g_k(t)\right)+ \sum_{m=1}^M\sum_{t=1}^T\Pr\left(g_{m^*}(t) < \mu_m^* \right) \\
-%
-&\leq
-\sum_{t=1}^T
-  \Pr\left( A^j(t) = k,\; \mu_{M^*} \leq g_k(t) \right)
-+
-\sum_{m=1}^M
-  \sum_{t=1}^T \Pr\left( g_{m^*}(t) < \mu_m^* \right),
-\end{align*}
-where the last inequality (for the first term) comes from the fact that $\mu_{M^*}$ is the smallest of the $\mu_{m^*}$ for $m \in \{1, \dots,M\}$.
-
-Now each of the two terms in the right hand side can directly be upper bounded using tools developed by \cite{KLUCBJournal} for the analysis of kl-UCB.
-The rightmost term can be controlled using Lemma~\ref{lem:5:Fact1KLUCB} below that relies on a self-normalized deviation inequality, whose proof exactly follows from the proof of Fact 1 in Appendix A of \cite{KLUCBJournal}.
-The leftmost term can be controlled using Lemma~\ref{lem:5:Fact2KLUCB} stated below, that is a direct consequence of the proof of Fact 2 in Appendix A of \cite{KLUCBJournal}.
+% %
+% %     Recall $g_k^j(t) \in \mathbb{R}$ denote the index of arm $k$ for user $j$ at time $t$.
+% %     As only user $j$ is considered here, the superscript $j$ is dropped.
+% %
+% Fix $k\in\Mworst$ and a player $j \in \{1,\dots,M\}$.
+% The key observation is that for \MCTopM, \RandTopM{} as well as the \rhoRand{} algorithm, it holds that
+% \begin{equation}\left(A^j(t) = k\right) = \left(A^j(t) = k , \exists m \in \Mbest : g_m^j(t) < g_k^j(t) \right).\label{eq:5:KeyInclusion}\end{equation}
+% Indeed, for the three algorithms, an arm selected at time $t+1$ belongs to the set $\TopM(t)$ of arms with $M$ largest indices.
+% If the sub-optimal arm $k$ is selected at time $t$, it implies that $k \in \TopM(t)$, and, because there are $M$ arms in both \Mbest{} and $\TopM(t)$, one of the arms in \Mbest{} must be excluded from $\TopM(t)$.
+% In particular, the index of arm $k$ must be larger than the index of this particular arm $m$.
 
 
-\begin{lemma}\label{lem:5:Fact1KLUCB}
-    For any arm $k$, if $g_k^{j}(t)$ is the \klUCB{} index with exploration function $f(t)=\log(t)+3\log\log(t)$,
-    \begin{equation}
-      \sum_{t=1}^T \Pr\left(g_k^{j}(t) < \mu_k\right) \leq 3 + 4e \log\log(T).
-    \end{equation}
-\end{lemma}
+% Using \eqref{eq:5:KeyInclusion}, one can then upper bound the number of selections of arm $k$ by user $j$ up to round $T$ as
+% \begin{align*}
+% \E_{\mu}[T_k^j(T)]
+% &= \E_{\mu}\left[ \sum_{t=1}^T \mathbbm{1}\left( A^j(t) = k \right) \right]
+% = \sum_{t=1}^T \Pr\left( A^j(t) = k \right).\\
+% %&= \sum_{t=1}^T \Pr\left( A^j(t) = k,\;\; \exists m \in\Mbest,\; g_m(t) < g_k(t) \right) \\
+% &= \sum_{t=1}^T \Pr\left( A^j(t) = k,\;\; \exists m \in\{1,\dots,M\}:\; g_{m^*}^j(t) < g_k^j(t) \right).
+% %
+% \intertext{Considering the relative position of the upper-confidence bound $g_{m^*}^j(t)$ and the corresponding mean $\mu_m^* = \mu_{m^*}$, one can write the decomposition}
+% \E_{\mu}[T_k^j(T)] &\leq \sum_{t=1}^T\Pr\left(A^j(t) = k,\;\; \exists m \in\{1,\dots,M\}:\; g_{m^*}(t) \leq g_k(t) , \forall m \in \{1,\dots,M\}: \;  g_{m^*}(t) \geq \mu_m^* \right)\\
+% &\;\;\;\;\;\;\;\; + \sum_{t=1}^T\Pr\left( \exists m \in\{1,\dots,M\}: \; g_{m^*}(t) < \mu_m^* \right) \\
+% &\leq \sum_{t=1}^T\Pr\left(A^j(t) = k,\;\; \exists m \in\{1,\dots,M\}:\; \mu_{m}^* \leq g_k(t)\right)+ \sum_{m=1}^M\sum_{t=1}^T\Pr\left(g_{m^*}(t) < \mu_m^* \right) \\
+% %
+% &\leq
+% \sum_{t=1}^T
+%   \Pr\left( A^j(t) = k,\; \mu_{M^*} \leq g_k(t) \right)
+% +
+% \sum_{m=1}^M
+%   \sum_{t=1}^T \Pr\left( g_{m^*}(t) < \mu_m^* \right),
+% \end{align*}
+% where the last inequality (for the first term) comes from the fact that $\mu_{M^*}$ is the smallest of the $\mu_{m^*}$ for $m \in \{1, \dots,M\}$.
 
-Denote $\kl'(x,y)$ the derivative of the function $x \mapsto \kl(x,y)$ (for any fixed $y\neq 0, 1$).
-
-\begin{lemma}\label{lem:5:Fact2KLUCB} For any arms $k$ and $k'$ such that $\mu_{k'} > \mu_{k}$, if $g_k^{j}(t)$ is the kl-UCB index with exploration function $f(t)$,
-\begin{align*}
-  &\sum_{t=1}^T\Pr\left( A^j(t) = k, \mu_{k'} \leq g_k^{j}(t) \right) & \leq  \frac{f(T)}{\kl(\mu_k,\mu_{k'})}
-  + \sqrt{2\pi} \sqrt{\frac{\kl'(\mu_k,\mu_{k'})^2}{\kl(\mu_k,\mu_{k'})^3}}\sqrt{f(T)} + 2\left(\frac{\kl'(\mu_k,\mu_{k'})}{\kl(\mu_k,\mu_{k'})}\right)^2 + 1.\end{align*}
-\end{lemma}
-
-Putting things together, one obtains the non-asymptotic upper bound
-\begin{align}\label{eq:5:UBprecise}
-  \E_{\mu}\left[T_k^j(T)\right]
-  & \leq \frac{\log(T) + 3 \log\log(T)}{\kl(\mu_k,\mu_{M^*})} + \sqrt{2\pi} \sqrt{\frac{\kl'(\mu_k,\mu_{M^*})^2}{\kl(\mu_k,\mu_{M*})^3}}\sqrt{\log(T) + 3\log\log(T)}  \nonumber\\
-  & \;\;\;\;\;\;+ 2\left(\frac{\kl'(\mu_k,\mu_{M^*})}{\kl(\mu_k,\mu_{M^*})}\right)^2 + 4Me \log\log(T) + 3M+1,
-\end{align}
-which yields Lemma~\ref{lem:5:SubOptimalSelections},
-with explicit constants $C_{\boldsymbol{\mu}}$ and $D_{\boldsymbol{\mu}}$.
+% Now each of the two terms in the right hand side can directly be upper bounded using tools developed by \cite{KLUCBJournal} for the analysis of kl-UCB.
+% The rightmost term can be controlled using Lemma~\ref{lem:5:Fact1KLUCB} below that relies on a self-normalized deviation inequality, whose proof exactly follows from the proof of Fact 1 in Appendix A of \cite{KLUCBJournal}.
+% The leftmost term can be controlled using Lemma~\ref{lem:5:Fact2KLUCB} stated below, that is a direct consequence of the proof of Fact 2 in Appendix A of \cite{KLUCBJournal}.
 
 
+% \begin{lemma}\label{lem:5:Fact1KLUCB}
+%     For any arm $k$, if $g_k^{j}(t)$ is the \klUCB{} index with exploration function $f(t)=\log(t)+3\log\log(t)$,
+%     \begin{equation}
+%       \sum_{t=1}^T \Pr\left(g_k^{j}(t) < \mu_k\right) \leq 3 + 4e \log\log(T).
+%     \end{equation}
+% \end{lemma}
 
-% --------------------------------------------------------------------------------
-\subsection{Proof of Lemma~\ref{lem:5:elementaryLemma_RandTopM_MCTopM}}\label{proof:5:elementaryLemma_RandTopM_MCTopM}
+% Denote $\kl'(x,y)$ the derivative of the function $x \mapsto \kl(x,y)$ (for any fixed $y\neq 0, 1$).
 
-Using the behavior of the algorithm when the current arm leaves the set $\TopM$ (Line 4), one has
-\begin{align*}
-  & \sum_{t=1}^T \bP\left(A^j(t) = k, k \notin \hat{M}^j(t)\right)  \\ & \leq \sum_{t=1}^T \bP\left(A^j(t) = k, k \notin \hat{M}^j(t), A^j(t+1) \in \TopM(t) \cap \{k': g_{k'}^j(t-1) \leq g_k^j(t-1)\}\right) \\
-  & \leq   \sum_{t=1}^T \sum_{k' \neq k}\bP\left(A^j(t) = k,A^j(t+1) = k', g_{k'}^j(t) \geq g_{k}^j(t), g_{k'}^j(t-1) \leq g_{k}^j(t-1)  \right) \\
-  & = \sum_{k' \neq k} \underbrace{\sum_{t=1}^T \bP\left(A^j(t) = k,A^j(t+1) = k', g_{k'}^j(t) \geq g_{k}^j(t), g_{k'}^j(t-1) \leq g_{k}^j(t-1)  \right)}_{:= T_{k'}}
-\end{align*}
+% \begin{lemma}\label{lem:5:Fact2KLUCB} For any arms $k$ and $k'$ such that $\mu_{k'} > \mu_{k}$, if $g_k^{j}(t)$ is the kl-UCB index with exploration function $f(t)$,
+% \begin{align*}
+%   &\sum_{t=1}^T\Pr\left( A^j(t) = k, \mu_{k'} \leq g_k^{j}(t) \right) & \leq  \frac{f(T)}{\kl(\mu_k,\mu_{k'})}
+%   + \sqrt{2\pi} \sqrt{\frac{\kl'(\mu_k,\mu_{k'})^2}{\kl(\mu_k,\mu_{k'})^3}}\sqrt{f(T)} + 2\left(\frac{\kl'(\mu_k,\mu_{k'})}{\kl(\mu_k,\mu_{k'})}\right)^2 + 1.\end{align*}
+% \end{lemma}
 
-Now, to control $T_{k'}$, we distinguish two cases. If $\mu_k < \mu_{k'}$, one can write
-\[T_{k'} \leq \sum_{t=1}^T \bP\left(g_{k'}^j(t) \leq \mu_{k'}\right) + \sum_{t=1}^T \bP\left(A^j(t) = k, g_{k}^j(t-1) \geq \mu_{k'}\right)\]
-The first term in the right hand side is $o(\log(T))$ by Lemma~\ref{lem:5:Fact1KLUCB}. To control the second term, we apply the same trick that led to the proof of Lemma~\ref{lem:5:Fact2KLUCB} in \cite{KLUCBJournal}.
-Letting $\kl^+(x, y) := \kl(x, y) \indic(x \geq y)$,
-and $\widehat{\mu}^j_{k,s}$ be the empirical mean of the $s$ first observations from arm $k$ by player $j$, one has
-\begin{align}
-  & \sum_{t=1}^T \bP\left(A^j(t) = k, g_{k}^j(t-1) \geq \mu_{k'}\right)
-  =  \bE \left[ \sum_{t=1}^T\sum_{s=1}^{t-1} \indic{\left(A^j(t) = k , N^j_k(t-1) = s\right)}\indic{\left( s  \times \kl^+\left(\widehat{\mu}_{k,s}^j , \mu_k\right) \leq f(t)\right)} \right]\nonumber\\
-  & \hspace{1cm} \leq \bE \left[ \sum_{s=1}^{T}\indic{\left( s \times \kl^+\left(\widehat{\mu}_{k,s}^j , \mu_k\right) \leq f(T)\right)}\sum_{t=s-1}^T \indic{\left(A^j(t) = k , N^j_k(t-1) = s\right)} \right] \nonumber \\
-  & \hspace{1cm}  \leq \sum_{s=1}^T \bP\left( s \times \kl^+\left(\widehat{\mu}_{k,s}^j , \mu_k\right) \leq f(T)\right),\label{eq:5:FromHere}
-\end{align}
-where the last inequality uses that for all $s$, \[\sum_{t=s-1}^T \indic{\left(A^j(t) = k , N^j_k(t-1) = s\right)} = \sum_{t=s-1}^T \indic{\left(A^j(t) = k , N^j_k(t) = s + 1\right)} \leq 1.\]
-From \eqref{eq:5:FromHere}, the same upper bound as that of Lemma~\ref{lem:5:Fact2KLUCB} can be obtained using the tools from \cite{KLUCBJournal}, which proves that for $T\to\infty$,
-\[T_{k'} = \frac{\log(T)}{\kl(\mu_k,\mu_{k'})} + o(\log(T)).\]
+% Putting things together, one obtains the non-asymptotic upper bound
+% \begin{align}\label{eq:5:UBprecise}
+%   \E_{\mu}\left[T_k^j(T)\right]
+%   & \leq \frac{\log(T) + 3 \log\log(T)}{\kl(\mu_k,\mu_{M^*})} + \sqrt{2\pi} \sqrt{\frac{\kl'(\mu_k,\mu_{M^*})^2}{\kl(\mu_k,\mu_{M*})^3}}\sqrt{\log(T) + 3\log\log(T)}  \nonumber\\
+%   & \;\;\;\;\;\;+ 2\left(\frac{\kl'(\mu_k,\mu_{M^*})}{\kl(\mu_k,\mu_{M^*})}\right)^2 + 4Me \log\log(T) + 3M+1,
+% \end{align}
+% which yields Lemma~\ref{lem:5:SubOptimalSelections},
+% with explicit constants $C_{\boldsymbol{\mu}}$ and $D_{\boldsymbol{\mu}}$.
 
-If $\mu_k > \mu_{k'}$, we rather use that
-\[T_{k'} \leq \sum_{t=1}^T \bP\left(g_{k}^j(t) \leq \mu_{k}\right) + \sum_{t=1}^T \bP\left(A^j(t+1) = k', g_{k'}^j(t) \geq \mu_{k}\right)\]
-and similarly Lemma~\ref{lem:5:Fact1KLUCB} and a slight variant of Lemma~\ref{lem:5:Fact2KLUCB} to deal with the modified time indices yields
-\[T_{k'} = \frac{\log(T)}{\kl(\mu_{k'},\mu_{k})} + o(\log(T)).\]
-Summing over $k'$ yields the result.
+
+
+% % --------------------------------------------------------------------------------
+% \subsection{Proof of Lemma~\ref{lem:5:elementaryLemma_RandTopM_MCTopM}}\label{proof:5:elementaryLemma_RandTopM_MCTopM}
+
+% Using the behavior of the algorithm when the current arm leaves the set $\TopM$ (Line 4), one has
+% \begin{align*}
+%   & \sum_{t=1}^T \bP\left(A^j(t) = k, k \notin \hat{M}^j(t)\right)  \\ & \leq \sum_{t=1}^T \bP\left(A^j(t) = k, k \notin \hat{M}^j(t), A^j(t+1) \in \TopM(t) \cap \{k': g_{k'}^j(t-1) \leq g_k^j(t-1)\}\right) \\
+%   & \leq   \sum_{t=1}^T \sum_{k' \neq k}\bP\left(A^j(t) = k,A^j(t+1) = k', g_{k'}^j(t) \geq g_{k}^j(t), g_{k'}^j(t-1) \leq g_{k}^j(t-1)  \right) \\
+%   & = \sum_{k' \neq k} \underbrace{\sum_{t=1}^T \bP\left(A^j(t) = k,A^j(t+1) = k', g_{k'}^j(t) \geq g_{k}^j(t), g_{k'}^j(t-1) \leq g_{k}^j(t-1)  \right)}_{:= T_{k'}}
+% \end{align*}
+
+% Now, to control $T_{k'}$, we distinguish two cases. If $\mu_k < \mu_{k'}$, one can write
+% \[T_{k'} \leq \sum_{t=1}^T \bP\left(g_{k'}^j(t) \leq \mu_{k'}\right) + \sum_{t=1}^T \bP\left(A^j(t) = k, g_{k}^j(t-1) \geq \mu_{k'}\right)\]
+% The first term in the right hand side is $o(\log(T))$ by Lemma~\ref{lem:5:Fact1KLUCB}. To control the second term, we apply the same trick that led to the proof of Lemma~\ref{lem:5:Fact2KLUCB} in \cite{KLUCBJournal}.
+% Letting $\kl^+(x, y) := \kl(x, y) \indic(x \geq y)$,
+% and $\widehat{\mu}^j_{k,s}$ be the empirical mean of the $s$ first observations from arm $k$ by player $j$, one has
+% \begin{align}
+%   & \sum_{t=1}^T \bP\left(A^j(t) = k, g_{k}^j(t-1) \geq \mu_{k'}\right)
+%   =  \bE \left[ \sum_{t=1}^T\sum_{s=1}^{t-1} \indic{\left(A^j(t) = k , N^j_k(t-1) = s\right)}\indic{\left( s  \times \kl^+\left(\widehat{\mu}_{k,s}^j , \mu_k\right) \leq f(t)\right)} \right]\nonumber\\
+%   & \hspace{1cm} \leq \bE \left[ \sum_{s=1}^{T}\indic{\left( s \times \kl^+\left(\widehat{\mu}_{k,s}^j , \mu_k\right) \leq f(T)\right)}\sum_{t=s-1}^T \indic{\left(A^j(t) = k , N^j_k(t-1) = s\right)} \right] \nonumber \\
+%   & \hspace{1cm}  \leq \sum_{s=1}^T \bP\left( s \times \kl^+\left(\widehat{\mu}_{k,s}^j , \mu_k\right) \leq f(T)\right),\label{eq:5:FromHere}
+% \end{align}
+% where the last inequality uses that for all $s$, \[\sum_{t=s-1}^T \indic{\left(A^j(t) = k , N^j_k(t-1) = s\right)} = \sum_{t=s-1}^T \indic{\left(A^j(t) = k , N^j_k(t) = s + 1\right)} \leq 1.\]
+% From \eqref{eq:5:FromHere}, the same upper bound as that of Lemma~\ref{lem:5:Fact2KLUCB} can be obtained using the tools from \cite{KLUCBJournal}, which proves that for $T\to\infty$,
+% \[T_{k'} = \frac{\log(T)}{\kl(\mu_k,\mu_{k'})} + o(\log(T)).\]
+
+% If $\mu_k > \mu_{k'}$, we rather use that
+% \[T_{k'} \leq \sum_{t=1}^T \bP\left(g_{k}^j(t) \leq \mu_{k}\right) + \sum_{t=1}^T \bP\left(A^j(t+1) = k', g_{k'}^j(t) \geq \mu_{k}\right)\]
+% and similarly Lemma~\ref{lem:5:Fact1KLUCB} and a slight variant of Lemma~\ref{lem:5:Fact2KLUCB} to deal with the modified time indices yields
+% \[T_{k'} = \frac{\log(T)}{\kl(\mu_{k'},\mu_{k})} + o(\log(T)).\]
+% Summing over $k'$ yields the result.
 
 %%%%%%%%%%%%ù PREVIOUS VERSION
 % For any arms $k, k' \in \{1, \dots, K\}$,
@@ -420,235 +420,235 @@ Summing over $k'$ yields the result.
 
 
 
-% --------------------------------------------------------------------------------
-\subsection{Controlling Collisions for \MCTopM: Proof of Lemma~\ref{lem:5:collisionsMCTopM}}
-\label{proof:5:collisionsMCTopM}
+% % --------------------------------------------------------------------------------
+% \subsection{Controlling Collisions for \MCTopM: Proof of Lemma~\ref{lem:5:collisionsMCTopM}}
+% \label{proof:5:collisionsMCTopM}
 
-A key feature of both the \RandTopM{} and \MCTopM{} algorithms is Lemma~\ref{lem:5:elementaryLemma_RandTopM_MCTopM}, that states that the probability of switching from some arm because this arm leaves $\TopM(t)$ is small. Its proof is postponed to the end of this section.
-
-
-%
-Figure~\ref{fig:5:StateMachineAlgorithm_MCTopM} below provides a schematic representation of the execution of the \MCTopM{} algorithm, that has to be exploited in order to properly control the number of collisions.
-%
-The sketch of the proof is the following: by focusing only on collisions in the ``not fixed'' state, bounding the number of transitions $(2)$ and $(3)$ is enough.
-Then, we show that both the number of transitions $(3)$ and $(5)$ are small: as a consequence of Lemma~\ref{lem:5:elementaryLemma_RandTopM_MCTopM}, the average number of these transitions is $\bigO{\log T}$.
-Finally, we use that the length of a sequence of consecutive transitions $(2)$ is also small (on average smaller than $M$), and except for possibly the first one, starting a new sequence implies a previous transition $(3)$ or $(5)$ to arrive in the state ``not fixed''. This gives a logarithmic number of transitions $(2)$ and $(3)$, and so gives $\E_{\mu}[\sum_k\cC_k(T)] = \bigO{\log T}$,
-with explicit constants depending on $\boldsymbol{\mu}$ and $M$.
-
-\begin{figure}[h!]
-  \resizebox{0.98\textwidth}{!}{
-  \begin{tikzpicture}[>=latex',line join=bevel,scale=5]
-      %
-      \node (start) at (1.5,0.30) {$(0)$ Start $t=0$};
-      \node (notfixed) at (1,0) [draw,rectangle,thick] {Not fixed, $\overline{s^j(t)}$};
-      \node (fixed) at (0,0) [draw,rectangle,thick] {Fixed, $s^j(t)$};
-      %
-      \draw [black,->] (start) -> (notfixed.20);
-      \draw [color=cyan,thick,->] (notfixed) to[bend right] node[midway,above,text width=5cm,text centered,black] {\small $(1)$ $\overline{C^j(t)}, A^j(t) \in \TopM(t)$} (fixed);
-      \path [color=blue,thick,->] (notfixed) edge[loop right] node[right,text width=4cm,text badly centered,black] {\small $(2)$  $C^j(t), A^j(t) \in \TopM(t)$} (1);
-      \path [color=red,thick,->] (notfixed) edge[loop below] node[below,text centered,black] {\small $(3)$  $A^j(t) \notin \TopM(t)$} (1);
-      \path [color=darkgreen,thick,->] (fixed) edge[loop left] node[left,text width=2.9cm,text badly centered,black] {\small $(4)$ $A^j(t) \in \TopM(t)$} (fixed);
-      \draw [color=red,thick,->] (fixed) to[bend right] node[midway,below,text centered,black] {\small $(5)$  $A^j(t) \notin \TopM(t)$} (notfixed);
-      %
-  \end{tikzpicture}
-  }
-  \caption[``State-machine'' representation of \MCTopM]{Player $j$ using \MCTopM, represented as ``state machine'' with $5$ transitions.
-  Taking one of the five transitions means playing one round of the Algorithm~\ref{algo:5:MCTopM}, to decide $A^j(t+1)$ using information of previous steps.}
-  \label{fig:5:StateMachineAlgorithm_MCTopM}
-\end{figure}
-
-% Explanation of the figure
-
-As in Algorithm~\ref{algo:5:MCTopM}, $s^j(t)$ is the event that player $j$ decided to fix herself on an arm at the end of round $t-1$.
-Formally, $s^j(0)$ is false, and $s^j(t+1)$ is defined inductively from $s^j(t)$ as
-% following the algorithm of \MCTopM:
-\begin{equation}
-    s^j(t+1) =
-    \left( s^j(t) \cup \left( \overline{s^j(t)} \cap \overline{C^j(t)} \right) \right)
-    \cap \left( A^j(t) \in \TopM(t) \right).
-\end{equation}
-
-For the sake of clarity, we now explain Figure~\ref{fig:5:StateMachineAlgorithm_MCTopM} in words. At step $t$, if player $j$ is not fixed ($\overline{s^j(t)}$), she can have three behaviors when executing \MCTopM.
-She keeps the same arm and goes to the other state $s^j(t)$ with transition $(1)$,
-or she stays in state $\overline{s^j(t)}$,
-with two cases.
-Either she sampled $A^j(t+1)$ uniformly
-from $\TopM(t) \cap \{ m : g_m^j(t) \leq g_k^j(t) \}$
-with transition $(3)$,
-in case of collision and if $A^j(t+1) \in \TopM(t)$,
-or she sampled $A^j(t+1)$ uniformly
-from $\TopM(t)$ with transition $(2)$,
-if $A^j(t+1) \notin \TopM(t)$.
-In particular, note that if $\overline{C^j(t)}$, transition $(3)$ is executed and not $(2)$.
-%
-% The case $(2)$ happens when there is no collision at time $t-1$ but a collision at time $t$,
-% and conversely case $(3)$ happens when the player was not fixed on her arm at time $t-1$ (\ie, $\overline{s^j(t-1)}$)
-% and experienced a collision at time $t-1$
-Transition $(3)$ is a uniform sampling from $\TopM(t)$ (the ``Musical Chair'' step).
+% A key feature of both the \RandTopM{} and \MCTopM{} algorithms is Lemma~\ref{lem:5:elementaryLemma_RandTopM_MCTopM}, that states that the probability of switching from some arm because this arm leaves $\TopM(t)$ is small. Its proof is postponed to the end of this section.
 
 
-For player $j$ and round $t$, we now introduce a few events that are useful in the proof. First, for every $x=1,2,3,4,5$, we denote $I_x^j(t)$ the event that a transition of type $(x)$ occurs for player $j$ after the first $t$ observations (\ie, between round $t$ and round $t+1$, to decide $A^j(t+1)$).
-Formally they are defined by
-\begin{align*}
-  I_1^j(t) &:= \left(\overline{s^j(t)},\overline{C_j(t)}, A^j(t) \in \TopM(t)\right), \\
-  % go sitted
-  I_2^j(t) &:= \left(\overline{s^j(t)},C_j(t), A^j(t) \in \TopM(t)\right),
-  \ \ \ &\text{and} \ \ \
-  I_3(t) &:= \left(\overline{s^j(t)},A^j(t) \notin \TopM(t)\right), \\
-  % if sitted
-  I_3(t) &:= \left(s^j(t),A^j(t) \in \TopM(t)\right),
-  \ \ \ &\text{and} \ \ \
-  I_5(t) &:= \left(s^j(t),A^j(t) \notin \TopM(t)\right).
-\end{align*}
-%
-Then, we introduce $\widetilde{C^j}(t)$ as the event that a collision occurs for player $j$ at round $t$ if she is not yet fixed on her arm, that is
-\begin{equation}
-    \widetilde{C^j}(t) := \left(C^j(t), \overline{s^j(t)}\right).
-\end{equation}
+% %
+% Figure~\ref{fig:5:StateMachineAlgorithm_MCTopM} below provides a schematic representation of the execution of the \MCTopM{} algorithm, that has to be exploited in order to properly control the number of collisions.
+% %
+% The sketch of the proof is the following: by focusing only on collisions in the ``not fixed'' state, bounding the number of transitions $(2)$ and $(3)$ is enough.
+% Then, we show that both the number of transitions $(3)$ and $(5)$ are small: as a consequence of Lemma~\ref{lem:5:elementaryLemma_RandTopM_MCTopM}, the average number of these transitions is $\bigO{\log T}$.
+% Finally, we use that the length of a sequence of consecutive transitions $(2)$ is also small (on average smaller than $M$), and except for possibly the first one, starting a new sequence implies a previous transition $(3)$ or $(5)$ to arrive in the state ``not fixed''. This gives a logarithmic number of transitions $(2)$ and $(3)$, and so gives $\E_{\mu}[\sum_k\cC_k(T)] = \bigO{\log T}$,
+% with explicit constants depending on $\boldsymbol{\mu}$ and $M$.
+
+% \begin{figure}[h!]
+%   \resizebox{0.98\textwidth}{!}{
+%   \begin{tikzpicture}[>=latex',line join=bevel,scale=5]
+%       %
+%       \node (start) at (1.5,0.30) {$(0)$ Start $t=0$};
+%       \node (notfixed) at (1,0) [draw,rectangle,thick] {Not fixed, $\overline{s^j(t)}$};
+%       \node (fixed) at (0,0) [draw,rectangle,thick] {Fixed, $s^j(t)$};
+%       %
+%       \draw [black,->] (start) -> (notfixed.20);
+%       \draw [color=cyan,thick,->] (notfixed) to[bend right] node[midway,above,text width=5cm,text centered,black] {\small $(1)$ $\overline{C^j(t)}, A^j(t) \in \TopM(t)$} (fixed);
+%       \path [color=blue,thick,->] (notfixed) edge[loop right] node[right,text width=4cm,text badly centered,black] {\small $(2)$  $C^j(t), A^j(t) \in \TopM(t)$} (1);
+%       \path [color=red,thick,->] (notfixed) edge[loop below] node[below,text centered,black] {\small $(3)$  $A^j(t) \notin \TopM(t)$} (1);
+%       \path [color=darkgreen,thick,->] (fixed) edge[loop left] node[left,text width=2.9cm,text badly centered,black] {\small $(4)$ $A^j(t) \in \TopM(t)$} (fixed);
+%       \draw [color=red,thick,->] (fixed) to[bend right] node[midway,below,text centered,black] {\small $(5)$  $A^j(t) \notin \TopM(t)$} (notfixed);
+%       %
+%   \end{tikzpicture}
+%   }
+%   \caption[``State-machine'' representation of \MCTopM]{Player $j$ using \MCTopM, represented as ``state machine'' with $5$ transitions.
+%   Taking one of the five transitions means playing one round of the Algorithm~\ref{algo:5:MCTopM}, to decide $A^j(t+1)$ using information of previous steps.}
+%   \label{fig:5:StateMachineAlgorithm_MCTopM}
+% \end{figure}
+
+% % Explanation of the figure
+
+% As in Algorithm~\ref{algo:5:MCTopM}, $s^j(t)$ is the event that player $j$ decided to fix herself on an arm at the end of round $t-1$.
+% Formally, $s^j(0)$ is false, and $s^j(t+1)$ is defined inductively from $s^j(t)$ as
+% % following the algorithm of \MCTopM:
+% \begin{equation}
+%     s^j(t+1) =
+%     \left( s^j(t) \cup \left( \overline{s^j(t)} \cap \overline{C^j(t)} \right) \right)
+%     \cap \left( A^j(t) \in \TopM(t) \right).
+% \end{equation}
+
+% For the sake of clarity, we now explain Figure~\ref{fig:5:StateMachineAlgorithm_MCTopM} in words. At step $t$, if player $j$ is not fixed ($\overline{s^j(t)}$), she can have three behaviors when executing \MCTopM.
+% She keeps the same arm and goes to the other state $s^j(t)$ with transition $(1)$,
+% or she stays in state $\overline{s^j(t)}$,
+% with two cases.
+% Either she sampled $A^j(t+1)$ uniformly
+% from $\TopM(t) \cap \{ m : g_m^j(t) \leq g_k^j(t) \}$
+% with transition $(3)$,
+% in case of collision and if $A^j(t+1) \in \TopM(t)$,
+% or she sampled $A^j(t+1)$ uniformly
+% from $\TopM(t)$ with transition $(2)$,
+% if $A^j(t+1) \notin \TopM(t)$.
+% In particular, note that if $\overline{C^j(t)}$, transition $(3)$ is executed and not $(2)$.
+% %
+% % The case $(2)$ happens when there is no collision at time $t-1$ but a collision at time $t$,
+% % and conversely case $(3)$ happens when the player was not fixed on her arm at time $t-1$ (\ie, $\overline{s^j(t-1)}$)
+% % and experienced a collision at time $t-1$
+% Transition $(3)$ is a uniform sampling from $\TopM(t)$ (the ``Musical Chair'' step).
 
 
-A key observation is that $C^j(t)$ implies $\bigcup_{j'=1}^M \widetilde{C^{j'}}(t)$, as a collision necessarily involves at least one player not yet fixed on her arm ($\overline{s^{j'(t)}}$).
-Otherwise, if they are all fixed, \ie, for all $j$, $s^j(t)$, then by definition of $s^j(t)$, none of the player changed their arm from $t-1$ to $t$, and none experienced any collision at time $t-1$ so by induction there is no collision at time $t$.
-%
-Thus, $\sum_{j=1}^M \Pr(C^j(t))$ can be upper bounded by $M \sum_{j=1}^M \Pr(\widetilde{C^j}(t))$ (union bound),
-and it follows that if $\cC(T) := \sum_{k=1}^K \cC_k(T)$ then
-\[\E_{\mu}[\cC(T)] \leq M \sum_{j=1}^M \sum_{t=1}^T \Pr(\widetilde{C^j}(t)).\]
-We can further  observe that $\widetilde{C^j}(t)$ implies a transition $(2)$ or $(3)$, as a transition $(1)$ cannot happen in case of collision. Thus another union bound gives
-%
-\begin{align}
-  \sum_{t=1}^T \Pr(\widetilde{C^j}(t))
-  &\leq \sum_{t=1}^T \Pr(I_2^j(t))   + \sum_{t=1}^T \Pr(I_3^j(t)).\label{eq:5:UBTilde}
-\end{align}
-In the rest of the proof we focus on bounding the number of transitions $(2)$ and $(3)$.
+% For player $j$ and round $t$, we now introduce a few events that are useful in the proof. First, for every $x=1,2,3,4,5$, we denote $I_x^j(t)$ the event that a transition of type $(x)$ occurs for player $j$ after the first $t$ observations (\ie, between round $t$ and round $t+1$, to decide $A^j(t+1)$).
+% Formally they are defined by
+% \begin{align*}
+%   I_1^j(t) &:= \left(\overline{s^j(t)},\overline{C_j(t)}, A^j(t) \in \TopM(t)\right), \\
+%   % go sitted
+%   I_2^j(t) &:= \left(\overline{s^j(t)},C_j(t), A^j(t) \in \TopM(t)\right),
+%   \ \ \ &\text{and} \ \ \
+%   I_3(t) &:= \left(\overline{s^j(t)},A^j(t) \notin \TopM(t)\right), \\
+%   % if sitted
+%   I_3(t) &:= \left(s^j(t),A^j(t) \in \TopM(t)\right),
+%   \ \ \ &\text{and} \ \ \
+%   I_5(t) &:= \left(s^j(t),A^j(t) \notin \TopM(t)\right).
+% \end{align*}
+% %
+% Then, we introduce $\widetilde{C^j}(t)$ as the event that a collision occurs for player $j$ at round $t$ if she is not yet fixed on her arm, that is
+% \begin{equation}
+%     \widetilde{C^j}(t) := \left(C^j(t), \overline{s^j(t)}\right).
+% \end{equation}
 
 
-Let $N_x^j(T)$ be the random variable denoting the number of transitions of type $(x)$.
-Neglecting the event $\overline{s^j(t)}$ for $x=3$ and $s^j(t)$ for $x=5$, one has
-\begin{equation}
-    \E_{\mu}[N_x^j(t)]
-    = \sum_{t=1}^T \Pr(I_x^j(t))
-    \leq \sum_{t=1}^T \Pr \left(A^j(t) \notin \TopM(t)\right)
-    \leq \sum_{t=1}^T \sum_{k=1}^K \Pr \left(A^j(t)=k, k \notin \TopM(t)\right),
-\end{equation}
-which is $\bigO{\log T}$ (with known constants) by Lemma~\ref{lem:5:elementaryLemma_RandTopM_MCTopM}. In particular, this controls the second term in the right hand side of \eqref{eq:5:UBTilde}.
-
-To control the first term $\sum_{t=1}^T \Pr(I_2^j(t))$
-we introduce three sequences of random variables,
-the starting times $(\theta_i)_{i \geq 1}$
-and the ending times $(\tau_i)_{i \geq 1}$
-(possibly larger than $T$),
-of sequences during which $I_2(s)$ is true for all $s=\theta_i,\dots,\tau_i-1$ but not before and after,
-that is
-$\forall i \in \{1,\dots,n(T)\},
-\overline{I_2^j(\theta_i - 1)}
-\cap \bigcap_{t=\theta_i}^{\tau_i-1} I_2^j(t)
-\cap \overline{I_2^j(\tau_i)}
-$
-with $n(T)$ the number of such sequences,
-\ie,
-$n(T) := \inf \{i \geq 1 : \min(\theta_i, \tau_i) \geq T \}$
-(or $0$ if $\theta_1$ does not exist).
-%
-If $\theta_i = 1$, the first sequence does not have term $\overline{I_2^j(\theta_i - 1)}$.
-
-Now we can decompose the sum on $t=1,\dots,T$ with the use of consecutive sequences,
-\begin{align}
-  \E_{\mu}[N_2^j(t)]
-  &= \E_{\mu}\left[ \sum_{t=1}^T \indic{\left(I_2^j(t)\right)} \right]
-  =
-  \E_{\mu}\left[ \sum_{i=1}^{n(T)} \left( \sum_{t=\theta_i}^{\tau_i - 1} 1 + \sum_{t=\tau_i}^{\theta_{i+1} - 1} 0 \right) \right]
-  =
-  \E_{\mu}\left[ \sum_{i=1}^{n(T)} (\tau_i - \theta_i) \right].
-  \intertext{Both $n(T)$ and $\tau_i - \theta_i \geq 0$ have finite averages for any $i$ (as $\tau_i - \theta_i \leq T$), and $n(T)$ is a \emph{stopping time} with respect to the past events (that is, $\cF^j_T$), and so we can obtain}
-  % so we can use Wald's Lemma \citep{Wald45}
-  &\leq \E_{\mu}\left[ n(T) \right] \times \max_{i\in\N} \E_{\mu}\left[ \tau_i - \theta_i \right]
-  = (\alpha) \times (\beta).
-\end{align}
-
-$(\alpha)$ To control $\E_{\mu}[n(T)]$, we can observe that
-the number of sequences $n(T)$ is smaller than $1$ plus the number of times when \emph{a sequence begins} ($1$ plus because maybe the game starts in a sequence).
-%
-And beginning a sequence
-% \footnote{Similarly, one could focus on the number of times \emph{a sequence finishes}, and $I_2^j(\theta_i) \cap \overline{I_2^j(\theta_i+1)}$ implies a transition of type $(3)$ or $(1)$.
-% The key is that after a transition $(1)$, a new sequence of transitions $(2)$ is possible only after a transition $(5)$, which total number is also controlled as $\bigO{\log T}$.}
-at time $\theta_i$ implies
-$\overline{I_2^j(\theta_i-1)} \cap I_2^j(\theta_i)$,
-which implies a transition of type $(3)$ or $(5)$ at time $\theta_i - 1$, as player j is in state ``not fixed'' at time $\theta_i$ (transitions $(1)$ and $(4)$ are impossible).
-%
-As stated above, $\E_{\mu}[N_x^j(T)] = \bigO{\log T}$ for both $x=3$ and $x=5$,
-and so $\E_{\mu}[n(T)] = \bigO{\log T}$ also.
+% A key observation is that $C^j(t)$ implies $\bigcup_{j'=1}^M \widetilde{C^{j'}}(t)$, as a collision necessarily involves at least one player not yet fixed on her arm ($\overline{s^{j'(t)}}$).
+% Otherwise, if they are all fixed, \ie, for all $j$, $s^j(t)$, then by definition of $s^j(t)$, none of the player changed their arm from $t-1$ to $t$, and none experienced any collision at time $t-1$ so by induction there is no collision at time $t$.
+% %
+% Thus, $\sum_{j=1}^M \Pr(C^j(t))$ can be upper bounded by $M \sum_{j=1}^M \Pr(\widetilde{C^j}(t))$ (union bound),
+% and it follows that if $\cC(T) := \sum_{k=1}^K \cC_k(T)$ then
+% \[\E_{\mu}[\cC(T)] \leq M \sum_{j=1}^M \sum_{t=1}^T \Pr(\widetilde{C^j}(t)).\]
+% We can further  observe that $\widetilde{C^j}(t)$ implies a transition $(2)$ or $(3)$, as a transition $(1)$ cannot happen in case of collision. Thus another union bound gives
+% %
+% \begin{align}
+%   \sum_{t=1}^T \Pr(\widetilde{C^j}(t))
+%   &\leq \sum_{t=1}^T \Pr(I_2^j(t))   + \sum_{t=1}^T \Pr(I_3^j(t)).\label{eq:5:UBTilde}
+% \end{align}
+% In the rest of the proof we focus on bounding the number of transitions $(2)$ and $(3)$.
 
 
-$(\beta)$ To control $\E_{\mu}\left[ \tau_i - \theta_i \right]$,
-a simple argument can be used.
-$\bigcup_{t=\theta_i}^{\tau_i-1} I_2^j(t)$
-implies $C^j(t)$ for $\tau_i - \theta_i$ consecutive times.
-%
-The very structure of \RandTopM{} gives that in this sequence of transitions $(2)$,
-the successive collisions (\ie, $C^j(t-1) \cap C^j(t)$)
-implies that each new arm $A^j(t+1)$ for $t \in \{\theta_i, \tau_i-1\}$ is selected uniformly from
-$\TopM(t+1)$,
-a set of size $M$ with at least one available arm.
-%
-Indeed, as there is $M-1$ other players, at time $t+1$ \emph{at least} one arm in $\TopM(t+1)$ is not selected by any player $k'\neq k$,
-and so player $j$ has \emph{at least} a probability $1/M$ to select
-a free arm, which implies $\overline{C^j(t+1)}$, and so implies the end of the sequence.
-%
-In other words, the average length of sequences of transitions $(2)$,
-$\E_{\mu}\left[ \tau_i - \theta_i \right]$,
-is bounded by the expected number of failed trial of a repeated Bernoulli experiment, with probability of success larger than $1/M$ (by the uniform choice of $A^j(t+1)$ in a set of size $M$ with at least one available arm).
-We recognize the mean of a geometric random variable, of parameter $\lambda \geq 1/M$, and so $\E_{\mu}\left[ \tau_i - \theta_i \right] = \frac{1}{\lambda} \leq \frac{1}{1/M} = M$.
+% Let $N_x^j(T)$ be the random variable denoting the number of transitions of type $(x)$.
+% Neglecting the event $\overline{s^j(t)}$ for $x=3$ and $s^j(t)$ for $x=5$, one has
+% \begin{equation}
+%     \E_{\mu}[N_x^j(t)]
+%     = \sum_{t=1}^T \Pr(I_x^j(t))
+%     \leq \sum_{t=1}^T \Pr \left(A^j(t) \notin \TopM(t)\right)
+%     \leq \sum_{t=1}^T \sum_{k=1}^K \Pr \left(A^j(t)=k, k \notin \TopM(t)\right),
+% \end{equation}
+% which is $\bigO{\log T}$ (with known constants) by Lemma~\ref{lem:5:elementaryLemma_RandTopM_MCTopM}. In particular, this controls the second term in the right hand side of \eqref{eq:5:UBTilde}.
 
-This finishes the proof as $\E_{\mu}[N_2^j(T)] = \sum_{t=1}^T \Pr(I_2^j(t)) = \bigO{\log T}$ and so
-$\sum_{t=1}^T \Pr(\widetilde{C^j}(t) \cap (A^j(t) = k)) = \bigO{\log T}$
-and finally
-$\E_{\mu}[\cC(T)] = \sum_{k=1}^K \E_{\mu}[\cC^k(T)] = \bigO{\log T}$ also.
+% To control the first term $\sum_{t=1}^T \Pr(I_2^j(t))$
+% we introduce three sequences of random variables,
+% the starting times $(\theta_i)_{i \geq 1}$
+% and the ending times $(\tau_i)_{i \geq 1}$
+% (possibly larger than $T$),
+% of sequences during which $I_2(s)$ is true for all $s=\theta_i,\dots,\tau_i-1$ but not before and after,
+% that is
+% $\forall i \in \{1,\dots,n(T)\},
+% \overline{I_2^j(\theta_i - 1)}
+% \cap \bigcap_{t=\theta_i}^{\tau_i-1} I_2^j(t)
+% \cap \overline{I_2^j(\tau_i)}
+% $
+% with $n(T)$ the number of such sequences,
+% \ie,
+% $n(T) := \inf \{i \geq 1 : \min(\theta_i, \tau_i) \geq T \}$
+% (or $0$ if $\theta_1$ does not exist).
+% %
+% If $\theta_i = 1$, the first sequence does not have term $\overline{I_2^j(\theta_i - 1)}$.
 
-We can be more precise about the constants, all the previous arguments can be used successively:
-\begin{align}
-  \E_{\mu}[\cC(T)]
-  &\leq M \sum_{j=1}^M \left(\sum_{t=1}^T \Pr(I_2^j(t)) + \sum_{t=1}^T \Pr(I_3^j(t))\right)
-  = M \left(\sum_{j=1}^M \E_{\mu}[N_2^j(T)] + \E_{\mu}[N_3^j(T)]\right) \\
-  &\leq M^2 \left(\E_{\mu}[n(T)] \E_{\mu}[\theta_i - \tau_i] \right) + M^2 \E_{\mu}[N_3^1(T)] \notag  \\
-  &\leq M^2 (1+\E_{\mu}[N_3^1(T)] + \E_{\mu}[N_5^1(T)]) M + M^2 \E_{\mu}[N_3^1(T)] \notag \\
-  &\leq 2 M^3 \E_{\mu}[N_3^1(T)] + \smallO{\log T} + M^2 \left(\sum_{a,b=1,\dots,K,\;\mu_a < \mu_b} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T} \notag  \\
-  &\leq \left(2 M^3 + M^2\right) \left(\sum_{a,b=1,\dots,K,\;\mu_a < \mu_b} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T}.
-\end{align}
+% Now we can decompose the sum on $t=1,\dots,T$ with the use of consecutive sequences,
+% \begin{align}
+%   \E_{\mu}[N_2^j(t)]
+%   &= \E_{\mu}\left[ \sum_{t=1}^T \indic{\left(I_2^j(t)\right)} \right]
+%   =
+%   \E_{\mu}\left[ \sum_{i=1}^{n(T)} \left( \sum_{t=\theta_i}^{\tau_i - 1} 1 + \sum_{t=\tau_i}^{\theta_{i+1} - 1} 0 \right) \right]
+%   =
+%   \E_{\mu}\left[ \sum_{i=1}^{n(T)} (\tau_i - \theta_i) \right].
+%   \intertext{Both $n(T)$ and $\tau_i - \theta_i \geq 0$ have finite averages for any $i$ (as $\tau_i - \theta_i \leq T$), and $n(T)$ is a \emph{stopping time} with respect to the past events (that is, $\cF^j_T$), and so we can obtain}
+%   % so we can use Wald's Lemma \citep{Wald45}
+%   &\leq \E_{\mu}\left[ n(T) \right] \times \max_{i\in\N} \E_{\mu}\left[ \tau_i - \theta_i \right]
+%   = (\alpha) \times (\beta).
+% \end{align}
 
-And so we obtain the desired inequality, with explicit constants, that depend only on $\boldsymbol{\mu}$ and $M$.
-%
-\begin{equation}
-  \sum_{k=1}^K \E_{\mu}[\cC^k(T)] = \E_{\mu}[\cC(T)]
-  \leq M^2\left(2 M + 1\right) \left(\sum_{a,b=1,\dots,K,\;\mu_a < \mu_b} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T}.
-\end{equation}
+% $(\alpha)$ To control $\E_{\mu}[n(T)]$, we can observe that
+% the number of sequences $n(T)$ is smaller than $1$ plus the number of times when \emph{a sequence begins} ($1$ plus because maybe the game starts in a sequence).
+% %
+% And beginning a sequence
+% % \footnote{Similarly, one could focus on the number of times \emph{a sequence finishes}, and $I_2^j(\theta_i) \cap \overline{I_2^j(\theta_i+1)}$ implies a transition of type $(3)$ or $(1)$.
+% % The key is that after a transition $(1)$, a new sequence of transitions $(2)$ is possible only after a transition $(5)$, which total number is also controlled as $\bigO{\log T}$.}
+% at time $\theta_i$ implies
+% $\overline{I_2^j(\theta_i-1)} \cap I_2^j(\theta_i)$,
+% which implies a transition of type $(3)$ or $(5)$ at time $\theta_i - 1$, as player j is in state ``not fixed'' at time $\theta_i$ (transitions $(1)$ and $(4)$ are impossible).
+% %
+% As stated above, $\E_{\mu}[N_x^j(T)] = \bigO{\log T}$ for both $x=3$ and $x=5$,
+% and so $\E_{\mu}[n(T)] = \bigO{\log T}$ also.
 
 
-\paragraph{Number of switches}\label{app:5:NumberSwitches}
-%
-Note that we controlled the total number of transitions $(2)$, $(3)$ and $(5)$,
-which are the only transitions when a player can switch from arm $k$ to arm $k'\neq k$.
-Thus, the total number of arm switches is also proved to be logarithmic, if all players uses
-the \MCTopM-\klUCB{} algorithm.
+% $(\beta)$ To control $\E_{\mu}\left[ \tau_i - \theta_i \right]$,
+% a simple argument can be used.
+% $\bigcup_{t=\theta_i}^{\tau_i-1} I_2^j(t)$
+% implies $C^j(t)$ for $\tau_i - \theta_i$ consecutive times.
+% %
+% The very structure of \RandTopM{} gives that in this sequence of transitions $(2)$,
+% the successive collisions (\ie, $C^j(t-1) \cap C^j(t)$)
+% implies that each new arm $A^j(t+1)$ for $t \in \{\theta_i, \tau_i-1\}$ is selected uniformly from
+% $\TopM(t+1)$,
+% a set of size $M$ with at least one available arm.
+% %
+% Indeed, as there is $M-1$ other players, at time $t+1$ \emph{at least} one arm in $\TopM(t+1)$ is not selected by any player $k'\neq k$,
+% and so player $j$ has \emph{at least} a probability $1/M$ to select
+% a free arm, which implies $\overline{C^j(t+1)}$, and so implies the end of the sequence.
+% %
+% In other words, the average length of sequences of transitions $(2)$,
+% $\E_{\mu}\left[ \tau_i - \theta_i \right]$,
+% is bounded by the expected number of failed trial of a repeated Bernoulli experiment, with probability of success larger than $1/M$ (by the uniform choice of $A^j(t+1)$ in a set of size $M$ with at least one available arm).
+% We recognize the mean of a geometric random variable, of parameter $\lambda \geq 1/M$, and so $\E_{\mu}\left[ \tau_i - \theta_i \right] = \frac{1}{\lambda} \leq \frac{1}{1/M} = M$.
+
+% This finishes the proof as $\E_{\mu}[N_2^j(T)] = \sum_{t=1}^T \Pr(I_2^j(t)) = \bigO{\log T}$ and so
+% $\sum_{t=1}^T \Pr(\widetilde{C^j}(t) \cap (A^j(t) = k)) = \bigO{\log T}$
+% and finally
+% $\E_{\mu}[\cC(T)] = \sum_{k=1}^K \E_{\mu}[\cC^k(T)] = \bigO{\log T}$ also.
+
+% We can be more precise about the constants, all the previous arguments can be used successively:
+% \begin{align}
+%   \E_{\mu}[\cC(T)]
+%   &\leq M \sum_{j=1}^M \left(\sum_{t=1}^T \Pr(I_2^j(t)) + \sum_{t=1}^T \Pr(I_3^j(t))\right)
+%   = M \left(\sum_{j=1}^M \E_{\mu}[N_2^j(T)] + \E_{\mu}[N_3^j(T)]\right) \\
+%   &\leq M^2 \left(\E_{\mu}[n(T)] \E_{\mu}[\theta_i - \tau_i] \right) + M^2 \E_{\mu}[N_3^1(T)] \notag  \\
+%   &\leq M^2 (1+\E_{\mu}[N_3^1(T)] + \E_{\mu}[N_5^1(T)]) M + M^2 \E_{\mu}[N_3^1(T)] \notag \\
+%   &\leq 2 M^3 \E_{\mu}[N_3^1(T)] + \smallO{\log T} + M^2 \left(\sum_{a,b=1,\dots,K,\;\mu_a < \mu_b} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T} \notag  \\
+%   &\leq \left(2 M^3 + M^2\right) \left(\sum_{a,b=1,\dots,K,\;\mu_a < \mu_b} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T}.
+% \end{align}
+
+% And so we obtain the desired inequality, with explicit constants, that depend only on $\boldsymbol{\mu}$ and $M$.
+% %
+% \begin{equation}
+%   \sum_{k=1}^K \E_{\mu}[\cC^k(T)] = \E_{\mu}[\cC(T)]
+%   \leq M^2\left(2 M + 1\right) \left(\sum_{a,b=1,\dots,K,\;\mu_a < \mu_b} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T}.
+% \end{equation}
 
 
-\paragraph{Strong uniform efficiency}\label{app:5:JustifyingDefinition5}
-%
-As soon as $R_T = \bigO{\log T}$ for all problem, \MCTopM{} is clearly proved
-to be uniformly efficient, as $\log T$ is $\smallO{T^{\alpha}}$ for any $\alpha\in(0,1)$.
-%
-And as justified after Definition~\ref{def:5:DecentralizedUniformEfficiency} (page~\pageref{def:5:DecentralizedUniformEfficiency}), uniform efficiency and invariance under permutations of the users implies strong uniform efficiency, and so \MCTopM{} satisfies Definition~\ref{def:5:DecentralizedUniformEfficiency}.
-%
-This is a sanity check: the lower-bound of
-Theorem~\ref{thm:5:BetterLowerBound} indeed applies to our algorithm \MCTopM,
-and finally this highlights that it is order-optimal for the regret, in the sense that it matches the lower-bound up-to a multiplicative constant,
-and optimal for the term \ref{eq:5:term1}.
+% \paragraph{Number of switches}\label{app:5:NumberSwitches}
+% %
+% Note that we controlled the total number of transitions $(2)$, $(3)$ and $(5)$,
+% which are the only transitions when a player can switch from arm $k$ to arm $k'\neq k$.
+% Thus, the total number of arm switches is also proved to be logarithmic, if all players uses
+% the \MCTopM-\klUCB{} algorithm.
+
+
+% \paragraph{Strong uniform efficiency}\label{app:5:JustifyingDefinition5}
+% %
+% As soon as $R_T = \bigO{\log T}$ for all problem, \MCTopM{} is clearly proved
+% to be uniformly efficient, as $\log T$ is $\smallO{T^{\alpha}}$ for any $\alpha\in(0,1)$.
+% %
+% And as justified after Definition~\ref{def:5:DecentralizedUniformEfficiency} (page~\pageref{def:5:DecentralizedUniformEfficiency}), uniform efficiency and invariance under permutations of the users implies strong uniform efficiency, and so \MCTopM{} satisfies Definition~\ref{def:5:DecentralizedUniformEfficiency}.
+% %
+% This is a sanity check: the lower-bound of
+% Theorem~\ref{thm:5:BetterLowerBound} indeed applies to our algorithm \MCTopM,
+% and finally this highlights that it is order-optimal for the regret, in the sense that it matches the lower-bound up-to a multiplicative constant,
+% and optimal for the term \ref{eq:5:term1}.
 
 
 
 
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
-\section{Additional Discussions on \Selfish}
+\subsection{Additional Discussions on \Selfish}
 \label{app:5:SelfishFails}
 
 \TODOL{Maybe we can completely remove this, and just points to the paper \cite{Besson2018ALT}?}
@@ -770,7 +770,7 @@ and we do not find such tricks to be promising from a theoretical point-of-view.
 
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
-\section{Additional Figures}
+\subsection{Additional Figures}
 \label{app:5:moreplots}
 
 The plots missing from Section~\ref{sec:5:experiments} are included here,
@@ -778,7 +778,7 @@ as well as some additional numerical results.
 
 
 % -----------------------------------------------------------------
-\subsection{Illustration of the lower bound}
+\subsubsection{Illustration of the lower bound}
 \label{app:5:illustrationLowerBound}
 
 \TODOL{Maybe we can not include this part and just points to the paper \cite{Besson2018ALT}?}
@@ -847,7 +847,7 @@ For $M=9$ and \Selfish, \ref{eq:5:term3} is actually larger than the regret,
 and term \ref{eq:5:term1} is zero, as well as the lower bounds.
 
 
-\subsection{Figures from Section~\ref{sec:5:experiments}}
+\subsubsection{Figures from Section~\ref{sec:5:experiments}}
 \label{app:5:plotsFromSec5}
 
 This last Appendix includes the figures used in Section~\ref{sec:5:experiments},
