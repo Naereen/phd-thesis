@@ -184,7 +184,7 @@ The first one is naive but can be used in practice, while the two others are ver
 They are however useful for our numerical simulations, and will be used as references, in order to show that our MAB-based approaches quickly learn to perform almost optimally.
 
 
-\paragraph{Naive policy: Random Channel Selection}
+\paragraph{$1^{\text{st}}$ - Naive policy: Random Channel Selection}
 
 We derive here the probability of having a successful transmission, for a dynamic device, in the case where all the dynamic devices make a purely random channel selection (\ie, uniform on $i \in \llbracket 1; K \rrbracket$).
 This reflects a naive policy that could be implemented by all the dynamic devices, and it provides a reference scenario to compare against.
@@ -209,7 +209,7 @@ This expression \eqref{eq:41:strategynaive} is constant (in time), and easy to c
 (maybe after a long enough initial learning period).
 
 
-\paragraph{(Unachievable) Optimal oracle policy}
+\paragraph{$2^{\text{nd}}$ - (Unachievable) Optimal oracle policy}
 
 We investigate here the optimal policy that can be achieved if the dynamic devices have a perfect knowledge of $(S_i)_i$ the repartition of static devices, and a fully centralized decision making\footnote{~This optimal policy needs an \emph{oracle} seeing the entire system, and affecting all the dynamic devices, once and for all, for a fixed stationary scenario, in order to avoid any signaling overhead. This is not possible in IoT contexts as several completely independent networks may operate in a single place.} is possible.
 We want to find the stationary repartition of devices into channels that maximizes the probability of having a successful transmission.
@@ -269,7 +269,7 @@ Solving the optimization problem provides the optimal real number value for $D_i
 %
 $\widehat{D_i} = \lfloor D_i^* \rfloor$ for $1 \leq i < K$, and $\widehat{D_{K}} = D - \sum_{i=1}^{K - 1} \widehat{D_i}$.
 
-\paragraph{A greedy approach of the oracle strategy}
+\paragraph{$3^{\text{rd}}$ - A greedy approach of the oracle strategy}
 
 We propose a \emph{sequential} approximation of the optimal policy:
 the third solution is a sub-optimal naive policy, simple to set up, but also unpractical as it also needs an oracle.
@@ -347,20 +347,20 @@ We tried similar experiments with other values for $K$ and this repartition vect
 
 \begin{figure}[!b]
     \centering
-    \subfloat[10\% of dynamic devices]{\includegraphics[scale=0.5]{10intelligent.eps}
+    \subfloat[10\% of dynamic devices]{\includegraphics[width=0.52\textwidth]{10intelligent.eps}
     \label{fig:41:10intelligent}}
-    \hfill
-    \subfloat[30\% of dynamic devices]{\includegraphics[scale=0.5]{30intelligent.eps}
+    %
+    \subfloat[30\% of dynamic devices]{\includegraphics[width=0.52\textwidth]{30intelligent.eps}
     \label{fig:41:30intelligent}}
-    \vskip\baselineskip
-    \vspace*{-20pt}
-    \subfloat[50\% of dynamic devices]{\includegraphics[scale=0.5]{50intelligent.eps}
+    %
+    \vspace*{-10pt}
+    \subfloat[50\% of dynamic devices]{\includegraphics[width=0.52\textwidth]{50intelligent.eps}
     \label{fig:41:50intelligent}}
-    \hfill
-    \subfloat[100\% of dynamic devices]{\includegraphics[scale=0.5]{100intelligent.eps}
+    %
+    \subfloat[100\% of dynamic devices]{\includegraphics[width=0.52\textwidth]{100intelligent.eps}
     \label{fig:41:100intelligent}}
     % FIXME use a shorter caption for the list of figures in Appendix of the thesis: it takes lots of lines to have these (a)...(d) shown in list of figures
-    \caption[Performance of two MAB algorithms (\UCB{} and Thompson Sampling), compared to extreme references without learning or oracle knowledge, when the proportion of dynamic end-devices in the network increases, from $10\%$ to $100\%$.]{Performance of two MAB algorithms (\UCB{} and Thompson Sampling), compared to extreme references without learning or oracle knowledge, when the proportion of dynamic end-devices in the network increases, from $10\%$ to $100\%$.}
+    \caption[Performance of two MAB algorithms (\UCB{} and Thompson Sampling), compared to extreme reference policies without learning or oracle knowledge, when the proportion of dynamic end-devices in the network increases, from $10\%$ to $100\%$.]{Performance of two MAB algorithms (\UCB{} and Thompson Sampling), compared to extreme reference policies without learning or oracle knowledge, when the proportion of dynamic end-devices in the network increases, from $10\%$ to $100\%$.}
     \label{fig:41:from10to100}
     \vspace*{-10pt}
 \end{figure}
@@ -369,7 +369,7 @@ We tried similar experiments with other values for $K$ and this repartition vect
 \paragraph{First results}
 
 Figure \ref{fig:41:from10to100} presents the evolution of the successful transmission rate, as a function of time.
-The two MAB algorithms, \UCB{} and Thompson Sampling (TS), are compared against the naive random policy from below, and the two oracle policies (optimal and greedy) from above.
+The two MAB algorithms, \UCB{} and Thompson Sampling (TS), are compared against the naive random policy (which are outperformed easily by the MAB algorithms), and the two (optimal and greedy) oracle policies (which outperform slightly the MAB algorithms).
 The results are displayed when $10\%$, $30\%$, $50\%$ and $100\%$ of the traffic is generated by dynamic devices.
 
 
@@ -380,7 +380,7 @@ Increasing the number of end-devices decreases the gap between the optimal and r
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[scale=0.60]{perf_learning.eps}
+    \includegraphics[scale=0.65]{perf_learning.eps}
     \caption{Learning with \UCB{} and Thomson Sampling, with many dynamic devices. Both algorithms achieve close to optimal performance after a reasonable learning time.}
     \label{fig:41:perf_learning}
 \end{figure}
@@ -392,27 +392,27 @@ To better assess the evolution of the optimal policy compared to the random one,
 We can see that when the proportion of end-devices is low (\eg, $1\%$ of devices are dynamic), the optimal policy provides an improvement of $16\%$ compared to random channel selection.
 The TS algorithm always provides near-optimal performance, but the \UCB{} algorithm has a lowest rate of convergence and performs consequently worse after $1000$ transmissions, for instance it only provides a gain of $12\%$ for the same proportion of dynamic devices ($1\%$).
 
+\begin{figure}[!b]
+    \centering
+    \subfloat[10\% of intelligent devices]{\includegraphics[width=0.47\textwidth]{ch2_10.eps}
+    \label{fig:41:ch2_10}}
+    %
+    \subfloat[30\% of intelligent devices]{\includegraphics[width=0.47\textwidth]{ch2_30.eps}
+    \label{fig:41:ch2_30}}
+    %
+    \vspace*{-10pt}
+    \subfloat[50\% of intelligent devices]{\includegraphics[width=0.47\textwidth]{ch2_50.eps}
+    \label{fig:41:ch2_50}}
+    %
+    \subfloat[100\% of intelligent devices]{\includegraphics[width=0.47\textwidth]{ch2_100.eps}
+    \label{fig:41:ch2_100}}
+    \caption{Performance of the UCB bandit algorithm for the special case of uniform repartition of the static devices, when the proportion of intelligent devices in the network increases, from $10\%$ to $100\%$.}
+    \label{fig:41:figure4appendix}
+\end{figure}
+
 Figure \ref{fig:41:perf_learning} also shows that learning keeps near-optimal performance even when the proportion of devices becomes large.
 Note that when this proportion increases, the assumptions of a stochastic MAB model are clearly violated, and there is no justification for the efficiency of TS and \UCB{} algorithms.
 Hence, it is surprising to have near optimal performance with stochastic MAB algorithms applied to partly or fully dynamic scenarios.
-
-\begin{figure}[!h]
-    \centering
-    \subfloat[10\% of intelligent devices]{\includegraphics[scale=0.5]{ch2_10.eps}
-    \label{fig:41:ch2_10}}
-    \hfill
-    \subfloat[30\% of intelligent devices]{\includegraphics[scale=0.5]{ch2_30.eps}
-    \label{fig:41:ch2_30}}
-    \vskip\baselineskip
-    \vspace*{-20pt}
-    \subfloat[50\% of intelligent devices]{\includegraphics[scale=0.5]{ch2_50.eps}
-    \label{fig:41:ch2_50}}
-    \hfill
-    \subfloat[100\% of intelligent devices]{\includegraphics[scale=0.5]{ch2_100.eps}
-    \label{fig:41:ch2_100}}
-    \caption{Performance of the UCB bandit algorithm for the special case of uniform repartition of the static devices, when the proportion of intelligent devices in the network increases, from $10\%$ to $100\%$ (limit scenario).}
-    \label{fig:41:figure4appendix}
-\end{figure}
 
 
 \paragraph{A safety check}

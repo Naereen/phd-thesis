@@ -71,13 +71,14 @@ We choose to implement our own physical layer and protocol, for both clarity and
 Regarding the physical layer, we consider a QPSK constellation (\emph{Quadrature Phase-Shift Keying}). Moreover, we use simplified packets composed of two parts.
 The first part is the \emph{preamble} which is used for the purpose of synchronization (phase correction).
 Then, we have the \emph{index} of the user, which is a sequence of QPSK symbols.
-For example, this index can be a simple QPSK symbol ($\pm1\pm1j$), or a longer sequence if the PoC have to consider more users\footnote{~With $\ell$ QPSK symbols, we can fit at most $4^{\ell}/2$ devices, and not $4^{\ell}$ due to the use of a conjugate index to send back acknowledgements from the gateway.}.
+For example, this index can be a simple QPSK symbol ($\pm1\pm1j$), or a longer sequence if the PoC have to consider more users.
+With $\ell$ QPSK symbols, we can indeed fit at most $4^{\ell}/2 = 2^{2\ell-1}$ devices, and not $4^{\ell}$ due to the use of a conjugate index to send back acknowledgements from the gateway
 Once the gateway receives an uplink packet, it detects this index and transmits an acknowledgement which has the same frame structure, but where the index is the conjugate of the index of the uplink packet ($z \mapsto \overline{z}$, \emph{e.g.}, $1+j \mapsto 1-j$).
 Thanks to this index, we can have several devices communicating with the same gateway.
 
 \begin{figure}[!b]
     \centering
-    \includegraphics[width=0.70\linewidth]{our-demo.eps}
+    \includegraphics[width=0.75\linewidth]{our-demo.eps}
     \caption{Schematic of our implementation that presents the role of each USRP platform.}
     \label{fig:42:our_demo}
 \end{figure}
@@ -227,14 +228,14 @@ in addition to USRP platforms from Ettus Research.
 \paragraph{Video}
 %
 As shown below in Figure~\ref{fig:42:screenshotDemoYouTube},
-we made a $6$-minute \textbf{video} to show our demonstration online, and it is available on the YouTube hosting platform, at \texttt{\href{https://youtu.be/HospLNQhcMk}{youtu.be/HospLNQhcMk}}.
+we realized and released a $6$-minute \textbf{video} to show our demonstration online, and it is available on the YouTube hosting platform, at \texttt{\href{https://youtu.be/HospLNQhcMk}{youtu.be/HospLNQhcMk}}.
 The video shows examples of $3$ dynamic devices learning simultaneously, confirming the results of Figure~\ref{fig:42:plot_datafile_append_Uniform_vs_UCB_vs_TS} for overlapping channels.
 It also shows the connections between the USRP boards, the Octoclock, the master laptop etc, completing the presentation of the SCEE testbed already shown in Figure~\ref{fig:42:photosSCEETestBed}.
 
 \begin{figure}[!h]
 	\centering
     % \includegraphics[width=0.90\textwidth]{Images/screenshotDemoYouTube.png}
-    \includegraphics[width=0.90\textwidth]{2-Chapters/4-Chapter/Images/screenshotDemoYouTube.png}
+    \includegraphics[width=1.00\textwidth]{2-Chapters/4-Chapter/Images/screenshotDemoYouTube.png}
     \caption{Screenshot of the \textbf{video} of our demonstration, \texttt{\href{https://youtu.be/HospLNQhcMk}{youtu.be/HospLNQhcMk}}.}
     \label{fig:42:screenshotDemoYouTube}
 \end{figure}
