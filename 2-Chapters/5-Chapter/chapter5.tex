@@ -61,24 +61,88 @@ This chapter is mainly based on the following publication: \cite{Besson2018ALT}.
 
 
 % ----------------------------------------------------------------------------
-\section{Many extensions of our models: literature review and numerical experiments}
+% ----------------------------------------------------------------------------
+\section{Literature review of many extensions of our models}
 \label{sec:5:literatureReviewOtherModels}
+% ----------------------------------------------------------------------------
+
+We conclude this chapter with a literature review of the many extensions of the three models presented above in Section~\ref{sec:5:model}.
+We wanted to highlight that the community was quite active on research on multi-player bandits in the last $10$ years, but especially active since last spring $2018$.
+For instance, our article \cite{Besson2018ALT} was the first to propose the ``no sensing'' case, and it was studied by (at least) three independent group of researchers since its publication in April $2018$ \cite{BoursierPerchet18,LugosiMehrabian18,AvnerMannor18}.
+Another example is the model with different ear means among players, who was studied first by \cite{Bistritz18} and shortly after by \cite{KaufmannAbbas19}.
+%
+By following actively the research on multi-player bandit models since the last three years, we believe to be able to give an exhaustive literature review, but it is of course possible that we missed an important research work. In this case, it is our mistake and not an intentional choice as we included all the different extensions of our models that we were aware of.
+
+% \TODOL{Just a small sentence saying that we present here all the extensions of our models that we are aware of blabla}
+
+Many extensions of the simpler model of multi-player bandits have been considered.
+The number of players $M$ can be fixed but initially unknown to the players, the sensing information can be absent (like our \modeltrois{} presented above), there could be communications between players (happening at each time step or only occasionally), or $M$ could evolve over time to model the possibility of arrivals or departures of players (\ie, connexions and disconnections of devices in a wireless networks).
+Also inspired by real-world wireless networks, the arm means may vary among players, for instance to model players located at different distance of the gateway, and we can also consider networks with some ``jammers'' whose purpose is not to communicate to the gateway in a collaborative way, like the $M$ devices, but to interfere with the communications of the $M$ devices.
+
+Finally, we can also be interested by models where $M$ stays fixed, but the environment evolves, for instance with abrupt changes in the means of arms. This last model makes a good connexion between this chapter and the next one, and an exciting future work is to further study this model in order to tackle this kind of problems by merging our proposals for stationary multi-player bandits and for non-stationary single-player bandits.
 
 \TODOL{I also need to include additional simulations from the latest research articles, and discussions about the new works that took inspiration in our paper.}
 
-\TODOL{Just a small sentence saying that we present here all the extensions of our models that we are aware of blabla}
 
-
+% ----------------------------------------------------------------------------
 \subsection{Unknown (fixed) number of players}
 \label{sub:5:unknownNumberOfPlayers}
+
+In the model we presented above, we assumed the number of players $M$ to be fixed in time during the learning process.
+Without removing this hypothesis (we study this case below in Section~\ref{sub:5:arrivalDepartures}), it is interesting to remark that we made no hypothesis on whether the players can known this value $M$ or not.
+Our proposals, \RandTopM{} and \MCTopM, both assume to know $M$ beforehand, like it was done for our inspirational algorithms \RhoRand{} and \MusicalChair.
+
+
+\paragraph{Performance of our proposals for a wrong value of $M$?}
+%
+We can start by asking whether our efficient proposal, \MCTopM-\klUCB, is still efficient if it uses a value $M'$ different than the real number of players $M$.
+Even though we did not include numerical simulations for this case in Section~\ref{sec:5:experiments} above, we did some tests, and we observed two disappointing results.
+First, the three algorithms (\RhoRand, \RandTopM{} and \MCTopM) give linear regret if they are using a value $M'$ strictly smaller than $M$ (as soon as $\mu^*_{M-1} > \mu^*_M$), as players will converge to play ($T-\bigO{\log(T)}$ times) the $M-1$ best arms, leading to at least one collision and thus a linear regret.
+Second, if they are using $M' > M$, then there is also a certain probability to achieve a linear regret. Indeed, imagine one player ($M=1$) running \MCTopM{} with the false knowledge of $M'=2$, and if it learned to accurately identify the set of the $2$ best arms, then the \MCTopM{} orthogonalization scheme can make it play the worst of the two arms, and as $M=1$ this player will never encounter any collision, thus playing this suboptimal arm for $T-\bigO{\log(T)}$ times, leading to linear regret.
+
+
+\paragraph{Physical interpretation of the hypothesis of knowning $M$.}
+%
+% \TODOL{Explain that it does make less sense to know $M$}
+One criticism that could be made about our approach is the fact that if we study a wireless networks with no central coordination from the gateway,
+in particular where the devices cannot be assigned to a channel or be assigned a unique ID by the gateway when they first log in the network.
+Then in such networks, if one wants to apply an algorithm like \MCTopM-\klUCB,
+the $M$ devices need to known their number $M$, and have to receive it from the gateway, as it is the only part of this example of network which knowns $M$.
+It seems unrealistic to ask the gateway to send the fixed value $M$ to each device, and not a unique ID to each device, for instance $\mathrm{id}^j\in\{1,\dots,K\}$.
+
+\TODOL{Explain why the problem is MUCH easier if we have before hand these unique ID!}
+
+
+\paragraph{Literature review}
+
+Some works studied the same model as our model \modeldeux{} ``with sensing'', under the hypothesis
+
+
+\paragraph{Extension of our proposals to learn the value of $M$?}
+
+Similarly to what was proposed for the \rhoRandEst{} algorithm, we could have worked on proposing and analyzing an extension of our proposals that could efficiently learn the value of $M$ the number of player.
+Two possible directions exist to estimate on the fly this number.
+The first idea comes from \cite{Anandkumar11}, and is quite simple. All players will build an estimate $\hat{M}^j(t)$ of the number of player, that start by $\hat{M}^j(0)=1$. As soon as one collision is observed, a player knows that $M\geq2$, so $\hat{M}^j(t+1) = 2$.
+Then, 
+
 
 \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
 
 
+% ----------------------------------------------------------------------------
 \subsection{Without sensing information}
 \label{sub:5:withoutSensing}
 
 \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
+
+\cite{BoursierPerchet18}
+
+
+Distributed Learning and Optimal Assignment in Multiplayer Heterogeneous Networks
+H Tibrewal, S Patchala, MK Hanawal - arXiv preprint arXiv …, 2019 - arxiv.org
+https://arxiv.org/pdf/1901.03868.pdf
+\cite{Tibrewal2019}
+``communication/collision trick''
 
 
 \subsubsection{Additionnal numerical simulations}
@@ -86,30 +150,80 @@ This chapter is mainly based on the following publication: \cite{Besson2018ALT}.
 \TODOL{Do some basic simulations and show !}
 
 
+% ----------------------------------------------------------------------------
 \subsection{With communication or coordination between players}
 \label{sub:5:withCommunicationOrCoordination}
 
 \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
 
+Multi-user Communication Networks: A Coordinated Multi-armed Bandit Approach
+O Avner, S Mannor - arXiv preprint arXiv:1808.04875, 2018 - arxiv.org
+\cite{AvnerMannor18}
 
+
+% ----------------------------------------------------------------------------
 \subsection{Arrival and departures of players}
 \label{sub:5:arrivalDepartures}
 
 \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
 
+\cite{KumarYadav2018}
 
+Distributed Learning and Stable Orthogonalization in Ad-Hoc Networks with Heterogeneous Channels
+Sumit J Darak, Manjesh K. Hanawal
+https://arxiv.org/pdf/1812.11651
+\cite{DarakHanawal18}
+
+
+% ----------------------------------------------------------------------------
 \subsection{With different arm utilities among players}
 \label{sub:5:withDifferentMeansAmongPlayers}
 
 \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
 
+\cite{Bistritz18}
 
+\cite{KaufmannAbbas19}
+
+
+Distributed Learning and Stable Orthogonalization in Ad-Hoc Networks with Heterogeneous Channels
+Sumit J Darak, Manjesh K. Hanawal
+https://arxiv.org/pdf/1812.11651
+\cite{DarakHanawal18}
+
+
+Distributed Learning and Optimal Assignment in Multiplayer Heterogeneous Networks
+H Tibrewal, S Patchala, MK Hanawal
+https://arxiv.org/pdf/1901.03868.pdf
+\cite{Tibrewal2019}
+``The channel characteristics are unknown  and  could  be  different  for  each  user  (heterogeneous)''
+
+
+% ----------------------------------------------------------------------------
 \subsection{With malicious jammers}
 \label{sub:5:withDifferentMeansAmongPlayers}
 
 \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
 
+Learning to Coordinate in a Decentralized Cognitive Radio Network in Presence of Jammers
+Suneet Sawant, Rohit Kumar, Manjesh K. Hanawal, Sumit J. Darak 
+https://arxiv.org/abs/1803.06810
+\cite{SawantKumar2018}
 
+
+% ----------------------------------------------------------------------------
+\subsection{Modeling more closely a real wireless network}
+\label{sub:5:moreRealisticModels}
+
+\cite{NaparstekCohen17}
+
+Distributed Learning for Channel Allocation Over a Shared Spectrum
+S.M. Zafaruddin, Ilai Bistritz, Amir Leshem, Dusit Niyato
+https://arxiv.org/pdf/1902.06353
+\cite{Zafaruddin2019}
+
+
+% ----------------------------------------------------------------------------
 \subsection{Real-world demonstrations to validate some models}
 \label{sub:5:USRPdemos}
 
@@ -119,12 +233,28 @@ All the similar works that we are aware of also used USRP boards, and implemente
 
 \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
 
+\cite{Darak16}
 
+\cite{modiDemo2016}
+
+\cite{kumar2016two}
+
+\cite{KumarYadav2018}
+
+\cite{SawantKumar2018}
+
+\cite{JoshiKumar2018}
+
+
+% ----------------------------------------------------------------------------
 \subsection{Towards non-stationary multi-players MAB models}
 \label{sub:5:towardsNonStationaryModels}
 
 \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
 
+\cite{WeiSrivastava18Distributed}
+
+\cite{AlaturLevyKrause19}
 
 
 % ----------------------------------------------------------------------------
