@@ -66,14 +66,12 @@ This chapter is mainly based on the following publication: \cite{Besson2018ALT}.
 \label{sec:5:literatureReviewOtherModels}
 % ----------------------------------------------------------------------------
 
-We conclude this chapter with a literature review of the many extensions of the three models presented above in Section~\ref{sec:5:model}.
+Before concluding this chapter, we give a literature review of the many extensions of the three models presented above in Section~\ref{sec:5:model}.
 We wanted to highlight that the community was quite active on research on multi-player bandits in the last $10$ years, but especially active since last spring $2018$.
 For instance, our article \cite{Besson2018ALT} was the first to propose the ``no sensing'' case, and it was studied by (at least) three independent group of researchers since its publication in April $2018$ \cite{BoursierPerchet18,LugosiMehrabian18,AvnerMannor18}.
-Another example is the model with different ear means among players, who was studied first by \cite{Bistritz18} and shortly after by \cite{KaufmannAbbas19}.
+Another example is the model with different arm means among players, who was studied in \cite{Anandkumar10,Kalathil12} and then more recently in \cite{Bistritz18,KaufmannAbbas19}.
 %
 By following actively the research on multi-player bandit models since the last three years, we believe to be able to give an exhaustive literature review, but it is of course possible that we missed an important research work. In this case, it is our mistake and not an intentional choice as we included all the different extensions of our models that we were aware of.
-
-% \TODOL{Just a small sentence saying that we present here all the extensions of our models that we are aware of blabla}
 
 Many extensions of the simpler model of multi-player bandits have been considered.
 The number of players $M$ can be fixed but initially unknown to the players, the sensing information can be absent (like our \modeltrois{} presented above), there could be communications between players (happening at each time step or only occasionally), or $M$ could evolve over time to model the possibility of arrivals or departures of players (\ie, connexions and disconnections of devices in a wireless networks).
@@ -81,13 +79,13 @@ Also inspired by real-world wireless networks, the arm means may vary among play
 
 Finally, we can also be interested by models where $M$ stays fixed, but the environment evolves, for instance with abrupt changes in the means of arms. This last model makes a good connexion between this chapter and the next one, and an exciting future work is to further study this model in order to tackle this kind of problems by merging our proposals for stationary multi-player bandits and for non-stationary single-player bandits.
 
-\TODOL{I also need to include additional simulations from the latest research articles, and discussions about the new works that took inspiration in our paper.}
-
 \TODOL{
-    Pour chaque extension au modèle ci dessous, je veux suivre la même organisation :
+    Pour chaque extension présentée ci dessous, je veux suivre la même organisation :
 
     1. j'explique l'extension, et en quoi c'est difficile (= en quoi notre approche échoue si on fait rien de plus),
+
     2. j'explique les travaux existants, et les résultats qu'ils obtiennent e.g. en terme de bornes de regret
+
     3. si j'ai déjà le code pour, je peux montrer UNE simulation
 }
 
@@ -98,48 +96,55 @@ Finally, we can also be interested by models where $M$ stays fixed, but the envi
 
 In the model we presented above, we assumed the number of players $M$ to be fixed in time during the learning process.
 Without removing this hypothesis (we study this case below in Section~\ref{sub:5:arrivalDepartures}), it is interesting to remark that we made no hypothesis on whether the players can known this value $M$ or not.
-Our proposals, \RandTopM{} and \MCTopM, both assume to know $M$ beforehand, like it was done for our inspirational algorithms \RhoRand{} and \MusicalChair.
+Our proposals, \RandTopM{} and \MCTopM, both assume to know $M$ beforehand, like it was done for our main inspiration \RhoRand.
 
 
 \paragraph{Performance of our proposals for a wrong value of $M$?}
 %
-We can start by asking whether our efficient proposal, \MCTopM-\klUCB, is still efficient if it uses a value $M'$ different than the real number of players $M$.
-Even though we did not include numerical simulations for this case in Section~\ref{sec:5:experiments} above, we did some tests, and we observed two disappointing results.
-First, the three algorithms (\RhoRand, \RandTopM{} and \MCTopM) give linear regret if they are using a value $M'$ strictly smaller than $M$ (as soon as $\mu^*_{M-1} > \mu^*_M$), as players will converge to play ($T-\bigO{\log(T)}$ times) the $M-1$ best arms, leading to at least one collision and thus a linear regret.
-Second, if they are using $M' > M$, then there is also a certain probability to achieve a linear regret. Indeed, imagine one player ($M=1$) running \MCTopM{} with the false knowledge of $M'=2$, and if it learned to accurately identify the set of the $2$ best arms, then the \MCTopM{} orthogonalization scheme can make it play the worst of the two arms, and as $M=1$ this player will never encounter any collision, thus playing this suboptimal arm for $T-\bigO{\log(T)}$ times, leading to linear regret.
+We can start by asking whether our most efficient proposal, \MCTopM-\klUCB, is still efficient if it uses a value $M'$ different than the real number of players $M$.
+Even though we did not include numerical simulations for this case in Section~\ref{sec:5:experiments} above, we did some tests, which confirmed two disappointing results that were also proved analytically.
+First, the three algorithms (\RhoRand, \RandTopM{} and \MCTopM) give linear regret if they are using a value $M'$ strictly smaller than $M$ (and if $\mu^*_{M-1} > \mu^*_M$), as players will converge to play about $T-\bigO{\log(T)}$ times the $M-1$ best arms, leading to at least one collision most of the time, and thus a linear regret.
+Second, if the $M$ players falsely use a value $M' > M$, then there is also a certain (fixed) probability to achieve a linear regret. Indeed, imagine one player ($M=1$) running \MCTopM{} with the false knowledge of $M'=2$, and if it learned to accurately identify the set of the $2$ best arms, then the \MCTopM{} orthogonalization scheme can make it play the worst of the two arms, and as $M=1$ this player will never encounter any collision, thus playing this suboptimal arm for about $T-\bigO{\log(T)}$ times, also leading to linear regret.
 
 
-\paragraph{Physical interpretation of the hypothesis of knowning $M$.}
+\paragraph{Interpretation of the hypothesis of knowning $M$ for real-world networks.}
 %
 % \TODOL{Explain that it does make less sense to know $M$}
-One criticism that could be made about our approach is the fact that if we study a wireless networks with no central coordination from the gateway,
+One could criticize our approach if we study a wireless networks with no central coordination from the gateway,
 in particular where the devices cannot be assigned to a channel or be assigned a unique ID by the gateway when they first log in the network.
 Then in such networks, if one wants to apply an algorithm like \MCTopM-\klUCB,
 the $M$ devices need to known their number $M$, and have to receive it from the gateway, as it is the only part of this example of network which knowns $M$.
 It seems unrealistic to ask the gateway to send the fixed value $M$ to each device, and not a unique ID to each device, for instance $\mathrm{id}^j\in\{1,\dots,K\}$.
-
-\TODOL{Explain why the problem is MUCH easier if we have before hand these unique ID!}
+%
+% \TODOL{Explain why the problem is MUCH easier if we have before hand these unique ID!}
+If the $M$ players each have a unique ID, then a simple explore-then-commit algorithm running on top of a round-Robin phase can achieve order-optimal regret. Without giving more details, we let the interested refer to what is is explained for the RR-SW-UCB\# algorithm in \cite{WeiSrivastava18Distributed} and \cite{DarakHanawal18,JoshiKumar2018,KumarDarak2019}.
 
 
 \paragraph{Literature review}
 
 Some works studied the same model as our model \modeldeux{} ``with sensing'', under the hypothesis that players do not know in the value of $M$.
-
-
-\paragraph{Extension of our proposals to learn the value of $M$?}
-
-Similarly to what was proposed for the \rhoRandEst{} algorithm in \cite{Anandkumar11}, we could have worked on proposing and analyzing an extension of our proposals that could efficiently learn the value of $M$ the number of player.
+As illustrated above, if we consider algorithms building on the same ideas as \RhoRand{} or \MCTopM, it seems mandatory to first build an estimate of the value of $M$ then run the initial algorithm that assumed a perfect knowledge of $M$.
 Two possible directions exist to estimate on the fly this number.
 
-The first idea comes from \cite{Anandkumar11}, and is quite simple. All players will build an estimate $\hat{M}^j(t)$ of the number of player, that start by $\hat{M}^j(0)=1$. As soon as one collision is observed, a player knows that $M\geq2$, so $\hat{M}^j(t+1) = 2$.
+The first idea comes from \cite{Anandkumar11}, and the intuition behind it is quite simple, even if the mathematical derivations are not.
+All players will build an estimate $\hat{M}^j(t)$ of the number of player, that start by $\hat{M}^j(0)=1$. As soon as one collision is observed, a player knows that $M\geq2$, so $\hat{M}^j(t+1) = 2$.
 Then, based on probabilistic computations on the expected number of collisions if there were $m$ players, all following the same strategy (\eg, \RhoRand{} in the case of ), and because the formula is simple to compute for different $m$, the authors proposed a statistical test of the hypothesis $M \leq \hat{M}^j(t)$ against $M > \hat{M}^j(t)$ which is expressed as a simple comparison of the current number of collisions (since last update of $\hat{M}^j(t)$) against a threshold.
 If a player observed ``too many'' collisions (that are unlikely to be caused by only $\hat{M}^j(t) - 1$ other players), then she increases her current estimate $\hat{M}^j(t+1) = \hat{M}^j(t) + 1$.
-We implemented this \rhoRandEst{} policy in our library SMPyBandits \cite{SMPyBandits}, as well as this mechanism for our proposals \RandTopM{} and \MCTopM.
 
 The second idea comes from \cite{Rosenski16}, and suppose to know beforehand both the horizon $T$ and a certain measure of the difficulty of the problem (\ie, a lower bound on the minimal gap between two means).
 If all the $M$ players start to play for a long enough time $T_0$ uniformly at random among all the $K$ arms, then the (expected) number of collisions observed $\E[\cC^j_{T_0}]$ by any player $j$ is a (relatively simple) function of $M$. By knowing $K$ and $T_0$ and if all players use the same mechanism, then they can invert the formula to obtain the most likely estimate of $M$ which explained the observations of $\cC^j_{T_0}$ collisions.
 This second approach works empirically very fine, but it requires a fine tuning of the stopping time $T_0$.
 Rosenski et al. studies the performance of their algorithm with high-probability bounds \cite{Rosenski16}, and the tuning of $T_0$ they propose depends on prior knowledge on the problem.
+%
+For this reason, we are not fond of this approach, as this hypothesis is quite unrealistic if one wants to apply this kind of algorithms for real-world wireless networks.
+We note that all the following works assume some sort of prior knowledge on the difficulty of the problem:
+\cite{kumar2017channel,KumarYadav2018,SawantKumar2018,JoshiKumar2018,DarakHanawal18,KumarDarak2019,Tibrewal2019}.
+
+
+\paragraph{Extension of our proposals to learn the value of $M$?}
+
+Similarly to what was proposed for the \rhoRandEst{} algorithm in \cite{Anandkumar11}, we could have worked on proposing and analyzing an extension of our proposals that could efficiently learn the value of $M$ the number of player.
+We implemented this \rhoRandEst{} policy in our library SMPyBandits \cite{SMPyBandits}, as well as this mechanism for our proposals \RandTopM{} and \MCTopM.
 
 \TODOL{Include a simulation to show the behavior of \rhoRand{} vs \rhoRandEst, and \RandTopM{} and \MCTopM{} with prior knowledge of $M$ vs the ``estimate'' versions.}
 
@@ -150,19 +155,45 @@ Rosenski et al. studies the performance of their algorithm with high-probability
 \label{sub:5:withoutSensing}
 
 We presented in Section~\ref{sec:5:model} the model \modeltrois, without sensing information. Players can only observe $Y_k(t)$, the product of the \iid{} random sensing information from arm $k$ and of the no-collision indicator.
-This model is clearly harder than the model with sensing information, and even though our proposal \Selfish{} works fine in simulations (in terms of average regret), we proved that it can yield linear regret.
+This model seems harder than the model with sensing information, and even though our proposal \Selfish{} works fine in simulations (in terms of average regret), we proved that it can yield linear regret.
 In our paper \cite{Besson2018ALT} as well as the previous sections, it was left as a future work to know if an algorithm can achieve sub-linear regret in this harder model without sensing information.
 
 \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
 
-Inspired by our article \cite{Besson2018ALT}, Boursier and Perchet studied this question in the summer $2018$ following its publication \cite{BoursierPerchet18}.
-Their answer is that the model without sensing information is essentially not harder than with sensing information.
+Inspired by our article \cite{Besson2018ALT},
+Boursier and Perchet studied this question in the summer $2018$ following its publication \cite{BoursierPerchet18}.
+Their answer is that the model without sensing information is essentially not harder than the model with sensing information.
+%
+Similarly, Lugosi and Mehrabian studied the same problem \cite{LugosiMehrabian18}.
+In both works, the authors detail algorithms that are unfortunately suboptimal empirically, but give in both cases a logarithmic regret if $M\leqK$ players all independently implement the proposed algorithm.
+
+\paragraph{The ``communication trick''}
+%
+\TODOL{Write about half a page on the article \cite{BoursierPerchet18}.}
+
+
+\paragraph{Estimating collisions through uniform exploration}
+%
+\cite{LugosiMehrabian18} gives a first algorithm with expected regret of $\bigO{M K \log(T) / \Delta^2}$, if $\Delta = \mu^*_{M} - \mu^*_{M+1} \neq 0$, achieving a better dependency regarding $M$ when compared to our result (our bound is $\bigO{M^3}$) but at the cost of (much) larger constants hidden in the $\cO$ notation, and a non-fully explicit algorithms which usually obtain bad (or worse) empirical performance.
+Then they study an interesting extension that works also if $\Delta = 0$ or if $\Delta$ is so close than the bound in $1/\Delta^2$ becomes useless for ``small horizons''. This behavior is well known for classical bandits, where bounds of the form $\log(T)/\Delta^2$ become worse than a linear regret $T$ if $\Delta$ is very small (\ie, $\Delta\ll \sqrt{\log(T)/T}$).
+For this extension, their proposed algorithm is proved to achieve $\bigO{K^2 M (\log(T))^2 / \mu + K M \min(\sqrt{T \log(T)}, \log(T)/\Delta')}$ regret, if $\mu$ is a lower-bound on $\mu^*_{M}$ and $\Delta' = \max(\Delta, \min\{|\mu^*_M-\mu^*_i| : \mu^*_M > \mu^*_i \})$ (that both have to be known beforehand by the algorithm).
+%
+The proposed algorithms in \cite{LugosiMehrabian18} are all based on the Musical Chair algorithm from \cite{Rosenski16}, and the curious reader should read their Algorithm~2 (page 15) for more details.
+
+The results presented in \cite{LugosiMehrabian18} are based on some hypotheses, for instance the tuning they propose for the length $g$ of the uniform exploration phase in the beginning of their ``Musical Chair''-like algorithm is based on a prior knowledge of the horizon $T$.
+In Section~4 they explain how to relax the assumptions of their results.
+For the same example, the ``doubling trick'' technique can be used to obtain a regret upper bound for an algorithm unaware of the value of $T$, within a constant multiplicative factor of the upper bound given for the algorithm aware of $T$ (Section~4.1). Because the regret bound is of the form $\bigO{\sqrt{T} \log(T)}$, a simple ``doubling trick'' of increasing horizons of lengths $T_i = 2^i$ works well, as proposed in \cite{CesaLugosi06} and as studied in depth in our article \cite{Besson2018DoublingTricks}.
+They also study in Section~4.3 an extension of the model for the case with more players than arms, but we do not give more details on this aspect. Their definition of a centralized regret for this case is an interesting and natural generalization of our definition, and they also proposed an algorithm achieving $\bigO{M K \log(T) \exp(4M/K) / \Delta^2}$ regret in this case.
+Finally, they also proposed in Section~4.4 an extension of their algorithm to estimate the number of players $M$, which is analyzed as for the Musical Chair algorithm in \cite{Rosenski16}, and also achieve logarithmic regret.
+Note that it is significantly harder to estimate $M$ without collision information, and Algorithm~3 in page 24 is quite complex.
+We did not implement it, and it is an interesting future work to run some numerical simulations in order to validate it empirically.
+
 
 \paragraph{About \Selfish-\UCB{} inefficiency.}
 %
-They also prove in Appendix~A \cite{BoursierPerchet18} that \Selfish-\UCB{} has a linear regret, in the theoretical case, with a very neat argument from number theory (using Lindemann-Weierstrass theorem). As we conjectured, there is a gap between the theoretical result and its practical consequence, as the Theorem~4 they gave is only valid for real-valued number, and not for hardware-represented floating point number.
+It is also proved in Appendix~A of \cite{BoursierPerchet18} that \Selfish-\UCB{} has a linear regret, in the theoretical case, with a very neat argument from number theory (using Lindemann-Weierstrass theorem). As we conjectured, there is a gap between the theoretical result and its practical consequence, as the Theorem~4 they gave is only valid for real-valued number, and not for hardware-represented floating point number.
 Their proof is supporting what we illustrated in Figure~\ref{fig:5:oneGameTree_SelfishKLUCB}.
-Their argument is essentially to prove that for \Selfish-powered players using the simple \UCB-indexes, with a probability $p$ at time $t$ (both independent from $T$), two players might ahve the same number of pulls and the same observed rewards for each arm. In that case, the two players would pull the exact same arms and thus collide for a long time, until they reach a ``tie breaking point'' where they could choose different arms thanks to a random tie breaking rule (\eg, if two values of their \UCB{} indexes are the same, the $\argmax$ is a uniform random choice among the two arms).
+Their argument is essentially to prove that for \Selfish-powered players using the simple \UCB-indexes, with a probability $p$ at time $t$ (both independent from $T$), two players might have the same number of pulls and the same observed rewards for each arm. In that case, the two players would pull the exact same arms and thus collide for a long time, until they reach a ``tie breaking point'' where they could choose different arms thanks to a random tie breaking rule (\eg, if two values of their \UCB{} indexes are the same, the $\argmax$ is a uniform random choice among the two arms).
 They prove that it is unlikely to encounter any of these ``tie breaking points'', in theory if the \UCB{} indexes are real-valued number (that can be rational or irrational).
 
 
@@ -175,11 +206,18 @@ They prove that it is unlikely to encounter any of these ``tie breaking points''
 \subsection{With communication or coordination between players}
 \label{sub:5:withCommunicationOrCoordination}
 
-\TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
+In all the models of IoT networks considered in this thesis, we assume that the different IoT devices \emph{cannot communicate} with each other, and can only communicate with a unique gateway.
+Of course, this hypothesis can be removed, and in practice in some families of wireless networks, communication between players are possible.
+Note that this extension is not considering a graph of distributed agents all playing cooperatively to solve a unique bandit game, like it is studied in the ``graph bandit'' problem.
+What we are interested here is an extension of our model where players can send some bits to one or all the other players, at every time steps or some time steps. Clearly, the problem is easier by allowing communication, and it is quite immediate to see that the communication capacity between players must be limited otherwise the problem becomes trivial to solve.
+Indeed, imagine that at each time step $t$, all the $M$ players could share an unbounded number of bits with the other players, at no cost, even if this hypothesis is clearly unrealistic for wireless networks.
+Then they can share all their observations, and they can all run the same multi-plays MAB algorithm \cite{Anantharam87a} (in a deterministic way), like for instance the extension of Thompson sampling for multi-plays studied in \cite{Komiyama15}, or extensions of \KLUCB{} from \cite{Luedtke16}.
+In this setting, a logarithmic regret is obtained easily, and the regret upper-bound of the two aforementioned algorithms asymptotically achieve the lower-bound from \cite{Anantharam87a}.
 
-Multi-user Communication Networks: A Coordinated Multi-armed Bandit Approach
-O Avner, S Mannor - arXiv preprint arXiv:1808.04875, 2018 - arxiv.org
-\cite{AvnerMannor18}
+Thus an interesting extension is to limit the communication between players, either to a small number of bits, or just one bit, 
+This extension is studied in \cite{Avner16,AvnerMannor18}, where they essentially propose an efficient algorithm for this problem, that also reach a logarithmic regret when $M \leq K$ players are running independently the same algorithm.
+
+\TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
 
 
 % ----------------------------------------------------------------------------
