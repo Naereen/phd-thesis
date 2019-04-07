@@ -34,14 +34,13 @@ We are also interested to consider the harder model where devices do not have ac
 Our article \cite{Besson2018ALT} was the first to propose this ``no sensing'' model, for which we only proposed an heuristic, the naive \Selfish{} strategy as it was already used in Chapter~\ref{chapter:4}.
 Even if empirical simulations showed that \Selfish-\klUCB{} performs very well, it is a mistake to only consider mean regret, as we find on numerical simulations as well as formal derivation on a simple example of $K=M=2$ that the \Selfish{} heuristic can has a linear regret with a low probability (and so asymptotically it has linear regret and fails to solve the no sensing multi-player MAB problem).
 We did not propose any other efficient algorithm, but our work presented in April~$2018$ inspired some other articles \cite{LugosiMehrabian18,BoursierPerchet18}.
-Two articles confirmed our finding that \Selfish{} has a linear regret, and they all proposed new algorithms.
-We do not include numerical simulations to compare all of them, but we present in details the current state-of-the-art of research on multi-player MAB models without sensing.
+Two articles confirmed our finding that \Selfish{} can have a linear regret, and they all proposed new algorithms.
+We not include some numerical simulations to compare some of them, and we present in details the current state-of-the-art of research on multi-player MAB models without sensing.
 
-Finally, another interesting extension of the studied models is to consider different channels utility for each devices. It is a very interesting extension of our model, as for instance the devices could be located on different parts of a building or a field and suffer from different mean qualities of access to each channels.
+Another interesting extension of the studied model is to consider different channels utility for each devices. It is a very interesting extension of our model, as for instance the devices could be located on different parts of a building or a field and suffer from different mean qualities of access to each channels.
 This extension is not studied per say but we quickly review the existing literature, consisting in the two recent works \cite{Bistritz18,KaufmannAbbas19}, and we discuss the possible real-world usage of the existing algorithms.
 
-
-\TODOL{Get bibtex of the articles by Sumit J. Darak, and talk correctly about them!}
+Finally, we review other extensions of our model, and give a overview of the current state-of-the-art as exhaustive as possible.
 
 
 \vfill{}
@@ -68,7 +67,7 @@ This chapter is mainly based on the following publication: \cite{Besson2018ALT}.
 
 Before concluding this chapter, we give a literature review of the many extensions of the three models presented above in Section~\ref{sec:5:model}.
 We wanted to highlight that the community was quite active on research on multi-player bandits in the last $10$ years, but especially active since last spring $2018$.
-For instance, our article \cite{Besson2018ALT} was the first to propose the ``no sensing'' case, and it was studied by (at least) three independent group of researchers since its publication in April $2018$ \cite{BoursierPerchet18,LugosiMehrabian18,AvnerMannor18}.
+For instance, our article \cite{Besson2018ALT} was the first to propose the ``no sensing'' case, and it was studied by (at least) two independent group of researchers since its publication in April $2018$ \cite{BoursierPerchet18,LugosiMehrabian18}.
 Another example is the model with different arm means among players, who was studied in \cite{Anandkumar10,Kalathil12} and then more recently in \cite{Bistritz18,KaufmannAbbas19}.
 %
 By following actively the research on multi-player bandit models since the last three years, we believe to be able to give an exhaustive literature review, but it is of course possible that we missed an important research work. In this case, it is our mistake and not an intentional choice as we included all the different extensions of our models that we were aware of.
@@ -146,8 +145,41 @@ We note that all the following works assume some sort of prior knowledge on the 
 Similarly to what was proposed for the \rhoRandEst{} algorithm in \cite{Anandkumar11}, we could have worked on proposing and analyzing an extension of our proposals that could efficiently learn the value of $M$ the number of player.
 We implemented this \rhoRandEst{} policy in our library SMPyBandits \cite{SMPyBandits}, as well as this mechanism for our proposals \RandTopM{} and \MCTopM.
 
+\paragraph{Simulations.}
+
+We consider a bandit problem with $K=9$ arms, of means $0.1,0.2,\dots,0.8,0.9$, and three different cases of $M=3,6,9$ players, for $100$ independent repetitions and an horizon of $T=10000$.
+As before, we include the centralized multiple-play \klUCB{} as an unachievably efficient baseline, the \Selfish-\klUCB{} algorithm as an heuristic which does not require the know $M$.
+Then we compare the \RhoRand, \RandTopM{} and \MCTopM{} algorithms, using \klUCB, which know $M$ beforehand, with their extensions implementing the same algorithm as \rhoRandEst{} to estimate $M$ on the fly.
+
 \TODOL{Include a simulation to show the behavior of \rhoRand{} vs \rhoRandEst, and \RandTopM{} and \MCTopM{} with prior knowledge of $M$ vs the ``estimate'' versions.}
 
+
+\begin{table}[ht]
+    % \begin{footnotesize}
+        \centering
+        \begin{tabular}{c|ccc}
+        \textbf{Algorithms} $\;$ \textbackslash $\;$ \textbf{Number of players} & $M=3$ & $M=6$ & $M=9$ \\
+            \hline
+            Centralized multiple-play \klUCB{} & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
+            \hline
+            \RhoRand-\klUCB{} & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
+            \RhoRand-\klUCB{} + Estimate $M$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
+            \hline
+            \RandTopM-\klUCB{} & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
+            \RandTopM-\klUCB{} + Estimate $M$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
+            \hline
+            \MCTopM-\klUCB{} & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
+            \MCTopM-\klUCB{} + Estimate $M$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
+            \hline
+            \Selfish-\klUCB{} & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
+            \hline
+        \end{tabular}
+        \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on the same problem with $M=3,6,9$, comparing algorithms which knows $M$ against algorithms which estimate $M$ on the fly.}
+        \label{table:5:meanRegretSimulationsEstimatingM}
+    % \end{footnotesize}
+    \end{table}
+
+\TODOL{Give interpretation from these results!}
 
 
 % ----------------------------------------------------------------------------
@@ -157,8 +189,6 @@ We implemented this \rhoRandEst{} policy in our library SMPyBandits \cite{SMPyBa
 We presented in Section~\ref{sec:5:model} the model \modeltrois, without sensing information. Players can only observe $Y_k(t)$, the product of the \iid{} random sensing information from arm $k$ and of the no-collision indicator.
 This model seems harder than the model with sensing information, and even though our proposal \Selfish{} works fine in simulations (in terms of average regret), we proved that it can yield linear regret.
 In our paper \cite{Besson2018ALT} as well as the previous sections, it was left as a future work to know if an algorithm can achieve sub-linear regret in this harder model without sensing information.
-
-\TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
 
 Inspired by our article \cite{Besson2018ALT},
 Boursier and Perchet studied this question in the summer $2018$ following its publication \cite{BoursierPerchet18}.
@@ -199,14 +229,43 @@ They prove that it is unlikely to encounter any of these ``tie breaking points''
 
 \subsubsection{Additionnal numerical simulations}
 
-\TODOL{Do some basic simulations and show !}
+\TODOL{Do some basic simulations and show :
+
+    - Selfish-UCB from \cite{Besson2018ALT}.
+    - Improved Musical Chair from \cite{LugosiMehrabian18}.
+    - SIC-MMAB from \cite{BoursierPerchet18}.
+}
+
+As above, we consider a bandit problem with $K=9$ arms, of means $0.1,0.2,\dots,0.8,0.9$, and three different cases of $M=3,6,9$ players, for $100$ independent repetitions and an horizon of $T=10000$.
+We include the \Selfish-\klUCB{} algorithm as an heuristic, as well as the Improved \MusicalChair{} algorithm from \cite{LugosiMehrabian18} and \textsc{Sic-MMAB} from \cite{BoursierPerchet18}.
+
+
+\begin{table}[ht]
+    % \begin{footnotesize}
+        \centering
+        \begin{tabular}{c|ccc}
+        \textbf{Algorithms} $\;$ \textbackslash $\;$ \textbf{Number of players} & $M=3$ & $M=6$ & $M=9$ \\
+            \hline
+            \Selfish-\klUCB{} & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
+            \hline
+            Improved \MusicalChair{} & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
+            \hline
+            \textsc{Sic-MMAB} & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
+            \hline
+        \end{tabular}
+        \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on the same problem with $M=3,6,9$, for the ``no sensing'' case.}
+        \label{table:5:meanRegretSimulationsNoSensing}
+    % \end{footnotesize}
+    \end{table}
+
+\TODOL{Give interpretation from these results!}
 
 
 % ----------------------------------------------------------------------------
 \subsection{With communication or coordination between players}
 \label{sub:5:withCommunicationOrCoordination}
 
-In all the models of IoT networks considered in this thesis, we assume that the different IoT devices \emph{cannot communicate} with each other, and can only communicate with a unique gateway.
+In all the models of IoT networks considered in this thesis, we assume that \emph{the different IoT devices cannot communicate with each other}, and can only communicate with a unique gateway.
 Of course, this hypothesis can be removed, and in practice in some families of wireless networks, communication between players are possible.
 Note that this extension is not considering a graph of distributed agents all playing cooperatively to solve a unique bandit game, like it is studied in the ``graph bandit'' problem.
 What we are interested here is an extension of our model where players can send some bits to one or all the other players, at every time steps or some time steps. Clearly, the problem is easier by allowing communication, and it is quite immediate to see that the communication capacity between players must be limited otherwise the problem becomes trivial to solve.
@@ -214,17 +273,66 @@ Indeed, imagine that at each time step $t$, all the $M$ players could share an u
 Then they can share all their observations, and they can all run the same multi-plays MAB algorithm \cite{Anantharam87a} (in a deterministic way), like for instance the extension of Thompson sampling for multi-plays studied in \cite{Komiyama15}, or extensions of \KLUCB{} from \cite{Luedtke16}.
 In this setting, a logarithmic regret is obtained easily, and the regret upper-bound of the two aforementioned algorithms asymptotically achieve the lower-bound from \cite{Anantharam87a}.
 
-Thus an interesting extension is to limit the communication between players, either to a small number of bits, or just one bit, 
-This extension is studied in \cite{Avner16,AvnerMannor18}, where they essentially propose an efficient algorithm for this problem, that also reach a logarithmic regret when $M \leq K$ players are running independently the same algorithm.
+An interesting extension is thus to limit the communication between players, either to a small number of bits, or just one bit.
+We do not review papers that study this model, because the recent work \cite{BoursierPerchet18} introduced the ``communication trick'', that essentially allow any player to send one bit to all the others, at some pre-agreed time steps, with no modification on the model.
+Thanks to this ``communication trick'', recent research efforts have been more focus on studying the basic model --without explicit communications between players--, while proposing algorithms that can rely on some communication between players.
+This trick essentially use the fact that the players share a synchronized time, thus they can use a collision as a way to directly exchange one bit of information between two players.
+This process is slow and not efficient, as all but two players must do nothing when player $i$ is sending a bit to player $j$, but it does build a communication protocol in the model without explicit communication between players.
+This ``communication trick'' is used for instance in \cite{KaufmannAbbas19}.
+We let the interested reader refer to these last two works \cite{BoursierPerchet18,KaufmannAbbas19} as they are both solid, and well explained.
 
-\TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
+Another line of research is to consider models that are closer to realistic wireless communication networks, as it is done in \cite{Avner16,AvnerMannor18}.
+Explaining in details their model and proposed solutions would be quite lengthy, and we rather prefer to let the interested reader refer to the later work \cite{AvnerMannor18}.
+% where they essentially propose an efficient algorithm for this problem, that also reach a logarithmic regret when $M \leq K$ players are running independently the same algorithm.
+% FIXME don't copy/paste their abstract...
+We sum-up its contributions quickly.
+They we address several aspects of the challenge of communication networks shared by many users simultaneously: learning unknown stochastic network characteristics, sharing resources with other users while keeping coordination overhead to a minimum.
+The proposed solution combines Multi-Armed Bandit learning with a lightweight signalling-based coordination scheme, and ensures convergence to a stable allocation of resources.
+They work considers single-user level algorithms for two scenarios:an unknown fixed number of users, and a dynamic number of users.
+Analytic performance guarantees, proving convergence to stable marriage configurations, are presented for both setups. The algorithms are designed based on a system-wide perspective, rather than focusing on single user welfare. Thus, maximal re-source utilization is ensured.
 
 
 % ----------------------------------------------------------------------------
-\subsection{Arrival and departures of players}
+\subsection{Arrival and departures of players: the ``dynamic setting''}
 \label{sub:5:arrivalDepartures}
 
+As reminded above, our model assumes the number of players $M$ remain fixed during all the bandit game.
+However, in real-world wireless networks, when players model communicating devices connected to a single gateway, devices can arrive or leave the network at any time.
+The existing previous work on multi-player bandit models are all motivated by possible applications to wireless networks, but most of them assume $M$ to be fixed.
+The first work studying the relaxation of this hypothesis is \cite{Rosenski16}, where this case is called the ``dynamic setting''.
+If the arrival or departures of players is not random, but determined in advance while still being unknown to any player, the natural notion of regret is the following, where the expectancy $\E[\bullet]$ is capturing the randomness in the rewards (\ie, sensing) as well as in the players' decisions (\ie, collisions):
+\begin{equation}\label{eq:5:defRegretDynamicSetting}
+    R_T^{\text{dyn}} = \sum_{t=1}^T \sum_{k=1}^{M(t)} \mu^*_{k} - \E\Bigl[ \sum_{t=1}^T \sum_{j=1}^{M(t)} r^j(t) \Bigr].
+\end{equation}
+
+In \cite{Rosenski16}, the authors explain that if the model allows arrival or departures of players at \emph{any time step}, then the game is much harder, and sub-linear regret is most likely un-achievable, if we consider the natural extension of the definition of regret as in our model presented in Section~\ref{sec:5:model} above.
+However, this negative results depends on how arrival of players are modeled:
+if an arriving player has no prior memory of the previous observations, \ie, if it model a new device, then if there is no restriction on the number or frequency of arrival or departures, we can most likely prove that sub-linear regret is not achievable in general.
+A simple but extreme example shows that regret has to be linear for any bandit strategy (in the observation model with sensing).
+Consider $K=2$ Bernoulli-distributed arms of means $\mu_1=\mu_2=1/2$, and one player is always active and play any bandit strategy (\eg, \MCTopM-\klUCB).
+Every time step, another player is either arriving, without any knowledge of the problem (\eg, it is a fresh and new IoT device). Then no matter the strategy of these news players, even if they all play \MCTop-\klUCB{} for instance, if they player a uniformly-efficient strategy there is a non-zero probability that player $1$ suffer from a collision at each time step, thus resulting in linear centralized system regret.
+
+In \cite{Rosenski16}, it is assumed that the players all know a lower-bound $L$ on the length of all the intervals during which arrival or departures of players are allowed.
+A naive idea, if $L$ is large enough, is simply to restart the underlying algorithm every $L$ time steps, in order to directly benefit from the theoretical guarantees of the ``static setting'' (where $M$ stays constant).
+However, this idea yields a large regret if the length of ``static'' intervals $L$ is too small.
+Applied to the \MusicalChair{} algorithm, the authors in \cite{Rosenski16} call this basic extension Dynamic \MusicalChair
+Under the simple hypothesis that the overall number of players entering and leaving the game is sub-linear in $T$ (\ie, a $\smallO{T}$), they analyze the regret of Dynamic \MusicalChair{} and prove it is also sub-linear (see Theorem~2 in Section~3.4).
+%
+Under the same hypothesis, and if the lower-bound $L$ is known before-hand and is large enough, then we could also apply the same idea as from \cite{Rosenski16} to our approach. We believe that we could easily prove that a sub-linear regret is achievable, if all players run \MCTopM-\klUCB{} (and if currently active players restart their memory of the past observations every $L$ time steps).
+As the regret guarantees are stronger (\ie, smaller regret upper-bound) for \MCTopM{} than \MusicalChair, we also believe that in this ``slowly varying'' dynamic setting, using the idea of Dynamic \MusicalChair{} from \cite{Rosenski16} to our proposal \MCTopM{} would also give a small regret upper-bound.
+
+After being introduced in \cite{Rosenski16}, some more recent works studied the case of arrival or departures of players, usually referred to as ``dynamic setting'' or ``dynamic case''.
+For instance, \cite{BoursierPerchet18} studies in Section~4 the first algorithm proposed for the dynamic case under the no-sensing model.
+They study the same notion of regret as the one proposed in \cite{Rosenski16} and given above in \eqref{eq:5:defRegretDynamicSetting}, see Equation $(10)$ in Section~4.2.1.
+With the assumption of a non-decreasing number of players, \ie, if only arrivals of players are considered,
+they prove a regret upper-bound of the \textsc{Dyn-MMAB} algorithm in Theorem~3 .
+% Denote $M(t)$ the number of players at each time $t$, then they propose to study $R_T$ defined as
+% \[ R_T = \sum_{t=1}^T \sum_{k=1}^{M(t)} \mu_^*{k} - \sum_{t=1}^T \sum_{j=1}^{M(t)} r^j(t). \]
+If all arriving players are using their \textsc{Dyn-MMAB} algorithm, the ``dynamic'' regret is bounded by $\bigO{M^2 K \log(T) / \mu^*_{M}}$, if $M=M(T)$ is the total number of players involved in the problem.
+
 \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
+
+Note that we have not yet implemented this extension in SMPyBandits \cite{SMPyBandits}, but we are interested to do it, and it is one of the major future work left on our library\footnote{See the issue ticket open at \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{\texttt{GitHub.com/SMPyBandits/SMPyBandits/issues/124}}}.
 
 \cite{KumarYadav2018}
 
@@ -243,6 +351,10 @@ https://arxiv.org/pdf/1812.11651
 \cite{Bistritz18}
 
 \cite{KaufmannAbbas19}
+
+
+
+Note that we have not yet implemented this extension in SMPyBandits \cite{SMPyBandits}, but we are interested to do it, and it is one of the major future work left on our library\footnote{See the issue ticket open at \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{\texttt{GitHub.com/SMPyBandits/SMPyBandits/issues/185}}}.
 
 
 Distributed Learning and Stable Orthogonalization in Ad-Hoc Networks with Heterogeneous Channels
@@ -265,9 +377,13 @@ https://arxiv.org/pdf/1901.03868.pdf
 \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
 
 Learning to Coordinate in a Decentralized Cognitive Radio Network in Presence of Jammers
-Suneet Sawant, Rohit Kumar, Manjesh K. Hanawal, Sumit J. Darak 
+Suneet Sawant, Rohit Kumar, Manjesh K. Hanawal, Sumit J. Darak
 https://arxiv.org/abs/1803.06810
 \cite{SawantKumar2018}
+
+
+
+Note that we have not yet implemented this extension in SMPyBandits \cite{SMPyBandits}, but we are interested to do it, and it is one of the major future work left on our library\footnote{See the issue ticket open at \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{\texttt{GitHub.com/SMPyBandits/SMPyBandits/issues/120}}}.
 
 
 % ----------------------------------------------------------------------------
