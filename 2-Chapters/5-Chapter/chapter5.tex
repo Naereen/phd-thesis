@@ -108,7 +108,6 @@ Second, if the $M$ players falsely use a value $M' > M$, then there is also a ce
 
 \paragraph{Interpretation of the hypothesis of knowning $M$ for real-world networks.}
 %
-% \TODOL{Explain that it does make less sense to know $M$}
 One could criticize our approach if we study a wireless networks with no central coordination from the gateway,
 in particular where the devices cannot be assigned to a channel or be assigned a unique ID by the gateway when they first log in the network.
 Then in such networks, if one wants to apply an algorithm like \MCTopM-\klUCB,
@@ -116,10 +115,10 @@ the $M$ devices need to known their number $M$, and have to receive it from the 
 It seems unrealistic to ask the gateway to send the fixed value $M$ to each device, and not a unique ID to each device, for instance $\mathrm{id}^j\in\{1,\dots,K\}$.
 %
 % \TODOL{Explain why the problem is MUCH easier if we have before hand these unique ID!}
-If the $M$ players each have a unique ID, then a simple explore-then-commit algorithm running on top of a round-Robin phase can achieve order-optimal regret. Without giving more details, we let the interested refer to what is is explained for the RR-SW-UCB\# algorithm in \cite{WeiSrivastava18Distributed} and \cite{DarakHanawal18,JoshiKumar2018,KumarDarak2019}.
+If the $M$ players each have a unique ID, then a simple explore-then-commit algorithm running on top of a round-Robin phase can achieve order-optimal regret. Without giving more details, we let the interested refer to what is is explained for the RR-SW-UCB\# algorithm in \cite{WeiSrivastava18Distributed} and the algorithms presented in \cite{DarakHanawal18,JoshiKumar2018,KumarDarak2019}.
 
 
-\paragraph{Literature review}
+\paragraph{Two ideas to estimate $M$.}
 
 Some works studied the same model as our model \modeldeux{} ``with sensing'', under the hypothesis that players do not know in the value of $M$.
 As illustrated above, if we consider algorithms building on the same ideas as \RhoRand{} or \MCTopM, it seems mandatory to first build an estimate of the value of $M$ then run the initial algorithm that assumed a perfect knowledge of $M$.
@@ -140,10 +139,13 @@ We note that all the following works assume some sort of prior knowledge on the 
 \cite{kumar2017channel,KumarYadav2018,SawantKumar2018,JoshiKumar2018,DarakHanawal18,KumarDarak2019,Tibrewal2019}.
 
 
-\paragraph{Extension of our proposals to learn the value of $M$?}
+\paragraph{Extension of our proposals to learn the value of $M$.}
 
 Similarly to what was proposed for the \rhoRandEst{} algorithm in \cite{Anandkumar11}, we could have worked on proposing and analyzing an extension of our proposals that could efficiently learn the value of $M$ the number of player.
 We implemented this \rhoRandEst{} policy in our library SMPyBandits \cite{SMPyBandits}, as well as this mechanism for our proposals \RandTopM{} and \MCTopM.
+Building from the theoretical analysis given for \rhoRandEst{} in \cite{Anandkumar11}, and our analysis of \MCTopM-\klUCB, we believe it is possible to show that the aforementioned extension of our proposal also achieves sub-linear regret without requiring players to know $M$ in the beginning of the bandit game.
+More precisely, we believe that \MCTopM-\klUCB{} can still give order-optimal logarithmic regret if $M$ players use it, and this extension of Theorem~\ref{thm:5:LogarithmicRegret_MCTopMklUCB} is not included due to space constraints.
+Writing its proof and performing more simulations are left as possible future work.
 
 \paragraph{Simulations.}
 
@@ -195,7 +197,7 @@ Boursier and Perchet studied this question in the summer $2018$ following its pu
 Their answer is that the model without sensing information is essentially not harder than the model with sensing information.
 %
 Similarly, Lugosi and Mehrabian studied the same problem \cite{LugosiMehrabian18}.
-In both works, the authors detail algorithms that are unfortunately suboptimal empirically, but give in both cases a logarithmic regret if $M\leqK$ players all independently implement the proposed algorithm.
+In both works, the authors detail algorithms that are unfortunately suboptimal empirically, but give in both cases a logarithmic regret if $M \leq K$ players all independently implement the proposed algorithm.
 
 \paragraph{The ``communication trick''}
 %
@@ -284,12 +286,14 @@ We let the interested reader refer to these last two works \cite{BoursierPerchet
 Another line of research is to consider models that are closer to realistic wireless communication networks, as it is done in \cite{Avner16,AvnerMannor18}.
 Explaining in details their model and proposed solutions would be quite lengthy, and we rather prefer to let the interested reader refer to the later work \cite{AvnerMannor18}.
 % where they essentially propose an efficient algorithm for this problem, that also reach a logarithmic regret when $M \leq K$ players are running independently the same algorithm.
-% FIXME don't copy/paste their abstract...
+\TODOL{FIXME don't copy/paste their abstract...}
 We sum-up its contributions quickly.
 They we address several aspects of the challenge of communication networks shared by many users simultaneously: learning unknown stochastic network characteristics, sharing resources with other users while keeping coordination overhead to a minimum.
 The proposed solution combines Multi-Armed Bandit learning with a lightweight signalling-based coordination scheme, and ensures convergence to a stable allocation of resources.
 They work considers single-user level algorithms for two scenarios:an unknown fixed number of users, and a dynamic number of users.
 Analytic performance guarantees, proving convergence to stable marriage configurations, are presented for both setups. The algorithms are designed based on a system-wide perspective, rather than focusing on single user welfare. Thus, maximal re-source utilization is ensured.
+
+\TODOL{A conclusion from this sub-section presenting this model?}
 
 
 % ----------------------------------------------------------------------------
@@ -310,7 +314,7 @@ However, this negative results depends on how arrival of players are modeled:
 if an arriving player has no prior memory of the previous observations, \ie, if it model a new device, then if there is no restriction on the number or frequency of arrival or departures, we can most likely prove that sub-linear regret is not achievable in general.
 A simple but extreme example shows that regret has to be linear for any bandit strategy (in the observation model with sensing).
 Consider $K=2$ Bernoulli-distributed arms of means $\mu_1=\mu_2=1/2$, and one player is always active and play any bandit strategy (\eg, \MCTopM-\klUCB).
-Every time step, another player is either arriving, without any knowledge of the problem (\eg, it is a fresh and new IoT device). Then no matter the strategy of these news players, even if they all play \MCTop-\klUCB{} for instance, if they player a uniformly-efficient strategy there is a non-zero probability that player $1$ suffer from a collision at each time step, thus resulting in linear centralized system regret.
+Every time step, another player is either arriving, without any knowledge of the problem (\eg, it is a fresh and new IoT device). Then no matter the strategy of these news players, even if they all play \MCTopM-\klUCB{} for instance, if they player a uniformly-efficient strategy there is a non-zero probability that player $1$ suffer from a collision at each time step, thus resulting in linear centralized system regret.
 
 In \cite{Rosenski16}, it is assumed that the players all know a lower-bound $L$ on the length of all the intervals during which arrival or departures of players are allowed.
 A naive idea, if $L$ is large enough, is simply to restart the underlying algorithm every $L$ time steps, in order to directly benefit from the theoretical guarantees of the ``static setting'' (where $M$ stays constant).
