@@ -42,7 +42,7 @@ Finally, in Appendix~\ref{sec:3:appendix} we include some minimalist files showi
 \paragraph{Publications}
 %
 This chapter is based on the following publication: \cite{SMPyBanditsJMLR}.
-The code code for SMPyBandits is hosted online at \texttt{\href{https://GitHub.com/SMPyBandits/SMPyBandits/}{GitHub.com/SMPyBandits/SMPyBandits}}, its documentation is at \texttt{\href{https://SMPyBandits.GitHub.io/}{SMPyBandits.GitHub.io}} or \texttt{\href{https://SMPyBandits.RTFD.io/}{SMPyBandits.RTFD.io}}, and all the library is publicly released under the MIT open-source License.
+The code for SMPyBandits is hosted online at \texttt{\href{https://GitHub.com/SMPyBandits/SMPyBandits/}{GitHub.com/SMPyBandits/SMPyBandits}}, its documentation is at \texttt{\href{https://SMPyBandits.GitHub.io/}{SMPyBandits.GitHub.io}} or \texttt{\href{https://SMPyBandits.RTFD.io/}{SMPyBandits.RTFD.io}}, and all the library is publicly released under the MIT open-source License.
 
 
 % ----------------------------------------------------------------------------
@@ -79,9 +79,7 @@ reward distributions, MAB algorithm, and a simulation loop that essentially look
 \end{itemize}
 %
 Note that the second step should of course be repeated a large number of times if we want to study \emph{mean} regret and not only the regret in one single trajectory.
-
-% FIXME finish this paragraph
-If one wants to compare algorithms on a same problem, it is possible to sample all the rewards $(r_k(t))_{k\in[K], t\in[T]}$ before-hand, and ensure XXX.
+If one wants to compare algorithms on a same problem, it is possible to sample all the rewards $(r_k(t))_{k\in[K], t\in[T]}$ before-hand, and store them so that for each repetition of the simulation, the randomness from the environment (\ie, the rewards) has the same impact on all the algorithms.
 
 
 \paragraph{Simulation loop for multi-player bandit}
@@ -93,7 +91,7 @@ Different collision models has been proposed, and the simplest one consists in g
 Without any centralized supervision or coordination between players, they must learn to access the $M$ best resources (\ie, arms with highest means) without collisions.
 We refer to Chapter~\ref{chapter:5} which introduces and details various multi-player bandit models.
 
-SMPyBandits implements all collision models found in the literature (in the module \texttt{\href{https://SMPyBandits.GitHub.io/docs/Environment.CollisionModels.html}{Environment.CollisionModels}}), as well as all the algorithms from the last 10 years (in the module \texttt{\href{https://SMPyBandits.GitHub.io/docs/Environment.CollisionModels.html}{Environment.CollisionModels}}).
+SMPyBandits implements all collision models found in the literature (in the module \texttt{\href{https://SMPyBandits.GitHub.io/docs/Environment.CollisionModels.html}{Environment.CollisionModels}}), as well as all the algorithms known by the authors (in the module \texttt{\href{https://SMPyBandits.GitHub.io/docs/Environment.CollisionModels.html}{Environment.CollisionModels}}).
 %
 It includes
 \texttt{rhoRand} (\texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html}{PoliciesMultiPlayers.rhoRand}}) from \cite{Anandkumar11},
@@ -120,12 +118,13 @@ This library tackles one dimensional distributions,
 and supports \emph{Bernoulli} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Bernoulli.html}{Arms.Bernoulli}}), \emph{binomial} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Binomial.html}{Arms.Binomial}}), \emph{Poisson} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Poisson.html}{Arms.Poisson}}), and a generic \emph{discrete} (\texttt{\href{https://smpybandits.github.io/docs/Arms.DiscreteArm.html}{Arms.DiscreteArm}}) distributions,
 as well as \emph{exponential} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Exponential.html}{Arms.Exponential}}), \emph{gamma} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Gamma.html}{Arms.Gamma}}), \emph{Gaussian} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Gaussian.html}{Arms.Gaussian}}) and \emph{uniform} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Uniform.html}{Arms.Uniform}}) continuous distributions,
 which can be truncated to an interval $[a,b]$ or have unbounded support ($\mathbb{R}$).
-
-The default is to use the same distribution for the $K$ arms, but it also possible to mix them.
-
-% FIXME
-\TODOL{point to the notebook!}
-% https://perso.crans.org/besson/phd/notebooks/Easily_creating_MAB_problems.html
+%
+The default is to use the same distribution for the $K$ arms, but it also possible to mix them (see for instance Figure~\ref{fig:25:HarderMixed}).
+%
+We do not give more details, but the interested reader can refer to the following Jupyter notebook \cite{jupyter} document hosted at:\\
+\begin{small}
+    \href{https://smpybandits.github.io/notebooks/Easily_creating_MAB_problems.html}{\texttt{SMPyBandits.GitHub.io/notebooks/Easily\_creating\_MAB\_problems.html}}
+\end{small}
 
 
 \subsection{MAB algorithms}
@@ -204,7 +203,7 @@ $ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=4 \
 
 A small script \texttt{configuration.py} (\texttt{\href{https://SMPyBandits.GitHub.io/docs/configuration.html}{SMPyBandits.GitHub.io/docs/configuration.html}}) is used to import the arm classes (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Arms.html}{SMPyBandits.GitHub.io/docs/Arms.html}}), the policy classes (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.html}{SMPyBandits.GitHub.io/docs/Policies.html}}) and define the problems and the experiments.
 Choosing the algorithms is easy by customizing the \texttt{configuration["policies"]} list in the \texttt{configuration.py} file.
-For instance, one can compare the standard anytime \klUCB{} algorithm (class \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.klUCB.html}{Policies.klUCB}}) against the non-anytime variant $\klUCB^{++}$ algorithm (class \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.klUCBPlusPlus.html}{Policies.klUCBPlusPlus}}), and also \UCB{} with $\alpha=1$ (class \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.UCBalpha.html}{Policies.UCB}}) and Thompson sampling (class \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Thompson.html}{Policies.Thompson}}) with a Beta posterior (class \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Posterior.Beta.html}{Policies.Posterior.Beta}})).
+For instance, one can compare the standard anytime \klUCB{} algorithm (class \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.klUCB.html}{Policies.klUCB}}) against the non-anytime variant $\klUCB^{++}$ algorithm (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.klUCBPlusPlus.html}{Policies.klUCBPlusPlus}}), and also \UCB{} with $\alpha=1$ (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.UCBalpha.html}{Policies.UCB}}) and Thompson sampling (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Thompson.html}{Policies.Thompson}}) with a Beta posterior (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Posterior.Beta.html}{Policies.Posterior.Beta}})).
 
 % https://tex.stackexchange.com/a/12430/
 \begin{small}
@@ -223,11 +222,6 @@ configuration["policies"] = [
 \end{listing}
 \end{small}
 
-Running the simulation as shown above will save figures in a sub-folder, as well as save data (pulls, rewards and regret) in a HDF5 file (\cite{h5py}, \texttt{\href{http://docs.h5py.org/en/stable/high/file.html}{docs.h5py.org/en/stable/high/file.html}})\footnote{~For example, this simulation produces this HDF5 file\\\texttt{\href{https://github.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5}{GitHub.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5}}}.
-Figure~\ref{fig:3:firstPlot} below shows the average regret for these $4$ algorithms.
-The regret is the difference between the cumulated rewards of the best fixed-armed strategy (which is the oracle strategy for stationary bandits), and the cumulated rewards of the considered algorithms.
-The Figure~\ref{fig:3:firstPlot_hist} shows the histogram of regret for the same experiment.
-
 \begin{figure}[h!]  % [htbp]
 	% \centering
 	\includegraphics[width=1.05\linewidth]{3.pdf}
@@ -236,6 +230,13 @@ The Figure~\ref{fig:3:firstPlot_hist} shows the histogram of regret for the same
 	}
 	\label{fig:3:firstPlot}
 \end{figure}
+
+Running the simulation as shown above will save figures in a sub-folder, as well as save data (pulls, rewards and regret) in a HDF5 file\footnote{~For example, this simulation produces this HDF5 file\\\texttt{\href{https://github.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5}{GitHub.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5}}}
+\cite{h5py}.
+% \texttt{\href{http://docs.h5py.org/en/stable/high/file.html}{docs.h5py.org/en/stable/high/file.html}}).
+Figure~\ref{fig:3:firstPlot} above shows the average regret for these $4$ algorithms.
+The regret is the difference between the cumulated rewards of the best fixed-armed strategy (which is the oracle strategy for stationary bandits), and the cumulated rewards of the considered algorithms.
+The Figure~\ref{fig:3:firstPlot_hist} below shows the histogram of regret for the same experiment.
 
 \begin{figure}[h!]  % [htbp]
 	% \centering
@@ -254,18 +255,18 @@ Optional dependencies include \texttt{joblib} \cite{joblib} for parallel simulat
 All the quoted libraries are free and open-source and can be installed in one command using the \texttt{pip} (\texttt{\href{https://pip.pypa.io/}{pip.PyPa.io}}) or \texttt{conda} (\texttt{\href{http://conda.anaconda.org/}{conda.anaconda.org}}) package manager.
 
 
-\subsection{Research papers using SMPyBandits}
+\subsection{Research works using SMPyBandits}
 
-SMPyBandits was used for the following research articles since $2017$.
+SMPyBandits was used for the following research articles since $2017$, and it is used for the next chapters of this thesis (except in Chapter~\ref{chapter:4}).
 
-In \cite{Besson2018WCNC} and in Chapter~\ref{chapter:2}, we used SMPyBandits to illustrate and compare different aggregation algorithms\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/Aggregation.html}{SMPyBandits.GitHub.io/Aggregation.html}} on the documentation, which gives detailed instructions to reproduce the results presented in this research paper, details about the models and the notations, and bibliographic references.}. We designed a variant of the Exp4 algorithm for online aggregation of experts \cite{Bubeck12}, called \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Aggregator.html}{Aggregator}}.
+In \cite{Besson2018WCNC} and in Chapter~\ref{chapter:2} above, we used SMPyBandits to illustrate and compare different aggregation algorithms\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/Aggregation.html}{SMPyBandits.GitHub.io/Aggregation.html}} on the documentation, which gives detailed instructions to reproduce the results presented in this research paper, details about the models and the notations, and bibliographic references.}. We designed a variant of the Exp4 algorithm for online aggregation of experts \cite{Bubeck12}, called \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Aggregator.html}{Aggregator}}.
 % Aggregating experts is a well-studied idea in sequential learning and in machine learning in general. We showed that it can be used in practice to select on the run the best bandit algorithm for a certain problem from a fixed pool of experts. This idea and algorithm can have interesting impact for Opportunistic Spectrum Access applications \cite{Jouini09} that use multi-armed bandits algorithms for sequential learning and network efficiency optimization.
 
-In \cite{Besson2018ALT} and in Chapter~\ref{chapter:5}, we used SMPyBandits for all the simulations for multi-player bandit algorithms\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/MultiPlayers.html}{SMPyBandits.GitHub.io/MultiPlayers.html}} on the documentation.}. We designed the two \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html}{RandTopM}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{MCTopM}} algorithms and proved than they enjoy logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (\ie, \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html}{rhoRand}}, \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html}{MEGA}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html}{MusicalChair}}).
+In \cite{Besson2018ALT} and in Chapter~\ref{chapter:5} below, we used SMPyBandits for all the simulations for multi-player bandit algorithms\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/MultiPlayers.html}{SMPyBandits.GitHub.io/MultiPlayers.html}} on the documentation.}. We designed the two \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html}{RandTopM}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{MCTopM}} algorithms and proved than they enjoy logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (\ie, \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html}{rhoRand}}, \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html}{MEGA}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html}{MusicalChair}}).
 
 In \cite{Besson2018DoublingTricks}, we used SMPyBandits to illustrate and compare different "doubling trick" schemes\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/DoublingTrick.html}{SMPyBandits.GitHub.io/DoublingTrick.html}} on the documentation.}. and lots of bibliographic referencesIn sequential learning, an algorithm is anytime if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any non-anytime algorithm to an anytime variant is the ``Doubling Trick'': start with an horizon $T_0\in\mathbb{N}^*$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to conserve minimax regret bounds (in $R_T = \mathcal{O}(\sqrt{T})$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to conserve a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to conserve logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can conserve minimax bounds, or "weak" minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
 
-In \cite{Besson2019GLRT} and \cite{Besson2019Gretsi}, and in Chapter~\ref{chapter:6}, we used SMPyBandits for piece-wise stationary MAB models (only for the single-player case). We illustrate and compare different algorithms designed for this family of non-stationary problems\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/NonStationary.html}{SMPyBandits.GitHub.io/NonStationary.html}} on the documentation.}.
+In \cite{Besson2019GLRT} and \cite{Besson2019Gretsi}, and in Chapter~\ref{chapter:6} below, we used SMPyBandits for piece-wise stationary MAB models (only for the single-player case). We illustrate and compare different algorithms designed for this family of non-stationary problems\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/NonStationary.html}{SMPyBandits.GitHub.io/NonStationary.html}} on the documentation.}.
 We designed the \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.GLR_UCB.html}{GLRklUCB}} policy, and implemented most of the policies from state-of-the-art research on passively or active adaptive policies, both adversarial- or stochastic-based, designed to tackle the piece-wise stationary MAB problems.
 We also implemented a large benchmark of problems.
 
