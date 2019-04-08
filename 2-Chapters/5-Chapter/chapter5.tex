@@ -158,6 +158,8 @@ Then we compare the \RhoRand, \RandTopM{} and \MCTopM{} algorithms, using \klUCB
 \TODOL{Include a simulation to show the behavior of \rhoRand{} vs \rhoRandEst, and \RandTopM{} and \MCTopM{} with prior knowledge of $M$ vs the ``estimate'' versions.
 
 FIXME Je dois refaire ces simulations, les chiffres ici sont avec $T=1000$ et $N=4$ répétitions (juste faites vite fait dans le train, je dois les lancer sur la machine du bureau).
+
+% for M in 3 6 9; do DEBUG=False SAVEALL=True NOPLOTS=True M=$M K=9 N_JOBS=-1 N=100 T=10000 make moremultiplayers; read; done
 }
 
 
@@ -181,12 +183,17 @@ FIXME Je dois refaire ces simulations, les chiffres ici sont avec $T=1000$ et $N
         \Selfish-\klUCB{} & $136 \pm 17$ & $468 \pm 87$ & $1379 \pm 16$ \\
         \hline
     \end{tabular}
-    \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on the same problem with $M=3,6,9$, comparing algorithms which knows $M$ against algorithms which estimate $M$ on the fly. The three algorithms \RhoRand, \RandTopM{} and \MCTopM{} all suffer from similar costs on their regret when they have to estimate $M$ on the fly. Our proposals are still much more efficient than \RhoRand{} when using the procedure to estimate $M$ described from \cite{Anandkumar11}.}
+    \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on the same problem with $M=3,6,9$, comparing algorithms which knows $M$ against algorithms which estimate $M$ on the fly.}
     \label{table:5:meanRegretSimulationsEstimatingM}
 % \end{footnotesize}
 \end{table}
 
 \TODOL{Give interpretation from these results!}
+One can observe in Table~\ref{table:5:meanRegretSimulationsEstimatingM} the empirical performances of different algorithms in an example problem, in each case of low, medium and maximum number of players ($M=3,6,9$ for $K=9$ arms).
+The three algorithms \RhoRand, \RandTopM{} and \MCTopM{} all suffer from similar costs on their regret when they have to estimate $M$ on the fly. Our proposals are still much more efficient than \RhoRand{} when using the procedure to estimate $M$ described from \cite{Anandkumar11}.
+For the two non-extreme cases ($M=3,6$), the performance drop when having to estimate $M$ is quite large (on the three algorithms and two cases, about $+30\%$), and consistent on the different algorithm.
+The extreme case of $M=K$ players is of highest interest, as \MCTopM{} achieves a very small regret (proved to be $\smallO{\log(T)}$ as it is just the expected time of the orthogonalization process), while the same algorithm with unknown $M$ suffers from a much larger regret (written ``Estimate $M$'' in Table~\ref{table:5:meanRegretSimulationsEstimatingM}).
+In this extreme case, \RhoRand{} and its extension both perform very closely, as expected.
 
 
 % ----------------------------------------------------------------------------
