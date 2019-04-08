@@ -124,7 +124,7 @@ If the $M$ players each have a unique ID, then a simple explore-then-commit algo
 
 Some works studied the same model as our model \modeldeux{} ``with sensing'', under the hypothesis that players do not know in the value of $M$.
 As illustrated above, if we consider algorithms building on the same ideas as \RhoRand{} or \MCTopM, it seems mandatory to first build an estimate of the value of $M$ then run the initial algorithm that assumed a perfect knowledge of $M$.
-Two possible directions exist to estimate on the fly this number.
+Two possible directions exist to estimate $M$ on the fly.
 
 The first idea comes from \cite{Anandkumar11}, and the intuition behind it is quite simple, even if the mathematical derivations are not.
 All players will build an estimate $\hat{M}^j(t)$ of the number of player, that start by $\hat{M}^j(0)=1$. As soon as one collision is observed, a player knows that $M\geq2$, so $\hat{M}^j(t+1) = 2$.
@@ -155,7 +155,10 @@ We consider a bandit problem with $K=9$ arms, of means $0.1,0.2,\dots,0.8,0.9$, 
 As before, we include the centralized multiple-play \klUCB{} as an unachievably efficient baseline, the \Selfish-\klUCB{} algorithm as an heuristic which does not require the know $M$.
 Then we compare the \RhoRand, \RandTopM{} and \MCTopM{} algorithms, using \klUCB, which know $M$ beforehand, with their extensions implementing the same algorithm as \rhoRandEst{} to estimate $M$ on the fly.
 
-\TODOL{Include a simulation to show the behavior of \rhoRand{} vs \rhoRandEst, and \RandTopM{} and \MCTopM{} with prior knowledge of $M$ vs the ``estimate'' versions.}
+\TODOL{Include a simulation to show the behavior of \rhoRand{} vs \rhoRandEst, and \RandTopM{} and \MCTopM{} with prior knowledge of $M$ vs the ``estimate'' versions.
+
+FIXME Je dois refaire ces simulations, les chiffres ici sont avec $T=1000$ et $N=4$ répétitions (juste faites vite fait dans le train, je dois les lancer sur la machine du bureau).
+}
 
 
 \begin{table}[ht]
@@ -164,21 +167,21 @@ Then we compare the \RhoRand, \RandTopM{} and \MCTopM{} algorithms, using \klUCB
         \begin{tabular}{c|ccc}
         \textbf{Algorithms} $\;$ \textbackslash $\;$ \textbf{Number of players} & $M=3$ & $M=6$ & $M=9$ \\
             \hline
-            Centralized multiple-play \klUCB{} & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
+            Centralized multiple-play \klUCB{} & $\mathbf{52 \pm 15}$ & $\mathbf{35 \pm 15}$ & $\mathbf{0}$ \\
             \hline
-            \RhoRand-\klUCB{} & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
-            \RhoRand-\klUCB{} + Estimate $M$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
+            \RhoRand-\klUCB{} & $297 \pm 18$ & $1411 \pm 144$ & $2351 \pm 55$ \\
+            \RhoRand-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$326 \pm 86$} & \textcolor{red}{$1213 \pm 168$} & \textcolor{red}{$2403 \pm 121$} \\
             \hline
-            \RandTopM-\klUCB{} & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
-            \RandTopM-\klUCB{} + Estimate $M$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
+            \RandTopM-\klUCB{} & $188 \pm 18$ & $671 \pm 159$ & $790 \pm 470$ \\
+            \RandTopM-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$238 \pm 27$} & \textcolor{red}{$778 \pm 156$} & \textcolor{red}{$1098 \pm 153$} \\
             \hline
-            \MCTopM-\klUCB{} & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
-            \MCTopM-\klUCB{} + Estimate $M$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
+            \MCTopM-\klUCB{} & $134 \pm 6$ & $304 \pm 19$ & $42 \pm 5$ \\
+            \MCTopM-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$210 \pm 66$} & \textcolor{red}{$465 \pm 39$} & \textcolor{red}{$602 \pm 54$} \\
             \hline
-            \Selfish-\klUCB{} & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
+            \Selfish-\klUCB{} & $136 \pm 17$ & $468 \pm 87$ & $1379 \pm 16$ \\
             \hline
         \end{tabular}
-        \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on the same problem with $M=3,6,9$, comparing algorithms which knows $M$ against algorithms which estimate $M$ on the fly.}
+        \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on the same problem with $M=3,6,9$, comparing algorithms which knows $M$ against algorithms which estimate $M$ on the fly. The three algorithms \RhoRand, \RandTopM{} and \MCTopM{} all suffer from similar costs on their regret when they have to estimate $M$ on the fly. Our proposals are still much more efficient than \RhoRand{} when using the procedure to estimate $M$ described from \cite{Anandkumar11}.}
         \label{table:5:meanRegretSimulationsEstimatingM}
     % \end{footnotesize}
     \end{table}

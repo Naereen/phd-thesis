@@ -122,54 +122,48 @@
 \subsection{Lower Bound: Proof of Theorem~\ref{thm:5:BetterLowerBound}}
 \label{proof:5:BetterLowerBound}
 
-\TODOL{Rewrite this to include new knowledge presented in Appendix of \cite{KaufmannAbbas19}.}
-
-
-% -----------------------------------------------------------------
-\subsubsection{Proof of Theorem~\ref{thm:5:BetterLowerBound}}
-
 The lower bound that we present relies on the following \emph{change-of-distribution} lemma that we prove in the next section, following recent arguments from \cite{Garivier16TrueShape} that have to be adapted to incorporate the collision information.
 
 
-\begin{lemma}\label{lem:5:CD} Under observation model \modelun{} and \modeldeux, for every event $A$ that is $\cF_{T}^{j}$-measurable, considering two multi-player bandit models denoted by $\mu$ and $\lambda$ respectively, it holds that
+\begin{lemma}\label{lem:5:CD} Under observation model \modelun{} and \modeldeux, for every event $A$ that is $\cF_{T}^{j}$-measurable, considering two multi-player bandit models denoted by $\bm{\mu}$ and $\bm{\lambda}$ respectively, it holds that
 \begin{equation}
-  \sum_{k=1}^{K}\E_{\mu}\left[T_k^j(T)\right]\kl(\mu_k,\lambda_k) \geq \kl \left(\Pr_{\mu}(A),\Pr_{\lambda}(A)\right).
+  \sum_{k=1}^{K}\E_{\bm{\mu}}\left[T_k^j(T)\right]\kl(\mu_k,\lambda_k) \geq \kl \left(\Pr_{\bm{\mu}}(A),\Pr_{\bm{\lambda}}(A)\right).
 \end{equation}
 \end{lemma}
 
-Let $k$ be a sub-optimal arm under $\mu$,
+Let $k$ be a sub-optimal arm under $\bm{\mu}$,
 fix $\varepsilon \in \left(0, \mu_{M-1}^* - \mu_M^*\right)$,
-% We define the bandit instance $\lambda$ such that
-and let $\lambda$ be the bandit instance such that
+% We define the bandit instance $\bm{\lambda}$ such that
+and let $\bm{\lambda}$ be the bandit instance such that
 \[\left\{\begin{array}{ccl}
           \lambda_\ell & = & \mu_\ell \ \ \  \text{for all } \ell \neq k, \\
           \lambda_k & = & \mu_{M^*} + \varepsilon.
          \end{array}
 \right.\]
-Clearly, $\lambda\in\cP_M$ also,
-and the set of $M$ best arms under $\mu$ and $\lambda$ differ by one arm: if \Mbest$_{\mu} = \{1^*,\dots,M^*\}$ then $\Mbest_{\lambda} = \{1^*,\dots,(M-1)^*,k\}$.
+Clearly, $\bm{\lambda}\in\cP_M$ also,
+and the set of $M$ best arms under $\bm{\mu}$ and $\bm{\lambda}$ differ by one arm: if \Mbest$_{\bm{\mu}} = \{1^*,\dots,M^*\}$ then $\Mbest_{\bm{\lambda}} = \{1^*,\dots,(M-1)^*,k\}$.
 Thus, one expects the ($\cF^j_T$-mesurable) event
 \[A_T = \left(T_k^j(T) > \frac{T}{2M}\right)\]
-to have a small probability under $\mu$ (under which $k$ is sub-optimal) and a large probability under $\lambda$ (under which $k$ is one of the optimal arms, and is likely to be drawn a lot).
+to have a small probability under $\bm{\mu}$ (under which $k$ is sub-optimal) and a large probability under $\bm{\lambda}$ (under which $k$ is one of the optimal arms, and is likely to be drawn a lot).
 
 Applying the inequality in Lemma~\ref{lem:5:CD}, and noting that the sum in the left-hand side reduces to on term as there is a single arm whose distribution is changed, one obtains
 \begin{eqnarray*}
-  \E_{\mu}\left[T_k^j(T)\right] \kl (\mu_k, \mu_{M^*}+\varepsilon) &\geq & \kl \left(\Pr_{\mu}(A_T),\Pr_{\lambda}(A_T)\right),\nonumber \\
-  \E_{\mu}\left[T_k^j(T)\right] \kl (\mu_k, \mu_{M^*}+\varepsilon) &\geq & \left(1 - \Pr_{\mu}(A_T)\right) \log \left(\frac{1}{\Pr_{\lambda}(\overline{A_T})}\right) - \log(2),
+  \E_{\bm{\mu}}\left[T_k^j(T)\right] \kl (\mu_k, \mu_{M^*}+\varepsilon) &\geq & \kl \left(\Pr_{\bm{\mu}}(A_T),\Pr_{\bm{\lambda}}(A_T)\right),\nonumber \\
+  \E_{\bm{\mu}}\left[T_k^j(T)\right] \kl (\mu_k, \mu_{M^*}+\varepsilon) &\geq & \left(1 - \Pr_{\bm{\mu}}(A_T)\right) \log \left(\frac{1}{\Pr_{\bm{\lambda}}(\overline{A_T})}\right) - \log(2),
 \end{eqnarray*}
 using the fact that the binary KL-divergence satisfies $\kl(x,y) = \kl(1-x,1-y)$ as well as the inequality  $\kl(x, y) \geq x \log\left(1/y\right) - \log(2)$, proved by \cite{Garivier16TrueShape}.
 Now, using Markov inequality yields
 \begin{align*}
-  \Pr_{\mu}\left(A_T\right)
-    & \leq 2M\frac{\E_\mu\left[T^j_k(T)\right]}{T} =: x_T, \\
-  \Pr_{\lambda}\left(\overline{A_T}\right)
-    & = \Pr_{\lambda}\left(\frac{T}{M} - T^j_k(T) > \frac{T}{2M}\right) \leq 2M\frac{\E_\lambda\left[ \frac{T}{M} - T^j_k(T)\right]}{T} =: \frac{y_T}{T},
+  \Pr_{\bm{\mu}}\left(A_T\right)
+    & \leq 2M\frac{\E_{\bm{\mu}}\left[T^j_k(T)\right]}{T} =: x_T, \\
+  \Pr_{\bm{\lambda}}\left(\overline{A_T}\right)
+    & = \Pr_{\bm{\lambda}}\left(\frac{T}{M} - T^j_k(T) > \frac{T}{2M}\right) \leq 2M\frac{\E_\bm{\lambda}\left[ \frac{T}{M} - T^j_k(T)\right]}{T} =: \frac{y_T}{T},
 \end{align*}
 which defines two sequences $x_T$ and $y_T$, such that
 \begin{eqnarray}\label{eq:5:CqCD}
-  \E_{\mu}\left[T_k^j(T)\right] \kl (\mu_k, \mu_{M^*}+\varepsilon) &\geq & \left(1 - x_T\right) \log \left(\frac{T}{y_T}\right) - \log(2).
+  \E_{\bm{\mu}}\left[T_k^j(T)\right] \kl (\mu_k, \mu_{M^*}+\varepsilon) &\geq & \left(1 - x_T\right) \log \left(\frac{T}{y_T}\right) - \log(2).
 \end{eqnarray}
-The strong uniform efficiency assumption  (see Definition~\ref{def:5:DecentralizedUniformEfficiency}) further tells us that $x_T \rightarrow 0$ (as $\E_\mu[T_k^j(T)] = o(T^\alpha)$ for all $\alpha$) and $y_T = o(T^\alpha)$ when $T \to \infty$, for all $\alpha \in (0,1)$.
+The strong uniform efficiency assumption  (see Definition~\ref{def:5:DecentralizedUniformEfficiency}) further tells us that $x_T \rightarrow 0$ (as $\E_{\bm{\mu}}[T_k^j(T)] = o(T^\alpha)$ for all $\alpha$) and $y_T = o(T^\alpha)$ when $T \to \infty$, for all $\alpha \in (0,1)$.
 As a consequence, observe that $\log(y_T)/\log(T) \rightarrow 0$ when $T$ tends to infinity and
 \[
   \frac{\left(1 - x_T\right) \log \left({T}/{y_T}\right) - \log(2)}{\log(T)} = 1-x_T - (1-x_T) \frac{\log(y_T)}{\log(T)} - \frac{\log(2)}{\log(T)}
@@ -177,7 +171,7 @@ As a consequence, observe that $\log(y_T)/\log(T) \rightarrow 0$ when $T$ tends 
 tends to one when $T$ tends to infinity.
 From Equation~\eqref{eq:5:CqCD}, this yields
 \begin{equation}\label{eq:5:CqCD2}
-  \liminf_{T\to\infty} \frac{\E_{\mu}[T_k^j(T)]}{\log(T)} \geq \frac{1}{\kl(\mu_k,\mu_{M^*}+\varepsilon)},
+  \liminf_{T\to\infty} \frac{\E_{\bm{\mu}}[T_k^j(T)]}{\log(T)} \geq \frac{1}{\kl(\mu_k,\mu_{M^*}+\varepsilon)},
 \end{equation}
 for all $\varepsilon \in \left(0, \mu_{M-1}^* - \mu_M^*\right)$.
 Letting $\varepsilon$ go to zero gives the conclusion (as $\kl$ is continuous).
@@ -186,49 +180,45 @@ Letting $\varepsilon$ go to zero gives the conclusion (as $\kl$ is continuous).
 
 \subsubsection{Proof of Lemma~\ref{lem:5:CD}}
 
-Under observation model \modelun{} and \modeldeux, the strategy $A^j(t)$ decides which arm to play based on the information contained in $I_{t-1}$, where $I_0 = U_0$ and
-\[\forall t > 0, \ \ I_t = (U_0,Y_1,C_1,U_1,\dots,Y_t,C_t,U_t)\]
+Under observation model \modelun{} and \modeldeux, the strategy $A^j(t)$ decides which arm to play based on the information contained in $\cO_{t-1}$, where $\cO_0 = U_0$ and
+\[\forall t > 0, \ \ \cO_t = (U_0,Y_1,C_1,U_1,\dots,Y_t,C_t,U_t)\]
 where $Y_{t} := Y_{A^j(t-1),t}$ denotes the sensing information, $C_t := C^j(t)$ denotes the collision information (not always completely exploited under observation model \modeldeux) and $U_t$ denotes some external source of randomness\footnote{For instance, \MCTopM, \RandTopM{} and \rhoRand{} draws from a uniform variable in $\{1,\dots,M\}$ for new ranks or arms.} useful to select $A^j(t)$.
-Formally, one can say that $A^j(t)$ is $\sigma(I_{t-1})$ measurable\footnote{$\sigma(I_t)$ denotes the sigma-Algebra generated by the observations $I_t$.} (as $\cF^j(t) \subseteq \sigma(I_{t})$, with an equality under observation model \modelun).
+Formally, one can say that $A^j(t)$ is $\sigma(\cO_{t-1})$ measurable, if $\sigma(\cO_t)$ denotes the sigma-Algebra generated by the observations $\cO_t$, and as $\cF^j(t) \subseteq \sigma(\cO_{t})$, with an equality under observation model \modelun.
 
-Under two bandit models $\mu$ and $\lambda$, we let $\Pr_{\mu}^{I_t}$ (resp. $\Pr_{\lambda}^{I_t}$) be the distribution of the observations under model $\mu$ (resp. $\lambda$), given a fixed algorithm.
-Using the exact same technique as \cite{Garivier16TrueShape} (the contraction of entropy principle), one can establish that for any event $A$ that is $\sigma(I_t)$-measurable\footnote{In the work of \cite{Garivier16TrueShape}, the statement is more general and the probability of an event $A$ is replaced by the expectation of any $\cF_T$-measurable random variable $Z$ bounded in $[0,1]$.},
-\[\KL\left(\Pr_{\mu}^{I_t},\Pr_{\lambda}^{I_t}\right) \geq \kl\left(\Pr_{\mu}(A),\Pr_{\lambda}(A)\right).\]
+Under two bandit models $\bm{\mu}$ and $\bm{\lambda}$, we let $\Pr_{\bm{\mu}}^{\cO_t}$ (resp. $\Pr_{\bm{\lambda}}^{\cO_t}$) be the distribution of the observations under model $\bm{\mu}$ (resp. $\bm{\lambda}$), given a fixed algorithm.
+Using the exact same technique as \cite{Garivier16TrueShape}, called the ``contraction of entropy'' principle, one can establish that for any event $A$ that is $\sigma(\cO_t)$-measurable\footnote{In the work of \cite{Garivier16TrueShape}, the statement is more general and the probability of an event $A$ is replaced by the expectation of any $\cF_T$-measurable random variable $Z$ bounded in $[0,1]$.},
+\[\KL\left(\Pr_{\bm{\mu}}^{\cO_t},\Pr_{\bm{\lambda}}^{\cO_t}\right) \geq \kl\left(\Pr_{\bm{\mu}}(A),\Pr_{\bm{\lambda}}(A)\right).\]
 
-The next step is to relate the complicated KL-divergence $\KL\left(\Pr_{\mu}^{I_t},\Pr_{\lambda}^{I_t}\right)$ to the number of arm selections.
+The next step is to relate the complicated KL-divergence $\KL\left(\Pr_{\bm{\mu}}^{\cO_t},\Pr_{\bm{\lambda}}^{\cO_t}\right)$ to the number of arm selections.
 Proceeding similarly as \cite{Garivier16TrueShape}, one can write, using the chain rule for KL-divergence, that
-\begin{equation}\label{eq:5:Iterative}\KL\left(\Pr_{\mu}^{I_{t}},\Pr_{\lambda}^{I_{t}}\right) =  \KL\left(\Pr_{\mu}^{I_{t-1}},\Pr_{\lambda}^{I_{t-1}}\right) + \KL\left(\Pr_{\mu}^{Y_{t},C_t,U_t | I_{t-1}},\Pr_{\lambda}^{Y_{t},C_t,U_t | I_{t-1}}\right).\end{equation}
-Now observe that conditionally to $I_{t-1}$, $U_t$, $Y_t$ and $C_t$ are independent, as once the selected arm is known, the value of the sensing $Y_t$ does not influence the other players selecting that arm, and $U_t$ is some exogenous randomness.
-Using further that the distribution of $U_t$ is the same under $\mu$ and $\lambda$, one obtains
-\begin{equation}\KL\left(\Pr_{\mu}^{Y_{t},C_t | I_{t-1}},\Pr_{\lambda}^{Y_{t},C_t | I_{t-1}}\right) =
- \KL\left(\Pr_{\mu}^{Y_{t}| I_{t-1}},\Pr_{\lambda}^{Y_{t}| I_{t-1}}\right) + \KL\left(\Pr_{\mu}^{C_t | I_{t-1}},\Pr_{\lambda}^{C_t | I_{t-1}}\right).\label{eq:5:DecKL}
+\begin{equation}\label{eq:5:Iterative}\KL\left(\Pr_{\bm{\mu}}^{\cO_{t}},\Pr_{\bm{\lambda}}^{\cO_{t}}\right) =  \KL\left(\Pr_{\bm{\mu}}^{\cO_{t-1}},\Pr_{\bm{\lambda}}^{\cO_{t-1}}\right) + \KL\left(\Pr_{\bm{\mu}}^{Y_{t},C_t,U_t | \cO_{t-1}},\Pr_{\bm{\lambda}}^{Y_{t},C_t,U_t | \cO_{t-1}}\right).\end{equation}
+Now observe that conditionally to $\cO_{t-1}$, $U_t$, $Y_t$ and $C_t$ are independent, as once the selected arm is known, the value of the sensing $Y_t$ does not influence the other players selecting that arm, and $U_t$ is some exogenous randomness.
+Using further that the distribution of $U_t$ is the same under $\bm{\mu}$ and $\bm{\lambda}$, one obtains
+\begin{equation}\KL\left(\Pr_{\bm{\mu}}^{Y_{t},C_t | \cO_{t-1}},\Pr_{\bm{\lambda}}^{Y_{t},C_t | \cO_{t-1}}\right) =
+ \KL\left(\Pr_{\bm{\mu}}^{Y_{t}| \cO_{t-1}},\Pr_{\bm{\lambda}}^{Y_{t}| \cO_{t-1}}\right) + \KL\left(\Pr_{\bm{\mu}}^{C_t | \cO_{t-1}},\Pr_{\bm{\lambda}}^{C_t | \cO_{t-1}}\right).\label{eq:5:DecKL}
 \end{equation}
 
-The first term in \eqref{eq:5:DecKL} can be rewritten using the same argument as \cite{Garivier16TrueShape}, that relies on the fact that conditionally to $I_{t-1}$, $Y_t$ is a Bernoulli distribution with mean $\mu_{A^j(t)}$ under the instance $\mu$ and $\lambda_{A^j(t)}$ under the instance $\lambda$:
+The first term in \eqref{eq:5:DecKL} can be rewritten using the same argument as \cite{Garivier16TrueShape}, that relies on the fact that conditionally to $\cO_{t-1}$, $Y_t$ is a Bernoulli distribution with mean $\mu_{A^j(t)}$ under the instance $\bm{\mu}$ and $\lambda_{A^j(t)}$ under the instance $\bm{\lambda}$:
 \begin{eqnarray*}
-\KL\left(\Pr_{\mu}^{Y_{t}| I_{t-1}},\Pr_{\lambda}^{Y_{t}| I_{t-1}}\right)  & = & \E_\mu\left[\E_\mu\left[ \KL\left(\Pr_{\mu}^{Y_{t}| I_{t-1}},\Pr_{\lambda}^{Y_{t}| I_{t-1}}\right) | I_{t-1} \right]\right] \\
-& = & \E_\mu \left[\kl \left(\mu_{A^j(t)},\lambda_{A^j(t)}\right)\right] \\
-& = & \E_\mu  \left[\sum_{k=1}^K \indic{(A^j(t)=k)} \kl \left(\mu_{k},\lambda_{k}\right)\right],
+\KL\left(\Pr_{\bm{\mu}}^{Y_{t}| \cO_{t-1}},\Pr_{\bm{\lambda}}^{Y_{t}| \cO_{t-1}}\right)  & = & \E_{\bm{\mu}}\left[\E_{\bm{\mu}}\left[ \KL\left(\Pr_{\bm{\mu}}^{Y_{t}| \cO_{t-1}},\Pr_{\bm{\lambda}}^{Y_{t}| \cO_{t-1}}\right) | \cO_{t-1} \right]\right] \\
+& = & \E_{\bm{\mu}} \left[\kl \left(\mu}_{A^j(t)},\lambda_{A^j(t)}\right)\right] \\
+& = & \E_{\bm{\mu}}  \left[\sum_{k=1}^K \indic{(A^j(t)=k)} \kl \left(\mu}_{k},\lambda_{k}\right)\right],
 \end{eqnarray*}
 We now show that second term in \eqref{eq:5:DecKL} is zero:
 \begin{eqnarray*}
-\KL\left(\Pr_{\mu}^{C_t | I_{t-1}},\Pr_{\lambda}^{C_t | I_{t-1}}\right)
-& = & \E_\mu\left[\E_\mu\left[ \KL\left(\Pr_{\mu}^{C_t| I_{t-1}},\Pr_{\lambda}^{C_t| I_{t-1}}\right) | I_{t-1} \right]\right] \\
-& = & \E_\mu\left[\E_\mu\left[\E_\mu\left[ \KL\left(\Pr_{\mu}^{C_t| I_{t-1}},\Pr_{\lambda}^{C_t| I_{t-1}}\right) | \bigcup_{j' \neq j} I_{t-1}^{j'}\right]| I_{t-1} \right]\right], \\
+\KL\left(\Pr_{\bm{\mu}}^{C_t | \cO_{t-1}},\Pr_{\bm{\lambda}}^{C_t | \cO_{t-1}}\right)
+& = & \E_{\bm{\mu}}\left[\E_{\bm{\mu}}\left[ \KL\left(\Pr_{\bm{\mu}}^{C_t| \cO_{t-1}},\Pr_{\bm{\lambda}}^{C_t| \cO_{t-1}}\right) | \cO_{t-1} \right]\right] \\
+& = & \E_{\bm{\mu}}\left[\E_{\bm{\mu}}\left[\E_{\bm{\mu}}\left[ \KL\left(\Pr_{\bm{\mu}}^{C_t| \cO_{t-1}},\Pr_{\bm{\lambda}}^{C_t| \cO_{t-1}}\right) | \bigcup_{j' \neq j} \cO_{t-1}^{j'}\right]| \cO_{t-1} \right]\right], \\
 \end{eqnarray*}
-where $I_{t-1}^{j'}$ denote the information available to player $j' \neq j$.
-Knowing the information available to all other players player $C_t$ is an almost surely constant random variable, whose distribution is the same under $\mu$ and $\lambda$.
-Hence the inner expectation is zero and so does $\KL\left(\Pr_{\mu}^{C_t | I_{t-1}},\Pr_{\lambda}^{C_t | I_{t-1}}\right)$.
-
-
-\TODOL{This is wrong as explained in \cite{BoursierPerchet18}! Rewrite this to include new knowledge presented in Appendix of \cite{KaufmannAbbas19}.}
-
+where $\cO_{t-1}^{j'}$ denote the information available to player $j' \neq j$.
+\textcolor{red}{By hypothesis}, the ``collision information term'' is assumed to be a $\smallO{\log(T)}$,
+and thus $\KL\left(\Pr_{\bm{\mu}}^{C_t | \cO_{t-1}},\Pr_{\bm{\lambda}}^{C_t | \cO_{t-1}}\right) = \smallO{\log(T)}$.
 
 Putting things together, we showed that
-\[\KL\left(\Pr_{\mu}^{I_t},\Pr_{\lambda}^{I_t}\right) = \KL\left(\Pr_{\mu}^{I_{t-1}},\Pr_{\lambda}^{I_{t-1}}\right) + \E_\mu  \left[\sum_{k=1}^K \indic{(A^j(t)=k)} \kl \left(\mu_{k},\lambda_{k}\right)\right].\]
-Iterating this equality and using that $\KL\left(\Pr_{\mu}^{I_{0}},\Pr_{\lambda}^{I_{0}}\right)=0$ yields that
-\[\sum_{k=1}^{K}\E_{\mu}\left[T_k^j(T)\right]\kl(\mu_k,\lambda_k) \geq \kl \left(\Pr_{\mu}(A),\Pr_{\lambda}(A)\right),\]
-for all $A \in \sigma(I_T)$, in particular for all $A \in \cF^j_T$.
+\[\KL\left(\Pr_{\bm{\mu}}^{\cO_t},\Pr_{\bm{\lambda}}^{\cO_t}\right) = \KL\left(\Pr_{\bm{\mu}}^{\cO_{t-1}},\Pr_{\bm{\lambda}}^{\cO_{t-1}}\right) + \E_{\bm{\mu}}  \left[\sum_{k=1}^K \indic{(A^j(t)=k)} \kl \left(\mu}_{k},\lambda_{k}\right)\right] + \smallO{\log(T)}.\]
+Iterating this equality and using that $\KL\left(\Pr_{\bm{\mu}}^{\cO_{0}},\Pr_{\bm{\lambda}}^{\cO_{0}}\right)=0$ yields that
+\[\sum_{k=1}^{K}\E_{\bm{\mu}}\left[T_k^j(T)\right]\kl(\mu}_k,\lambda_k) \geq \kl \left(\Pr_{\bm{\mu}}(A),\Pr_{\bm{\lambda}}(A)\right) + \smallO{\log(T)},\]
+for all $A \in \sigma(\cO_T)$, in particular for all $A \in \cF^j_T$.
 
 
 % -----------------------------------------------------------------
