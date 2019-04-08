@@ -188,12 +188,13 @@ FIXME Je dois refaire ces simulations, les chiffres ici sont avec $T=1000$ et $N
 % \end{footnotesize}
 \end{table}
 
-\TODOL{Give interpretation from these results!}
 One can observe in Table~\ref{table:5:meanRegretSimulationsEstimatingM} the empirical performances of different algorithms in an example problem, in each case of low, medium and maximum number of players ($M=3,6,9$ for $K=9$ arms).
 The three algorithms \RhoRand, \RandTopM{} and \MCTopM{} all suffer from similar costs on their regret when they have to estimate $M$ on the fly. Our proposals are still much more efficient than \RhoRand{} when using the procedure to estimate $M$ described from \cite{Anandkumar11}.
 For the two non-extreme cases ($M=3,6$), the performance drop when having to estimate $M$ is quite large (on the three algorithms and two cases, about $+30\%$), and consistent on the different algorithm.
 The extreme case of $M=K$ players is of highest interest, as \MCTopM{} achieves a very small regret (proved to be $\smallO{\log(T)}$ as it is just the expected time of the orthogonalization process), while the same algorithm with unknown $M$ suffers from a much larger regret (written ``Estimate $M$'' in Table~\ref{table:5:meanRegretSimulationsEstimatingM}).
 In this extreme case, \RhoRand{} and its extension both perform very closely, as expected.
+%
+Additional simulations, for increasing time horizons $T$, confirmed the expected order-optimal regret of this extension \MCTopM-\klUCB.
 
 
 % ----------------------------------------------------------------------------
@@ -297,13 +298,11 @@ We let the interested reader refer to these last two works \cite{BoursierPerchet
 
 Another line of research is to consider models that are closer to realistic wireless communication networks, as it is done in \cite{Avner16,AvnerMannor18}.
 Explaining in details their model and proposed solutions would be quite lengthy, and we rather prefer to let the interested reader refer to the later work \cite{AvnerMannor18}.
-% where they essentially propose an efficient algorithm for this problem, that also reach a logarithmic regret when $M \leq K$ players are running independently the same algorithm.
-\TODOL{FIXME don't copy/paste their abstract...}
 We sum-up its contributions quickly.
-They we address several aspects of the challenge of communication networks shared by many users simultaneously: learning unknown stochastic network characteristics, sharing resources with other users while keeping coordination overhead to a minimum.
-The proposed solution combines Multi-Armed Bandit learning with a lightweight signalling-based coordination scheme, and ensures convergence to a stable allocation of resources.
-They work considers single-user level algorithms for two scenarios:an unknown fixed number of users, and a dynamic number of users.
-Analytic performance guarantees, proving convergence to stable marriage configurations, are presented for both setups. The algorithms are designed based on a system-wide perspective, rather than focusing on single user welfare. Thus, maximal re-source utilization is ensured.
+They address several aspects of the challenge of communication networks shared by many users simultaneously: learning unknown stochastic network characteristics, sharing resources with other users while keeping coordination overhead to a minimum.
+The solution they proposed combines Multi-Armed Bandit learning with a lightweight signalling-based coordination scheme, and ensures convergence to a stable allocation of resources.
+Their work considers single-user level algorithms for two scenarios: an unknown fixed number of users, and a dynamic number of users, both for different arms means for each users (players).
+Analytic performance guarantees, proving convergence to stable marriage configurations, are presented for both setups. The algorithms are based on a system-wide perspective, rather than focusing on single user welfare.
 
 \TODOL{A conclusion from this sub-section presenting this model?}
 
@@ -335,7 +334,7 @@ Applied to the \MusicalChair{} algorithm, the authors in \cite{Rosenski16} call 
 Under the simple hypothesis that the overall number of players entering and leaving the game is sub-linear in $T$ (\ie, a $\smallO{T}$), they analyze the regret of Dynamic \MusicalChair{} and prove it is also sub-linear (see Theorem~2 in Section~3.4).
 %
 Under the same hypothesis, and if the lower-bound $L$ is known before-hand and is large enough, then we could also apply the same idea as from \cite{Rosenski16} to our approach. We believe that we could easily prove that a sub-linear regret is achievable, if all players run \MCTopM-\klUCB{} (and if currently active players restart their memory of the past observations every $L$ time steps).
-As the regret guarantees are stronger (\ie, smaller regret upper-bound) for \MCTopM{} than \MusicalChair, we also believe that in this ``slowly varying'' dynamic setting, using the idea of Dynamic \MusicalChair{} from \cite{Rosenski16} to our proposal \MCTopM{} would also give a small regret upper-bound.
+As the regret guarantees are stronger (\ie, smaller regret upper-bound) for \MCTopM{} than \MusicalChair, we also believe that in this ``slowly varying'' dynamic setting, applying the idea of Dynamic \MusicalChair{} from \cite{Rosenski16} to our proposal \MCTopM{} would also give a small regret upper-bound.
 
 After being introduced in \cite{Rosenski16}, some more recent works studied the case of arrival or departures of players, usually referred to as ``dynamic setting'' or ``dynamic case''.
 For instance, \cite{BoursierPerchet18} studies in Section~4 the first algorithm proposed for the dynamic case under the no-sensing model.
@@ -406,12 +405,21 @@ Note that we have not yet implemented this extension in SMPyBandits \cite{SMPyBa
 \subsection{Modeling more closely a real wireless network}
 \label{sub:5:moreRealisticModels}
 
-\cite{NaparstekCohen17}
+Due to space constraint, we simply quote here three recent articles which proposed a similar approach of using decentralized reinforcement learning algorithms on the device-side on wireless networks,
+but proposed models closer to the reality of wireless networks.
+%
+The first work is \cite{NaparstekCohen17}, which proposes to use a decentralized learning based on deep learning, in the ``no sensing'' case, but in a model where the users have to learn not only the channels to use for their uplink messages (only from the feedback through the acknowledgements, like in Section~\ref{sec:4:firstModel}), but where they have to learn the whole ``spectrum access actions''.
+% Deep Multi-User Reinforcement Learning for Dynamic Spectrum Access in Multichannel Wireless Networks
+% FIXME continue!
 
-Distributed Learning for Channel Allocation Over a Shared Spectrum
-S.M. Zafaruddin, Ilai Bistritz, Amir Leshem, Dusit Niyato
-https://arxiv.org/pdf/1902.06353
-\cite{Zafaruddin2019}
+%
+The work of \cite{AvnerMannor18} is discussed above for the case with communication between players, and their model is of high interest from the point-of-view of real-world wireless communication protocols.
+
+Finally, the very recent work of \cite{Zafaruddin2019} is the first one to present experiments done on simulated LTE and 5G channels.
+The mathematics behind their model are actually quite close to our model, but they explain it in terms of OFDMA and Quality-of-Service (QoS).
+Their algorithm is essentially based on a pre-agreement of the $M$ players, that will deterministically run an alternance of exploration phase, auction phase and exploitation phase, of (exponentially) increasing durations.
+By diving into the details of the modulation and giving explicitly the form of the uplink messages sent by the devices, the authors are able to set-up two different uplink packets, to efficiently perform the auction phase (see Figure~2).
+They prove a regret upper-bound of the order $R_T = \bigO{\log(T)}$, with no special care regarding the constants, and we can also note that their algorithm require a prior knowledge of $\Delta_{\min}$ a problem-dependent constant (Theorem~3).
 
 
 % ----------------------------------------------------------------------------
@@ -419,35 +427,89 @@ https://arxiv.org/pdf/1902.06353
 \label{sub:5:USRPdemos}
 
 Similarly to our demonstration of multi-armed bandit learning in an IoT network that we presented in the previous Chapter~\ref{chapter:4} in Section~\ref{sec:4:gnuradio},
-we review in this section some related works, dating back from $2016$, who proposed a similar approach.
+we list in this section some related works, dating back from $2016$, who proposed a similar approach.
 All the similar works that we are aware of also used USRP boards, and implemented the demonstration using either the Simulink and MATLAB softwares, or the GNU Radio software like we did \cite{Besson2018ICT}.
 
-\TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
+In \cite{darak2016bayesian,Darak16}, the authors study the same model and focussed on the \RhoRand{} policy, which was the state-of-the-art back in $2016$, combined with \UCB{} or \klUCB, as well as an extension using Bayes-UCB from \cite{Kaufmann12BUCB}.
+Their idea is to use the same skeleton as \RhoRand, that is to assign a \emph{rank} to each player, and make players change their rank after any collision. But instead of selecting a new rank uniformly at random among $\{1,\dots,M\}$, they proposed to use a ``second-stage'' learning policy\footnote{This is a very natural idea: use a bandit algorithm to balance the exploration/exploitation aspect of rank selection, instead of a random hoping.}, based on Bayes-UCB, to (try to) learn the best rank while still exploring each rank from time to time.
+This algorithm is implemented in SMPyBandits and named \texttt{rhoLearn}\footnote{See \href{https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoLearn.html}{\texttt{SMPyBandits.github.io/docs/PoliciesMultiPlayers.rhoLearn.html}} for its documentation.}, where it can use Bayes-UCB or any of the $65$ or more bandit algorithms available in the library.
+Even if no theoretical guarantee backs up this idea of second-stage learning with Bayes-UCB, empirical simulations found that it can be efficient.
+We illustrate this in Table~\ref{table:5:comparisonRhoRandRhoLearn} below, where we consider the same problem as described above in Section~\ref{sub:5:withoutSensing} (Table~\ref{table:5:meanRegretSimulationsNoSensing}).
+The first \texttt{rhoLearn} uses Bayes-UCB for the second-stage learning, while the second uses Exp3,
+and we include both the centralized multi-play version of \klUCB{} and our proposal \MCTopM-\klUCB{} for comparison.
 
-\cite{Darak16}
+% FIXME run the simulations!
+\begin{table}[ht]
+% \begin{footnotesize}
+    \centering
+    \begin{tabular}{c|ccc}
+    \textbf{Algorithm} $\;$ \textbackslash $\;$ Number of players & $M=3$ & $M=6$ & $M=9$ \\
+        \hline
+        Centralized multiple-play \klUCB{} & $\mathbf{52 \pm 15}$ & $\mathbf{35 \pm 15}$ & $\mathbf{0}$ \\
+        \hline
+        \RhoRand-\klUCB{} & $297 \pm 18$ & $1411 \pm 144$ & $2351 \pm 55$ \\
+        \texttt{rhoLearn}-\klUCB{} + Bayes-UCB & $297 \pm 18$ & $1411 \pm 144$ & $2351 \pm 55$ \\
+        \texttt{rhoLearn}-\klUCB{} + Exp3 & $297 \pm 18$ & $1411 \pm 144$ & $2351 \pm 55$ \\
+        \hline
+        \MCTopM-\klUCB{} & $134 \pm 6$ & $304 \pm 19$ & $42 \pm 5$ \\
+        \hline
+    \end{tabular}
+    \caption{Comparison of \RhoRand{} and \texttt{rhoLearn} for a simple multi-player bandit problem with $K=9$ arms.}
+    \label{table:5:comparisonRhoRandRhoLearn}
+% \end{footnotesize}
+\end{table}
 
-\cite{modiDemo2016}
+% FIXME mcuh more details?
 
-\cite{kumar2016two}
+Other works in the same line of research included \cite{modiDemo2016} implemented using the same USRP testbed as for our demonstration in Chapter~\ref{chapter:4} (Section~\ref{sec:4:gnuradio}),
+and the first work of a research team based in IIT Dehli, \cite{kumar2016two}.
+%
+More recent works by the same team, \cite{KumarYadav2018,SawantKumar2018,JoshiKumar2018}, all follow the same approach and include an experimental section that shows the results of an implementation of the proposed algorithms on USRP boards.
 
-\cite{KumarYadav2018}
-
-\cite{SawantKumar2018}
-
-\cite{JoshiKumar2018}
-
+\TODOL{I should explain more, no? Who does what and why? So long...}
 
 % ----------------------------------------------------------------------------
 \subsection{Towards non-stationary multi-players MAB models}
 \label{sub:5:towardsNonStationaryModels}
 
-\TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
+Since the beginning of this thesis, all the studied bandit problems were stationary: the rewards coming from choosing arm $k$ are all \iid{} and follow the same distribution $\nu_k$.
+The next Chapter~\ref{chapter:6} is focussed on a relaxation of this hypothesis, the piece-wise stationary bandit model.
+When we were working on multi-players bandits in Autumn $2017$ \cite{Besson2018ALT}, we left the study of the piece-wise stationary case as a future work, and shortly after we were excited to see that two independent works tackling this question were published, in December $2018$ and in February $2019$.
+Without diving too much into the details, we review here these two works.
+Without a more serious analysis, we conjecture that it should not be difficult to merge the regret lower-bound for stationary \emph{multi-players} MAB (Theorem~\ref{thm:5:BetterLowerBound}) and the lower-bound for \emph{piece-wise stationary} single-player MAB from \cite{Garivier11UCBDiscount}.
+We conjecture that any reasonable decentralized bandit algorithm must suffer a regret at least $M \sqrt{K \Upsilon_T T}$ for $M \leq K$ players, $K$ arms, and $\Upsilon_T$ stationary intervals.
 
-\cite{WeiSrivastava18Distributed}
+On the first hand, piece-wise stationary multi-players MAB can be tackled by extending algorithms developed for the single-player case.
+In \cite{WeiSrivastava18Distributed}, the authors study exactly the same multi-players bandit model as our model, and they propose two distributed algorithms that can efficiently be used by $M \leq K$ players to achieve sub-linear regret for piece-wise stationary problems, essentially by considering it as a harder case of a stationary problem. \\
+If $\Upsilon_T$ is bounded by $\Upsilon_T = \bigO{T^{\gamma}}$, for a known $\gamma$ but an unknown $\Upsilon_T$, they prove for instance in Theorem~2 that the expected cumulative regret of their RR-SW-UCB\# algorithm is bounded by $R_T = \bigO{T^{\frac{1+\gamma}{2}} \log(T)}$ (what we call the centralized system regret).
+This bound is of the same order as the bound obtained by the same authors for the SW-UCB\# algorithm in \cite{WeiSrivastava18Abruptly} for the single-player case.
+If $\Upsilon_T = \bigO{T^{\gamma}}$, this bound is comparable to the results obtained for most of the research literature on piece-wise stationary bandits (earlier works like D-UCB in \cite{Garivier11UCBDiscount} have the $\log(T)$ outside the square root, while more recent works all improved this aspect and have the $\log(T)$ in the square root, like for instance our proposals \GLRklUCB{} in \cite{Besson2019GLRT} and presented in Chapter~\ref{chapter:6}).
+Even if their analysis is not explicit regarding the constant, in the case where $\Upsilon_T = \bigO{T^{\gamma}}$ for a known $\gamma$, their regret upper-bound actually matches our conjectured lower-bound, up to a logarithmic factor $\log(T)$. \\
+%
+And finally, even though numerical simulations in their papers \cite{WeiSrivastava18Abruptly,WeiSrivastava18Distributed} are interesting and confirm the regret upper-bounds, they do not compare with any other algorithm, and it is left as an interesting future work to study this direction in more details.
+Sadly, a major drawback of their work is that assume that player $j\in\{1,\dots,M\}$ knows its index $j$, and as we explained above this small hypothesis is actually quite strong, as it allows players to be already orthogonal, and it reduces greatly the difficulty of the decentralized bandit problem.
 
-\cite{AlaturLevyKrause19}
+On the other hand, another possible is to extend ideas developed for the adversarial setting.
+In \cite{AlaturLevyKrause19}, the authors essentially consider the piece-wise stationary as an easier case of an adversarial problem. \\
+They build on the \MusicalChair{} algorithm from \cite{Rosenski16}, to let the $M$ players converge to a ranking in an efficient and decentralized way (cf. Algorithm 1), and on they apparently rediscovered the ``communication trick'' independently from \cite{BoursierPerchet18} to use communications between players to set up a ``coordinator'' player and $M-1$ ``followers'' (running respectively their Algorithms 2 and 3).
+%
+Their key algorithmic technique is to imitate the idealized case where there is full communication between the players. Then, to address the no-communication constraint, we enforce the players to keep the same decisions (arms) within long periods of time (blocks). This gives them the chance to coordinate between themselves via a simple protocol that uses collisions as a primitive, yet effective manner of communication.\\
+%
+Their proposal is using the Exp3 algorithm from \cite{Auer02NonStochastic} on a combinatorial problem: they consider ``meta'' arms that are affectations of the $M$ players to $M$ distinct arms among the $K$ arms.
+As soon as the ``coordinator'' can effectively use one algorithm to decide the arms played by all the $M$ players, they show that the regret will grow as $R_T = \bigO{M^{4/3} K^{2/3} (\log(K))^{1/3} T^{2/3}}$ as showed in Theorem~4.1
+(their notation uses $K$ for $M$ the number of players and $N$ for $K$ the number of arms).
+This bound is much worse than the one obtained for the first article \cite{WeiSrivastava18Distributed}, but is more general, and it is much worse than the bound of $\bigO{\sqrt{K T \log(K)}}$ obtained for Exp3 for the single-player adversarial setting in \cite{Auer02NonStochastic}.
+Note that this bound in $T^{2/3}$ is of the same order as the one given in \cite{Avner15}, for the \MEGA{} algorithm.
+However, we note that the dependency in $M$ is surprisingly better for their result than for our regret upper-bound for \MCTopM-\klUCB, as its regret scales in $M^3$ in Theorem~\ref{thm:5:LogarithmicRegret_MCTopMklUCB}.\\
+Moreover, at first sight, this idea of ``meta'' arms implies an exponential blow up in terms of computational and storage cost, as there is ${M \choose K}$ such ``meta arms'', but
+the authors provide in Section~4.1 and Lemma~4.1 an interesting discussion regarding the time efficiency of their proposed algorithm, and they show it can stay polynomial in $M$ and $K$ by leveraging techniques from the Determinental Point Processes (DPP, see \cite{GaBaVa18} for a good review).
+%
+In this second work also, we can note the poor experimental section, as the proposed algorithm is only compared against the \MusicalChair{} algorithm, in ``easy'' problems (small number of break-points $\Upsilon_T$).
+Despite being more complicated than other approaches, their algorithm ``\texttt{C \& P}'' should not be too hard to implement ourself, and studying its empirical performances is an interesting future work.
 
 
+
+\newpage  % FIXME
 % ----------------------------------------------------------------------------
 \section{Conclusion}
 \label{sec:5:conclusion}
@@ -457,7 +519,7 @@ In this chapter, we saw...
 Future works include...
 
 
-
+\newpage  % FIXME
 % ----------------------------------------------------------------------------
 \section{Appendix}
 \label{sec:5:appendix}

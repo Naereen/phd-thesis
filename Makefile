@@ -6,6 +6,7 @@ OUT  = $(FILE).pdf
 
 all:	clean pdf evince clean
 quick:	pdf
+bib:	bib2txt
 pdf:	$(OUT)
 
 .PHONY:	quick all pdf evince compress clean send_zamok latexstats lint proselint
