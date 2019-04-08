@@ -41,7 +41,7 @@
 
 % the need for multiple players in cognitive radio
 
-For the development of Cognitive Radio, a crucial step is to insert \emph{multiple} smart devices in the \emph{same} background traffic (at least $M \geq 2$).
+For the development of Cognitive Radio, a crucial step is to insert \emph{multiple} smart devices in the \emph{same} background traffic (at least $M \geq 2$), as we explained in Chapters~\ref{chapter:1,chapter:4}.
 With the presence of a central controller that can assign the devices to separate channels, this amounts to choosing at each time step \emph{several} arms of a MAB in order to maximize the global rewards, and can thus be viewed as an application of the multiple-play bandit, introduced by \cite{Anantharam87a} and recently studied by \cite{Komiyama15}.
 They essentially proved that existing algorithms can be easily extended to the multiple-play case, with provable guarantees on their regret.
 % In the context of CR, this first extension can model a centralized agent taking decisions for end-devices, for instance a base station affecting devices to channels.
@@ -54,22 +54,22 @@ They essentially proved that existing algorithms can be easily extended to the m
 % It is harder as there is a game theoretic-like situation, for instance where devices try to avoid collisions.
 %
 Due to the communication cost implied by a central controller, a more relevant model is the
-\emph{decentralized multi-player} multi-armed bandit model, introduced by \cite{Zhao10} and \cite{Anandkumar10,Anandkumar11}, in which players select arms individually and collisions may occur, that yield a loss of reward.
+\emph{decentralized multi-player} multi-armed bandit model, introduced by \cite{Zhao10} and further studied shortly after in \cite{Anandkumar10,Anandkumar11}, in which players select arms individually and collisions may occur, that yield a loss of reward.
 Further algorithms were proposed in similar models by \cite{Tekin12IEEE} and \cite{Kalathil12} (under the assumption that each arm is a Markov chain)
 and by \cite{Avner15,Avner16} and \cite{Rosenski16} (for \iid{} or piece-wise \iid{} arms).
 %
 The goal for every player is to select most of the time one of the $M$ best arms, without colliding too often with other players.
-A first difficulty relies in the well-known trade-off between \emph{exploration} and \emph{exploitation}: players need to explore all arms to estimate their means while trying to focus on the best arms to gain as much rewards as possible.
-The decentralized setting considers no exchange of information between players, that only know $K$ and $M$, and to avoid collisions, players should furthermore find orthogonal configurations (\ie, the $M$ players use the $M$ best arms without any collision), without communicating.
+A first difficulty relies in the well-known trade-off between \emph{exploration} and \emph{exploitation}: players need to explore all the arms to estimate their means, while trying to focus on the best arms to gain as much rewards as possible.
+The decentralized setting considers wireless protocol with no direct or explicit exchange of information between players, and assumes that the players only know $K$ and $M$. To avoid collisions, players should furthermore find orthogonal configurations, \ie, the $M$ players use the $M$ best arms without any collision, without explicitly communicating\footnote{One must now be careful about this aspect when stating that ``no explicit communications are allowed between players'' in the model, as \cite{BoursierPerchet18} proved that even in the no sensing case, the ``communication trick'' can be used to exchange information between players, by generating collisions at some pre-agreed times. We discuss this work more in details at the end of this chapter, in Section~\ref{sub:5:withoutSensing}.} with each other.
 Hence, in that case the trade-off is to be found between exploration, exploitation \emph{and} low collisions.
 
 All these above-mentioned works are motivated by the OSA problem, in which it is assumed that \emph{sensing} occurs, that is each smart device observes the availability of a channel (sample from the arm) \emph{before} trying to transmit and possibly experiment a collision with other smart devices.
-However some real radio networks do not use sensing at all, \eg, emerging standards developed for \emph{Internet of Things} (IoT) networks such as LoRaWAN.
+However some real radio networks do not use sensing at all, \eg, emerging standards currently or recently developed for \emph{Internet of Things} (IoT) networks, such as LoRaWAN.
 Thus, to take into account these new applications, algorithms with additional constraints on the available feedback have to be proposed within the multiple-player MAB model.
 Especially, the typical approach that combines a (single-player) bandit algorithm based on the sensing information --to learn the quality of the channels while targeting the best ones-- with a low-complexity decentralized collision avoidance protocol, is no longer possible.
+Our article \cite{Besson2018ALT} was the first to study this other model of multi-player bandits for the ``no sensing'' case.
 
-
-In this chapter, we take a step back and present the different feedback levels possible for multi-player MAB algorithms. For each of them, we propose algorithmic solutions supported by both experimental and theoretical guarantees. In the presence of sensing information, our contributions are a new problem-dependent regret lower bound, tighter than previous work, and the introduction of two algorithms, \RandTopM{} and \MCTopM{}. Both are shown to achieve an asymptotically optimal number of selections of the sub-optimal arms, and for \MCTopM{} we furthermore establish a logarithmic upper bound on the regret, that follows from a careful control of the number of collisions. In the absence of sensing information, we propose the \Selfish{} heuristic and investigate its performance. Our study of this algorithm is supported by (promising) empirical performance and some first (disappointing) theoretical elements.
+In this chapter, we take a step back and present the different feedback levels possible for multi-player MAB algorithms. For each of them, we propose algorithmic solutions supported by both experimental and theoretical guarantees. In the presence of sensing information, our contributions are a new problem-dependent regret lower bound, tighter than previous work, and the introduction of two algorithms, \RandTopM{} and \MCTopM{}. Both are shown to achieve an asymptotically optimal number of selections of the sub-optimal arms, and for \MCTopM{} we furthermore establish a logarithmic upper bound on the regret, that follows from a careful control of the number of collisions. In the absence of sensing information, we propose the \Selfish{} heuristic and investigate its performance. Our study of this algorithm was supported in \cite{Besson2018ALT} by (promising) empirical performance and some first (disappointing) theoretical elements, and it was proved to be inefficient since then.
 
 
 
@@ -89,9 +89,12 @@ Finally, the result of our experimental study reported in Section~\ref{sec:5:exp
 % -----------------------------------------------------------------
 
 % describe our stochastic assumptions
-We consider a $K$-armed Bernoulli bandit model, % (for $K\geq2$),
+Similarly to what is presented in Chapter~\ref{chapter:2},
+we consider a $K$-armed Bernoulli bandit model, % (for $K\geq2$),
 in which arm $k$ is a Bernoulli distribution with mean $\mu_k\in[0,1]$.
 We denote $(Y_{k,t})_{t\in\N}$ the \iid{} (binary) \emph{reward stream} for arm $k$, that satisfies $\Pr(Y_{k,t}=1) = \mu_k$ and that is independent from the other rewards streams.
+
+\textbf{Only Bernoulli?}
 However we mention that our lower bound and all our algorithms (and their analysis) can be easily extended to one-dimensional exponential families (just like for the \klUCB{} algorithm of \cite{KLUCBJournal}). For simplicity, we focus on the Bernoulli case, that is also the most relevant for Cognitive Radio, as it can model channel availabilities.
 
 
@@ -125,11 +128,11 @@ In words, she receives the reward of the selected arm if she is the only one to 
 This provides another reason to focus on the Bernoulli model. It is the hardest model, in the sense that receiving a reward zero is not enough to detect collisions. For other models, the data streams $(Y_{k,s})_s$ are usually continuously distributed, with no mass at zero. Hence receiving $r^j(t) = 0$ directly gives $\indic(C^j(t)) = 1$.
 
 Note that other models for rewards loss have also been proposed in the literature, for instance the reward is randomly allocated to one of the players selecting it.
-To stay consistent with the model presented in the previous Chapter~\ref{chapter:4},
+To stay consistent and for simplicity, with the model presented in the previous Chapter~\ref{chapter:4},
 we preferred to focus on full reward occlusion in this chapter.
 
 
-A multi-player MAB strategy is a tuple $\rho = (\rho^1,\dots,\rho^M)$ of arm selection strategies for of each of the $M$ players, and the goal is to propose a strategy that maximizes the total reward of the system, under some constraints.
+A multi-player MAB strategy is formally defined as a tuple $\rho = (\rho^1,\dots,\rho^M)$ of arm selection strategies for of each of the $M$ players, and the goal is to propose a strategy that maximizes the total reward of the system, under some constraints.
 First, each player $j$ should adopt a \emph{sequential} strategy $\rho^j$, that decides which arm to select at time $t$ based on \emph{previous observations}.
 Previous observations for player $j$ at time $t$ always include the previously chosen arms $A^j(s)$ and received rewards $r^j(s)$ for $s<t$, but may also include the \emph{sensing information} $Y_{A^j(t),t}$ or the \emph{collision information} $C^j(t)$.
 More precisely, depending on the application, one may consider the following three observation models, \modelun, \modeldeux{} and \modeltrois.
@@ -139,7 +142,8 @@ But for Bernoulli distributions, one may consider the following three observatio
 
 \begin{itemize}
   \item[\modelun]
-    \textbf{Simultaneous sensing and collision}: player $j$ observes  $Y_{A^j(t),t}$ \emph{and} $C^j(t)$ (not previously studied).
+    \textbf{Simultaneous sensing and collision}: player $j$ observes  $Y_{A^j(t),t}$ \emph{and} $C^j(t)$.
+    We note that this first model was never previously studied, but we do not focus on it because of its unrealistic aspect, and its simplicity (it is easier than the following model, for which we obtain good theoretical results).
   \item[\modeldeux]
     \textbf{Sensing, then collision}: player $j$ observes $Y_{A^j(t),t}$, \emph{then} observes the reward, and thus also $C^j(t)$ only if $Y_{A^j(t),t} = 1$.
     This common setup, studied for example by \cite{Anandkumar11,Avner15,Rosenski16}, is relevant to model the OSA problem: the device first checks for the presence of primary users in the chosen channel.
@@ -152,7 +156,8 @@ But for Bernoulli distributions, one may consider the following three observatio
     with a device from the background traffic $(Y_{A^j(t),t}=0)$,
     or to a collision with one of the others players ($C^j(t)$).
     However, the sensing and collision information are censored.
-    Recently, our work presented in Chapter~\ref{chapter:4} \cite{Bonnefoi17} presented the first (bandit-based) algorithmic solutions under this (harder) feedback model, in a slightly different setup, more suited to large scale IoT applications. %\footnote{\cite{Bonnefoi17} considers a different setting, more suited for large-scale IoT networks, and a future work will be to extend our work to this setting with more than $K$ players but small probability of activations.}.
+    Recently, our work presented in Chapter~\ref{chapter:4} \cite{Bonnefoi17} presented the first (bandit-based) algorithmic solutions under this (harder) feedback model, in a slightly different setup, more suited to large scale IoT applications, but as explained above we did not present theoretical results for this third model (yet).
+    %\footnote{\cite{Bonnefoi17} considers a different setting, more suited for large-scale IoT networks, and a future work will be to extend our work to this setting with more than $K$ players but small probability of activations.}.
 \end{itemize}
 
 Under each of these three models, we define $\cF^j_t$ to be the filtration generated by the observations gathered by player $j$ up to time $t$ (which contains different information under models \modelun, \modeldeux{} and \modeltrois).
@@ -197,7 +202,7 @@ In this section, we provide a useful decomposition of the regret (Lemma~\ref{lem
 
 % FIXME
 \begin{framed}
-  \paragraph{\textcolor{red}{Warning}.}
+  \textbf{\textcolor{red}{Warning}.}
   The regret lower bound given in \cite{Besson2018ALT} is not applicable to any algorithm,
   as it was discovered by Etienne Boursier and Vianney Perchet, as they explain in Section~2.4 in \cite{BoursierPerchet18}.
   The proof we gave in the Appendix of our paper \cite{Besson2018ALT} was wrong in just one step,
@@ -358,6 +363,8 @@ However, a careful manipulation of this decomposition shows that the regret is a
 To express our lower bound, we need to introduce $\kl(x,y)$ as the Kullback-Leibler divergence between the Bernoulli distribution of mean $x$ and that of mean $y$, so that $\kl(x,y) := x\log(x/y) + (1-x)\log((1-x)/(1-y))$.
 %
 We first introduce the assumption under which we derive a regret lower bound, that generalizes a classical assumption made by \cite{LaiRobbins85} in single-player bandit models.
+Our lower bound will only be valid for algorithms of a certain class, that do not obtain much information from the collision indicator variables.
+This class contains our proposals, \RandTopM{} and \MCTopM, but rule out the \textsc{Sic-MMAB} algorithm of \cite{BoursierPerchet18}.
 
 \begin{definition}\label{def:5:DecentralizedUniformEfficiency}
   A strategy $\rho$  is \emph{\textbf{strongly uniformly efficient}} if for all $\boldsymbol{\mu} \in \cP_M$ and for all $\alpha \in (0,1)$,
@@ -387,11 +394,28 @@ ${T}- \E_{\mu}[T_k(T)] {=} o(T^{\alpha})$, and so
 \end{equation}
 The additional assumption in \eqref{eq:5:SUE} further implies some notion of \emph{fairness}, as it suggests that each of the $M$ players spends on average the same amount of time on each of the $M$ best arms. Note that this assumption is satisfied by any strategy that is invariant under every permutation of the players, \ie, for which the distribution of the observations under $\rho^{\gamma} = (\rho^{\gamma(1)},\dots,\rho^{\gamma(M)})$ is independent from the choice of permutation $\gamma \in \Sigma_M$. In that case, it holds that  $\E_{\mu}[T_k^j(T)]=\E_{\mu}[T_k^{j'}(T)]$ for every arm $k$ and $(j,j') \in \{1,\dots,M\}$, hence \eqref{eq:5:SUE} and \eqref{eq:5:intermediate} are equivalent, and strong uniform efficiency is equivalent to standard uniform efficiency. Note that all our proposed algorithms are permutation invariant and \MCTopM{} is thus an example of strongly uniformly efficient algorithm, as we prove in Section~\ref{sec:5:upperbounds} that its regret is logarithmic on every instance $\mu \in \cP_M$.
 
-We now state a problem-dependent asymptotic lower bound on the number of sub-optimal arms selections under a \emph{decentralized strategy} that has access to the sensing information.
+As it was discovered in \cite{BoursierPerchet18} and further explained in Appendix~E of \cite{KaufmannAbbas19}, our lower-bound was not true for any algorithm, as we wrongly claimed in \cite{Besson2018ALT} that the collision information term is zero for any algorithm $\rho$.
+However, we wanted to be still able to present our derivations and results giving the desired lower-bound, mainly because its proof and its form give insights on how to design an asymptotically optimal algorithm $\rho$, and because it still applies to algorithms of the \RhoRand{} family as well as our proposals \RandTopM{} and \MCTopM.
+The following notations and the hypothesis on the collision information term \eqref{eq:5:collisionInformationTerm} come from Appendix~E of \cite{KaufmannAbbas19}.
+% FIXME
+% We let the interested reader fetch the details on their paper.
+Fix a player $j\in\{1,\dots,M\}$, and we consider the observations $\cO_t$ gathered by this player after $t$ rounds of its algorithm $\rho^j$:
+\[ \cO_t := \left( U^j(1), Y_{A^j(1),1}, C^j(1), \ldots, U^j(t), Y_{A^j(t),t}, C^j(t) \right),\]
+where $U^j(t)$ denotes some external source of randomness useful to select $A^j(t+1)$ (\eg, for an algorithm based on ranks and \UCB{} indexes, like \RhoRand, when two arms have the same maximum index, the decision is an $\argmax$ that is usually a uniform random selection among the arms with maximum index).
+Fix a problem $\bm{\mu}$, and as we do in Appendix~\ref{proof:5:BetterLowerBound}, introduce an alternative model parametrized by $\bm{\lambda}$, with a small difference between $\bm{\mu}$.
+
+For the algorithm $\rho$, we introduce the \emph{collision information term} as:
+\begin{equation}\label{eq:5:collisionInformationTerm}
+  \cI_{\bm{\mu},\bm{\lambda}}(\rho,T) := \sum_{t=1}^{T} \mathrm{KL}(\P_{\bm{\mu}}^{C_t | \cO_{t-1}}, \P_{\bm{\lambda}}^{C_t | \cO_{t-1}}).
+\end{equation}
+
+We now state a problem-dependent asymptotic lower bound on the number of sub-optimal arms selections under a \emph{decentralized strategy} $\rho$ that has access to the sensing information and satisfies $\cI_{\bm{\mu},\bm{\lambda}}(\rho,T) = \smallO{\log(T)}$.
+This additional hypothesis on $\cI_{\bm{\mu},\bm{\lambda}}(\rho,T)$ essentially says that ``the collisions do not bring too much information on the arm means'', as stated in \cite{KaufmannAbbas19}.
 This result, proved in Appendix~\ref{proof:5:BetterLowerBound}, yields an asymptotic logarithmic lower bound on the regret, also given in Theorem~\ref{thm:5:BetterLowerBound}.
 
 \begin{theorem}\label{thm:5:BetterLowerBound}
-  Under observation models $\modelun$ and $\modeldeux$, for any strongly uniformly efficient \emph{decentralized} policy $\rho$ and $\boldsymbol{\mu}\in\cP_M$,
+  Under observation models $\modelun$ and $\modeldeux$, for any strongly uniformly efficient \emph{decentralized} policy $\rho$ and $\boldsymbol{\mu}\in\cP_M$.
+  Furthermore, if $\rho$ satisfies $\cI_{\bm{\mu},\bm{\lambda}}(\cA,T) = \smallO{\log(T)}$, then
   % \vspace*{-10pt}  % XXX
   \begin{equation}\label{eq:5:LBDraws}
     \forall j \in \{1,\dots,M\}, \ \forall k \in \Mworst, \ \ \ \liminf_{T\to \infty} \frac{\E_{\mu}[T_k^j(T)]}{\log(T)} \geq \frac{1}{\kl(\mu_k, \mu_M^*)}.
