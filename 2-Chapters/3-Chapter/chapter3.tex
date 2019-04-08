@@ -391,38 +391,84 @@ $ T=50000 N=100 K=10 ARM_TYPE=Gaussian python main.py
 \end{small}
 
 
-\subsection{Using multi-core to speed-up simulations}
+\subsection{A final note about parallelism in SMPyBandits}
+\label{sub:3:parallelSimulations}
+% Using multi-core to speed-up simulations
 
-Nowadays, parallelism is everywhere in the computation world, and any serious framework for numerical simulations must try at least one of the three approaches to gain from parallelism.
+Nowadays, parallelism is everywhere in the computational world, and any serious framework for numerical simulations must explore at least one of the three main approaches to (try to) gain performance from parallelism.
 %
-For all the different numerical simulations presented in this thesis, except the ones based on MATLAB or GNU Radio in Chapter~\ref{chapter:4}, the setting is the same: we consider a small set of $p$ different problems, of time horizon $T$ that we want to simulate for $N$ independent runs.
-On the first hand, Because of the sequential learning aspect, each repetition of the simulation must be sequential regarding the time steps $t=1,\dots,T$, and so no parallelism can be done to speed up this axis.
-On the other hand, parallelism can help greatly for the two other variables: if we have a way to run in parallel $4$ processes, and we have $p=4$ problems to simulate, then running a process for each problem directly brings a speed-up factor of $4$.
-Similarly, if we want to simulate $1000$ repetitions of the same (random) problem, and we can run $4$ processes in parallel, then running $1000/4=250$ repetitions on each process also bring a speed-up factor of $4$.
+For all the different numerical simulations presented in this thesis, except the ones based on MATLAB or GNU Radio in Chapter~\ref{chapter:4}, the setting is the same: we consider a small set of $p$ different problems, of time horizon $T$ that we want to simulate for $N$ independent runs (\eg, $p=6$, $T=10000$ and $N=100$ like in Chapter~\ref{chapter:6}).
+On the first hand, because of the fundamentally sequential nature of bandit games, each repetition of the simulation must be sequential regarding the time steps $t=1,\dots,T$, and so no parallelism can be done to speed up this axis.
+On the other hand, parallelism can help greatly for the two other axes: if we have a way to run in parallel $4$ processes, and we have $p=4$ problems to simulate, then running a process for each problem directly brings a speed-up factor of $4$.
+Similarly, if we want to run $100$ repetitions of the same (random) problem, and we can run $4$ processes in parallel, then running $100/4=25$ repetitions on each process also bring a speed-up factor of $4$.
 %
 In this last section, we quickly review the chosen approach for SMPyBandits (multi-core on one machine), and we explain why the two other approaches were less appropriate for our study of multi-armed bandit problems.
 
+\paragraph{What we did implement: \tettt{Joblib} for multi-core simulations.}
+%
 The first approach is to use multiple cores of the same machines, and because it is both the simplest and the less financially as well as ecologically costly, this is the approach implemented in SMPyBandits.
 The machines I had access to during my thesis, either my own laptop or a workstation hosted the SCEE team in CentraleSupélec campus, were equipped with $i5$ or $i7$ Intel CPU with $4$ or $12$ cores.
+%
+As explained in the page \href{https://smpybandits.github.io/How_to_run_the_code.html}{\texttt{SMPyBandits.GitHub.io/How\_to\_run\_the\_code.html}}, we implemented in SMPyBandits an easy way to run any simulations on $n$ cores of a machine, using the \texttt{Joblib} \cite{joblib} library.
+It is implemented in a completely transparent way, and if someone uses the command-line variable to configure experiments, using one core or all the cores of the machine one changes \texttt{N\_JOBS=1} to \texttt{N\_JOBS=-1}, like in this example.
 
-Quickly explain the advantages and drawbacks of using \texttt{Joblib} and \texttt{joblib.Parallel} to run simulations on multiple cores of the same computer
+% https://tex.stackexchange.com/a/12430/
+\begin{small}
+    \begin{listing}[h!]
+        \begin{minted}[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{bash}
+$ BAYES=False ARM_TYPE=Bernoulli N=100 T=10000 K=9 N_JOBS=1 \
+  python3 main.py configuration.py
+        \end{minted}
+        \caption{To run such simulation using the maximum number of cores, use \texttt{N\_JOBS=-1} instead.}
+        % \captionof{listing}{Run a simulation using 1 or \texttt{N} cores \label{lst:3:runOneCoreOrMore}.}
+        \label{lst:3:runOneCoreOrMore}
+    \end{listing}
+\end{small}
 
+As long as the number of jobs (\texttt{N\_JOBS} here) is less then or equal to the number of physical cores in the CPU of the computer, the final speed-up in terms of total computation runtime is almost optimal, dividing the running time by \texttt{N\_JOBS}.
+But jobs are implemented as threads, so the speed-up cannot be more than the number of cores, and using for instance $20$ jobs on $4$-cores for the $20$ repetitions is highly sub-optimal, as the CPU will essentially spend all his time (and memory) managing the different jobs, and not actually doing the simulations.
+Using the above example, we illustrate the effect of using multi-jobs and multi-cores on the time efficiency of simulations using SMPyBandits. We consider three values of \texttt{N\_JOBS}, $1$ to use only one core and one job, $4$ to use all the $4$ cores of my $i5$ Intel CPU, and $20$ jobs.
+We give in Table~\ref{table:3:speedUpTimeParallelComputations}
+
+\TODOL{Je veux terminer cet exemple!}
+
+% FIXME run
+% for N in 1 10 100; do for NJOBS in 1 4 100; do DEBUG=True SAVEALL=False NOPLOTS=True N=$N T=10000 N_JOBS=$NJOBS make single; read; done
+
+\begin{table}[ht]
+% \begin{footnotesize}
+    \centering
+    \begin{tabular}{c|ccc}
+    \textbf{Repetitions} $\;$ \textbackslash $\;$ \texttt{N\_JOBS} & $1$ & $4$ & $20$ \\
+        \hline
+        $1$ repetition    & $XXX \;\text{s}$ & $XXX \;\text{s}$ & $XXX \;\text{s}$ \\
+        $10$ repetitions  & $XXX \;\text{s}$ & $XXX \;\text{s}$ & $XXX \;\text{s}$ \\
+        $100$ repetitions & $59 \;\text{s}$ & $37 \;\text{s}$ & $XXX \;\text{s}$ \\
+        \hline
+    \end{tabular}
+    \caption{Effect on the running time of using \texttt{N\_JOBS} jobs in parallel, for a simulation with $9$ different algorithms, for $K=9$ arms, a time horizon of $T=10000$.}
+    \label{table:3:speedUpTimeParallelComputations}
+% \end{footnotesize}
+\end{table}
 
 % Explain why I didn't try more on parallelisation (eg on Grid5000 or other large scale computer).
+\paragraph{Approaches we did not try.}
 %
 The two other approaches we could have consider is parallel computations running on not multiple cores but multiple machines, in a computer cluster, or parallel computations running in a Graphical Processing Unit (GPU).
+
+On the first hand, I did not try to add in SMPyBandits the possibility to run simulations using a GPU, or any general purpose computation libraries offering a GPU-backend.
 Initially designed for graphical simulations and mainly for video-games applications, the use of GPU for scientific computations have been gaining attention for numerical simulation in the research world since the last $15$ years, and NVidia CUDA for GPGPU (General Purpose GPU) started to become popular in $2011$.
 Since $2016$, we saw a large press coverage as well as an extensive use in research of deep learning libraries that make general-purpose machine learning algorithms train on the GPU of a user's laptop or a cluster of GPU.
 This success is mainly possible because of the heavy parallelism of such training algorithms, and the parallel nature of GPU.
-To the best of the author knowledge, nobody has tried to implement high performance MAB simulations by using the ``parallelism power'' of a GPU (at least, no code for such experiments were made public in $2019$). I worked on a GPU, implementing fluid dynamic simulations in an internship in $2012$, and I have since then kept a curiosity on how to use GPU-powered libraries and code.
-The author has contributed to famous libraries like Theano (\href{http://deeplearning.net/software/theano/}{\texttt{DeepLearning.net/software/theano}}) or Keras (\href{https://keras.io/}{\texttt{keras.io}}), and my limited knowledge on such libraries made me believe that it was not easy to use a GPU for bandit simulations, and most surely it would not have been worth the time.
+To the best of the author knowledge, nobody has tried to implement high performance MAB simulations by using the ``parallelism power'' of a GPU (at least, no code for such experiments were made public in $2019$).
+I worked on a GPU, implementing fluid dynamic simulations in an internship in $2012$, and I have since then kept a curiosity on how to use GPU-powered libraries and code.
+I have contributed to and used famous deep-learning libraries, like Theano (\href{http://deeplearning.net/software/theano/}{\texttt{DeepLearning.net/software/theano}}) or Keras (\href{https://keras.io/}{\texttt{keras.io}}), and my limited knowledge on such libraries made me believe that it was not easy to use a GPU for bandit simulations, and most surely it would not have been worth the time.
+I would be very curious to understand how a GPU could be used to implement highly efficient simulations for sequential learning problems, because it seemed hard whenever I thought about it.
 
-I did not try to use any large scale computer cluster, even if I was aware of the possibility offered by the Grid 5000 project, for instance.
-It is partly due to time constraint, as I would have been curious to try, but also because we found that it would not have helped us much to use a large scale cluster.
-The main reason is that in the multi-armed bandit and sequential learning literature, most research papers do not even include an experimental section, and for the papers who do take the time to implement and test their proposed algorithms, it is almost done on just a few problems and for short- or medium- duration experiments.
+On the other hand, I also did not try to use any large scale computer cluster, even if I was aware of the possibility offered by the Grid 5000 project, for instance.
+It is partly due to time constraint, as I would have been curious to try, but mainly because we found that it would not have helped us much to use a large scale cluster.
+The main reason is that in the multi-armed bandit and sequential learning literature, most research papers do not even include an experimental section, and for the papers who did take the time to implement and test their proposed algorithms, it is almost done on just a few problems and for short- or medium- duration experiments.
 For instance, the papers we consider to be the best ones regarding their empirical sections are \cite{LiuLeeShroff17,CaoZhenKvetonXie18}, for piece-wise stationary bandits, and they mainly consider reasonable problems of horizon $T=10000$ and no more than $1000$ independent repetitions. Each paper considers one harder problem, of horizon $T=1000000$ and less repetitions.
 %
 In each article written during my thesis, we included extensive numerical simulations, and even the longest ones (for \cite{Besson2019GLRT}) were short enough to run in less than $12$ hours on a $12$-core workstation, so we could run a few large-scale simulations over night.
-
-\TODOL{Finish this section}
-
+For such reasons, we prefer to not try to run simulations on a cluster.
