@@ -896,10 +896,12 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
   Denote $\kl'(x,y)$ the derivative of the function $x \mapsto \kl(x,y)$ (for any fixed $y\neq 0, 1$).
 
   \begin{lemma}\label{lem:5:Fact2KLUCB} For any arms $k$ and $k'$ such that $\mu_{k'} > \mu_{k}$, if $g_k^{j}(t)$ is the kl-UCB index with exploration function $f(t)$,
+  \begin{small} % XXX
   \begin{align*}
     &\sum_{t=1}^T\Pr_{\bm{\mu}} \left( A^j(t) = k, \mu_{k'} \leq g_k^{j}(t) \right) & \leq  \frac{f(T)}{\kl(\mu_k,\mu_{k'})}
     + \sqrt{2\pi} \sqrt{\frac{\kl'(\mu_k,\mu_{k'})^2}{\kl(\mu_k,\mu_{k'})^3}}\sqrt{f(T)} + 2\left(\frac{\kl'(\mu_k,\mu_{k'})}{\kl(\mu_k,\mu_{k'})}\right)^2 + 1.\end{align*}
   \end{lemma}
+  \end{small} % XXX
 
   Putting things together, one obtains the non-asymptotic upper bound
   \begin{align}\label{eq:5:UBprecise}
@@ -1206,7 +1208,9 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
     \E_{\mu}[\cC(T)]
     &\leq M \sum_{j=1}^M \left(\sum_{t=1}^T \Pr(I_2^j(t)) + \sum_{t=1}^T \Pr(I_3^j(t))\right)
     = M \left(\sum_{j=1}^M \E_{\mu}[N_2^j(T)] + \E_{\mu}[N_3^j(T)]\right) \\
-    &\leq M^2 \left(\E_{\mu}[n(T)] \E_{\mu}[\theta_i - \tau_i] \right) + M^2 \E_{\mu}[N_3^1(T)] \notag  \\
+    &\leq M^2 \left(\E_{\mu}[n(T)] \E_{\mu}[\theta_i - \tau_i] \right) + M^2 \E_{\mu}[N_3^1(T)] \notag
+  \end{align}%
+  \begin{align}
     &\leq M^2 (1+\E_{\mu}[N_3^1(T)] + \E_{\mu}[N_5^1(T)]) M + M^2 \E_{\mu}[N_3^1(T)] \notag \\
     &\leq 2 M^3 \E_{\mu}[N_3^1(T)] + \smallO{\log T} + M^2 \left(\sum_{a,b=1,\dots,K,\;\mu_a < \mu_b} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T} \notag  \\
     &\leq \left(2 M^3 + M^2\right) \left(\sum_{a,b=1,\dots,K,\;\mu_a < \mu_b} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T}.
@@ -1267,8 +1271,11 @@ and optimal for the term \ref{eq:5:term1}.
 % -----------------------------------------------------------------
 \subsection{Discussion on \Selfish} \label{sub:5:SelfishFails}
 
-The analysis of \Selfish{} is harder, but we tried our best to obtain some understanding of the behavior of this algorithm, that seems to be doing surprisingly well in many contexts, as in our experiments with $K=9$ arms and in extensive experiments not reported in this section. However, a disappointing result is that we found simple problems, usually with small number of arms, for which the algorithm may fail. For example with $M=2$ or $M=3$ players competing for $K=3$ arms,
-with means $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$, the histograms in Figure~\ref{fig:5:selfish_fail1} suggests that with a small probability, the regret $R_T$ of \Selfish-\klUCB{} can be very large. We provide a discussion in Appendix~\ref{app:5:SelfishFails} about when such situations may happen, including a conjectured (constant, but small) lower bound on the probability that \Selfish{} experience collision almost at every round. This result would then prevent \Selfish{} from having a logarithmic regret. However, it is to be noted that the lower bound of Theorem~\ref{thm:5:BetterLowerBound} does not apply to the censored observation model \modeltrois{} under which \Selfish{} operates, and it is not known yet whether logarithmic regret is at all possible.
+The analysis of \Selfish{} is harder, but we obtained some understanding of the behavior of this algorithm, that seems to be doing surprisingly well in many contexts, as in our experiments with $K=9$ arms and in extensive experiments not reported in this section. However, a disappointing result is that we found simple problems, usually with small number of arms, for which the algorithm may fail. For example with $M=2$ or $M=3$ players competing for $K=3$ arms,
+with means $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$, the histograms in Figure~\ref{fig:5:selfish_fail1} suggests that with a small probability, the regret $R_T$ of \Selfish-\klUCB{} can be very large. We provide a discussion in Appendix~\ref{app:5:SelfishFails} about when such situations may happen, including a conjectured (constant, but small) lower bound on the probability that \Selfish{} experience collision almost at every round. This result would then prevent \Selfish{} from having a logarithmic regret. However, it is to be noted that the lower bound of Theorem~\ref{thm:5:BetterLowerBound} does not apply to the censored observation model \modeltrois{} under which \Selfish{} operates.
+%
+The \textsc{Sic-MMAB} algorithm proposed in \cite{BoursierPerchet18} answers the question we left open last year in \cite{Besson2018ALT},
+of whether logarithmic regret is at all possible for the ``no sensing'' case (model \modeltrois).
 
 
 
@@ -1287,9 +1294,7 @@ with means $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$, the histograms in Figure~\ref{f
 
 
 We illustrate here the empirical performances of the algorithms presented in Section~\ref{sec:5:algorithms}, used in combination with the \klUCB{} indices.
-Some plots are at pages \pageref{fig:5:MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems} and \pageref{fig:5:MP__K9_M6_T10000_N1000__4_algos} and most of them in Appendix~\ref{app:5:plotsFromSec5}.
-
-\TODOL{Rewrite appendix to include all simulations here!}
+% Some plots are at pages \pageref{fig:5:MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems} and \pageref{fig:5:MP__K9_M6_T10000_N1000__4_algos} and most of them in Appendix~\ref{app:5:plotsFromSec5}.
 
 \TODOL{Include here some plots showing \RhoRand{} with \UCB{} and \klUCB{} vs \MCTopM{} with \UCB{} and \klUCB{}.}
 
@@ -1300,22 +1305,22 @@ As the purpose of this work is not to optimize on the index policy, but rather p
 we only report results for \klUCB.
 In a first set of experiments, \MCTopM{}, \RandTopM{} and \Selfish{} are benchmarked against the state-of-the-art \RhoRand{} algorithm.
 We also include a centralized multiple-play \klUCB{} algorithm,
-%as defined by \cite{Anantharam87a},
+as defined by \cite{Anantharam87a},
 essentially to check that the \emph{``price of decentralized learning''} is not too large.
 
 %
 
-We present results for two bandit instance: one with $K=3$ arms and means %\footnote{But of course the means are unknown to the algorithms, and their order is not important.}
+We present results for two bandit instance: one with $K=3$ arms and means
 $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$, for which two cases $M=2$ and $M=3$ are presented in Figure~\ref{fig:5:selfish_fail1}. For the second instance $K=9$ and $\boldsymbol{\mu} = [0.1, 0.2, \dots, 0.9]$,
 three cases are presented: $M=6$ in Figure~\ref{fig:5:MP__K9_M6_T10000_N1000__4_algos},
 and for the two limit cases $M=2$ and $M=9=K$ in Figure~\ref{fig:5:MP__K9_M2-6-9_T10000_N200__4_algos}.
-% Note the different algorithms know the number of players $M$.
-Performance is measured with the \emph{expected} regret up to horizon $T=10000$, estimated based on $1000$ repetitions on the same bandit instance. %, from $t=1$ to the horizon $T=10000$ (also unknown by the algorithms),
+Note that here, we consider different algorithms that know the number of players $M$.
+Performance is measured with the \emph{expected} regret up to horizon $T=10000$, estimated based on $1000$ repetitions on the same bandit instance.
+%
 We also include histograms showing the \emph{distribution} of regret at $t=T$,
 as this allows to check if the regret is indeed small for \emph{each} run of the simulation.
 %
 For the plots showing the regret, our \emph{asymptotic} lower bound from Theorem~\ref{thm:5:BetterLowerBound} is displayed.
-% and it should be surprising to see it being larger than some regret values: it is only asymptotic.
 
 Experiments with a different problem for each repetition,
 that is uniformly sampled $\boldsymbol{\mu} \sim \cU([0,1]^K)$,
@@ -1323,8 +1328,9 @@ are also considered, in Figure~\ref{fig:5:MP__K9_M6_T5000_N500__4_algos__all_Reg
 This helps to check that no matter the \emph{complexity} of the considered problem (one measure of complexity being the constant in our lower bound),
 \MCTopM{} performs similarly or better than all the other algorithms,
 and \Selfish{} outperforms \rhoRand{} in most cases.
-%Figure~\ref{fig:5:MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems} is a good example
-%of outstanding performances of \MCTopM{} and \Selfish{} in comparison to \rhoRand{}.
+Figure~\ref{fig:5:MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems} is a good example
+of outstanding performances of \MCTopM{} and \Selfish{} in comparison to \rhoRand{}.
+%
 Empirically, our proposals were found to almost always outperform \rhoRand{}, and except for \Selfish{} that can fail badly on problems with small $K$,
 we verified that \MCTopM{} outperforms the state-of-the-art algorithms in many different problems, and is more and more efficient as $M$ and $K$ grows.
 
@@ -1381,8 +1387,148 @@ can be considered out of the scope of online sequential learning.
 
 
 
+
+\begin{figure}[!h]
+  \centering
+  % \begin{subfigure}[!h]{0.85\textwidth}
+      \includegraphics[width=1.00\textwidth]{MP__K9_M3_T123456_N100__8_algos/all_RegretCentralized____env1-1_7803645526012310577.pdf}
+  % \end{subfigure}
+  % ~
+  % \begin{subfigure}[!h]{0.85\textwidth}
+      \includegraphics[width=1.00\textwidth]{MP__K9_M3_T123456_N100__8_algos/all_RegretCentralized_semilogy____env1-1_7803645526012310577.pdf}
+  % \end{subfigure}
+  \caption[Regret for $M=3$ players for $K=9$ arms, horizon $T=123456$, for $100$ repetitions on a fixed problem]{Regret (in log-$y$ scale on the right) for $M=3$ players for $K=9$ arms, horizon $T=123456$, for $100$ repetitions on problem $\mu=[0.1,\dots,0.9]$. With a perfect knowledge on the gap ($\Delta=0.1$ here) and by using the parameters suggested from their respective articles, \MEGA{} and \MusicalChair{} perform badly in this simple setting, even with the knowledge of the horizon $T$ for \MusicalChair{}. The first two \MusicalChair{} instances use the optimal $T_0$ value from \cite{Rosenski16}, with $\varepsilon$ taken slightly smaller than the gap $\Delta$ ($\varepsilon=0.99 \Delta$), and respectively with $\delta=0.5$ and $\delta=0.1$, for which the regret can bounded with probability $0.5$ and $0.9$ respectively. The third instance uses the optimal $T_0$ corresponding to $\delta=1/T$, that is guaranteed to have an expected regret of order $\log(T)$.}
+  \label{fig:5:MP__K9_M3_T123456_N100__8_algos}
+\end{figure}
+
+%
+% Regular plots of centralized regrets
+%
+\begin{figure}[!h]
+  \centering
+  % \begin{subfigure}[!h]{0.49\textwidth}
+      \includegraphics[width=1.00\textwidth]{MP__K3_M2_T5000_N1000__4_algos/all_HistogramsRegret____env1-1_5016720151160452442.pdf}
+  % \end{subfigure}
+  % % ~
+  % \begin{subfigure}[!h]{0.49\textwidth}
+  %   \includegraphics[width=1.10\textwidth]{MP__K3_M3_T5000_N1000__4_algos/all_HistogramsRegret____env1-1_1035303196230283176.pdf}
+  % \end{subfigure}
+  \caption[Failure case of \Selfish]{Regret for $M=2$ players, $K=3$ arms, horizon $T=5000$, $1000$ repetitions and $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$. Axis $x$ is for regret (different scale for each part), and the \textcolor{darkgreen}{green} curve for \Selfish{} shows a small probability of having a linear regret ($17$ cases of $R_T \geq T$, out of $1000$). The regret for the three other algorithms is very small for this problem, always smaller than $100$ here.}
+  \label{fig:5:selfish_fail1}
+  % \vspace*{-15pt}  % XXX remove if problem
+\end{figure}
+
+
+%
+% Regular plots of centralized regrets
+%
+\begin{figure}[!h]
+  \centering
+  % \begin{subfigure}[!h]{0.49\textwidth}
+      \includegraphics[width=1.05\textwidth]{MP__K3_M2_T5000_N1000__4_algos/all_RegretCentralized____env1-1_2643560344649862285.pdf}
+  % \end{subfigure}
+  % ~
+  % \begin{subfigure}[!h]{0.49\textwidth}
+      \includegraphics[width=1.05\textwidth]{MP__K3_M3_T5000_N1000__4_algos/all_RegretCentralized____env1-1_4683123079851881812.pdf}
+  % \end{subfigure}
+  \caption[Second failure case of \Selfish]{Regret, $M=2$ and $M=3$ players, $K=3$ arms, horizon $T=5000$, against $1000$ problems $\boldsymbol{\mu}$ uniformly sampled in $[0,1]^K$. \Selfish{} (top curve in \textcolor{darkgreen}{green}) clearly fails in such setting with small $K$.}
+  \label{fig:5:selfish_fail2}
+  % \vspace*{-15pt}  % XXX remove if problem
+\end{figure}
+
+%
+% Regular plots of centralized regrets
+%
+\begin{figure}[!h]
+  \centering
+  % \begin{subfigure}[!h]{1.00\textwidth}
+      % \includegraphics[width=1.00\textwidth]{MP__K3_M3_T5000_N1000__4_algos/all_HistogramsRegret____env1-1_1035303196230283176.pdf}
+      \includegraphics[width=1.00\textwidth]{MP__K3_M3_T5000_N1000__4_algos/all_RegretCentralized____env1-1_1035303196230283176.pdf}
+      % \includegraphics[width=1.00\textwidth]{MP__K3_M2_T5000_N1000__4_algos/all_RegretCentralized____env1-1_5016720151160452442.pdf}
+  % \end{subfigure}
+  ~
+  % \begin{subfigure}[!h]{1.00\textwidth}
+      \includegraphics[width=1.00\textwidth]{MP__K3_M3_T5000_N1000__4_algos/all_HistogramsRegret____env1-1_1035303196230283176.pdf}
+  % \end{subfigure}
+  \caption[Third failure case of \Selfish]{Regret for $M=3$ players, $K=3$ arms, horizon $T=5000$, $1000$ repetitions and $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$. Axis $x$ is for regret (different scale for each), and the top \textcolor{darkgreen}{green} curve for \Selfish{} shows a small probability of having a linear regret ($11$ cases of $R_T \geq T$, out of $1000$). The regret for the three other algorithms is very small for this problem, and even appears constant.}
+  \label{fig:5:selfish_fail3}
+  % \vspace*{-15pt}  % XXX remove if problem
+\end{figure}
+
+%
+% Regular plots of centralized regrets
+%
+
+\begin{figure}[!h]
+  \centering
+  % \begin{subfigure}[!h]{1.00\textwidth}
+      \includegraphics[width=1.00\textwidth]{MP__K9_M2_T5000_N500__4_algos/all_RegretCentralized____env1-1_3251433209347345969.pdf}
+  % \end{subfigure}
+  % ~
+  % \begin{subfigure}[!h]{1.00\textwidth}
+      % \includegraphics[width=1.00\textwidth]{MP__K9_M6_T5000_N500__4_algos/all_RegretCentralized____env1-1_8318947830261751207.pdf}
+      \includegraphics[width=1.00\textwidth]{MP__K9_M2_T5000_N500__4_algos/all_HistogramsRegret____env1-1_3251433209347345969.pdf}
+  % \end{subfigure}
+  \caption[Regret for $M=2$ players, $K=9$ arms, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled]{Regret for $M=2$ players, $K=9$ arms, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled in $[0,1]^K$. \rhoRand{} (top \textcolor{blue}{blue}) is outperformed by the other algorithms (and the gain increases when $M$ increases), which all perform similarly in such configurations. Note that the (small) tail of the histograms come from complicated problems $\boldsymbol{\mu}$ and not failure cases.}
+  \label{fig:5:MP__K9_M2_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems}
+  % \vspace*{-15pt}  % XXX remove if problem
+\end{figure}
+
+
+\begin{figure}[!h]
+  \centering
+  % \begin{subfigure}[!h]{1.00\textwidth}
+      \includegraphics[width=1.00\textwidth]{MP__K9_M9_T5000_N500__4_algos/all_RegretCentralized____env1-1_3892966382091165662.pdf}
+  % \end{subfigure}
+  % ~
+  % \begin{subfigure}[!h]{1.00\textwidth}
+      \includegraphics[width=1.00\textwidth]{MP__K9_M9_T5000_N500__4_algos/all_HistogramsRegret____env1-1_3892966382091165662.pdf}
+  % \end{subfigure}
+  \caption[Regret for $M=9$ players for $K=9$ arms, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled]{Regret for $M=9$ players for $K=9$ arms, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled in $[0,1]^K$. This extreme case $M=K$ shows the drastic difference of behavior between \RandTopM{} and \MCTopM, having constant regret, and \rhoRand{} and \Selfish, having large regret.}
+  \label{fig:5:MP__K9_M9_T5000_N500__4_algos__all_HistogramsRegret}
+  % \vspace*{-15pt}  % XXX remove if problem
+\end{figure}
+
+
+\begin{figure}[!h]
+  \centering
+  % \begin{subfigure}[!h]{1.00\textwidth}
+      \includegraphics[width=1.00\textwidth]{MP__K9_M2_T10000_N1000__4_algos/all_RegretCentralized_loglog____env1-1_2643359116089264295.pdf}
+  % \end{subfigure}
+  % ~
+  % \begin{subfigure}[!h]{1.00\textwidth}
+  %   \includegraphics[width=1.00\textwidth]{MP__K9_M6_T10000_N1000__4_algos/all_RegretCentralized_loglog____env1-1_8200873569864822246.pdf}
+  % \end{subfigure}
+  % ~
+  % \begin{subfigure}[!h]{1.00\textwidth}
+      \includegraphics[width=1.00\textwidth]{MP__K9_M9_T10000_N200__4_algos/all_RegretCentralized_loglog____env1-1_2306423191427933958.pdf}
+  % \end{subfigure}
+  \caption[Regret for $M=2$ and $9$ players for $K=9$ arms, horizon $T=5000$, for a fixed problem]{Regret (in log-log scale), for $M=2$ and $9$ players for $K=9$ arms, horizon $T=5000$,Regret (in log-log scale), for $M=2$ and $9$ players for $K=9$ arms, horizon $T=5000$, for problem $\boldsymbol{\mu}=[0.1,\dots,0.9]$] for problem $\boldsymbol{\mu}=[0.1,\dots,0.9]$. In different settings, \RandTopM{} (\textcolor{gold}{yellow} curve) and \Selfish{} (\textcolor{darkgreen}{green}) can outperform each other, and always outperform \rhoRand. \MCTopM{} is always among the best algorithms, and for $M$ not too small, its regret seems logarithmic with a constant matching the lower bound.}
+  \label{fig:5:MP__K9_M2-6-9_T10000_N200__4_algos}
+\end{figure}
+
+
+\begin{figure}[!h]
+  \centering
+  % \begin{subfigure}[!h]{0.75\textwidth}
+      \includegraphics[width=1.00\textwidth]{MP__K17_M6_T10000_N100__4_algos/all_RegretCentralized_loglog____env1-1_4163066365888233475.pdf}
+  % \end{subfigure}
+  % ~
+  % \begin{subfigure}[!h]{0.75\textwidth}
+      \includegraphics[width=1.00\textwidth]{MP__K17_M12_T10000_N100__4_algos/all_RegretCentralized_loglog____env1-1_3856003705095179548.pdf}
+  % \end{subfigure}
+  % ~
+  % \begin{subfigure}[!h]{0.75\textwidth}
+      \includegraphics[width=1.00\textwidth]{MP__K17_M17_T10000_N100__4_algos/all_RegretCentralized_loglog____env1-1_8969236287861113966.pdf}
+  % \end{subfigure}
+  \caption[Regret for $M=6, 12, 17$ players for a ``difficult'' problem with $K=17$, and $T=5000$]{Regret (in log-log scale), for $M=6, 12, 17$ players for a ``difficult'' problem with $K=17$, and $T=5000$. The same observation as in Figure~\ref{fig:5:MP__K9_M2-6-9_T10000_N200__4_algos} can be made. \Selfish{} outperforms \MCTopM{} for $M=2$ here. Additionally, \MCTopM{} is the only algorithm to not fail dramatically when $M=K$ here.}
+  \label{fig:5:MP__K17_M6-12-17_T10000_N100__4_algos}
+\end{figure}
+
+
+
 % -----------------------------------------------------------------
-\section{Conclusion and future work}
+\section{Conclusion of our contributions}
 \label{sec:5:conclusion}
 % -----------------------------------------------------------------
 
@@ -1404,5 +1550,9 @@ Finally, one could want to strengthen the guarantees obtained in the absence of 
 \paragraph{Reproducibility.}
 The page \texttt{SMPyBandits.GitHub.io/MultiPlayers.html} explains how to reproduce the experiments used for this Chapter.
 
-% biblio usually before the supplementary material
-% \bibliography{mpBandits}
+\begin{framed}
+  \textcolor{red}{\textbf{FIXME}}
+  Je ne sais pas trop comment inclure toutes ces figures ici, avant la dernière section où je parle des extensions de nos modèles.
+  J'aimerai bien avoir quelques pages simplement remplies des figures, sans avoir le texte de Section~\ref{sec:5:literatureReviewOtherModels} qui commence au milieu...
+  Une idée ?
+\end{framed}
