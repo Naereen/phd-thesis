@@ -15,8 +15,8 @@ More than two years of active development have shown how easy it can be to add n
 
 This chapter details the organization of the library, what it implements in terms of arm distributions, models, algorithms and visualizations.
 Then we use it to perform a numerical comparisons of the main state-of-the-art single-player MAB algorithms, as well as a study to compare time and memory costs of the main algorithms.
-\TODOL{Do we really have time/space to talk about Markov models?}
-Finally, we introduce rested or restless Markov models and use the library to simulate and illustrate the performance of the classical \UCB{} algorithm.
+% \TODOL{Do we really have time/space to talk about Markov models?}
+% Finally, we introduce rested or restless Markov models and use the library to simulate and illustrate the performance of the classical \UCB{} algorithm.
 
 % \newpage
 % Write miniTOC just after the title
@@ -295,15 +295,15 @@ Maybe I can pick one simple problem family (\eg, evenly spaced in $[\varepsilon,
 The goal is to highlight that the simplest (but most efficient) algorithms have a memory cost bounded by $\bigO{K}$ and a time complexity at each time step $t\in[T]$ bounded by $\bigO{K}$, independent of $t$.
 
 
-% ----------------------------------------------------------------------------
-\section{An example of another model: rested or restless Markov models}
-\label{sec:3:markovModels}
+% % ----------------------------------------------------------------------------
+% \section{An example of another model: rested or restless Markov models}
+% \label{sec:3:markovModels}
 
-%  - FIXME maybe not included?
+% %  - FIXME maybe not included?
 
-Maybe if I have space at the end of this chapter, I can show another part of the library, maybe introduce the rested/restless Markov models (with maybe just one example) and show simulations in this model?
+% Maybe if I have space at the end of this chapter, I can show another part of the library, maybe introduce the rested/restless Markov models (with maybe just one example) and show simulations in this model?
 
-SMPyBandits also implemented sparse MAB models (with $s<K$ arms with a mean $\mu_i>0$ and $K-s$ arms with a mean $\mu_i \leq 0$), I could also present this model, the various algorithms designed to tackle it, and some numerical experiments.
+% SMPyBandits also implemented sparse MAB models (with $s<K$ arms with a mean $\mu_i>0$ and $K-s$ arms with a mean $\mu_i \leq 0$), I could also present this model, the various algorithms designed to tackle it, and some numerical experiments.
 
 
 % ----------------------------------------------------------------------------
@@ -393,8 +393,36 @@ $ T=50000 N=100 K=10 ARM_TYPE=Gaussian python main.py
 
 \subsection{Using multi-core to speed-up simulations}
 
-\TODOL{Write it!}
+Nowadays, parallelism is everywhere in the computation world, and any serious framework for numerical simulations must try at least one of the three approaches to gain from parallelism.
+%
+For all the different numerical simulations presented in this thesis, except the ones based on MATLAB or GNU Radio in Chapter~\ref{chapter:4}, the setting is the same: we consider a small set of $p$ different problems, of time horizon $T$ that we want to simulate for $N$ independent runs.
+On the first hand, Because of the sequential learning aspect, each repetition of the simulation must be sequential regarding the time steps $t=1,\dots,T$, and so no parallelism can be done to speed up this axis.
+On the other hand, parallelism can help greatly for the two other variables: if we have a way to run in parallel $4$ processes, and we have $p=4$ problems to simulate, then running a process for each problem directly brings a speed-up factor of $4$.
+Similarly, if we want to simulate $1000$ repetitions of the same (random) problem, and we can run $4$ processes in parallel, then running $1000/4=250$ repetitions on each process also bring a speed-up factor of $4$.
+%
+In this last section, we quickly review the chosen approach for SMPyBandits (multi-core on one machine), and we explain why the two other approaches were less appropriate for our study of multi-armed bandit problems.
+
+The first approach is to use multiple cores of the same machines, and because it is both the simplest and the less financially as well as ecologically costly, this is the approach implemented in SMPyBandits.
+The machines I had access to during my thesis, either my own laptop or a workstation hosted the SCEE team in CentraleSupélec campus, were equipped with $i5$ or $i7$ Intel CPU with $4$ or $12$ cores.
 
 Quickly explain the advantages and drawbacks of using \texttt{Joblib} and \texttt{joblib.Parallel} to run simulations on multiple cores of the same computer
 
-Explain why I didn't try more on parallelisation (eg on Grid5000 or other large scale computer).
+
+% Explain why I didn't try more on parallelisation (eg on Grid5000 or other large scale computer).
+%
+The two other approaches we could have consider is parallel computations running on not multiple cores but multiple machines, in a computer cluster, or parallel computations running in a Graphical Processing Unit (GPU).
+Initially designed for graphical simulations and mainly for video-games applications, the use of GPU for scientific computations have been gaining attention for numerical simulation in the research world since the last $15$ years, and NVidia CUDA for GPGPU (General Purpose GPU) started to become popular in $2011$.
+Since $2016$, we saw a large press coverage as well as an extensive use in research of deep learning libraries that make general-purpose machine learning algorithms train on the GPU of a user's laptop or a cluster of GPU.
+This success is mainly possible because of the heavy parallelism of such training algorithms, and the parallel nature of GPU.
+To the best of the author knowledge, nobody has tried to implement high performance MAB simulations by using the ``parallelism power'' of a GPU (at least, no code for such experiments were made public in $2019$). I worked on a GPU, implementing fluid dynamic simulations in an internship in $2012$, and I have since then kept a curiosity on how to use GPU-powered libraries and code.
+The author has contributed to famous libraries like Theano (\href{http://deeplearning.net/software/theano/}{\texttt{DeepLearning.net/software/theano}}) or Keras (\href{https://keras.io/}{\texttt{keras.io}}), and my limited knowledge on such libraries made me believe that it was not easy to use a GPU for bandit simulations, and most surely it would not have been worth the time.
+
+I did not try to use any large scale computer cluster, even if I was aware of the possibility offered by the Grid 5000 project, for instance.
+It is partly due to time constraint, as I would have been curious to try, but also because we found that it would not have helped us much to use a large scale cluster.
+The main reason is that in the multi-armed bandit and sequential learning literature, most research papers do not even include an experimental section, and for the papers who do take the time to implement and test their proposed algorithms, it is almost done on just a few problems and for short- or medium- duration experiments.
+For instance, the papers we consider to be the best ones regarding their empirical sections are \cite{LiuLeeShroff17,CaoZhenKvetonXie18}, for piece-wise stationary bandits, and they mainly consider reasonable problems of horizon $T=10000$ and no more than $1000$ independent repetitions. Each paper considers one harder problem, of horizon $T=1000000$ and less repetitions.
+%
+In each article written during my thesis, we included extensive numerical simulations, and even the longest ones (for \cite{Besson2019GLRT}) were short enough to run in less than $12$ hours on a $12$-core workstation, so we could run a few large-scale simulations over night.
+
+\TODOL{Finish this section}
+
