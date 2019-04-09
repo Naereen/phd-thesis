@@ -155,12 +155,9 @@ We consider a bandit problem with $K=9$ arms, of means $0.1,0.2,\dots,0.8,0.9$, 
 As before, we include the centralized multiple-play \klUCB{} as an unachievably efficient baseline, the \Selfish-\klUCB{} algorithm as an heuristic which does not require the know $M$.
 Then we compare the \RhoRand, \RandTopM{} and \MCTopM{} algorithms, using \klUCB, which know $M$ beforehand, with their extensions implementing the same algorithm as \rhoRandEst{} to estimate $M$ on the fly.
 
-\TODOL{Include a simulation to show the behavior of \rhoRand{} vs \rhoRandEst, and \RandTopM{} and \MCTopM{} with prior knowledge of $M$ vs the ``estimate'' versions.
-
-FIXME Je dois refaire ces simulations, les chiffres ici sont avec $T=1000$ et $N=4$ répétitions (juste faites vite fait dans le train, je dois les lancer sur la machine du bureau).
-
+% \TODOL{Include a simulation to show the behavior of \rhoRand{} vs \rhoRandEst, and \RandTopM{} and \MCTopM{} with prior knowledge of $M$ vs the ``estimate'' versions.}
+% Je dois refaire ces simulations, les chiffres ici sont avec $T=1000$ et $N=4$ répétitions (juste faites vite fait dans le train, je dois les lancer sur la machine du bureau).
 % for M in 3 6 9; do DEBUG=False SAVEALL=True NOPLOTS=True M=$M K=9 N_JOBS=-1 N=100 T=10000 make moremultiplayers; read; done
-}
 
 
 \begin{table}[ht]
@@ -171,16 +168,16 @@ FIXME Je dois refaire ces simulations, les chiffres ici sont avec $T=1000$ et $N
         \hline
         Centralized multiple-play \klUCB{} & $\mathbf{92 \pm 20}$ & $\mathbf{70 \pm 16}$ & $\mathbf{0}$ \\
         \hline
-        \RhoRand-\klUCB{} & $417 \pm 103$ & $2481 \pm 449$ & $2351 \pm 55$ \\
-        \RhoRand-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$1422 \pm 1051$} & \textcolor{red}{$9030 \pm 1922$} & \textcolor{red}{$2403 \pm 121$} \\
+        \RhoRand-\klUCB{} & $417 \pm 103$ & $2481 \pm 449$ & $6639 ± 1035$ \\
+        \RhoRand-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$1422 \pm 1051$} & \textcolor{red}{$9030 \pm 1922$} & \textcolor{red}{$7264 ± 1009 $} \\
         \hline
-        \RandTopM-\klUCB{} & $268 \pm 45$ & $941 \pm 217$ & $790 \pm 470$ \\
-        \RandTopM-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$688 \pm 614$} & \textcolor{red}{$4256 \pm 2701$} & \textcolor{red}{$1098 \pm 153$} \\
+        \RandTopM-\klUCB{} & $268 \pm 45$ & $941 \pm 217$ & $437 ± 367$ \\
+        \RandTopM-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$688 \pm 614$} & \textcolor{red}{$4256 \pm 2701$} & \textcolor{red}{$1155 ± 544$} \\
         \hline
-        \MCTopM-\klUCB{} & $244 \pm 39$ & $401 \pm 55$ & $42 \pm 5$ \\
-        \MCTopM-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$563 \pm 546$} & \textcolor{red}{$1560 \pm 1293$} & \textcolor{red}{$602 \pm 54$} \\
+        \MCTopM-\klUCB{} & $244 \pm 39$ & $401 \pm 55$ & $44 ± 13$ \\
+        \MCTopM-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$563 \pm 546$} & \textcolor{red}{$1560 \pm 1293$} & \textcolor{red}{$618 ± 29$} \\
         \hline
-        \Selfish-\klUCB{} & $250 \pm 34$ & $735 \pm 85$ & $1379 \pm 16$ \\
+        \Selfish-\klUCB{} & $250 \pm 34$ & $735 \pm 85$ & $3010 ± 472$ \\
         \hline
     \end{tabular}
     \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on the same problem with $M=3,6,9$, comparing algorithms which knows $M$ against algorithms which estimate $M$ on the fly.}
@@ -444,7 +441,7 @@ We illustrate this in Table~\ref{table:5:comparisonRhoRandRhoLearn} below, where
 The first \texttt{rhoLearn} uses \klUCB{}, Bayes-UCB or Exp3 for the second-stage learning,
 and we include both the centralized multi-play version of \klUCB{} and our proposal \MCTopM-\klUCB{} for comparison.
 
-% FIXME run the simulations with N=100 and not N=4
+% DONE run the simulations with N=100 and not N=4
 % for M in 3 6 9; do DEBUG=False SAVEALL=False NOPLOTS=True M=$M K=9 N_JOBS=-1 N=100 T=10000 make moremultiplayers; read; done
 \begin{table}[ht]
 % \begin{footnotesize}
@@ -454,13 +451,13 @@ and we include both the centralized multi-play version of \klUCB{} and our propo
         \hline
         Centralized multiple-play \klUCB{} & $\mathbf{92 \pm 20}$ & $\mathbf{70 \pm 16}$ & $\mathbf{0}$ \\
         \hline
-        \RhoRand-\klUCB{} & $417 \pm 103$ & $2481 \pm 449$ & $6044 \pm 744$ \\
+        \RhoRand-\klUCB{} & $417 \pm 103$ & $2481 \pm 449$ & $6639 ± 1035$ \\
         \hline
-        \texttt{rhoLearn}-\klUCB{} + \klUCB{} & $546 \pm 190$ & $1172 \pm 295$ & $1193 \pm 303$ \\
-        \texttt{rhoLearn}-\klUCB{} + Bayes-UCB & $561 \pm 219$ & $1204 \pm 394$ & $1158 \pm 133$ \\
-        \texttt{rhoLearn}-\klUCB{} + Exp3 & $529 \pm 175$ & $1659 \pm 331$ & $5222 \pm 813$ \\
+        \texttt{rhoLearn}-\klUCB{} + \klUCB{} & $546 \pm 190$ & $1172 \pm 295$ & $1416 ± 347$ \\
+        \texttt{rhoLearn}-\klUCB{} + Bayes-UCB & $561 \pm 219$ & $1204 \pm 394$ & $1363 ± 331$ \\
+        \texttt{rhoLearn}-\klUCB{} + Exp3 & $529 \pm 175$ & $1659 \pm 331$ & $5134 ± 976$ \\
         \hline
-        \MCTopM-\klUCB{} & $244 \pm 39$ & $401 \pm 55$ & $39 \pm 3$ \\
+        \MCTopM-\klUCB{} & $244 \pm 39$ & $401 \pm 55$ & $44 ± 13$ \\
         \hline
     \end{tabular}
     \caption{Comparison of \RhoRand{} and \texttt{rhoLearn} for a simple multi-player bandit problem with $K=9$ arms.}
