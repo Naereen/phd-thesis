@@ -115,8 +115,8 @@ in particular where the devices cannot be assigned to a channel or be assigned a
 Then in such networks, if one wants to apply an algorithm like \MCTopM-\klUCB,
 the $M$ devices need to known their number $M$, and have to receive it from the gateway, as it is the only part of this example of network which knowns $M$.
 It seems unrealistic to ask the gateway to send the fixed value $M$ to each device, and not a unique ID to each device, for instance $\mathrm{id}^j\in\{1,\dots,K\}$.
-%
-% \TODOL{Explain why the problem is MUCH easier if we have before hand these unique ID!}
+
+\TODOL{Explain why the problem is MUCH easier if we have before hand these unique ID!}
 If the $M$ players each have a unique ID, then a simple explore-then-commit algorithm running on top of a round-Robin phase can achieve order-optimal regret. Without giving more details, we let the interested refer to what is is explained for the RR-SW-UCB\# algorithm in \cite{WeiSrivastava18Distributed} and the algorithms presented in \cite{DarakHanawal18,JoshiKumar2018,KumarDarak2019}.
 
 
@@ -415,7 +415,7 @@ The first work is \cite{NaparstekCohen17}, which proposes to use a decentralized
 %
 The work of \cite{AvnerMannor18} is discussed above for the case with communication between players, and their model is of high interest from the point-of-view of real-world wireless communication protocols.
 
-Finally, the very recent work of \cite{Zafaruddin2019} is the first one to present experiments done on simulated LTE and 5G channels.
+Finally, the very recent work of \cite{Zafaruddin2019} is the first one to present experiments of reinforcement learning done on simulated LTE and 5G channels.
 The mathematics behind their model are actually quite close to our model, but they explain it in terms of OFDMA and Quality-of-Service (QoS).
 Their algorithm is essentially based on a pre-agreement of the $M$ players, that will deterministically run an alternance of exploration phase, auction phase and exploitation phase, of (exponentially) increasing durations.
 By diving into the details of the modulation and giving explicitly the form of the uplink messages sent by the devices, the authors are able to set-up two different uplink packets, to efficiently perform the auction phase (see Figure~2).
@@ -435,23 +435,25 @@ Their idea is to use the same skeleton as \RhoRand, that is to assign a \emph{ra
 This algorithm is implemented in SMPyBandits and named \texttt{rhoLearn}\footnote{See \href{https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoLearn.html}{\texttt{SMPyBandits.github.io/docs/PoliciesMultiPlayers.rhoLearn.html}} for its documentation.}, where it can use Bayes-UCB or any of the $65$ or more bandit algorithms available in the library.
 Even if no theoretical guarantee backs up this idea of second-stage learning with Bayes-UCB, empirical simulations found that it can be efficient.
 We illustrate this in Table~\ref{table:5:comparisonRhoRandRhoLearn} below, where we consider the same problem as described above in Section~\ref{sub:5:withoutSensing} (Table~\ref{table:5:meanRegretSimulationsNoSensing}).
-The first \texttt{rhoLearn} uses Bayes-UCB for the second-stage learning, while the second uses Exp3,
+The first \texttt{rhoLearn} uses \klUCB{}, Bayes-UCB or Exp3 for the second-stage learning,
 and we include both the centralized multi-play version of \klUCB{} and our proposal \MCTopM-\klUCB{} for comparison.
 
-% FIXME run the simulations!
+% FIXME run the simulations with N=100 and not N=4
+% for M in 3 6 9; do DEBUG=False SAVEALL=False NOPLOTS=True M=$M K=9 N_JOBS=-1 N=100 T=10000 make moremultiplayers; read; done
 \begin{table}[ht]
 % \begin{footnotesize}
     \centering
     \begin{tabular}{c|ccc}
     \textbf{Algorithm} $\;$ \textbackslash $\;$ Number of players & $M=3$ & $M=6$ & $M=9$ \\
         \hline
-        Centralized multiple-play \klUCB{} & $\mathbf{52 \pm 15}$ & $\mathbf{35 \pm 15}$ & $\mathbf{0}$ \\
+        Centralized multiple-play \klUCB{} & $\mathbf{93 \pm 15}$ & $\mathbf{72 ± 19}$ & $\mathbf{0}$ \\
         \hline
-        \RhoRand-\klUCB{} & $297 \pm 18$ & $1411 \pm 144$ & $2351 \pm 55$ \\
-        \texttt{rhoLearn}-\klUCB{} + Bayes-UCB & $297 \pm 18$ & $1411 \pm 144$ & $2351 \pm 55$ \\
-        \texttt{rhoLearn}-\klUCB{} + Exp3 & $297 \pm 18$ & $1411 \pm 144$ & $2351 \pm 55$ \\
+        \RhoRand-\klUCB{} & $429 \pm 134$ & $2451 ± 338$ & $6044 ± 744$ \\
+        \texttt{rhoLearn}-\klUCB{} + \klUCB{} & $473 \pm 141$ & $1277 ± 535$ & $1193 ± 303$ \\
+        \texttt{rhoLearn}-\klUCB{} + Bayes-UCB & $473 \pm 141$ & $1277 ± 535$ & $1158 ± 133$ \\
+        \texttt{rhoLearn}-\klUCB{} + Exp3 & $548 \pm 176$ & $1880 ± 389$ & $5222 ± 813$ \\
         \hline
-        \MCTopM-\klUCB{} & $134 \pm 6$ & $304 \pm 19$ & $42 \pm 5$ \\
+        \MCTopM-\klUCB{} & $269 \pm 34$ & $401 ± 36$ & $39 ± 3$ \\
         \hline
     \end{tabular}
     \caption{Comparison of \RhoRand{} and \texttt{rhoLearn} for a simple multi-player bandit problem with $K=9$ arms.}
@@ -459,14 +461,14 @@ and we include both the centralized multi-play version of \klUCB{} and our propo
 % \end{footnotesize}
 \end{table}
 
-% FIXME mcuh more details?
 
+% FIXME much more details?
 Other works in the same line of research included \cite{modiDemo2016} implemented using the same USRP testbed as for our demonstration in Chapter~\ref{chapter:4} (Section~\ref{sec:4:gnuradio}),
 and the first work of a research team based in IIT Dehli, \cite{kumar2016two}.
 %
 More recent works by the same team, \cite{KumarYadav2018,SawantKumar2018,JoshiKumar2018}, all follow the same approach and include an experimental section that shows the results of an implementation of the proposed algorithms on USRP boards.
-
 \TODOL{I should explain more, no? Who does what and why? So long...}
+
 
 % ----------------------------------------------------------------------------
 \subsection{Towards non-stationary multi-players MAB models}
