@@ -169,18 +169,18 @@ FIXME Je dois refaire ces simulations, les chiffres ici sont avec $T=1000$ et $N
     \begin{tabular}{c|ccc}
     \textbf{Algorithms} $\;$ \textbackslash $\;$ \textbf{Number of players} & $M=3$ & $M=6$ & $M=9$ \\
         \hline
-        Centralized multiple-play \klUCB{} & $\mathbf{52 \pm 15}$ & $\mathbf{35 \pm 15}$ & $\mathbf{0}$ \\
+        Centralized multiple-play \klUCB{} & $\mathbf{92 \pm 20}$ & $\mathbf{70 \pm 16}$ & $\mathbf{0}$ \\
         \hline
-        \RhoRand-\klUCB{} & $297 \pm 18$ & $1411 \pm 144$ & $2351 \pm 55$ \\
-        \RhoRand-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$326 \pm 86$} & \textcolor{red}{$1213 \pm 168$} & \textcolor{red}{$2403 \pm 121$} \\
+        \RhoRand-\klUCB{} & $417 \pm 103$ & $2481 \pm 449$ & $2351 \pm 55$ \\
+        \RhoRand-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$1422 \pm 1051$} & \textcolor{red}{$9030 \pm 1922$} & \textcolor{red}{$2403 \pm 121$} \\
         \hline
-        \RandTopM-\klUCB{} & $188 \pm 18$ & $671 \pm 159$ & $790 \pm 470$ \\
-        \RandTopM-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$238 \pm 27$} & \textcolor{red}{$778 \pm 156$} & \textcolor{red}{$1098 \pm 153$} \\
+        \RandTopM-\klUCB{} & $268 \pm 45$ & $941 \pm 217$ & $790 \pm 470$ \\
+        \RandTopM-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$688 \pm 614$} & \textcolor{red}{$4256 \pm 2701$} & \textcolor{red}{$1098 \pm 153$} \\
         \hline
-        \MCTopM-\klUCB{} & $134 \pm 6$ & $304 \pm 19$ & $42 \pm 5$ \\
-        \MCTopM-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$210 \pm 66$} & \textcolor{red}{$465 \pm 39$} & \textcolor{red}{$602 \pm 54$} \\
+        \MCTopM-\klUCB{} & $244 \pm 39$ & $401 \pm 55$ & $42 \pm 5$ \\
+        \MCTopM-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$563 \pm 546$} & \textcolor{red}{$1560 \pm 1293$} & \textcolor{red}{$602 \pm 54$} \\
         \hline
-        \Selfish-\klUCB{} & $136 \pm 17$ & $468 \pm 87$ & $1379 \pm 16$ \\
+        \Selfish-\klUCB{} & $250 \pm 34$ & $735 \pm 85$ & $1379 \pm 16$ \\
         \hline
     \end{tabular}
     \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on the same problem with $M=3,6,9$, comparing algorithms which knows $M$ against algorithms which estimate $M$ on the fly.}
@@ -389,16 +389,22 @@ https://arxiv.org/pdf/1901.03868.pdf
 \subsection{With malicious jammers}
 \label{sub:5:withDifferentMeansAmongPlayers}
 
+In all this chapter and the previous research literature, another common hypothesis is that all the $M$ players are pursuing the same goal, and are all behaving nicely by following the same algorithm.
+% Efficient utilization of licensed spectrum in the cognitive radio network is challenging due to lack of coordination among the Secondary Users (SUs).
+Distributed algorithms proposed in the literature aim to maximize the network throughput by ensuring orthogonal channel allocation for the SUs.
+However, these algorithms work under the assumption that all the SUs faithfully follow the algorithms which may not always hold due to the decentralized nature of the network.
+In the paper \cite{SawantKumar2018}, the authors study for the first time distributed algorithms that are robust against malicious behavior, also called \emph{jamming attack}.
+They consider both the cases of jammers launching coordinated and uncoordinated attacks, and consider a set of $J$ jammers.
+In the coordinated attack, the jammers select non-overlapping channels to attack in each time slot and can significantly increase the number of collisions for SUs.
+They setup the problem in each scenario as a multi-player bandit and develop algorithm,
+and their analysis shows that when the SUs faithfully implement proposed algorithms, the regret is constant with high probability.
+They validate their claims through exhaustive synthetic experiments and also through a realistic USRP.
+Their synthetic experiments consider different cases, for different values of $K$ the number of channels, $M$ the number of players and $J$ the number of jammers.
+
 \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
 
-Learning to Coordinate in a Decentralized Cognitive Radio Network in Presence of Jammers
-Suneet Sawant, Rohit Kumar, Manjesh K. Hanawal, Sumit J. Darak
-https://arxiv.org/abs/1803.06810
-\cite{SawantKumar2018}
-
-
-
 Note that we have not yet implemented this extension in SMPyBandits \cite{SMPyBandits}, but we are interested to do it, and it is one of the major future work left on our library\footnote{See the issue ticket open at \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{\texttt{GitHub.com/SMPyBandits/SMPyBandits/issues/120}}}.
+It would not be too difficult to do, we just lacked some time.
 
 
 % ----------------------------------------------------------------------------
@@ -446,14 +452,15 @@ and we include both the centralized multi-play version of \klUCB{} and our propo
     \begin{tabular}{c|ccc}
     \textbf{Algorithm} $\;$ \textbackslash $\;$ Number of players & $M=3$ & $M=6$ & $M=9$ \\
         \hline
-        Centralized multiple-play \klUCB{} & $\mathbf{93 \pm 15}$ & $\mathbf{72 ± 19}$ & $\mathbf{0}$ \\
+        Centralized multiple-play \klUCB{} & $\mathbf{92 \pm 20}$ & $\mathbf{70 \pm 16}$ & $\mathbf{0}$ \\
         \hline
-        \RhoRand-\klUCB{} & $429 \pm 134$ & $2451 ± 338$ & $6044 ± 744$ \\
-        \texttt{rhoLearn}-\klUCB{} + \klUCB{} & $473 \pm 141$ & $1277 ± 535$ & $1193 ± 303$ \\
-        \texttt{rhoLearn}-\klUCB{} + Bayes-UCB & $473 \pm 141$ & $1277 ± 535$ & $1158 ± 133$ \\
-        \texttt{rhoLearn}-\klUCB{} + Exp3 & $548 \pm 176$ & $1880 ± 389$ & $5222 ± 813$ \\
+        \RhoRand-\klUCB{} & $417 \pm 103$ & $2481 \pm 449$ & $6044 \pm 744$ \\
         \hline
-        \MCTopM-\klUCB{} & $269 \pm 34$ & $401 ± 36$ & $39 ± 3$ \\
+        \texttt{rhoLearn}-\klUCB{} + \klUCB{} & $546 \pm 190$ & $1172 \pm 295$ & $1193 \pm 303$ \\
+        \texttt{rhoLearn}-\klUCB{} + Bayes-UCB & $561 \pm 219$ & $1204 \pm 394$ & $1158 \pm 133$ \\
+        \texttt{rhoLearn}-\klUCB{} + Exp3 & $529 \pm 175$ & $1659 \pm 331$ & $5222 \pm 813$ \\
+        \hline
+        \MCTopM-\klUCB{} & $244 \pm 39$ & $401 \pm 55$ & $39 \pm 3$ \\
         \hline
     \end{tabular}
     \caption{Comparison of \RhoRand{} and \texttt{rhoLearn} for a simple multi-player bandit problem with $K=9$ arms.}
