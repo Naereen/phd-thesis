@@ -167,17 +167,16 @@ Then we compare the \RhoRand, \RandTopM{} and \MCTopM{} algorithms, using \klUCB
     \textbf{Algorithms} $\;$ \textbackslash $\;$ \textbf{Number of players} & $M=3$ & $M=6$ & $M=9$ \\
         \hline
         Centralized multiple-play \klUCB{} & $\mathbf{92 \pm 20}$ & $\mathbf{70 \pm 16}$ & $\mathbf{0}$ \\
+        \Selfish-\klUCB{} & $250 \pm 34$ & $735 \pm 85$ & $3010 \pm 472$ \\
         \hline
-        \RhoRand-\klUCB{} & $417 \pm 103$ & $2481 \pm 449$ & $6639 ± 1035$ \\
-        \RhoRand-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$1422 \pm 1051$} & \textcolor{red}{$9030 \pm 1922$} & \textcolor{red}{$7264 ± 1009 $} \\
+        \RhoRand-\klUCB{} & $417 \pm 103$ & $2481 \pm 449$ & $6639 \pm 1035$ \\
+        \RhoRand-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$1422 \pm 1051$} & \textcolor{red}{$9030 \pm 1922$} & \textcolor{red}{$7264 \pm 1009 $} \\
         \hline
-        \RandTopM-\klUCB{} & $268 \pm 45$ & $941 \pm 217$ & $437 ± 367$ \\
-        \RandTopM-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$688 \pm 614$} & \textcolor{red}{$4256 \pm 2701$} & \textcolor{red}{$1155 ± 544$} \\
+        \RandTopM-\klUCB{} & $268 \pm 45$ & $941 \pm 217$ & $437 \pm 367$ \\
+        \RandTopM-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$688 \pm 614$} & \textcolor{red}{$4256 \pm 2701$} & \textcolor{red}{$1155 \pm 544$} \\
         \hline
-        \MCTopM-\klUCB{} & $244 \pm 39$ & $401 \pm 55$ & $44 ± 13$ \\
-        \MCTopM-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$563 \pm 546$} & \textcolor{red}{$1560 \pm 1293$} & \textcolor{red}{$618 ± 29$} \\
-        \hline
-        \Selfish-\klUCB{} & $250 \pm 34$ & $735 \pm 85$ & $3010 ± 472$ \\
+        \MCTopM-\klUCB{} & $244 \pm 39$ & $401 \pm 55$ & $44 \pm 13$ \\
+        \MCTopM-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$563 \pm 546$} & \textcolor{red}{$1560 \pm 1293$} & \textcolor{red}{$618 \pm 29$} \\
         \hline
     \end{tabular}
     \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on the same problem with $M=3,6,9$, comparing algorithms which knows $M$ against algorithms which estimate $M$ on the fly.}
@@ -186,12 +185,12 @@ Then we compare the \RhoRand, \RandTopM{} and \MCTopM{} algorithms, using \klUCB
 \end{table}
 
 One can observe in Table~\ref{table:5:meanRegretSimulationsEstimatingM} the empirical performances of different algorithms in an example problem, in each case of low, medium and maximum number of players ($M=3,6,9$ for $K=9$ arms).
-The three algorithms \RhoRand, \RandTopM{} and \MCTopM{} all suffer from similar costs on their regret when they have to estimate $M$ on the fly. Our proposals are still much more efficient than \RhoRand{} when using the procedure to estimate $M$ described from \cite{Anandkumar11}.
-For the two non-extreme cases ($M=3,6$), the performance drop when having to estimate $M$ is quite large (on the three algorithms and two cases, about $+30\%$), and consistent on the different algorithm.
-The extreme case of $M=K$ players is of highest interest, as \MCTopM{} achieves a very small regret (proved to be $\smallO{\log(T)}$ as it is just the expected time of the orthogonalization process), while the same algorithm with unknown $M$ suffers from a much larger regret (written ``Estimate $M$'' in Table~\ref{table:5:meanRegretSimulationsEstimatingM}).
+The three algorithms \RhoRand, \RandTopM{} and \MCTopM{} all suffer from similar costs on their regret when they have to estimate $M$ on the fly (written ``Estimate $M$'' in red, in Table~\ref{table:5:meanRegretSimulationsEstimatingM}). Our proposals are still much more efficient than \RhoRand{} when using the procedure to estimate $M$ described from \cite{Anandkumar11}.
+For the two non-extreme cases ($M=3,6$), the performance drop when having to estimate $M$ is quite large (on the three algorithms and two cases, about $\times 3.4$), and consistent on the different algorithm.
+The extreme case of $M=K$ players is of highest interest, as \MCTopM{} achieves a very small regret (proved to be $\smallO{\log(T)}$ as it is just the expected time of the orthogonalization process), while the same algorithm with unknown $M$ suffers from a much larger regret.
 In this extreme case, \RhoRand{} and its extension both perform very closely, as expected.
 %
-Additional simulations, for increasing time horizons $T$, confirmed the expected order-optimal regret of this extension \MCTopM-\klUCB.
+Additional simulations, for increasing time horizons $T$, confirmed the expected order-optimal regret of this extension of our proposal \MCTopM-\klUCB.
 
 
 % ----------------------------------------------------------------------------
@@ -209,12 +208,12 @@ Their answer is that the model without sensing information is essentially not ha
 Similarly, Lugosi and Mehrabian studied the same problem \cite{LugosiMehrabian18}.
 In both works, the authors detail algorithms that are unfortunately suboptimal empirically, but give in both cases a logarithmic regret if $M \leq K$ players all independently implement the proposed algorithm.
 
-\paragraph{The ``communication trick''}
+\paragraph{The ``communication trick''.}
 %
 \TODOL{Write about half a page on the article \cite{BoursierPerchet18}.}
 
 
-\paragraph{Estimating collisions through uniform exploration}
+\paragraph{Estimating collisions through uniform exploration.}
 %
 \cite{LugosiMehrabian18} gives a first algorithm with expected regret of $\bigO{M K \log(T) / \Delta^2}$, if $\Delta = \mu^*_{M} - \mu^*_{M+1} \neq 0$, achieving a better dependency regarding $M$ when compared to our result (our bound is $\bigO{M^3}$) but at the cost of (much) larger constants hidden in the $\cO$ notation, and a non-fully explicit algorithms which usually obtain bad (or worse) empirical performance.
 Then they study an interesting extension that works also if $\Delta = 0$ or if $\Delta$ is so close than the bound in $1/\Delta^2$ becomes useless for ``small horizons''. This behavior is well known for classical bandits, where bounds of the form $\log(T)/\Delta^2$ become worse than a linear regret $T$ if $\Delta$ is very small (\ie, $\Delta\ll \sqrt{\log(T)/T}$).
@@ -239,38 +238,90 @@ Their argument is essentially to prove that for \Selfish-powered players using t
 They prove that it is unlikely to encounter any of these ``tie breaking points'', in theory if the \UCB{} indexes are real-valued number (that can be rational or irrational).
 
 
-\subsubsection{Additionnal numerical simulations}
+\paragraph{Additionnal numerical simulations.}
 
-\TODOL{Do some basic simulations and show :
-
-    - Selfish-UCB from \cite{Besson2018ALT}.
-    - Improved Musical Chair from \cite{LugosiMehrabian18}.
-    - SIC-MMAB from \cite{BoursierPerchet18}.
-}
-
+To illustrate the difficulty of the ``no sensing'' case, we illustrate here the performances of different algorithms designed specifically for this setting.
 As above, we consider a bandit problem with $K=9$ arms, of means $0.1,0.2,\dots,0.8,0.9$, and three different cases of $M=3,6,9$ players, for $100$ independent repetitions and an horizon of $T=10000$.
 We include the \Selfish-\klUCB{} algorithm as an heuristic, as well as the Improved \MusicalChair{} algorithm from \cite{LugosiMehrabian18} and \textsc{Sic-MMAB} from \cite{BoursierPerchet18}.
+The centralized multiple-play \klUCB{} is included as an unrealistic efficient baseline, but it is interesting to also add it here, as it does not use the sensing information but only the joint information (the reward) $r^j(t)$, because it directly affects the player in an orthogonal configuration and thus never encounters any collision (thus $r^j(t)=Y_{t,A^j(t)}$ for each $j,t$).
+%
+For the two other algorithms, we use the parameters advised in all papers: for \textsc{Sic-MMAB}, we used $T_0 = \lceil K \log(T) \rceil$ as advised by the authors.
+For Improved-MC, we used $c=1$ which gives $g=235$, whereas in the paper the authors use $c=128$ for their analysis. We found empirically no difference when using different values of the constant $c$ or $g$, and unfortunately the regret of Improved-MC was always found to be linear (\eg, $12150$ for $T=10000$).
 
+% for T in 10000; do for K in 9; do for N in 4 100; do for M in 3 6 9; do DEBUG=False N_JOBS=4 N=$N K=$K M=$M T=$T make --noFreeSMS moremulti && cp logs/main_multiplayers_more_py3_log.txt logs/main_multiplayers_more_py3_log__K${K}_N${N}_M${M}_T${T}_$(date +"%d-%m-%Y_%H-%M-%S").txt && FreeSMS.py "Done for simulations for $K arms, $M players, T=$T N=$N and lots algorithms for experiments for Chapter 5 of my PhD. Love from Rennes."; done; done; done; done
+
+We give in Table~\ref{table:5:meanRegretSimulationsNoSensing}, we give the mean regret obtained for these different algorithms, and we observe a drastic difference between the unrealistic centralized algorithm, which achieves a very small regret, the heuristic \Selfish-\klUCB{} which achieve small mean regret (but is small to fail in theory and in some instances), and the two other algorithms.
+We were unable to find any bug in our implementation of Improved \MusicalChair{} from \cite{LugosiMehrabian18} and all the different tuning of $c$ (or $g$) explored gave the same disappointing result (linear regret).
+The \textsc{Sic-MMAB} algorithm performs better than the \Selfish{} heuristic for the extreme case of $M=K$, but its large regret in this case shows that the orthogonalization protocol developed by \cite{BoursierPerchet18} is not fast to converge (for illustration, for the same problem for $M=K=9$ for the ``sensing'' case, \MCTopM-\klUCB{} achieves a mean regret of about $40$, two orders of magnitude smaller!).
+%
+Further empirical evaluation would be needed to fully understand the situation, and a first future work would be to fix the algorithm proposed by \cite{LugosiMehrabian18} and illustrate in some problems that it can indeed achieve sub-linear regret (maybe it does but only for large horizons, even if we did try larger values of $T$ like up-to $T=200000$).
 
 \begin{table}[ht]
     % \begin{footnotesize}
-        \centering
-        \begin{tabular}{c|ccc}
-        \textbf{Algorithms} $\;$ \textbackslash $\;$ \textbf{Number of players} & $M=3$ & $M=6$ & $M=9$ \\
-            \hline
-            \Selfish-\klUCB{} & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
-            \hline
-            Improved \MusicalChair{} & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
-            \hline
-            \textsc{Sic-MMAB} & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ & $\mathbf{XXX \pm XXX}$ \\
-            \hline
-        \end{tabular}
-        \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on the same problem with $M=3,6,9$, for the ``no sensing'' case.}
-        \label{table:5:meanRegretSimulationsNoSensing}
-    % \end{footnotesize}
-    \end{table}
+    \centering
+    \begin{tabular}{c|ccc}
+    \textbf{Algorithms} $\;$ \textbackslash $\;$ \textbf{Number of players} & $M=3$ & $M=6$ & $M=9$ \\
+        \hline
+        Centralized Multiple play \klUCB{} & $\mathbf{91 \pm 21}$ & $\mathbf{70 \pm 16}$ & $\mathbf{0 \pm 0}$ \\
+        \Selfish-\klUCB{} & $249 \pm 35$ & $728 \pm 94$ & $2953 \pm 501$ \\
+        \hline
+        \textsc{Sic-MMAB} & $1705 \pm 340$ & $3915 \pm 300$ & $1713 \pm 52$ \\
+        Improved \MusicalChair{} & $\textcolor{red}{12149 \pm 60}$ & $\textcolor{red}{22341 \pm 77}$ & $\textcolor{red}{27462 \pm 85}$ \\
+        \hline
+    \end{tabular}
+    \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on the same problem with $M=3,6,9$, for the ``no sensing'' case.}
+    \label{table:5:meanRegretSimulationsNoSensing}
+% \end{footnotesize}
+\end{table}
 
-\TODOL{Give interpretation from these results!}
+% % M=3
+% SIC-MMAB(kl-UCB, $T_0=226$) : 1705 ± 340
+% TSN($T_{RH} = 140, T_{SH} = 1.53e+04$) : 9001 ± 2
+% Selfish-kl-UCB : 249 ± 35
+% CentralizedMultiplePlay(kl-UCB) : 91 ± 21
+% MusicalChair($T_0=1000$) : 1410 ± 641
+% MusicalChair($T_0=450$) : 1268 ± 1110
+% MusicalChair($T_0=900$) : 1355 ± 681
+% MusicalChair($T_0=1350$) : 1791 ± 561
+% MusicalChair($T_0=95117$) : 12145 ± 59
+% MusicalChair($T_0=118764$) : 12142 ± 59
+% MusicalChair($T_0=220257$) : 12146 ± 59
+% MCNoSensing($M=3$, $T=10000$, $c=1$, $g=235$) : 12149 ± 60
+% MCNoSensing($M=3$, $T=10000$, $c=10$, $g=2.35e+03$) : 12148 ± 66
+% MCNoSensing($M=3$, $T=10000$, $c=128$, $g=3.01e+04$) : 12149 ± 56
+
+% % M=6
+
+% SIC-MMAB(kl-UCB, $T_0=226$) : 3915 ± 300
+% TSN($T_{RH} = 140, T_{SH} = 1.53e+04$) : 9008 ± 5
+% Selfish-kl-UCB'  : 728 ± 94
+% CentralizedMultiplePlay(kl-UCB)' : 70 ± 16
+% MusicalChair($T_0=1000$) : 3130 ± 1583
+% MusicalChair($T_0=450$) : 2690 ± 2473
+% MusicalChair($T_0=900$) : 3015 ± 1839
+% MusicalChair($T_0=1350$) : 3403 ± 1202
+% MusicalChair($T_0=95117$) : 22363 ± 89
+% MusicalChair($T_0=118764$) : 22352 ± 74
+% MusicalChair($T_0=220257$) : 22352 ± 75
+% MCNoSensing($M=6$, $T=10000$, $c=1$, $g=235$) : 22341 ± 77
+% MCNoSensing($M=6$, $T=10000$, $c=10$, $g=2.35e+03$) : 22365 ± 80
+% MCNoSensing($M=6$, $T=10000$, $c=128$, $g=3.01e+04$) : 22349 ± 84
+
+% % M=9
+% SIC-MMAB(kl-UCB, $T_0=226$) : 1713 ± 52
+% TSN($T_{RH} = 140, T_{SH} = 1.53e+04$) : 39 ± 18
+% Selfish-kl-UCB : 2953 ± 501
+% CentralizedMultiplePlay(kl-UCB) : 0 ± 0
+% MusicalChair($T_0=1000$) : 2775 ± 27
+% MusicalChair($T_0=450$) : 1455 ± 1059
+% MusicalChair($T_0=900$) : 2506 ± 30
+% MusicalChair($T_0=1350$) : 3737 ± 36
+% MusicalChair($T_0=95117$) : 27466 ± 90
+% MusicalChair($T_0=118764$) : 27480 ± 80
+% MusicalChair($T_0=220257$) : 27467 ± 95
+% MCNoSensing($M=9$, $T=10000$, $c=1$, $g=235$) : 27462 ± 85
+% MCNoSensing($M=9$, $T=10000$, $c=10$, $g=2.35e+03$) : 27463 ± 101
+% MCNoSensing($M=9$, $T=10000$, $c=128$, $g=3.01e+04$) : 27462 ± 76
 
 
 % ----------------------------------------------------------------------------
@@ -451,13 +502,13 @@ and we include both the centralized multi-play version of \klUCB{} and our propo
         \hline
         Centralized multiple-play \klUCB{} & $\mathbf{92 \pm 20}$ & $\mathbf{70 \pm 16}$ & $\mathbf{0}$ \\
         \hline
-        \RhoRand-\klUCB{} & $417 \pm 103$ & $2481 \pm 449$ & $6639 ± 1035$ \\
+        \RhoRand-\klUCB{} & $417 \pm 103$ & $2481 \pm 449$ & $6639 \pm 1035$ \\
         \hline
-        \texttt{rhoLearn}-\klUCB{} + \klUCB{} & $546 \pm 190$ & $1172 \pm 295$ & $1416 ± 347$ \\
-        \texttt{rhoLearn}-\klUCB{} + Bayes-UCB & $561 \pm 219$ & $1204 \pm 394$ & $1363 ± 331$ \\
-        \texttt{rhoLearn}-\klUCB{} + Exp3 & $529 \pm 175$ & $1659 \pm 331$ & $5134 ± 976$ \\
+        \texttt{rhoLearn}-\klUCB{} + \klUCB{} & $546 \pm 190$ & $1172 \pm 295$ & $1416 \pm 347$ \\
+        \texttt{rhoLearn}-\klUCB{} + Bayes-UCB & $561 \pm 219$ & $1204 \pm 394$ & $1363 \pm 331$ \\
+        \texttt{rhoLearn}-\klUCB{} + Exp3 & $529 \pm 175$ & $1659 \pm 331$ & $5134 \pm 976$ \\
         \hline
-        \MCTopM-\klUCB{} & $244 \pm 39$ & $401 \pm 55$ & $44 ± 13$ \\
+        \MCTopM-\klUCB{} & $244 \pm 39$ & $401 \pm 55$ & $44 \pm 13$ \\
         \hline
     \end{tabular}
     \caption{Comparison of \RhoRand{} and \texttt{rhoLearn} for a simple multi-player bandit problem with $K=9$ arms.}
