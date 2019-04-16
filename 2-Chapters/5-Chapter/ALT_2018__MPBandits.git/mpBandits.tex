@@ -1294,20 +1294,63 @@ of whether logarithmic regret is at all possible for the ``no sensing'' case (mo
 % Put most of them in appendix.
 
 
-We illustrate here the empirical performances of the algorithms presented in Section~\ref{sec:5:algorithms}, used in combination with the \klUCB{} indices.
-% Some plots are at pages \pageref{fig:5:MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems} and \pageref{fig:5:MP__K9_M6_T10000_N1000__4_algos} and most of them in Appendix~\ref{app:5:plotsFromSec5}.
-
-\TODOL{Include here some plots showing \RhoRand{} with \UCB{} and \klUCB{} vs \MCTopM{} with \UCB{} and \klUCB{}.}
-
-In experiments that are not reported here, we could observe that using \klUCB{} rather than \UCB{} indices always yield better practical performance.
-%, as the theoretical guarantees for single player suggested,
-As the purpose of this work is not to optimize on the index policy, but rather propose new ways of using indices in a decentralized setting,
-% And for some configurations, using a decentralized approach with a more efficient index family (\klUCB{} instead of \UCB) has better performances than the centralized approach.
-we only report results for \klUCB.
-In a first set of experiments, \MCTopM{}, \RandTopM{} and \Selfish{} are benchmarked against the state-of-the-art \RhoRand{} algorithm.
+We illustrate here the empirical performances of the algorithms presented in Section~\ref{sec:5:algorithms}, used in combination with the \UCB{} or \klUCB{} indices.
+The analysis given in Section~\ref{sec:5:upperbounds} was focussing on \klUCB, because it is well known that it is more efficient both in practice and in theory.
+To illustrate this, we first show below the result of some experiments comparing different algorithms that use either the \UCB{} or the \klUCB{} indexes.
+%
+Our proposed algorithms, \MCTopM{}, \RandTopM{} and \Selfish{} are benchmarked against the state-of-the-art \RhoRand{} algorithm.
 We also include a centralized multiple-play \klUCB{} algorithm,
 as defined by \cite{Anantharam87a},
 essentially to check that the \emph{``price of decentralized learning''} is not too large.
+
+The first experiment is considering $K=9$ arms, with means $\bm{\mu}=[0.1,0.2,\dots,0.9]$, and $M=3$ then $6$ then $9$ players.
+Note that here and as in all this section we consider different algorithms that know the number of players $M$ (see Section~\ref{sub:5:unknownNumberOfPlayers} below for a discussion on the case when $M$ could be unknown).
+%
+Performance is measured with the \emph{expected} regret up to horizon $T=10000$, estimated based on $1000$ repetitions on the same bandit instance.
+%
+We report in Table~\ref{table:5:comparisonUCB_klUCB} the results in terms of mean regret, $\pm$ one standard deviation.
+The conclusions are three fold: first we observe for any of the compared algorithms, using \klUCB{} is always (much) better than using \UCB.
+Second we observe that our proposal \MCTopM{} is outperforming the state-of-the-art \RhoRand{} policy, and performs closely to the centralized (unrealistic) approach.
+Third we observe in the last column, when $M=K=9$, that \MCTopM{} is achieving constant regret, as we proved (the regret upper-bound of Theorem~\ref{thm:5:LogarithmicRegret_MCTopMklUCB} is $\cO(1)$ if there is no arms in \Mworst{} !), and it shows that the orthogonalization scheme proposed for \MCTopM{} is very efficient, especially in comparison to previous (state-of-the-art) approaches using ranks.
+%
+Additional experiments and illustrations are given below.
+We illustrate below the (empirical mean) regret $R_t$ as a function of time and not only results in terms of empirical mean regret $R_T$ at the end of the bandit game.
+
+% for N in 4 100; do for M in 3 6 9; do DEBUG=True SAVEALL=False NOPLOTS=True M=$M K=30 N_JOBS=-1 N=$N T=10000 make moremultiplayers; echo "Done for N=$N and M=$M"; read; done; echo "Done for N=$N"; read; done
+% TODO run the simulations with N=100 and not N=4
+\begin{table}[ht]
+  % \begin{footnotesize}
+      \centering
+      \begin{tabular}{c|ccc}
+      \textbf{Algorithm} $\;$ \textbackslash $\;$ Number of players & $M=3$ & $M=6$ & $M=9$ \\
+          \hline
+          Centralized multiple-play \UCB{} & $317 \pm 37$ & $219 \pm 17$ & $0$ \\
+          Centralized multiple-play \klUCB{} & $94 \pm 32$ & $77 \pm 7$ & $0$ \\
+          \hline
+          \Selfish-\UCB{} & $1175 \pm 70$ & $3705 \pm 379$ & $12709 \pm 246$ \\
+          \Selfish-\klUCB{} & $230 \pm 34$ & $673 \pm 48$ & $2689 \pm 230$ \\
+          \hline
+          \RhoRand-\UCB{} & $1534 \pm 145$ & $4797 \pm 319$ & $12047 \pm 1056$ \\
+          \RhoRand-\klUCB{} & $349 \pm 58$ & $2688 \pm 469$ & $6709 \pm 1186$ \\
+          \hline
+          \RandTopM-\UCB{} & $1074 \pm 36$ & $2751 \pm 229$ & $252 \pm 150$ \\
+          \RandTopM-\klUCB{} & $245 \pm 30$ & $1181 \pm 100$ & $617 \pm 592$ \\
+          \hline
+          \MCTopM-\UCB{} & $941 \pm 23$ & $1368 \pm 86$ & $46 \pm 5$ \\
+          \MCTopM-\klUCB{} & $\mathbf{277 \pm 12}$ & $\mathbf{391 \pm 70}$ & $\mathbf{50 \pm 11}$ \\
+          \hline
+      \end{tabular}
+      \caption{Using \klUCB{} is much more efficient than using \UCB{}, for multi-player bandit (here in a simple problem with $K=9$ arms).}
+      \label{table:5:comparisonUCB_klUCB}
+  % \end{footnotesize}
+  \end{table}
+
+
+The purpose of this work is not to optimize on the index policy, but rather propose new ways of using indices in a decentralized setting,
+% And for some configurations, using a decentralized approach with a more efficient index family (\klUCB{} instead of \UCB) has better performances than the centralized approach.
+and as we observed that using \klUCB{} rather than \UCB{} indices always yield better practical performance,
+from now on we only report results for \klUCB.
+%, as the theoretical guarantees for single player suggested,
 
 %
 
@@ -1315,8 +1358,6 @@ We present results for two bandit instance: one with $K=3$ arms and means
 $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$, for which two cases $M=2$ and $M=3$ are presented in Figure~\ref{fig:5:selfish_fail1}. For the second instance $K=9$ and $\boldsymbol{\mu} = [0.1, 0.2, \dots, 0.9]$,
 three cases are presented: $M=6$ in Figure~\ref{fig:5:MP__K9_M6_T10000_N1000__4_algos},
 and for the two limit cases $M=2$ and $M=9=K$ in Figure~\ref{fig:5:MP__K9_M2-6-9_T10000_N200__4_algos}.
-Note that here, we consider different algorithms that know the number of players $M$.
-Performance is measured with the \emph{expected} regret up to horizon $T=10000$, estimated based on $1000$ repetitions on the same bandit instance.
 %
 We also include histograms showing the \emph{distribution} of regret at $t=T$,
 as this allows to check if the regret is indeed small for \emph{each} run of the simulation.

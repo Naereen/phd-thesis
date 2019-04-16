@@ -126,7 +126,7 @@ Without giving more details, we let the interested refer to what is is explained
 %
 These works assume a prior knowledge of $\Delta$, or other measures of the difficulty of the problem, and as such we do not.
 FIXME
-\TODOL{FIXME écrire ça sans être fini}
+\TODOL{FIXME écrire ça sans être méchant envers leurs travaux !}
 
 
 \paragraph{Two ideas to estimate $M$.}
@@ -227,7 +227,7 @@ Thanks to this ``communication trick'', recent research efforts have been more f
 This trick essentially use the fact that the players share a synchronized time, thus they can use a collision as a way to directly exchange one bit of information between two players.
 This process is slow and not efficient, as all but two players must do nothing when player $i$ is sending a bit to player $j$, but it does build a communication protocol in the model without explicit communication between players.
 This ``communication trick'' is used for instance in \cite{KaufmannAbbas19}.
-We let the interested reader refer to these last two works \cite{BoursierPerchet18,KaufmannAbbas19} as they are both solid, and well explained
+We let the interested reader refer to these last two works \cite{BoursierPerchet18,KaufmannAbbas19} as they are both solid, and well explained.
 
 
 \paragraph{Estimating collisions through uniform exploration.}
@@ -348,14 +348,26 @@ Further empirical evaluation would be needed to fully understand the situation, 
 In all the models of IoT networks considered in this thesis, we assume that \emph{the different IoT devices cannot communicate with each other}, and can only communicate with a unique gateway.
 Of course, this hypothesis can be removed, and in practice in some families of wireless networks, communication between players are possible.
 Note that this extension is not considering a graph of distributed agents all playing cooperatively to solve a unique bandit game, like it is studied in the ``graph bandit'' problem.
-What we are interested here is an extension of our model where players can send some bits to one or all the other players, at every time steps or some time steps. Clearly, the problem is easier by allowing communication, and it is quite immediate to see that the communication capacity between players must be limited otherwise the problem becomes trivial to solve.
+What we are interested here is an extension of our model where players can send some bits to one or all the other players, at every time steps or some time steps.
+
+Clearly, the problem is easier by allowing communication, and it is quite immediate to see that the communication capacity between players must be limited otherwise the problem is already known and solved.
 Indeed, imagine that at each time step $t$, all the $M$ players could share an unbounded number of bits with the other players, at no cost, even if this hypothesis is clearly unrealistic for wireless networks.
-Then they can share all their observations, and they can all run the same multi-plays MAB algorithm \cite{Anantharam87a} (in a deterministic way), like for instance the extension of Thompson sampling for multi-plays studied in \cite{Komiyama15}, or extensions of \KLUCB{} from \cite{Luedtke16}.
+Then they can share all their observations, and they can all run the same multiple-plays MAB algorithm \cite{Anantharam87a} (in a deterministic way), like for instance the extension of Thompson sampling for multiple-plays studied in \cite{Komiyama15}, or extensions of \KLUCB{} from \cite{Luedtke16}.
 In this setting, a logarithmic regret is obtained easily, and the regret upper-bound of the two aforementioned algorithms asymptotically achieve the lower-bound from \cite{Anantharam87a}.
 
-An interesting extension is thus to limit the communication between players, either to a small number of bits, or just one bit.
-We do not review papers that study this model, because the recent work \cite{BoursierPerchet18} introduced the ``communication trick''.
-Recent research efforts have been more focus on studying the basic model --without explicit communications between players--, while proposing algorithms that can rely on some communication between players.
+An interesting extension is thus to limit the communication between players, either to a small number of bits, or just one bit, at every or only some time steps.
+We identified that the state-of-the-art on this direction of research consists in the two very recent works published in April 2019, while I was finishing this chapter: \cite{tao2019collaborative} and \cite{wang2019distributed}.
+Distributed pure exploration is studied in \cite{tao2019collaborative}, where the proposed new lower bounds for the regret of any algorithm for the distributed best arm identification problem, under the fixed time or fixed confidence settings.
+The also propose effective algorithms that asymptotically match their lower-bounds (up-to logarithmic factors, in some cases).
+The second work studies distributed learning for (not necessarily stochastic) multi-armed bandits as well as linear bandits \cite{tao2019collaborative}.
+For a distributed $K$-armed bandit with $M$ agents, they developed two protocols achieving near-optimal regret $\cO(\sqrt{M K T \log(T)})$,
+and requiring little communication cost,
+one is independent of the time horizon $T$ and use $\cO(M \log(T))$ communications,
+and the other is independent of the number of arms $K$ and use $\cO(M K \log(M))$ communications.
+Their model and algorithms fit in the distributed, decentralized framework we advertise in all this thesis, and this last work is very interesting.
+
+Additionally, after the recent work \cite{BoursierPerchet18} introduced the ``communication trick'',
+some recent research efforts have been more focus on studying the basic model --without explicit communications between players--, while proposing algorithms that can rely on some communication between players.
 This ``communication trick'' is used for instance in \cite{KaufmannAbbas19}.
 Due to space constraint, we let the interested reader refer to these last two works \cite{BoursierPerchet18,KaufmannAbbas19} as they are both solid, and well explained.
 
