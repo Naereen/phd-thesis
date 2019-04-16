@@ -81,7 +81,7 @@ Also inspired by real-world wireless networks, the arm means may vary among play
 Finally, we can also be interested by models where $M$ stays fixed, but the environment evolves, for instance with abrupt changes in the means of arms. This last model makes a good connexion between this chapter and the next one, and an exciting future work is to further study this model in order to tackle this kind of problems by merging our proposals for stationary multi-player bandits and for non-stationary single-player bandits.
 
 \TODOL{
-    Pour chaque extension présentée ci dessous, je veux suivre la même organisation :
+    Pour les extension présentées ici, je veux suivre la même organisation :
 
     1. j'explique l'extension, et en quoi c'est difficile (= en quoi notre approche échoue si on fait rien de plus),
 
@@ -116,8 +116,17 @@ Then in such networks, if one wants to apply an algorithm like \MCTopM-\klUCB,
 the $M$ devices need to known their number $M$, and have to receive it from the gateway, as it is the only part of this example of network which knowns $M$.
 It seems unrealistic to ask the gateway to send the fixed value $M$ to each device, and not a unique ID to each device, for instance $\mathrm{id}^j\in\{1,\dots,K\}$.
 
-\TODOL{Explain why the problem is MUCH easier if we have before hand these unique ID!}
-If the $M$ players each have a unique ID, then a simple explore-then-commit algorithm running on top of a round-Robin phase can achieve order-optimal regret. Without giving more details, we let the interested refer to what is is explained for the RR-SW-UCB\# algorithm in \cite{WeiSrivastava18Distributed} and the algorithms presented in \cite{DarakHanawal18,JoshiKumar2018,KumarDarak2019}.
+If the $M$ players each have a unique ID, then a simple explore-then-commit algorithm running on top of a round-Robin phase can achieve order-optimal regret.
+If the players know the time horizon $T$, then fix a confidence level $\delta$. For the first $T_0$ time steps, the $M$ players will use a simple round-Robin game, using their (unique) ID to stay orthogonal: player $j$ starts at arm $j$, then $j+1$, then cycle in $\{1,\dots,K\}$. They encounter no collision in these time steps, and then user $j$ targets the $j$-th best arm among the set of $M$-best arm.
+If $T_0$ is large enough, all players have built the same estimate of the ranking of the arms (and not only correctly identified the set of $M$-best arms), with high probability (at least $\delta$), and thus they will also encounter no collision and no regret from after time $T_0$.
+The mean regret of such approach is easily bounded by $R_T \leq M T_0 + (1 - \delta) (T - T_0)$, so by using $\delta = 1-1/T$, $R_T = \bigO{T_0}$.
+By calibrating $T_0$ based on $\delta$ (which needs prior knowledge of $T$) and the minimal gap $\Delta$ between \Mbest{} and \Mworst, one can show, using similar arguments as used by \cite{Rosenski16} for the Musical Chair policy, that with large probability a constant regret is obtained. A logarithmic regret can be obtained from the same bound, proving the order-optimality of this simple approach, if we assume that user $j$ knows it is user number $j$.
+%
+Without giving more details, we let the interested refer to what is is explained for the algorithms presented in \cite{DarakHanawal18,JoshiKumar2018,KumarDarak2019}.
+%
+These works assume a prior knowledge of $\Delta$, or other measures of the difficulty of the problem, and as such we do not.
+FIXME
+\TODOL{FIXME écrire ça sans être fini}
 
 
 \paragraph{Two ideas to estimate $M$.}
@@ -211,6 +220,14 @@ In both works, the authors detail algorithms that are unfortunately suboptimal e
 \paragraph{The ``communication trick''.}
 %
 \TODOL{Write about half a page on the article \cite{BoursierPerchet18}.}
+
+The recent work \cite{BoursierPerchet18} proposed an idea they called the ``communication trick''.
+It essentially allow any player to send one bit to all the others, at some pre-agreed time steps, with no modification on the model.
+Thanks to this ``communication trick'', recent research efforts have been more focus on studying the basic model --without explicit communications between players--, while proposing algorithms that can rely on some communication between players.
+This trick essentially use the fact that the players share a synchronized time, thus they can use a collision as a way to directly exchange one bit of information between two players.
+This process is slow and not efficient, as all but two players must do nothing when player $i$ is sending a bit to player $j$, but it does build a communication protocol in the model without explicit communication between players.
+This ``communication trick'' is used for instance in \cite{KaufmannAbbas19}.
+We let the interested reader refer to these last two works \cite{BoursierPerchet18,KaufmannAbbas19} as they are both solid, and well explained
 
 
 \paragraph{Estimating collisions through uniform exploration.}
@@ -337,12 +354,10 @@ Then they can share all their observations, and they can all run the same multi-
 In this setting, a logarithmic regret is obtained easily, and the regret upper-bound of the two aforementioned algorithms asymptotically achieve the lower-bound from \cite{Anantharam87a}.
 
 An interesting extension is thus to limit the communication between players, either to a small number of bits, or just one bit.
-We do not review papers that study this model, because the recent work \cite{BoursierPerchet18} introduced the ``communication trick'', that essentially allow any player to send one bit to all the others, at some pre-agreed time steps, with no modification on the model.
-Thanks to this ``communication trick'', recent research efforts have been more focus on studying the basic model --without explicit communications between players--, while proposing algorithms that can rely on some communication between players.
-This trick essentially use the fact that the players share a synchronized time, thus they can use a collision as a way to directly exchange one bit of information between two players.
-This process is slow and not efficient, as all but two players must do nothing when player $i$ is sending a bit to player $j$, but it does build a communication protocol in the model without explicit communication between players.
+We do not review papers that study this model, because the recent work \cite{BoursierPerchet18} introduced the ``communication trick''.
+Recent research efforts have been more focus on studying the basic model --without explicit communications between players--, while proposing algorithms that can rely on some communication between players.
 This ``communication trick'' is used for instance in \cite{KaufmannAbbas19}.
-We let the interested reader refer to these last two works \cite{BoursierPerchet18,KaufmannAbbas19} as they are both solid, and well explained.
+Due to space constraint, we let the interested reader refer to these last two works \cite{BoursierPerchet18,KaufmannAbbas19} as they are both solid, and well explained.
 
 Another line of research is to consider models that are closer to realistic wireless communication networks, as it is done in \cite{Avner16,AvnerMannor18}.
 Explaining in details their model and proposed solutions would be quite lengthy, and we rather prefer to let the interested reader refer to the later work \cite{AvnerMannor18}.
