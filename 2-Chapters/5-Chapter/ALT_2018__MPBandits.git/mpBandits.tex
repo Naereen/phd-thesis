@@ -1317,27 +1317,27 @@ Additional experiments and illustrations are given below.
 We illustrate below the (empirical mean) regret $R_t$ as a function of time and not only results in terms of empirical mean regret $R_T$ at the end of the bandit game.
 
 % for N in 4 100; do for M in 3 6 9; do DEBUG=True SAVEALL=False NOPLOTS=True M=$M K=30 N_JOBS=-1 N=$N T=10000 make moremultiplayers; echo "Done for N=$N and M=$M"; read; done; echo "Done for N=$N"; read; done
-% TODO run the simulations with N=100 and not N=4
+%
 \begin{table}[ht]
   % \begin{footnotesize}
       \centering
       \begin{tabular}{c|ccc}
       \textbf{Algorithm} $\;$ \textbackslash $\;$ Number of players & $M=3$ & $M=6$ & $M=9$ \\
           \hline
-          Centralized multiple-play \UCB{} & $317 \pm 37$ & $219 \pm 17$ & $0$ \\
-          Centralized multiple-play \klUCB{} & $94 \pm 32$ & $77 \pm 7$ & $0$ \\
+          Centralized multiple-play \UCB{} & $321 \pm 30$ & $233 \pm 25$ & $0$ \\
+          Centralized multiple-play \klUCB{} & $94 \pm 17$ & $68 \pm 18$ & $0$ \\
           \hline
-          \Selfish-\UCB{} & $1175 \pm 70$ & $3705 \pm 379$ & $12709 \pm 246$ \\
-          \Selfish-\klUCB{} & $230 \pm 34$ & $673 \pm 48$ & $2689 \pm 230$ \\
+          \Selfish-\UCB{} & $1263 \pm 157$ & $3694 \pm 387$ & $12420 \pm 404$ \\
+          \Selfish-\klUCB{} & $243 \pm 31$ & $743 \pm 113$ & $3005 \pm 492$ \\
           \hline
-          \RhoRand-\UCB{} & $1534 \pm 145$ & $4797 \pm 319$ & $12047 \pm 1056$ \\
-          \RhoRand-\klUCB{} & $349 \pm 58$ & $2688 \pm 469$ & $6709 \pm 1186$ \\
+          \RhoRand-\UCB{} & $1455 \pm 208$ & $4775 \pm 463$ & $11794 \pm 1083$ \\
+          \RhoRand-\klUCB{} & $394 \pm 96$ & $2385 \pm 412$ & $7057 \pm 1053$ \\
           \hline
-          \RandTopM-\UCB{} & $1074 \pm 36$ & $2751 \pm 229$ & $252 \pm 150$ \\
-          \RandTopM-\klUCB{} & $245 \pm 30$ & $1181 \pm 100$ & $617 \pm 592$ \\
+          \RandTopM-\UCB{} & $1020 \pm 92$ & $2899 \pm 418$ & $470 \pm 346$ \\
+          \RandTopM-\klUCB{} & $258 \pm 43$ & $902 \pm 234$ & $551 \pm 520$ \\
           \hline
-          \MCTopM-\UCB{} & $941 \pm 23$ & $1368 \pm 86$ & $46 \pm 5$ \\
-          \MCTopM-\klUCB{} & $\mathbf{277 \pm 12}$ & $\mathbf{391 \pm 70}$ & $\mathbf{50 \pm 11}$ \\
+          \MCTopM-\UCB{} & $980 \pm 76$ & $1466 \pm 132$ & $43 \pm 13$ \\
+          \MCTopM-\klUCB{} & $\mathbf{248 \pm 40}$ & $\mathbf{410 \pm 54}$ & $\mathbf{42 \pm 10}$ \\
           \hline
       \end{tabular}
       \caption{Using \klUCB{} is much more efficient than using \UCB{}, for multi-player bandit (here in a simple problem with $K=9$ arms).}
@@ -1373,7 +1373,7 @@ and \Selfish{} outperforms \rhoRand{} in most cases.
 Figure~\ref{fig:5:MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems} is a good example
 of outstanding performances of \MCTopM{} and \Selfish{} in comparison to \rhoRand{}.
 %
-Empirically, our proposals were found to almost always outperform \rhoRand{}, and except for \Selfish{} that can fail badly on problems with small $K$,
+Empirically, our proposals were found to always outperform \rhoRand{}, and except for \Selfish{} that can fail badly on problems with small $K$,
 we verified that \MCTopM{} outperforms the state-of-the-art algorithms in many different problems, and is more and more efficient as $M$ and $K$ grows.
 
 

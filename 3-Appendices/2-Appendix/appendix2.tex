@@ -1,13 +1,46 @@
 %!TEX root = ../PhD_thesis__Lilian_Besson
 % ******************************* Thesis Appendix B ****************************
-\chapter{Publication: What Doubling-Trick Can and Can't Do for Multi-Armed Bandits}
+\chapter{About another publication: ``What Doubling-Trick Can and Can't Do for Multi-Armed Bandits''}
 \label{app:2:DoublingTricks}
 
-See https://hal.inria.fr/hal-01736357
+This appendix quickly presents the contributions of another publication that was not presented in the main text of this thesis, \cite{Besson2018DoublingTricks}.
 
-I cannot include it raw without more work on the maths, we have to write only the best versions of our results.
+% \TODOL{
+% I cannot include it raw without more work on the maths, we have to write only the best versions of our results.
 
-But I am interested in including this article in my thesis, mainly because GLRklUCB in Chapter 6 is not anytime!
+% But I am interested in including this article in my thesis, mainly because GLRklUCB in Chapter 6 is not anytime!
 
-I need to try DoublingTrick + GLRklUCB, at least experimentally!
-For the theoretical analysis, it will probably be a huge failure.
+% I need to try DoublingTrick + GLRklUCB, at least experimentally!
+% For the theoretical analysis, it will probably be a huge failure.
+% }
+
+As introduced in Chapter~\ref{chapter:2},
+an online reinforcement learning algorithm is \emph{anytime} if it does not need to know in advance the horizon $T$ of the experiment.
+%
+Depending on the context of the practical application of interest, it might be unrealistic to assume to know in advance $T$. We give two examples to illustrate where this prior knowledge can be realistic or not.
+On the first hand, consider clinical trials: it is likely that the number of patients is known before starting the trial, and for instance we refer to all the research that studies the setting of fixed-time best-arm identification \cite{audibert2010best,Garivier16BAI}.
+On the second hand, consider cognitive radio and decentralized MAB learning implemented on IoT devices: usually a learning step corresponds to an uplink and then downlink message sent and received by the IoT device, and so the time horizon $T$ denotes the total number of such messages. While it can be assumed that the device will run for instance for $10$ years (as it is advertised by some companies), many kinds of applications such as medical sensors or connected fields cannot predict the number of total communications before setting up the device.
+
+For this later range of applications, it is of highest interest to be able to use low-cost MAB algorithms that do not rely on prior knowledge of the problem for which they will be applied, and especially do not need to know the horizon $T$.
+While we proposed in Chapter~\ref{chapter:5} any-time algorithms solving the presented problem of stationary multi-player bandit, our solution for the problem of non-stationary MAB problem studied in Chapter~\ref{chapter:6} does rely on a prior knowledge of the horizon $T$.
+It is interesting to know what is the best approach to fix this weakness: work more and design algorithms that are inherently any-time, or use a generic technique to avoid depending on a prior knowledge of $T$, and automatically transform our non-anytime approach to make it anytime.
+
+A well-known technique to obtain an anytime algorithm from any non-anytime algorithm is the ``Doubling Trick'', as first introduced in \cite{CesaLugosi06}.
+We studied doubling tricks between fall 2017 and spring 2018, and we wrote an article \cite{Besson2018DoublingTricks} which was rejected at the COLT 2018 conference, and unfortunately we lacked the time to improve it and resubmit it to another conference.
+%
+In the context of adversarial or stochastic multi-armed bandits,
+the performance of an algorithm is measured by its regret,
+and we study two families of sequences of growing horizons (geometric and exponential)
+to generalize previously known results that certain doubling tricks can be used to conserve certain regret bounds.
+In a broad setting, we prove that a geometric doubling trick can be used to conserve (minimax) bounds in $R_T = \cO(\sqrt{T})$ but \emph{cannot} conserve (distribution-dependent) bounds in $R_T = \cO(\log T)$.
+We give insights as to why exponential doubling tricks may be better, as they conserve bounds in $R_T = \cO(\log T)$, and are close to conserving bounds in $R_T = \cO(\sqrt{T})$.
+Interestingly, we prove that they conserve bounds of the mixed form $R_T = \cO(T^{\gamma} (\log(T))^{\delta})$, for $0<\gamma<1$ and $\delta>0$, and so an exponential doubling trick could be used to obtain an anytime version of the algorithm we propose for non-stationary bandits, \GLRklUCB{} in Chapter~\ref{chapter:6}.
+However, our study was only focussing on stationary bandit, and it is left as a future work to explore the harder case of piece-wise stationary problems.
+
+In our article \cite{Besson2018DoublingTricks}, we also present numerical experiments in the case of stationary MAB problems, to compare the performance of efficient anytime algorithms, like \klUCB, against efficient non-anytime algorithms, like \KLUCBpp, made anytime with different doubling-trick.
+We conclude that for such problems, if $T$ is not known before, it is always more efficient to use policies that were designed to be anytime that to use a doubling trick.
+For example, an applicative paper written in 2018, \cite{li2019useDoublingTrick}, only tested the use of an exponential doubling trick combined with \KLUCBpp, but most surely the \klUCB{} algorithm would have given better empirical performance as well as more robust results.
+
+To conclude this work, we would need to complete the study of the doubling tricks, and instead of focussing on two families of doubling tricks (geometric and exponential), we need to completely characterize the doubling tricks that allow to preserve certain regret bound.
+Such doubling is given either by the function mapping the current time $t$ to the current estimate of the horizon $T(t)$, or the sequence $(T_i)_{i\in\N^*}$ of successive estimates of the horizons.
+We are interested in pursuing this work, in the hope of finding an intermediate sequence, growing faster than a geometric but slower than an exponential doubling sequence, that can preserve both worlds, problem-dependent bounds in $\cO(\log(T))$ and problem-independent bounds in $\cO(\sqrt{T})$.
