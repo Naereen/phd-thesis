@@ -41,7 +41,7 @@
 
 % the need for multiple players in cognitive radio
 
-For the development of Cognitive Radio, a crucial step is to insert \emph{multiple} smart devices in the \emph{same} background traffic (at least $M \geq 2$), as we explained in Chapters~\ref{chapter:1,chapter:4}.
+For the development of Cognitive Radio, a crucial step is to insert \emph{multiple} smart devices in the \emph{same} background traffic (at least $M \geq 2$), as we explained in Chapters~\ref{chapter:1},\ref{chapter:4}.
 With the presence of a central controller that can assign the devices to separate channels, this amounts to choosing at each time step \emph{several} arms of a MAB in order to maximize the global rewards, and can thus be viewed as an application of the multiple-play bandit, introduced by \cite{Anantharam87a} and recently studied by \cite{Komiyama15}.
 They essentially proved that existing algorithms can be easily extended to the multiple-play case, with provable guarantees on their regret.
 % In the context of CR, this first extension can model a centralized agent taking decisions for end-devices, for instance a base station affecting devices to channels.
@@ -752,7 +752,7 @@ The five different transitions $(1)$, $(2)$, $(3)$, $(4)$, $(5)$ refer to the no
 
 
 % -----------------------------------------------------------------
-\subsection{The \Selfish{} approach: a heuristic for the ``no sensing case''}
+\subsection{The \Selfish{} heuristic for the ``no sensing case''}
 \label{sub:5:Selfish}
 
 Under observation model \modeltrois{} no sensing information is available and the previous algorithms cannot be used, as the sum of sensing information $S_k^j(t)$ and thus the empirical mean $\widehat{\mu}_k^j(t)$ cannot be computed, hence neither the indices $g_k^j(t)$. However, one can still define a notion of \emph{empirical reward} received from arm $k$ by player $j$, by introducing
@@ -1406,8 +1406,8 @@ with \MEGA{} \citep{Avner15} and \MusicalChair{} \citep{Rosenski16}. Yet these t
 %
 Figure~\ref{fig:5:MP__K9_M3_T123456_N100__8_algos} that they perform poorly in comparison to \rhoRand, \RandTopM{} and \MCTopM.
 %
-\MEGA{} needs a careful tuning of \emph{five} parameters ($c$, $d$, $p_0$, $\alpha$ and $\beta$) to attain reasonable performances. No good guideline for tuning them is provided and using cross validation, as suggested,
-can be considered out of the scope of online sequential learning.
+\MEGA{} needs a careful tuning of \emph{five} parameters ($c$, $d$, $p_0$, $\alpha$ and $\beta$) to attain reasonable performances. No good guideline for tuning them is provided and using \emph{cross validation}, as suggested by \cite{Avner15},
+can be considered out of the scope of \emph{online} sequential learning.
 %In practice, on a fixed instance, the authors do not indicate how to select the parameters, even with a perfect knowledge of the parameters ($\boldsymbol{\mu}$ and $T$).
 %
 \MusicalChair{} consists of a random exploration phase of length $T_0$ after which the players quickly converge to orthogonal strategies targeting the $M$ best arms. With probability $1-\delta$, its regret is proved to be ``constant'' (of order $\log(1/\delta)$). The theoretical minimal value for $T_0$ depends on $\delta$, on the horizon $T$ and on a lower bound $\epsilon$ on the gap $\Delta = \mu^*_M - \mu^*_{M+1}$, and the practical tuning is hard too. %% which are both unavailable in our setting.
@@ -1567,30 +1567,6 @@ can be considered out of the scope of online sequential learning.
   \label{fig:5:MP__K17_M6-12-17_T10000_N100__4_algos}
 \end{figure}
 
-
-
-% -----------------------------------------------------------------
-\section{Conclusion of our contributions}
-\label{sec:5:conclusion}
-% -----------------------------------------------------------------
-
-To sum up, we presented three variants of Multi-Player Multi-Arm Bandits,
-with different level of feedback being available to the decentralized players, under which we proposed efficient algorithms.
-For the two easiest models --with sensing--, our theoretical contribution improves both the state-of-the-art upper and lower bounds on the regret. In the absence of sensing, we also provide some motivation for the practical use of the interesting \Selfish{} heuristic, a simple index policy based on hybrid indices that are directly taking  into account the collision information.
-
-This work suggests several interesting further research directions.
-First, one could want to investigate the notion of \emph{optimal algorithms} in the decentralized multi-player model with sensing information. So far we provided the first matching upper and lower bound on the expected number of sub-optimal arms selections, which suggests some form of (asymptotic) optimality. However, sub-optimal draws turn out not be the dominant terms in the regret, both in our upper bounds and in practice, thus an interesting future work is to identify some notion of \emph{minimal number of collisions}. Second, it remains an open question to know if a simple decentralized algorithm can be as efficient as \MCTopM{} without knowing $M$ in advance, or in dynamic settings (when $M$ can change in time). One could start by proposing variants of our algorithm that are inspired by the \rhoRandEst{} variant of \rhoRand{} proposed by \cite{Anandkumar11}.
-Finally, one could want to strengthen the guarantees obtained in the absence of sensing, that is to know whether logarithmic regret is achievable and to have a better analysis of the \Selfish{} approach.  Indeed, in most cases, it performs comparably to \RandTopM{} even with limited feedback and without knowing the number of players $M$, which makes it a good candidate for applications to Internet of Things networks.
-
-
-% -----------------------------------------------------------------
-
-
-% \paragraph{Acknowledgments}
-% Thanks to Odalric-Ambrym Maillard at Inria Lille for useful discussions, and thanks to Christophe Moy at University Rennes 1.
-
-\paragraph{Reproducibility.}
-The page \texttt{SMPyBandits.GitHub.io/MultiPlayers.html} explains how to reproduce the experiments used for this Chapter.
 
 \begin{framed}
   \textcolor{red}{\textbf{FIXME}}

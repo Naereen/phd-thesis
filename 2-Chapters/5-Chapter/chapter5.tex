@@ -42,7 +42,8 @@ We include some numerical simulations to compare some of them, and we present in
 Another interesting extension of the studied model is to consider different channels utility for each devices. It is a very interesting extension of our model, as for instance the devices could be located on different parts of a building or a field and suffer from different mean qualities of access to each channels.
 This extension is not studied per say but we quickly review the existing literature, consisting in the two recent works \cite{Bistritz18,KaufmannAbbas19}, and we discuss the possible real-world usage of the existing algorithms.
 
-Finally, we review other extensions of our model, and give a overview of the current state-of-the-art as exhaustive as possible.
+Finally, we review other extensions of our model, and give a overview of the current state-of-the-art.
+For some extensions, we discuss how to adapt our proposal and illustrate the empirical performances of such modification of \MCTopM-\klUCB{}, leaving theoretical analyses as future works.
 
 
 \vfill{}
@@ -124,9 +125,7 @@ By calibrating $T_0$ based on $\delta$ (which needs prior knowledge of $T$) and 
 %
 Without giving more details, we let the interested refer to what is is explained for the algorithms presented in \cite{DarakHanawal18,JoshiKumar2018,KumarDarak2019}.
 %
-These works assume a prior knowledge of $\Delta$, or other measures of the difficulty of the problem, and as such we do not.
-FIXME
-\TODOL{FIXME écrire ça sans être méchant envers leurs travaux !}
+These works assume a prior knowledge of $\Delta$, or other measures of the difficulty of the problem, and as such we do not find them comparable with the approach chosen here.
 
 
 \paragraph{Two ideas to estimate $M$.}
@@ -494,7 +493,7 @@ The first work is \cite{NaparstekCohen17}, which proposes to use a decentralized
 % FIXME continue!
 
 %
-The work of \cite{AvnerMannor18} is discussed above for the case with communication between players, and their model is of high interest from the point-of-view of real-world wireless communication protocols.
+The work of \cite{AvnerMannor18} is discussed above for the case with communicating players, and their model is very interesting from the point-of-view of real-world wireless communication protocols.
 
 Finally, the very recent work of \cite{Zafaruddin2019} is the first one to present experiments of reinforcement learning done on simulated LTE and 5G channels.
 The mathematics behind their model are actually quite close to our model, but they explain it in terms of OFDMA and Quality-of-Service (QoS).
@@ -508,7 +507,7 @@ They prove a regret upper-bound of the order $R_T = \bigO{\log(T)}$, with no spe
 \label{sub:5:USRPdemos}
 
 Similarly to our demonstration of multi-armed bandit learning in an IoT network that we presented in the previous Chapter~\ref{chapter:4} in Section~\ref{sec:4:gnuradio},
-we list in this section some related works, dating back from $2016$, who proposed a similar approach.
+we list here some related works, dating back from $2016$, who proposed a similar approach.
 All the similar works that we are aware of also used USRP boards, and implemented the demonstration using either the Simulink and MATLAB softwares, or the GNU Radio software like we did \cite{Besson2018ICT}.
 
 In \cite{darak2016bayesian,Darak16}, the authors study the same model and focussed on the \RhoRand{} policy, which was the state-of-the-art back in $2016$, combined with \UCB{} or \klUCB, as well as an extension using Bayes-UCB from \cite{Kaufmann12BUCB}.
@@ -597,13 +596,38 @@ Despite being more complicated than other approaches, their algorithm ``\texttt{
 % ----------------------------------------------------------------------------
 \section{Conclusion}
 \label{sec:5:conclusion}
+% -----------------------------------------------------------------
 
-In this chapter, we saw...
+To sum up, we presented in this Chapter three variants of Multi-Player Multi-Arm Bandits,
+with different level of feedback being available to the decentralized players, under which we proposed efficient algorithms.
+For the two easiest models --with sensing--, our theoretical contribution improves both the state-of-the-art upper and lower bounds on the regret. In the absence of sensing, we also provide some motivation for the practical use of the interesting \Selfish{} heuristic, a simple index policy based on hybrid indices that are directly taking  into account the collision information.
+%
+We also reviewed various variants of this model, and for some interesting variants we discussed the related literature, which has proved to be very active in the last two years. For some models, we explained why our approach does not work efficiently without modifications, but we detailed and illustrated how to adapt our proposal \MCTopM{} to other settings.
+For example, it assumes to know the number of players $M$ before-hand, but we illustrated that previously introduced technique to estimate $M$ can also be applied to our proposal and give satisfactory empirical performances.
+Further works would be required to adapt our theoretical analysis to these various extensions.
 
-Future works include...
+This Chapter suggests several interesting further research directions.
+First, one could want to investigate the notion of \emph{optimal algorithms} in the decentralized multi-player model with sensing information. So far we provided the first matching upper and lower bound on the expected number of sub-optimal arms selections, which suggests some form of (asymptotic) optimality. However, sub-optimal draws turn out not be the dominant terms in the regret, both in our upper bounds and in practice, thus an interesting future work is to identify some notion of \emph{minimal number of collisions}.
+Similarly to what was done very recently in \cite{wang2019distributed} for communication between players who collaborate with each other, it would be interesting to characterize the number of collisions needed to achieve logarithmic regret.
+
+% Second, it remains an open question to know if a simple decentralized algorithm can be as efficient as \MCTopM{} without knowing $M$ in advance, or in dynamic settings (when $M$ can change in time). One could start by proposing variants of our algorithm that are inspired by the \rhoRandEst{} variant of \rhoRand{} proposed by \cite{Anandkumar11}.
+% Finally, one could want to strengthen the guarantees obtained in the absence of sensing, that is to know whether logarithmic regret is achievable.
 
 
-\newpage  % FIXME
+% -----------------------------------------------------------------
+
+
+% \paragraph{Acknowledgments}
+% Thanks to Odalric-Ambrym Maillard at Inria Lille for useful discussions, and thanks to Christophe Moy at University Rennes 1.
+
+\paragraph{A note on the simulation code.}
+%
+All the experiments used for this chapter were performed using SMPyBandits,
+and we refer to the following page for details on how to reproduce them,
+\texttt{SMPyBandits.GitHub.io/MultiPlayers.html}
+
+
+\newpage
 % ----------------------------------------------------------------------------
 \section{Appendix}
 \label{sec:5:appendix}
