@@ -197,7 +197,8 @@ Boursier and Perchet studied this question in the summer $2018$ following its pu
 Their answer is that the model without sensing information is essentially not harder than the model with sensing information.
 %
 Similarly, Lugosi and Mehrabian studied the same problem \cite{LugosiMehrabian18}.
-In both works, the authors detail algorithms that are unfortunately suboptimal empirically, but give in both cases a logarithmic regret if $M \leq K$ players all independently implement the proposed algorithm.
+In both works, the authors detail algorithms that give in both cases a logarithmic regret if $M \leq K$ players all independently implement the proposed algorithm.
+
 
 \paragraph{The ``communication trick''.}
 %
@@ -227,7 +228,7 @@ For the same example, the ``doubling trick'' technique can be used to obtain a r
 They also study in Section~4.3 an extension of the model for the case with more players than arms, but we do not give more details on this aspect. Their definition of a centralized regret for this case is an interesting and natural generalization of our definition, and they also proposed an algorithm achieving $\bigO{M K \log(T) \exp(4M/K) / \Delta^2}$ regret in this case.
 Finally, they also proposed in Section~4.4 an extension of their algorithm to estimate the number of players $M$, which is analyzed as for the Musical Chair algorithm in \cite{Rosenski16}, and also achieve logarithmic regret.
 Note that it is significantly harder to estimate $M$ without collision information, and Algorithm~3 in page 24 is quite complex.
-We did not implement it, and it is an interesting future work to run some numerical simulations in order to validate it empirically.
+We did not implement it, and it would be interesting to run some numerical simulations in order to validate it empirically.
 
 
 \paragraph{About \Selfish-\UCB{} inefficiency.}
@@ -243,10 +244,10 @@ They prove that it is unlikely to encounter any of these ``tie breaking points''
 To illustrate the difficulty of the ``no sensing'' case, we illustrate here the performances of different algorithms designed specifically for this setting.
 As above, we consider a bandit problem with $K=9$ arms, of means $0.1,0.2,\dots,0.8,0.9$, and three different cases of $M=3,6,9$ players, for $100$ independent repetitions and an horizon of $T=10000$.
 We include the \Selfish-\klUCB{} algorithm as an heuristic, as well as the Improved \MusicalChair{} algorithm from \cite{LugosiMehrabian18} and \textsc{Sic-MMAB} from \cite{BoursierPerchet18}.
-The centralized multiple-play \klUCB{} is included as an unrealistic efficient baseline, but it is interesting to also add it here, as it does not use the sensing information but only the joint information (the reward) $r^j(t)$, because it directly affects the player in an orthogonal configuration and thus never encounters any collision (thus $r^j(t)=Y_{t,A^j(t)}$ for each $j,t$).
+The centralized multiple-play \klUCB{} is included as an unrealistic efficient baseline, but it is interesting to also add it here, as it does not use the sensing information but only the joint information (the reward) $r^j(t)$, as it directly affects the player in an orthogonal configuration and thus never encounters any collision (thus $r^j(t)=Y_{t,A^j(t)}$ for each $j,t$).
 %
 For the two other algorithms, we use the parameters advised in all papers: for \textsc{Sic-MMAB}, we used $T_0 = \lceil K \log(T) \rceil$ as advised by the authors.
-For Improved-MC, we used $c=1$ which gives $g=235$, whereas in the paper the authors use $c=128$ for their analysis. We found empirically no difference when using different values of the constant $c$ or $g$, and unfortunately the regret of Improved-MC was always found to be linear (\eg, $12150$ for $T=10000$).
+For Improved-MC, we used $c=1$ which gives $g=235$, whereas in the paper the authors use $c=128$ for their analysis. We found empirically no difference when using different values of the constant $c$ or $g$, and unfortunately the regret of Improved-MC was always found to be linear\footnote{For instance Improved-MC obtained a mean regret $12150$ for $T=10000$, for $M=3,K=9$, but seeing one value for one horizon does not mean anything, however we also experimented with larger values of $T$ and found a same linear behavior.}.
 
 % for T in 10000; do for K in 9; do for N in 4 100; do for M in 3 6 9; do DEBUG=False N_JOBS=4 N=$N K=$K M=$M T=$T make --noFreeSMS moremulti && cp logs/main_multiplayers_more_py3_log.txt logs/main_multiplayers_more_py3_log__K${K}_N${N}_M${M}_T${T}_$(date +"%d-%m-%Y_%H-%M-%S").txt && FreeSMS.py "Done for simulations for $K arms, $M players, T=$T N=$N and lots algorithms for experiments for Chapter 5 of my PhD. Love from Rennes."; done; done; done; done
 
@@ -254,7 +255,7 @@ We give in Table~\ref{table:5:meanRegretSimulationsNoSensing}, we give the mean 
 We were unable to find any bug in our implementation of Improved \MusicalChair{} from \cite{LugosiMehrabian18} and all the different tuning of $c$ (or $g$) explored gave the same disappointing result (linear regret).
 The \textsc{Sic-MMAB} algorithm performs better than the \Selfish{} heuristic for the extreme case of $M=K$, but its large regret in this case shows that the orthogonalization protocol developed by \cite{BoursierPerchet18} is not fast to converge (for illustration, for the same problem for $M=K=9$ for the ``sensing'' case, \MCTopM-\klUCB{} achieves a mean regret of about $40$, two orders of magnitude smaller!).
 %
-Further empirical evaluation would be needed to fully understand the situation, and a first future work would be to fix the algorithm proposed by \cite{LugosiMehrabian18} and illustrate in some problems that it can indeed achieve sub-linear regret (maybe it does but only for large horizons, even if we did try larger values of $T$ like up-to $T=200000$).
+Further empirical evaluation would be needed to fully understand the situation, and a first future work would be to either fix our implementation of the algorithm proposed by \cite{LugosiMehrabian18} or propose an efficient modification, and illustrate in some problems that it can indeed achieve sub-linear regret (maybe it does but only for large horizons, even if we did try larger values of $T$ like up-to $T=200000$).
 
 \begin{table}[ht]
     % \begin{footnotesize}
@@ -335,7 +336,7 @@ What we are interested here is an extension of our model where players can send 
 
 Clearly, the problem is easier by allowing communication, and it is quite immediate to see that the communication capacity between players must be limited otherwise the problem is already known and solved.
 Indeed, imagine that at each time step $t$, all the $M$ players could share an unbounded number of bits with the other players, at no cost, even if this hypothesis is clearly unrealistic for wireless networks.
-Then they can share all their observations, and they can all run the same multiple-plays MAB algorithm \cite{Anantharam87a} (in a deterministic way), like for instance the extension of Thompson sampling for multiple-plays studied in \cite{Komiyama15}, or extensions of \KLUCB{} from \cite{Luedtke16}.
+Then they can share all their observations, and they can all run the same multiple-plays MAB algorithm \cite{Anantharam87a}, like for instance the extension of Thompson sampling for multiple-plays studied in \cite{Komiyama15}, or extensions of \KLUCB{} from \cite{Luedtke16}.
 In this setting, a logarithmic regret is obtained easily, and the regret upper-bound of the two aforementioned algorithms asymptotically achieve the lower-bound from \cite{Anantharam87a}.
 
 An interesting extension is thus to limit the communication between players, either to a small number of bits, or just one bit, at every or only some time steps.
@@ -383,7 +384,7 @@ However, this negative results depends on how arrival of players are modeled:
 if an arriving player has no prior memory of the previous observations, \ie, if it model a new device, then if there is no restriction on the number or frequency of arrival or departures, we can most likely prove that sub-linear regret is not achievable in general.
 A simple but extreme example shows that regret has to be linear for any bandit strategy (in the observation model with sensing).
 Consider $K=2$ Bernoulli-distributed arms of means $\mu_1=\mu_2=1/2$, and one player is always active and play any bandit strategy (\eg, \MCTopM-\klUCB).
-Every time step, another player is either arriving, without any knowledge of the problem (\eg, it is a fresh and new IoT device). Then no matter the strategy of these news players, even if they all play \MCTopM-\klUCB{} for instance, if they player a uniformly-efficient strategy there is a non-zero probability that player $1$ suffer from a collision at each time step, thus resulting in linear centralized system regret.
+Every time step, another player is either arriving, without any knowledge of the problem (\eg, it is a fresh and new IoT device). Then no matter the strategy of these news players, even if they all play \MCTopM-\klUCB{} for instance, if they play a uniformly-efficient strategy there is a non-zero probability that player $1$ suffer from a collision at each time step, thus resulting in linear centralized system regret.
 
 In \cite{Rosenski16}, it is assumed that the players all know a lower-bound $L$ on the length of all the intervals during which arrival or departures of players are allowed.
 A naive idea, if $L$ is large enough, is simply to restart the underlying algorithm every $L$ time steps, in order to directly benefit from the theoretical guarantees of the ``static setting'' (where $M$ stays constant).
