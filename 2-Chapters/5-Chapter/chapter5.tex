@@ -374,7 +374,7 @@ As reminded above, our model assumes the number of players $M$ remain fixed duri
 However, in real-world wireless networks, when players model communicating devices connected to a single gateway, devices can arrive or leave the network at any time.
 The existing previous work on multi-player bandit models are all motivated by possible applications to wireless networks, but most of them assume $M$ to be fixed.
 The first work studying the relaxation of this hypothesis is \cite{Rosenski16}, where this case is called the ``dynamic setting''.
-If the arrival or departures of players is not random, but determined in advance while still being unknown to any player, the natural notion of regret is the following, where the expectancy $\E[\bullet]$ is capturing the randomness in the rewards (\ie, sensing) as well as in the players' decisions (\ie, collisions):
+If the arrival or departures of players is not random, but determined in advance while still being unknown to any player, the natural notion of regret is the following, where the expectancy $\E[\bullet]$ is capturing the randomness in the sensing information, as well as in the players' decisions (\ie, collisions):
 \begin{equation}\label{eq:5:defRegretDynamicSetting}
     R_T^{\text{dyn}} = \sum_{t=1}^T \sum_{k=1}^{M(t)} \mu^*_{k} - \E\Bigl[ \sum_{t=1}^T \sum_{j=1}^{M(t)} r^j(t) \Bigr].
 \end{equation}
@@ -419,26 +419,62 @@ If all arriving players are using their \textsc{Dyn-MMAB} algorithm, the ``dynam
 \subsection{With different arm utilities among players}
 \label{sub:5:withDifferentMeansAmongPlayers}
 
-\TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
+In the multi-player model presented in this chapter, we assume that the arm distributions are the same for all the players.
+For cognitive radio applications, where arms model channels and players are radio devices, it can be unrealistic to consider that two players, maybe located at different distances from the gateway or equipped with different hardwares, encounter the same mean quality when accessing the same channel.
+%
+Motivated by this weakness, some researchers studied an interesting extension of our model of interest, considering multi-player MAB models with different arms distributions among players.
+%
+Starting in 2012 by \cite{Kalathil12} where arms are Markov chain, this model was studied more actively recently, \cite{DarakHanawal18,Bistritz18,KaufmannAbbas19,Tibrewal2019}.
 
-\cite{Bistritz18}
+In such models, instead of considering $K$ arms characterized by a vector of distributions, $(\nu_k)_{1\leq k \leq K}$, if there is $M$ players we consider a \emph{matrix of distributions}, $(\nu_k^j)_{1 \leq k \leq K, 1 \leq j \leq M}$. Two users $j$ and $j'$ can experience different utilities for the same arm $k$, \ie, $\nu_k^{j} \neq \nu_k^{j'}$.
+The goal stays the same, each player wants to maximize its cumulated reward, with or without explicit communications between players, with or without sensing information, but always without central supervision.
+%
+Like before, maximizing the rewards of each player simultaneously is maybe not possible.
+As soon as the matrix is not invariant under permutation of the users, the problem nature changes fundamentally:
+instead of finding an optimal orthogonal assignment of the $M$ players to the \Mbest{} arms,
+the goal of the system is now to reach an equilibrium position, also referred to as a stable marriage.
+Assignment are also called matching, and total (mean) reward of an assignment is its utility.
+Such equilibrium position means that the utility obtained by the $M$ player cannot be increased by swapping two users.
+Indeed imagine just $M=3$ players and $K=3$ arms, and Bernoulli distributions of means $[0.1, 0.5, 0.5]$, $[0.1, 0.5, 0.5]$ and $[0.9, 0.5, 0.1]$ for player $1$, $2$ and $3$. Then two optimal affectations of players to arms are $[3,2,1]$ or $[2,3,1]$, both giving the same utility of $1.9$.
 
-\cite{KaufmannAbbas19}
+In this extension, performance is still evaluated by a system regret, now defined as the difference between the sum of the cumulated rewards by the $M$ players, and the utility of any matching.
+The question is to possible to obtain a logarithmic --or even sub-linear-- regret in this problem is more difficult that for the model presented in Section~\ref{sec:5:model}.
+This question was first answered in \cite{Bistritz18}, and proposed an algorithm based on alternating three phases, and increasing their lengths after the end of each epoch ($2^p$ for the $p$-th epoch).
+First, players explore in order to estimate the expectations of the arm rewards ; then players use their ``Game of Thrones'' dynamics (inspired by Musical Chair \cite{Rosenski16}) and play the optimal solution most of the time ; finally players play the action they played most of the time in the recent GoT phases.
+% combining Musical Chair with an epoch-based alternative phases of forced exploration and pure exploitation.
+They analyse their ``Game of Thrones'' algorithm and proved that it achieves a regret of $\cO((\log(T))^{2+\kappa})$ for any positive constant $\kappa$, as small as possible, if $\kappa$ is known by the algorithm.
 
+Until the very recent work of \cite{KaufmannAbbas19}, it was unknown if a logarithmic regret was possible.
+They proposed an algorithm that is based on two phases: first, players will learn $M$ and learn orthogonal ranks, using the ``communication trick'' by \cite{BoursierPerchet18}, and then one player is elected as a leader and the others are followers.
+This second step, after initialization, is also using epoch of increasing lengths $2^p$.
+Until the optimal solution, each epoch is alternating three phases.
+Followers start by a Round-Robin uniform exploration with no collision, then they use the ``communication trick'' to communicate their samples to the leader, and finally they start an exploitation phase until the end of the game if the leader player tells them so.
+The leader can thus collect enough samples from all arms and all players, and is able to solve iteratively the stable marriage problem, and sends back the successive estimate of the solution to the players.
+%
+In the easier case when their is a unique optimal matching, their algorithm Multiplayer Explore-Then-Commit (M-ETC) is the first one to achieve logarithmic regret, in the form of $R_T = \cO(M K \log(K T) + K M^3 \log(M K T) / \Delta) + K M^2 (\log(M \log(K T) / \Delta))^2$, if $\Delta$ is defined as the gap between the utility of the best matching and the utility of that of the matching with second best utility.
+In the generic case, their algorithm M-ETC with Elimination achieves a regret of $\cO((\log(T))^{2+\kappa})$ for any positive constant $\kappa$.
 
+% \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
 
+Finally, we note that previous works all focussed on the ``sensing'' case, but most likely sub-linear regret can be achieve by decentralized algorithms that leverage the same techniques as introduced by \cite{BoursierPerchet18,LugosiMehrabian18} for the ``no sensing case''.
+%
+We conclude by noting that this model was recently studied by two very recent other works, \cite{DarakHanawal18,Tibrewal2019}, who obtained results comparable to the results from the two works presented above.
+They both also study the case of dynamic settings, with arrival or departures of players, as presented in Section~\ref{sub:5:arrivalDepartures}.
+Both articles \cite{DarakHanawal18,Tibrewal2019} use the terminology of ad-hoc networks, and they compare empirically their proposal with some previous works, while \cite{KaufmannAbbas19} do not include numerical simulations, and while \cite{Bistritz18} illustrate the performance of their GoT algorithm on a simple example, they do not compare with other algorithms.
+%
+It would be interesting to compare empirically all the different approaches.
+Another interesting directions are to study the possible extension of this model with different arm utilities by players to the non-stationary case, or real-world validation of such decentralized algorithms in real IoT networks.
 
-Distributed Learning and Stable Orthogonalization in Ad-Hoc Networks with Heterogeneous Channels
-Sumit J Darak, Manjesh K. Hanawal
-https://arxiv.org/pdf/1812.11651
-\cite{DarakHanawal18}
+% Distributed Learning and Stable Orthogonalization in Ad-Hoc Networks with Heterogeneous Channels
+% Sumit J Darak, Manjesh K. Hanawal
+% https://arxiv.org/pdf/1812.11651
+% \cite{DarakHanawal18}
 
-
-Distributed Learning and Optimal Assignment in Multiplayer Heterogeneous Networks
-H Tibrewal, S Patchala, MK Hanawal
-https://arxiv.org/pdf/1901.03868.pdf
-\cite{Tibrewal2019}
-``The channel characteristics are unknown  and  could  be  different  for  each  user  (heterogeneous)''
+% Distributed Learning and Optimal Assignment in Multiplayer Heterogeneous Networks
+% H Tibrewal, S Patchala, MK Hanawal
+% https://arxiv.org/pdf/1901.03868.pdf
+% \cite{Tibrewal2019}
+% ``The channel characteristics are unknown  and  could  be  different  for  each  user  (heterogeneous)''
 
 
 % ----------------------------------------------------------------------------
@@ -457,7 +493,7 @@ and their analysis shows that when the SUs faithfully implement proposed algorit
 They validate their claims through exhaustive synthetic experiments and also through a realistic USRP.
 Their synthetic experiments consider different cases, for different values of $K$ the number of channels, $M$ the number of players and $J$ the number of jammers.
 
-\TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
+% \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
 
 
 % ----------------------------------------------------------------------------
@@ -585,6 +621,8 @@ Despite being more complicated than other approaches, their algorithm ``\texttt{
     - and incorporate also the detected change-points by B-\GLR{} test in the orthogonalization procedure: after any change-point, the player is not sitting anymore.
     - Modification: only a change-point on the arm on which player is sitting can make him move? It's already the case: the \GLR{} test can only detect change-point on an arm that was played, and the \MCTopM{} orthogonalization procedure forces to play the same arm as long as the player is sitting.
 }
+
+\TODOL{Je peux faire des expériences pour cette approche, est-ce que j'en fais ? Ici, ou à la fin du chapitre 6 ? Ou en conclusion ?}
 
 
 % ----------------------------------------------------------------------------
