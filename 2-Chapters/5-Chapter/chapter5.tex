@@ -490,10 +490,10 @@ All the similar works that we are aware of also used USRP boards, and implemente
 
 In \cite{darak2016bayesian,Darak16}, the authors study the same model and focussed on the \RhoRand{} policy, which was the state-of-the-art back in $2016$, combined with \UCB{} or \klUCB, as well as an extension using Bayes-UCB from \cite{Kaufmann12BUCB}.
 Their idea is to use the same skeleton as \RhoRand, that is to assign a \emph{rank} to each player, and make players change their rank after any collision. But instead of selecting a new rank uniformly at random among $\{1,\dots,M\}$, they proposed to use a ``second-stage'' learning policy\footnote{This is a very natural idea: use a bandit algorithm to balance the exploration/exploitation aspect of rank selection, instead of a random hoping.}, based on Bayes-UCB, to (try to) learn the best rank while still exploring each rank from time to time.
-This algorithm is implemented in SMPyBandits and named \texttt{rhoLearn}\footnote{See \href{https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoLearn.html}{\texttt{SMPyBandits.github.io/docs/PoliciesMultiPlayers.rhoLearn.html}} for its documentation.}, where it can use Bayes-UCB or any of the $65$ or more bandit algorithms available in the library.
+This algorithm is implemented in SMPyBandits and named \rhoLearn\footnote{See \href{https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoLearn.html}{\texttt{SMPyBandits.github.io/docs/PoliciesMultiPlayers.rhoLearn.html}} for its documentation.}, where it can use Bayes-UCB or any of the $65$ or more bandit algorithms available in the library.
 Even if no theoretical guarantee backs up this idea of second-stage learning with Bayes-UCB, empirical simulations found that it can be efficient.
 We illustrate this in Table~\ref{table:5:comparisonRhoRandRhoLearn} below, where we consider the same problem as described above in Section~\ref{sub:5:withoutSensing} (Table~\ref{table:5:meanRegretSimulationsNoSensing}).
-The first \texttt{rhoLearn} uses \klUCB{}, Bayes-UCB or Exp3 for the second-stage learning,
+The first \rhoLearn uses \klUCB{}, Bayes-UCB or Exp3 for the second-stage learning,
 and we include both the centralized multi-play version of \klUCB{} and our proposal \MCTopM-\klUCB{} for comparison.
 
 % DONE run the simulations with N=100 and not N=4
@@ -508,14 +508,14 @@ and we include both the centralized multi-play version of \klUCB{} and our propo
         \hline
         \RhoRand-\klUCB{} & $417 \pm 103$ & $2481 \pm 449$ & $6639 \pm 1035$ \\
         \hline
-        \texttt{rhoLearn}-\klUCB{} + \klUCB{} & $546 \pm 190$ & $1172 \pm 295$ & $1416 \pm 347$ \\
-        \texttt{rhoLearn}-\klUCB{} + Bayes-UCB & $561 \pm 219$ & $1204 \pm 394$ & $1363 \pm 331$ \\
-        \texttt{rhoLearn}-\klUCB{} + Exp3 & $529 \pm 175$ & $1659 \pm 331$ & $5134 \pm 976$ \\
+        \rhoLearn-\klUCB{} + \klUCB{} & $546 \pm 190$ & $1172 \pm 295$ & $1416 \pm 347$ \\
+        \rhoLearn-\klUCB{} + Bayes-UCB & $561 \pm 219$ & $1204 \pm 394$ & $1363 \pm 331$ \\
+        \rhoLearn-\klUCB{} + Exp3 & $529 \pm 175$ & $1659 \pm 331$ & $5134 \pm 976$ \\
         \hline
         \MCTopM-\klUCB{} & $244 \pm 39$ & $401 \pm 55$ & $44 \pm 13$ \\
         \hline
     \end{tabular}
-    \caption{Comparison of \RhoRand{} and \texttt{rhoLearn} for a simple multi-player bandit problem with $K=9$ arms.}
+    \caption{Comparing \RhoRand{} and \rhoLearn on a simple MP bandit problem with $K=9$ arms.}
     \label{table:5:comparisonRhoRandRhoLearn}
 % \end{footnotesize}
 \end{table}
@@ -533,8 +533,9 @@ More recent works by the same team, \cite{KumarYadav2018,SawantKumar2018,JoshiKu
 \subsection{Towards non-stationary multi-players MAB models}
 \label{sub:5:towardsNonStationaryModels}
 
-Since the beginning of this thesis, all the studied bandit problems were stationary: the rewards coming from choosing arm $k$ are all \iid{} and follow the same distribution $\nu_k$.
-The next Chapter~\ref{chapter:6} is focussed on a relaxation of this hypothesis, the piece-wise stationary bandit model.
+Since the beginning of this thesis, all the studied bandit problems were stationary: the rewards coming from choosing arm $k$ are \iid{} and follow the same distribution $\nu_k$.
+The next Chapter~\ref{chapter:6} is focussed on the piece-wise stationary bandit model, a relaxation of this hypothesis.
+
 When we were working on multi-players bandits in Autumn $2017$ \cite{Besson2018ALT}, we left the study of the piece-wise stationary case as a future work, and shortly after we were excited to see that two independent works tackling this question were published, in December $2018$ and in February $2019$.
 Without diving too much into the details, we review here these two works.
 Without a more serious analysis, we conjecture that it should not be difficult to merge the regret lower-bound for stationary \emph{multi-players} MAB (Theorem~\ref{thm:5:BetterLowerBound}) and the lower-bound for \emph{piece-wise stationary} single-player MAB from \cite{Garivier11UCBDiscount}.
@@ -543,7 +544,10 @@ We conjecture that any reasonable decentralized bandit algorithm must suffer a r
 On the first hand, piece-wise stationary multi-players MAB can be tackled by extending algorithms developed for the single-player case.
 In \cite{WeiSrivastava18Distributed}, the authors study exactly the same multi-players bandit model as our model, and they propose two distributed algorithms that can efficiently be used by $M \leq K$ players to achieve sub-linear regret for piece-wise stationary problems, essentially by considering it as a harder case of a stationary problem. \\
 \indent
-If $\Upsilon_T$ is bounded by $\Upsilon_T = \bigO{T^{\gamma}}$, for a known $\gamma$ but an unknown $\Upsilon_T$, they prove for instance in Theorem~2 that the expected cumulative regret of their RR-SW-UCB\# algorithm is bounded by $R_T = \bigO{T^{\frac{1+\gamma}{2}} \log(T)}$ (what we call the centralized system regret).
+The proposed the RR-SW-UCB\# algorithm, which combines their SW-UCB\# algorithm, previously proposed in \cite{WeiSrivastava18Abruptly}, and a Round-Robin hoping, under the assumption that each user $j\in\{1,\dots,M\}$ knows its ID $j$ (see above the discussion we give on this unrealistic assumption).
+The SW-UCB\# algorithm is discussed more in details in the literature review of Chapter~\ref{chapter:6} below.
+%
+If $\Upsilon_T$ is bounded by $\Upsilon_T = \bigO{T^{\gamma}}$, for a known $\gamma$ but an unknown $\Upsilon_T$, they prove for instance in Theorem~2 \cite{WeiSrivastava18Distributed} that the expected cumulative regret of their RR-SW-UCB\# algorithm is bounded by $R_T = \bigO{T^{\frac{1+\gamma}{2}} \log(T)}$ (what we call the centralized system regret).
 This bound is of the same order as the bound obtained by the same authors for the SW-UCB\# algorithm in \cite{WeiSrivastava18Abruptly} for the single-player case.
 If $\Upsilon_T = \bigO{T^{\gamma}}$, this bound is comparable to the results obtained for most of the research literature on piece-wise stationary bandits (earlier works like D-UCB in \cite{Garivier11UCBDiscount} have the $\log(T)$ outside the square root, while more recent works all improved this aspect and have the $\log(T)$ in the square root, like for instance our proposals \GLRklUCB{} in \cite{Besson2019GLRT} and presented in Chapter~\ref{chapter:6}).
 Even if their analysis is not explicit regarding the constant, in the case where $\Upsilon_T = \bigO{T^{\gamma}}$ for a known $\gamma$, their regret upper-bound actually matches our conjectured lower-bound, up to a logarithmic factor $\log(T)$. \\
@@ -552,10 +556,10 @@ Even if their analysis is not explicit regarding the constant, in the case where
 And finally, even though numerical simulations in their papers \cite{WeiSrivastava18Abruptly,WeiSrivastava18Distributed} are interesting and confirm the regret upper-bounds, they do not compare with any other algorithm, and it is left as an interesting future work to study this direction in more details.
 Sadly, a major drawback of their work is that assume that player $j\in\{1,\dots,M\}$ knows its index $j$, and as we explained above this small hypothesis is actually quite strong, as it allows players to be already orthogonal, and it reduces greatly the difficulty of the decentralized bandit problem.
 
-On the other hand, another possible is to extend ideas developed for the adversarial setting.
+On the other hand, another possibility is to extend ideas developed for the adversarial setting.
 In \cite{AlaturLevyKrause19}, the authors essentially consider the piece-wise stationary as an easier case of an adversarial problem. \\
 \indent
-They build on the \MusicalChair{} algorithm from \cite{Rosenski16}, to let the $M$ players converge to a ranking in an efficient and decentralized way (cf. Algorithm 1), and on they apparently rediscovered the ``communication trick'' independently from \cite{BoursierPerchet18} to use communications between players to set up a ``coordinator'' player and $M-1$ ``followers'' (running respectively their Algorithms 2 and 3).
+They build on the \MusicalChair{} algorithm from \cite{Rosenski16}, to let the $M$ players converge to a ranking in an efficient and decentralized way (cf. Algorithm 1), and they apparently discovered the ``communication trick'' independently from \cite{BoursierPerchet18} to use (virtual) communications between players to set up a ``coordinator'' player and $M-1$ ``followers'' (running respectively their Algorithms 2 and 3).
 %
 Their key algorithmic technique is to imitate the idealized case where there is full communication between the players. Then, to address the no-communication constraint, we enforce the players to keep the same decisions (arms) within long periods of time (blocks). This gives them the chance to coordinate between themselves via a simple protocol that uses collisions as a primitive, yet effective manner of communication.\\
 %
@@ -574,13 +578,20 @@ In this second work also, we can note the poor experimental section, as the prop
 Despite being more complicated than other approaches, their algorithm ``\texttt{C \& P}'' should not be too hard to implement ourself, and studying its empirical performances is an interesting future work.
 
 
+\TODOL{Explain that we think the following approach can work very efficiently:
+
+    - Combine \MCTopM{} with \GLRklUCB{} instead of \klUCB,
+    - and incorporate also the detected change-points by B-\GLR{} test in the orthogonalization procedure: after any change-point, the player is not sitting anymore.
+    - Modification: only a change-point on the arm on which player is sitting can make him move? It's already the case: the \GLR{} test can only detect change-point on an arm that was played, and the \MCTopM{} orthogonalization procedure forces to play the same arm as long as the player is sitting.
+}
+
 
 % ----------------------------------------------------------------------------
 \subsection{A note on SMPyBandits}
 
 We have implemented in SMPyBandits \cite{SMPyBandits} the following extensions: evaluating $M$ on the fly (Section~\ref{sub:5:unknownNumberOfPlayers}), piece-wise stationary multi-player bandits (Section~\ref{sub:5:towardsNonStationaryModels}).
 We have not yet implemented the other extensions of our model in SMPyBandits, but we are interested to do it, and it is one of the major future work left on our library.
-For more details, see the issue ticket open at \href{https://github.com/SMPyBandits/SMPyBandits/issues/}{\texttt{GitHub.com/SMPyBandits/SMPyBandits/issues/}}: \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}.
+For more details, see the issue tickets at \href{https://github.com/SMPyBandits/SMPyBandits/issues/}{\texttt{GitHub.com/SMPyBandits/SMPyBandits/issues/X}}, for tickets number \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}.
 
 
 
@@ -616,7 +627,7 @@ Similarly to what was done very recently in \cite{wang2019distributed} for commu
 %
 All the experiments used for this chapter were performed using SMPyBandits,
 and we refer to the following page for details on how to reproduce them,
-\texttt{SMPyBandits.GitHub.io/MultiPlayers.html}
+\href{https://SMPyBandits.GitHub.io/MultiPlayers.html}{\texttt{SMPyBandits.GitHub.io/MultiPlayers.html}}
 
 
 \newpage
