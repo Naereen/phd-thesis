@@ -119,7 +119,7 @@
 
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
-\subsection{Lower Bound: Proof of Theorem~\ref{thm:5:BetterLowerBound}}
+\subsection{Lower bound: proof of Theorem~\ref{thm:5:BetterLowerBound}}
 \label{proof:5:BetterLowerBound}
 
 The lower bound that we present relies on the following \emph{change-of-distribution} lemma that we prove in the next section, following recent arguments from \cite{Garivier16TrueShape} that have to be adapted to incorporate the collision information.
@@ -636,125 +636,125 @@ for all $A \in \sigma(\cO_T)$, in particular for all $A \in \cF^j_T$.
 
 
 
-% -----------------------------------------------------------------
-% -----------------------------------------------------------------
-\subsection{Additional discussions on \Selfish}
-\label{app:5:SelfishFails}
+% % -----------------------------------------------------------------
+% % -----------------------------------------------------------------
+% \subsection{Additional discussions on \Selfish}
+% \label{app:5:SelfishFails}
 
-\TODOL{Maybe we can completely remove this, and just points to the paper \cite{Besson2018ALT}?}
+% \TODOL{Maybe we can completely remove this, and just points to the paper \cite{Besson2018ALT}?}
 
-% OBSERVATION
-% Empirically it works fine in average of regrets on lots of simulations, but on worst case regret (or in a histogram) we can see it does not have a logarithmic average regret
-%
-% BAD
-% Explain on a small example ($K=2, M=3$ or $K=M=2$) that we found both manually, empirically and with a formal game tree exploration a small probability of failure, for both \Selfish-\UCB{} and \Selfish-\klUCB...
-%
-% a small probability of failure... $K=2, M=3$ or $K=M=2$. (idée: comparer \Selfish{} et \rhoRand{} en terme d'histogramme de la distribution de $R_T$)
-%
-% DONE estimer la proba ? ou la calculer avec le calcul formel ? ca c'est fait c'est bon
-%
-% a curiosity: when $K=M=2$ and $\mu_1 = \mu_2$, using \Selfish{} KL-UCB does orthogonalize !
+% % OBSERVATION
+% % Empirically it works fine in average of regrets on lots of simulations, but on worst case regret (or in a histogram) we can see it does not have a logarithmic average regret
+% %
+% % BAD
+% % Explain on a small example ($K=2, M=3$ or $K=M=2$) that we found both manually, empirically and with a formal game tree exploration a small probability of failure, for both \Selfish-\UCB{} and \Selfish-\klUCB...
+% %
+% % a small probability of failure... $K=2, M=3$ or $K=M=2$. (idée: comparer \Selfish{} et \rhoRand{} en terme d'histogramme de la distribution de $R_T$)
+% %
+% % DONE estimer la proba ? ou la calculer avec le calcul formel ? ca c'est fait c'est bon
+% %
+% % a curiosity: when $K=M=2$ and $\mu_1 = \mu_2$, using \Selfish{} KL-UCB does orthogonalize !
 
-As said before, analyzing \Selfish{} is harder,
-but for instance one can prove that it yields constant
-collisions and regret for the trivial case of $\mu_1=\mu_2=1$ and $M=2$.
-%
-Empirically, when \Selfish{} is compared to the other algorithms,
-% with \UCB{} or \klUCB{} indices,
-% and the average regret is considered (for let say $1000$ repetitions),
-it is hard to find a case when \Selfish{} performs badly, as its (empirical average) regret always appeared logarithmic.
-%
-But an issue of only visualizing the empirical average regret for a certain number of repetitions is
-that if a certain ``bad'' run happens only with small probability, it is possible that it never happened
-in a simulation, or that it happened a few times but not enough to make the average regret look non-logarithmic\footnote{For instance, $0.999 \log(T) + 0.001 T$ looks more like $\log(T)$ than $T$ so an event yielding linear regret with ``small'' probability $10^{-3}$ cannot be observed from a plot showing the average regret.}.
-%
-This is why the distribution of regret, at the end of the simulations, $R_T$, is also displayed (in Appendix~\ref{app:5:moreplots}).
-%
-In a simple problem, with $M=2$ or $M=3$ players competing for $K=3$ arms,
-for instance with means $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$,
-the histogram in Figure~\ref{fig:5:selfish_fail1} shows that with a small probability, the regret $R_T$ of \Selfish-\klUCB{} is not small (and appears linear).
-%
-%
-Additionally, Figure~\ref{fig:5:selfish_fail2} shows that \Selfish-\klUCB{} also has bad performance against random uniform problems $\boldsymbol{\mu}\in[0,1]^K$,
-for $M=2$ or $3$ and $K=3$, in a lot of cases.
-In comparison, the others algorithms seem to have a logarithmic regret (for $M=2$ and all algorithms)
-or even a constant regret (for $M=3$ and \RandTopM{} and \MCTopM).
-
-
-The intuition behind these configurations when \Selfish{} performs poorly is the following,
-if all players use the same algorithm and the same indices.
-If two players $i$ and $j$ have exactly the same vectors $[\widetilde{S_k}^i(t)] = [\widetilde{S_k}^j(t)]$
-and $[T_k^i(t)] = [T_k^j(t)]$ at some time step $t \geq 1$,
-with different values for each $k$
-and so that the index vectors $\mathbf{g}^j(t) = \mathbf{g}^{i}(t)$ have different values for each arm $k$,
-then both players will take the same decisions at time $t$, and collide.
-Colliding does not change $[\widetilde{S_k}^j(t+1)]$ but increase one value in $[T_k^j(t+1)]$ by $1$.
-Then at the next step the same conditions on $\widetilde{S}^j$ and $N^j$ are preserved,
-and if the same condition on $\mathbf{g}^j(t+1)$ are also preserved,
-the two players will continue to collide.
-%
-We did not succeed in proving mathematically
-that the preservation of the first hypothesis on $\widetilde{S}^j$ and $N^j$
-implies the preservation of the hypothesis on index $\mathbf{g}^j$,
-but numerically it turns out to be always the case:
-and so two players colliding in such a setting will continue to do so infinitely:
-we denote such configurations as \emph{absorbing}.
-
-We wrote a script
-\footnote{~See online \texttt{\url{smpybandits.github.io/docs/complete_tree_exploration_for_MP_bandits.html}}}
-that explores formally all the possible runs,
-up-to a certain small time horizon,
-by exploring the complete \emph{game tree},
-of possible (random) rewards from the $K$ arms
-and (random) actions from the $M$ players, up-to a small depth of let say $T=8$.
-%
-Such game tree becomes quickly very large, but this was enough to confirm that with
-a certain small probability, function of $\mu_1,\dots,\mu_K$,
-two players can arrive in just a few steps in a ``bad'' absorbing configuration.
-%
-For instance, for only $K=2$ arms, the following game tree in Figure~\ref{fig:5:oneGameTree_SelfishKLUCB} illustrates the first $3$ steps that can lead to $2$ absorbing configurations.
-Using symbolic computations, the probability of reaching any of them was found to be
-$\geq \mu_1^2(1-\mu_2)^2/2 + \mu_2^2(1-\mu_1)^2/2$ for \Selfish-\UCB.
-That is far from being negligible, as it evaluates to $0.328$ for $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$,
-and a numerical simulation on $1000$ runs found $325$ cases of bad performance.
-%
-The same game tree exploration can be made for \Selfish-\klUCB,
-but so far we were not able to justify why it experiences fewer cases of bad performances even though our software found the same (lower bound on) failure probability.
+% As said before, analyzing \Selfish{} is harder,
+% but for instance one can prove that it yields constant
+% collisions and regret for the trivial case of $\mu_1=\mu_2=1$ and $M=2$.
+% %
+% Empirically, when \Selfish{} is compared to the other algorithms,
+% % with \UCB{} or \klUCB{} indices,
+% % and the average regret is considered (for let say $1000$ repetitions),
+% it is hard to find a case when \Selfish{} performs badly, as its (empirical average) regret always appeared logarithmic.
+% %
+% But an issue of only visualizing the empirical average regret for a certain number of repetitions is
+% that if a certain ``bad'' run happens only with small probability, it is possible that it never happened
+% in a simulation, or that it happened a few times but not enough to make the average regret look non-logarithmic\footnote{For instance, $0.999 \log(T) + 0.001 T$ looks more like $\log(T)$ than $T$ so an event yielding linear regret with ``small'' probability $10^{-3}$ cannot be observed from a plot showing the average regret.}.
+% %
+% This is why the distribution of regret, at the end of the simulations, $R_T$, is also displayed (in Appendix~\ref{app:5:moreplots}).
+% %
+% In a simple problem, with $M=2$ or $M=3$ players competing for $K=3$ arms,
+% for instance with means $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$,
+% the histogram in Figure~\ref{fig:5:selfish_fail1} shows that with a small probability, the regret $R_T$ of \Selfish-\klUCB{} is not small (and appears linear).
+% %
+% %
+% Additionally, Figure~\ref{fig:5:selfish_fail2} shows that \Selfish-\klUCB{} also has bad performance against random uniform problems $\boldsymbol{\mu}\in[0,1]^K$,
+% for $M=2$ or $3$ and $K=3$, in a lot of cases.
+% In comparison, the others algorithms seem to have a logarithmic regret (for $M=2$ and all algorithms)
+% or even a constant regret (for $M=3$ and \RandTopM{} and \MCTopM).
 
 
-\begin{figure}[h!]
-    \centering
-    % \input{2-Chapters/5-Chapter/ALT_2018__MPBandits.git/figures/Tree_exploration_K2_M2_depth3__Selfish_UCB__absorbing__onlyfig.gv.tex}
-    \includegraphics[width=0.70\textwidth]{2-Chapters/5-Chapter/ALT_2018__MPBandits.git/figures/Tree_exploration_K=2_M=2_depth=3__Selfish_UCB__absorbing.pdf}
-    % \includegraphics[width=0.70\textwidth]{Tree_exploration_K=2_M=2_depth=3__Selfish_UCB__absorbing__leafs.pdf}
-    % \includegraphics[width=0.70\textwidth]{Tree_exploration_K=2_M=2_depth=3__Selfish_KLUCB__absorbing.pdf}
-    % \includegraphics[width=0.70\textwidth]{Tree_exploration_K=2_M=2_depth=3__Selfish_KLUCB__absorbing__leafs.pdf}
-    \caption[Trajectories of $M=2$ players using \Selfish-\UCB{} for $K=2$ arms.]{For $K=2$ arms and $M=2$ players using \Selfish-\UCB, for depth$=3$: $2$ \textbf{\textcolor{red}{absorbing configurations}}. Each rectangle represents a configuration, as the matrix $[[\widetilde{S_k}^j(t) / T_k^j(t) ]_j]_k$. Absorbing configurations from depth $2$ are case of equality of the two vectors and the \Selfish{} indices $\widetilde{g_k}^j(t)$. Transitions are labeled with their probabilities.}
-    \label{fig:5:oneGameTree_SelfishKLUCB}
-\end{figure}
+% The intuition behind these configurations when \Selfish{} performs poorly is the following,
+% if all players use the same algorithm and the same indices.
+% If two players $i$ and $j$ have exactly the same vectors $[\widetilde{S_k}^i(t)] = [\widetilde{S_k}^j(t)]$
+% and $[T_k^i(t)] = [T_k^j(t)]$ at some time step $t \geq 1$,
+% with different values for each $k$
+% and so that the index vectors $\mathbf{g}^j(t) = \mathbf{g}^{i}(t)$ have different values for each arm $k$,
+% then both players will take the same decisions at time $t$, and collide.
+% Colliding does not change $[\widetilde{S_k}^j(t+1)]$ but increase one value in $[T_k^j(t+1)]$ by $1$.
+% Then at the next step the same conditions on $\widetilde{S}^j$ and $N^j$ are preserved,
+% and if the same condition on $\mathbf{g}^j(t+1)$ are also preserved,
+% the two players will continue to collide.
+% %
+% We did not succeed in proving mathematically
+% that the preservation of the first hypothesis on $\widetilde{S}^j$ and $N^j$
+% implies the preservation of the hypothesis on index $\mathbf{g}^j$,
+% but numerically it turns out to be always the case:
+% and so two players colliding in such a setting will continue to do so infinitely:
+% we denote such configurations as \emph{absorbing}.
 
-From the structure of such game tree, we conjecture that the probability of reaching absorbing configurations (before a certain time $t$) is always lower-bounded
-by a polynomial function of $\mu_1,\dots,\mu_K$ and $1-\mu_1,\dots,1-\mu_K$,
-of degree at most $t$ in each variable.
-% with coefficients smaller than $1$.
-% and without simple factors (\ie, $\mu_k^d$).
-%
-As such, the lower bound on probability of failures should decrease when $K$ and $M$ increase, and this is coherent with the experiments for $K=9$ or $K=17$ (see Figures~\ref{fig:5:MP__K9_M2-6-9_T10000_N200__4_algos} and \ref{fig:5:MP__K17_M6-12-17_T10000_N100__4_algos}),
-where \Selfish{} is shown to be uniformly more efficient than \rhoRand.
-%
-Of course, one cannot run an infinite number of simulations, and the smaller the probability of failure, the less likely it is to observe a failure
-in a finite number of runs.
+% We wrote a script
+% \footnote{~See online \texttt{\url{smpybandits.github.io/docs/complete_tree_exploration_for_MP_bandits.html}}}
+% that explores formally all the possible runs,
+% up-to a certain small time horizon,
+% by exploring the complete \emph{game tree},
+% of possible (random) rewards from the $K$ arms
+% and (random) actions from the $M$ players, up-to a small depth of let say $T=8$.
+% %
+% Such game tree becomes quickly very large, but this was enough to confirm that with
+% a certain small probability, function of $\mu_1,\dots,\mu_K$,
+% two players can arrive in just a few steps in a ``bad'' absorbing configuration.
+% %
+% For instance, for only $K=2$ arms, the following game tree in Figure~\ref{fig:5:oneGameTree_SelfishKLUCB} illustrates the first $3$ steps that can lead to $2$ absorbing configurations.
+% Using symbolic computations, the probability of reaching any of them was found to be
+% $\geq \mu_1^2(1-\mu_2)^2/2 + \mu_2^2(1-\mu_1)^2/2$ for \Selfish-\UCB.
+% That is far from being negligible, as it evaluates to $0.328$ for $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$,
+% and a numerical simulation on $1000$ runs found $325$ cases of bad performance.
+% %
+% The same game tree exploration can be made for \Selfish-\klUCB,
+% but so far we were not able to justify why it experiences fewer cases of bad performances even though our software found the same (lower bound on) failure probability.
 
-% IDEA
-\paragraph{Ideas to fix \Selfish{} ?}
-%
-It could be possible to change the \Selfish{} algorithm to add a way to escape such absorbing trajectories.
-For instance one could imagine that after seen seeing, \eg, $x=10$ collisions in a row,
-a certain random action could be taken by the players.
-These tricks can work empirically in some cases,
-but they are harder to analyze formally,
-and it is hard to tune the parameters (here $x$, but possibly more),
-and we do not find such tricks to be promising from a theoretical point-of-view.
+
+% \begin{figure}[h!]
+%     \centering
+%     % \input{2-Chapters/5-Chapter/ALT_2018__MPBandits.git/figures/Tree_exploration_K2_M2_depth3__Selfish_UCB__absorbing__onlyfig.gv.tex}
+%     \includegraphics[width=0.70\textwidth]{2-Chapters/5-Chapter/ALT_2018__MPBandits.git/figures/Tree_exploration_K=2_M=2_depth=3__Selfish_UCB__absorbing.pdf}
+%     % \includegraphics[width=0.70\textwidth]{Tree_exploration_K=2_M=2_depth=3__Selfish_UCB__absorbing__leafs.pdf}
+%     % \includegraphics[width=0.70\textwidth]{Tree_exploration_K=2_M=2_depth=3__Selfish_KLUCB__absorbing.pdf}
+%     % \includegraphics[width=0.70\textwidth]{Tree_exploration_K=2_M=2_depth=3__Selfish_KLUCB__absorbing__leafs.pdf}
+%     \caption[Trajectories of $M=2$ players using \Selfish-\UCB{} for $K=2$ arms.]{For $K=2$ arms and $M=2$ players using \Selfish-\UCB, for depth$=3$: $2$ \textbf{\textcolor{red}{absorbing configurations}}. Each rectangle represents a configuration, as the matrix $[[\widetilde{S_k}^j(t) / T_k^j(t) ]_j]_k$. Absorbing configurations from depth $2$ are case of equality of the two vectors and the \Selfish{} indices $\widetilde{g_k}^j(t)$. Transitions are labeled with their probabilities.}
+%     \label{fig:5:oneGameTree_SelfishKLUCB}
+% \end{figure}
+
+% From the structure of such game tree, we conjecture that the probability of reaching absorbing configurations (before a certain time $t$) is always lower-bounded
+% by a polynomial function of $\mu_1,\dots,\mu_K$ and $1-\mu_1,\dots,1-\mu_K$,
+% of degree at most $t$ in each variable.
+% % with coefficients smaller than $1$.
+% % and without simple factors (\ie, $\mu_k^d$).
+% %
+% As such, the lower bound on probability of failures should decrease when $K$ and $M$ increase, and this is coherent with the experiments for $K=9$ or $K=17$ (see Figures~\ref{fig:5:MP__K9_M2-6-9_T10000_N200__4_algos} and \ref{fig:5:MP__K17_M6-12-17_T10000_N100__4_algos}),
+% where \Selfish{} is shown to be uniformly more efficient than \rhoRand.
+% %
+% Of course, one cannot run an infinite number of simulations, and the smaller the probability of failure, the less likely it is to observe a failure
+% in a finite number of runs.
+
+% % IDEA
+% \paragraph{Ideas to fix \Selfish{} ?}
+% %
+% It could be possible to change the \Selfish{} algorithm to add a way to escape such absorbing trajectories.
+% For instance one could imagine that after seen seeing, \eg, $x=10$ collisions in a row,
+% a certain random action could be taken by the players.
+% These tricks can work empirically in some cases,
+% but they are harder to analyze formally,
+% and it is hard to tune the parameters (here $x$, but possibly more),
+% and we do not find such tricks to be promising from a theoretical point-of-view.
 
 
 
@@ -763,8 +763,8 @@ and we do not find such tricks to be promising from a theoretical point-of-view.
 \subsection{Additional figures}
 \label{app:5:moreplots}
 
-The plots missing from Section~\ref{sec:5:experiments} are included here,
-as well as some additional numerical results.
+We include here plots missing from Section~\ref{sec:5:experiments},
+and some additional numerical results.
 
 
 % -----------------------------------------------------------------
@@ -793,7 +793,7 @@ and both become uninformative when $M=K$ (\ie, null).
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.70\textwidth]{Comparison_of_our_lowerbound_and_Anandkumar_2010__9_arms.pdf}
+  \includegraphics[width=0.85\textwidth]{Comparison_of_our_lowerbound_and_Anandkumar_2010__9_arms.pdf}
   \caption[Comparison of our lower bound against the one from \cite{Zhao10}]{Comparison of our lower bound against the one from \cite{Zhao10}, on a simple problem with $9$ Bernoulli arms, of means $\boldsymbol{\mu} = [0.1, 0.2, \dots, 0.9]$, as a function of the number of players $M$.}
   \label{fig:5:CompLowerBounds}
 \end{figure}
@@ -826,7 +826,7 @@ It is just a simple way to check that the two lower bounds on the regret indeed 
 and are moreover lower bounds on the count of selections (\ref{eq:5:term1}, displayed in \textcolor{blue}{cyan}).
 %
 The lower bounds (in black) are $C(\boldsymbol{\mu}, M) \log t$, the dashed line
-for \citeauthor{Zhao10}'s lower bound, and the continuous line is our lower bound.
+for the lower bound from \cite{Zhao10}, and the continuous line is our lower bound.
 %
 These plot show the regret (in red),
 % the three lower bounds

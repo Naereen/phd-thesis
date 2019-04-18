@@ -42,6 +42,20 @@
 % the need for multiple players in cognitive radio
 
 For the development of Cognitive Radio, a crucial step is to insert \emph{multiple} smart devices in the \emph{same} background traffic (at least $M \geq 2$), as we explained in Chapters~\ref{chapter:1},\ref{chapter:4}.
+%
+In this Chapter~\ref{chapter:5}, we are interested in a more formal approach to the decentralized learning problem presented in Chapter~\ref{chapter:4}.
+We consider $M \leq K$ identical dynamic IoT devices, communicating with a unique gateway, in $K$ orthogonal channels and in a acknowledgment-based wireless protocol slotted in time.
+A perfect time and frequency synchronization is assumed,
+and some \iid{} background traffic is assumed to be non-uniformly in the $K$ channels.
+As before, if two or more devices decide to use the same channel at the same time, a \emph{collision} arises and none of sent uplink packet can be received by the gateway.
+%
+Such networks can be modelled using a decentralized multi-player multi-armed bandit problem, where arms are channels and players are dynamic IoT devices.
+Unfortunately, it is very hard to formally analyze the IoT network model we presented in Chapter~\ref{chapter:4}, mainly because of the random activation process of all the dynamic learning devices.
+Even if there are many identical bandit algorithms learning independently and in a decentralized way, the difficulty mainly comes from the fact that all of them are only communicating at some (random) time steps, and at each time step the number of communicating devices is random and unpredictable.
+
+Mainly for these two reasons, for this Chapter~\ref{chapter:5} we prefer to only consider the easier case of at most $M \leq K$ devices, communicating at each time step.
+Each device will use a Multi-Armed Bandit algorithm, to maximize its number of successful communications, by using the received acknowledgement \Ack{} as a (random) binary reward after each uplink message (\ie, at each time step).
+%
 With the presence of a central controller that can assign the devices to separate channels, this amounts to choosing at each time step \emph{several} arms of a MAB in order to maximize the global rewards, and can thus be viewed as an application of the multiple-play bandit, introduced by \cite{Anantharam87a} and recently studied by \cite{Komiyama15}.
 They essentially proved that existing algorithms can be easily extended to the multiple-play case, with provable guarantees on their regret.
 % In the context of CR, this first extension can model a centralized agent taking decisions for end-devices, for instance a base station affecting devices to channels.
@@ -55,9 +69,21 @@ They essentially proved that existing algorithms can be easily extended to the m
 %
 Due to the communication cost implied by a central controller, a more relevant model is the
 \emph{decentralized multi-player} multi-armed bandit model, introduced by \cite{Zhao10} and further studied shortly after in \cite{Anandkumar10,Anandkumar11}, in which players select arms individually and collisions may occur, that yield a loss of reward.
-Further algorithms were proposed in similar models by \cite{Tekin12IEEE} and \cite{Kalathil12} (under the assumption that each arm is a Markov chain)
-and by \cite{Avner15,Avner16} and \cite{Rosenski16} (for \iid{} or piece-wise \iid{} arms).
+Further algorithms were proposed in similar models by \cite{Tekin12IEEE} and \cite{Kalathil12} (under the assumption that each arm is a Markov chain),
+and by \cite{Avner15,Avner16} and \cite{Rosenski16} for \iid{} arms.
 %
+In the point of view of the wireless protocol, each time frame is separated as before in a \emph{sensing} phase (during which the device senses for the background traffic),
+an \emph{uplink} phase (during which the device sends a packet to the gateway if it sensed the chosen channel to be free),
+and a \emph{downlink} phase (during which it waits for an \Ack{} from the gateway).
+In this first model, the binary reward is $1$ only if the channel was sensed to be free of background traffic \textbf{and} if \Ack{} was received, and the device has access to both information.
+We present two algorithms, \RandTopM{} and \MCTopM, based on the combination of an efficient MAB index policy (we chose \klUCB) and a smart orthogonalization procedure, based on a random hoping procedure called Musical Chair.
+Like in previous works, we consider the centralized system regret (multi-player regret), or simply referred to as regret.
+We start by showing an improved asymptotical regret lower-bound for any algorithm of a certain class, including previous solutions such as \rhoRand{} and our two solutions.
+We then analyze our \MCTopM{} algorithm and we show that its regret upper-bound is logarithmic and order-optimal, improving over the previous state-of-the-art.
+%  with a regret bounded by $\bigO{\log(T)}$ for a game at horizon $T$.
+We also present extensive numerical simulations that show that our proposal outperforms all previous solutions and is much more efficient in this easier model of sensing feedback with a fixed and known number of players $M$ accessing $K \geq M$ channels.
+
+
 The goal for every player is to select most of the time one of the $M$ best arms, without colliding too often with other players.
 A first difficulty relies in the well-known trade-off between \emph{exploration} and \emph{exploitation}: players need to explore all the arms to estimate their means, while trying to focus on the best arms to gain as much rewards as possible.
 The decentralized setting considers wireless protocol with no direct or explicit exchange of information between players, and assumes that the players only know $K$ and $M$. To avoid collisions, players should furthermore find orthogonal configurations, \ie, the $M$ players use the $M$ best arms without any collision, without explicitly communicating\footnote{One must now be careful about this aspect when stating that ``no explicit communications are allowed between players'' in the model, as \cite{BoursierPerchet18} proved that even in the no sensing case, the ``communication trick'' can be used to exchange information between players, by generating collisions at some pre-agreed times. We discuss this work more in details at the end of this chapter, in Section~\ref{sub:5:withoutSensing}.} with each other.
@@ -67,9 +93,20 @@ All these above-mentioned works are motivated by the OSA problem, in which it is
 However some real radio networks do not use sensing at all, \eg, emerging standards currently or recently developed for \emph{Internet of Things} (IoT) networks, such as LoRaWAN.
 Thus, to take into account these new applications, algorithms with additional constraints on the available feedback have to be proposed within the multiple-player MAB model.
 Especially, the typical approach that combines a (single-player) bandit algorithm based on the sensing information --to learn the quality of the channels while targeting the best ones-- with a low-complexity decentralized collision avoidance protocol, is no longer possible.
-Our article \cite{Besson2018ALT} was the first to study this other model of multi-player bandits for the ``no sensing'' case.
+%
+Our article \cite{Besson2018ALT} was the first to study this other model of multi-player bandits for the ``no sensing'' case,
+% We are also interested in the harder model where devices do not have access to the two feedback information (sensing and \Ack) but only have access to the \Ack.
+% Our article \cite{Besson2018ALT} was the first to propose this ``no sensing'' model, 
+for which we only proposed an heuristic, the naive \Selfish{} strategy as it was already used in Chapter~\ref{chapter:4}.
+Even if empirical simulations showed that \Selfish-\klUCB{} performs very well, it is a mistake to only consider mean regret, as we found on numerical simulations as well as formal derivation on a simple example of $K=M=2$ that the \Selfish{} heuristic can has a linear regret with a low probability (and so asymptotically it has linear expected regret and fails to solve ``no sensing'' multi-player MAB problems).
+We do not propose any other efficient algorithm, but our work presented in April~$2018$ inspired two articles shorlty after \cite{LugosiMehrabian18,BoursierPerchet18}.
+They confirmed our finding that \Selfish{} can have a linear regret, and they both proposed new algorithms.
+We include some numerical simulations to compare some of them, and we present in details the current state-of-the-art of research on multi-player MAB models without sensing.
 
-In this chapter, we take a step back and present the different feedback levels possible for multi-player MAB algorithms. For each of them, we propose algorithmic solutions supported by both experimental and theoretical guarantees. In the presence of sensing information, our contributions are a new problem-dependent regret lower bound, tighter than previous work, and the introduction of two algorithms, \RandTopM{} and \MCTopM{}. Both are shown to achieve an asymptotically optimal number of selections of the sub-optimal arms, and for \MCTopM{} we furthermore establish a logarithmic upper bound on the regret, that follows from a careful control of the number of collisions. In the absence of sensing information, we propose the \Selfish{} heuristic and investigate its performance. Our study of this algorithm was supported in \cite{Besson2018ALT} by (promising) empirical performance and some first (disappointing) theoretical elements, and it was proved to be inefficient since then.
+% In this chapter, we take a step back and present the different feedback levels possible for multi-player MAB algorithms. For each of them, we propose algorithmic solutions supported by both experimental and theoretical guarantees. In the presence of sensing information, our contributions are a new problem-dependent regret lower bound, tighter than previous work, and the introduction of two algorithms, \RandTopM{} and \MCTopM{}. Both are shown to achieve an asymptotically optimal number of selections of the sub-optimal arms, and for \MCTopM{} we furthermore establish a logarithmic upper bound on the regret, that follows from a careful control of the number of collisions. In the absence of sensing information, we propose the \Selfish{} heuristic and investigate its performance. Our study of this algorithm was supported in \cite{Besson2018ALT} by (promising) empirical performance and some first (disappointing) theoretical elements, and it was proved to be inefficient since then.
+
+% Another interesting extension of the studied model is to consider different channels utility for each devices. It is a very interesting extension of our model, as for instance the devices could be located on different parts of a building or a field and suffer from different mean qualities of access to each channels.
+% This extension is not studied per say but we quickly review the existing literature, consisting in the two recent works \cite{Bistritz18,KaufmannAbbas19}, and we discuss the possible real-world usage of the existing algorithms.
 
 
 
@@ -200,7 +237,7 @@ With this definition, maximizing the expected sum of global reward of the system
 In this section, we provide a useful decomposition of the regret (Lemma~\ref{lem:5:DecompositionRegret}) that permits to establish a new problem-dependent lower bound on the regret (Theorem~\ref{thm:5:BetterLowerBound}), and also provides key insights on the derivation of regret upper bounds (Lemma~\ref{lem:5:1stUpperBound}).
 
 % FIXME
-\begin{framed}
+% \begin{framed}
   \textbf{\textcolor{red}{Warning}.}
   The regret lower bound given in \cite{Besson2018ALT} is not applicable to any algorithm,
   as it was discovered by Etienne Boursier and Vianney Perchet, as they explain in Section~2.4 in \cite{BoursierPerchet18}.
@@ -208,7 +245,7 @@ In this section, we provide a useful decomposition of the regret (Lemma~\ref{lem
   but the results stated in this section are now correct,
   thanks to the modifications proposed by Emilie Kaufmann and Abbas Mehrabian in Appendix~E of \cite{KaufmannAbbas19}.
   The cost for this modification is to restrict the lower-bound to a smaller class of algorithms, which contains both \RhoRand{} and our two proposals \RandTopM{} and \MCTopM{} but not the two algorithms proposed SIC-MMAB from \cite{BoursierPerchet18} and Multiplayer Explore-then-Commit (M-ETC) from \cite{KaufmannAbbas19}.
-\end{framed}
+% \end{framed}
 % FIXME
 
 
@@ -514,11 +551,72 @@ while ensuring that the number of sub-optimal selections is matching the lower b
 \label{sec:5:algorithms}
 % -----------------------------------------------------------------
 
-When sensing is possible, that is under observation models \modelun{} and \modeldeux, most existing strategies build on a \emph{single-player bandit algorithm} (usually an \emph{index policy}) that relies on the sensing information, together with an \emph{orthogonalization strategy} to deal with collisions. We present this approach in more details in Section~\ref{sub:5:RandTopM_and_MCTopM} and introduce two new algorithms of this kind, \RandTopM{} and \MCTopM.
-%
-Then, we suggest in Section~\ref{sub:5:Selfish} a completely different approach, called \Selfish{}, that no longer requires an orthogonalization strategy as the collisions are directly accounted for in the indices that are used.
-\Selfish{} can also be used under observation model \modeltrois{} --\emph{without sensing}--, and without the knowledge of $M$.
 
+Regardless of whether sensing is or not possible, we present formally in Section~\ref{sub:5:Selfish} the \Selfish{} policy, as used by all the IoT devices in the first model presented in Chapter~\ref{chapter:4}.
+It does not use an orthogonalization strategy as the collisions are directly accounted for in the \UCB-like indices that are used by each device to select its channel.
+\Selfish{} can also be used under observation model \modeltrois{} --\emph{without sensing}--, and without the knowledge of $M$.
+It was conjectured in \cite{Besson2018ALT} that \Selfish{} can suffer linear regret, and later confirmed in \cite{LugosiMehrabian18,BoursierPerchet18}.
+%
+When sensing is possible, that is under observation models \modelun{} and \modeldeux, most existing strategies build on a \emph{single-player bandit algorithm} (usually an \emph{index policy}) that relies on the sensing information, together with an \emph{orthogonalization strategy} to deal with collisions.
+Following this approach, we introduce two new algorithms, \RandTopM{} and \MCTopM, in Section~\ref{sub:5:RandTopM_and_MCTopM}.
+
+
+% -----------------------------------------------------------------
+\subsection{The \Selfish{} heuristic for the ``no sensing case''}
+\label{sub:5:Selfish}
+
+Under observation model \modeltrois{} no sensing information is available and the previous algorithms cannot be used, as the sum of sensing information $S_k^j(t)$ and thus the empirical mean $\widehat{\mu}_k^j(t)$ cannot be computed, hence neither the indices $g_k^j(t)$. However, one can still define a notion of \emph{empirical reward} received from arm $k$ by player $j$, by introducing
+%
+\vspace*{-5pt}
+\begin{equation}
+  \widetilde{S_k}^j(t) = \sum_{t=1}^T r^j(t) \indic(A^j(t) = k)
+  \ \ \ \text{and letting} \ \ \ \widetilde{\mu_k}^j(t) := \widetilde{S_k}^j(t) \;/\; T_k^j(t).
+\end{equation}
+
+Note that $\widetilde{\mu_k}^j(t)$ is no longer meant to be an unbiased estimate of $\mu_k$ as it also takes into account the collision information, that is present in the reward. Based on this empirical reward, one can similarly defined modified indices as
+%
+\begin{equation}\label{eq:5:indexTilde}
+  \widetilde{g_k}^j(t) = \begin{cases}
+      \widetilde{\mu_k}^j(t)  + \sqrt{  f(t) / (2T_k^j(t))}
+      &\text{for } \UCB, \\
+      \sup\left\{ q \in [0, 1]: T_k^j(t)\times \kl(\widetilde{\mu_k}^j(t), q) \leq f(t) \right\}
+      &\text{for } \klUCB.
+  \end{cases}
+\end{equation}
+
+Given any of these two index policies (\UCB{} or \klUCB), the \Selfish{} algorithm is defined by,
+%
+\begin{equation}
+  A^j(t) = \argmax{ k \in \{1,\dots,K\}} \ \widetilde{g_k}^j(t-1).\label{algo:5:Selfish}
+\end{equation}
+The name comes from the fact that each player is targeting, in a ``selfish'' way, the arm that has the highest index, instead of accepting to target only one of the $M$ best.
+The reason that this may work precisely comes from the fact that $\widetilde{g_k}^j(t)$ is no longer an upper-confidence on $\mu_k$,
+but some hybrid index that simultaneously increases when a transmission occurs and decreases when a collision occurs.
+
+This behavior is easier to be understood for the case of \Selfish-\UCB{} in which, letting $N_k^{j,C}(t) = \sum_{s=1}^t \indic(C^j(t))$ be the number of collisions on arm $k$, one can show that the hybrid \Selfish{} index induces a penalty proportional to the fraction of collision on this arm and the quality of the arm itself:
+\begin{equation}
+  \widetilde{g_k}^j(t) = g_k^j(t) -
+  \underbrace{\left(\frac{N_k^{j,C}(t)}{N_k^j(t)}\right)}_{\text{fraction of collisions}}
+  \underbrace{\left(\frac{1}{N_k^{j,C}(t)}\sum_{t=1}^{T}Y_{A^j(t),t} \indic(C^j(t)) \indic(A^j(t) = k)\right)}_{\text{estimate of } \mu_k }.
+\end{equation}
+
+From a bandit perspective, it looks like each player is using a stochastic bandit algorithm (\UCB{} or \klUCB) when interacting with $K$ arms that give a feedback (the reward, and not the sensing information) that is far from being \iid{} from some distribution, due to the collisions.
+%
+As such, the algorithm does not appear to be well justified, and one may rather want to use adversarial bandit algorithms like $\mathrm{EXP3}$ \citep{Auer02NonStochastic}, that do not require a stochastic (\iid) assumption on arms.
+%
+However, we found out empirically that \Selfish{} is doing surprisingly well when using \UCB-like indexes, greatly outperforming \Selfish{} based on $\mathrm{EXP3}$,
+like what we found in Chapter~\ref{chapter:4} in harder settings.
+
+We show in Section~\ref{sub:5:SelfishFails} that \Selfish{} does have a (very) small probability to fail (badly), for some problem with small $K$,
+which precludes the possibility of a logarithmic regret for any problem.
+In most cases, it empirically performs similarly to all the algorithms described before,
+and usually outperforms \rhoRand,
+even if it neither exploits the sensing information, nor the knowledge of the number of players $M$.
+%
+Practitioners may still be interested by the algorithm, especially for Cognitive Radio applications in which sensing is hard or cannot be considered.
+Thus we propose next our main contribution, the \MCTopM{} algorithm, proved to be asymptotically optimal for the identification of suboptimal arms (when using \klUCB), attaining order-optimal logarithmic regret, and outperforming all the other algorithms for the ``sensing case''.
+
+% -----------------------------------------------------------------
 
 % -----------------------------------------------------------------
 
@@ -748,65 +846,6 @@ The five different transitions $(1)$, $(2)$, $(3)$, $(4)$, $(5)$ refer to the no
   Taking one of the five transitions means playing one round of the Algorithm~\ref{algo:5:MCTopM}, to decide $A^j(t+1)$ using information of previous steps.}
   \label{fig:5:StateMachineAlgorithm_MCTopM}
 \end{figure}
-
-
-
-% -----------------------------------------------------------------
-\subsection{The \Selfish{} heuristic for the ``no sensing case''}
-\label{sub:5:Selfish}
-
-Under observation model \modeltrois{} no sensing information is available and the previous algorithms cannot be used, as the sum of sensing information $S_k^j(t)$ and thus the empirical mean $\widehat{\mu}_k^j(t)$ cannot be computed, hence neither the indices $g_k^j(t)$. However, one can still define a notion of \emph{empirical reward} received from arm $k$ by player $j$, by introducing
-%
-\vspace*{-5pt}
-\begin{equation}
-  \widetilde{S_k}^j(t) = \sum_{t=1}^T r^j(t) \indic(A^j(t) = k)
-  \ \ \ \text{and letting} \ \ \ \widetilde{\mu_k}^j(t) := \widetilde{S_k}^j(t) \;/\; T_k^j(t).
-\end{equation}
-
-Note that $\widetilde{\mu_k}^j(t)$ is no longer meant to be an unbiased estimate of $\mu_k$ as it also takes into account the collision information, that is present in the reward. Based on this empirical reward, one can similarly defined modified indices as
-%
-\begin{equation}\label{eq:5:indexTilde}
-  \widetilde{g_k}^j(t) = \begin{cases}
-      \widetilde{\mu_k}^j(t)  + \sqrt{  f(t) / (2T_k^j(t))}
-      &\text{for } \UCB, \\
-      \sup\left\{ q \in [0, 1]: T_k^j(t)\times \kl(\widetilde{\mu_k}^j(t), q) \leq f(t) \right\}
-      &\text{for } \klUCB.
-  \end{cases}
-\end{equation}
-
-Given any of these two index policies (\UCB{} or \klUCB), the \Selfish{} algorithm is defined by,
-%
-\begin{equation}
-  A^j(t) = \argmax{ k \in \{1,\dots,K\}} \ \widetilde{g_k}^j(t-1).\label{algo:5:Selfish}
-\end{equation}
-The name comes from the fact that each player is targeting, in a ``selfish'' way, the arm that has the highest index, instead of accepting to target only one of the $M$ best.
-The reason that this may work precisely comes from the fact that $\widetilde{g_k}^j(t)$ is no longer an upper-confidence on $\mu_k$,
-but some hybrid index that simultaneously increases when a transmission occurs and decreases when a collision occurs.
-
-This behavior is easier to be understood for the case of \Selfish-\UCB{} in which, letting $N_k^{j,C}(t) = \sum_{s=1}^t \indic(C^j(t))$ be the number of collisions on arm $k$, one can show that the hybrid \Selfish{} index induces a penalty proportional to the fraction of collision on this arm and the quality of the arm itself:
-\begin{equation}
-  \widetilde{g_k}^j(t) = g_k^j(t) -
-  \underbrace{\left(\frac{N_k^{j,C}(t)}{N_k^j(t)}\right)}_{\text{fraction of collisions}}
-  \underbrace{\left(\frac{1}{N_k^{j,C}(t)}\sum_{t=1}^{T}Y_{A^j(t),t} \indic(C^j(t)) \indic(A^j(t) = k)\right)}_{\text{estimate of } \mu_k }.
-\end{equation}
-
-From a bandit perspective, it looks like each player is using a stochastic bandit algorithm (\UCB{} or \klUCB) when interacting with $K$ arms that give a feedback (the reward, and not the sensing information) that is far from being \iid{} from some distribution, due to the collisions.
-%
-As such, the algorithm does not appear to be well justified, and one may rather want to use adversarial bandit algorithms like $\mathrm{EXP3}$ \citep{Auer02NonStochastic}, that do not require a stochastic (\iid) assumption on arms.
-%
-However, we found out empirically that \Selfish{} is doing surprisingly well,
-like what we found in Chapter~\ref{chapter:4} in harder settings.
-% as already noted by \cite{Bonnefoi17}, who did some experiments in the context of IoT applications.
-
-We show in Section~\ref{sec:5:upperbounds} that \Selfish{} does have a (very) small probability to fail (badly), for some problem with small $K$,
-which precludes the possibility of a logarithmic regret for any problem.
-In most cases, it empirically performs similarly to all the algorithms described before,
-and usually outperforms \rhoRand,
-even if it neither exploits the sensing information, nor the knowledge of the number of players $M$.
-%
-Practitioners may still be interested by the algorithm, especially for Cognitive Radio applications in which sensing is hard or cannot be considered.
-
-% -----------------------------------------------------------------
 
 
 
@@ -1273,10 +1312,14 @@ and optimal for the term \ref{eq:5:term1}.
 \subsection{Discussion on \Selfish} \label{sub:5:SelfishFails}
 
 The analysis of \Selfish{} is harder, but we obtained some understanding of the behavior of this algorithm, that seems to be doing surprisingly well in many contexts, as in our experiments with $K=9$ arms and in extensive experiments not reported in this section. However, a disappointing result is that we found simple problems, usually with small number of arms, for which the algorithm may fail. For example with $M=2$ or $M=3$ players competing for $K=3$ arms,
-with means $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$, the histograms in Figure~\ref{fig:5:selfish_fail1} suggests that with a small probability, the regret $R_T$ of \Selfish-\klUCB{} can be very large. We provide a discussion in Appendix~\ref{app:5:SelfishFails} about when such situations may happen, including a conjectured (constant, but small) lower bound on the probability that \Selfish{} experience collision almost at every round. This result would then prevent \Selfish{} from having a logarithmic regret. However, it is to be noted that the lower bound of Theorem~\ref{thm:5:BetterLowerBound} does not apply to the censored observation model \modeltrois{} under which \Selfish{} operates.
+with means $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$, the histograms in Figure~\ref{fig:5:selfish_fail1} suggests that with a small probability, the regret $R_T$ of \Selfish-\klUCB{} can be very large.
+
+In the Appendix~E of \cite{Besson2018ALT},
+we discussed about when such situations may happen, including a conjectured (constant, but small) lower bound on the probability that \Selfish{} experience collision almost at every round. This result would then prevent \Selfish{} from having a logarithmic regret. However, it is to be noted that the lower bound of Theorem~\ref{thm:5:BetterLowerBound} does not apply to the censored observation model \modeltrois{} under which \Selfish{} operates.
 %
 The \textsc{Sic-MMAB} algorithm proposed in \cite{BoursierPerchet18} answers the question we left open last year in \cite{Besson2018ALT},
 of whether logarithmic regret is at all possible for the ``no sensing'' case (model \modeltrois).
+They confirmed that \Selfish-\UCB{} can indeed suffer linear regret, and proposed an algorithm based on a ``communication trick'' to achieve logarithmic regret for this harder model \modeltrois.
 
 
 
@@ -1324,20 +1367,20 @@ We illustrate below the (empirical mean) regret $R_t$ as a function of time and 
       \begin{tabular}{c|ccc}
       \textbf{Algorithm} $\;$ \textbackslash $\;$ Number of players & $M=3$ & $M=6$ & $M=9$ \\
           \hline
-          Centralized multiple-play \UCB{} & $321 \pm 30$ & $233 \pm 25$ & $0$ \\
-          Centralized multiple-play \klUCB{} & $94 \pm 17$ & $68 \pm 18$ & $0$ \\
+          Centralized multiple-play with \UCB{} & $321 \pm 30$ & $233 \pm 25$ & $0$ \\
+          Centralized multiple-play with \klUCB{} & $94 \pm 17$ & $68 \pm 18$ & $0$ \\
           \hline
-          \Selfish-\UCB{} & $1263 \pm 157$ & $3694 \pm 387$ & $12420 \pm 404$ \\
-          \Selfish-\klUCB{} & $243 \pm 31$ & $743 \pm 113$ & $3005 \pm 492$ \\
+          \Selfish{} with \UCB{} & $1263 \pm 157$ & $3694 \pm 387$ & $12420 \pm 404$ \\
+          \Selfish{} with \klUCB{} & $243 \pm 31$ & $743 \pm 113$ & $3005 \pm 492$ \\
           \hline
-          \RhoRand-\UCB{} & $1455 \pm 208$ & $4775 \pm 463$ & $11794 \pm 1083$ \\
-          \RhoRand-\klUCB{} & $394 \pm 96$ & $2385 \pm 412$ & $7057 \pm 1053$ \\
+          \RhoRand{} with \UCB{} & $1455 \pm 208$ & $4775 \pm 463$ & $11794 \pm 1083$ \\
+          \RhoRand{} with \klUCB{} & $394 \pm 96$ & $2385 \pm 412$ & $7057 \pm 1053$ \\
           \hline
-          \RandTopM-\UCB{} & $1020 \pm 92$ & $2899 \pm 418$ & $470 \pm 346$ \\
-          \RandTopM-\klUCB{} & $258 \pm 43$ & $902 \pm 234$ & $551 \pm 520$ \\
+          \RandTopM{} with \UCB{} & $1020 \pm 92$ & $2899 \pm 418$ & $470 \pm 346$ \\
+          \RandTopM{} with \klUCB{} & $258 \pm 43$ & $902 \pm 234$ & $551 \pm 520$ \\
           \hline
-          \MCTopM-\UCB{} & $980 \pm 76$ & $1466 \pm 132$ & $43 \pm 13$ \\
-          \MCTopM-\klUCB{} & $\mathbf{248 \pm 40}$ & $\mathbf{410 \pm 54}$ & $\mathbf{42 \pm 10}$ \\
+          \MCTopM{} with \UCB{} & $980 \pm 76$ & $1466 \pm 132$ & $43 \pm 13$ \\
+          \MCTopM{} with \klUCB{} & $\mathbf{248 \pm 40}$ & $\mathbf{410 \pm 54}$ & $\mathbf{42 \pm 10}$ \\
           \hline
       \end{tabular}
       \caption{Using \klUCB{} is much more efficient than using \UCB{}, for multi-player bandit (here in a simple problem with $K=9$ arms).}
@@ -1553,15 +1596,15 @@ can be considered out of the scope of \emph{online} sequential learning.
 \begin{figure}[!h]
   \centering
   % \begin{subfigure}[!h]{0.75\textwidth}
-      \includegraphics[width=1.00\textwidth]{MP__K17_M6_T10000_N100__4_algos/all_RegretCentralized_loglog____env1-1_4163066365888233475.pdf}
+      \includegraphics[width=0.90\textwidth]{MP__K17_M6_T10000_N100__4_algos/all_RegretCentralized_loglog____env1-1_4163066365888233475.pdf}
   % \end{subfigure}
   % ~
   % \begin{subfigure}[!h]{0.75\textwidth}
-      \includegraphics[width=1.00\textwidth]{MP__K17_M12_T10000_N100__4_algos/all_RegretCentralized_loglog____env1-1_3856003705095179548.pdf}
+      \includegraphics[width=0.90\textwidth]{MP__K17_M12_T10000_N100__4_algos/all_RegretCentralized_loglog____env1-1_3856003705095179548.pdf}
   % \end{subfigure}
   % ~
   % \begin{subfigure}[!h]{0.75\textwidth}
-      \includegraphics[width=1.00\textwidth]{MP__K17_M17_T10000_N100__4_algos/all_RegretCentralized_loglog____env1-1_8969236287861113966.pdf}
+      \includegraphics[width=0.90\textwidth]{MP__K17_M17_T10000_N100__4_algos/all_RegretCentralized_loglog____env1-1_8969236287861113966.pdf}
   % \end{subfigure}
   \caption[Regret for $M=6, 12, 17$ players for a ``difficult'' problem with $K=17$, and $T=5000$]{Regret (in log-log scale), for $M=6, 12, 17$ players for a ``difficult'' problem with $K=17$, and $T=5000$. The same observation as in Figure~\ref{fig:5:MP__K9_M2-6-9_T10000_N200__4_algos} can be made. \Selfish{} outperforms \MCTopM{} for $M=2$ here. Additionally, \MCTopM{} is the only algorithm to not fail dramatically when $M=K$ here.}
   \label{fig:5:MP__K17_M6-12-17_T10000_N100__4_algos}
