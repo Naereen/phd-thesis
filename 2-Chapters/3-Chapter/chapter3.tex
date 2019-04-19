@@ -373,9 +373,9 @@ The goal is to highlight that the simplest (but most efficient) algorithms have 
 \label{sec:3:conclusion}
 
 
-In this chapter, we presented our Python library, named SMPyBandits, by detailing three main points:
+In this chapter, we presented our Python library SMPyBandits, by detailing three main points:
 $(i)$ its purpose and qualities,
-$(ii)$ the structure of the package,
+$(ii)$ its organization,
 and $(iii)$ an overview of its usage:
 %
 
@@ -402,11 +402,11 @@ We give below in Appendix~\ref{sec:3:appendix} a small but complete example of t
 
 
 % WARNING
-\paragraph{Remark.}
+% \paragraph{Remark.}
 We want to conclude by highlighting that a significant amount of time during my PhD was devoted to the development of SMPyBandits, and as such the library, its documentation and this chapter  are considered one of the main contribution of this thesis.
 %
 Our library is used for the numerical simulations in all this thesis, except Chapter~\ref{chapter:4}. We use it to compare state-of-the-art single-player algorithms designed for stationary MAB in Chapter~\ref{chapter:2}, for multi-armed problems in Chapter~\ref{chapter:5} and for piece-wise stationary problems in Chapter~\ref{chapter:6}.
-We also used it in other publications not included in this thesis, like our work on doubling tricks \cite{Besson2018DoublingTricks} that we shortly present in \ref{app:2:DoublingTricks}.
+We also used it in other publications not included in this thesis, like our work on doubling tricks \cite{Besson2018DoublingTricks} that we shortly present in Appendix~\ref{app:2:DoublingTricks}.
 
 
 \paragraph{Future works.}
@@ -416,10 +416,9 @@ For more details, see the issue tickets at \href{https://github.com/SMPyBandits/
 For instance it would be interesting to extend the library for problems with non-finite arms, \eg, linear or contextual bandit (\href{https://github.com/SMPyBandits/SMPyBandits/issues/117}{ticket 117}),
 or to add support for the ``dynamic case'' of multi-player bandits to allow arrivals or departures of players (\href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{ticket 124}).
 %
-In Chapter~\ref{chapter:5}, we use SMPyBandits to simulate multi-player bandit problems, and we also present many extensions of this model.
-Some have already been implemented, but other extensions are yet to be added.
-This direction is one of the major future work left on our library
-(see tickets \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}).
+At the end of Chapter~\ref{chapter:5}, we present many extensions of the multi-player bandit model,
+and even if some have already been implemented, a major future work is to implement the most interesting ones
+(tickets \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}).
 
 Since $2017$, I also received by email or by GitHub issues some requests to implement new features or models. Most of them were implemented quickly, but some would require more time and are left as possible future works.
 Two example of requests include a model where the number of arm can change at some or all time step (an example of such model is called ``sleeping bandit'', \href{https://github.com/SMPyBandits/SMPyBandits/issues/123}{issue 123}), to implement the model of rotting bandits (\href{https://github.com/SMPyBandits/SMPyBandits/issues/156}{issue 156}), or to add a web-based user interface for an even easier usage of the library requiring no command line or knowledge of Python (\href{https://github.com/SMPyBandits/SMPyBandits/issues/133}{issue 133}).
@@ -558,7 +557,7 @@ Due to the cost of orchestrating the different jobs, and memory exchanges at the
 % \begin{footnotesize}
     \centering
     \begin{tabular}{c|ccc}
-    \textbf{Repetitions} $\;$ \textbackslash $\;$ number of jobs \texttt{N\_JOBS} & $1$ & $4$ ($=$ nb CPU cores) & $20$ ($>$ nb CPU cores) \\
+    \textbf{Repetitions} $\;$ \textbackslash $\;$ number of jobs \texttt{N\_JOBS} & $1$ & $4$ ($=$ nb cores) & $20$ ($>$ nb cores) \\
         \hline
         $1$ repetition    & $15 \;\text{s}$ & $26 \;\text{s}$ & $43 \;\text{s}$ \\
         $10$ repetitions  & $87 \;\text{s}$ & $51 \;\text{s}$ & $76 \;\text{s}$ \\
@@ -570,6 +569,9 @@ Due to the cost of orchestrating the different jobs, and memory exchanges at the
     \label{table:3:speedUpTimeParallelComputations}
 % \end{footnotesize}
 \end{table}
+
+
+\TODOL{Pas sûr que ça vaille la peine d'inclure ce passage, c'est vraiment optionnel. Dans tous les cas, je devrais rajouter tout cette sous section dans la documentation, c'est intéressant !}
 
 % Explain why I didn't try more on parallelisation (eg on Grid5000 or other large scale computer).
 \paragraph{Approaches we did not try.}
