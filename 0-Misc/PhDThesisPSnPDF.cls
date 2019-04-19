@@ -1065,7 +1065,8 @@ wish to left align your text}
 \newenvironment{acknowledgements}{
 \cleardoublepage
 \setsinglecolumn
-\chapter*{\centering \Large Remerciements}
+% \chapter*{\centering \Large Remerciements}
+\chapter*{\centering \Large Acknowledgements}
 \thispagestyle{empty}
 }
 
@@ -1082,12 +1083,12 @@ wish to left align your text}
 \RequirePackage[intoc]{nomencl}
 \makenomenclature
 \renewcommand{\nomgroup}[1]{%
-\ifthenelse{\equal{#1}{L}}{\item[\textbf{Symboles latins}]}{%
-\ifthenelse{\equal{#1}{G}}{\item[\textbf{Symboles grecques}]}{%
+\ifthenelse{\equal{#1}{L}}{\item[\textbf{Roman symbols}]}{%
+\ifthenelse{\equal{#1}{G}}{\item[\textbf{Greek symbols}]}{%
 \ifthenelse{\equal{#1}{A}}{\item[\textbf{Acronyms and Abbreviations}]}{%
-\ifthenelse{\equal{#1}{E}}{\item[\textbf{Exposants}]}{%
+\ifthenelse{\equal{#1}{E}}{\item[\textbf{Exponents}]}{%
 \ifthenelse{\equal{#1}{I}}{\item[\textbf{Indices}]}{%
-\ifthenelse{\equal{#1}{O}}{\item[\textbf{Notations mathématiques}]}
+\ifthenelse{\equal{#1}{O}}{\item[\textbf{Mathematical notations}]}
 {}
 }% matches mathematical symbols > O
 }% matches Subscripts           > I
