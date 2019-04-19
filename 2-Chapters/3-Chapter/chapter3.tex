@@ -294,6 +294,17 @@ Optional dependencies include \texttt{joblib} \cite{joblib} for parallel simulat
 All the quoted libraries are free and open-source and can be installed in one command using the \texttt{pip} (\texttt{\href{https://pip.pypa.io/}{pip.PyPa.io}}) or \texttt{conda} (\texttt{\href{http://conda.anaconda.org/}{conda.anaconda.org}}) package manager.
 
 
+\subsection{Continuous integration using Read the Docs and Travis CI}
+
+% FIXME
+\TODOL{I need to quickly explain that SMPyBandits is using Read the Docs since $2017$ and Travis Ci since $2018$ to:
+
+1. automatically build the documentation on Read the Docs after every commit. This allows to regularly check that the library is well formatted and can be imported correctly, as well as keeping the online documentation up-to-date.
+
+2. automatically run short numerical simulations on Travis CI after every commit. This allows to check that no modification on any part of the codebase breaks anything, as well as giving an up-to-date example of log files that shows online the results of different examples of experiments. The tests covers all the main models and almost all the algorithms implemented in SMPyBandits, and it has been proved very useful to quickly find and fix new bugs.
+}
+
+
 \subsection{Research works using SMPyBandits}
 
 SMPyBandits was used for the following research articles since $2017$, and it is used for the next chapters of this thesis (except in Chapter~\ref{chapter:4}).
@@ -350,17 +361,67 @@ The goal is to highlight that the simplest (but most efficient) algorithms have 
 % SMPyBandits also implemented sparse MAB models (with $s<K$ arms with a mean $\mu_i>0$ and $K-s$ arms with a mean $\mu_i \leq 0$), I could also present this model, the various algorithms designed to tackle it, and some numerical experiments.
 
 
+
+
+\newpage  % WARNING
 % ----------------------------------------------------------------------------
 \section{Conclusion}
 \label{sec:3:conclusion}
 
-In this chapter, we saw...
 
-Future works include...
+In this chapter, we presented our Python library, named SMPyBandits, by detailing three main points:
+$(i)$ its purpose and qualities,
+$(ii)$ the structure of the package,
+and $(iii)$ an overview of its usage:
+%
+
+$(i)$
+Its purpose is to easily implement numerical simulations of stochastic or piece-wise stochastic (see Chapter~\ref{chapter:6}) problems of single- or multi-player multi-armed bandits.
+SMPyBandits is distributed on GitHub and Pypi freely, under an open-source license, and it is extensively documented (at \href{https://SMPyBandits.GitHub.io}{\texttt{SMPyBandits.GitHub.io}}).
+Our library allows any researcher to easily run numerical simulations of different kinds of multi-armed bandit problems, requiring only a small knowledge of Python thanks to its documentation, its well-designed API, and many examples of simulation scripts and configuration files included.
+
+$(ii)$
+We detailed how SMPyBandits is implementing arms, problems, algorithms, and use these components to implement a simulation loop, with various visualizations being performed after the simulation.
+As far as now, SMPyBandits is restricted to the finite-arm cases, but it supports a wide range of arms distributions.
+Different kinds of models are implemented, from stationary single-player to piece-wise stationary multi-player with different collision models.
+One of the main quality of the library is that it is quite exhaustive, as all the main families of algorithms covering these different models have been implemented, even very recent algorithms from the literature, as we tried our best in following the active research since December $2016$ to June $2019$.
+More than $65$ algorithms or variants of algorithms are implemented for the single-player case, $5$ for the expert aggregation problem, about $15$ for the multi-player case, and about $20$ for the piece-wise stationary problem.
+All the codebase is fully documented, and the library is using continuous integration to run automated tests on the code after every modification.
+%
+When comparing algorithms on a problem, the main performance measure is the regret, but the library also compute, store and visualize other measures such as best-arm selection rate or mean cumulated reward, as well as real time and memory costs.
+
+$(iii)$
+Finally, we presented how to use SMPyBandits, if one wants to run some pre-designed simulations or design new simulations.
+Running a simulation is very easy, and different examples showed that the main parameters such as the time horizon $T$ or the number of repetitions can be configured directly from the command line when running the Python script, or by modifying the code.
+Designing a new simulation requires to have a basic knowledge of Python, but not to dive into the implementation of the library.
+We give below in Appendix~\ref{sec:3:appendix} a small but complete example of the two files that has to be written for a new simulation: a \texttt{main} file which essentially defines the desired visualizations after the simulation, and a \texttt{configuration} file which defines the problems to simulate and their parameters, as well as the algorithms that will be compared.
 
 
+% WARNING
+\paragraph{Remark.}
+We want to conclude by highlighting that a significant amount of time during my PhD was devoted to the development of SMPyBandits, and as such the library, its documentation and this chapter  are considered one of the main contribution of this thesis.
+%
+Our library is used for the numerical simulations in all this thesis, except Chapter~\ref{chapter:4}. We use it to compare state-of-the-art single-player algorithms designed for stationary MAB in Chapter~\ref{chapter:2}, for multi-armed problems in Chapter~\ref{chapter:5} and for piece-wise stationary problems in Chapter~\ref{chapter:6}.
+We also used it in other publications not included in this thesis, like our work on doubling tricks \cite{Besson2018DoublingTricks} that we shortly present in \ref{app:2:DoublingTricks}.
 
 
+\paragraph{Future works.}
+%
+An interesting future work left on our library SMPyBandits could be to implement variants of the single-player stochastic models.
+For instance, adding support for non-finite arms is interesting, \eg, linear or contextual bandit.
+
+In Chapter~\ref{chapter:5}, we use SMPyBandits to simulate multi-player bandit problems, and some we present some extensions of this model. Some have already been implemented, but other extensions are yet to be added.
+It is one of the major future work left on our library.
+For more details, see the issue tickets at \href{https://github.com/SMPyBandits/SMPyBandits/issues/}{\texttt{GitHub.com/SMPyBandits/SMPyBandits/issues/X}}, for tickets number \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}.
+
+
+Finally, the most exciting thing that could happen to our SMPyBandits library would be to see it gaining popularity.
+We have submitted a summary paper presenting SMPyBandits \cite{SMPyBanditsJMLR} to the MLOSS track of the Journal of Machine Learning Research (JMLR), and we hope to be accepted.
+%
+I would personally love to be able in the next to teach a graduate or under-graduate course on multi-armed bandits, and use my library as a support to illustrate the course, as well as practical sessions.
+
+
+\newpage  % WARNING
 % ----------------------------------------------------------------------------
 \section{Appendix}
 \label{sec:3:appendix}
@@ -435,7 +496,7 @@ $ T=50000 N=100 K=10 ARM_TYPE=Gaussian python main.py
 \end{small}
 
 
-\subsection{A final note about parallelism in SMPyBandits}
+\subsection{Using parallelism in SMPyBandits}
 \label{sub:3:parallelSimulations}
 % Using multi-core to speed-up simulations
 
@@ -469,11 +530,12 @@ $ BAYES=False ARM_TYPE=Bernoulli N=100 T=10000 K=9 N_JOBS=1 \
     \end{listing}
 \end{small}
 
-As long as the number of jobs (\texttt{N\_JOBS} here) is less then or equal to the number of physical cores in the CPU of the computer, the final speed-up in terms of total computation runtime is almost optimal, dividing the running time by \texttt{N\_JOBS}.
-But jobs are implemented as threads, so the speed-up cannot be more than the number of cores, and using for instance $20$ jobs on $4$-cores for the $20$ repetitions is highly sub-optimal, as the CPU will essentially spend all his time (and memory) managing the different jobs, and not actually doing the simulations.
+As long as the number of jobs (\texttt{N\_JOBS} here) is less then or equal to the number of physical cores in the CPU of the computer, the final speed-up in terms of total computation runtime is almost optimal.
+%  dividing the running time by \texttt{N\_JOBS}.
+But jobs are implemented as threads, so the speed-up cannot be more than the number of cores, and using for instance $20$ jobs on $4$-cores for the $20$ repetitions is sub-optimal, as the CPU will essentially spend all his time (and memory) managing the different jobs, and not actually doing the simulations.
 Using the above example, we illustrate the effect of using multi-jobs and multi-cores on the time efficiency of simulations using SMPyBandits. We consider three values of \texttt{N\_JOBS}, $1$ to use only one core and one job, $4$ to use all the $4$ cores of my $i5$ Intel CPU, and $20$ jobs.
 We give in Table~\ref{table:3:speedUpTimeParallelComputations} an example of running time of an experiment with $T=1000$, and different number of repetitions and number of jobs.
-It clearly illustrates that using more jobs than the number of CPU is suboptimal, and that as soon as the number of repetitions is large enough, using one job by available CPU core (\ie, here $4$ jobs) gives a significant speed-up time.
+It clearly illustrates that using more jobs than the number of CPU is sub-optimal, and that as soon as the number of repetitions is large enough, using one job by available CPU core (\ie, here $4$ jobs) gives a significant speed-up time.
 Due to the cost of orchestrating the different jobs, and memory exchanges at the end of each repetition, the parallel version is \emph{not} $4$ times faster, but empirically we always found it to be $2$ to $3.5$ times faster.
 
 % for N in 1 10 100; do for NJOBS in 1 4 100; do DEBUG=True SAVEALL=False NOPLOTS=True N=$N T=10000 N_JOBS=$NJOBS make single; read; done
@@ -482,12 +544,12 @@ Due to the cost of orchestrating the different jobs, and memory exchanges at the
 % \begin{footnotesize}
     \centering
     \begin{tabular}{c|ccc}
-    \textbf{Repetitions} $\;$ \textbackslash $\;$ \texttt{N\_JOBS} & $1$ & $4$ & $20$ \\
+    \textbf{Repetitions} $\;$ \textbackslash $\;$ number of jobs \texttt{N\_JOBS} & $1$ & $4$ ($=$ nb CPU cores) & $20$ ($>$ nb CPU cores) \\
         \hline
         $1$ repetition    & $15 \;\text{s}$ & $26 \;\text{s}$ & $43 \;\text{s}$ \\
         $10$ repetitions  & $87 \;\text{s}$ & $51 \;\text{s}$ & $76 \;\text{s}$ \\
         $100$ repetitions & $749 \;\text{s}$ & $272 \;\text{s}$ & $308 \;\text{s}$ \\
-        $500$ repetitions & $2944 \;\text{s}$ & $1530 \;\text{s}$ & $1346 \;\text{s}$ \\
+        $500$ repetitions & $2944 \;\text{s}$ & $1530 \;\text{s}$ & $1846 \;\text{s}$ \\
         \hline
     \end{tabular}
     \caption{Effect on the running time of using \texttt{N\_JOBS} jobs in parallel, for a simulation with $9$ different algorithms, for $K=9$ arms, a time horizon of $T=10000$.}
@@ -500,7 +562,7 @@ Due to the cost of orchestrating the different jobs, and memory exchanges at the
 %
 The two other approaches we could have consider is parallel computations running on not multiple cores but multiple machines, in a computer cluster, or parallel computations running in a Graphical Processing Unit (GPU).
 
-On the first hand, I did not try to add in SMPyBandits the possibility to run simulations using a GPU, or any general purpose computation libraries offering a GPU-backend.
+$(i)$ I did not try to add in SMPyBandits the possibility to run simulations using a GPU, or any general purpose computation libraries offering a GPU-backend.
 Initially designed for graphical simulations and mainly for video-games applications, the use of GPU for scientific computations have been gaining attention for numerical simulation in the research world since the last $15$ years, and NVidia CUDA for GPGPU (General Purpose GPU) started to become popular in $2011$.
 Since $2016$, we saw a large press coverage as well as an extensive use in research of deep learning libraries that make general-purpose machine learning algorithms train on the GPU of a user's laptop or a cluster of GPU.
 This success is mainly possible because of the heavy parallelism of such training algorithms, and the parallel nature of GPU.
@@ -509,7 +571,7 @@ I worked on a GPU, implementing fluid dynamic simulations in an internship in $2
 I have contributed to and used famous deep-learning libraries, like Theano (\href{http://deeplearning.net/software/theano/}{\texttt{DeepLearning.net/software/theano}}) or Keras (\href{https://keras.io/}{\texttt{keras.io}}), and my limited knowledge on such libraries made me believe that it was not easy to use a GPU for bandit simulations, and most surely it would not have been worth the time.
 I would be very curious to understand how a GPU could be used to implement highly efficient simulations for sequential learning problems, because it seemed hard whenever I thought about it.
 
-On the other hand, I also did not try to use any large scale computer cluster, even if I was aware of the possibility offered by the Grid 5000 project, for instance.
+$(ii)$ I also did not try to use any large scale computer cluster, even if I was aware of the possibility offered by the Grid 5000 project, for instance.
 It is partly due to time constraint, as I would have been curious to try, but mainly because we found that it would not have helped us much to use a large scale cluster.
 The main reason is that in the multi-armed bandit and sequential learning literature, most research papers do not even include an experimental section, and for the papers who did take the time to implement and test their proposed algorithms, it is almost done on just a few problems and for short- or medium- duration experiments.
 For instance, the papers we consider to be the best ones regarding their empirical sections are \cite{LiuLeeShroff17,CaoZhenKvetonXie18}, for piece-wise stationary bandits, and they mainly consider reasonable problems of horizon $T=10000$ and no more than $1000$ independent repetitions. Each paper considers one harder problem, of horizon $T=1000000$ and less repetitions.
