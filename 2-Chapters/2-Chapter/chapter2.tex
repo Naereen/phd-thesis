@@ -1,13 +1,48 @@
 %!TEX root = ../PhD_thesis__Lilian_Besson
 
 % First chapter begins here
-\chapter{Single Player and Stationary Multi-Armed Bandit Models}
+\chapter{The Single Player and Stationary Multi-Armed Bandit Model}
 \label{chapter:2}
 \minitoc
 
-Abstract for Chapter 2.
+In this chapter, we present the first model of multi-armed bandit (MAB) studied in this thesis,
+the single-player and stationary stochastic MAB model.
+MAB models a decision-making game, where a \emph{player} has to sequentially select one action in a (usually finite) set of actions, and only receives a (random) feedback about the action she selected, also called \emph{reward}.
+Her goal is to maximize its sum of received rewards, from time $t=1$ to $t=T$ if the game is played at an horizon $T$. The difficulty comes from balancing the trade-off between \emph{exploration}, because she has to observe as much as possible all the arms to get more knowledge about the distributions of their rewards, and \emph{exploitation}, because she also has to select as much as possible the best arm.
+%
+We focus on the model with finite arms, and binary or real-valued stochastic rewards.
+After introducing formally the notations used in all this thesis, for arms, distributions, rewards etc, we review shortly various possible applications of multi-armed bandits.
+The focus of this work is on cognitive radio and IoT networks, where arms can represent wireless orthogonal channels, but more generally any resource characterizing the communication of a device to a gateway (\eg, spreading factor for LoRa, power allocation for NOMA etc).
 
-\TODOL{Write this!}
+We explain the measure of performance used in this thesis, defined as the regret and written $R_T^{\cA}$ for algorithm $\cA$ and horizon $T$. The regret compares the performance of the decision-making player and the oracle who knows in advance the best arm and always selects it.
+Other measures of performance, such as best-arm identification, are not used later on in this document, but they are also shortly discussed.
+%
+We give an overview of the main families of algorithms designed to tackle the stochastic MAB model, and we mainly focus on the \UCB{} and \klUCB{} algorithms, as they are the two we used in the next chapters.
+Part of the work presented in Chapter~\ref{chapter:4} also used the Thompson sampling algorithm, but no theoretical analyses were done about it.
+When presenting our library SMPyBandits in Chapter~\ref{chapter:3} our library SMPyBandits, designed to perform numerical simulations of MAB problem, we use it to compare the empirical performances of the most famous and most efficient algorithms, on a few different problems.
+%
+In the point-of-view of practical simulations, one must also take care of two other measures of performance: time and memory complexity, which can vary greatly between different families of algorithms.
+We also give an empirical comparison of different algorithms for these two measures in Chapter~\ref{chapter:3}.
+
+We then review the main theoretical results from famous previous works, that give a lower-bound on the regret of any algorithm, essentially showing that we cannot find an algorithm achieving a sub-logarithmic regret, in this stochastic MAB model.
+We also gives regret upper-bounds of the two main algorithms used in this thesis, \UCB{} and \klUCB, to highlight the difference between their finite-time regret upper-bounds. They both attain a logarithmic regret, proving their order optimality (\ie, their regret upper-bound asymptotically matches the lower-bound), moreover \klUCB{} is known to be optimal for a wide range of arms distributions.
+A sketch of the proof of both results is given in Appendix.
+
+Finally, we explore the problem of algorithm selection: as there is many different algorithms, all having different qualities and properties, how one can decide which algorithm to use for a particular application?
+We present one of the first contribution made during my PhD \cite{Besson2018WCNC}, consisting of an efficient algorithm for aggregating algorithms. We illustrate its performance empirically, but no satisfactory theoretical result is given, as the bound we hoped for have been proved unachievable since then.
+
+
+\paragraph{Publications.}
+%
+Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is based on the following publication: \cite{Besson2018WCNC}.
+The notations used in this thesis are the usual notations in all the MAB literature, and we follow closely the formalism of \cite{Kaufmann12PhD}, as well as \cite{Slivkins2019,LattimoreBanditAlgorithmsBook,Bubeck12}.
+
+
+\paragraph{Main references for the curious reader.}
+%
+For more details and a more pedagogical introduction to multi-armed bandits, we suggest to the interested reader to read the short text-book \cite{Slivkins2019}.
+Another excellent but reasonably short survey is \cite{Bubeck12}, while the more recent book \cite{LattimoreBanditAlgorithmsBook} is the most complete resource about bandit algorithms.
+
 
 \newpage
 % Write miniTOC just after the title
