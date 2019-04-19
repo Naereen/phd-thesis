@@ -4,6 +4,9 @@
 \label{chapter:3}
 \minitoc
 
+
+\paragraph{Abstract.}
+%
 SMPyBandits is a package I have developed since the beginning of my PhD.
 It is designed to allow easy and efficient numerical simulations on single-player and multi-players Multi-Armed Bandits (MAB) algorithms, and SMPyBandits is written in Python.
 This library is by far the most complete open-source implementation of state-of-the-art algorithms tackling various kinds of MAB sequential learning problems.
@@ -28,15 +31,17 @@ Then we use it to perform a numerical comparisons of the main state-of-the-art s
 SMPyBandits is the most complete open-source implementation of state-of-the-art algorithms tackling various kinds of sequential learning problems referred to as Multi-Armed Bandits.
 It aims at being extensive, simple to use and maintain, with a clean and perfectly documented codebase. But most of all it allows fast prototyping of simulations and experiments, with an easy configuration system and command-line options to customize experiments while starting them (see below for an example).
 
-SMPyBandits does not aim at being blazing fast or optimal in terms of memory usage, and it comes with a pure Python implementation \cite{python}, with no dependency except standard open-source Python packages.
-Even if some critical parts are also available as a \texttt{C} Python extension, and even by using Numba \cite{numba} whenever it is possible, if simulation speed really matters, one should rather refer to less exhaustive but faster implementations, like for example \cite{TorLibbandit} in \texttt{C++} or \cite{VishMABjl} in Julia.
+SMPyBandits does not aim at being blazing fast or optimized in terms of memory usage, as it comes with a pure Python implementation \cite{python}, with no dependency except standard open-source Python packages.
+Some critical parts are also available as a \texttt{C} Python extension, and the just-in-time Numba compiler \cite{numba} is used whenever it is possible, so we can note that we optimized the time efficiency of what could be (easily) optimized.
+However if simulation speed really matters, one should rather refer to less exhaustive but faster implementations, like for example \cite{TorLibbandit} in \texttt{C++} or \cite{VishMABjl} in Julia. Note that both are not maintained anymore, and contain just a few algorithms for the simple stationary MAB model.
 
 In this Chapter~\ref{chapter:3}, we start by presenting in Section~\ref{sec:3:presentationLibrary} the organization of the library.
 We use the library to compare the most famous and most efficient single-player MAB algorithms in Section~\ref{sec:3:reviewSPAlgorithms},
 then we present in Section~\ref{sec:3:timeAndMemoryCosts} additional numerical simulations to discuss about the time efficient and memory costs of the some MAB algorithms (we focus on the ones being used in the rest of this thesis, \UCB, \klUCB, and Thompson Sampling).
-To also illustrate how one can easily extend the SMPyBandits library to add not only add new distributions or new algorithms, but also new bandit models, we detail in Section~\ref{sec:3:markovModels} how we added the possibility to simulate Markovian models (as introduced by \cite{Anantharam87b}).
+To also illustrate how one can easily extend the SMPyBandits library to add not only add new distributions or new algorithms.
+% but also new bandit models, we detail in Section~\ref{sec:3:markovModels} how we added the possibility to simulate Markovian models (as introduced by \cite{Anantharam87b}).
 %
-Finally, in Appendix~\ref{sec:3:appendix} we include some minimalist files showing how to use the library, as well as details regarding the possible use of multiple cores to speed-up simulations.
+Finally, in Appendix~\ref{sec:3:appendix} we include some minimalist files showing how to use the library, as well as details regarding the use of parallel computing to speed-up simulations.
 
 
 \paragraph{Publications}
@@ -121,11 +126,45 @@ which can be truncated to an interval $[a,b]$ or have unbounded support ($\mathb
 %
 The default is to use the same distribution for the $K$ arms, but it also possible to mix them (see for instance Figure~\ref{fig:25:HarderMixed}).
 %
+For instance the following code creates three arms, following a Bernoulli distribution with respective means $0.1, 0.5, 0.9$, and a \texttt{MAB} object which encapsulate the problem.
+We give another example for truncated Gaussian distributions, and a visualization of a histogram of $10000$ rewards obtained from the arms, below in Figure~\ref{fig:3:exampleOfRewards}.
+
+% https://tex.stackexchange.com/a/12430/
+\begin{small}
+\begin{listing}[h!]
+    \begin{minted}[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{python}
+from SMPyBandits.Arms import *
+arm1 = Bernoulli(0.1)
+arm2 = Bernoulli(0.5)
+arm3 = Bernoulli(0.9)
+
+means = [0.1, 0.5, 0.9]
+from SMPyBandits.Environment import MAB
+bernoulli_problem = MAB([arm1, arm2, arm3])
+# but also
+bernoulli_problem = MAB({'arm_type': Bernoulli, 'params': means})
+
+gaussian_problem = MAB({'arm_type': Gaussian, 'params': means})
+gaussian_problem.plotHistogram()  # display the histogram showed below
+    \end{minted}
+    \caption{Small snippet of Bash code to run a simple experiment with SMPyBandits}
+    % \captionof{listing}{Small snippet of Bash code to run a simple experiment with SMPyBandits \label{lst:3:howToRunBasicLibrary}.}
+    \label{lst:3:howToRunBasicLibrary}
+\end{listing}
+\end{small}
+
+\begin{figure}[h!]  % [htbp]
+	\centering
+	\includegraphics[width=0.95\linewidth]{exampleOfRewards.pdf}
+	\caption{Histogram of $10000$ \iid{} rewards obtained from three arms with a Gaussian distribution truncated to $[0,1]$, of respective means $0.1$, $0.5$ and $0.9$.}
+	\label{fig:3:exampleOfRewards}
+\end{figure}
+
+
 We do not give more details, but the interested reader can refer to the following Jupyter notebook \cite{jupyter} document hosted at:\\
 \begin{small}
     \href{https://smpybandits.github.io/notebooks/Easily_creating_MAB_problems.html}{\texttt{SMPyBandits.GitHub.io/notebooks/Easily\_creating\_MAB\_problems.html}}
 \end{small}
-
 
 \subsection{MAB algorithms}
 
@@ -149,7 +188,7 @@ For instance the code specific to the UCB algorithm \cite{LaiRobbins85,Auer02} i
 
 \subsubsection{Features}
 
-With this numerical framework, simulations can run on a single CPU or a multi-core machine using joblib \cite{joblib},
+With this numerical framework, simulations can run on a single CPU or a multi-core machine using joblib \cite{joblib} (see Appendix~\ref{sub:3:parallelSimulations}),
 and summary plots are automatically saved as high-quality PNG, PDF and EPS, using matplotlib \cite{matplotlib} and seaborn \cite{seaborn}.
 Raw data from each simulation is also saved in a HDF5 file using h5py \cite{h5py}, an efficient and compressed binary format, to allow easy post-mortem exploration of simulation results.
 Making new simulations is very easy, one only needs to write a configuration script (\texttt{configuration.py}), without needing a complete knowledge of the internal code architecture.
@@ -173,7 +212,7 @@ $ cd SMPyBandits.git
 # 2. install the requirements
 $ pip install -r requirements.txt
         \end{minted}
-        \caption{Small snippet of Bash code to download and install dependencies of SMPyBandits}
+        \caption{Small snippet of Bash code to download and install dependencies of SMPyBandits.}
         % \captionof{listing}{Small snippet of Bash code to download and install dependencies of SMPyBandits \label{lst:3:howToInstallLibrary}.}
         \label{lst:3:howToInstallLibrary}
     \end{listing}
@@ -192,7 +231,7 @@ $ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=4 \
   MEANS=[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9] \
   python3 main.py configuration.py
     \end{minted}
-    \caption{Small snippet of Bash code to run a simple experiment with SMPyBandits}
+    \caption{Small snippet of Bash code to run a simple experiment with SMPyBandits.}
     % \captionof{listing}{Small snippet of Bash code to run a simple experiment with SMPyBandits \label{lst:3:howToRunBasicLibrary}.}
     \label{lst:3:howToRunBasicLibrary}
 \end{listing}
@@ -211,7 +250,7 @@ For instance, one can compare the standard anytime \klUCB{} algorithm (class \te
     \begin{minted}[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{python3}
 configuration["policies"] = [
   {"archtype": klUCB, "params": {"klucb": klucbBern}},
-  {"archtype": klUCBPlusPlus, "params": {"horizon": HORIZON, "klucb": klucbBern}},
+  {"archtype": klUCBPlusPlus, "params": {"horizon": T, "klucb": klucbBern}},
   {"archtype": UCBalpha, "params": {"alpha": 1}},
   {"archtype": Thompson, "params": {"posterior": Beta}}
 ]
@@ -259,21 +298,23 @@ All the quoted libraries are free and open-source and can be installed in one co
 
 SMPyBandits was used for the following research articles since $2017$, and it is used for the next chapters of this thesis (except in Chapter~\ref{chapter:4}).
 
-In \cite{Besson2018WCNC} and in Chapter~\ref{chapter:2} above, we used SMPyBandits to illustrate and compare different aggregation algorithms\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/Aggregation.html}{SMPyBandits.GitHub.io/Aggregation.html}} on the documentation, which gives detailed instructions to reproduce the results presented in this research paper, details about the models and the notations, and bibliographic references.}. We designed a variant of the Exp4 algorithm for online aggregation of experts \cite{Bubeck12}, called \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Aggregator.html}{Aggregator}}.
+-- In \cite{Besson2018WCNC} and in Chapter~\ref{chapter:2} above, we used SMPyBandits to illustrate and compare different aggregation algorithms\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/Aggregation.html}{SMPyBandits.GitHub.io/Aggregation.html}} on the documentation, which gives detailed instructions to reproduce the results presented in this research paper, details about the models and the notations, and bibliographic references.}. We designed a variant of the Exp4 algorithm for online aggregation of experts \cite{Bubeck12}, called \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Aggregator.html}{Aggregator}}.
 % Aggregating experts is a well-studied idea in sequential learning and in machine learning in general. We showed that it can be used in practice to select on the run the best bandit algorithm for a certain problem from a fixed pool of experts. This idea and algorithm can have interesting impact for Opportunistic Spectrum Access applications \cite{Jouini09} that use multi-armed bandits algorithms for sequential learning and network efficiency optimization.
 
-In \cite{Besson2018ALT} and in Chapter~\ref{chapter:5} below, we used SMPyBandits for all the simulations for multi-player bandit algorithms\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/MultiPlayers.html}{SMPyBandits.GitHub.io/MultiPlayers.html}} on the documentation.}. We designed the two \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html}{RandTopM}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{MCTopM}} algorithms and proved than they enjoy logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (\ie, \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html}{rhoRand}}, \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html}{MEGA}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html}{MusicalChair}}).
+-- In \cite{Besson2018ALT} and in Chapter~\ref{chapter:5} below, we used SMPyBandits for all the simulations for multi-player bandit algorithms\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/MultiPlayers.html}{SMPyBandits.GitHub.io/MultiPlayers.html}} on the documentation.}. We designed the two \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html}{RandTopM}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{MCTopM}} algorithms and proved than they enjoy logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (\ie, \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html}{rhoRand}}, \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html}{MEGA}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html}{MusicalChair}}).
 
-In \cite{Besson2018DoublingTricks}, we used SMPyBandits to illustrate and compare different "doubling trick" schemes\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/DoublingTrick.html}{SMPyBandits.GitHub.io/DoublingTrick.html}} on the documentation.}. and lots of bibliographic referencesIn sequential learning, an algorithm is anytime if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any non-anytime algorithm to an anytime variant is the ``Doubling Trick'': start with an horizon $T_0\in\mathbb{N}^*$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to conserve minimax regret bounds (in $R_T = \mathcal{O}(\sqrt{T})$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to conserve a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to conserve logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can conserve minimax bounds, or "weak" minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
+-- In \cite{Besson2018DoublingTricks} (quickly presented in Appendix~\ref{app:2:DoublingTricks}), we used SMPyBandits to illustrate and compare different "doubling trick" schemes\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/DoublingTrick.html}{SMPyBandits.GitHub.io/DoublingTrick.html}} on the documentation.}. and lots of bibliographic referencesIn sequential learning, an algorithm is anytime if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any non-anytime algorithm to an anytime variant is the ``Doubling Trick'': start with an horizon $T_0\in\mathbb{N}^*$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to conserve minimax regret bounds (in $R_T = \mathcal{O}(\sqrt{T})$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to conserve a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to conserve logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can conserve minimax bounds, or "weak" minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
 
-In \cite{Besson2019GLRT} and \cite{Besson2019Gretsi}, and in Chapter~\ref{chapter:6} below, we used SMPyBandits for piece-wise stationary MAB models (only for the single-player case). We illustrate and compare different algorithms designed for this family of non-stationary problems\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/NonStationary.html}{SMPyBandits.GitHub.io/NonStationary.html}} on the documentation.}.
+-- In \cite{Besson2019GLRT} and \cite{Besson2019Gretsi}, and in Chapter~\ref{chapter:6} below, we used SMPyBandits for piece-wise stationary MAB models (only for the single-player case). We illustrate and compare different algorithms designed for this family of non-stationary problems\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/NonStationary.html}{SMPyBandits.GitHub.io/NonStationary.html}} on the documentation.}.
 We designed the \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.GLR_UCB.html}{GLRklUCB}} policy, and implemented most of the policies from state-of-the-art research on passively or active adaptive policies, both adversarial- or stochastic-based, designed to tackle the piece-wise stationary MAB problems.
-We also implemented a large benchmark of problems.
+We also implemented a large benchmark of different problems.
 
 
 % ----------------------------------------------------------------------------
 \section{Experimental comparisons of state-of-the-art single-player algorithms}
 \label{sec:3:reviewSPAlgorithms}
+
+\TODOL{Write text for this Section, write configuration.py file, run short-term experiment, include them, if happy about it, run longer ang larger experiments}
 
 I want to show that SMPyBandits contains highly documented implementations of all the most important algorithms designed for stationary single-player multi-armed bandit.
 
@@ -288,6 +329,8 @@ I will include graphs showing the mean regret $R_t$ as a function of time $t$, a
 % ----------------------------------------------------------------------------
 \section{Some numerical experiments to compare time and memory costs of various algorithms}
 \label{sec:3:timeAndMemoryCosts}
+
+\TODOL{Write text for this Section, write configuration.py file, run short-term experiment, include them, if happy about it, run longer ang larger experiments}
 
 I want to show the real numerical costs in terms of computation time and storage requirement of the various algorithms for single-player bandits.
 
@@ -308,7 +351,7 @@ The goal is to highlight that the simplest (but most efficient) algorithms have 
 
 
 % ----------------------------------------------------------------------------
-\section{Conclusion of Chapter 3}
+\section{Conclusion}
 \label{sec:3:conclusion}
 
 In this chapter, we saw...
@@ -319,7 +362,7 @@ Future works include...
 
 
 % ----------------------------------------------------------------------------
-\section{Appendix for Chapter 3}
+\section{Appendix}
 \label{sec:3:appendix}
 
 
@@ -429,7 +472,9 @@ $ BAYES=False ARM_TYPE=Bernoulli N=100 T=10000 K=9 N_JOBS=1 \
 As long as the number of jobs (\texttt{N\_JOBS} here) is less then or equal to the number of physical cores in the CPU of the computer, the final speed-up in terms of total computation runtime is almost optimal, dividing the running time by \texttt{N\_JOBS}.
 But jobs are implemented as threads, so the speed-up cannot be more than the number of cores, and using for instance $20$ jobs on $4$-cores for the $20$ repetitions is highly sub-optimal, as the CPU will essentially spend all his time (and memory) managing the different jobs, and not actually doing the simulations.
 Using the above example, we illustrate the effect of using multi-jobs and multi-cores on the time efficiency of simulations using SMPyBandits. We consider three values of \texttt{N\_JOBS}, $1$ to use only one core and one job, $4$ to use all the $4$ cores of my $i5$ Intel CPU, and $20$ jobs.
-We give in Table~\ref{table:3:speedUpTimeParallelComputations}
+We give in Table~\ref{table:3:speedUpTimeParallelComputations} an example of running time of an experiment with $T=1000$, and different number of repetitions and number of jobs.
+It clearly illustrates that using more jobs than the number of CPU is suboptimal, and that as soon as the number of repetitions is large enough, using one job by available CPU core (\ie, here $4$ jobs) gives a significant speed-up time.
+Due to the cost of orchestrating the different jobs, and memory exchanges at the end of each repetition, the parallel version is \emph{not} $4$ times faster, but empirically we always found it to be $2$ to $3.5$ times faster.
 
 % for N in 1 10 100; do for NJOBS in 1 4 100; do DEBUG=True SAVEALL=False NOPLOTS=True N=$N T=10000 N_JOBS=$NJOBS make single; read; done
 
