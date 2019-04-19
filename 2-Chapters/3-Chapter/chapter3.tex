@@ -7,14 +7,16 @@
 
 \paragraph{Abstract.}
 %
-SMPyBandits is a package I have developed since the beginning of my PhD.
-It is designed to allow easy and efficient numerical simulations on single-player and multi-players Multi-Armed Bandits (MAB) algorithms, and SMPyBandits is written in Python.
-This library is by far the most complete open-source implementation of state-of-the-art algorithms tackling various kinds of MAB sequential learning problems.
-It aims at being extensive, simple to use and maintain, with a clean and well documented codebase.
+SMPyBandits is a Python package I have developed since the beginning of my PhD.
+It is designed to allow easy and fast numerical simulations on single-player and multi-players Multi-Armed Bandits (MAB) algorithms.
+%  and SMPyBandits is written in Python.
+This library is by far the most complete open-source implementation of state-of-the-art algorithms and different kinds of MAB models.
+It aims at being extensive, simple to use and maintain, and has a clean and well documented codebase.
 It allows fast prototyping of simulations and experiments, with an easy configuration system and command-line options to customize experiments.
 Experiment results are saved in an optimized binary format (HDF5) as well as high quality plots of many useful visualizations.
 %
 More than two years of active development have shown how easy it can be to add new algorithms, new arm distributions, and new bandit models (\eg, Markov or non-stationary).
+It uses the most recent technologies, by being hosted on GitHub, and uses two online services of continuous integration to run automated tests and build the documentation.
 
 This chapter details the organization of the library, what it implements in terms of arm distributions, models, algorithms and visualizations.
 Then we use it to perform a numerical comparisons of the main state-of-the-art single-player MAB algorithms, as well as a study to compare time and memory costs of the main algorithms.
@@ -28,7 +30,7 @@ Then we use it to perform a numerical comparisons of the main state-of-the-art s
 
 % This chapter is intended as a long version of the paper presenting SMPyBandits that I wrote in Summer 2018, see https://hal.inria.fr/hal-01840022
 
-SMPyBandits is the most complete open-source implementation of state-of-the-art algorithms tackling various kinds of sequential learning problems referred to as Multi-Armed Bandits.
+SMPyBandits is the most complete open-source implementation of state-of-the-art algorithms and models of Multi-Armed Bandits.
 It aims at being extensive, simple to use and maintain, with a clean and perfectly documented codebase. But most of all it allows fast prototyping of simulations and experiments, with an easy configuration system and command-line options to customize experiments while starting them (see below for an example).
 
 SMPyBandits does not aim at being blazing fast or optimized in terms of memory usage, as it comes with a pure Python implementation \cite{python}, with no dependency except standard open-source Python packages.
@@ -37,8 +39,8 @@ However if simulation speed really matters, one should rather refer to less exha
 
 In this Chapter~\ref{chapter:3}, we start by presenting in Section~\ref{sec:3:presentationLibrary} the organization of the library.
 We use the library to compare the most famous and most efficient single-player MAB algorithms in Section~\ref{sec:3:reviewSPAlgorithms},
-then we present in Section~\ref{sec:3:timeAndMemoryCosts} additional numerical simulations to discuss about the time efficient and memory costs of the some MAB algorithms (we focus on the ones being used in the rest of this thesis, \UCB, \klUCB, and Thompson Sampling).
-To also illustrate how one can easily extend the SMPyBandits library to add not only add new distributions or new algorithms.
+then we present in Section~\ref{sec:3:timeAndMemoryCosts} additional numerical simulations to discuss about the time efficient and memory costs of the some MAB algorithms. We focus on the ones being used in the rest of this thesis, \UCB, \klUCB, and Thompson Sampling.
+% To also illustrate how one can easily extend the SMPyBandits library to add not only add new distributions or new algorithms.
 % but also new bandit models, we detail in Section~\ref{sec:3:markovModels} how we added the possibility to simulate Markovian models (as introduced by \cite{Anantharam87b}).
 %
 Finally, in Appendix~\ref{sec:3:appendix} we include some minimalist files showing how to use the library, as well as details regarding the use of parallel computing to speed-up simulations.
@@ -47,7 +49,7 @@ Finally, in Appendix~\ref{sec:3:appendix} we include some minimalist files showi
 \paragraph{Publications.}
 %
 This chapter is based on the following publication: \cite{SMPyBanditsJMLR}.
-The code for SMPyBandits is hosted online at \texttt{\href{https://GitHub.com/SMPyBandits/SMPyBandits/}{GitHub.com/SMPyBandits/SMPyBandits}}, its documentation is at \texttt{\href{https://SMPyBandits.GitHub.io/}{SMPyBandits.GitHub.io}} or \texttt{\href{https://SMPyBandits.RTFD.io/}{SMPyBandits.RTFD.io}}, and all the library is publicly released under the MIT open-source License.
+The code for SMPyBandits is hosted online at \texttt{\href{https://GitHub.com/SMPyBandits/SMPyBandits/}{GitHub.com/SMPyBandits/SMPyBandits}}, its documentation is at \texttt{\href{https://SMPyBandits.GitHub.io/}{SMPyBandits.GitHub.io}} or \texttt{\href{https://SMPyBandits.RTFD.io/}{SMPyBandits.RTFD.io}}, and all the library is freely publicly released under the MIT open-source License.
 
 
 % ----------------------------------------------------------------------------
@@ -57,7 +59,7 @@ The code for SMPyBandits is hosted online at \texttt{\href{https://GitHub.com/SM
 % I want to show what is SMPyBandits, what problems does it solve, what did I implement, how to use it.
 
 We start by explaining how SMPyBandits simulates MAB problems, by detailing the different parts.
-We then detail how SMPyBandits implements MAB algorithms (\eg, \UCB),
+We then detail how it implements MAB algorithms (\eg, \UCB),
 and what kind of information is displayed, saved and plotted after a batch of simulations of bandit problems.
 
 The main goal of the library is to be easily able to simulate a small number of algorithms (\eg, three algorithms like \UCB, \klUCB{} and Thompson sampling) on one or more bandit models (single- or multi-player) defined by the number of arms $K$ and the distributions $\nu_k$, for some time from $t=1$ to the horizon $T$.
@@ -274,8 +276,8 @@ Running the simulation as shown above will save figures in a sub-folder, as well
 \cite{h5py}.
 % \texttt{\href{http://docs.h5py.org/en/stable/high/file.html}{docs.h5py.org/en/stable/high/file.html}}).
 Figure~\ref{fig:3:firstPlot} above shows the average regret for these $4$ algorithms.
-The regret is the difference between the cumulated rewards of the best fixed-armed strategy (which is the oracle strategy for stationary bandits), and the cumulated rewards of the considered algorithms.
-The Figure~\ref{fig:3:firstPlot_hist} below shows the histogram of regret for the same experiment.
+% The regret is the difference between the cumulated rewards of the best fixed-armed strategy (which is the oracle strategy for stationary bandits), and the cumulated rewards of the considered algorithms.
+The Figure~\ref{fig:3:firstPlot_hist} below shows the histogram of regret obtained at the end of the experiment (\ie, $R_T$) for the same example.
 
 \begin{figure}[h!]  % [htbp]
 	% \centering
@@ -289,9 +291,11 @@ The Figure~\ref{fig:3:firstPlot_hist} below shows the histogram of regret for th
 
 This library is written in Python \cite{python}, for versions 2.7+ or 3.4+, using \texttt{matplotlib} \cite{matplotlib} for 2D plotting, \texttt{numpy} \cite{numpy} for data storing, random number generations and operations on arrays, \texttt{scipy} \cite{scipy} for statistical and special functions, and \texttt{seaborn} \cite{seaborn} for pretty plotting and colorblind-aware colormaps.
 
-Optional dependencies include \texttt{joblib} \cite{joblib} for parallel simulations, \texttt{numba} \cite{numba} for automatic speed-up on small functions, \texttt{sphinx} \cite{sphinx} for generating the documentation, \texttt{virtualenv} \cite{virtualenv} for launching simulations in isolated environments, and \texttt{jupyter} \cite{jupyter} used with \texttt{ipython} \cite{ipython} to experiment with the code.
+Optional dependencies include \texttt{joblib} \cite{joblib} for parallel simulations, \texttt{numba} \cite{numba} for automatic speed-up on small functions using a Just-in-Time compiler, \texttt{sphinx} \cite{sphinx} for generating the documentation, \texttt{virtualenv} \cite{virtualenv} for launching simulations in isolated environments, and \texttt{jupyter} \cite{jupyter} used with \texttt{ipython} \cite{ipython} to experiment with the code.
 
 All the quoted libraries are free and open-source and can be installed in one command using the \texttt{pip} (\texttt{\href{https://pip.pypa.io/}{pip.PyPa.io}}) or \texttt{conda} (\texttt{\href{http://conda.anaconda.org/}{conda.anaconda.org}}) package manager.
+%
+When SMPyBandits is installed using \texttt{pip install SMPyBandits}, the dependencies are of course automatically installed if not already present.
 
 
 \subsection{Continuous integration using Read the Docs and Travis CI}
@@ -307,7 +311,7 @@ All the quoted libraries are free and open-source and can be installed in one co
 
 \subsection{Research works using SMPyBandits}
 
-SMPyBandits was used for the following research articles since $2017$, and it is used for the next chapters of this thesis (except in Chapter~\ref{chapter:4}).
+SMPyBandits was used for the following research articles since $2017$, and it is used for the previous and the next chapters of this thesis (except in Chapter~\ref{chapter:4}).
 
 -- In \cite{Besson2018WCNC} and in Chapter~\ref{chapter:2} above, we used SMPyBandits to illustrate and compare different aggregation algorithms\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/Aggregation.html}{SMPyBandits.GitHub.io/Aggregation.html}} on the documentation, which gives detailed instructions to reproduce the results presented in this research paper, details about the models and the notations, and bibliographic references.}. We designed a variant of the Exp4 algorithm for online aggregation of experts \cite{Bubeck12}, called \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Aggregator.html}{Aggregator}}.
 % Aggregating experts is a well-studied idea in sequential learning and in machine learning in general. We showed that it can be used in practice to select on the run the best bandit algorithm for a certain problem from a fixed pool of experts. This idea and algorithm can have interesting impact for Opportunistic Spectrum Access applications \cite{Jouini09} that use multi-armed bandits algorithms for sequential learning and network efficiency optimization.
@@ -338,7 +342,7 @@ I will include graphs showing the mean regret $R_t$ as a function of time $t$, a
 
 
 % ----------------------------------------------------------------------------
-\section{Some numerical experiments to compare time and memory costs of various algorithms}
+\section{Comparing the time and memory costs of various algorithms}
 \label{sec:3:timeAndMemoryCosts}
 
 \TODOL{Write text for this Section, write configuration.py file, run short-term experiment, include them, if happy about it, run longer ang larger experiments}
@@ -407,18 +411,28 @@ We also used it in other publications not included in this thesis, like our work
 
 \paragraph{Future works.}
 %
-An interesting future work left on our library SMPyBandits could be to implement variants of the single-player stochastic models.
-For instance, adding support for non-finite arms is interesting, \eg, linear or contextual bandit.
-
-In Chapter~\ref{chapter:5}, we use SMPyBandits to simulate multi-player bandit problems, and some we present some extensions of this model. Some have already been implemented, but other extensions are yet to be added.
-It is one of the major future work left on our library.
-For more details, see the issue tickets at \href{https://github.com/SMPyBandits/SMPyBandits/issues/}{\texttt{GitHub.com/SMPyBandits/SMPyBandits/issues/X}}, for tickets number \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}.
-
-
-Finally, the most exciting thing that could happen to our SMPyBandits library would be to see it gaining popularity.
-We have submitted a summary paper presenting SMPyBandits \cite{SMPyBanditsJMLR} to the MLOSS track of the Journal of Machine Learning Research (JMLR), and we hope to be accepted.
+An interesting future work left on our library SMPyBandits could be to implement variants of the single-player stochastic models, as well as variants for the multi-player or the non-stationary cases.
+For more details, see the issue tickets at \href{https://github.com/SMPyBandits/SMPyBandits/issues/}{\texttt{GitHub.com/SMPyBandits /SMPyBandits/issues/}}.
+For instance it would be interesting to extend the library for problems with non-finite arms, \eg, linear or contextual bandit (\href{https://github.com/SMPyBandits/SMPyBandits/issues/117}{ticket 117}),
+or to add support for the ``dynamic case'' of multi-player bandits to allow arrivals or departures of players (\href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{ticket 124}).
 %
-I would personally love to be able in the next to teach a graduate or under-graduate course on multi-armed bandits, and use my library as a support to illustrate the course, as well as practical sessions.
+In Chapter~\ref{chapter:5}, we use SMPyBandits to simulate multi-player bandit problems, and we also present many extensions of this model.
+Some have already been implemented, but other extensions are yet to be added.
+This direction is one of the major future work left on our library
+(see tickets \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}).
+
+Since $2017$, I also received by email or by GitHub issues some requests to implement new features or models. Most of them were implemented quickly, but some would require more time and are left as possible future works.
+Two example of requests include a model where the number of arm can change at some or all time step (an example of such model is called ``sleeping bandit'', \href{https://github.com/SMPyBandits/SMPyBandits/issues/123}{issue 123}), to implement the model of rotting bandits (\href{https://github.com/SMPyBandits/SMPyBandits/issues/156}{issue 156}), or to add a web-based user interface for an even easier usage of the library requiring no command line or knowledge of Python (\href{https://github.com/SMPyBandits/SMPyBandits/issues/133}{issue 133}).
+
+
+Finally, the most exciting thing that could happen to our SMPyBandits library would be to see it gaining popularity!
+Its documentation has seen already about $20000$ visits, the project on GitHub had $74$ stars in June $2019$, and based on the features requested and the emails received about it, we counted between $15$ to $25$ researchers in other labs we use or used SMPyBandits.
+While this is a good start, we believe that the library is mature and interesting enough to hope to see it being used by more people.
+%
+We have submitted a summary paper presenting SMPyBandits \cite{SMPyBanditsJMLR} to the MLOSS track of the Journal of Machine Learning Research (JMLR), and we hope to be accepted, as it would give more visibility to our work.
+
+As a personal note, I would like to continue working on SMPyBandits, and implement the most important requested features, as well as maintain it, and possibly continue to add recent algorithms by following actively the research in this community.
+I would also love to be able in the next to teach a graduate or under-graduate course on multi-armed bandits, and use my library as a support to illustrate the course, as well as practical sessions.
 
 
 \newpage  % WARNING
