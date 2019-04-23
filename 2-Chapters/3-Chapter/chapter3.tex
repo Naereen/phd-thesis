@@ -114,7 +114,7 @@ a collision model, and a simulation loop that essentially looks like this.
 \begin{itemize}
     \item First, initialize the MAB problem with $M$ players, and one or more cohorts of $M$ players (one player is one algorithm, usually $M$ times the same one),
     \item Then, for $t=1$ to $t=T$ (known before hand), repeat the following block (for each algorithm). Ask each player $\cA^{(j)}$ his chosen arm $A^{(j)}(t)$, then query the collision model\footnote{~The default collision model is the most widely studied in the literature, where a player encounters a collision (\ie, received a zero reward $Y^{(j)}(t)=0$) if she is not the only one to have chosen an arm $k=A^{(j)}(t)$, otherwise $Y^{(j)}(t)=r_{A^{(j)}(t)}(t)$ if she is the only one playing this arm.} to know which player will get a zero reward (for a collision) and which player will get a random reward from the environment. The
-    sample (random) feedback $r_k(t)$ (\iid) from distributions $\nu_{k}$, and compute the rewards $Y^{(j)}(t)$ from the random feedback and the collision model. Finally feeds the observation $(A^{(j)}(t),Y^{(j)}(t))$ to the $M$ players,
+    sample (random) feedback $Y_k(t)$ (\iid) from distributions $\nu_{k}$, and compute the rewards $r^{(j)}(t)$ from the random feedback and the collision model. Finally feeds the observation $(A^{(j)}(t), Y_{A^{(j)}(t)}(t), r^{(j)}(t))$ to player $j$, for all the $M$ players,
     \item At the end, compute the accumulated reward, the regret, plot visualizations etc.
 \end{itemize}
 
@@ -522,7 +522,7 @@ Similarly, if we want to run $100$ repetitions of the same (random) problem, and
 %
 In this last section, we quickly review the chosen approach for SMPyBandits (multi-core on one machine), and we explain why the two other approaches were less appropriate for our study of multi-armed bandit problems.
 
-\paragraph{What we did implement: \tettt{Joblib} for multi-core simulations.}
+\paragraph{What we did implement: \texttt{Joblib} for multi-core simulations.}
 %
 The first approach is to use multiple cores of the same machines, and because it is both the simplest and the less financially as well as ecologically costly, this is the approach implemented in SMPyBandits.
 The machines I had access to during my thesis, either my own laptop or a workstation hosted the SCEE team in CentraleSupélec campus, were equipped with $i5$ or $i7$ Intel CPU with $4$ or $12$ cores.

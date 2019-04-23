@@ -157,13 +157,13 @@ Now, using Markov inequality yields
   \Pr_{\bm{\mu}}\left(A_T\right)
     & \leq 2M\frac{\E_{\bm{\mu}}\left[T^j_k(T)\right]}{T} =: x_T, \\
   \Pr_{\bm{\lambda}}\left(\overline{A_T}\right)
-    & = \Pr_{\bm{\lambda}}\left(\frac{T}{M} - T^j_k(T) > \frac{T}{2M}\right) \leq 2M\frac{\E_\bm{\lambda}\left[ \frac{T}{M} - T^j_k(T)\right]}{T} =: \frac{y_T}{T},
+    & = \Pr_{\bm{\lambda}}\left(\frac{T}{M} - T^j_k(T) > \frac{T}{2M}\right) \leq 2M\frac{\E_{\bm{\lambda}}\left[ \frac{T}{M} - T^j_k(T)\right]}{T} =: \frac{y_T}{T},
 \end{align*}
 which defines two sequences $x_T$ and $y_T$, such that
 \begin{eqnarray}\label{eq:5:CqCD}
   \E_{\bm{\mu}}\left[T_k^j(T)\right] \kl (\mu_k, \mu_{M^*}+\varepsilon) &\geq & \left(1 - x_T\right) \log \left(\frac{T}{y_T}\right) - \log(2).
 \end{eqnarray}
-The strong uniform efficiency assumption  (see Definition~\ref{def:5:DecentralizedUniformEfficiency}) further tells us that $x_T \rightarrow 0$ (as $\E_{\bm{\mu}}[T_k^j(T)] = o(T^\alpha)$ for all $\alpha$) and $y_T = o(T^\alpha)$ when $T \to \infty$, for all $\alpha \in (0,1)$.
+The strong uniform efficiency assumption (see Definition~\ref{def:5:DecentralizedUniformEfficiency}) further tells us that $x_T \rightarrow 0$ (as $\E_{\bm{\mu}}[T_k^j(T)] = o(T^\alpha)$ for all $\alpha$) and $y_T = o(T^\alpha)$ when $T \to \infty$, for all $\alpha \in (0,1)$.
 As a consequence, observe that $\log(y_T)/\log(T) \rightarrow 0$ when $T$ tends to infinity and
 \[
   \frac{\left(1 - x_T\right) \log \left({T}/{y_T}\right) - \log(2)}{\log(T)} = 1-x_T - (1-x_T) \frac{\log(y_T)}{\log(T)} - \frac{\log(2)}{\log(T)}
@@ -201,8 +201,8 @@ Using further that the distribution of $U_t$ is the same under $\bm{\mu}$ and $\
 The first term in \eqref{eq:5:DecKL} can be rewritten using the same argument as \cite{Garivier16TrueShape}, that relies on the fact that conditionally to $\cO_{t-1}$, $Y_t$ is a Bernoulli distribution with mean $\mu_{A^j(t)}$ under the instance $\bm{\mu}$ and $\lambda_{A^j(t)}$ under the instance $\bm{\lambda}$:
 \begin{eqnarray*}
 \KL\left(\Pr_{\bm{\mu}}^{Y_{t}| \cO_{t-1}},\Pr_{\bm{\lambda}}^{Y_{t}| \cO_{t-1}}\right)  & = & \E_{\bm{\mu}}\left[\E_{\bm{\mu}}\left[ \KL\left(\Pr_{\bm{\mu}}^{Y_{t}| \cO_{t-1}},\Pr_{\bm{\lambda}}^{Y_{t}| \cO_{t-1}}\right) | \cO_{t-1} \right]\right] \\
-& = & \E_{\bm{\mu}} \left[\kl \left(\mu}_{A^j(t)},\lambda_{A^j(t)}\right)\right] \\
-& = & \E_{\bm{\mu}}  \left[\sum_{k=1}^K \indic{(A^j(t)=k)} \kl \left(\mu}_{k},\lambda_{k}\right)\right],
+& = & \E_{\bm{\mu}} \left[\kl \left(\mu_{A^j(t)},\lambda_{A^j(t)}\right)\right] \\
+& = & \E_{\bm{\mu}}  \left[\sum_{k=1}^K \indic{(A^j(t)=k)} \kl \left(\mu_{k},\lambda_{k}\right)\right],
 \end{eqnarray*}
 We now show that second term in \eqref{eq:5:DecKL} is zero:
 \begin{eqnarray*}
@@ -215,7 +215,7 @@ where $\cO_{t-1}^{j'}$ denote the information available to player $j' \neq j$.
 and thus $\KL\left(\Pr_{\bm{\mu}}^{C_t | \cO_{t-1}},\Pr_{\bm{\lambda}}^{C_t | \cO_{t-1}}\right) = \smallO{\log(T)}$.
 
 Putting things together, we showed that
-\[\KL\left(\Pr_{\bm{\mu}}^{\cO_t},\Pr_{\bm{\lambda}}^{\cO_t}\right) = \KL\left(\Pr_{\bm{\mu}}^{\cO_{t-1}},\Pr_{\bm{\lambda}}^{\cO_{t-1}}\right) + \E_{\bm{\mu}}  \left[\sum_{k=1}^K \indic{(A^j(t)=k)} \kl \left(\mu}_{k},\lambda_{k}\right)\right] + \smallO{\log(T)}.\]
+\[\KL\left(\Pr_{\bm{\mu}}^{\cO_t},\Pr_{\bm{\lambda}}^{\cO_t}\right) = \KL\left(\Pr_{\bm{\mu}}^{\cO_{t-1}},\Pr_{\bm{\lambda}}^{\cO_{t-1}}\right) + \E_{\bm{\mu}}  \left[\sum_{k=1}^K \indic{(A^j(t)=k)} \kl \left(\mu_{k},\lambda_{k}\right)\right] + \smallO{\log(T)}.\]
 Iterating this equality and using that $\KL\left(\Pr_{\bm{\mu}}^{\cO_{0}},\Pr_{\bm{\lambda}}^{\cO_{0}}\right)=0$ yields that
 \[\sum_{k=1}^{K}\E_{\bm{\mu}}\left[T_k^j(T)\right]\kl(\mu}_k,\lambda_k) \geq \kl \left(\Pr_{\bm{\mu}}(A),\Pr_{\bm{\lambda}}(A)\right) + \smallO{\log(T)},\]
 for all $A \in \sigma(\cO_T)$, in particular for all $A \in \cF^j_T$.
@@ -768,10 +768,10 @@ and some additional numerical results.
 
 
 % -----------------------------------------------------------------
-\subsubsection{Illustration of the lower bound}
+\subsubsection{An illustration of the lower bound}
 \label{app:5:illustrationLowerBound}
 
-\TODOL{Maybe we can not include this part and just points to the paper \cite{Besson2018ALT}?}
+% \TODOL{Maybe we can not include this part and just points to the paper \cite{Besson2018ALT}?}
 
 We proved in Theorem~\ref{thm:5:BetterLowerBound} that the normalized regret, \ie, $R_T$ divided by
 $\log T$, is asymptotically lower bounded by a constant $\mathrm{LB}(\boldsymbol{\mu}, M)$

@@ -497,6 +497,7 @@ A lower bound on the minimal number of collisions experienced by any strongly un
 
 % -----------------------------------------------------------------
 \subsection{Towards regret upper bounds}
+\label{sub:5:towardsRegretUpperBounds}
 
 A natural approach to obtain an upper bound on the regret of an algorithm is to upper bound separately each of the three terms defined in Lemma~\ref{lem:5:DecompositionRegret}.
 The following result shows that term \ref{eq:5:term2} can be related to the number of sub-optimal selections and the number of collisions that occurs on the $M$ best arms.
@@ -567,7 +568,7 @@ Following this approach, we introduce two new algorithms, \RandTopM{} and \MCTop
 
 Under observation model \modeltrois{} no sensing information is available and the previous algorithms cannot be used, as the sum of sensing information $S_k^j(t)$ and thus the empirical mean $\widehat{\mu}_k^j(t)$ cannot be computed, hence neither the indices $g_k^j(t)$. However, one can still define a notion of \emph{empirical reward} received from arm $k$ by player $j$, by introducing
 %
-\vspace*{-5pt}
+% \vspace*{-5pt}
 \begin{equation}
   \widetilde{S_k}^j(t) = \sum_{t=1}^T r^j(t) \indic(A^j(t) = k)
   \ \ \ \text{and letting} \ \ \ \widetilde{\mu_k}^j(t) := \widetilde{S_k}^j(t) \;/\; T_k^j(t).
@@ -651,6 +652,7 @@ To circumvent this problem, several coordination mechanisms have emerged, that r
 
 
 \paragraph{Two ideas for orthogonalization?}
+\label{par:5:twoIdeasOrthogonalization}
 %
 On the first hand, the \TDFS{} algorithm \citep{Zhao10} relies on the player agreeing in advance on the time steps at which they will target each of the $M$ best indices.
 Even though some alternative without pre-agreement are proposed, they are quite complicated and we prefer to focus on other approaches.
@@ -935,13 +937,15 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
   The leftmost term in $(\heartsuit)$ can be controlled using Lemma~\ref{lem:5:Fact2KLUCB}, that is a direct consequence of the proof of Fact~2 in Appendix~A of \cite{KLUCBJournal}.
   Denote $\kl'(x,y)$ the derivative of the function $x \mapsto \kl(x,y)$ (for any fixed $y\neq 0, 1$).
 
-  \begin{lemma}\label{lem:5:Fact2KLUCB} For any arms $k$ and $k'$ such that $\mu_{k'} > \mu_{k}$, if $g_k^{j}(t)$ is the kl-UCB index with exploration function $f(t)$,
-  \begin{small} % XXX
-  \begin{align*}
-    &\sum_{t=1}^T\Pr_{\bm{\mu}} \left( A^j(t) = k, \mu_{k'} \leq g_k^{j}(t) \right) & \leq  \frac{f(T)}{\kl(\mu_k,\mu_{k'})}
-    + \sqrt{2\pi} \sqrt{\frac{\kl'(\mu_k,\mu_{k'})^2}{\kl(\mu_k,\mu_{k'})^3}}\sqrt{f(T)} + 2\left(\frac{\kl'(\mu_k,\mu_{k'})}{\kl(\mu_k,\mu_{k'})}\right)^2 + 1.\end{align*}
-  \end{lemma}
-  \end{small} % XXX
+  \begin{lemma}\label{lem:5:Fact2KLUCB}
+    For any arms $k$ and $k'$ such that $\mu_{k'} > \mu_{k}$, if $g_k^{j}(t)$ is the kl-UCB index with exploration function $f(t)$,
+    \begin{small} % XXX
+      \begin{align*}
+        &\sum_{t=1}^T\Pr_{\bm{\mu}} \left( A^j(t) = k, \mu_{k'} \leq g_k^{j}(t) \right) & \leq  \frac{f(T)}{\kl(\mu_k,\mu_{k'})}
+        + \sqrt{2\pi} \sqrt{\frac{\kl'(\mu_k,\mu_{k'})^2}{\kl(\mu_k,\mu_{k'})^3}}\sqrt{f(T)} + 2\left(\frac{\kl'(\mu_k,\mu_{k'})}{\kl(\mu_k,\mu_{k'})}\right)^2 + 1.
+      \end{align*}
+    \end{small} % XXX
+\end{lemma}
 
   Putting things together, one obtains the non-asymptotic upper bound
   \begin{align}\label{eq:5:UBprecise}
@@ -1315,7 +1319,7 @@ The analysis of \Selfish{} is harder, but we obtained some understanding of the 
 with means $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$, the histograms in Figure~\ref{fig:5:selfish_fail1} suggests that with a small probability, the regret $R_T$ of \Selfish-\klUCB{} can be very large.
 
 In the Appendix~E of \cite{Besson2018ALT},
-we discussed about when such situations may happen, including a conjectured (constant, but small) lower bound on the probability that \Selfish{} experience collision almost at every round. This result would then prevent \Selfish{} from having a logarithmic regret. However, it is to be noted that the lower bound of Theorem~\ref{thm:5:BetterLowerBound} does not apply to the censored observation model \modeltrois{} under which \Selfish{} operates.
+we explained when such situations may happen, and we included a conjectured (constant, but small) lower bound on the probability that \Selfish{} experience collision almost at every round. This result would then prevent \Selfish{} from having a logarithmic regret. However, it is to be noted that the lower bound of Theorem~\ref{thm:5:BetterLowerBound} does not apply to the censored observation model \modeltrois{} under which \Selfish{} operates.
 %
 The \textsc{Sic-MMAB} algorithm proposed in \cite{BoursierPerchet18} answers the question we left open last year in \cite{Besson2018ALT},
 of whether logarithmic regret is at all possible for the ``no sensing'' case (model \modeltrois).

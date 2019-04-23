@@ -85,6 +85,7 @@ Our proposals, \RandTopM{} and \MCTopM, both assume to know $M$ beforehand, like
 
 
 \paragraph{Performance of our proposals for a wrong value of $M$?}
+\label{par:5:usingWrongValueofM}
 %
 We can start by asking whether our most efficient proposal, \MCTopM-\klUCB, is still efficient if it uses a value $M'$ different than the real number of players $M$.
 Even though we did not include numerical simulations for this case in Section~\ref{sec:5:experiments} above, we did some tests, which confirmed two disappointing results that were also proved analytically.
@@ -219,7 +220,7 @@ We let the interested reader refer to these last two works \cite{BoursierPerchet
 Then they study an interesting extension that works also if $\Delta = 0$ or if $\Delta$ is so close than the bound in $1/\Delta^2$ becomes useless for ``small horizons''. This behavior is well known for classical bandits, where bounds of the form $\log(T)/\Delta^2$ become worse than a linear regret $T$ if $\Delta$ is very small (\ie, $\Delta\ll \sqrt{\log(T)/T}$).
 For this extension, their proposed algorithm is proved to achieve $\bigO{K^2 M (\log(T))^2 / \mu + K M \min(\sqrt{T \log(T)}, \log(T)/\Delta')}$ regret, if $\mu$ is a lower-bound on $\mu^*_{M}$ and $\Delta' = \max(\Delta, \min\{|\mu^*_M-\mu^*_i| : \mu^*_M > \mu^*_i \})$ (that both have to be known beforehand by the algorithm).
 %
-The proposed algorithms in \cite{LugosiMehrabian18} are all based on the Musical Chair algorithm from \cite{Rosenski16}, and the curious reader should read their Algorithm~2 (page 15) for more details.
+The proposed algorithms in \cite{LugosiMehrabian18} are all based on the Musical Chair algorithm from \cite{Rosenski16}, and the curious reader should read for instance their Algorithm~2 (page 15) for more details.
 
 The results presented in \cite{LugosiMehrabian18} are based on some hypotheses, for instance the tuning they propose for the length $g$ of the uniform exploration phase in the beginning of their ``Musical Chair''-like algorithm is based on a prior knowledge of the horizon $T$.
 In Section~4 they explain how to relax the assumptions of their results.
@@ -438,7 +439,7 @@ Such equilibrium position means that the utility obtained by the $M$ player cann
 Indeed imagine just $M=3$ players and $K=3$ arms, and Bernoulli distributions of means $[0.1, 0.5, 0.5]$, $[0.1, 0.5, 0.5]$ and $[0.9, 0.5, 0.1]$ for player $1$, $2$ and $3$. Then two optimal affectations of players to arms are $[3,2,1]$ or $[2,3,1]$, both giving the same utility of $1.9$.
 
 In this extension, performance is still evaluated by a system regret, now defined as the difference between the sum of the cumulated rewards by the $M$ players, and the utility of any matching.
-The question is to possible to obtain a logarithmic --or even sub-linear-- regret in this problem is more difficult that for the model presented in Section~\ref{sec:5:model}.
+The question is to know if it is possible to obtain a logarithmic --or even sub-linear-- regret in this problem is more difficult that for the model presented in Section~\ref{sec:5:model}.
 This question was first answered in \cite{Bistritz18}, and proposed an algorithm based on alternating three phases, and increasing their lengths after the end of each epoch ($2^p$ for the $p$-th epoch).
 First, players explore in order to estimate the expectations of the arm rewards ; then players use their ``Game of Thrones'' dynamics (inspired by Musical Chair \cite{Rosenski16}) and play the optimal solution most of the time ; finally players play the action they played most of the time in the recent GoT phases.
 % combining Musical Chair with an epoch-based alternative phases of forced exploration and pure exploitation.
@@ -594,9 +595,11 @@ And finally, even though numerical simulations in their papers \cite{WeiSrivasta
 Sadly, a major drawback of their work is that assume that player $j\in\{1,\dots,M\}$ knows its index $j$, and as we explained above this small hypothesis is actually quite strong, as it allows players to be already orthogonal, and it reduces greatly the difficulty of the decentralized bandit problem.
 
 On the other hand, another possibility is to extend ideas developed for the adversarial setting.
-In \cite{AlaturLevyKrause19}, the authors essentially consider the piece-wise stationary as an easier case of an adversarial problem. \\
+In \cite{AlaturLevyKrause19}, the authors essentially consider the piece-wise stationary as an easier case of an adversarial problem.
+The recent work \cite{bande2019adversarial} also proposes a decentralized algorithm that can achieve sub-linear regret ($\cO(T^{3/4})$) under an adversarial multi-players bandit model.
+\\
 \indent
-They build on the \MusicalChair{} algorithm from \cite{Rosenski16}, to let the $M$ players converge to a ranking in an efficient and decentralized way (cf. Algorithm 1), and they apparently discovered the ``communication trick'' independently from \cite{BoursierPerchet18} to use (virtual) communications between players to set up a ``coordinator'' player and $M-1$ ``followers'' (running respectively their Algorithms 2 and 3).
+In \cite{AlaturLevyKrause19}, the authors build on the \MusicalChair{} algorithm from \cite{Rosenski16}, to let the $M$ players converge to a ranking in an efficient and decentralized way (cf. Algorithm 1), and they apparently discovered the ``communication trick'' independently from \cite{BoursierPerchet18} to use (virtual) communications between players to set up a ``coordinator'' player and $M-1$ ``followers'' (running respectively their Algorithms 2 and 3).
 %
 Their key algorithmic technique is to imitate the idealized case where there is full communication between the players. Then, to address the no-communication constraint, we enforce the players to keep the same decisions (arms) within long periods of time (blocks). This gives them the chance to coordinate between themselves via a simple protocol that uses collisions as a primitive, yet effective manner of communication.\\
 %

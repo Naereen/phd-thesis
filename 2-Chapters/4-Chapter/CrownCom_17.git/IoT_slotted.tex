@@ -46,7 +46,7 @@ We present our system model, which consists of one gateway and many IoT devices,
 %
 We consider the system model presented in Figure~\ref{fig:41:system_model1}, where a set of devices all sends uplink packets to a (unique) network gateway.
 Messages can be sent in a fixed number $K\geq2$ of wireless channels,
-that are assumed to be orthogonal, that is, a message in channel $i$ will not cause collision to a message in another channel $j \neq i$.
+that are assumed to be orthogonal, that is, a message in channel $k$ will not cause collision to a message in another channel $j \neq i$.
 % (\eg, $K=4$ or $K=16$ for instance), which are centered indifferently around the $433.5\;\mathrm{MHz}$ or the $877\;\mathrm{MHz}$ ISM bands (as it is chosen for the implementation presented in Section~\ref{sec:4:gnuradio}).
 The communication between IoT devices and this gateway is done through a simple pure ALOHA-based protocol where devices transmit uplink packets of fixed duration whenever they want.
 %
@@ -116,7 +116,7 @@ We assume that there are two types of end-devices in the network:
 \end{itemize}
 
 We further assume that there are $K \geq 2$ channels, $D \geq 0$ dynamic end-devices, and $S \geq 0$ static devices.
-Furthermore, in channel $i \in \llbracket 1; K \rrbracket$ there are $0 \leq S_i \leq S$ static devices (so $S = \sum_{i=1}^{K} S_i$).
+Furthermore, in channel $k \in \llbracket 1; K \rrbracket$ there are $0 \leq S_k \leq S$ static devices (so $S = \sum_{k=1}^{K} S_k$).
 
 
 \paragraph{Random emission patterns}
@@ -135,7 +135,7 @@ Note that even unlicensed bands have such limitations, as for instance this is a
 %
 We prefer this choice rather than non-crowded networks, \ie, where $S + D \leq K$, as the former makes more sense for IoT networks.
 % \footnote{~Here, $K$ will typically be about $10$ different radio channels, usually in the same RF band and with separate mean carrier frequencies, and the number of devices will be of the order of $1000$ to $10000$.}.
-Indeed, imagine if there were only $K=4$ channels being occupied by $D+S = 100$ devices, each communicating with a high rate of $p=1/10$, with a non-zero occupancy in each channel (\ie, $\forall i, S_i > 0$). Then, almost all time slots will lead to collisions in all channels, for a uniformly random access scheme, and thus the network efficiency (\ie, successful communication rate) will be so close to zero that using learning algorithms cannot improve much.
+Indeed, imagine if there were only $K=4$ channels being occupied by $D+S = 100$ devices, each communicating with a high rate of $p=1/10$, with a non-zero occupancy in each channel (\ie, $\forall k, S_k > 0$). Then, almost all time slots will lead to collisions in all channels, for a uniformly random access scheme, and thus the network efficiency (\ie, successful communication rate) will be so close to zero that using learning algorithms cannot improve much.
 Such scenario is not our target of interest, and thus we prefer to only consider feasible scenarios where $p$ is smaller than $K/(S+D)$, in order to have an average of active devices not larger than the number of channels.
 
 
@@ -181,7 +181,7 @@ Before modeling this goal with a \emph{multi-armed bandit problem}, we present s
 We present three different policies that can be used to assess the efficiency of the learning algorithms presented later on.
 The first one is naive but can be used in practice, while the two others are very efficient but require full knowledge on the system (\ie, an oracle) and are thus unpractical.
 %
-They are however useful for our numerical simulations, and will be used as references, in order to show that our MAB-based approaches quickly learn to perform almost optimally.
+They are however useful for our numerical simulations, and are used as references, to show that our MAB-based approaches quickly learn to perform almost optimally.
 
 
 \paragraph{$1^{\text{st}}$ - Naive policy: Random Channel Selection}
@@ -189,21 +189,21 @@ They are however useful for our numerical simulations, and will be used as refer
 We derive here the probability of having a successful transmission, for a dynamic device, in the case where all the dynamic devices make a purely random channel selection (\ie, uniform on $i \in \llbracket 1; K \rrbracket$).
 This reflects a naive policy that could be implemented by all the dynamic devices, and it provides a reference scenario to compare against.
 
-In this case, for one dynamic device, a successful transmission happens if it is the only device to choose channel $i$, at that time slot.
-The probability of successful transmission is computed as follows, because the $S_i$ static devices in each channel $i$ are assumed to be independent, and static and dynamic devices are assumed to \emph{not} transmit at each time $t$ with a fixed probability $1-p$:
+In this case, for one dynamic device, a successful transmission happens if it is the only device to choose channel $k$, at that time slot.
+The probability of successful transmission is computed as follows, because the $S_k$ static devices in each channel $k$ are assumed to be independent, and static and dynamic devices are assumed to \emph{not} transmit at each time $t$ with a fixed probability $1-p$:
 \begin{equation}
-    \Pr(\text{success}|\text{sent}) = \sum_{i=1}^{K} \underbrace{\Pr(\text{success}|\text{sent in channel}\;i)}_{\text{No one else sent in channel}\; i} \; \underbrace{\Pr(\text{sent in channel}\,i)}_{= 1/K, \text{ by uniform choice}}
+    \Pr(\text{success}|\text{sent}) = \sum_{k=1}^{K} \underbrace{\Pr(\text{success}|\text{sent in channel}\;k)}_{\text{No one else sent in channel}\; k} \; \underbrace{\Pr(\text{sent in channel}\,k)}_{= 1/K, \text{ by uniform choice}}
 \end{equation}
 
-All dynamic devices follow the same policy in this case, so the probability of transmitting at that time in channel $i$ for any dynamic device is $p / K$, and there are $D-1$ other dynamic devices.
+All dynamic devices follow the same policy in this case, so the probability of transmitting at that time in channel $k$ for any dynamic device is $p / K$, and there are $D-1$ other dynamic devices.
 As they are independent, the probability that no other dynamic device sent in $i$
 % $\Pr(\text{no other dynamic device sent in}\;i)$,
 is $q = \Pr(\bigcap_{k=1}^{D-1} \text{device}\;k\;\text{did not sent in}\;i) = \prod_{k=1}^{D-1} \Pr(\text{device}\;k\;\text{did not sent in}\;i)$. And $\Pr(\text{device}\;k\;\text{sent in}\;i) = p \times 1 / K$, by uniform choice on channels and the Bernoulli emission hypothesis. So $q = \prod_{k=1}^{D-1} (1 - p/K) = (1-p/K)^{D-1}$. Thus we can conclude,
 %
 \begin{align}\label{eq:41:strategynaive}
     \Pr(\text{success}|\text{sent})
-    & = \sum_{i=1}^{K} \underbrace{(1 - p / K)^{D-1}}_{\text{No other dynamic device}} \times \underbrace{(1-p)^{S_i}}_{\text{No static device}} \times\; \frac{1}{K} \nonumber \\
-    & = \frac{1}{K} \left(1-\frac{p}{K}\right)^{D-1} \sum_{i=1}^{K} (1-p)^{S_i} .
+    & = \sum_{k=1}^{K} \underbrace{(1 - p / K)^{D-1}}_{\text{No other dynamic device}} \times \underbrace{(1-p)^{S_k}}_{\text{No static device}} \times\; \frac{1}{K} \nonumber \\
+    & = \frac{1}{K} \left(1-\frac{p}{K}\right)^{D-1} \sum_{k=1}^{K} (1-p)^{S_k} .
 \end{align}
 This expression \eqref{eq:41:strategynaive} is constant (in time), and easy to compute numerically, but comparing the successful transmission rate of any policy against this naive policy is important, as any efficient learning algorithm should outperform it
 (maybe after a long enough initial learning period).
@@ -211,15 +211,15 @@ This expression \eqref{eq:41:strategynaive} is constant (in time), and easy to c
 
 \paragraph{$2^{\text{nd}}$ - (Unachievable) Optimal oracle policy}
 
-We investigate here the optimal policy that can be achieved if the dynamic devices have a perfect knowledge of $(S_i)_i$ the repartition of static devices, and a fully centralized decision making\footnote{~This optimal policy needs an \emph{oracle} seeing the entire system, and affecting all the dynamic devices, once and for all, for a fixed stationary scenario, in order to avoid any signaling overhead. This is not possible in IoT contexts as several completely independent networks may operate in a single place.} is possible.
+We investigate here the optimal policy that can be achieved if the dynamic devices have a perfect knowledge of $(S_k)_k$ the repartition of static devices, and a fully centralized decision making\footnote{~This optimal policy needs an \emph{oracle} seeing the entire system, and affecting all the dynamic devices, once and for all, for a fixed stationary scenario, in order to avoid any signaling overhead. This is not possible in IoT contexts as several completely independent networks may operate in a single place.} is possible.
 We want to find the stationary repartition of devices into channels that maximizes the probability of having a successful transmission.
 
-If the oracle chooses a fixed configuration of dynamic devices, with $D_i$ devices affected to channel $i$ is fixed (in time, \ie, stationary),
+If the oracle chooses a fixed configuration of dynamic devices, with $D_k$ devices affected to channel $k$ is fixed (in time, \ie, stationary),
 then this probability is computed as before:
 \begin{align}\label{eq:41:prob_col}
     \Pr(\text{success}|\text{sent})
-    & = \sum_{i=1}^{K} \Pr(\text{success}|\text{sent in channel}\;i) \; \Pr(\text{sent in channel}\;i) \nonumber \\
-    & = \sum_{i=1}^{K} \underbrace{(1 - p)^{D_i - 1}}_{\;\;D_i - 1 \;\text{others}\;\;} \times \underbrace{(1 - p)^{S_i}}_{\;\;\text{No static device}\;\;} \times \underbrace{ D_i / D }_{\;\;\text{Sent in channel}\; i\;\;}.
+    & = \sum_{k=1}^{K} \Pr(\text{success}|\text{sent in channel}\;k) \; \Pr(\text{sent in channel}\;k) \nonumber \\
+    & = \sum_{k=1}^{K} \underbrace{(1 - p)^{D_k - 1}}_{\;\;D_k - 1 \;\text{others}\;\;} \times \underbrace{(1 - p)^{S_k}}_{\;\;\text{No static device}\;\;} \times \underbrace{ D_k / D }_{\;\;\text{Sent in channel}\; k\;\;}.
 \end{align}
 
 Consequently, an optimal allocation vector $(D_1,\dots,D_{K})$ is a solution of the following real-valued constraint optimization problem:
@@ -227,9 +227,9 @@ Consequently, an optimal allocation vector $(D_1,\dots,D_{K})$ is a solution of 
 \begin{subequations}\label{eq:41:prob}
 \begin{align}
     % \begin{cases}
-    \underset{D_1,\dots,D_{K}}{\arg\max}\; & \sum_{i=1}^{K} D_i (1 - p)^{S_i + D_i -1}, \label{eq:41:optPb}\\
-    \text{such that}\;\; & \sum_{i=1}^{K} D_i = D, \label{eq:41:eqCstr}\\
-    & D_i \geq 0 \qquad \forall i\in\llbracket 1;K\rrbracket . \label{eq:41:ineqCstr}
+    \underset{D_1,\dots,D_{K}}{\arg\max}\; & \sum_{k=1}^{K} D_k (1 - p)^{S_k + D_k -1}, \label{eq:41:optPb}\\
+    \text{such that}\;\; & \sum_{k=1}^{K} D_k = D, \label{eq:41:eqCstr}\\
+    & D_k \geq 0 \qquad \forall k\in\llbracket 1;K\rrbracket . \label{eq:41:ineqCstr}
     % \end{cases}
 \end{align}
 \end{subequations}
@@ -237,17 +237,17 @@ Consequently, an optimal allocation vector $(D_1,\dots,D_{K})$ is a solution of 
 \begin{proposition}\label{prop:41:Lagrangian}
     The \emph{Lagrange multipliers} method \cite{BoydVanderberghe04} can be used to solve the constraint real-valued maximization problem introduced in equation \eqref{eq:41:prob}.
 
-    It gives a closed form expression for the (unique) optimal solution $D_i^*(\lambda)$, depending on the system parameters, and the unknown Lagrange multiplier $\lambda \in \mathbb{R}$.
+    It gives a closed form expression for the (unique) optimal solution $D_k^*(\lambda)$, depending on the system parameters, and the unknown Lagrange multiplier $\lambda \in \mathbb{R}$.
 
     \begin{equation}\label{eq:41:Dilambda}
-        D_i^*(\lambda) = \left(\frac{1}{\log(1-p)}\left[ \mathcal{W}\left(\frac{\lambda e}{(1-p)^{S_i-1}} \right)-1 \right]\right)^{+} .
+        D_k^*(\lambda) = \left(\frac{1}{\log(1-p)}\left[ \mathcal{W}\left(\frac{\lambda e}{(1-p)^{S_k-1}} \right)-1 \right]\right)^{+} .
     \end{equation}
 \end{proposition}
 
 \begin{proof}
 \begin{itemize}
     \item
-    In a realistic scenario, we can assume that $D_i\leq \frac{-2}{\ln\left(1-p\right)} \approx \frac{2}{p},\quad \forall i\in\llbracket 1;K \rrbracket$. For such values for $D_i$, the objective function $f: (D_1, \dots, D_{K}) \mapsto \sum_{i=1}^{K} D_i (1 - p)^{S_i + D_i -1}$ is concave as the sum of concave functions
+    In a realistic scenario, we can assume that $D_k\leq \frac{-2}{\ln\left(1-p\right)} \approx \frac{2}{p},\quad \forall k\in\llbracket 1;K \rrbracket$. For such values for $D_k$, the objective function $f: (D_1, \dots, D_{K}) \mapsto \sum_{k=1}^{K} D_k (1 - p)^{S_k + D_k -1}$ is concave as the sum of concave functions
     \footnote{~It is worth noting that $f$ is neither concave nor quasi-concave on $[0,\infty)^{K}$ \cite{Luenberger68,Yaari77}.}.
     \item
     The Lagrange multipliers method can be applied to the optimization problem \eqref{eq:41:optPb}, with a concave objective function $f$, linear equality constraints \eqref{eq:41:eqCstr} and linear inequality constraints \eqref{eq:41:ineqCstr}. The strong duality condition is satisfied in this case \cite{BoydVanderberghe04}, so finding the saddle points will be enough to find the maximizers.
@@ -260,20 +260,20 @@ Consequently, an optimal allocation vector $(D_1,\dots,D_{K})$ is a solution of 
 Where in the equation~\eqref{eq:41:Dilambda}, $(a)^{+} = \max(a,0)$, and $\mathcal{W}$ denotes the $\mathcal{W}$-Lambert function which is the reciprocal bijection of $x \mapsto x e^x$ on $\mathbb{R^+} = [0, +\infty)$ (it can be computed numerically in an efficient manner) \cite{Corless96}.
 Moreover, condition \eqref{eq:41:eqCstr} implies that the Lagrange multiplier $\lambda$ is the solution of the constraint
 \begin{equation}\label{eq:41:constraintLambda}
- \sum_{i=1}^{K} D_i^*(\lambda) = D.
+    \sum_{k=1}^{K} D_k^*(\lambda) = D.
 \end{equation}
 
 
 Equation \eqref{eq:41:constraintLambda} can be solved numerically, with simple one-dimensional root finding algorithms.
-Solving the optimization problem provides the optimal real number value for $D_i^*$, which has to be rounded\footnote{~Any rounding choice will give about the same repartition, up-to a difference of only one device by channel, and so we chose to round from below for the first channels.} to find the optimal number of devices for channel $i$:
+Solving the optimization problem provides the optimal real number value for $D_k^*$, which has to be rounded\footnote{~Any rounding choice will give about the same repartition, up-to a difference of only one device by channel, and so we chose to round from below for the first channels.} to find the optimal number of devices for channel $k$:
 %
-$\widehat{D_i} = \lfloor D_i^* \rfloor$ for $1 \leq i < K$, and $\widehat{D_{K}} = D - \sum_{i=1}^{K - 1} \widehat{D_i}$.
+$\widehat{D_k} = \lfloor D_k^* \rfloor$ for $1 \leq k < K$, and $\widehat{D_{K}} = D - \sum_{k=1}^{K - 1} \widehat{D_k}$.
 
 \paragraph{$3^{\text{rd}}$ - A greedy approach of the oracle strategy}
 
 We propose a \emph{sequential} approximation of the optimal policy:
 the third solution is a sub-optimal naive policy, simple to set up, but also unpractical as it also needs an oracle.
-End-devices are iteratively inserted in the channels with the lowest load (\ie, the index $i$ minimizing $S_i + D_i(\tau)$ at global time step $\tau$). Once the number of devices in each channel is computed, the probability of sending successfully a message is also given by equation \eqref{eq:41:prob_col}.
+End-devices are iteratively inserted in the channels with the lowest load (\ie, the index $k$ minimizing $S_k + D_k(\tau)$ at global time step $\tau$). Once the number of devices in each channel is computed, the probability of sending successfully a message is also given by equation \eqref{eq:41:prob_col}.
 This is the policy that would be used by dynamic devices if they were inserted one after the other, and if they had a perfect knowledge of the channel loads.
 
 
@@ -417,7 +417,7 @@ Hence, it is surprising to have near optimal performance with stochastic MAB alg
 
 \paragraph{A safety check}
 
-We include another simulation in Figure~\ref{fig:41:figure4appendix}, with a uniform repartition of static devices (\ie, $\forall i, S_i = S/K$), to check that learning approach (here, only \UCB)
+We include another simulation in Figure~\ref{fig:41:figure4appendix}, with a uniform repartition of static devices (\ie, $\forall k, S_k = S/K$), to check that learning approach (here, only \UCB)
 also gives interesting gain of performance, and achieve a close-to optimal successful transmission rate.
 Except for the limit case of $100\%$ of dynamic devices, which corresponds to Figures~\ref{fig:41:100intelligent} and \ref{fig:41:ch2_100}, where the uniform access performs as well as the optimal oracle solution, the MAB-based approach almost instantly outperforms the baseline.
 

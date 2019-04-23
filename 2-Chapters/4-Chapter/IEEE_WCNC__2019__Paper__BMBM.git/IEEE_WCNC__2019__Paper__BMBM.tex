@@ -80,7 +80,7 @@ On the other hand, there are  IoT devices, that possess the additional advantage
 
 Like in the previous model presented in Section~\ref{sec:4:firstModel},
 regardless the type of devices, each of them follows a slotted ALOHA protocol \cite{Roberts75}, and has a probability $p>0$ to transmit a packet in a time slot.
-We make the hypothesis that the transmission is successful if the channel is available, otherwise upon radio collision.
+We make the hypothesis that the transmission is successful if the channel is available, otherwise it fails upon radio collision.
 The novelty compare to the previous model is that
 in case of RF (uplink or downlink) collision that prevent the device to receive the \emph{Ack} from the gateway,
 these devices will attempt to retransmit their packet up-to $M$ times, with $M \in\mathbb{N}$.
@@ -307,11 +307,11 @@ We interpret this fact in two different situations.
 % More formally, for one device, let $N_k(t)$ be the number of times the channel $k$ (for $k\in \llbracket 1, K \rrbracket$) was selected up-to time $t-1$, for $t\geq 0$
 % for any $t\in\mathbb{N}$,
 % \begin{equation}\label{eq:43:Nkt}
-% 	N_k(t) = \sum_{\tau=0}^{t-1} \mathbbm{1}(C(\tau) = k),
+% 	N_k(t) = \sum_{\tau=0}^{t-1} \mathbbm{1}(A(\tau) = k),
 % \end{equation}
 % The empirical mean estimator $\widehat{\mu_k}(t)$ of channel $k$ is defined as the mean reward obtained up-to time $t-1$,
 % \begin{equation}\label{eq:43:mukt}
-% 	\widehat{\mu_k}(t) = \frac{1}{N_k(t)} \sum_{\tau=0}^{t-1} r_k(\tau) \mathbbm{1}(C(\tau) = k).
+% 	\widehat{\mu_k}(t) = \frac{1}{N_k(t)} \sum_{\tau=0}^{t-1} r_k(\tau) \mathbbm{1}(A(\tau) = k).
 % \end{equation}
 % where $r_{k}(t)$ is the reward obtained after transmission in channel $k$ at time $t$ ($1$ for a successful transmission, and $0$ otherwise)
 % %
@@ -330,7 +330,7 @@ We interpret this fact in two different situations.
 % is the one maximizing this \UCB{} index $U_k(t)$,
 % as it is the one expected to be the best one at the current time step $t$,
 % \begin{equation}\label{eq:43:maxucb}
-% 	C(t) = \arg\max_{1\leq k \leq K} U_k(t).
+% 	A(t) = \arg\max_{1\leq k \leq K} U_k(t).
 % \end{equation}
 
 % The \UCB{} algorithm is implemented independently by each device, and we present it in Algorithm~\ref{algo:43:UCB}.
@@ -344,8 +344,8 @@ We interpret this fact in two different situations.
 % 		% \begin{small} % XXX remove if needed
 % 		\For(){$t = 1, \dots, T$}{
 % 			Compute $\forall k, U_k(t) = \widehat{\mu_k}(t) + \sqrt{\alpha \log(t) / N_k(t)}$\;
-% 			Transmit in channel $C(t) = \arg\max_{1\leq k \leq K} U_k(t)$\;
-% 			Reward $r_{C(t)}(t) = 1$, if \emph{Ack} is received, else $0$\;
+% 			Transmit in channel $A(t) = \arg\max_{1\leq k \leq K} U_k(t)$\;
+% 			Reward $r_{A(t)}(t) = 1$, if \emph{Ack} is received, else $0$\;
 % 		}
 % 		\caption{The \UCB{} algorithm for channel selection (base building block).}
 % 		\label{algo:43:UCB}
@@ -368,16 +368,16 @@ Note that a device using this first approach is only able to select a channel fo
 
 More formally, for one device, let $N_k(t)$ be the number of times the channel $k$ (for $k\in \llbracket 1, K \rrbracket$) was selected up-to time $t-1$, for $t\geq 0$
 for any $t\in\mathbb{N}$,
-$N_k(t) = \sum_{\tau=0}^{t-1} \mathbbm{1}(C(\tau) = k)$.
+$N_k(t) = \sum_{\tau=0}^{t-1} \mathbbm{1}(A(\tau) = k)$.
 The empirical mean estimator $\widehat{\mu_k}(t)$ of channel $k$ is defined as the mean reward obtained up-to time $t-1$,
-$\widehat{\mu_k}(t) = \frac{1}{N_k(t)} \sum_{\tau=0}^{t-1} r_k(\tau) \mathbbm{1}(C(\tau) = k)$,
+$\widehat{\mu_k}(t) = \frac{1}{N_k(t)} \sum_{\tau=0}^{t-1} r_k(\tau) \mathbbm{1}(A(\tau) = k)$,
 where $r_{k}(t)$ is the reward obtained after transmission in channel $k$ at time $t$.
 The upper confidence bound in each channel $k$ is defined as
 $U_k(t) = \widehat{\mu_k}(t) + \sqrt{\alpha \log(t) / N_k(t)}$.
 Finally, the transmission channel at time step $t$
 is the one maximizing this \UCB{} index $U_k(t)$,
 as it is the one expected to be the best one at the current time step $t$,
-$C(t) = \arg\max_{1\leq k \leq K} U_k(t)$.
+$A(t) = \arg\max_{1\leq k \leq K} U_k(t)$.
 
 
 % \begin{small} % XXX remove if needed
@@ -389,12 +389,12 @@ $C(t) = \arg\max_{1\leq k \leq K} U_k(t)$.
 		\For(){$t = 1, \dots, T$}{
 			\uIf{First packet transmission}{
 				Compute $\forall k, U_k(t) = \widehat{\mu_k}(t) + \sqrt{\alpha \log(t) / N_k(t)}$\;
-				Transmit in channel $C(t) = \arg\max_{1\leq k \leq K} U_k(t)$\;
-				Reward $r_{C(t)}(t) = 1$, if \emph{Ack} is received, else $0$\;
+				Transmit in channel $A(t) = \arg\max_{1\leq k \leq K} U_k(t)$\;
+				Reward $r_{A(t)}(t) = 1$, if \emph{Ack} is received, else $0$\;
 			}
 			\Else(\tcp*[f]{Retransmit in same channel}){
 				j $\leftarrow$ last channel selected by first-stage \UCB\;
-				Transmit in channel $C(t) = j$\;
+				Transmit in channel $A(t) = j$\;
 			}
 		}
 		\caption{Heuristic: first-stage \UCB{} and retransmission in same channel.}
@@ -449,7 +449,7 @@ More precisely, the first-stage \UCB{} use rewards built from the acknowledgment
 				Use first-stage \UCB. %as in Algorithm~\ref{algo:43:UCB}.
 			}
 			\Else(\tcp*[f]{Random retransmission}){
-				Transmit in channel $C(t) \sim \mathcal{U}(1,\ldots,K)$\;
+				Transmit in channel $A(t) \sim \mathcal{U}(1,\ldots,K)$\;
 			}
 		}
 		\caption{Heuristic: uniform random retransmission.}    % A naive
@@ -521,8 +521,8 @@ Each of these algorithms are denoted using the subscript $({}^{j})$, for $j\in\l
 			\Else(\tcp*[f]{Packet retransmission with $\mathrm{UCB}^j$}){ % Retr. after trying channel $j$
 				j $\leftarrow$ last channel selected by first-stage \UCB\;
 				Compute $\forall k, U_k^j(t) = \widehat{\mu_k}^j(t) + \sqrt{\alpha \log(t) / N_k^j(t)}$\;
-				Transmit in channel $C^j(t) = \arg\max_{1\leq k \leq K} U^j_k(t)$\;
-				Reward $r^j_{C^j(t)}(t) = 1$ if \emph{Ack} is received, else $0$\;
+				Transmit in channel $A^j(t) = \arg\max_{1\leq k \leq K} U^j_k(t)$\;
+				Reward $r^j_{A^j(t)}(t) = 1$ if \emph{Ack} is received, else $0$\;
 			}
 		}
 		\caption{Heuristic: $K$ different {\UCB}s for retransmission.}
@@ -571,12 +571,12 @@ related to the delayed second-stage \UCB{} algorithm.
 				Use first-stage \UCB. %as in Algorithm~\ref{algo:43:UCB}.
 			}
 			\uElseIf(\tcp*[f]{Random retransmission}){$t \leq \Delta$}{
-				Transmit randomly in a channel $C(t) \sim \mathcal{U}(1,\ldots,K)$.
+				Transmit randomly in a channel $A(t) \sim \mathcal{U}(1,\ldots,K)$.
 			}
 			\Else(\tcp*[f]{Packet retransmission with delayed $\mathrm{UCB}^d$}){
 				Compute $\forall k, U^d_k(t) = \widehat{\mu^d_k}(t) + \sqrt{\alpha \log(t) / N_k^d(t)}$\;
-				Transmit in channel $C^d(t) = \arg\max_{1\leq k \leq K} U^d_k(t)$\;
-				Reward $r^d_{C^d(t)}(t) = 1$ if \emph{Ack} is received, else $0$\;
+				Transmit in channel $A^d(t) = \arg\max_{1\leq k \leq K} U^d_k(t)$\;
+				Reward $r^d_{A^d(t)}(t) = 1$ if \emph{Ack} is received, else $0$\;
 			}
 		}
 		\caption{Heuristic: Delayed \UCB{} for retransmission.}
@@ -593,6 +593,8 @@ related to the delayed second-stage \UCB{} algorithm.
 Instead of considering a first-stage \UCB{} followed by a random channel retransmission, we could have considered a random first-stage channel retransmission followed by a second-stage \UCB.
 This was not considered in our study \cite{Bonnefoi2019WCNC}, and we preferred to not add it to the experiments presented below, for three reasons: to avoid clutter in the plots, to win some time as these experiments had to run for quite a long time, but mainly because the first-stage channel selection is most important one as we illustrate by the large difference in terms of performance between the uniform channel selection and the ``only UCB'' heuristic, below in Figures~\ref{fig:43:mainExperiment1} and \ref{fig:43:mainExperiment2}.
 
+\textbf{Remark.}
+%
 Similarly, Philippe Mary asked me at the MoTION workshop where I presented \cite{Bonnefoi2019WCNC}, why didn't we rather used Bayes-UCB instead of \UCB{} (from \cite{Kaufmann12BUCB}), as it is known to empirically outperform \UCB{} (as illustrated for instance in \cite{darak2016bayesian,kumar2016two}).
 We could have chose any bandit algorithm for the ``first stage'' component used in this Section, and for simplicity and clarity we focussed on a simple but efficient one (\UCB).
 We believe that the same empirical results, but more importantly, the same conclusions, could be given if we used Bayes-UCB or other bandit algorithm for the base building block in the different heuristics proposed in Section~\ref{sub:43:heuristics}.

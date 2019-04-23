@@ -42,6 +42,10 @@
 % Communication terms
 \nomenclature[A]{PLR}{\textit{Packet Loss Ratio}}
 
+% Computer science related terms
+\nomenclature[A]{CPU}{\textit{Central Processing Unit} (the electronic circuitry within a computer that carries out the instructions of a computer program by performing the basic arithmetic, logical, control and input/output (I/O) operations)}
+\nomenclature[A]{RAM}{\textit{Random Access Memory} (efficient working memory of a modern computer)}
+
 % Algorithms or tools
 \nomenclature[A]{UCB}{\textit{Upper Confidence Bound} (object or algorithm)}
 \nomenclature[A]{klUCB}{\textit{Kullback-Leibler Upper Confidence Bound} (algorithm)}
@@ -58,21 +62,96 @@
 
 % --------------------------------
 % matches Greek Symbols        > G
-\nomenclature[G]{$\mu_k,\mu_k(t),\mu_k^j$}{Mean of arm $k$, arm $k$ at time $t$, arm $k$ for user $j$.}
+\nomenclature[G]{$\nu_k$,$\nu_k(t)$,$\nu_k^j$}{Distribution of arm $k$, arm $k$ at time $t$, arm $k$ for user $j$}
+\nomenclature[G]{$\mu_k$,$\mu_k(t)$,$\mu_k^j$,$\mu_i^{(k)}$}{Mean of arm $k$, arm $k$ at time $t$, arm $k$ for user $j$ in Chapter~\ref{chapter:5}, arm $i$ in the $k$-th stationary interval in Chapter~\ref{chapter:6}}
+\nomenclature[G]{$\mu^*$,$\mu_k^*$}{Mean of the optimal arm (\ie, $\mu^*=\max_k \mu_k$), and mean of the $k$-th best arm}
+\nomenclature[G]{$\bm{\mu},\bm{\nu},\bm{\lambda},$}{Vector of means $(\mu_k) = \mu_1,\dots,\mu_K$, or vector of distributions $(\nu_k)_k$ or $(\lambda_k)_k$ (characterizing a problem)}
+\nomenclature[G]{$\Delta$}{Usually used to denote the gap in terms of means of arms, usually between the best and second best arms, in Chapters~\ref{chapter:2}, \ref{chapter:5}. In Chapter~\ref{chapter:4} in Algorithm~\ref{algo:43:UCBwithDelay} it denotes a delay. In Chapter~\ref{chapter:6}, it can denote different gaps}
+\nomenclature[G]{$\Delta n$, $\Delta s$}{Parameters of numerical optimization tricks in Chapter~\ref{chapter:6}}
+\nomenclature[G]{$\delta$}{Usually used to denote a lower-bound on the gap $\Delta$, known before hand by an algorithm, in Chapters~\ref{chapter:5}, \ref{chapter:6}. Also denote a confidence level of an algorithm in Section~\ref{sec:6:ChangePointDetector}}
+\nomenclature[G]{$\Upsilon_T$}{Number of break-points in a piece-wise stationary MAB problem in Chapter~\ref{chapter:6}. $\NCi$ denotes the number of change-points on arm $i$, and $C_T = \sum_{i=1}^{K} \NCi$ the number of change-points on the arms}
+\nomenclature[G]{$\tau_k^j$, $\tau^{(k)}$}{Usually used to denote the location of a change-point, \eg, the $j$-th change-point on arm $k$, in Chapter~\ref{chapter:6}}
+\nomenclature[G]{$\tau$}{Usually used to denote the length of a sliding-window algorithm like Sliding-Window-\UCB{} in Chapter~\ref{chapter:6}}
+\nomenclature[G]{$\gamma$}{Usually used to denote the discount factor of an algorithm like Discounted-\UCB{} in Chapter~\ref{chapter:6}}
+\nomenclature[G]{$\varepsilon$}{Usually used to denote a small positive real value, \eg, $\lambda_k = \mu_k + \varepsilon$ in Chapter~\ref{chapter:5} or a drift correction parameter in Chapter~\ref{chapter:6}}
+\nomenclature[G]{$\alpha$}{Usually used to denote the parameter of a \UCB{} algorithm in Chapters~\ref{chapter:2} and \ref{chapter:4}, or a parameter controlling the forced exploration mechanism in Chapter~\ref{chapter:6}}
+\nomenclature[G]{$\beta$}{Usually used to denote a threshold of GLR tests in Chapter~\ref{chapter:6}}
+
+\nomenclature[G]{$\alpha_0$, $\delta_0$}{Usually used to denote a constant scaling of a parameter of an algorithm, for instance $\alpha = \alpha_0 \alpha_T$ is used in Chapter~\ref{chapter:6}, where $\alpha_T$ is the formula suggested by the theoretical analysis and $\alpha_0 > 0$, \eg, $\alpha_0 = 0.01$}
 
 % --------------------------------
 % matches Roman Symbols        > L
-\nomenclature[L]{$t$}{Time step, $t\in\{1,\dots,T\}$}
-\nomenclature[L]{$T$}{Time horizon, the duration of the bandit game}
+\nomenclature[L]{$XXX$}{XXX}
+\nomenclature[L]{$t$, $s$, $n$, $r$}{Time step, $t\in\{1,\dots,T\}$. Chapter~\ref{chapter:6} also uses $s$, $n$ and $r$, \eg, in the $\sup$ of the stopping times or some technical lemmas}
+\nomenclature[L]{$T$}{Time horizon, the duration of the bandit game (always $T\geq1$)}
+\nomenclature[L]{$T_0$, $T_1$}{Fixed durations of some algorithms based on different phases, \eg, the Musical Chair algorithm from \cite{Rosenski16}}
+\nomenclature[L]{$\cA$, $\pi$}{A algorithm, a policy, designing the algorithm (\eg, \UCB) rather than the strategy. $\pi$ can also denote a permutation in Section~\ref{par:5:twoIdeasOrthogonalization}}
+\nomenclature[L]{$\rho$, $\rho^k$}{A bandit strategy, denoting the mathematical object which maps past observations to future decisions (mainly in Chapter~\ref{chapter:5})}
+\nomenclature[L]{$A(t)$, $A^j(t)$}{Decision of algorithm $\cA$ at time $t$, $A(t)\in\{1,\dots,K\}$. Decision for user $j$ in Chapter~\ref{chapter:5}}
+\nomenclature[L]{$Y_{k,t}$}{Random sample from the $k$ arm at time $t$}
+\nomenclature[L]{$\cO_t$}{Vector of observations until time $t$ in Chapter~\ref{chapter:5}}
+\nomenclature[L]{$r(t)$, $r^j(t)$}{Reward obtained at time $t$, for user $j$ at time $t$}
+\nomenclature[L]{$K$}{Number of arms for multi-armed bandit games}
+\nomenclature[L]{$k$}{Usually used to denote the $k$-th arm, $k\in\{1,\dots,K\}$}
+\nomenclature[L]{$M$}{In Chapter~\ref{chapter:4}, denote the maximum number of retransmission of a packet in the ALOHA protocol, and in Chapter~\ref{chapter:5}, denote the number of player for multi-players bandit games}
+\nomenclature[L]{$m$}{In Chapter~\ref{chapter:4}, denote the maximum length of the back-off interval after a collision}
+\nomenclature[L]{$i$, $j$}{Usually used to denote the $i$-th or $j$-th player, $i,j\in\{1,\dots,M\}$ in Chapter~\ref{chapter:5}}
+\nomenclature[L]{$N$}{Usually used to denote the number of independent repetitions of the same numerical experiments (\eg, $N=1000$). In Chapter~\ref{chapter:4}, denote the number of IoT (dynamic) devices in the studied network}
+
+\nomenclature[L]{$R_T$, $R_T^{\cA}$}{Regret (of an algorithm $\cA$) for horizon $T$}
+
+\nomenclature[L]{$N_k(t)$ or $T_k(t)$}{Number of samples obtained for arm $k$ at time $t$ ($N_k(t)$ in Chapter~\ref{chapter:4}, $T_k(t)$ in Chapter~\ref{chapter:5})}
+\nomenclature[L]{$\widehat{\mu}_k(t)$}{Empirical mean of rewards obtained for arm $k$ at time $t$}
+\nomenclature[L]{$I_k(t)$}{Index of arm $k$ at time $t$ for an index policy}
+\nomenclature[L]{$\UCB_k(t)$}{Upper-Confidence Bound (\UCB) of arm $k$ at time $t$ for an index policy}
+\nomenclature[L]{$g_k^j(t)$,$g^j(t)$}{Index of (arm $k$) at time $t$ of user $j$ for an index policy in Chapter~\ref{chapter:5}}
+
+\nomenclature[L]{$p$}{In Chapter~\ref{chapter:4}, probability of transmission for the devices following a Bernoulli random emission pattern (\eg, $p=10^{-5}$)}
+\nomenclature[L]{$S$, $S_k$}{In Chapter~\ref{chapter:4}, total number of \emph{static} devices in the network, resp. in channel $k$}
+\nomenclature[L]{$D$, $D_k$}{In Chapter~\ref{chapter:4}, total number of \emph{dynamic} devices in the network, resp. in channel $k$}
+
+\nomenclature[L]{$C_k(t)$, $C^j(t)$}{In Chapters~\ref{chapter:4} and \ref{chapter:5}, collision indicator on arm $k$ or for user $j$ at time $j$}
+
+\nomenclature[L]{$C_{\bm{\mu}}$, $D_{\bm{\mu}}$, $G_{M,\bm{\mu}}$}{In Chapter~\ref{chapter:5}, constants depending on the problem parameters only (or also on $M$)}
+
+\nomenclature[L]{$\cH_0$, $\cH_1$, $\cH_2$}{Hypothesis, in Chapters~\ref{chapter:4} and \ref{chapter:6}}
+\nomenclature[L]{$d^{(k)}$, $d^{(\ell)}$}{Lower-bound on number of samples for accurate detection of change-points in Chapter~\ref{chapter:6}}
+\nomenclature[L]{$\cT$}{In Chapter~\ref{chapter:6}, denote a function in \eqref{def:6:function_T} and a set of time steps in Section~\ref{sub:6:IdeasOptimizations}}
+
 
 % --------------------------------
 % matches mathematical symbols > O
+\nomenclature[O]{$\kl$}{Binary relative entropy, KullBack-Leibler divergence between two Bernoulli distribution: $\kl(x,y) = x\log(x/y) + (1-x) \log((1-x)/(1-y))$}
+\nomenclature[O]{$\kl'$}{Derivative of the binary relative entropy function $\kl(x,y)$, with respect to $x$, for a fixed $y$, in Chapter~\ref{chapter:5}, see Lemma~\ref{lem:5:Fact2KLUCB}}
+\nomenclature[O]{$d(x,y)$}{Divergence function between two distributions of parameters $x$ and $y$, in a one-dimensional exponential family, in Chapter~\ref{chapter:6}}
+
+\nomenclature[O]{$\cW$}{Lambert $\cW$ function, \cite{Corless96}}
+\nomenclature[O]{$f$,$g$,$h$}{Real-valued functions, \eg, exploration function used for \klUCB{} indexes, $f(t) = \log(t) + 3 \log(\log(t))$}
+
+\nomenclature[O]{$\Pr$}{Probability measure under a probabilistic model}
+\nomenclature[O]{$\E$}{Expectancy under a probabilistic model}
+\nomenclature[O]{$\mathbbm{1}(E)$}{Indicator function of an event $E$ ($= 1$ if and only if the event $E$ is true)}
+\nomenclature[O]{$\cF$, $\cF_t$}{Filtration in a probabilistic model, after $t-1$ prior observations}
+\nomenclature[O]{$I_1,\dots,I_5$}{Used in Chapter~\ref{chapter:5} to denote various events}
+\nomenclature[O]{$\cE$, $\cE_T$}{Used in Chapter~\ref{chapter:6} to denote ``good events'' that happen most of the time}
+
+\nomenclature[O]{$\lfloor \bullet \rfloor$, $\lceil \bullet \rceil$}{Floor and ceiling funtions, $\lfloor x \rfloor = \sup\{n\in\Z, x \leq n\}$ and $\lceil x \rceil = \sup\{n\in\Z, x < n\}$}
+
+\nomenclature[O]{$o(\bullet)$, $\cO(\bullet)$, $\Omega(\bullet)$}{Landau notations: $f(x)=o(g(x)$ means that $g(x)\neq0$ and $f(x)/g(x)\to0$ for $x\to\infty$, $f(x)=\cO(g(x))$ means that there exists $x_0,K>0$ such that $f(x)\leq K g(x)$ from $x\geq x_0$, and $f(x)=\Omega(g(x))$ means $g(x)=\cO(f(x))$}
 
 
 % --------------------------------
 % matches Subscripts           > I
+\nomenclature[I]{$x_k$}{Usually the subscript index $k$ is used to denote a variable depending on an arm, for $k\in\{1,\dots,K\}$}
+\nomenclature[I]{$\overline{E}$}{Complement of an event $E$}
+\nomenclature[I]{$X'$}{Usually used to denote a ``wrong value'' of a variable $X$, for instance $M'$ denotes in Section~\ref{par:5:usingWrongValueofM}}
+\nomenclature[I]{$\widehat{X}$}{Usually used to denote an ``empirical value'', a mean or an estimate of a quantity $X$ that depends on time, \eg, $\widehat{\mu_k}$ the empirical mean of arm $k$ or $\widehat{S}_t$ the set of selected arms in Section~\ref{sub:5:towardsRegretUpperBounds}}
+\nomenclature[I]{$\widetilde{X}$}{Usually used to denote another ``empirical value'' or an estimate of a quantity $X$ that depends on time, \eg, $\widehat{S}_t$ the set of selected arms in Section~\ref{sub:5:Selfish}. Also denote a surrogate for a function without a closed form, \eg, $\widetilde{T}$ in Section~\ref{sec:6:exploringDifferentThresholdFunctions}}
 
 
 % --------------------------------
 % matches Superscripts         > E
+\nomenclature[E]{$y^j$}{Usually the superscript index $j$ is used to denote a variable depending on a player, for $j\in\{1,\dots,M\}$}
+\nomenclature[E]{$y^{(k)}$}{Usually the superscript index $(k)$ is used to denote a variable in the $k$-th stationary interval, under the \emph{global} changes point-of-view, in Chapter~\ref{chapter:6}}
+\nomenclature[E]{$y^{(\ell)}$}{Usually the superscript index $(\ell)$ is used to denote a variable in the $\ell$-th stationary interval, under the \emph{local} changes point-of-view, in Chapter~\ref{chapter:6}}
 
