@@ -402,7 +402,7 @@ Let $\kl(x,y) := x\log(x/y) + (1-x)\log((1-x)/(1-y))$ be KL divergence between t
 %
 We first introduce the assumption under which we derive a regret lower bound, that generalizes a classical assumption made by \cite{LaiRobbins85} in single-player bandit models.
 Our lower bound will only be valid for algorithms of a certain class, that do not obtain much information from the collision indicator variables.
-This class contains our proposals, \RandTopM{} and \MCTopM, but rule out the \textsc{Sic-MMAB} algorithm of \cite{BoursierPerchet18}.
+This class contains our proposals, \RandTopM{} and \MCTopM, but rules out the \textsc{Sic-MMAB} algorithm of \cite{BoursierPerchet18}.
 
 \begin{definition}\label{def:5:DecentralizedUniformEfficiency}
   A strategy $\rho$  is \emph{\textbf{strongly uniformly efficient}} if for all $\boldsymbol{\mu} \in \cP_M$ and for all $\alpha \in (0,1)$,
@@ -677,16 +677,6 @@ We now propose two alternatives to this strategy, that do not rely on ranks and 
 \end{equation}
 
 
-\paragraph{The \RandTopM{} algorithm.}
-%
-First, we precisely state the \RandTopM{} algorithm above in Algorithm~\ref{algo:5:RandTopM}.
-It is essentially a refinement over the \RhoRand{} algorithm, and a simpler version of \MCTopM.
-The difference with \MCTopM{} is that the later algorithm introduces a concept of a ``Chair'', by considering a binary ``being fixed'' state $s^j(t)$, as presented in Algorithm~\ref{algo:5:MCTopM} below.
-%
-In \RandTopM{}, player $j$ is always considered ``not fixed'',
-and a \emph{collision always forces a uniform sampling of the next arm} from $\TopM(t)$.
-
-
 % \vspace*{-5pt}  % XXX remove if problem
 % \begin{small}  % XXX remove if problem
   \begin{figure}[h!]
@@ -730,6 +720,16 @@ and a \emph{collision always forces a uniform sampling of the next arm} from $\T
   \end{figure}
 % \end{small}  % XXX remove if problem
 % \vspace*{-5pt}  % XXX remove if problem
+
+
+\paragraph{The \RandTopM{} algorithm.}
+%
+First, we precisely state the \RandTopM{} algorithm above in Algorithm~\ref{algo:5:RandTopM}.
+It is essentially a refinement over the \RhoRand{} algorithm, to not use the indirection of ranks, and a simpler version of \MCTopM.
+The difference with \MCTopM{} is that the later algorithm introduces a concept of a ``Chair'', by considering a binary ``being fixed'' state $s^j(t)$, as presented in Algorithm~\ref{algo:5:MCTopM} below.
+%
+In \RandTopM{}, player $j$ is always considered ``not fixed'',
+and a \emph{collision always forces a uniform sampling of the next arm} from $\TopM(t)$.
 
 
 
@@ -829,7 +829,7 @@ The five different transitions $(1)$, $(2)$, $(3)$, $(4)$, $(5)$ refer to the no
 
 \begin{figure}[h!]
   \resizebox{1.00\textwidth}{!}{
-  \begin{tikzpicture}[>=latex',line join=bevel,scale=5]
+  \begin{tikzpicture}[>=latex',line join=bevel,scale=5.5]
       %
       \node (start) at (1.5,0.30) {$(0)$ Start $t=0$};
       \node (notfixed) at (1,0) [draw,rectangle,thick] {Not fixed, $\overline{s^j(t)}$};
@@ -852,7 +852,7 @@ The five different transitions $(1)$, $(2)$, $(3)$, $(4)$, $(5)$ refer to the no
 
 
 % -----------------------------------------------------------------
-\section{Theoretical elements, and order optimal regret for \MCTopM}
+\section{Theoretical elements, and regret upper bound for \MCTopM}
 \label{sec:5:upperbounds}
 % -----------------------------------------------------------------
 
@@ -1354,7 +1354,7 @@ The first experiment is considering $K=9$ arms, with means $\bm{\mu}=[0.1,0.2,\d
 Note that here and as in all this section we consider different algorithms that know the number of players $M$ (see Section~\ref{sub:5:unknownNumberOfPlayers} below for a discussion on the case when $M$ could be unknown).
 %
 Performance is measured with the \emph{expected} regret up to horizon $T=10000$, estimated based on $1000$ repetitions on the same bandit instance.
-%
+
 We report in Table~\ref{table:5:comparisonUCB_klUCB} the results in terms of mean regret, $\pm$ one standard deviation.
 The conclusions are three fold: first we observe for any of the compared algorithms, using \klUCB{} is always (much) better than using \UCB.
 Second we observe that our proposal \MCTopM{} is outperforming the state-of-the-art \RhoRand{} policy, and performs closely to the centralized (unrealistic) approach.

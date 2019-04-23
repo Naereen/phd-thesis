@@ -43,7 +43,7 @@ then we present in Section~\ref{sec:3:timeAndMemoryCosts} additional numerical s
 % To also illustrate how one can easily extend the SMPyBandits library to add not only add new distributions or new algorithms.
 % but also new bandit models, we detail in Section~\ref{sec:3:markovModels} how we added the possibility to simulate Markovian models (as introduced by \cite{Anantharam87b}).
 %
-Finally, in Appendix~\ref{sec:3:appendix} we include some minimalist files showing how to use the library, as well as details regarding the use of parallel computing to speed-up simulations.
+Finally, in Appendix~\ref{sec:3:appendix} we include some small files showing how to use the library, as well as details regarding the use of parallel computing to speed-up simulations.
 
 
 \paragraph{Publications.}
@@ -168,6 +168,10 @@ We do not give more details, but the interested reader can refer to the followin
     \href{https://smpybandits.github.io/notebooks/Easily_creating_MAB_problems.html}{\texttt{SMPyBandits.GitHub.io/notebooks/Easily\_creating\_MAB\_problems.html}}
 \end{small}
 
+We have not yet tried to add support for higher dimensional distributions of rewards, \eg, linear bandit, but it would be an interesting extension of SMPyBandits.
+%
+However, note that our library does support finite-state real-valued Markov MAB models, where arms do not correspond to distributions but to Markov chains, in the two variants of \emph{rested} or \emph{restless} Markov chains, as introduced by \cite{Anantharam87b}.
+
 \subsection{MAB algorithms}
 
 SMPyBandits is a complete open-source implementation of single-player (classical) bandit algorithms,
@@ -188,7 +192,7 @@ For instance the code specific to the UCB algorithm \cite{LaiRobbins85,Auer02} i
 \end{small}
 
 
-\subsubsection{Features}
+\subsection{Features}
 
 With this numerical framework, simulations can run on a single CPU or a multi-core machine using joblib \cite{joblib} (see Appendix~\ref{sub:3:parallelSimulations}),
 and summary plots are automatically saved as high-quality PNG, PDF and EPS, using matplotlib \cite{matplotlib} and seaborn \cite{seaborn}.
@@ -198,7 +202,7 @@ Making new simulations is very easy, one only needs to write a configuration scr
 A complete Sphinx documentation, for each algorithm and all parts of the codebase, even including the constants in the different configuration files, is available here: \texttt{\href{https://SMPyBandits.GitHub.io}{SMPyBandits.GitHub.io}}.
 
 
-\subsubsection{How to run experiments?}
+\subsection{How to run experiments?}
 
 We show how to install SMPyBandits, and an example of how to run a simple experiment.
 This bash snippet\footnote{~See this page \texttt{\href{https://SMPyBandits.GitHub.io/How_to_run_the_code.html}{SMPyBandits.GitHub.io/How\_to\_run\_the\_code.html}} for more details.} shows how to clone the code\footnote{~SMPyBandits is also available on Pypi, see \texttt{\href{https://pypi.org/project/SMPyBandits/}{pypi.org/project/SMPyBandits}}. You can install it directly with \texttt{sudo pip install SMPyBandits}, or from a \texttt{virtualenv} \cite{virtualenv}.},
@@ -298,15 +302,36 @@ All the quoted libraries are free and open-source and can be installed in one co
 When SMPyBandits is installed using \texttt{pip install SMPyBandits}, the dependencies are of course automatically installed if not already present.
 
 
-\subsection{Continuous integration using Read the Docs and Travis CI}
+\subsection{Continuous integration with Read the Docs and Travis CI}
 
-% FIXME
-\TODOL{I need to quickly explain that SMPyBandits is using Read the Docs since $2017$ and Travis Ci since $2018$ to:
+% \TODOL{I need to quickly explain that SMPyBandits is using Read the Docs since $2017$ and Travis Ci since $2018$ to: }
 
-1. automatically build the documentation on Read the Docs after every commit. This allows to regularly check that the library is well formatted and can be imported correctly, as well as keeping the online documentation up-to-date.
+Since $2017$ and $2018$, SMPyBandits is using the free version of two online continuous integration (CI) service, to automatically build and host the documentation, and to automatically test the library on some numerical simulations.
+%
+These CI services are free for open-source work, and are both triggered whenever a modification of the codebase is sent to the hosting platform (\ie, GitHub).
 
-2. automatically run short numerical simulations on Travis CI after every commit. This allows to check that no modification on any part of the codebase breaks anything, as well as giving an up-to-date example of log files that shows online the results of different examples of experiments. The tests covers all the main models and almost all the algorithms implemented in SMPyBandits, and it has been proved very useful to quickly find and fix new bugs.
-}
+\paragraph{Read the Docs.}
+Since $2017$, we have been using the free web service provided by Read the Docs (\href{https://readthedocs.org/}{\texttt{ReadTheDocs.org}}).
+Read the Docs allows to automatically build the documentation after every commit. This allows to regularly check that the library is well formatted and can be imported correctly, as well as keeping the online documentation up-to-date.
+Moreover, they offer to host the documentation online, at \href{https://smpybandits.rtfd.io/}{\texttt{SMPyBandits.ReadTheDocs.io}}.
+For more details, see \href{https://readthedocs.org/projects/smpybandits/}{\texttt{https://ReadTheDocs.org/projects/SMPyBandits}}.
+%
+Since its first use, the service did about 180 builds, and about $10\%$ of them were useful to detect newly introduced issues or bugs in the code.
+The build is configured using the \texttt{.readthedocs.yml} file in SMPyBandits main folder, and it builds the documentation in about two minutes.
+I have also been building the documentation manually on a weekly basis, to also host it on \href{https://smpybandits.github.io/}{\texttt{SMPyBandits.GitHub.io}} thanks to GitHub pages.
+In the last two years, the documentation saw about 8500 unique visits, while the GitHub project have been visited about 3500 unique visits.
+
+
+\paragraph{Travis CI.}
+Since $2018$, we have been using the free web service provided by Travis CI (\href{https://travis-ci.org/}{\texttt{Travis-CI.org}}).
+Travis CI allows to automatically run short numerical simulations after every commit.
+This allows to check that each modification on any part of the codebase does not break anything, as well as giving an up-to-date example of log files that shows online the results of different examples of experiments. The tests covers all the main models and almost all the algorithms implemented in SMPyBandits, and it has been proved very useful to quickly find and fix new bugs.
+For more details, see \href{https://travis-ci.org/SMPyBandits/SMPyBandits}{\texttt{Travis-CI.org/SMPyBandits/SMPyBandits}}.
+%
+Since its first use, the service did about 160 builds, and about $30\%$ of them were useful to detect newly introduced issues or bugs in the code.
+The build is configured using the \texttt{.travis.yml} file in SMPyBandits main folder, and it runs numerical experiments with a short horizon (\eg, $T=100$ or $T=1000$) and a small number of repetitions (\ie, $N=4$), but covering all the different models implemented by SMPyBandits (and even including some that are not covered in this chapter, like the Markov model, or the sparse multi-player model).
+Builds typically run for $15$ minutes, and Travis CI have been proved to be very useful in our development process.
+
 
 
 \subsection{Research works using SMPyBandits}
@@ -380,7 +405,7 @@ and $(iii)$ an overview of its usage:
 %
 
 $(i)$
-Its purpose is to easily implement numerical simulations of stochastic or piece-wise stochastic (see Chapter~\ref{chapter:6}) problems of single- or multi-player multi-armed bandits.
+Its purpose is to easily implement numerical simulations of stochastic or piece-wise stochastic problems of single- or multi-player multi-armed bandits.
 SMPyBandits is distributed on GitHub and Pypi freely, under an open-source license, and it is extensively documented (at \href{https://SMPyBandits.GitHub.io}{\texttt{SMPyBandits.GitHub.io}}).
 Our library allows any researcher to easily run numerical simulations of different kinds of multi-armed bandit problems, requiring only a small knowledge of Python thanks to its documentation, its well-designed API, and many examples of simulation scripts and configuration files included.
 
@@ -392,7 +417,7 @@ One of the main quality of the library is that it is quite exhaustive, as all th
 More than $65$ algorithms or variants of algorithms are implemented for the single-player case, $5$ for the expert aggregation problem, about $15$ for the multi-player case, and about $20$ for the piece-wise stationary problem.
 All the codebase is fully documented, and the library is using continuous integration to run automated tests on the code after every modification.
 %
-When comparing algorithms on a problem, the main performance measure is the regret, but the library also compute, store and visualize other measures such as best-arm selection rate or mean cumulated reward, as well as real time and memory costs.
+When comparing algorithms on a problem, the main performance measure is the regret, but the library also computes, stores and visualizes other measures, such as best-arm selection rate or mean cumulated reward, as well as real time and memory costs.
 
 $(iii)$
 Finally, we presented how to use SMPyBandits, if one wants to run some pre-designed simulations or design new simulations.
@@ -403,9 +428,10 @@ We give below in Appendix~\ref{sec:3:appendix} a small but complete example of t
 
 % WARNING
 % \paragraph{Remark.}
-We want to conclude by highlighting that a significant amount of time during my PhD was devoted to the development of SMPyBandits, and as such the library, its documentation and this chapter  are considered one of the main contribution of this thesis.
+We want to conclude by highlighting that a significant amount of time during my PhD was devoted to the development of SMPyBandits, and as such the library, its documentation and this chapter  are considered an important contribution of this thesis.
 %
-Our library is used for the numerical simulations in all this thesis, except Chapter~\ref{chapter:4}. We use it to compare state-of-the-art single-player algorithms designed for stationary MAB in Chapter~\ref{chapter:2}, for multi-armed problems in Chapter~\ref{chapter:5} and for piece-wise stationary problems in Chapter~\ref{chapter:6}.
+Our library is used for the numerical simulations in all this thesis, except Chapter~\ref{chapter:4}.
+% We use it to compare state-of-the-art single-player algorithms designed for stationary MAB in Chapter~\ref{chapter:2}, for multi-armed problems in Chapter~\ref{chapter:5} and for piece-wise stationary problems in Chapter~\ref{chapter:6}.
 We also used it in other publications not included in this thesis, like our work on doubling tricks \cite{Besson2018DoublingTricks} that we shortly present in Appendix~\ref{app:2:DoublingTricks}.
 
 
@@ -418,18 +444,20 @@ or to add support for the ``dynamic case'' of multi-player bandits to allow arri
 %
 At the end of Chapter~\ref{chapter:5}, we present many extensions of the multi-player bandit model,
 and even if some have already been implemented, a major future work is to implement the most interesting ones
-(tickets \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}).
-
+(tickets \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}).\\
+%
+\indent
 Since $2017$, I also received by email or by GitHub issues some requests to implement new features or models. Most of them were implemented quickly, but some would require more time and are left as possible future works.
 Two example of requests include a model where the number of arm can change at some or all time step (an example of such model is called ``sleeping bandit'', \href{https://github.com/SMPyBandits/SMPyBandits/issues/123}{issue 123}), to implement the model of rotting bandits (\href{https://github.com/SMPyBandits/SMPyBandits/issues/156}{issue 156}), or to add a web-based user interface for an even easier usage of the library requiring no command line or knowledge of Python (\href{https://github.com/SMPyBandits/SMPyBandits/issues/133}{issue 133}).
 
 
 Finally, the most exciting thing that could happen to our SMPyBandits library would be to see it gaining popularity!
-Its documentation has seen already about $20000$ visits, the project on GitHub had $74$ stars in June $2019$, and based on the features requested and the emails received about it, we counted between $15$ to $25$ researchers in other labs we use or used SMPyBandits.
+Its documentation has seen already about $20000$ visits, the project on GitHub had $76$ stars in June $2019$, and based on the features requested and the emails received about it, we counted between $15$ to $25$ researchers in other labs we use or used SMPyBandits.
 While this is a good start, we believe that the library is mature and interesting enough to hope to see it being used by more people.
 %
-We have submitted a summary paper presenting SMPyBandits \cite{SMPyBanditsJMLR} to the MLOSS track of the Journal of Machine Learning Research (JMLR), and we hope to be accepted, as it would give more visibility to our work.
-
+We have submitted a summary paper presenting SMPyBandits \cite{SMPyBanditsJMLR} to the MLOSS track of the Journal of Machine Learning Research (JMLR), and we hope to be accepted, as it would give more visibility to our work.\\
+%
+\indent
 As a personal note, I would like to continue working on SMPyBandits, and implement the most important requested features, as well as maintain it, and possibly continue to add recent algorithms by following actively the research in this community.
 I would also love to be able in the next to teach a graduate or under-graduate course on multi-armed bandits, and use my library as a support to illustrate the course, as well as practical sessions.
 
@@ -482,7 +510,7 @@ which is used to load the configuration, run the experiment and then print and p
 We present below in Listing~\ref{lst:3:configuration} a full example of a minimalist \texttt{configuration.py} file,
 which is used to define the experiment.
 It defines the number of arms $K$ and their distribution, the horizon $T$, the policies to test etc.
-It uses environment variables, so a user can configure some parameters of the simulation when launching them:
+It uses environment variables, so a user can configure some parameters of the simulation when launching them from a terminal:
 
 % \begin{verbatim}
 %     (bash) $ T=50000 N=100 K=10 ARM_TYPE=Gaussian python main.py

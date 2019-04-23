@@ -143,9 +143,9 @@ Writing its proof and performing more simulations are left as possible future wo
 
 \paragraph{Simulations.}
 
-We consider a bandit problem with $K=9$ arms, of means $0.1,0.2,\dots,0.8,0.9$, and three different cases of $M=3,6,9$ players, for $100$ independent repetitions and an horizon of $T=10000$.
+We consider a bandit problem with $K=9$ arms, of means $0.1,\dots,0.9$, and three different cases of $M=3,6,9$ players, for $100$ independent repetitions and an horizon of $T=10000$.
 As before, we include the centralized multiple-play \klUCB{} as an unachievably efficient baseline, the \Selfish-\klUCB{} algorithm as an heuristic which does not require the know $M$.
-Then we compare the \RhoRand, \RandTopM{} and \MCTopM{} algorithms, using \klUCB, which know $M$ beforehand, with their extensions implementing the same algorithm as \rhoRandEst{} to estimate $M$ on the fly.
+Then we compare the \RhoRand, \RandTopM{} and \MCTopM{} algorithms, using \klUCB, which know $M$ beforehand, with their extensions implementing the same algorithm as \rhoRandEst, to estimate $M$ on the fly.
 
 % \TODOL{Include a simulation to show the behavior of \rhoRand{} vs \rhoRandEst, and \RandTopM{} and \MCTopM{} with prior knowledge of $M$ vs the ``estimate'' versions.}
 % Je dois refaire ces simulations, les chiffres ici sont avec $T=1000$ et $N=4$ répétitions (juste faites vite fait dans le train, je dois les lancer sur la machine du bureau).
@@ -243,7 +243,7 @@ They prove that it is unlikely to encounter any of these ``tie breaking points''
 \paragraph{Additionnal numerical simulations.}
 
 To illustrate the difficulty of the ``no sensing'' case, we illustrate here the performances of different algorithms designed specifically for this setting.
-As above, we consider a bandit problem with $K=9$ arms, of means $0.1,0.2,\dots,0.8,0.9$, and three different cases of $M=3,6,9$ players, for $100$ independent repetitions and an horizon of $T=10000$.
+As above, we consider a bandit problem with $K=9$ arms, of means $0.1,\dots,0.9$, and three different cases of $M=3,6,9$ players, for $100$ independent repetitions and an horizon of $T=10000$.
 We include the \Selfish-\klUCB{} algorithm as an heuristic, as well as the Improved \MusicalChair{} algorithm from \cite{LugosiMehrabian18} and \textsc{Sic-MMAB} from \cite{BoursierPerchet18}.
 The centralized multiple-play \klUCB{} is included as an unrealistic efficient baseline, but it is interesting to also add it here, as it does not use the sensing information but only the joint information (the reward) $r^j(t)$, as it directly affects the player in an orthogonal configuration and thus never encounters any collision (thus $r^j(t)=Y_{t,A^j(t)}$ for each $j,t$).
 %
@@ -331,7 +331,7 @@ Further empirical evaluation would be needed to fully understand the situation, 
 \label{sub:5:withCommunicationOrCoordination}
 
 In all the models of IoT networks considered in this thesis, we assume that \emph{the different IoT devices cannot communicate with each other}, and can only communicate with a unique gateway.
-Of course, this hypothesis can be removed, and in practice in some families of wireless networks, communication between players are possible.
+Of course, this hypothesis can be removed, and in practice in some families of wireless networks, communication between devices are possible.
 Note that this extension is not considering a graph of distributed agents all playing cooperatively to solve a unique bandit game, like it is studied in the ``graph bandit'' problem.
 What we are interested here is an extension of our model where players can send some bits to one or all the other players, at every time steps or some time steps.
 
@@ -341,7 +341,9 @@ Then they can share all their observations, and they can all run the same multip
 In this setting, a logarithmic regret is obtained easily, and the regret upper-bound of the two aforementioned algorithms asymptotically achieve the lower-bound from \cite{Anantharam87a}.
 
 An interesting extension is thus to limit the communication between players, either to a small number of bits, or just one bit, at every or only some time steps.
-We identified that the state-of-the-art on this direction of research consists in the two very recent works published in April 2019, while I was finishing this chapter: \cite{tao2019collaborative} and \cite{wang2019distributed}.
+We identified that the state-of-the-art on this direction of research consists in the two very recent works
+% published in April 2019, while I was finishing this chapter:
+\cite{tao2019collaborative} and \cite{wang2019distributed}.
 Distributed pure exploration is studied in \cite{tao2019collaborative}, where the proposed new lower bounds for the regret of any algorithm for the distributed best arm identification problem, under the fixed time or fixed confidence settings.
 The also propose effective algorithms that asymptotically match their lower-bounds (up-to logarithmic factors, in some cases).
 The second work studies distributed learning for (not necessarily stochastic) multi-armed bandits as well as linear bandits \cite{tao2019collaborative}.
