@@ -186,6 +186,55 @@ Additional simulations, for increasing time horizons $T$, confirmed the expected
 
 
 % ----------------------------------------------------------------------------
+\subsection{Arrival and departures of players: the ``dynamic setting''}
+\label{sub:5:arrivalDepartures}
+
+As reminded above, our model assumes the number of players $M$ remain fixed during all the bandit game.
+However, in real-world wireless networks, when players model communicating devices connected to a single gateway, devices can arrive or leave the network at any time.
+The existing previous work on multi-player bandit models are all motivated by possible applications to wireless networks, but most of them assume $M$ to be fixed.
+The first work studying the relaxation of this hypothesis is \cite{Rosenski16}, where this case is called the ``dynamic setting''.
+If the arrival or departures of players is not random, but determined in advance while still being unknown to any player, the natural notion of regret is the following, where the expectancy $\E[\bullet]$ is capturing the randomness in the sensing information, as well as in the players' decisions (\ie, collisions):
+\begin{equation}\label{eq:5:defRegretDynamicSetting}
+    R_T^{\text{dyn}} = \sum_{t=1}^T \sum_{k=1}^{M(t)} \mu^*_{k} - \E\Bigl[ \sum_{t=1}^T \sum_{j=1}^{M(t)} r^j(t) \Bigr].
+\end{equation}
+
+In \cite{Rosenski16}, the authors explain that if the model allows arrival or departures of players at \emph{any time step}, then the game is much harder, and sub-linear regret is most likely un-achievable, if we consider the natural extension of the definition of regret as in our model presented in Section~\ref{sec:5:model} above.
+However, this negative results depends on how arrival of players are modeled:
+if an arriving player has no prior memory of the previous observations, \ie, if it model a new device, then if there is no restriction on the number or frequency of arrival or departures, we can most likely prove that sub-linear regret is not achievable in general.
+A simple but extreme example shows that regret has to be linear for any bandit strategy (in the observation model with sensing).
+Consider $K=2$ Bernoulli-distributed arms of means $\mu_1=\mu_2=1/2$, and one player is always active and play any bandit strategy (\eg, \MCTopM-\klUCB).
+Every time step, another player is either arriving, without any knowledge of the problem (\eg, it is a fresh and new IoT device). Then no matter the strategy of these news players, even if they all play \MCTopM-\klUCB{} for instance, if they play a uniformly-efficient strategy there is a non-zero probability that player $1$ suffer from a collision at each time step, thus resulting in linear centralized system regret.
+
+In \cite{Rosenski16}, it is assumed that the players all know a lower-bound $L$ on the length of all the intervals during which arrival or departures of players are allowed.
+A naive idea, if $L$ is large enough, is simply to restart the underlying algorithm every $L$ time steps, in order to directly benefit from the theoretical guarantees of the ``static setting'' (where $M$ stays constant).
+However, this idea yields a large regret if the length of ``static'' intervals $L$ is too small.
+Applied to the \MusicalChair{} algorithm, the authors in \cite{Rosenski16} call this basic extension Dynamic \MusicalChair
+Under the simple hypothesis that the overall number of players entering and leaving the game is sub-linear in $T$ (\ie, a $\smallO{T}$), they analyze the regret of Dynamic \MusicalChair{} and prove it is also sub-linear (see Theorem~2 in Section~3.4).
+%
+Under the same hypothesis, and if the lower-bound $L$ is known before-hand and is large enough, then we could also apply the same idea as from \cite{Rosenski16} to our approach. We believe that we could easily prove that a sub-linear regret is achievable, if all players run \MCTopM-\klUCB{} (and if currently active players restart their memory of the past observations every $L$ time steps).
+As the regret guarantees are stronger (\ie, smaller regret upper-bound) for \MCTopM{} than \MusicalChair, we also believe that in this ``slowly varying'' dynamic setting, applying the idea of Dynamic \MusicalChair{} from \cite{Rosenski16} to our proposal \MCTopM{} would also give a small regret upper-bound.
+
+After being introduced in \cite{Rosenski16}, some more recent works studied the case of arrival or departures of players, usually referred to as ``dynamic setting'' or ``dynamic case''.
+For instance, \cite{BoursierPerchet18} studies in Section~4 the first algorithm proposed for the dynamic case under the no-sensing model.
+They study the same notion of regret as the one proposed in \cite{Rosenski16} and given above in \eqref{eq:5:defRegretDynamicSetting}, see Equation $(10)$ in Section~4.2.1.
+With the assumption of a non-decreasing number of players, \ie, if only arrivals of players are considered,
+they prove a regret upper-bound of the \textsc{Dyn-MMAB} algorithm in Theorem~3 .
+% Denote $M(t)$ the number of players at each time $t$, then they propose to study $R_T$ defined as
+% \[ R_T = \sum_{t=1}^T \sum_{k=1}^{M(t)} \mu_^*{k} - \sum_{t=1}^T \sum_{j=1}^{M(t)} r^j(t). \]
+If all arriving players are using their \textsc{Dyn-MMAB} algorithm, the ``dynamic'' regret is bounded by $\bigO{M^2 K \log(T) / \mu^*_{M}}$, if $M=M(T)$ is the total number of players involved in the problem.
+
+% \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
+
+
+% \cite{KumarYadav2018}
+
+% Distributed Learning and Stable Orthogonalization in Ad-Hoc Networks with Heterogeneous Channels
+% Sumit J Darak, Manjesh K. Hanawal
+% https://arxiv.org/pdf/1812.11651
+% \cite{DarakHanawal18}
+
+
+% ----------------------------------------------------------------------------
 \subsection{Without sensing information}
 \label{sub:5:withoutSensing}
 
@@ -370,55 +419,6 @@ Analytic performance guarantees, proving convergence to stable marriage configur
 
 
 % ----------------------------------------------------------------------------
-\subsection{Arrival and departures of players: the ``dynamic setting''}
-\label{sub:5:arrivalDepartures}
-
-As reminded above, our model assumes the number of players $M$ remain fixed during all the bandit game.
-However, in real-world wireless networks, when players model communicating devices connected to a single gateway, devices can arrive or leave the network at any time.
-The existing previous work on multi-player bandit models are all motivated by possible applications to wireless networks, but most of them assume $M$ to be fixed.
-The first work studying the relaxation of this hypothesis is \cite{Rosenski16}, where this case is called the ``dynamic setting''.
-If the arrival or departures of players is not random, but determined in advance while still being unknown to any player, the natural notion of regret is the following, where the expectancy $\E[\bullet]$ is capturing the randomness in the sensing information, as well as in the players' decisions (\ie, collisions):
-\begin{equation}\label{eq:5:defRegretDynamicSetting}
-    R_T^{\text{dyn}} = \sum_{t=1}^T \sum_{k=1}^{M(t)} \mu^*_{k} - \E\Bigl[ \sum_{t=1}^T \sum_{j=1}^{M(t)} r^j(t) \Bigr].
-\end{equation}
-
-In \cite{Rosenski16}, the authors explain that if the model allows arrival or departures of players at \emph{any time step}, then the game is much harder, and sub-linear regret is most likely un-achievable, if we consider the natural extension of the definition of regret as in our model presented in Section~\ref{sec:5:model} above.
-However, this negative results depends on how arrival of players are modeled:
-if an arriving player has no prior memory of the previous observations, \ie, if it model a new device, then if there is no restriction on the number or frequency of arrival or departures, we can most likely prove that sub-linear regret is not achievable in general.
-A simple but extreme example shows that regret has to be linear for any bandit strategy (in the observation model with sensing).
-Consider $K=2$ Bernoulli-distributed arms of means $\mu_1=\mu_2=1/2$, and one player is always active and play any bandit strategy (\eg, \MCTopM-\klUCB).
-Every time step, another player is either arriving, without any knowledge of the problem (\eg, it is a fresh and new IoT device). Then no matter the strategy of these news players, even if they all play \MCTopM-\klUCB{} for instance, if they play a uniformly-efficient strategy there is a non-zero probability that player $1$ suffer from a collision at each time step, thus resulting in linear centralized system regret.
-
-In \cite{Rosenski16}, it is assumed that the players all know a lower-bound $L$ on the length of all the intervals during which arrival or departures of players are allowed.
-A naive idea, if $L$ is large enough, is simply to restart the underlying algorithm every $L$ time steps, in order to directly benefit from the theoretical guarantees of the ``static setting'' (where $M$ stays constant).
-However, this idea yields a large regret if the length of ``static'' intervals $L$ is too small.
-Applied to the \MusicalChair{} algorithm, the authors in \cite{Rosenski16} call this basic extension Dynamic \MusicalChair
-Under the simple hypothesis that the overall number of players entering and leaving the game is sub-linear in $T$ (\ie, a $\smallO{T}$), they analyze the regret of Dynamic \MusicalChair{} and prove it is also sub-linear (see Theorem~2 in Section~3.4).
-%
-Under the same hypothesis, and if the lower-bound $L$ is known before-hand and is large enough, then we could also apply the same idea as from \cite{Rosenski16} to our approach. We believe that we could easily prove that a sub-linear regret is achievable, if all players run \MCTopM-\klUCB{} (and if currently active players restart their memory of the past observations every $L$ time steps).
-As the regret guarantees are stronger (\ie, smaller regret upper-bound) for \MCTopM{} than \MusicalChair, we also believe that in this ``slowly varying'' dynamic setting, applying the idea of Dynamic \MusicalChair{} from \cite{Rosenski16} to our proposal \MCTopM{} would also give a small regret upper-bound.
-
-After being introduced in \cite{Rosenski16}, some more recent works studied the case of arrival or departures of players, usually referred to as ``dynamic setting'' or ``dynamic case''.
-For instance, \cite{BoursierPerchet18} studies in Section~4 the first algorithm proposed for the dynamic case under the no-sensing model.
-They study the same notion of regret as the one proposed in \cite{Rosenski16} and given above in \eqref{eq:5:defRegretDynamicSetting}, see Equation $(10)$ in Section~4.2.1.
-With the assumption of a non-decreasing number of players, \ie, if only arrivals of players are considered,
-they prove a regret upper-bound of the \textsc{Dyn-MMAB} algorithm in Theorem~3 .
-% Denote $M(t)$ the number of players at each time $t$, then they propose to study $R_T$ defined as
-% \[ R_T = \sum_{t=1}^T \sum_{k=1}^{M(t)} \mu_^*{k} - \sum_{t=1}^T \sum_{j=1}^{M(t)} r^j(t). \]
-If all arriving players are using their \textsc{Dyn-MMAB} algorithm, the ``dynamic'' regret is bounded by $\bigO{M^2 K \log(T) / \mu^*_{M}}$, if $M=M(T)$ is the total number of players involved in the problem.
-
-% \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
-
-
-% \cite{KumarYadav2018}
-
-% Distributed Learning and Stable Orthogonalization in Ad-Hoc Networks with Heterogeneous Channels
-% Sumit J Darak, Manjesh K. Hanawal
-% https://arxiv.org/pdf/1812.11651
-% \cite{DarakHanawal18}
-
-
-% ----------------------------------------------------------------------------
 \subsection{With different arm utilities among players}
 \label{sub:5:withDifferentMeansAmongPlayers}
 
@@ -455,7 +455,7 @@ Followers start by a Round-Robin uniform exploration with no collision, then the
 The leader can thus collect enough samples from all arms and all players, and is able to solve iteratively the stable marriage problem, and sends back the successive estimate of the solution to the players.
 %
 In the easier case when their is a unique optimal matching, their algorithm Multiplayer Explore-Then-Commit (M-ETC) is the first one to achieve logarithmic regret, in the form of $R_T = \cO(M K \log(K T) + K M^3 \log(M K T) / \Delta) + K M^2 (\log(M \log(K T) / \Delta))^2$, if $\Delta$ is defined as the gap between the utility of the best matching and the utility of that of the matching with second best utility.
-In the generic case, their algorithm M-ETC with Elimination achieves a regret of $\cO((\log(T))^{2+\kappa})$ for any positive constant $\kappa$.
+In the generic case, their algorithm M-ETC with Elimination achieves a regret of $\cO((\log(T))^{1+\kappa})$ for any positive constant $\kappa$.
 
 % \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
 
@@ -481,29 +481,10 @@ Another interesting directions are to study the possible extension of this model
 
 
 % ----------------------------------------------------------------------------
-\subsection{With malicious jammers}
-\label{sub:5:withDifferentMeansAmongPlayers}
-
-In all this chapter and the previous research literature, another common hypothesis is that all the $M$ players are pursuing the same goal, and are all behaving nicely by following the same algorithm.
-% Efficient utilization of licensed spectrum in the cognitive radio network is challenging due to lack of coordination among the Secondary Users (SUs).
-Distributed algorithms proposed in the literature aim to maximize the network throughput by ensuring orthogonal channel allocation for the SUs.
-However, these algorithms work under the assumption that all the SUs faithfully follow the algorithms which may not always hold due to the decentralized nature of the network.
-In the paper \cite{SawantKumar2018}, the authors study for the first time distributed algorithms that are robust against malicious behavior, also called \emph{jamming attack}.
-They consider both the cases of jammers launching coordinated and uncoordinated attacks, and consider a set of $J$ jammers.
-In the coordinated attack, the jammers select non-overlapping channels to attack in each time slot and can significantly increase the number of collisions for SUs.
-They setup the problem in each scenario as a multi-player bandit and develop algorithm,
-and their analysis shows that when the SUs faithfully implement proposed algorithms, the regret is constant with high probability.
-They validate their claims through exhaustive synthetic experiments and also through a realistic USRP.
-Their synthetic experiments consider different cases, for different values of $K$ the number of channels, $M$ the number of players and $J$ the number of jammers.
-
-% \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
-
-
-% ----------------------------------------------------------------------------
 \subsection{Modeling more closely a real wireless network}
 \label{sub:5:moreRealisticModels}
 
-Due to space constraint, we simply quote here three recent articles which proposed a similar approach of using decentralized reinforcement learning algorithms on the device-side on wireless networks,
+We simply quote here three recent articles which proposed a similar approach of using decentralized reinforcement learning algorithms on the device-side on wireless networks,
 but proposed models closer to the reality of wireless networks.
 %
 The first work is \cite{NaparstekCohen17}, which proposes to use a decentralized learning based on deep learning, in the ``no sensing'' case, but in a model where the users have to learn not only the channels to use for their uplink messages (only from the feedback through the acknowledgements, like in Section~\ref{sec:4:firstModel}), but where they have to learn the whole ``spectrum access actions''.
@@ -521,7 +502,7 @@ They prove a regret upper-bound of the order $R_T = \bigO{\log(T)}$, with no spe
 
 
 % ----------------------------------------------------------------------------
-\subsection{Real-world demonstrations to validate some models}
+\subsection{Inspirations from real-world demonstrations to validate some models}
 \label{sub:5:USRPdemos}
 
 Similarly to our demonstration of multi-armed bandit learning in an IoT network that we presented in the previous Chapter~\ref{chapter:4} in Section~\ref{sec:4:gnuradio},
@@ -567,6 +548,25 @@ and the first work of a research team based in IIT Dehli, \cite{kumar2016two}.
 %
 More recent works by the same team, \cite{KumarYadav2018,SawantKumar2018,JoshiKumar2018}, all follow the same approach and include an experimental section that shows the results of an implementation of the proposed algorithms on USRP boards.
 \TODOL{I should explain more, no? Who does what and why? So long...}
+
+
+% ----------------------------------------------------------------------------
+\subsection{With malicious jammers}
+\label{sub:5:withDifferentMeansAmongPlayers}
+
+In all this chapter and the previous research literature, another common hypothesis is that all the $M$ players are pursuing the same goal, and are all behaving nicely by following the same algorithm.
+% Efficient utilization of licensed spectrum in the cognitive radio network is challenging due to lack of coordination among the Secondary Users (SUs).
+Distributed algorithms proposed in the literature aim to maximize the network throughput by ensuring orthogonal channel allocation for the SUs.
+However, these algorithms work under the assumption that all the SUs faithfully follow the algorithms which may not always hold due to the decentralized nature of the network.
+In the paper \cite{SawantKumar2018}, the authors study for the first time distributed algorithms that are robust against malicious behavior, also called \emph{jamming attack}.
+They consider both the cases of jammers launching coordinated and uncoordinated attacks, and consider a set of $J$ jammers.
+In the coordinated attack, the jammers select non-overlapping channels to attack in each time slot and can significantly increase the number of collisions for SUs.
+They setup the problem in each scenario as a multi-player bandit and develop algorithm,
+and their analysis shows that when the SUs faithfully implement proposed algorithms, the regret is constant with high probability.
+They validate their claims through exhaustive synthetic experiments and also through a realistic USRP.
+Their synthetic experiments consider different cases, for different values of $K$ the number of channels, $M$ the number of players and $J$ the number of jammers.
+
+% \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}
 
 
 % ----------------------------------------------------------------------------
