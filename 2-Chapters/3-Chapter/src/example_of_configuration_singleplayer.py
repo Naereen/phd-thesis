@@ -61,36 +61,27 @@ configuration = {
         {
             "archtype": Uniform,   # The stupidest policy, fully uniform
             "params": {}
-        },
-        # --- Fixed arm algorithm
-        {
-            "archtype": TakeFixedArm,
-            "params": { "armIndex": 0 },  # Take worse arm!
+        }, {  # --- Fixed arm algorithm
+            "archtype": TakeFixedArm,   # Take worse arm!
+            "params": { "armIndex": 0 },
         }, {
-            "archtype": TakeFixedArm,
-            "params": { "armIndex": 1 },  # Take second worse arm!
+            "archtype": TakeFixedArm,   # Take second worse arm!
+            "params": { "armIndex": 1 },
         }, {
-            "archtype": TakeFixedArm,
-            "params": { "armIndex": min(2, nbArms - 1) },  # Take third worse arm!
-        },
-        # --- UCB algorithm
-        {
+            "archtype": TakeFixedArm,   # Take third worse arm!
+            "params": { "armIndex": min(2, nbArms - 1) },
+        }, {  # --- UCB algorithm
             "archtype": UCBalpha,   # UCB with alpha=1 parameter
             "params": { "alpha": 1.0 }
-        },
-        # --- Thompson algorithm
-        {
+        }, {  # --- Thompson algorithm
             "archtype": Thompson,
             "params": { "posterior": Beta }
-        },
-        # --- KL UCB algorithm
-        {
+        }, {  # --- KL UCB algorithm
             "archtype": klUCB,
             "params": { "klucb": klBern }
         },
     ]
-}
+}  # DONE
 
-# DONE
 print("Loaded experiments configuration:")
 print("configuration =", configuration)  # DEBUG
