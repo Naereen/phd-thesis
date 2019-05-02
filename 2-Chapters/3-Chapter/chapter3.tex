@@ -157,7 +157,7 @@ gaussian_problem.plotHistogram()  # display the histogram showed below
 
 \begin{figure}[h!]  % [htbp]
 	\centering
-	\includegraphics[width=0.95\linewidth]{exampleOfRewards.pdf}
+	\includegraphics[width=0.75\linewidth]{exampleOfRewards.pdf}
 	\caption{Histogram of $10000$ \iid{} rewards obtained from three arms with a Gaussian distribution truncated to $[0,1]$, of respective means $0.1$, $0.5$ and $0.9$.}
 	\label{fig:3:exampleOfRewards}
 \end{figure}
@@ -293,6 +293,7 @@ The Figure~\ref{fig:3:firstPlot_hist} below shows the histogram of regret obtain
 
 
 \subsection{Dependencies}
+\label{sub:3:dependencies}
 
 This library is written in Python \cite{python}, for versions 2.7+ or 3.4+, using \texttt{matplotlib} \cite{matplotlib} for 2D plotting, \texttt{numpy} \cite{numpy} for data storing, random number generations and operations on arrays, \texttt{scipy} \cite{scipy} for statistical and special functions, and \texttt{seaborn} \cite{seaborn} for pretty plotting and colorblind-aware colormaps.
 
@@ -307,9 +308,9 @@ When SMPyBandits is installed using \texttt{pip install SMPyBandits}, the depend
 
 % \TODOL{I need to quickly explain that SMPyBandits is using Read the Docs since $2017$ and Travis Ci since $2018$ to: }
 
-Since $2017$ and $2018$, SMPyBandits is using the free version of two online continuous integration (CI) service, to automatically build and host the documentation, and to automatically test the library on some numerical simulations.
+Since $2017$ and $2018$, SMPyBandits is using two online continuous integration (CI) service, to automatically build and host the documentation, and to automatically test the library on some numerical simulations.
 %
-These CI services are free for open-source work, and are both triggered whenever a modification of the codebase is sent to the hosting platform (\ie, GitHub).
+These CI services are free for open-source works, and are both triggered whenever a modification of the codebase is sent to the hosting platform (\ie, GitHub).
 
 \paragraph{Read the Docs.}
 Since $2017$, we have been using the free web service provided by Read the Docs (\href{https://readthedocs.org/}{\texttt{ReadTheDocs.org}}).
@@ -342,11 +343,11 @@ SMPyBandits was used for the following research articles since $2017$, and it is
 -- In \cite{Besson2018WCNC} and in Chapter~\ref{chapter:2} above, we used SMPyBandits to illustrate and compare different aggregation algorithms\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/Aggregation.html}{SMPyBandits.GitHub.io/Aggregation.html}} on the documentation, which gives detailed instructions to reproduce the results presented in this research paper, details about the models and the notations, and bibliographic references.}. We designed a variant of the Exp4 algorithm for online aggregation of experts \cite{Bubeck12}, called \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Aggregator.html}{Aggregator}}.
 % Aggregating experts is a well-studied idea in sequential learning and in machine learning in general. We showed that it can be used in practice to select on the run the best bandit algorithm for a certain problem from a fixed pool of experts. This idea and algorithm can have interesting impact for Opportunistic Spectrum Access applications \cite{Jouini09} that use multi-armed bandits algorithms for sequential learning and network efficiency optimization.
 
--- In \cite{Besson2018ALT} and in Chapter~\ref{chapter:5} below, we used SMPyBandits for all the simulations for multi-player bandit algorithms\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/MultiPlayers.html}{SMPyBandits.GitHub.io/MultiPlayers.html}} on the documentation.}. We designed the two \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html}{RandTopM}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{MCTopM}} algorithms and proved than they enjoy logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (\ie, \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html}{rhoRand}}, \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html}{MEGA}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html}{MusicalChair}}).
+-- In \cite{Besson2018ALT} and in Chapter~\ref{chapter:5} below, we used SMPyBandits for all the simulations for multi-player bandit algorithms\footnote{~Similarly, see the page \texttt{\href{https://SMPyBandits.GitHub.io/MultiPlayers.html}{SMPyBandits.GitHub.io/MultiPlayers.html}} on the documentation.}. We designed the two \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html}{RandTopM}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{MCTopM}} algorithms and proved than they enjoy logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (\ie, \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html}{rhoRand}}, \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html}{MEGA}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html}{MusicalChair}}).
 
--- In \cite{Besson2018DoublingTricks} (quickly presented in Appendix~\ref{app:2:DoublingTricks}), we used SMPyBandits to illustrate and compare different "doubling trick" schemes\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/DoublingTrick.html}{SMPyBandits.GitHub.io/DoublingTrick.html}} on the documentation.}. and lots of bibliographic referencesIn sequential learning, an algorithm is anytime if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any non-anytime algorithm to an anytime variant is the ``Doubling Trick'': start with an horizon $T_0\in\mathbb{N}^*$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to conserve minimax regret bounds (in $R_T = \mathcal{O}(\sqrt{T})$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to conserve a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to conserve logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can conserve minimax bounds, or "weak" minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
+-- In \cite{Besson2018DoublingTricks} (quickly presented in Appendix~\ref{app:2:DoublingTricks}), we used SMPyBandits to illustrate and compare different "doubling trick" schemes\footnote{~Similarly, see the page \texttt{\href{https://SMPyBandits.GitHub.io/DoublingTrick.html}{SMPyBandits.GitHub.io/DoublingTrick.html}} on the documentation.}. and lots of bibliographic referencesIn sequential learning, an algorithm is anytime if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any non-anytime algorithm to an anytime variant is the ``Doubling Trick'': start with an horizon $T_0\in\mathbb{N}^*$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to conserve minimax regret bounds (in $R_T = \mathcal{O}(\sqrt{T})$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to conserve a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to conserve logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can conserve minimax bounds, or "weak" minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
 
--- In \cite{Besson2019GLRT} and \cite{Besson2019Gretsi}, and in Chapter~\ref{chapter:6} below, we used SMPyBandits for piece-wise stationary MAB models (only for the single-player case). We illustrate and compare different algorithms designed for this family of non-stationary problems\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/NonStationary.html}{SMPyBandits.GitHub.io/NonStationary.html}} on the documentation.}.
+-- In \cite{Besson2019GLRT} and \cite{Besson2019Gretsi}, and in Chapter~\ref{chapter:6} below, we used SMPyBandits for piece-wise stationary MAB models (only for the single-player case). We illustrate and compare different algorithms designed for this family of non-stationary problems\footnote{~Similarly, see the page \texttt{\href{https://SMPyBandits.GitHub.io/NonStationary.html}{SMPyBandits.GitHub.io/NonStationary.html}} on the documentation.}.
 We designed the \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.GLR_UCB.html}{GLRklUCB}} policy, and implemented most of the policies from state-of-the-art research on passively or active adaptive policies, both adversarial- or stochastic-based, designed to tackle the piece-wise stationary MAB problems.
 We also implemented a large benchmark of different problems.
 
@@ -356,6 +357,531 @@ We also implemented a large benchmark of different problems.
 \label{sec:3:reviewSPAlgorithms}
 
 \TODOL{Write text for this Section, write configuration.py file, run short-term experiment, include them, if happy about it, run longer ang larger experiments}
+
+In this section, we use the SMPyBandits library to compare experimentally various state-of-the-art single-player algorithms on different kinds of multi-armed bandit problems.
+First, we detail the list of $9$ different algorithms that we compare, and the different problems on which they are all tested.
+We give the results of the numerical experiments, in terms of mean regret at the end of the experiment of different horizons $T$.
+Additional results in terms of real measurements of time and memory are given and discussed in the next Section~\ref{sec:3:timeAndMemoryCosts}.
+
+Finally, we give some observations on the results, and the main take-away message of this section is the following: in all the rest of this thesis, we focus on using the simple \UCB{} algorithm when simplicity is favored, \ie, in the more applied Chapter~\ref{chapter:4}, and the \klUCB{} algorithm when efficiency is favored, \ie, in the two more theoretical Chapters~\ref{chapter:5} and \ref{chapter:6}.
+
+
+\subsection{Experimental setup: algorithms and problems}
+
+\paragraph{List of algorithms}
+
+We consider the nine following algorithms. For each of them, we give a bibliographic reference, that corresponds to the most recent article studying it and not the first one which introduced it.
+We give the chosen tuning of the parameters, for parametric algorithms.
+Algorithms that are not anytime use the exact value of the horizon $T$, and when increasing values of $T$ are studied for the same problem, of course they use the correct successive values.
+We also give the name of the corresponding class in the \texttt{Policies} module in SMPyBandits.
+
+% FIXME order from oldest to most recent, and simplest to more complex
+
+\begin{itemize}
+    \item Algorithm 1 is
+    an $\varepsilon$-greedy algorithm, as described in \cite{Bubeck12}, using $\varepsilon_t = \varepsilon_0 / t$, and $\varepsilon_0 = 0.1$ (chosen arbitrarily) (\texttt{EpsilonDecreasing}).
+
+    \item Algorithm 2 is
+    an Explore-then-Commit algorithm from \cite{GarivierETC2016}, that knows the horizon, and a lower-bound on the gap between arms (chosen arbitrarily as $\delta=0.01$, valid for all problems) (\texttt{ETC\_KnownGap}).
+
+    \item Algorithm 3 is
+    $\mathrm{Exp}3^{++}$ from \cite{Seldin17}, using $\alpha=3$ and $\beta=256$ as advised (\texttt{Exp3PlusPlus}).
+
+    \item Algorithm 4 is
+    $\UCB_1$ from \cite{Auer02}, using $\alpha=1$ (\texttt{UCB}).
+
+    \item Algorithm 5 is
+    \klUCB{} from \cite{KLUCBJournal}, using the Bernoulli KL divergence and the corresponding \klUCB{} indexes, implemented as \texttt{kullback.klucbBern} (\texttt{klUCB}).
+
+    \item Algorithm 6 is
+    Thompson sampling from \cite{Kaufmann12Thompson}, using a Beta prior and posterior, initially uniform (\ie, $\mathrm{Beta}(1,1)$) (\texttt{Thompson}).
+
+    \item Algorithm 7 is
+    Bayes-UCB from \cite{Kaufmann12BUCB}, using a Beta prior and posterior, initially uniform (\ie, $\mathrm{Beta}(1,1)$) (\texttt{BayesUCB}).
+
+    \item Algorithm 8 is
+    AdBandits from \cite{Truzzi13}, using $\alpha=1$ (\texttt{AdBandits}).
+
+    \item Algorithm 9 is
+    BESA (Best Empirical Sampled Average) from \cite{Baransi2014}, using a binary tournament implement in a naive but efficient way (not using recursive functions) (\texttt{BESA} with \texttt{''non\_recursive''=True}).
+\end{itemize}
+
+In the results presented in the main text of this chapter, we focus on the most well known algorithms, and two others that are efficient but less known (AdBandits and BESA).
+We present in Appendix~\ref{sub:3:additionalExperiments} seven other algorithms, being more recent (from $2016$, $3$ from $2018$ and $2$ from $2019$) but are usually more complex, or are based on a different point-of-view.
+We include numerical results for these other algorithms as well, to justify empirically that despite their respective qualities, and despite being efficient, it is reasonable to focus on \UCB{} and \klUCB{} algorithms in the rest of this thesis.
+
+
+\paragraph{Two different problems}
+
+We consider two different problems, that are described here for a generic value of $K \geq 2$ the number of arms.
+For simplicity, we focus on Bernoulli distributed arms, even if similar results were observed for other distributions, in particular for truncated or untruncated Gaussian distributions.
+
+\begin{itemize}
+    \item \textbf{Problem 1} considers $K$ arms of equally spaced means, in $[0,1]$.
+    It uses a minimum mean of $0.05$ and a maximum mean of $0.95$.
+    For instance, for $K=2$, $\bm{\mu}=[0.05, 0.95]$ and for $K=5$, $\bm{\mu} = [0.05, 0.275, 0.5, 0.725, 0.95]$.
+
+    \item \textbf{Problem 2} takes another approach. Instead of simulating $1000$ times the same problem, it generates a new random problem for each independent run.
+    It considers a randomly generated vector of means, each being sampled uniformly at random in $[0,1]$, with a minimum gap of $\Delta^{\min}$, $\bm{\mu} \sim \cE(\Delta^{\min},\mu_{\min},\mu_{\max})$, as well as minimum and maximum values of $\mu_{\min}$ and $\mu_{\max}$.
+    This space $\cE_{\Delta^{\min}}$ is defined as $\{ \bm{\mu} \in [\mu_{\min}, \mu_{\max}]^K : \min_{k\neq k'} |\mu_k - \mu_{k'}| \geq \Delta^{\min} \}$.
+    We use $\mu_{\min} = \Delta^{\min}$ and $\mu_{\max} = 1 - \Delta^{\min}$,
+    and the value used for $\Delta^{\min}$ is $0.1$ for $K \leq 3$ (for ``easy'' problems), and $\frac{1}{3 K}$ for $K \geq 5$ (for ``harder'' problems).
+    % 0.1 if NB_ARMS <= 5 else 1. / (3 * NB_ARMS)
+\end{itemize}
+
+
+\paragraph{Other parameters of the experiments}
+
+We consider increasing values for the horizon, $T=1000$, $T=5000$, $T=10000$ and $T=50000$.  % FIXME update if needed?
+We consider as well an increasing number of arms, $K=2$, $K=5$, $K=9$, $K=20$ and $K=50$.  % FIXME update if needed?
+For all experiments, we run $N=1000$ independent simulations.  % FIXME update if needed?
+
+
+\subsection{Experiments results}
+
+We give in the tables below the results of the experiments. For the two different problems and different values of $T$ and $K$, we give the mean $\pm 1$ standard-variation of the empirical regret $R_T$ obtained by the different algorithms at the end of the experiments.
+Tables~\ref{table:3:meanRegret_problem1} is for the fixed-gap \textbf{problem 1}
+and \ref{table:3:meanRegret_problem2}  is for the randomly generated \textbf{problem 2}.
+Each column corresponds to one value of $T$, and each line corresponds to one algorithm.
+For each cell, we report successive values that correspond to the successive values of the number of arms $K$.
+
+\TODOL{FIXME launch these experiments, for a very short number of repetitions N=4, and if I'm happy about the results and if they are easily copied-and-pasted here, then launch with N=100 or N=1000 depending on the running
+
+% DEBUG=True; NOPLOTS=False; SAVEALL=False; for N in 4 100 1000; do for BAYES in False True; do for T in 1000 5000 10000 50000; do for K in 2 5 10 20 50; do debut=$(date); DEBUG=$DEBUG NOPLOTS=$NOPLOTS SAVEALL=$SAVEALL N=$N N_JOBS=-1 T=$T K=$K BAYES=$BAYES make --noFreeSMS single && cp logs/main_py3_log.txt logs/main_py3_log__N${N}_BAYES${BAYES}_T{T}_K{K}.txt && FreeSMS.py "Expérience commencée ${debut} terminée, avec N=${N}, BAYES=${BAYES}, T=${T}, K=${K}." ; done; done; done; done time.}
+
+\begin{table}[!t]
+\begin{footnotesize}
+    \centering
+    \begin{tabular}{c|*{5}{m{2cm}}} % WARNING size ?
+    \textbf{Algorithms} $\;$ \textbackslash $\;$ $\mathbf{T=}$
+        & $T_1 = 1000$ & $T_2 = 5000$ & $T_3 = 10000$ & $T_4 = 50000$ \\
+        \hline
+        $\varepsilon$-greedy &
+            $R^{1}_{T_1,K_1} = 0 \pm 0$
+                $R^{1}_{T_1,K_2} = 0 \pm 0$
+                $R^{1}_{T_1,K_3} = 0 \pm 0$
+                $R^{1}_{T_1,K_4} = 0 \pm 0$
+                $R^{1}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{1}_{T_2,K_1} = 0 \pm 0$
+                $R^{1}_{T_2,K_2} = 0 \pm 0$
+                $R^{1}_{T_2,K_3} = 0 \pm 0$
+                $R^{1}_{T_2,K_4} = 0 \pm 0$
+                $R^{1}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{1}_{T_3,K_1} = 0 \pm 0$
+                $R^{1}_{T_3,K_2} = 0 \pm 0$
+                $R^{1}_{T_3,K_3} = 0 \pm 0$
+                $R^{1}_{T_3,K_4} = 0 \pm 0$
+                $R^{1}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{1}_{T_4,K_1} = 0 \pm 0$
+                $R^{1}_{T_4,K_2} = 0 \pm 0$
+                $R^{1}_{T_4,K_3} = 0 \pm 0$
+                $R^{1}_{T_4,K_4} = 0 \pm 0$
+                $R^{1}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        Explore-then-Commit &
+            $R^{2}_{T_1,K_1} = 0 \pm 0$
+                $R^{2}_{T_1,K_2} = 0 \pm 0$
+                $R^{2}_{T_1,K_3} = 0 \pm 0$
+                $R^{2}_{T_1,K_4} = 0 \pm 0$
+                $R^{2}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{2}_{T_2,K_1} = 0 \pm 0$
+                $R^{2}_{T_2,K_2} = 0 \pm 0$
+                $R^{2}_{T_2,K_3} = 0 \pm 0$
+                $R^{2}_{T_2,K_4} = 0 \pm 0$
+                $R^{2}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{2}_{T_3,K_1} = 0 \pm 0$
+                $R^{2}_{T_3,K_2} = 0 \pm 0$
+                $R^{2}_{T_3,K_3} = 0 \pm 0$
+                $R^{2}_{T_3,K_4} = 0 \pm 0$
+                $R^{2}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{2}_{T_4,K_1} = 0 \pm 0$
+                $R^{2}_{T_4,K_2} = 0 \pm 0$
+                $R^{2}_{T_4,K_3} = 0 \pm 0$
+                $R^{2}_{T_4,K_4} = 0 \pm 0$
+                $R^{2}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        $\mathrm{Exp}3^{++}$ &
+            $R^3_{T_1,K_1} = 0 \pm 0$
+                $R^3_{T_1,K_2} = 0 \pm 0$
+                $R^3_{T_1,K_3} = 0 \pm 0$
+                $R^3_{T_1,K_4} = 0 \pm 0$
+                $R^3_{T_1,K_5} = 0 \pm 0$ &
+            $R^3_{T_2,K_1} = 0 \pm 0$
+                $R^3_{T_2,K_2} = 0 \pm 0$
+                $R^3_{T_2,K_3} = 0 \pm 0$
+                $R^3_{T_2,K_4} = 0 \pm 0$
+                $R^3_{T_2,K_5} = 0 \pm 0$ &
+            $R^3_{T_3,K_1} = 0 \pm 0$
+                $R^3_{T_3,K_2} = 0 \pm 0$
+                $R^3_{T_3,K_3} = 0 \pm 0$
+                $R^3_{T_3,K_4} = 0 \pm 0$
+                $R^3_{T_3,K_5} = 0 \pm 0$ &
+            $R^3_{T_4,K_1} = 0 \pm 0$
+                $R^3_{T_4,K_2} = 0 \pm 0$
+                $R^3_{T_4,K_3} = 0 \pm 0$
+                $R^3_{T_4,K_4} = 0 \pm 0$
+                $R^3_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        $\UCB_1$ &
+            $R^{4}_{T_1,K_1} = 0 \pm 0$
+                $R^{4}_{T_1,K_2} = 0 \pm 0$
+                $R^{4}_{T_1,K_3} = 0 \pm 0$
+                $R^{4}_{T_1,K_4} = 0 \pm 0$
+                $R^{4}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{4}_{T_2,K_1} = 0 \pm 0$
+                $R^{4}_{T_2,K_2} = 0 \pm 0$
+                $R^{4}_{T_2,K_3} = 0 \pm 0$
+                $R^{4}_{T_2,K_4} = 0 \pm 0$
+                $R^{4}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{4}_{T_3,K_1} = 0 \pm 0$
+                $R^{4}_{T_3,K_2} = 0 \pm 0$
+                $R^{4}_{T_3,K_3} = 0 \pm 0$
+                $R^{4}_{T_3,K_4} = 0 \pm 0$
+                $R^{4}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{4}_{T_4,K_1} = 0 \pm 0$
+                $R^{4}_{T_4,K_2} = 0 \pm 0$
+                $R^{4}_{T_4,K_3} = 0 \pm 0$
+                $R^{4}_{T_4,K_4} = 0 \pm 0$
+                $R^{4}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        \klUCB{} &
+            $R^{5}_{T_1,K_1} = 0 \pm 0$
+                $R^{5}_{T_1,K_2} = 0 \pm 0$
+                $R^{5}_{T_1,K_3} = 0 \pm 0$
+                $R^{5}_{T_1,K_4} = 0 \pm 0$
+                $R^{5}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{5}_{T_2,K_1} = 0 \pm 0$
+                $R^{5}_{T_2,K_2} = 0 \pm 0$
+                $R^{5}_{T_2,K_3} = 0 \pm 0$
+                $R^{5}_{T_2,K_4} = 0 \pm 0$
+                $R^{5}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{5}_{T_3,K_1} = 0 \pm 0$
+                $R^{5}_{T_3,K_2} = 0 \pm 0$
+                $R^{5}_{T_3,K_3} = 0 \pm 0$
+                $R^{5}_{T_3,K_4} = 0 \pm 0$
+                $R^{5}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{5}_{T_4,K_1} = 0 \pm 0$
+                $R^{5}_{T_4,K_2} = 0 \pm 0$
+                $R^{5}_{T_4,K_3} = 0 \pm 0$
+                $R^{5}_{T_4,K_4} = 0 \pm 0$
+                $R^{5}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        Thompson sampling &
+            $R^{6}_{T_1,K_1} = 0 \pm 0$
+                $R^{6}_{T_1,K_2} = 0 \pm 0$
+                $R^{6}_{T_1,K_3} = 0 \pm 0$
+                $R^{6}_{T_1,K_4} = 0 \pm 0$
+                $R^{6}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{6}_{T_2,K_1} = 0 \pm 0$
+                $R^{6}_{T_2,K_2} = 0 \pm 0$
+                $R^{6}_{T_2,K_3} = 0 \pm 0$
+                $R^{6}_{T_2,K_4} = 0 \pm 0$
+                $R^{6}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{6}_{T_3,K_1} = 0 \pm 0$
+                $R^{6}_{T_3,K_2} = 0 \pm 0$
+                $R^{6}_{T_3,K_3} = 0 \pm 0$
+                $R^{6}_{T_3,K_4} = 0 \pm 0$
+                $R^{6}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{6}_{T_4,K_1} = 0 \pm 0$
+                $R^{6}_{T_4,K_2} = 0 \pm 0$
+                $R^{6}_{T_4,K_3} = 0 \pm 0$
+                $R^{6}_{T_4,K_4} = 0 \pm 0$
+                $R^{6}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        Thompson sampling &
+            $R^{7}_{T_1,K_1} = 0 \pm 0$
+                $R^{7}_{T_1,K_2} = 0 \pm 0$
+                $R^{7}_{T_1,K_3} = 0 \pm 0$
+                $R^{7}_{T_1,K_4} = 0 \pm 0$
+                $R^{7}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{7}_{T_2,K_1} = 0 \pm 0$
+                $R^{7}_{T_2,K_2} = 0 \pm 0$
+                $R^{7}_{T_2,K_3} = 0 \pm 0$
+                $R^{7}_{T_2,K_4} = 0 \pm 0$
+                $R^{7}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{7}_{T_3,K_1} = 0 \pm 0$
+                $R^{7}_{T_3,K_2} = 0 \pm 0$
+                $R^{7}_{T_3,K_3} = 0 \pm 0$
+                $R^{7}_{T_3,K_4} = 0 \pm 0$
+                $R^{7}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{7}_{T_4,K_1} = 0 \pm 0$
+                $R^{7}_{T_4,K_2} = 0 \pm 0$
+                $R^{7}_{T_4,K_3} = 0 \pm 0$
+                $R^{7}_{T_4,K_4} = 0 \pm 0$
+                $R^{7}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        AdBandits &
+            $R^{8}_{T_1,K_1} = 0 \pm 0$
+                $R^{8}_{T_1,K_2} = 0 \pm 0$
+                $R^{8}_{T_1,K_3} = 0 \pm 0$
+                $R^{8}_{T_1,K_4} = 0 \pm 0$
+                $R^{8}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{8}_{T_2,K_1} = 0 \pm 0$
+                $R^{8}_{T_2,K_2} = 0 \pm 0$
+                $R^{8}_{T_2,K_3} = 0 \pm 0$
+                $R^{8}_{T_2,K_4} = 0 \pm 0$
+                $R^{8}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{8}_{T_3,K_1} = 0 \pm 0$
+                $R^{8}_{T_3,K_2} = 0 \pm 0$
+                $R^{8}_{T_3,K_3} = 0 \pm 0$
+                $R^{8}_{T_3,K_4} = 0 \pm 0$
+                $R^{8}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{8}_{T_4,K_1} = 0 \pm 0$
+                $R^{8}_{T_4,K_2} = 0 \pm 0$
+                $R^{8}_{T_4,K_3} = 0 \pm 0$
+                $R^{8}_{T_4,K_4} = 0 \pm 0$
+                $R^{8}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        BESA &
+            $R^{9}_{T_1,K_1} = 0 \pm 0$
+                $R^{9}_{T_1,K_2} = 0 \pm 0$
+                $R^{9}_{T_1,K_3} = 0 \pm 0$
+                $R^{9}_{T_1,K_4} = 0 \pm 0$
+                $R^{9}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{9}_{T_2,K_1} = 0 \pm 0$
+                $R^{9}_{T_2,K_2} = 0 \pm 0$
+                $R^{9}_{T_2,K_3} = 0 \pm 0$
+                $R^{9}_{T_2,K_4} = 0 \pm 0$
+                $R^{9}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{9}_{T_3,K_1} = 0 \pm 0$
+                $R^{9}_{T_3,K_2} = 0 \pm 0$
+                $R^{9}_{T_3,K_3} = 0 \pm 0$
+                $R^{9}_{T_3,K_4} = 0 \pm 0$
+                $R^{9}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{9}_{T_4,K_1} = 0 \pm 0$
+                $R^{9}_{T_4,K_2} = 0 \pm 0$
+                $R^{9}_{T_4,K_3} = 0 \pm 0$
+                $R^{9}_{T_4,K_4} = 0 \pm 0$
+                $R^{9}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+    \end{tabular}
+    \caption{Mean regret $\pm$ $1$ std-dev, for $9$ different algorithms on \textbf{problem 1} with different values of time $T$ and number of arm $K$.
+    }
+    \label{table:3:meanRegret_problem1}
+\end{footnotesize}
+\end{table}
+
+
+\begin{table}[!t]
+\begin{footnotesize}
+    \centering
+    \begin{tabular}{c|*{5}{m{2cm}}} % WARNING size ?
+    \textbf{Algorithms} $\;$ \textbackslash $\;$ $\mathbf{T=}$
+        & $T_1 = 1000$ & $T_2 = 5000$ & $T_3 = 10000$ & $T_4 = 50000$ \\
+        \hline
+        $\varepsilon$-greedy &
+            $R^{1}_{T_1,K_1} = 0 \pm 0$
+                $R^{1}_{T_1,K_2} = 0 \pm 0$
+                $R^{1}_{T_1,K_3} = 0 \pm 0$
+                $R^{1}_{T_1,K_4} = 0 \pm 0$
+                $R^{1}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{1}_{T_2,K_1} = 0 \pm 0$
+                $R^{1}_{T_2,K_2} = 0 \pm 0$
+                $R^{1}_{T_2,K_3} = 0 \pm 0$
+                $R^{1}_{T_2,K_4} = 0 \pm 0$
+                $R^{1}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{1}_{T_3,K_1} = 0 \pm 0$
+                $R^{1}_{T_3,K_2} = 0 \pm 0$
+                $R^{1}_{T_3,K_3} = 0 \pm 0$
+                $R^{1}_{T_3,K_4} = 0 \pm 0$
+                $R^{1}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{1}_{T_4,K_1} = 0 \pm 0$
+                $R^{1}_{T_4,K_2} = 0 \pm 0$
+                $R^{1}_{T_4,K_3} = 0 \pm 0$
+                $R^{1}_{T_4,K_4} = 0 \pm 0$
+                $R^{1}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        Explore-then-Commit &
+            $R^{2}_{T_1,K_1} = 0 \pm 0$
+                $R^{2}_{T_1,K_2} = 0 \pm 0$
+                $R^{2}_{T_1,K_3} = 0 \pm 0$
+                $R^{2}_{T_1,K_4} = 0 \pm 0$
+                $R^{2}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{2}_{T_2,K_1} = 0 \pm 0$
+                $R^{2}_{T_2,K_2} = 0 \pm 0$
+                $R^{2}_{T_2,K_3} = 0 \pm 0$
+                $R^{2}_{T_2,K_4} = 0 \pm 0$
+                $R^{2}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{2}_{T_3,K_1} = 0 \pm 0$
+                $R^{2}_{T_3,K_2} = 0 \pm 0$
+                $R^{2}_{T_3,K_3} = 0 \pm 0$
+                $R^{2}_{T_3,K_4} = 0 \pm 0$
+                $R^{2}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{2}_{T_4,K_1} = 0 \pm 0$
+                $R^{2}_{T_4,K_2} = 0 \pm 0$
+                $R^{2}_{T_4,K_3} = 0 \pm 0$
+                $R^{2}_{T_4,K_4} = 0 \pm 0$
+                $R^{2}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        $\mathrm{Exp}3^{++}$ &
+            $R^3_{T_1,K_1} = 0 \pm 0$
+                $R^3_{T_1,K_2} = 0 \pm 0$
+                $R^3_{T_1,K_3} = 0 \pm 0$
+                $R^3_{T_1,K_4} = 0 \pm 0$
+                $R^3_{T_1,K_5} = 0 \pm 0$ &
+            $R^3_{T_2,K_1} = 0 \pm 0$
+                $R^3_{T_2,K_2} = 0 \pm 0$
+                $R^3_{T_2,K_3} = 0 \pm 0$
+                $R^3_{T_2,K_4} = 0 \pm 0$
+                $R^3_{T_2,K_5} = 0 \pm 0$ &
+            $R^3_{T_3,K_1} = 0 \pm 0$
+                $R^3_{T_3,K_2} = 0 \pm 0$
+                $R^3_{T_3,K_3} = 0 \pm 0$
+                $R^3_{T_3,K_4} = 0 \pm 0$
+                $R^3_{T_3,K_5} = 0 \pm 0$ &
+            $R^3_{T_4,K_1} = 0 \pm 0$
+                $R^3_{T_4,K_2} = 0 \pm 0$
+                $R^3_{T_4,K_3} = 0 \pm 0$
+                $R^3_{T_4,K_4} = 0 \pm 0$
+                $R^3_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        $\UCB_1$ &
+            $R^{4}_{T_1,K_1} = 0 \pm 0$
+                $R^{4}_{T_1,K_2} = 0 \pm 0$
+                $R^{4}_{T_1,K_3} = 0 \pm 0$
+                $R^{4}_{T_1,K_4} = 0 \pm 0$
+                $R^{4}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{4}_{T_2,K_1} = 0 \pm 0$
+                $R^{4}_{T_2,K_2} = 0 \pm 0$
+                $R^{4}_{T_2,K_3} = 0 \pm 0$
+                $R^{4}_{T_2,K_4} = 0 \pm 0$
+                $R^{4}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{4}_{T_3,K_1} = 0 \pm 0$
+                $R^{4}_{T_3,K_2} = 0 \pm 0$
+                $R^{4}_{T_3,K_3} = 0 \pm 0$
+                $R^{4}_{T_3,K_4} = 0 \pm 0$
+                $R^{4}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{4}_{T_4,K_1} = 0 \pm 0$
+                $R^{4}_{T_4,K_2} = 0 \pm 0$
+                $R^{4}_{T_4,K_3} = 0 \pm 0$
+                $R^{4}_{T_4,K_4} = 0 \pm 0$
+                $R^{4}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        \klUCB{} &
+            $R^{5}_{T_1,K_1} = 0 \pm 0$
+                $R^{5}_{T_1,K_2} = 0 \pm 0$
+                $R^{5}_{T_1,K_3} = 0 \pm 0$
+                $R^{5}_{T_1,K_4} = 0 \pm 0$
+                $R^{5}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{5}_{T_2,K_1} = 0 \pm 0$
+                $R^{5}_{T_2,K_2} = 0 \pm 0$
+                $R^{5}_{T_2,K_3} = 0 \pm 0$
+                $R^{5}_{T_2,K_4} = 0 \pm 0$
+                $R^{5}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{5}_{T_3,K_1} = 0 \pm 0$
+                $R^{5}_{T_3,K_2} = 0 \pm 0$
+                $R^{5}_{T_3,K_3} = 0 \pm 0$
+                $R^{5}_{T_3,K_4} = 0 \pm 0$
+                $R^{5}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{5}_{T_4,K_1} = 0 \pm 0$
+                $R^{5}_{T_4,K_2} = 0 \pm 0$
+                $R^{5}_{T_4,K_3} = 0 \pm 0$
+                $R^{5}_{T_4,K_4} = 0 \pm 0$
+                $R^{5}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        Thompson sampling &
+            $R^{6}_{T_1,K_1} = 0 \pm 0$
+                $R^{6}_{T_1,K_2} = 0 \pm 0$
+                $R^{6}_{T_1,K_3} = 0 \pm 0$
+                $R^{6}_{T_1,K_4} = 0 \pm 0$
+                $R^{6}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{6}_{T_2,K_1} = 0 \pm 0$
+                $R^{6}_{T_2,K_2} = 0 \pm 0$
+                $R^{6}_{T_2,K_3} = 0 \pm 0$
+                $R^{6}_{T_2,K_4} = 0 \pm 0$
+                $R^{6}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{6}_{T_3,K_1} = 0 \pm 0$
+                $R^{6}_{T_3,K_2} = 0 \pm 0$
+                $R^{6}_{T_3,K_3} = 0 \pm 0$
+                $R^{6}_{T_3,K_4} = 0 \pm 0$
+                $R^{6}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{6}_{T_4,K_1} = 0 \pm 0$
+                $R^{6}_{T_4,K_2} = 0 \pm 0$
+                $R^{6}_{T_4,K_3} = 0 \pm 0$
+                $R^{6}_{T_4,K_4} = 0 \pm 0$
+                $R^{6}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        Bayes-UCB &
+            $R^{7}_{T_1,K_1} = 0 \pm 0$
+                $R^{7}_{T_1,K_2} = 0 \pm 0$
+                $R^{7}_{T_1,K_3} = 0 \pm 0$
+                $R^{7}_{T_1,K_4} = 0 \pm 0$
+                $R^{7}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{7}_{T_2,K_1} = 0 \pm 0$
+                $R^{7}_{T_2,K_2} = 0 \pm 0$
+                $R^{7}_{T_2,K_3} = 0 \pm 0$
+                $R^{7}_{T_2,K_4} = 0 \pm 0$
+                $R^{7}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{7}_{T_3,K_1} = 0 \pm 0$
+                $R^{7}_{T_3,K_2} = 0 \pm 0$
+                $R^{7}_{T_3,K_3} = 0 \pm 0$
+                $R^{7}_{T_3,K_4} = 0 \pm 0$
+                $R^{7}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{7}_{T_4,K_1} = 0 \pm 0$
+                $R^{7}_{T_4,K_2} = 0 \pm 0$
+                $R^{7}_{T_4,K_3} = 0 \pm 0$
+                $R^{7}_{T_4,K_4} = 0 \pm 0$
+                $R^{7}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        AdBandits &
+            $R^{8}_{T_1,K_1} = 0 \pm 0$
+                $R^{8}_{T_1,K_2} = 0 \pm 0$
+                $R^{8}_{T_1,K_3} = 0 \pm 0$
+                $R^{8}_{T_1,K_4} = 0 \pm 0$
+                $R^{8}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{8}_{T_2,K_1} = 0 \pm 0$
+                $R^{8}_{T_2,K_2} = 0 \pm 0$
+                $R^{8}_{T_2,K_3} = 0 \pm 0$
+                $R^{8}_{T_2,K_4} = 0 \pm 0$
+                $R^{8}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{8}_{T_3,K_1} = 0 \pm 0$
+                $R^{8}_{T_3,K_2} = 0 \pm 0$
+                $R^{8}_{T_3,K_3} = 0 \pm 0$
+                $R^{8}_{T_3,K_4} = 0 \pm 0$
+                $R^{8}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{8}_{T_4,K_1} = 0 \pm 0$
+                $R^{8}_{T_4,K_2} = 0 \pm 0$
+                $R^{8}_{T_4,K_3} = 0 \pm 0$
+                $R^{8}_{T_4,K_4} = 0 \pm 0$
+                $R^{8}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        BESA &
+            $R^{9}_{T_1,K_1} = 0 \pm 0$
+                $R^{9}_{T_1,K_2} = 0 \pm 0$
+                $R^{9}_{T_1,K_3} = 0 \pm 0$
+                $R^{9}_{T_1,K_4} = 0 \pm 0$
+                $R^{9}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{9}_{T_2,K_1} = 0 \pm 0$
+                $R^{9}_{T_2,K_2} = 0 \pm 0$
+                $R^{9}_{T_2,K_3} = 0 \pm 0$
+                $R^{9}_{T_2,K_4} = 0 \pm 0$
+                $R^{9}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{9}_{T_3,K_1} = 0 \pm 0$
+                $R^{9}_{T_3,K_2} = 0 \pm 0$
+                $R^{9}_{T_3,K_3} = 0 \pm 0$
+                $R^{9}_{T_3,K_4} = 0 \pm 0$
+                $R^{9}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{9}_{T_4,K_1} = 0 \pm 0$
+                $R^{9}_{T_4,K_2} = 0 \pm 0$
+                $R^{9}_{T_4,K_3} = 0 \pm 0$
+                $R^{9}_{T_4,K_4} = 0 \pm 0$
+                $R^{9}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+    \end{tabular}
+    \caption{Mean regret $\pm$ $1$ std-dev, for $9$ different algorithms on \textbf{problem 2} with different values of time $T$ and number of arm $K$.
+    }
+    \label{table:3:meanRegret_problem2}
+\end{footnotesize}
+\end{table}
+
+% Include in appendix of this chapter the results for 7 more algorithms, the most recent and less important ones (MOSSAnytime, ApproximatedFHGittins, UCBdagger, klUCBswitchAnytime, PHE, RCB, Tsallis-Inf)
+
+
+\subsection{Observations and summary of the experiments}
+
+\TODOL{Use UCB and klUCB}
+\TODOL{Regret usually scales as $\bigO{K}$ and $\bigO{\log T}$}
+
 
 I want to show that SMPyBandits contains highly documented implementations of all the most important algorithms designed for stationary single-player multi-armed bandit.
 
@@ -372,6 +898,480 @@ I will include graphs showing the mean regret $R_t$ as a function of time $t$, a
 \label{sec:3:timeAndMemoryCosts}
 
 \TODOL{Write text for this Section, write configuration.py file, run short-term experiment, include them, if happy about it, run longer ang larger experiments}
+
+In this section, we report additional experiment results from the simulations described in the previous section.
+Instead of studying on the efficiency of the algorithms (\ie, their regret), we report results of real measurements in terms of computational time as well as memory storage.
+%
+The goal of this section is to highlight that the simplest (but most efficient) algorithms have a memory cost proportional to the number of arms but independent of the horizons, \ie, bounded by $\bigO{K}$, and a time complexity at each time step $t\in\{1,\dots,T\}$ bounded by $\bigO{K}$, independent of $t$.
+%
+While the results reported in the previous section should not depend on the implementation of the different algorithms, the results in this section concern real measurements of both time and memory consumptions of the simulation software used for these simulations.
+Hence, the reported results highly depend on many factors, including how the code is written, and where and when it is run.
+
+\begin{itemize}
+    \item Quality and optimization of the code:
+    The same level of optimization is used in all the codebase of SMPyBandits, and most of the time, the code is pure and naive Python and was not optimized.
+    Mathematical functions (\eg, $\sqrt{\bullet}, \log$) and random numbers used are using \texttt{numpy} and \texttt{numpy.random} modules \cite{numpy}, which are based on C and Cython code and can be considered highly efficient.
+    Computations of Kullback-Leibler and indexes for \klUCB{} algorithms are based on a compiled CPython extension written in C and can also be considered highly efficient.
+    As we can safely affirm that the code of the different algorithms has the same level of optimization, the comparison is fair, and we do not favor any algorithm in their implementation in SMPyBandits.
+
+    \item About the experimental environment:
+    the exact measurements displayed below highly depend on the machine used for the simulation, the version of the language and its libraries (see above in Section~\ref{sub:3:dependencies} for details about SMPyBandits), as well as the number of CPU cores being used (here, we used $12$ cores in a $12$-core desktop) etc.
+    As long as the different algorithms and simulations are performed on the same environment, the comparison and conclusions we make from them are fair and do make sense.
+\end{itemize}
+
+But what is important in these simulation results is not the exact values, but rather to compare the costs of the different algorithms, and thus only the relative difference in terms of time and memory costs are important.
+Relative difference for costs do not depend much on the code and the machine used for the simulation.
+
+The tables~\ref{table:3:time_problem1}, \ref{table:3:time_problem2} \ref{table:3:memory_problem1} and \ref{table:3:memory_problem2} below follow the same structure as the ones given in Section~\ref{sec:3:reviewSPAlgorithms} but report results in terms of computation time (in milli-seconds) and memory (in B).
+The computation time is \emph{normalized}, that is it is divided by the horizon, to count the (average) time used by an algorithm at time $t$ from $t=1$ to $t=T$, while the memory cost is \emph{not normalized}.
+%
+Thus, we can check that efficient algorithms have a running time independent on the horizon $T$, instead of just observing a linear dependency, and we can check that efficient algorithms have a memory cost independent on the horizon.
+All the considered algorithms in this Chapter are efficient in this aspect, but in Chapter~\ref{chapter:6} we study algorithms that essentially have to store, and run computations, on an increasing number of observations (\eg, \CUSUMUCB), so their computation cost at time $t$ increases (linearly) with $t$, and thus they are more costly.
+%
+We can also check that efficient algorithms have a running time and a memory cost linear in the number of arms $K$, while more complex algorithms like BESA suffer from an exponential blow-up of their complexity when $K$ increases.
+
+
+\subsection{Computational time}
+
+\TODOL{Just one long table for problem 1, not necessary to include other problems}
+
+
+\begin{table}[!t]
+\begin{footnotesize}
+    \centering
+    \begin{tabular}{c|*{5}{m{2cm}}} % WARNING size ?
+    \textbf{Algorithms} $\;$ \textbackslash $\;$ $\mathbf{T=}$
+        & $T_1 = 1000$ & $T_2 = 5000$ & $T_3 = 10000$ & $T_4 = 50000$ \\
+        \hline
+        $\varepsilon$-greedy &
+            $\cT^{1}_{T_1,K_1} = 0$
+                $\cT^{1}_{T_1,K_2} = 0$
+                $\cT^{1}_{T_1,K_3} = 0$
+                $\cT^{1}_{T_1,K_4} = 0$
+                $\cT^{1}_{T_1,K_5} = 0$ &
+            $\cT^{1}_{T_2,K_1} = 0$
+                $\cT^{1}_{T_2,K_2} = 0$
+                $\cT^{1}_{T_2,K_3} = 0$
+                $\cT^{1}_{T_2,K_4} = 0$
+                $\cT^{1}_{T_2,K_5} = 0$ &
+            $\cT^{1}_{T_3,K_1} = 0$
+                $\cT^{1}_{T_3,K_2} = 0$
+                $\cT^{1}_{T_3,K_3} = 0$
+                $\cT^{1}_{T_3,K_4} = 0$
+                $\cT^{1}_{T_3,K_5} = 0$ &
+            $\cT^{1}_{T_4,K_1} = 0$
+                $\cT^{1}_{T_4,K_2} = 0$
+                $\cT^{1}_{T_4,K_3} = 0$
+                $\cT^{1}_{T_4,K_4} = 0$
+                $\cT^{1}_{T_4,K_5} = 0$ \\
+        \hline
+        Explore-then-Commit &
+            $\cT^{2}_{T_1,K_1} = 0$
+                $\cT^{2}_{T_1,K_2} = 0$
+                $\cT^{2}_{T_1,K_3} = 0$
+                $\cT^{2}_{T_1,K_4} = 0$
+                $\cT^{2}_{T_1,K_5} = 0$ &
+            $\cT^{2}_{T_2,K_1} = 0$
+                $\cT^{2}_{T_2,K_2} = 0$
+                $\cT^{2}_{T_2,K_3} = 0$
+                $\cT^{2}_{T_2,K_4} = 0$
+                $\cT^{2}_{T_2,K_5} = 0$ &
+            $\cT^{2}_{T_3,K_1} = 0$
+                $\cT^{2}_{T_3,K_2} = 0$
+                $\cT^{2}_{T_3,K_3} = 0$
+                $\cT^{2}_{T_3,K_4} = 0$
+                $\cT^{2}_{T_3,K_5} = 0$ &
+            $\cT^{2}_{T_4,K_1} = 0$
+                $\cT^{2}_{T_4,K_2} = 0$
+                $\cT^{2}_{T_4,K_3} = 0$
+                $\cT^{2}_{T_4,K_4} = 0$
+                $\cT^{2}_{T_4,K_5} = 0$ \\
+        \hline
+        $\mathrm{Exp}3^{++}$ &
+            $\cT^3_{T_1,K_1} = 0$
+                $\cT^3_{T_1,K_2} = 0$
+                $\cT^3_{T_1,K_3} = 0$
+                $\cT^3_{T_1,K_4} = 0$
+                $\cT^3_{T_1,K_5} = 0$ &
+            $\cT^3_{T_2,K_1} = 0$
+                $\cT^3_{T_2,K_2} = 0$
+                $\cT^3_{T_2,K_3} = 0$
+                $\cT^3_{T_2,K_4} = 0$
+                $\cT^3_{T_2,K_5} = 0$ &
+            $\cT^3_{T_3,K_1} = 0$
+                $\cT^3_{T_3,K_2} = 0$
+                $\cT^3_{T_3,K_3} = 0$
+                $\cT^3_{T_3,K_4} = 0$
+                $\cT^3_{T_3,K_5} = 0$ &
+            $\cT^3_{T_4,K_1} = 0$
+                $\cT^3_{T_4,K_2} = 0$
+                $\cT^3_{T_4,K_3} = 0$
+                $\cT^3_{T_4,K_4} = 0$
+                $\cT^3_{T_4,K_5} = 0$ \\
+        \hline
+        $\UCB_1$ &
+            $\cT^{4}_{T_1,K_1} = 0$
+                $\cT^{4}_{T_1,K_2} = 0$
+                $\cT^{4}_{T_1,K_3} = 0$
+                $\cT^{4}_{T_1,K_4} = 0$
+                $\cT^{4}_{T_1,K_5} = 0$ &
+            $\cT^{4}_{T_2,K_1} = 0$
+                $\cT^{4}_{T_2,K_2} = 0$
+                $\cT^{4}_{T_2,K_3} = 0$
+                $\cT^{4}_{T_2,K_4} = 0$
+                $\cT^{4}_{T_2,K_5} = 0$ &
+            $\cT^{4}_{T_3,K_1} = 0$
+                $\cT^{4}_{T_3,K_2} = 0$
+                $\cT^{4}_{T_3,K_3} = 0$
+                $\cT^{4}_{T_3,K_4} = 0$
+                $\cT^{4}_{T_3,K_5} = 0$ &
+            $\cT^{4}_{T_4,K_1} = 0$
+                $\cT^{4}_{T_4,K_2} = 0$
+                $\cT^{4}_{T_4,K_3} = 0$
+                $\cT^{4}_{T_4,K_4} = 0$
+                $\cT^{4}_{T_4,K_5} = 0$ \\
+        \hline
+        \klUCB{} &
+            $\cT^{5}_{T_1,K_1} = 0$
+                $\cT^{5}_{T_1,K_2} = 0$
+                $\cT^{5}_{T_1,K_3} = 0$
+                $\cT^{5}_{T_1,K_4} = 0$
+                $\cT^{5}_{T_1,K_5} = 0$ &
+            $\cT^{5}_{T_2,K_1} = 0$
+                $\cT^{5}_{T_2,K_2} = 0$
+                $\cT^{5}_{T_2,K_3} = 0$
+                $\cT^{5}_{T_2,K_4} = 0$
+                $\cT^{5}_{T_2,K_5} = 0$ &
+            $\cT^{5}_{T_3,K_1} = 0$
+                $\cT^{5}_{T_3,K_2} = 0$
+                $\cT^{5}_{T_3,K_3} = 0$
+                $\cT^{5}_{T_3,K_4} = 0$
+                $\cT^{5}_{T_3,K_5} = 0$ &
+            $\cT^{5}_{T_4,K_1} = 0$
+                $\cT^{5}_{T_4,K_2} = 0$
+                $\cT^{5}_{T_4,K_3} = 0$
+                $\cT^{5}_{T_4,K_4} = 0$
+                $\cT^{5}_{T_4,K_5} = 0$ \\
+        \hline
+        Thompson sampling &
+            $\cT^{6}_{T_1,K_1} = 0$
+                $\cT^{6}_{T_1,K_2} = 0$
+                $\cT^{6}_{T_1,K_3} = 0$
+                $\cT^{6}_{T_1,K_4} = 0$
+                $\cT^{6}_{T_1,K_5} = 0$ &
+            $\cT^{6}_{T_2,K_1} = 0$
+                $\cT^{6}_{T_2,K_2} = 0$
+                $\cT^{6}_{T_2,K_3} = 0$
+                $\cT^{6}_{T_2,K_4} = 0$
+                $\cT^{6}_{T_2,K_5} = 0$ &
+            $\cT^{6}_{T_3,K_1} = 0$
+                $\cT^{6}_{T_3,K_2} = 0$
+                $\cT^{6}_{T_3,K_3} = 0$
+                $\cT^{6}_{T_3,K_4} = 0$
+                $\cT^{6}_{T_3,K_5} = 0$ &
+            $\cT^{6}_{T_4,K_1} = 0$
+                $\cT^{6}_{T_4,K_2} = 0$
+                $\cT^{6}_{T_4,K_3} = 0$
+                $\cT^{6}_{T_4,K_4} = 0$
+                $\cT^{6}_{T_4,K_5} = 0$ \\
+        \hline
+        Thompson sampling &
+            $\cT^{7}_{T_1,K_1} = 0$
+                $\cT^{7}_{T_1,K_2} = 0$
+                $\cT^{7}_{T_1,K_3} = 0$
+                $\cT^{7}_{T_1,K_4} = 0$
+                $\cT^{7}_{T_1,K_5} = 0$ &
+            $\cT^{7}_{T_2,K_1} = 0$
+                $\cT^{7}_{T_2,K_2} = 0$
+                $\cT^{7}_{T_2,K_3} = 0$
+                $\cT^{7}_{T_2,K_4} = 0$
+                $\cT^{7}_{T_2,K_5} = 0$ &
+            $\cT^{7}_{T_3,K_1} = 0$
+                $\cT^{7}_{T_3,K_2} = 0$
+                $\cT^{7}_{T_3,K_3} = 0$
+                $\cT^{7}_{T_3,K_4} = 0$
+                $\cT^{7}_{T_3,K_5} = 0$ &
+            $\cT^{7}_{T_4,K_1} = 0$
+                $\cT^{7}_{T_4,K_2} = 0$
+                $\cT^{7}_{T_4,K_3} = 0$
+                $\cT^{7}_{T_4,K_4} = 0$
+                $\cT^{7}_{T_4,K_5} = 0$ \\
+        \hline
+        AdBandits &
+            $\cT^{8}_{T_1,K_1} = 0$
+                $\cT^{8}_{T_1,K_2} = 0$
+                $\cT^{8}_{T_1,K_3} = 0$
+                $\cT^{8}_{T_1,K_4} = 0$
+                $\cT^{8}_{T_1,K_5} = 0$ &
+            $\cT^{8}_{T_2,K_1} = 0$
+                $\cT^{8}_{T_2,K_2} = 0$
+                $\cT^{8}_{T_2,K_3} = 0$
+                $\cT^{8}_{T_2,K_4} = 0$
+                $\cT^{8}_{T_2,K_5} = 0$ &
+            $\cT^{8}_{T_3,K_1} = 0$
+                $\cT^{8}_{T_3,K_2} = 0$
+                $\cT^{8}_{T_3,K_3} = 0$
+                $\cT^{8}_{T_3,K_4} = 0$
+                $\cT^{8}_{T_3,K_5} = 0$ &
+            $\cT^{8}_{T_4,K_1} = 0$
+                $\cT^{8}_{T_4,K_2} = 0$
+                $\cT^{8}_{T_4,K_3} = 0$
+                $\cT^{8}_{T_4,K_4} = 0$
+                $\cT^{8}_{T_4,K_5} = 0$ \\
+        \hline
+        BESA &
+            $\cT^{9}_{T_1,K_1} = 0$
+                $\cT^{9}_{T_1,K_2} = 0$
+                $\cT^{9}_{T_1,K_3} = 0$
+                $\cT^{9}_{T_1,K_4} = 0$
+                $\cT^{9}_{T_1,K_5} = 0$ &
+            $\cT^{9}_{T_2,K_1} = 0$
+                $\cT^{9}_{T_2,K_2} = 0$
+                $\cT^{9}_{T_2,K_3} = 0$
+                $\cT^{9}_{T_2,K_4} = 0$
+                $\cT^{9}_{T_2,K_5} = 0$ &
+            $\cT^{9}_{T_3,K_1} = 0$
+                $\cT^{9}_{T_3,K_2} = 0$
+                $\cT^{9}_{T_3,K_3} = 0$
+                $\cT^{9}_{T_3,K_4} = 0$
+                $\cT^{9}_{T_3,K_5} = 0$ &
+            $\cT^{9}_{T_4,K_1} = 0$
+                $\cT^{9}_{T_4,K_2} = 0$
+                $\cT^{9}_{T_4,K_3} = 0$
+                $\cT^{9}_{T_4,K_4} = 0$
+                $\cT^{9}_{T_4,K_5} = 0$ \\
+        \hline
+    \end{tabular}
+    \caption{Normalized running time, rounded and in milli-seconds, for $9$ different algorithms on problem $1$ with different, values of time $T$ and number of arm $K$.}
+    \label{table:3:time_problem1}
+\end{footnotesize}
+\end{table}
+
+
+\subsection{Memory cost}
+
+\TODOL{Just one long table for problem 1, not necessary to include other problems}
+
+
+\begin{table}[!t]
+\begin{footnotesize}
+    \centering
+    \begin{tabular}{c|*{5}{m{2cm}}} % WARNING size ?
+    \textbf{Algorithms} $\;$ \textbackslash $\;$ $\mathbf{T=}$
+        & $T_1 = 1000$ & $T_2 = 5000$ & $T_3 = 10000$ & $T_4 = 50000$ \\
+        \hline
+        $\varepsilon$-greedy &
+            $\cM^{1}_{T_1,K_1} = 0$
+                $\cM^{1}_{T_1,K_2} = 0$
+                $\cM^{1}_{T_1,K_3} = 0$
+                $\cM^{1}_{T_1,K_4} = 0$
+                $\cM^{1}_{T_1,K_5} = 0$ &
+            $\cM^{1}_{T_2,K_1} = 0$
+                $\cM^{1}_{T_2,K_2} = 0$
+                $\cM^{1}_{T_2,K_3} = 0$
+                $\cM^{1}_{T_2,K_4} = 0$
+                $\cM^{1}_{T_2,K_5} = 0$ &
+            $\cM^{1}_{T_3,K_1} = 0$
+                $\cM^{1}_{T_3,K_2} = 0$
+                $\cM^{1}_{T_3,K_3} = 0$
+                $\cM^{1}_{T_3,K_4} = 0$
+                $\cM^{1}_{T_3,K_5} = 0$ &
+            $\cM^{1}_{T_4,K_1} = 0$
+                $\cM^{1}_{T_4,K_2} = 0$
+                $\cM^{1}_{T_4,K_3} = 0$
+                $\cM^{1}_{T_4,K_4} = 0$
+                $\cM^{1}_{T_4,K_5} = 0$ \\
+        \hline
+        Explore-then-Commit &
+            $\cM^{2}_{T_1,K_1} = 0$
+                $\cM^{2}_{T_1,K_2} = 0$
+                $\cM^{2}_{T_1,K_3} = 0$
+                $\cM^{2}_{T_1,K_4} = 0$
+                $\cM^{2}_{T_1,K_5} = 0$ &
+            $\cM^{2}_{T_2,K_1} = 0$
+                $\cM^{2}_{T_2,K_2} = 0$
+                $\cM^{2}_{T_2,K_3} = 0$
+                $\cM^{2}_{T_2,K_4} = 0$
+                $\cM^{2}_{T_2,K_5} = 0$ &
+            $\cM^{2}_{T_3,K_1} = 0$
+                $\cM^{2}_{T_3,K_2} = 0$
+                $\cM^{2}_{T_3,K_3} = 0$
+                $\cM^{2}_{T_3,K_4} = 0$
+                $\cM^{2}_{T_3,K_5} = 0$ &
+            $\cM^{2}_{T_4,K_1} = 0$
+                $\cM^{2}_{T_4,K_2} = 0$
+                $\cM^{2}_{T_4,K_3} = 0$
+                $\cM^{2}_{T_4,K_4} = 0$
+                $\cM^{2}_{T_4,K_5} = 0$ \\
+        \hline
+        $\mathrm{Exp}3^{++}$ &
+            $\cM^3_{T_1,K_1} = 0$
+                $\cM^3_{T_1,K_2} = 0$
+                $\cM^3_{T_1,K_3} = 0$
+                $\cM^3_{T_1,K_4} = 0$
+                $\cM^3_{T_1,K_5} = 0$ &
+            $\cM^3_{T_2,K_1} = 0$
+                $\cM^3_{T_2,K_2} = 0$
+                $\cM^3_{T_2,K_3} = 0$
+                $\cM^3_{T_2,K_4} = 0$
+                $\cM^3_{T_2,K_5} = 0$ &
+            $\cM^3_{T_3,K_1} = 0$
+                $\cM^3_{T_3,K_2} = 0$
+                $\cM^3_{T_3,K_3} = 0$
+                $\cM^3_{T_3,K_4} = 0$
+                $\cM^3_{T_3,K_5} = 0$ &
+            $\cM^3_{T_4,K_1} = 0$
+                $\cM^3_{T_4,K_2} = 0$
+                $\cM^3_{T_4,K_3} = 0$
+                $\cM^3_{T_4,K_4} = 0$
+                $\cM^3_{T_4,K_5} = 0$ \\
+        \hline
+        $\UCB_1$ &
+            $\cM^{4}_{T_1,K_1} = 0$
+                $\cM^{4}_{T_1,K_2} = 0$
+                $\cM^{4}_{T_1,K_3} = 0$
+                $\cM^{4}_{T_1,K_4} = 0$
+                $\cM^{4}_{T_1,K_5} = 0$ &
+            $\cM^{4}_{T_2,K_1} = 0$
+                $\cM^{4}_{T_2,K_2} = 0$
+                $\cM^{4}_{T_2,K_3} = 0$
+                $\cM^{4}_{T_2,K_4} = 0$
+                $\cM^{4}_{T_2,K_5} = 0$ &
+            $\cM^{4}_{T_3,K_1} = 0$
+                $\cM^{4}_{T_3,K_2} = 0$
+                $\cM^{4}_{T_3,K_3} = 0$
+                $\cM^{4}_{T_3,K_4} = 0$
+                $\cM^{4}_{T_3,K_5} = 0$ &
+            $\cM^{4}_{T_4,K_1} = 0$
+                $\cM^{4}_{T_4,K_2} = 0$
+                $\cM^{4}_{T_4,K_3} = 0$
+                $\cM^{4}_{T_4,K_4} = 0$
+                $\cM^{4}_{T_4,K_5} = 0$ \\
+        \hline
+        \klUCB{} &
+            $\cM^{5}_{T_1,K_1} = 0$
+                $\cM^{5}_{T_1,K_2} = 0$
+                $\cM^{5}_{T_1,K_3} = 0$
+                $\cM^{5}_{T_1,K_4} = 0$
+                $\cM^{5}_{T_1,K_5} = 0$ &
+            $\cM^{5}_{T_2,K_1} = 0$
+                $\cM^{5}_{T_2,K_2} = 0$
+                $\cM^{5}_{T_2,K_3} = 0$
+                $\cM^{5}_{T_2,K_4} = 0$
+                $\cM^{5}_{T_2,K_5} = 0$ &
+            $\cM^{5}_{T_3,K_1} = 0$
+                $\cM^{5}_{T_3,K_2} = 0$
+                $\cM^{5}_{T_3,K_3} = 0$
+                $\cM^{5}_{T_3,K_4} = 0$
+                $\cM^{5}_{T_3,K_5} = 0$ &
+            $\cM^{5}_{T_4,K_1} = 0$
+                $\cM^{5}_{T_4,K_2} = 0$
+                $\cM^{5}_{T_4,K_3} = 0$
+                $\cM^{5}_{T_4,K_4} = 0$
+                $\cM^{5}_{T_4,K_5} = 0$ \\
+        \hline
+        Thompson sampling &
+            $\cM^{6}_{T_1,K_1} = 0$
+                $\cM^{6}_{T_1,K_2} = 0$
+                $\cM^{6}_{T_1,K_3} = 0$
+                $\cM^{6}_{T_1,K_4} = 0$
+                $\cM^{6}_{T_1,K_5} = 0$ &
+            $\cM^{6}_{T_2,K_1} = 0$
+                $\cM^{6}_{T_2,K_2} = 0$
+                $\cM^{6}_{T_2,K_3} = 0$
+                $\cM^{6}_{T_2,K_4} = 0$
+                $\cM^{6}_{T_2,K_5} = 0$ &
+            $\cM^{6}_{T_3,K_1} = 0$
+                $\cM^{6}_{T_3,K_2} = 0$
+                $\cM^{6}_{T_3,K_3} = 0$
+                $\cM^{6}_{T_3,K_4} = 0$
+                $\cM^{6}_{T_3,K_5} = 0$ &
+            $\cM^{6}_{T_4,K_1} = 0$
+                $\cM^{6}_{T_4,K_2} = 0$
+                $\cM^{6}_{T_4,K_3} = 0$
+                $\cM^{6}_{T_4,K_4} = 0$
+                $\cM^{6}_{T_4,K_5} = 0$ \\
+        \hline
+        Bayes-UCB &
+            $\cM^{7}_{T_1,K_1} = 0$
+                $\cM^{7}_{T_1,K_2} = 0$
+                $\cM^{7}_{T_1,K_3} = 0$
+                $\cM^{7}_{T_1,K_4} = 0$
+                $\cM^{7}_{T_1,K_5} = 0$ &
+            $\cM^{7}_{T_2,K_1} = 0$
+                $\cM^{7}_{T_2,K_2} = 0$
+                $\cM^{7}_{T_2,K_3} = 0$
+                $\cM^{7}_{T_2,K_4} = 0$
+                $\cM^{7}_{T_2,K_5} = 0$ &
+            $\cM^{7}_{T_3,K_1} = 0$
+                $\cM^{7}_{T_3,K_2} = 0$
+                $\cM^{7}_{T_3,K_3} = 0$
+                $\cM^{7}_{T_3,K_4} = 0$
+                $\cM^{7}_{T_3,K_5} = 0$ &
+            $\cM^{7}_{T_4,K_1} = 0$
+                $\cM^{7}_{T_4,K_2} = 0$
+                $\cM^{7}_{T_4,K_3} = 0$
+                $\cM^{7}_{T_4,K_4} = 0$
+                $\cM^{7}_{T_4,K_5} = 0$ \\
+        \hline
+        AdBandits &
+            $\cM^{8}_{T_1,K_1} = 0$
+                $\cM^{8}_{T_1,K_2} = 0$
+                $\cM^{8}_{T_1,K_3} = 0$
+                $\cM^{8}_{T_1,K_4} = 0$
+                $\cM^{8}_{T_1,K_5} = 0$ &
+            $\cM^{8}_{T_2,K_1} = 0$
+                $\cM^{8}_{T_2,K_2} = 0$
+                $\cM^{8}_{T_2,K_3} = 0$
+                $\cM^{8}_{T_2,K_4} = 0$
+                $\cM^{8}_{T_2,K_5} = 0$ &
+            $\cM^{8}_{T_3,K_1} = 0$
+                $\cM^{8}_{T_3,K_2} = 0$
+                $\cM^{8}_{T_3,K_3} = 0$
+                $\cM^{8}_{T_3,K_4} = 0$
+                $\cM^{8}_{T_3,K_5} = 0$ &
+            $\cM^{8}_{T_4,K_1} = 0$
+                $\cM^{8}_{T_4,K_2} = 0$
+                $\cM^{8}_{T_4,K_3} = 0$
+                $\cM^{8}_{T_4,K_4} = 0$
+                $\cM^{8}_{T_4,K_5} = 0$ \\
+        \hline
+        BESA &
+            $\cM^{9}_{T_1,K_1} = 0$
+                $\cM^{9}_{T_1,K_2} = 0$
+                $\cM^{9}_{T_1,K_3} = 0$
+                $\cM^{9}_{T_1,K_4} = 0$
+                $\cM^{9}_{T_1,K_5} = 0$ &
+            $\cM^{9}_{T_2,K_1} = 0$
+                $\cM^{9}_{T_2,K_2} = 0$
+                $\cM^{9}_{T_2,K_3} = 0$
+                $\cM^{9}_{T_2,K_4} = 0$
+                $\cM^{9}_{T_2,K_5} = 0$ &
+            $\cM^{9}_{T_3,K_1} = 0$
+                $\cM^{9}_{T_3,K_2} = 0$
+                $\cM^{9}_{T_3,K_3} = 0$
+                $\cM^{9}_{T_3,K_4} = 0$
+                $\cM^{9}_{T_3,K_5} = 0$ &
+            $\cM^{9}_{T_4,K_1} = 0$
+                $\cM^{9}_{T_4,K_2} = 0$
+                $\cM^{9}_{T_4,K_3} = 0$
+                $\cM^{9}_{T_4,K_4} = 0$
+                $\cM^{9}_{T_4,K_5} = 0$ \\
+        \hline
+    \end{tabular}
+    \caption{Non-normalized memory cost, rounded and in Bytes, for $9$ different algorithms on problem $1$ with different, values of time $T$ and number of arm $K$.}
+    \label{table:3:memory_problem1}
+\end{footnotesize}
+\end{table}
+
+
+
+\subsection{Observations and summary of the experiments}
+
+\TODOL{Use UCB and klUCB}
+\TODOL{Regret usually scales as $\bigO{K}$ and $\bigO{\log T}$}
+
+
 
 I want to show the real numerical costs in terms of computation time and storage requirement of the various algorithms for single-player bandits.
 
@@ -538,7 +1538,588 @@ $ T=50000 N=100 K=10 ARM_TYPE=Gaussian python main.py
 \end{small}
 
 
-\subsection{Using parallelism in SMPyBandits}
+% --------------------------------------------------------------
+\subsection{Additional experimental results: more recent algorithms}
+\label{sub:3:additionalExperiments}
+
+This Appendix section describes seven more algorithms that are also compared with the nine presented above in Section~\ref{sec:3:reviewSPAlgorithms}.
+
+\TODOL{Si on a la place, j'aimerai bien inclure des résultats pour 7 algorithmes de plus, que voici :}
+
+\begin{itemize}
+    \item Algorithm 10 is
+    $\mathrm{MOSS}$-$\mathrm{Anytime}$ from \cite{Degenne16}, using $\alpha=1$ (\texttt{MOSSAnytime}).
+
+    \item Algorithm 11 is
+    the approximated Finite-Horizon Gittins from \cite{Lattimore16a}, using $\alpha=1$ (\texttt{ApproximatedFHGittins}).
+
+    \item Algorithm 12 is
+    $\UCB\dagger$ from \cite{Lattimore2018refining}, using $\alpha=1$ (\texttt{UCBdagger}).
+
+    \item Algorithm 13 is
+    the anytime variant of KL-UCB-Switch from \cite{GarivierHadiji2018}, using $\alpha=1$ (\texttt{klUCBswitchAnytime}).
+
+    \item Algorithm 14 is
+    \textsc{Tsallis-Inf} from \cite{Zimmert2018}, using $\alpha=0.5$ (it seems to be the most efficient of the algorithms described in the article) (\texttt{TsallisInf}).
+
+    \item Algorithm 15 is
+    $\mathrm{RCB}$ (Randomized Confidence Bound) from \cite{KimTewari2019}, using $\alpha=1$ and permutations uniformly sampled in $[0,1]$ (it is the simplest of the algorithms described in the article) (\texttt{RCB}).
+
+    \item Algorithm 16 is
+    $\mathrm{PHE}$ (Perturbed-History Exploration) from \cite{KvetonSzepesvari2019}, using a perturbation scale of $0.5$ as advised (\texttt{PHE}).
+
+\end{itemize}
+\TODOL{FIXME order correctly in configuration.py}
+
+We give below the results for these additional algorithms, only for the problem 1,
+first in terms of regret in Table~\ref{table:3:meanRegret_problem1_otherAlgorithms},
+then in terms of computation times in Table~\ref{table:3:time_problem1_otherAlgorithms}
+and for storage costs in Table~\ref{table:3:memory_problem1_otherAlgorithms}.
+
+
+
+\paragraph{Mean regret}
+
+\begin{table}[!t]
+\begin{footnotesize}
+    \centering
+    \begin{tabular}{c|*{5}{m{2cm}}} % WARNING size ?
+    \textbf{Algorithms} $\;$ \textbackslash $\;$ $\mathbf{T=}$
+        & $T_1 = 1000$ & $T_2 = 5000$ & $T_3 = 10000$ & $T_4 = 50000$ \\
+        $\mathrm{MOSS}$-$\mathrm{Anytime}$ &
+            $R^{10}_{T_1,K_1} = 0 \pm 0$
+                $R^{10}_{T_1,K_2} = 0 \pm 0$
+                $R^{10}_{T_1,K_3} = 0 \pm 0$
+                $R^{10}_{T_1,K_4} = 0 \pm 0$
+                $R^{10}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{10}_{T_2,K_1} = 0 \pm 0$
+                $R^{10}_{T_2,K_2} = 0 \pm 0$
+                $R^{10}_{T_2,K_3} = 0 \pm 0$
+                $R^{10}_{T_2,K_4} = 0 \pm 0$
+                $R^{10}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{10}_{T_3,K_1} = 0 \pm 0$
+                $R^{10}_{T_3,K_2} = 0 \pm 0$
+                $R^{10}_{T_3,K_3} = 0 \pm 0$
+                $R^{10}_{T_3,K_4} = 0 \pm 0$
+                $R^{10}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{10}_{T_4,K_1} = 0 \pm 0$
+                $R^{10}_{T_4,K_2} = 0 \pm 0$
+                $R^{10}_{T_4,K_3} = 0 \pm 0$
+                $R^{10}_{T_4,K_4} = 0 \pm 0$
+                $R^{10}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        Appr. F-H Gittins &
+            $R^{11}_{T_1,K_1} = 0 \pm 0$
+                $R^{11}_{T_1,K_2} = 0 \pm 0$
+                $R^{11}_{T_1,K_3} = 0 \pm 0$
+                $R^{11}_{T_1,K_4} = 0 \pm 0$
+                $R^{11}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{11}_{T_2,K_1} = 0 \pm 0$
+                $R^{11}_{T_2,K_2} = 0 \pm 0$
+                $R^{11}_{T_2,K_3} = 0 \pm 0$
+                $R^{11}_{T_2,K_4} = 0 \pm 0$
+                $R^{11}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{11}_{T_3,K_1} = 0 \pm 0$
+                $R^{11}_{T_3,K_2} = 0 \pm 0$
+                $R^{11}_{T_3,K_3} = 0 \pm 0$
+                $R^{11}_{T_3,K_4} = 0 \pm 0$
+                $R^{11}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{11}_{T_4,K_1} = 0 \pm 0$
+                $R^{11}_{T_4,K_2} = 0 \pm 0$
+                $R^{11}_{T_4,K_3} = 0 \pm 0$
+                $R^{11}_{T_4,K_4} = 0 \pm 0$
+                $R^{11}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        $\UCB\dagger$ &
+            $R^{12}_{T_1,K_1} = 0 \pm 0$
+                $R^{12}_{T_1,K_2} = 0 \pm 0$
+                $R^{12}_{T_1,K_3} = 0 \pm 0$
+                $R^{12}_{T_1,K_4} = 0 \pm 0$
+                $R^{12}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{12}_{T_2,K_1} = 0 \pm 0$
+                $R^{12}_{T_2,K_2} = 0 \pm 0$
+                $R^{12}_{T_2,K_3} = 0 \pm 0$
+                $R^{12}_{T_2,K_4} = 0 \pm 0$
+                $R^{12}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{12}_{T_3,K_1} = 0 \pm 0$
+                $R^{12}_{T_3,K_2} = 0 \pm 0$
+                $R^{12}_{T_3,K_3} = 0 \pm 0$
+                $R^{12}_{T_3,K_4} = 0 \pm 0$
+                $R^{12}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{12}_{T_4,K_1} = 0 \pm 0$
+                $R^{12}_{T_4,K_2} = 0 \pm 0$
+                $R^{12}_{T_4,K_3} = 0 \pm 0$
+                $R^{12}_{T_4,K_4} = 0 \pm 0$
+                $R^{12}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        KL-UCB-Switch &
+            $R^{13}_{T_1,K_1} = 0 \pm 0$
+                $R^{13}_{T_1,K_2} = 0 \pm 0$
+                $R^{13}_{T_1,K_3} = 0 \pm 0$
+                $R^{13}_{T_1,K_4} = 0 \pm 0$
+                $R^{13}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{13}_{T_2,K_1} = 0 \pm 0$
+                $R^{13}_{T_2,K_2} = 0 \pm 0$
+                $R^{13}_{T_2,K_3} = 0 \pm 0$
+                $R^{13}_{T_2,K_4} = 0 \pm 0$
+                $R^{13}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{13}_{T_3,K_1} = 0 \pm 0$
+                $R^{13}_{T_3,K_2} = 0 \pm 0$
+                $R^{13}_{T_3,K_3} = 0 \pm 0$
+                $R^{13}_{T_3,K_4} = 0 \pm 0$
+                $R^{13}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{13}_{T_4,K_1} = 0 \pm 0$
+                $R^{13}_{T_4,K_2} = 0 \pm 0$
+                $R^{13}_{T_4,K_3} = 0 \pm 0$
+                $R^{13}_{T_4,K_4} = 0 \pm 0$
+                $R^{13}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        \textsc{Tsallis-Inf} &
+            $R^{14}_{T_1,K_1} = 0 \pm 0$
+                $R^{14}_{T_1,K_2} = 0 \pm 0$
+                $R^{14}_{T_1,K_3} = 0 \pm 0$
+                $R^{14}_{T_1,K_4} = 0 \pm 0$
+                $R^{14}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{14}_{T_2,K_1} = 0 \pm 0$
+                $R^{14}_{T_2,K_2} = 0 \pm 0$
+                $R^{14}_{T_2,K_3} = 0 \pm 0$
+                $R^{14}_{T_2,K_4} = 0 \pm 0$
+                $R^{14}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{14}_{T_3,K_1} = 0 \pm 0$
+                $R^{14}_{T_3,K_2} = 0 \pm 0$
+                $R^{14}_{T_3,K_3} = 0 \pm 0$
+                $R^{14}_{T_3,K_4} = 0 \pm 0$
+                $R^{14}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{14}_{T_4,K_1} = 0 \pm 0$
+                $R^{14}_{T_4,K_2} = 0 \pm 0$
+                $R^{14}_{T_4,K_3} = 0 \pm 0$
+                $R^{14}_{T_4,K_4} = 0 \pm 0$
+                $R^{14}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        $\mathrm{RCB}$ &
+            $R^{15}_{T_1,K_1} = 0 \pm 0$
+                $R^{15}_{T_1,K_2} = 0 \pm 0$
+                $R^{15}_{T_1,K_3} = 0 \pm 0$
+                $R^{15}_{T_1,K_4} = 0 \pm 0$
+                $R^{15}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{15}_{T_2,K_1} = 0 \pm 0$
+                $R^{15}_{T_2,K_2} = 0 \pm 0$
+                $R^{15}_{T_2,K_3} = 0 \pm 0$
+                $R^{15}_{T_2,K_4} = 0 \pm 0$
+                $R^{15}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{15}_{T_3,K_1} = 0 \pm 0$
+                $R^{15}_{T_3,K_2} = 0 \pm 0$
+                $R^{15}_{T_3,K_3} = 0 \pm 0$
+                $R^{15}_{T_3,K_4} = 0 \pm 0$
+                $R^{15}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{15}_{T_4,K_1} = 0 \pm 0$
+                $R^{15}_{T_4,K_2} = 0 \pm 0$
+                $R^{15}_{T_4,K_3} = 0 \pm 0$
+                $R^{15}_{T_4,K_4} = 0 \pm 0$
+                $R^{15}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+        $\mathrm{PHE}$ &
+            $R^{16}_{T_1,K_1} = 0 \pm 0$
+                $R^{16}_{T_1,K_2} = 0 \pm 0$
+                $R^{16}_{T_1,K_3} = 0 \pm 0$
+                $R^{16}_{T_1,K_4} = 0 \pm 0$
+                $R^{16}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{16}_{T_2,K_1} = 0 \pm 0$
+                $R^{16}_{T_2,K_2} = 0 \pm 0$
+                $R^{16}_{T_2,K_3} = 0 \pm 0$
+                $R^{16}_{T_2,K_4} = 0 \pm 0$
+                $R^{16}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{16}_{T_3,K_1} = 0 \pm 0$
+                $R^{16}_{T_3,K_2} = 0 \pm 0$
+                $R^{16}_{T_3,K_3} = 0 \pm 0$
+                $R^{16}_{T_3,K_4} = 0 \pm 0$
+                $R^{16}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{16}_{T_4,K_1} = 0 \pm 0$
+                $R^{16}_{T_4,K_2} = 0 \pm 0$
+                $R^{16}_{T_4,K_3} = 0 \pm 0$
+                $R^{16}_{T_4,K_4} = 0 \pm 0$
+                $R^{16}_{T_4,K_5} = 0 \pm 0$ \\
+        \hline
+    \end{tabular}
+    \caption{Mean regret $\pm$ $1$ std-dev, for $9$ different algorithms on problem $1$ with different values of time $T$ and number of arm $K$.
+    }
+    \label{table:3:meanRegret_problem1_otherAlgorithms}
+\end{footnotesize}
+\end{table}
+
+
+\paragraph{Computation time}
+
+\TODOL{A faire}
+
+\begin{table}[!t]
+\begin{footnotesize}
+    \centering
+    \begin{tabular}{c|*{5}{m{2cm}}} % WARNING size ?
+    \textbf{Algorithms} $\;$ \textbackslash $\;$ $\mathbf{T=}$
+        & $T_1 = 1000$ & $T_2 = 5000$ & $T_3 = 10000$ & $T_4 = 50000$ \\
+        $\mathrm{MOSS}$-$\mathrm{Anytime}$ &
+            $\cT^{10}_{T_1,K_1} = 0$
+                $\cT^{10}_{T_1,K_2} = 0$
+                $\cT^{10}_{T_1,K_3} = 0$
+                $\cT^{10}_{T_1,K_4} = 0$
+                $\cT^{10}_{T_1,K_5} = 0$ &
+            $\cT^{10}_{T_2,K_1} = 0$
+                $\cT^{10}_{T_2,K_2} = 0$
+                $\cT^{10}_{T_2,K_3} = 0$
+                $\cT^{10}_{T_2,K_4} = 0$
+                $\cT^{10}_{T_2,K_5} = 0$ &
+            $\cT^{10}_{T_3,K_1} = 0$
+                $\cT^{10}_{T_3,K_2} = 0$
+                $\cT^{10}_{T_3,K_3} = 0$
+                $\cT^{10}_{T_3,K_4} = 0$
+                $\cT^{10}_{T_3,K_5} = 0$ &
+            $\cT^{10}_{T_4,K_1} = 0$
+                $\cT^{10}_{T_4,K_2} = 0$
+                $\cT^{10}_{T_4,K_3} = 0$
+                $\cT^{10}_{T_4,K_4} = 0$
+                $\cT^{10}_{T_4,K_5} = 0$ \\
+        \hline
+        Appr. F-H Gittins &
+            $\cT^{11}_{T_1,K_1} = 0$
+                $\cT^{11}_{T_1,K_2} = 0$
+                $\cT^{11}_{T_1,K_3} = 0$
+                $\cT^{11}_{T_1,K_4} = 0$
+                $\cT^{11}_{T_1,K_5} = 0$ &
+            $\cT^{11}_{T_2,K_1} = 0$
+                $\cT^{11}_{T_2,K_2} = 0$
+                $\cT^{11}_{T_2,K_3} = 0$
+                $\cT^{11}_{T_2,K_4} = 0$
+                $\cT^{11}_{T_2,K_5} = 0$ &
+            $\cT^{11}_{T_3,K_1} = 0$
+                $\cT^{11}_{T_3,K_2} = 0$
+                $\cT^{11}_{T_3,K_3} = 0$
+                $\cT^{11}_{T_3,K_4} = 0$
+                $\cT^{11}_{T_3,K_5} = 0$ &
+            $\cT^{11}_{T_4,K_1} = 0$
+                $\cT^{11}_{T_4,K_2} = 0$
+                $\cT^{11}_{T_4,K_3} = 0$
+                $\cT^{11}_{T_4,K_4} = 0$
+                $\cT^{11}_{T_4,K_5} = 0$ \\
+        \hline
+        $\UCB\dagger$ &
+            $\cT^{12}_{T_1,K_1} = 0$
+                $\cT^{12}_{T_1,K_2} = 0$
+                $\cT^{12}_{T_1,K_3} = 0$
+                $\cT^{12}_{T_1,K_4} = 0$
+                $\cT^{12}_{T_1,K_5} = 0$ &
+            $\cT^{12}_{T_2,K_1} = 0$
+                $\cT^{12}_{T_2,K_2} = 0$
+                $\cT^{12}_{T_2,K_3} = 0$
+                $\cT^{12}_{T_2,K_4} = 0$
+                $\cT^{12}_{T_2,K_5} = 0$ &
+            $\cT^{12}_{T_3,K_1} = 0$
+                $\cT^{12}_{T_3,K_2} = 0$
+                $\cT^{12}_{T_3,K_3} = 0$
+                $\cT^{12}_{T_3,K_4} = 0$
+                $\cT^{12}_{T_3,K_5} = 0$ &
+            $\cT^{12}_{T_4,K_1} = 0$
+                $\cT^{12}_{T_4,K_2} = 0$
+                $\cT^{12}_{T_4,K_3} = 0$
+                $\cT^{12}_{T_4,K_4} = 0$
+                $\cT^{12}_{T_4,K_5} = 0$ \\
+        \hline
+        KL-UCB-Switch &
+            $\cT^{13}_{T_1,K_1} = 0$
+                $\cT^{13}_{T_1,K_2} = 0$
+                $\cT^{13}_{T_1,K_3} = 0$
+                $\cT^{13}_{T_1,K_4} = 0$
+                $\cT^{13}_{T_1,K_5} = 0$ &
+            $\cT^{13}_{T_2,K_1} = 0$
+                $\cT^{13}_{T_2,K_2} = 0$
+                $\cT^{13}_{T_2,K_3} = 0$
+                $\cT^{13}_{T_2,K_4} = 0$
+                $\cT^{13}_{T_2,K_5} = 0$ &
+            $\cT^{13}_{T_3,K_1} = 0$
+                $\cT^{13}_{T_3,K_2} = 0$
+                $\cT^{13}_{T_3,K_3} = 0$
+                $\cT^{13}_{T_3,K_4} = 0$
+                $\cT^{13}_{T_3,K_5} = 0$ &
+            $\cT^{13}_{T_4,K_1} = 0$
+                $\cT^{13}_{T_4,K_2} = 0$
+                $\cT^{13}_{T_4,K_3} = 0$
+                $\cT^{13}_{T_4,K_4} = 0$
+                $\cT^{13}_{T_4,K_5} = 0$ \\
+        \hline
+        \textsc{Tsallis-Inf} &
+            $\cT^{14}_{T_1,K_1} = 0$
+                $\cT^{14}_{T_1,K_2} = 0$
+                $\cT^{14}_{T_1,K_3} = 0$
+                $\cT^{14}_{T_1,K_4} = 0$
+                $\cT^{14}_{T_1,K_5} = 0$ &
+            $\cT^{14}_{T_2,K_1} = 0$
+                $\cT^{14}_{T_2,K_2} = 0$
+                $\cT^{14}_{T_2,K_3} = 0$
+                $\cT^{14}_{T_2,K_4} = 0$
+                $\cT^{14}_{T_2,K_5} = 0$ &
+            $\cT^{14}_{T_3,K_1} = 0$
+                $\cT^{14}_{T_3,K_2} = 0$
+                $\cT^{14}_{T_3,K_3} = 0$
+                $\cT^{14}_{T_3,K_4} = 0$
+                $\cT^{14}_{T_3,K_5} = 0$ &
+            $\cT^{14}_{T_4,K_1} = 0$
+                $\cT^{14}_{T_4,K_2} = 0$
+                $\cT^{14}_{T_4,K_3} = 0$
+                $\cT^{14}_{T_4,K_4} = 0$
+                $\cT^{14}_{T_4,K_5} = 0$ \\
+        \hline
+        $\mathrm{RCB}$ &
+            $\cT^{15}_{T_1,K_1} = 0$
+                $\cT^{15}_{T_1,K_2} = 0$
+                $\cT^{15}_{T_1,K_3} = 0$
+                $\cT^{15}_{T_1,K_4} = 0$
+                $\cT^{15}_{T_1,K_5} = 0$ &
+            $\cT^{15}_{T_2,K_1} = 0$
+                $\cT^{15}_{T_2,K_2} = 0$
+                $\cT^{15}_{T_2,K_3} = 0$
+                $\cT^{15}_{T_2,K_4} = 0$
+                $\cT^{15}_{T_2,K_5} = 0$ &
+            $\cT^{15}_{T_3,K_1} = 0$
+                $\cT^{15}_{T_3,K_2} = 0$
+                $\cT^{15}_{T_3,K_3} = 0$
+                $\cT^{15}_{T_3,K_4} = 0$
+                $\cT^{15}_{T_3,K_5} = 0$ &
+            $\cT^{15}_{T_4,K_1} = 0$
+                $\cT^{15}_{T_4,K_2} = 0$
+                $\cT^{15}_{T_4,K_3} = 0$
+                $\cT^{15}_{T_4,K_4} = 0$
+                $\cT^{15}_{T_4,K_5} = 0$ \\
+        \hline
+        $\mathrm{PHE}$ &
+            $\cT^{16}_{T_1,K_1} = 0$
+                $\cT^{16}_{T_1,K_2} = 0$
+                $\cT^{16}_{T_1,K_3} = 0$
+                $\cT^{16}_{T_1,K_4} = 0$
+                $\cT^{16}_{T_1,K_5} = 0$ &
+            $\cT^{16}_{T_2,K_1} = 0$
+                $\cT^{16}_{T_2,K_2} = 0$
+                $\cT^{16}_{T_2,K_3} = 0$
+                $\cT^{16}_{T_2,K_4} = 0$
+                $\cT^{16}_{T_2,K_5} = 0$ &
+            $\cT^{16}_{T_3,K_1} = 0$
+                $\cT^{16}_{T_3,K_2} = 0$
+                $\cT^{16}_{T_3,K_3} = 0$
+                $\cT^{16}_{T_3,K_4} = 0$
+                $\cT^{16}_{T_3,K_5} = 0$ &
+            $\cT^{16}_{T_4,K_1} = 0$
+                $\cT^{16}_{T_4,K_2} = 0$
+                $\cT^{16}_{T_4,K_3} = 0$
+                $\cT^{16}_{T_4,K_4} = 0$
+                $\cT^{16}_{T_4,K_5} = 0$ \\
+        \hline
+    \end{tabular}
+    \caption{Normalized running time, rounded and in milli-seconds, for $9$ different algorithms on problem $1$ with different, values of time $T$ and number of arm $K$.}
+    \label{table:3:time_problem1_otherAlgorithms}
+\end{footnotesize}
+\end{table}
+
+
+\paragraph{Storage cost}
+
+\TODOL{A faire}
+
+\begin{table}[!t]
+\begin{footnotesize}
+    \centering
+    \begin{tabular}{c|*{5}{m{2cm}}} % WARNING size ?
+    \textbf{Algorithms} $\;$ \textbackslash $\;$ $\mathbf{T=}$
+        & $T_1 = 1000$ & $T_2 = 5000$ & $T_3 = 10000$ & $T_4 = 50000$ \\
+        $\mathrm{MOSS}$-$\mathrm{Anytime}$ &
+            $\cM^{10}_{T_1,K_1} = 0$
+                $\cM^{10}_{T_1,K_2} = 0$
+                $\cM^{10}_{T_1,K_3} = 0$
+                $\cM^{10}_{T_1,K_4} = 0$
+                $\cM^{10}_{T_1,K_5} = 0$ &
+            $\cM^{10}_{T_2,K_1} = 0$
+                $\cM^{10}_{T_2,K_2} = 0$
+                $\cM^{10}_{T_2,K_3} = 0$
+                $\cM^{10}_{T_2,K_4} = 0$
+                $\cM^{10}_{T_2,K_5} = 0$ &
+            $\cM^{10}_{T_3,K_1} = 0$
+                $\cM^{10}_{T_3,K_2} = 0$
+                $\cM^{10}_{T_3,K_3} = 0$
+                $\cM^{10}_{T_3,K_4} = 0$
+                $\cM^{10}_{T_3,K_5} = 0$ &
+            $\cM^{10}_{T_4,K_1} = 0$
+                $\cM^{10}_{T_4,K_2} = 0$
+                $\cM^{10}_{T_4,K_3} = 0$
+                $\cM^{10}_{T_4,K_4} = 0$
+                $\cM^{10}_{T_4,K_5} = 0$ \\
+        \hline
+        Appr. F-H Gittins &
+            $\cM^{11}_{T_1,K_1} = 0$
+                $\cM^{11}_{T_1,K_2} = 0$
+                $\cM^{11}_{T_1,K_3} = 0$
+                $\cM^{11}_{T_1,K_4} = 0$
+                $\cM^{11}_{T_1,K_5} = 0$ &
+            $\cM^{11}_{T_2,K_1} = 0$
+                $\cM^{11}_{T_2,K_2} = 0$
+                $\cM^{11}_{T_2,K_3} = 0$
+                $\cM^{11}_{T_2,K_4} = 0$
+                $\cM^{11}_{T_2,K_5} = 0$ &
+            $\cM^{11}_{T_3,K_1} = 0$
+                $\cM^{11}_{T_3,K_2} = 0$
+                $\cM^{11}_{T_3,K_3} = 0$
+                $\cM^{11}_{T_3,K_4} = 0$
+                $\cM^{11}_{T_3,K_5} = 0$ &
+            $\cM^{11}_{T_4,K_1} = 0$
+                $\cM^{11}_{T_4,K_2} = 0$
+                $\cM^{11}_{T_4,K_3} = 0$
+                $\cM^{11}_{T_4,K_4} = 0$
+                $\cM^{11}_{T_4,K_5} = 0$ \\
+        \hline
+        $\UCB\dagger$ &
+            $\cM^{12}_{T_1,K_1} = 0$
+                $\cM^{12}_{T_1,K_2} = 0$
+                $\cM^{12}_{T_1,K_3} = 0$
+                $\cM^{12}_{T_1,K_4} = 0$
+                $\cM^{12}_{T_1,K_5} = 0$ &
+            $\cM^{12}_{T_2,K_1} = 0$
+                $\cM^{12}_{T_2,K_2} = 0$
+                $\cM^{12}_{T_2,K_3} = 0$
+                $\cM^{12}_{T_2,K_4} = 0$
+                $\cM^{12}_{T_2,K_5} = 0$ &
+            $\cM^{12}_{T_3,K_1} = 0$
+                $\cM^{12}_{T_3,K_2} = 0$
+                $\cM^{12}_{T_3,K_3} = 0$
+                $\cM^{12}_{T_3,K_4} = 0$
+                $\cM^{12}_{T_3,K_5} = 0$ &
+            $\cM^{12}_{T_4,K_1} = 0$
+                $\cM^{12}_{T_4,K_2} = 0$
+                $\cM^{12}_{T_4,K_3} = 0$
+                $\cM^{12}_{T_4,K_4} = 0$
+                $\cM^{12}_{T_4,K_5} = 0$ \\
+        \hline
+        KL-UCB-Switch &
+            $\cM^{13}_{T_1,K_1} = 0$
+                $\cM^{13}_{T_1,K_2} = 0$
+                $\cM^{13}_{T_1,K_3} = 0$
+                $\cM^{13}_{T_1,K_4} = 0$
+                $\cM^{13}_{T_1,K_5} = 0$ &
+            $\cM^{13}_{T_2,K_1} = 0$
+                $\cM^{13}_{T_2,K_2} = 0$
+                $\cM^{13}_{T_2,K_3} = 0$
+                $\cM^{13}_{T_2,K_4} = 0$
+                $\cM^{13}_{T_2,K_5} = 0$ &
+            $\cM^{13}_{T_3,K_1} = 0$
+                $\cM^{13}_{T_3,K_2} = 0$
+                $\cM^{13}_{T_3,K_3} = 0$
+                $\cM^{13}_{T_3,K_4} = 0$
+                $\cM^{13}_{T_3,K_5} = 0$ &
+            $\cM^{13}_{T_4,K_1} = 0$
+                $\cM^{13}_{T_4,K_2} = 0$
+                $\cM^{13}_{T_4,K_3} = 0$
+                $\cM^{13}_{T_4,K_4} = 0$
+                $\cM^{13}_{T_4,K_5} = 0$ \\
+        \hline
+        \textsc{Tsallis-Inf} &
+            $\cM^{14}_{T_1,K_1} = 0$
+                $\cM^{14}_{T_1,K_2} = 0$
+                $\cM^{14}_{T_1,K_3} = 0$
+                $\cM^{14}_{T_1,K_4} = 0$
+                $\cM^{14}_{T_1,K_5} = 0$ &
+            $\cM^{14}_{T_2,K_1} = 0$
+                $\cM^{14}_{T_2,K_2} = 0$
+                $\cM^{14}_{T_2,K_3} = 0$
+                $\cM^{14}_{T_2,K_4} = 0$
+                $\cM^{14}_{T_2,K_5} = 0$ &
+            $\cM^{14}_{T_3,K_1} = 0$
+                $\cM^{14}_{T_3,K_2} = 0$
+                $\cM^{14}_{T_3,K_3} = 0$
+                $\cM^{14}_{T_3,K_4} = 0$
+                $\cM^{14}_{T_3,K_5} = 0$ &
+            $\cM^{14}_{T_4,K_1} = 0$
+                $\cM^{14}_{T_4,K_2} = 0$
+                $\cM^{14}_{T_4,K_3} = 0$
+                $\cM^{14}_{T_4,K_4} = 0$
+                $\cM^{14}_{T_4,K_5} = 0$ \\
+        \hline
+        $\mathrm{RCB}$ &
+            $\cM^{15}_{T_1,K_1} = 0$
+                $\cM^{15}_{T_1,K_2} = 0$
+                $\cM^{15}_{T_1,K_3} = 0$
+                $\cM^{15}_{T_1,K_4} = 0$
+                $\cM^{15}_{T_1,K_5} = 0$ &
+            $\cM^{15}_{T_2,K_1} = 0$
+                $\cM^{15}_{T_2,K_2} = 0$
+                $\cM^{15}_{T_2,K_3} = 0$
+                $\cM^{15}_{T_2,K_4} = 0$
+                $\cM^{15}_{T_2,K_5} = 0$ &
+            $\cM^{15}_{T_3,K_1} = 0$
+                $\cM^{15}_{T_3,K_2} = 0$
+                $\cM^{15}_{T_3,K_3} = 0$
+                $\cM^{15}_{T_3,K_4} = 0$
+                $\cM^{15}_{T_3,K_5} = 0$ &
+            $\cM^{15}_{T_4,K_1} = 0$
+                $\cM^{15}_{T_4,K_2} = 0$
+                $\cM^{15}_{T_4,K_3} = 0$
+                $\cM^{15}_{T_4,K_4} = 0$
+                $\cM^{15}_{T_4,K_5} = 0$ \\
+        \hline
+        $\mathrm{RCB}$ &
+            $\cM^{16}_{T_1,K_1} = 0$
+                $\cM^{16}_{T_1,K_2} = 0$
+                $\cM^{16}_{T_1,K_3} = 0$
+                $\cM^{16}_{T_1,K_4} = 0$
+                $\cM^{16}_{T_1,K_5} = 0$ &
+            $\cM^{16}_{T_2,K_1} = 0$
+                $\cM^{16}_{T_2,K_2} = 0$
+                $\cM^{16}_{T_2,K_3} = 0$
+                $\cM^{16}_{T_2,K_4} = 0$
+                $\cM^{16}_{T_2,K_5} = 0$ &
+            $\cM^{16}_{T_3,K_1} = 0$
+                $\cM^{16}_{T_3,K_2} = 0$
+                $\cM^{16}_{T_3,K_3} = 0$
+                $\cM^{16}_{T_3,K_4} = 0$
+                $\cM^{16}_{T_3,K_5} = 0$ &
+            $\cM^{16}_{T_4,K_1} = 0$
+                $\cM^{16}_{T_4,K_2} = 0$
+                $\cM^{16}_{T_4,K_3} = 0$
+                $\cM^{16}_{T_4,K_4} = 0$
+                $\cM^{16}_{T_4,K_5} = 0$ \\
+        \hline
+    \end{tabular}
+    \caption{Non-normalized memory cost, rounded and in Bytes, for $9$ different algorithms on problem $1$ with different, values of time $T$ and number of arm $K$.}
+    \label{table:3:memory_problem1_otherAlgorithms}
+\end{footnotesize}
+\end{table}
+
+
+\paragraph{Interpretation}
+
+\TODOL{A faire}
+
+
+\paragraph{Bash command to run these experiments}
+
+Finally, we give below the Bash command that was used to run the experiments presented in Sections~\ref{sec:3:reviewSPAlgorithms} and \ref{sub:3:additionalExperiments}.
+It uses \texttt{for} loops from Bash and not Python and environment variables, but we could also have done the same by writing a Python script that calls the \texttt{main.py} script for the different values of $N$, $T$ and $K$.
+
+% https://tex.stackexchange.com/a/12430/
+\begin{listing}[h!]
+    \begin{minted}[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{bash}
+$ for N in 4 100 1000; do \
+  for BAYES in False True; do\
+  for T in 1000 5000 10000 50000; do \
+  for K in 2 5 10 20 50; do \
+    DEBUG=False NOPLOTS=False SAVEALL=True N_JOBS=-1 \
+             N=$N BAYES=$BAYES T=$T K=$K make single \
+    && cp logs/main_py3_log.txt logs/main_py3_log__N${N}_BAYES${BAYES}_T{T}_K{K}.txt \
+  done; done; done; done
+    \end{minted}
+    \caption{Snippet of Bash code to run the large experiments presented in Sections~\ref{sec:3:reviewSPAlgorithms} and \ref{sub:3:additionalExperiments}.
+    % \captionof{listing}{Small snippet of Bash code to run an experiment \label{lst:3:BashCodeToLaunchLargeExperiments}.}
+    \label{lst:3:BashCodeToLaunchLargeExperiments}
+\end{listing}
+
+
+% --------------------------------------------------------------
+\subsection{Additional remark: about parallelism in SMPyBandits}
 \label{sub:3:parallelSimulations}
 % Using multi-core to speed-up simulations
 
