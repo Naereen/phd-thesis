@@ -353,7 +353,7 @@ We also implemented a large benchmark of different problems.
 
 
 % ----------------------------------------------------------------------------
-\section{Experimental comparisons of state-of-the-art single-player algorithms}
+\section{Experimental comparisons of state-of-the-art algorithms}
 \label{sec:3:reviewSPAlgorithms}
 
 \TODOL{Write text for this Section, write configuration.py file, run short-term experiment, include them, if happy about it, run longer ang larger experiments}
@@ -386,24 +386,43 @@ We also give the name of the corresponding class in the \texttt{Policies} module
 
     \item Algorithm 3 is
     $\mathrm{Exp}3^{++}$ from \cite{Seldin17}, using $\alpha=3$ and $\beta=256$ as advised (\texttt{Exp3PlusPlus}).
+    It is a recent variant of the $\mathrm{Exp3}$ algorithm, using an adaptive tuning of its parameter. It is anytime, and was proved to obtain good ``best of both world'' performances, meaning that it achieves $\cO(K\log(T)/\Delta^2)$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
 
     \item Algorithm 4 is
     $\UCB_1$ from \cite{Auer02}, using $\alpha=1$ (\texttt{UCB}).
+    It was proved to achieve order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret.
 
     \item Algorithm 5 is
     \klUCB{} from \cite{KLUCBJournal}, using the Bernoulli KL divergence and the corresponding \klUCB{} indexes, implemented as \texttt{kullback.klucbBern} (\texttt{klUCB}).
+    It was proved to achieve asymptotical optimal problem-dependent bounds with a $\cO(\log(T))$ regret with the scaling factor matching Lai and Robbins' lower-bound \cite{LaiRobbins85}.
+    It is computationally more costly that \UCB, as at each time step $t$, to compute the $K$ indexes, a convex optimization problem must be solved approximately, for each arm.
+    In practice, a few steps of a Newton method are enough to obtain a precision of more than 10 digits, and empirically we found that even in the worst cases \klUCB{} is an order of magnitude slower than \UCB.
 
     \item Algorithm 6 is
     Thompson sampling from \cite{Kaufmann12Thompson}, using a Beta prior and posterior, initially uniform (\ie, $\mathrm{Beta}(1,1)$) (\texttt{Thompson}).
+    It was also proved to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12Thompson,AgrawalGoyal11}.
+    It is efficient in terms of storage, and even if $K$ random samples must be sampled from the arms posteriors at each time step $t$, Thompson sampling is not much slower than \UCB, if the random number generator used for the simulations is efficient (it is the case for SMPyBandits, as we use \texttt{numpy.random} module which relies on C or Cython code, highly optimized).
 
     \item Algorithm 7 is
     Bayes-UCB from \cite{Kaufmann12BUCB}, using a Beta prior and posterior, initially uniform (\ie, $\mathrm{Beta}(1,1)$) (\texttt{BayesUCB}).
+    It was also proved to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12BUCB}.
+    It is comparable to Thompson sampling in terms of memory complexity, but slower in terms of time complexity as computing a $1-1/t$ quantile is more costly than sampling from a distribution.
+    But in particular for Bernoulli distributed arms and for Beta posteriors and priors, Bayes-UCB is only about twice as slow as Thompson sampling.
 
     \item Algorithm 8 is
     AdBandits from \cite{Truzzi13}, using $\alpha=1$ (\texttt{AdBandits}).
+    It follows the same assumptions as Thompson sampling and Bayes-UCB, and uses a Beta posteriors on each arm. It uses a random mixture between the two algorithms, and with a certain probability it uses the Thompson decision rule (\ie, choose the arm maximizing one draw of random samples from the posteriors), otherwise it uses the Bayes-UCB decision rule (\ie, choose the arm maximizing the $1-1/t$ quantile).
+    It was proposed in this article and illustrated on empirical simulations, but no theoretical analysis was given, and it did not gain popularity since then.
+    In practice, it is usually (slighly) more efficient than both Thompson sampling and Bayes-UCB in terms of regret, is comparable in terms of computation times, but costs more memory.
 
     \item Algorithm 9 is
-    BESA (Best Empirical Sampled Average) from \cite{Baransi2014}, using a binary tournament implement in a naive but efficient way (not using recursive functions) (\texttt{BESA} with \texttt{''non\_recursive''=True}).
+    BESA (Best Empirical Sampled Average) from \cite{Baransi2014}, and it consists in trying to fix a simple observation.
+    For instance in \UCB, if arm $1$ has $100$ samples and arm $2$ has $50$ samples, it should make more sense to only use $50$ samples of arm $1$ to compute any statistics for each arms (\eg, mean).
+    The BESA algorithm for $K=2$ arms is then very simple: at each time step, if arm $1,2$ has $n_1,n_2$ samples and if $n_1>n_2$ (for instance), first sub-sample $n_2$ observations from $n_1$, then compute the mean of these observations, and play the arm maximizing this mean (now that there is the same number for both arms, intuitively it makes more sense to compare these quantities).
+    It was analyzed partially for the two-armed case, and the authors illustrated that it can be very efficient empirically.
+    Analyzing it in the generic case was found to be difficult, and is still an open problem.
+    We implemented it using a binary tournament implement in a naive but efficient way (not using recursive functions) (\texttt{BESA} with \texttt{''non\_recursive''=True}).
+    Due to its binary nature, the extension to more than $K=2$ arms is costly in terms of both time and memory, as illustrated below.
 \end{itemize}
 
 In the results presented in the main text of this chapter, we focus on the most well known algorithms, and two others that are efficient but less known (AdBandits and BESA).
@@ -432,9 +451,10 @@ For simplicity, we focus on Bernoulli distributed arms, even if similar results 
 
 \paragraph{Other parameters of the experiments}
 
-We consider increasing values for the horizon, $T=1000$, $T=5000$, $T=10000$ and $T=50000$.  % FIXME update if needed?
-We consider as well an increasing number of arms, $K=2$, $K=5$, $K=9$, $K=20$ and $K=50$.  % FIXME update if needed?
-For all experiments, we run $N=1000$ independent simulations.  % FIXME update if needed?
+% FIXME update if needed?
+We consider increasing values for the horizon, $T=1000$, $T=2500$, $T=5000$, $T=10000$, $T=20000$, $T=25000$ and $T=50000$.
+We consider as well an increasing number of arms, $K=2$, $K=4$, $K=8$, $K=12$, $K=16$, $K=20$ and $K=32$.
+For all experiments, we run $N=100$ independent simulations.
 
 
 \subsection{Experiments results}
@@ -670,202 +690,202 @@ For each cell, we report successive values that correspond to the successive val
         & $T_1 = 1000$ & $T_2 = 5000$ & $T_3 = 10000$ & $T_4 = 50000$ \\
         \hline
         $\varepsilon$-greedy &
-            $R^{1}_{T_1,K_1} = 0 \pm 0$
-                $R^{1}_{T_1,K_2} = 0 \pm 0$
-                $R^{1}_{T_1,K_3} = 0 \pm 0$
-                $R^{1}_{T_1,K_4} = 0 \pm 0$
-                $R^{1}_{T_1,K_5} = 0 \pm 0$ &
-            $R^{1}_{T_2,K_1} = 0 \pm 0$
-                $R^{1}_{T_2,K_2} = 0 \pm 0$
-                $R^{1}_{T_2,K_3} = 0 \pm 0$
-                $R^{1}_{T_2,K_4} = 0 \pm 0$
-                $R^{1}_{T_2,K_5} = 0 \pm 0$ &
-            $R^{1}_{T_3,K_1} = 0 \pm 0$
-                $R^{1}_{T_3,K_2} = 0 \pm 0$
-                $R^{1}_{T_3,K_3} = 0 \pm 0$
-                $R^{1}_{T_3,K_4} = 0 \pm 0$
-                $R^{1}_{T_3,K_5} = 0 \pm 0$ &
-            $R^{1}_{T_4,K_1} = 0 \pm 0$
-                $R^{1}_{T_4,K_2} = 0 \pm 0$
-                $R^{1}_{T_4,K_3} = 0 \pm 0$
-                $R^{1}_{T_4,K_4} = 0 \pm 0$
-                $R^{1}_{T_4,K_5} = 0 \pm 0$ \\
+            $R^{'1}_{T_1,K_1} = 0 \pm 0$
+                $R^{'1}_{T_1,K_2} = 0 \pm 0$
+                $R^{'1}_{T_1,K_3} = 0 \pm 0$
+                $R^{'1}_{T_1,K_4} = 0 \pm 0$
+                $R^{'1}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{'1}_{T_2,K_1} = 0 \pm 0$
+                $R^{'1}_{T_2,K_2} = 0 \pm 0$
+                $R^{'1}_{T_2,K_3} = 0 \pm 0$
+                $R^{'1}_{T_2,K_4} = 0 \pm 0$
+                $R^{'1}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{'1}_{T_3,K_1} = 0 \pm 0$
+                $R^{'1}_{T_3,K_2} = 0 \pm 0$
+                $R^{'1}_{T_3,K_3} = 0 \pm 0$
+                $R^{'1}_{T_3,K_4} = 0 \pm 0$
+                $R^{'1}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{'1}_{T_4,K_1} = 0 \pm 0$
+                $R^{'1}_{T_4,K_2} = 0 \pm 0$
+                $R^{'1}_{T_4,K_3} = 0 \pm 0$
+                $R^{'1}_{T_4,K_4} = 0 \pm 0$
+                $R^{'1}_{T_4,K_5} = 0 \pm 0$ \\
         \hline
         Explore-then-Commit &
-            $R^{2}_{T_1,K_1} = 0 \pm 0$
-                $R^{2}_{T_1,K_2} = 0 \pm 0$
-                $R^{2}_{T_1,K_3} = 0 \pm 0$
-                $R^{2}_{T_1,K_4} = 0 \pm 0$
-                $R^{2}_{T_1,K_5} = 0 \pm 0$ &
-            $R^{2}_{T_2,K_1} = 0 \pm 0$
-                $R^{2}_{T_2,K_2} = 0 \pm 0$
-                $R^{2}_{T_2,K_3} = 0 \pm 0$
-                $R^{2}_{T_2,K_4} = 0 \pm 0$
-                $R^{2}_{T_2,K_5} = 0 \pm 0$ &
-            $R^{2}_{T_3,K_1} = 0 \pm 0$
-                $R^{2}_{T_3,K_2} = 0 \pm 0$
-                $R^{2}_{T_3,K_3} = 0 \pm 0$
-                $R^{2}_{T_3,K_4} = 0 \pm 0$
-                $R^{2}_{T_3,K_5} = 0 \pm 0$ &
-            $R^{2}_{T_4,K_1} = 0 \pm 0$
-                $R^{2}_{T_4,K_2} = 0 \pm 0$
-                $R^{2}_{T_4,K_3} = 0 \pm 0$
-                $R^{2}_{T_4,K_4} = 0 \pm 0$
-                $R^{2}_{T_4,K_5} = 0 \pm 0$ \\
+            $R^{'2}_{T_1,K_1} = 0 \pm 0$
+                $R^{'2}_{T_1,K_2} = 0 \pm 0$
+                $R^{'2}_{T_1,K_3} = 0 \pm 0$
+                $R^{'2}_{T_1,K_4} = 0 \pm 0$
+                $R^{'2}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{'2}_{T_2,K_1} = 0 \pm 0$
+                $R^{'2}_{T_2,K_2} = 0 \pm 0$
+                $R^{'2}_{T_2,K_3} = 0 \pm 0$
+                $R^{'2}_{T_2,K_4} = 0 \pm 0$
+                $R^{'2}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{'2}_{T_3,K_1} = 0 \pm 0$
+                $R^{'2}_{T_3,K_2} = 0 \pm 0$
+                $R^{'2}_{T_3,K_3} = 0 \pm 0$
+                $R^{'2}_{T_3,K_4} = 0 \pm 0$
+                $R^{'2}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{'2}_{T_4,K_1} = 0 \pm 0$
+                $R^{'2}_{T_4,K_2} = 0 \pm 0$
+                $R^{'2}_{T_4,K_3} = 0 \pm 0$
+                $R^{'2}_{T_4,K_4} = 0 \pm 0$
+                $R^{'2}_{T_4,K_5} = 0 \pm 0$ \\
         \hline
         $\mathrm{Exp}3^{++}$ &
-            $R^3_{T_1,K_1} = 0 \pm 0$
-                $R^3_{T_1,K_2} = 0 \pm 0$
-                $R^3_{T_1,K_3} = 0 \pm 0$
-                $R^3_{T_1,K_4} = 0 \pm 0$
-                $R^3_{T_1,K_5} = 0 \pm 0$ &
-            $R^3_{T_2,K_1} = 0 \pm 0$
-                $R^3_{T_2,K_2} = 0 \pm 0$
-                $R^3_{T_2,K_3} = 0 \pm 0$
-                $R^3_{T_2,K_4} = 0 \pm 0$
-                $R^3_{T_2,K_5} = 0 \pm 0$ &
-            $R^3_{T_3,K_1} = 0 \pm 0$
-                $R^3_{T_3,K_2} = 0 \pm 0$
-                $R^3_{T_3,K_3} = 0 \pm 0$
-                $R^3_{T_3,K_4} = 0 \pm 0$
-                $R^3_{T_3,K_5} = 0 \pm 0$ &
-            $R^3_{T_4,K_1} = 0 \pm 0$
-                $R^3_{T_4,K_2} = 0 \pm 0$
-                $R^3_{T_4,K_3} = 0 \pm 0$
-                $R^3_{T_4,K_4} = 0 \pm 0$
-                $R^3_{T_4,K_5} = 0 \pm 0$ \\
+            $R^3'_{T_1,K_1} = 0 \pm 0$
+                $R^3'_{T_1,K_2} = 0 \pm 0$
+                $R^3'_{T_1,K_3} = 0 \pm 0$
+                $R^3'_{T_1,K_4} = 0 \pm 0$
+                $R^3'_{T_1,K_5} = 0 \pm 0$ &
+            $R^3'_{T_2,K_1} = 0 \pm 0$
+                $R^3'_{T_2,K_2} = 0 \pm 0$
+                $R^3'_{T_2,K_3} = 0 \pm 0$
+                $R^3'_{T_2,K_4} = 0 \pm 0$
+                $R^3'_{T_2,K_5} = 0 \pm 0$ &
+            $R^3'_{T_3,K_1} = 0 \pm 0$
+                $R^3'_{T_3,K_2} = 0 \pm 0$
+                $R^3'_{T_3,K_3} = 0 \pm 0$
+                $R^3'_{T_3,K_4} = 0 \pm 0$
+                $R^3'_{T_3,K_5} = 0 \pm 0$ &
+            $R^3'_{T_4,K_1} = 0 \pm 0$
+                $R^3'_{T_4,K_2} = 0 \pm 0$
+                $R^3'_{T_4,K_3} = 0 \pm 0$
+                $R^3'_{T_4,K_4} = 0 \pm 0$
+                $R^3'_{T_4,K_5} = 0 \pm 0$ \\
         \hline
         $\UCB_1$ &
-            $R^{4}_{T_1,K_1} = 0 \pm 0$
-                $R^{4}_{T_1,K_2} = 0 \pm 0$
-                $R^{4}_{T_1,K_3} = 0 \pm 0$
-                $R^{4}_{T_1,K_4} = 0 \pm 0$
-                $R^{4}_{T_1,K_5} = 0 \pm 0$ &
-            $R^{4}_{T_2,K_1} = 0 \pm 0$
-                $R^{4}_{T_2,K_2} = 0 \pm 0$
-                $R^{4}_{T_2,K_3} = 0 \pm 0$
-                $R^{4}_{T_2,K_4} = 0 \pm 0$
-                $R^{4}_{T_2,K_5} = 0 \pm 0$ &
-            $R^{4}_{T_3,K_1} = 0 \pm 0$
-                $R^{4}_{T_3,K_2} = 0 \pm 0$
-                $R^{4}_{T_3,K_3} = 0 \pm 0$
-                $R^{4}_{T_3,K_4} = 0 \pm 0$
-                $R^{4}_{T_3,K_5} = 0 \pm 0$ &
-            $R^{4}_{T_4,K_1} = 0 \pm 0$
-                $R^{4}_{T_4,K_2} = 0 \pm 0$
-                $R^{4}_{T_4,K_3} = 0 \pm 0$
-                $R^{4}_{T_4,K_4} = 0 \pm 0$
-                $R^{4}_{T_4,K_5} = 0 \pm 0$ \\
+            $R^{'4}_{T_1,K_1} = 0 \pm 0$
+                $R^{'4}_{T_1,K_2} = 0 \pm 0$
+                $R^{'4}_{T_1,K_3} = 0 \pm 0$
+                $R^{'4}_{T_1,K_4} = 0 \pm 0$
+                $R^{'4}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{'4}_{T_2,K_1} = 0 \pm 0$
+                $R^{'4}_{T_2,K_2} = 0 \pm 0$
+                $R^{'4}_{T_2,K_3} = 0 \pm 0$
+                $R^{'4}_{T_2,K_4} = 0 \pm 0$
+                $R^{'4}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{'4}_{T_3,K_1} = 0 \pm 0$
+                $R^{'4}_{T_3,K_2} = 0 \pm 0$
+                $R^{'4}_{T_3,K_3} = 0 \pm 0$
+                $R^{'4}_{T_3,K_4} = 0 \pm 0$
+                $R^{'4}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{'4}_{T_4,K_1} = 0 \pm 0$
+                $R^{'4}_{T_4,K_2} = 0 \pm 0$
+                $R^{'4}_{T_4,K_3} = 0 \pm 0$
+                $R^{'4}_{T_4,K_4} = 0 \pm 0$
+                $R^{'4}_{T_4,K_5} = 0 \pm 0$ \\
         \hline
         \klUCB{} &
-            $R^{5}_{T_1,K_1} = 0 \pm 0$
-                $R^{5}_{T_1,K_2} = 0 \pm 0$
-                $R^{5}_{T_1,K_3} = 0 \pm 0$
-                $R^{5}_{T_1,K_4} = 0 \pm 0$
-                $R^{5}_{T_1,K_5} = 0 \pm 0$ &
-            $R^{5}_{T_2,K_1} = 0 \pm 0$
-                $R^{5}_{T_2,K_2} = 0 \pm 0$
-                $R^{5}_{T_2,K_3} = 0 \pm 0$
-                $R^{5}_{T_2,K_4} = 0 \pm 0$
-                $R^{5}_{T_2,K_5} = 0 \pm 0$ &
-            $R^{5}_{T_3,K_1} = 0 \pm 0$
-                $R^{5}_{T_3,K_2} = 0 \pm 0$
-                $R^{5}_{T_3,K_3} = 0 \pm 0$
-                $R^{5}_{T_3,K_4} = 0 \pm 0$
-                $R^{5}_{T_3,K_5} = 0 \pm 0$ &
-            $R^{5}_{T_4,K_1} = 0 \pm 0$
-                $R^{5}_{T_4,K_2} = 0 \pm 0$
-                $R^{5}_{T_4,K_3} = 0 \pm 0$
-                $R^{5}_{T_4,K_4} = 0 \pm 0$
-                $R^{5}_{T_4,K_5} = 0 \pm 0$ \\
+            $R^{'5}_{T_1,K_1} = 0 \pm 0$
+                $R^{'5}_{T_1,K_2} = 0 \pm 0$
+                $R^{'5}_{T_1,K_3} = 0 \pm 0$
+                $R^{'5}_{T_1,K_4} = 0 \pm 0$
+                $R^{'5}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{'5}_{T_2,K_1} = 0 \pm 0$
+                $R^{'5}_{T_2,K_2} = 0 \pm 0$
+                $R^{'5}_{T_2,K_3} = 0 \pm 0$
+                $R^{'5}_{T_2,K_4} = 0 \pm 0$
+                $R^{'5}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{'5}_{T_3,K_1} = 0 \pm 0$
+                $R^{'5}_{T_3,K_2} = 0 \pm 0$
+                $R^{'5}_{T_3,K_3} = 0 \pm 0$
+                $R^{'5}_{T_3,K_4} = 0 \pm 0$
+                $R^{'5}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{'5}_{T_4,K_1} = 0 \pm 0$
+                $R^{'5}_{T_4,K_2} = 0 \pm 0$
+                $R^{'5}_{T_4,K_3} = 0 \pm 0$
+                $R^{'5}_{T_4,K_4} = 0 \pm 0$
+                $R^{'5}_{T_4,K_5} = 0 \pm 0$ \\
         \hline
         Thompson sampling &
-            $R^{6}_{T_1,K_1} = 0 \pm 0$
-                $R^{6}_{T_1,K_2} = 0 \pm 0$
-                $R^{6}_{T_1,K_3} = 0 \pm 0$
-                $R^{6}_{T_1,K_4} = 0 \pm 0$
-                $R^{6}_{T_1,K_5} = 0 \pm 0$ &
-            $R^{6}_{T_2,K_1} = 0 \pm 0$
-                $R^{6}_{T_2,K_2} = 0 \pm 0$
-                $R^{6}_{T_2,K_3} = 0 \pm 0$
-                $R^{6}_{T_2,K_4} = 0 \pm 0$
-                $R^{6}_{T_2,K_5} = 0 \pm 0$ &
-            $R^{6}_{T_3,K_1} = 0 \pm 0$
-                $R^{6}_{T_3,K_2} = 0 \pm 0$
-                $R^{6}_{T_3,K_3} = 0 \pm 0$
-                $R^{6}_{T_3,K_4} = 0 \pm 0$
-                $R^{6}_{T_3,K_5} = 0 \pm 0$ &
-            $R^{6}_{T_4,K_1} = 0 \pm 0$
-                $R^{6}_{T_4,K_2} = 0 \pm 0$
-                $R^{6}_{T_4,K_3} = 0 \pm 0$
-                $R^{6}_{T_4,K_4} = 0 \pm 0$
-                $R^{6}_{T_4,K_5} = 0 \pm 0$ \\
+            $R^{'6}_{T_1,K_1} = 0 \pm 0$
+                $R^{'6}_{T_1,K_2} = 0 \pm 0$
+                $R^{'6}_{T_1,K_3} = 0 \pm 0$
+                $R^{'6}_{T_1,K_4} = 0 \pm 0$
+                $R^{'6}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{'6}_{T_2,K_1} = 0 \pm 0$
+                $R^{'6}_{T_2,K_2} = 0 \pm 0$
+                $R^{'6}_{T_2,K_3} = 0 \pm 0$
+                $R^{'6}_{T_2,K_4} = 0 \pm 0$
+                $R^{'6}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{'6}_{T_3,K_1} = 0 \pm 0$
+                $R^{'6}_{T_3,K_2} = 0 \pm 0$
+                $R^{'6}_{T_3,K_3} = 0 \pm 0$
+                $R^{'6}_{T_3,K_4} = 0 \pm 0$
+                $R^{'6}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{'6}_{T_4,K_1} = 0 \pm 0$
+                $R^{'6}_{T_4,K_2} = 0 \pm 0$
+                $R^{'6}_{T_4,K_3} = 0 \pm 0$
+                $R^{'6}_{T_4,K_4} = 0 \pm 0$
+                $R^{'6}_{T_4,K_5} = 0 \pm 0$ \\
         \hline
         Bayes-UCB &
-            $R^{7}_{T_1,K_1} = 0 \pm 0$
-                $R^{7}_{T_1,K_2} = 0 \pm 0$
-                $R^{7}_{T_1,K_3} = 0 \pm 0$
-                $R^{7}_{T_1,K_4} = 0 \pm 0$
-                $R^{7}_{T_1,K_5} = 0 \pm 0$ &
-            $R^{7}_{T_2,K_1} = 0 \pm 0$
-                $R^{7}_{T_2,K_2} = 0 \pm 0$
-                $R^{7}_{T_2,K_3} = 0 \pm 0$
-                $R^{7}_{T_2,K_4} = 0 \pm 0$
-                $R^{7}_{T_2,K_5} = 0 \pm 0$ &
-            $R^{7}_{T_3,K_1} = 0 \pm 0$
-                $R^{7}_{T_3,K_2} = 0 \pm 0$
-                $R^{7}_{T_3,K_3} = 0 \pm 0$
-                $R^{7}_{T_3,K_4} = 0 \pm 0$
-                $R^{7}_{T_3,K_5} = 0 \pm 0$ &
-            $R^{7}_{T_4,K_1} = 0 \pm 0$
-                $R^{7}_{T_4,K_2} = 0 \pm 0$
-                $R^{7}_{T_4,K_3} = 0 \pm 0$
-                $R^{7}_{T_4,K_4} = 0 \pm 0$
-                $R^{7}_{T_4,K_5} = 0 \pm 0$ \\
+            $R^{'7}_{T_1,K_1} = 0 \pm 0$
+                $R^{'7}_{T_1,K_2} = 0 \pm 0$
+                $R^{'7}_{T_1,K_3} = 0 \pm 0$
+                $R^{'7}_{T_1,K_4} = 0 \pm 0$
+                $R^{'7}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{'7}_{T_2,K_1} = 0 \pm 0$
+                $R^{'7}_{T_2,K_2} = 0 \pm 0$
+                $R^{'7}_{T_2,K_3} = 0 \pm 0$
+                $R^{'7}_{T_2,K_4} = 0 \pm 0$
+                $R^{'7}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{'7}_{T_3,K_1} = 0 \pm 0$
+                $R^{'7}_{T_3,K_2} = 0 \pm 0$
+                $R^{'7}_{T_3,K_3} = 0 \pm 0$
+                $R^{'7}_{T_3,K_4} = 0 \pm 0$
+                $R^{'7}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{'7}_{T_4,K_1} = 0 \pm 0$
+                $R^{'7}_{T_4,K_2} = 0 \pm 0$
+                $R^{'7}_{T_4,K_3} = 0 \pm 0$
+                $R^{'7}_{T_4,K_4} = 0 \pm 0$
+                $R^{'7}_{T_4,K_5} = 0 \pm 0$ \\
         \hline
         AdBandits &
-            $R^{8}_{T_1,K_1} = 0 \pm 0$
-                $R^{8}_{T_1,K_2} = 0 \pm 0$
-                $R^{8}_{T_1,K_3} = 0 \pm 0$
-                $R^{8}_{T_1,K_4} = 0 \pm 0$
-                $R^{8}_{T_1,K_5} = 0 \pm 0$ &
-            $R^{8}_{T_2,K_1} = 0 \pm 0$
-                $R^{8}_{T_2,K_2} = 0 \pm 0$
-                $R^{8}_{T_2,K_3} = 0 \pm 0$
-                $R^{8}_{T_2,K_4} = 0 \pm 0$
-                $R^{8}_{T_2,K_5} = 0 \pm 0$ &
-            $R^{8}_{T_3,K_1} = 0 \pm 0$
-                $R^{8}_{T_3,K_2} = 0 \pm 0$
-                $R^{8}_{T_3,K_3} = 0 \pm 0$
-                $R^{8}_{T_3,K_4} = 0 \pm 0$
-                $R^{8}_{T_3,K_5} = 0 \pm 0$ &
-            $R^{8}_{T_4,K_1} = 0 \pm 0$
-                $R^{8}_{T_4,K_2} = 0 \pm 0$
-                $R^{8}_{T_4,K_3} = 0 \pm 0$
-                $R^{8}_{T_4,K_4} = 0 \pm 0$
-                $R^{8}_{T_4,K_5} = 0 \pm 0$ \\
+            $R^{'8}_{T_1,K_1} = 0 \pm 0$
+                $R^{'8}_{T_1,K_2} = 0 \pm 0$
+                $R^{'8}_{T_1,K_3} = 0 \pm 0$
+                $R^{'8}_{T_1,K_4} = 0 \pm 0$
+                $R^{'8}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{'8}_{T_2,K_1} = 0 \pm 0$
+                $R^{'8}_{T_2,K_2} = 0 \pm 0$
+                $R^{'8}_{T_2,K_3} = 0 \pm 0$
+                $R^{'8}_{T_2,K_4} = 0 \pm 0$
+                $R^{'8}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{'8}_{T_3,K_1} = 0 \pm 0$
+                $R^{'8}_{T_3,K_2} = 0 \pm 0$
+                $R^{'8}_{T_3,K_3} = 0 \pm 0$
+                $R^{'8}_{T_3,K_4} = 0 \pm 0$
+                $R^{'8}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{'8}_{T_4,K_1} = 0 \pm 0$
+                $R^{'8}_{T_4,K_2} = 0 \pm 0$
+                $R^{'8}_{T_4,K_3} = 0 \pm 0$
+                $R^{'8}_{T_4,K_4} = 0 \pm 0$
+                $R^{'8}_{T_4,K_5} = 0 \pm 0$ \\
         \hline
         BESA &
-            $R^{9}_{T_1,K_1} = 0 \pm 0$
-                $R^{9}_{T_1,K_2} = 0 \pm 0$
-                $R^{9}_{T_1,K_3} = 0 \pm 0$
-                $R^{9}_{T_1,K_4} = 0 \pm 0$
-                $R^{9}_{T_1,K_5} = 0 \pm 0$ &
-            $R^{9}_{T_2,K_1} = 0 \pm 0$
-                $R^{9}_{T_2,K_2} = 0 \pm 0$
-                $R^{9}_{T_2,K_3} = 0 \pm 0$
-                $R^{9}_{T_2,K_4} = 0 \pm 0$
-                $R^{9}_{T_2,K_5} = 0 \pm 0$ &
-            $R^{9}_{T_3,K_1} = 0 \pm 0$
-                $R^{9}_{T_3,K_2} = 0 \pm 0$
-                $R^{9}_{T_3,K_3} = 0 \pm 0$
-                $R^{9}_{T_3,K_4} = 0 \pm 0$
-                $R^{9}_{T_3,K_5} = 0 \pm 0$ &
-            $R^{9}_{T_4,K_1} = 0 \pm 0$
-                $R^{9}_{T_4,K_2} = 0 \pm 0$
-                $R^{9}_{T_4,K_3} = 0 \pm 0$
-                $R^{9}_{T_4,K_4} = 0 \pm 0$
-                $R^{9}_{T_4,K_5} = 0 \pm 0$ \\
+            $R^{'9}_{T_1,K_1} = 0 \pm 0$
+                $R^{'9}_{T_1,K_2} = 0 \pm 0$
+                $R^{'9}_{T_1,K_3} = 0 \pm 0$
+                $R^{'9}_{T_1,K_4} = 0 \pm 0$
+                $R^{'9}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{'9}_{T_2,K_1} = 0 \pm 0$
+                $R^{'9}_{T_2,K_2} = 0 \pm 0$
+                $R^{'9}_{T_2,K_3} = 0 \pm 0$
+                $R^{'9}_{T_2,K_4} = 0 \pm 0$
+                $R^{'9}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{'9}_{T_3,K_1} = 0 \pm 0$
+                $R^{'9}_{T_3,K_2} = 0 \pm 0$
+                $R^{'9}_{T_3,K_3} = 0 \pm 0$
+                $R^{'9}_{T_3,K_4} = 0 \pm 0$
+                $R^{'9}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{'9}_{T_4,K_1} = 0 \pm 0$
+                $R^{'9}_{T_4,K_2} = 0 \pm 0$
+                $R^{'9}_{T_4,K_3} = 0 \pm 0$
+                $R^{'9}_{T_4,K_4} = 0 \pm 0$
+                $R^{'9}_{T_4,K_5} = 0 \pm 0$ \\
         \hline
     \end{tabular}
     \caption{Mean regret $\pm$ $1$ std-dev, for $9$ different algorithms on \textbf{problem 2} with different values of time $T$ and number of arm $K$.
@@ -1552,25 +1572,47 @@ This Appendix section describes seven more algorithms that are also compared wit
 \begin{itemize}
     \item Algorithm 10 is
     $\mathrm{MOSS}$-$\mathrm{Anytime}$ from \cite{Degenne16}, using $\alpha=1$ (\texttt{MOSSAnytime}).
+    It is a recent variant of the $\mathrm{MOSS}$ algorithm \cite{BubeckSlivkins12}, using an adaptive tuning of its parameter. It is anytime, and was proved to obtain good ``best of both world'' performances, meaning that it achieves $\cO(K\log(T)/\Delta^2)$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
+    Empirically, it performs usually similarly to \UCB, and is slightly more costly in terms of both time and memory.
 
     \item Algorithm 11 is
     the approximated Finite-Horizon Gittins from \cite{Lattimore16a}, using $\alpha=1$ (\texttt{ApproximatedFHGittins}).
+    It mimics the \UCB{} algorithm but uses a more complicated function to compute the upper confidence bounds.
+    It was proved to achieve order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret.
+    Empirically, it performs usually similarly to \UCB{} and $\mathrm{MOSS}$-$\mathrm{Anytime}$, and is slightly more costly in terms of both time and memory.
 
     \item Algorithm 12 is
     $\UCB\dagger$ from \cite{Lattimore2018refining}, using $\alpha=1$ (\texttt{UCBdagger}).
+    It mimics the \UCB{} algorithm but uses a much more complicated function to compute the upper confidence bounds, and uses more storage.
+    It was also proved to achieve order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret.
+    Empirically, it performs usually similarly to \UCB{} and $\mathrm{MOSS}$-$\mathrm{Anytime}$, and is slightly more costly in computation time, but it is much more costly in terms of memory.
 
     \item Algorithm 13 is
-    the anytime variant of KL-UCB-Switch from \cite{GarivierHadiji2018}, using $\alpha=1$ (\texttt{klUCBswitchAnytime}).
+    the anytime variant of KL-UCB-Switch from \cite{GarivierHadiji2018} (\texttt{klUCBswitchAnytime}).
+    It is a very recent variant of the \klUCB{} algorithm \cite{KLUCBJournal},
+    and it mimics the \klUCB{} algorithm but uses a much more complicated function to compute the upper confidence bounds, and uses more storage.
+    It is anytime, and was proved to obtain good ``best of both world'' performances, meaning that it achieves an asymptotically optimal $\cO(\log(T))$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
+    Empirically, it usually outperforms \klUCB{} and costs about the same memory, but it is more costly in terms of computation time.
 
     \item Algorithm 14 is
-    \textsc{Tsallis-Inf} from \cite{Zimmert2018}, using $\alpha=0.5$ (it seems to be the most efficient of the algorithms described in the article) (\texttt{TsallisInf}).
+    \textsc{Tsallis-Inf} from \cite{Zimmert2018}, using $\alpha=1/2$ (it seems to be the most efficient of the algorithms described in the article) (\texttt{TsallisInf}).
+    It is based on the online mirror descent algorithm with a Tsallis entropy regularizer, and it is anytime.
+    It was also proved to to obtain good ``best of both world'' performances.
+    Empirically, we were unable to find any problem were it performs as well as \UCB{} (or any other efficient algorithm), and we are confident that our implementation is correct\footnote{Despite a serious amount of time spent on this implementation, maybe it has some bug which explains the poor empirical performance obtained by \textsc{Tsallis-Inf} in our simulations. Exploring in more details this kind of algorithms is very interesting, as algorithms based on online mirror descent make a rich connexion between multi-armed bandit and online convex optimization \cite{Hazan2016introduction},Hazan2016introduction and a short-term future work in SMPyBandits will be to explore different values of $\alpha$ for Tsallis entropy regularization, or other families of regularization.}.
+    \textsc{Tsallis-Inf} is also slower than \UCB{} (about as slow as KL-UCB-Switch), and costs an-order-of-magnitude more memory.
 
     \item Algorithm 15 is
-    $\mathrm{RCB}$ (Randomized Confidence Bound) from \cite{KimTewari2019}, using $\alpha=1$ and permutations uniformly sampled in $[0,1]$ (it is the simplest of the algorithms described in the article) (\texttt{RCB}).
+    $\mathrm{RCB}$ (Randomized Confidence Bound) from \cite{KimTewari2019}, using $\alpha=1$ and perturbations uniformly sampled in $[0,1]$. We prefer to use the simplest of the algorithms described in the article, and other algorithms in the same article used other families of distributions for the perturbations (\texttt{RCB}).
+    It was analyzed and found to be order-optimal for problem-dependent bounds, and empirically we found that it is usually performs slightly worse than \UCB, in terms of regret, time and memory.
+    It is included because it remains comparably efficient with the other state-of-the-art algorithms, and because the key message from \cite{KimTewari2019} is very interesting:
+    ``the optimism embedded in UCB can be replaced by simple randomization''.
 
     \item Algorithm 16 is
     $\mathrm{PHE}$ (Perturbed-History Exploration) from \cite{KvetonSzepesvari2019}, using a perturbation scale of $0.5$ as advised (\texttt{PHE}).
-
+    The algorithm adds $\cO(t)$ \iid{} pseudo-rewards to its history in round $t$, and then pulls the arm with the highest estimated value in its perturbed history.
+    It was also analyzed and found to be comparable with \UCB.
+    Like $\mathrm{RCB}$, $\mathrm{PHE}$ was found to be empirically slightly worse than other state-of-the-art algorithms.
+    Interestingly, its time and memory consumption stay constant with respect to the step number $t$ and the horizon $T$, because generating and summing $t$ pseudo-rewards from a Bernoulli distribution can actually be done in $\cO(1)$ time and space, by using efficient sampling methods for sampling from Binomial distributions.
 \end{itemize}
 
 We give below the results for these additional algorithms, only for the problem 1,
