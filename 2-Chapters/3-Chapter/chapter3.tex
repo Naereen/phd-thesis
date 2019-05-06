@@ -368,7 +368,7 @@ Finally, we give some observations on the results, and the main take-away messag
 
 \subsection{Experimental setup: algorithms and problems}
 
-\paragraph{List of algorithms}
+% \paragraph{List of algorithms}
 
 We consider the nine following algorithms. For each of them, we give a bibliographic reference, that corresponds to the most recent article studying it and not the first one which introduced it.
 We give the chosen tuning of the parameters, for parametric algorithms.
@@ -420,7 +420,7 @@ We also give the name of the corresponding class in the \texttt{Policies} module
     \item Algorithm 9 is
     BESA (Best Empirical Sampled Average) from \cite{Baransi2014}, and it consists in trying to fix a simple observation.
     For instance in \UCB, if arm $1$ has $100$ samples and arm $2$ has $50$ samples, it should make more sense to only use $50$ samples of arm $1$ to compute any statistics for each arms (\eg, mean).
-    The BESA algorithm for $K=2$ arms is then very simple: at each time step, if arm $1,2$ has $n_1,n_2$ samples and if $n_1>n_2$ (for instance), first sub-sample $n_2$ observations from $n_1$, then compute the mean of these observations, and play the arm maximizing this mean (now that there is the same number for both arms, intuitively it makes more sense to compare these quantities).
+    The BESA algorithm for $K=2$ arms is then very simple: at each time step, if arm $1,2$ has $n_1,n_2$ samples and if $n_1>n_2$ (for instance), first sub-sample $n_2$ observations from $n_1$, then compute the mean of these observations, and play the arm maximizing this mean (now that there is the same number of observations for both arms, intuitively it makes more sense to compare these quantities).
     It was analyzed partially for the two-armed case, and the authors illustrated that it can be very efficient empirically.
     Analyzing it in the generic case was found to be difficult, and is still an open problem.
     We implemented it using a binary tournament implement in a naive but efficient way (not using recursive functions) (\texttt{BESA} with \texttt{''non\_recursive''=True}).
@@ -457,6 +457,7 @@ For simplicity, we focus on Bernoulli distributed arms, even if similar results 
 We consider increasing values for the horizon, and we focus on $7$ exponentially-spaced values: $T=1000$, $T=2500$, $T=5000$, $T=10000$, $T=20000$, $T=25000$ and $T=50000$.
 We consider as well an increasing number of arms, and we focus again on $7$ values: $K=2$, $K=4$, $K=8$, $K=12$, $K=16$, $K=20$ and $K=32$.
 For all experiments, we run $N=100$ independent simulations.
+See the snippet of code~\ref{lst:3:BashCodeToLaunchLargeExperiments} in the Appendix below.
 
 
 \subsection{Experiments results}
@@ -736,26 +737,26 @@ For each cell, we report successive values that correspond to the successive val
                 $R^{'2}_{T_4,K_5} = 0 \pm 0$ \\
         \hline
         $\mathrm{Exp}3^{++}$ &
-            $R^3'_{T_1,K_1} = 0 \pm 0$
-                $R^3'_{T_1,K_2} = 0 \pm 0$
-                $R^3'_{T_1,K_3} = 0 \pm 0$
-                $R^3'_{T_1,K_4} = 0 \pm 0$
-                $R^3'_{T_1,K_5} = 0 \pm 0$ &
-            $R^3'_{T_2,K_1} = 0 \pm 0$
-                $R^3'_{T_2,K_2} = 0 \pm 0$
-                $R^3'_{T_2,K_3} = 0 \pm 0$
-                $R^3'_{T_2,K_4} = 0 \pm 0$
-                $R^3'_{T_2,K_5} = 0 \pm 0$ &
-            $R^3'_{T_3,K_1} = 0 \pm 0$
-                $R^3'_{T_3,K_2} = 0 \pm 0$
-                $R^3'_{T_3,K_3} = 0 \pm 0$
-                $R^3'_{T_3,K_4} = 0 \pm 0$
-                $R^3'_{T_3,K_5} = 0 \pm 0$ &
-            $R^3'_{T_4,K_1} = 0 \pm 0$
-                $R^3'_{T_4,K_2} = 0 \pm 0$
-                $R^3'_{T_4,K_3} = 0 \pm 0$
-                $R^3'_{T_4,K_4} = 0 \pm 0$
-                $R^3'_{T_4,K_5} = 0 \pm 0$ \\
+            $R^{'3}_{T_1,K_1} = 0 \pm 0$
+                $R^{'3}_{T_1,K_2} = 0 \pm 0$
+                $R^{'3}_{T_1,K_3} = 0 \pm 0$
+                $R^{'3}_{T_1,K_4} = 0 \pm 0$
+                $R^{'3}_{T_1,K_5} = 0 \pm 0$ &
+            $R^{'3}_{T_2,K_1} = 0 \pm 0$
+                $R^{'3}_{T_2,K_2} = 0 \pm 0$
+                $R^{'3}_{T_2,K_3} = 0 \pm 0$
+                $R^{'3}_{T_2,K_4} = 0 \pm 0$
+                $R^{'3}_{T_2,K_5} = 0 \pm 0$ &
+            $R^{'3}_{T_3,K_1} = 0 \pm 0$
+                $R^{'3}_{T_3,K_2} = 0 \pm 0$
+                $R^{'3}_{T_3,K_3} = 0 \pm 0$
+                $R^{'3}_{T_3,K_4} = 0 \pm 0$
+                $R^{'3}_{T_3,K_5} = 0 \pm 0$ &
+            $R^{'3}_{T_4,K_1} = 0 \pm 0$
+                $R^{'3}_{T_4,K_2} = 0 \pm 0$
+                $R^{'3}_{T_4,K_3} = 0 \pm 0$
+                $R^{'3}_{T_4,K_4} = 0 \pm 0$
+                $R^{'3}_{T_4,K_5} = 0 \pm 0$ \\
         \hline
         $\UCB_1$ &
             $R^{'4}_{T_1,K_1} = 0 \pm 0$
@@ -973,7 +974,7 @@ Thus, we normalized the data by dividing the regrets by $K \log(T)$, the times b
 
 \begin{figure}[h!]  % [htbp]
 	% \centering
-	\includegraphics[width=1.05\linewidth]{16_different_algorithms__lognormregret_vs_lognormtime__56pb__7KS_7Ts.pdf}
+	\includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormregret_vs_lognormtime__56pb__7KS_7Ts.pdf}
 	\caption[Normalized mean regret vs normalized running time (in micro-seconds).]{
         Normalized mean regret vs normalized running time (in micro-seconds),
         aggregating the results from different values of $K$ and $T$, for $16$ algorithms.
@@ -1202,7 +1203,7 @@ Thus, we normalized the data by dividing the regrets by $K \log(T)$, the times b
 
 \begin{figure}[h!]  % [htbp]
 	% \centering
-	\includegraphics[width=1.05\linewidth]{16_different_algorithms__lognormregret_vs_lognormmemory__56pb__7KS_7Ts.pdf}
+	\includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormregret_vs_lognormmemory__56pb__7KS_7Ts.pdf}
 	\caption[Normalized mean regret vs normalized memory costs (in bytes).]{
         Normalized mean regret vs normalized memory costs (in bytes),
         aggregating the results from different values of $K$ and $T$, for $16$ algorithms.
@@ -1632,7 +1633,7 @@ This Appendix section describes seven more algorithms that are also compared wit
     It is a very recent variant of the \klUCB{} algorithm \cite{KLUCBJournal},
     and it mimics the \klUCB{} algorithm but uses a much more complicated function to compute the upper confidence bounds, and uses more storage.
     It is anytime, and was proved to obtain good ``best of both world'' performances, meaning that it achieves an asymptotically optimal $\cO(\log(T))$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
-    Empirically, it usually outperforms \klUCB{} and costs about the same memory, but it is more costly in terms of computation time.
+    Empirically, it usually outperforms \klUCB{} in terms of regret, and costs about the same memory, but it is slower.
 
     \item Algorithm 14 is
     \textsc{Tsallis-Inf} from \cite{Zimmert2018}, using $\alpha=1/2$ (it seems to be the most efficient of the algorithms described in the article) (\texttt{TsallisInf}).
@@ -2187,10 +2188,10 @@ It uses \texttt{for} loops from Bash and not Python and environment variables, b
 % https://tex.stackexchange.com/a/12430/
 \begin{listing}[h!]
     \begin{minted}[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{bash}
-$ for N in 4 100 1000;            do \
+$ for N     in 4 100 1000;        do \
   for BAYES in False True;        do \
-  for T in 1000 5000 10000 50000; do \
-  for K in 2 5 10 20 50;          do \
+  for T in 1000 2500 5000 10000 20000 50000; do \
+  for K     in 2 4 8 12 16 20 32; do \
     DEBUG=False NOPLOTS=False SAVEALL=True N_JOBS=-1 \
                          N=$N BAYES=$BAYES T=$T K=$K \
                     python3 main.py configuration.py \
