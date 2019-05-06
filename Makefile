@@ -33,6 +33,7 @@ clean:
 
 # Sender
 send_zamok:
+	CP $(IN) besson@zamok.crans.org:~/www/phd/articles/.$(IN)
 	CP $(OUT) besson@zamok.crans.org:~/www/phd/articles/.$(OUT)
 
 bib2html:
