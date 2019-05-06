@@ -356,7 +356,7 @@ We also implemented a large benchmark of different problems.
 \section{Experimental comparisons of state-of-the-art algorithms}
 \label{sec:3:reviewSPAlgorithms}
 
-\TODOL{Write text for this Section, write configuration.py file, run short-term experiment, include them, if happy about it, run longer ang larger experiments}
+% \TODOL{Write text for this Section, write configuration.py file, run short-term experiment, include them, if happy about it, run longer ang larger experiments}
 
 In this section, we use the SMPyBandits library to compare experimentally various state-of-the-art single-player algorithms on different kinds of multi-armed bandit problems.
 First, we detail the list of different algorithms that we compare, and the different problems on which they are all tested.
@@ -380,9 +380,11 @@ We also give the name of the corresponding class in the \texttt{Policies} module
 \begin{itemize}
     \item Algorithm 1 is
     an $\varepsilon$-greedy algorithm, as described in \cite{Bubeck12}, using $\varepsilon_t = \varepsilon_0 / t$, and $\varepsilon_0 = 0.1$ (chosen arbitrarily) (\texttt{EpsilonDecreasing}).
+    It has a very small cost in terms of time and memory, but it usually achieves linear regret.
 
     \item Algorithm 2 is
     an Explore-then-Commit algorithm from \cite{GarivierETC2016}, that knows the horizon, and a lower-bound on the gap between arms (chosen arbitrarily as $\delta=0.01$, valid for all problems) (\texttt{ETC\_KnownGap}).
+    Similarly to $\varepsilon$-greedy, it has a very small footprint in terms of time and memory, but only obtain large (linear) regret.
 
     \item Algorithm 3 is
     $\mathrm{Exp}3^{++}$ from \cite{Seldin17}, using $\alpha=3$ and $\beta=256$ as advised (\texttt{Exp3PlusPlus}).
@@ -452,8 +454,8 @@ For simplicity, we focus on Bernoulli distributed arms, even if similar results 
 \paragraph{Other parameters of the experiments}
 
 % FIXME update if needed?
-We consider increasing values for the horizon, $T=1000$, $T=2500$, $T=5000$, $T=10000$, $T=20000$, $T=25000$ and $T=50000$.
-We consider as well an increasing number of arms, $K=2$, $K=4$, $K=8$, $K=12$, $K=16$, $K=20$ and $K=32$.
+We consider increasing values for the horizon, and we focus on $7$ exponentially-spaced values: $T=1000$, $T=2500$, $T=5000$, $T=10000$, $T=20000$, $T=25000$ and $T=50000$.
+We consider as well an increasing number of arms, and we focus again on $7$ values: $K=2$, $K=4$, $K=8$, $K=12$, $K=16$, $K=20$ and $K=32$.
 For all experiments, we run $N=100$ independent simulations.
 
 
@@ -465,7 +467,7 @@ and \ref{table:3:meanRegret_problem2} is for the randomly generated \textbf{prob
 Each column corresponds to one value of $T$, and each line corresponds to one algorithm.
 For each cell, we report successive values that correspond to the successive values of the number of arms $K$.
 
-\TODOL{FIXME launch these experiments, for a very short number of repetitions N=4, and if I'm happy about the results and if they are easily copied-and-pasted here, then launch with N=100 or N=1000 depending on the running time of the whole simulations}
+% \TODOL{FIXME launch these experiments, for a very short number of repetitions N=4, and if I'm happy about the results and if they are easily copied-and-pasted here, then launch with N=100 or N=1000 depending on the running time of the whole simulations}
 
 % DEBUG=True; NOPLOTS=False; SAVEALL=False; for N in 4 100 1000; do for BAYES in False True; do for T in 1000 5000 10000 50000; do for K in 2 5 10 20 50; do debut=$(date); DEBUG=$DEBUG NOPLOTS=$NOPLOTS SAVEALL=$SAVEALL N=$N N_JOBS=-1 T=$T K=$K BAYES=$BAYES make --noFreeSMS single && cp logs/main_py3_log.txt logs/main_py3_log__N${N}_BAYES${BAYES}_T{T}_K{K}.txt && FreeSMS.py "Expérience commencée ${debut} terminée, avec N=${N}, BAYES=${BAYES}, T=${T}, K=${K}." ; done; done; done; done time.
 
@@ -950,10 +952,36 @@ All the considered algorithms in this Chapter are efficient in this aspect, but 
 %
 We can also check that efficient algorithms have a running time and a memory cost linear in the number of arms $K$, while more complex algorithms like BESA suffer from an exponential blow-up of their complexity when $K$ increases.
 
+\paragraph{Normalizing data?}
+
+The two figures below regret normalized data, in the following way.
+For each algorithm, we ran simulations to obtain its (empirical) regret, computation time and space requirement, for different problems with different values of $K$ and $T$.
+Simply considering the average of such measurements make no sense, as for instance two values of the regret for $T=1000$ or $T=50000$ do not have the same order of magnitude.
+%
+We know that efficient algorithms are expected to follow these patterns:
+\begin{itemize}
+    \item Final regret $R_T$ should scale as $\cO(K \log(T))$,
+    \item Total computation time $\cT_T$ should scale as $\cO(K T)$ (\ie, a computation time of $\cO(K)$ for each time step $t$),
+    \item Total memory cost should scale $\cM_T$ as $\cO(K \log(T))$.
+\end{itemize}
+Thus, we normalized the data by dividing the regrets by $K \log(T)$, the times by $K T$ and the memory by $K$.
+
 
 \subsection{Computational time}
 
 \TODOL{Just one long table for problem 1, not necessary to include other problems}
+
+\begin{figure}[h!]  % [htbp]
+	% \centering
+	\includegraphics[width=1.05\linewidth]{16_different_algorithms__lognormregret_vs_lognormtime__56pb__7KS_7Ts.pdf}
+	\caption[Normalized mean regret vs normalized running time (in micro-seconds).]{
+        Normalized mean regret vs normalized running time (in micro-seconds),
+        aggregating the results from different values of $K$ and $T$, for $16$ algorithms.
+        Both the $x$-axis and $y$-axis are in log-scale.
+        \UCB{} and \klUCB{} are among the best algorithms, while AdBandits, Thompson sampling and Bayes-UCB slightly outperform them in terms of regret, and have similar running times.
+	}
+	\label{fig:3:16_different_algorithms__lognormregret_vs_lognormtime__56pb__7KS_7Ts}
+\end{figure}
 
 
 \begin{table}[!t]
@@ -1171,6 +1199,18 @@ We can also check that efficient algorithms have a running time and a memory cos
 \subsection{Memory cost}
 
 \TODOL{Just one long table for problem 1, not necessary to include other problems}
+
+\begin{figure}[h!]  % [htbp]
+	% \centering
+	\includegraphics[width=1.05\linewidth]{16_different_algorithms__lognormregret_vs_lognormmemory__56pb__7KS_7Ts.pdf}
+	\caption[Normalized mean regret vs normalized memory costs (in bytes).]{
+        Normalized mean regret vs normalized memory costs (in bytes),
+        aggregating the results from different values of $K$ and $T$, for $16$ algorithms.
+        Both the $x$-axis and $y$-axis are in log-scale.
+        Thompson sampling appears as the best algorithm in this visualization, while \UCB{} has the advantage of being memory efficient, and \klUCB{} obtains similar performances.
+	}
+	\label{fig:3:16_different_algorithms__lognormregret_vs_lognormmemory__56pb__7KS_7Ts}
+\end{figure}
 
 
 \begin{table}[!t]
