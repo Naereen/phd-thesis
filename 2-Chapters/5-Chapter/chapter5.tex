@@ -44,6 +44,7 @@ This chapter is mainly based on the following publication: \cite{Besson2018ALT}.
 \input{2-Chapters/5-Chapter/ALT_2018__MPBandits.git/mpBandits.tex}
 
 
+\newpage  % WARNING
 % ----------------------------------------------------------------------------
 % ----------------------------------------------------------------------------
 \section{Literature review of many extensions of our models}
@@ -64,15 +65,15 @@ Also inspired by real-world wireless networks, the arm means may vary among play
 
 Finally, we can also be interested by models where $M$ stays fixed, but the environment evolves, for instance with abrupt changes in the means of arms. This last model makes a good connexion between this chapter and the next one, and an exciting future work is to further study this model in order to tackle this kind of problems by merging our contributions for stationary multi-player bandits and for non-stationary single-player bandits.
 
-\TODOL{
-    Pour les extension présentées ici, je veux suivre la même organisation :
+% \TODOL{
+%     Pour les extension présentées ici, je veux suivre la même organisation :
 
-    1. j'explique l'extension, et en quoi c'est difficile (= en quoi notre approche échoue si on fait rien de plus),
+%     1. j'explique l'extension, et en quoi c'est difficile (= en quoi notre approche échoue si on fait rien de plus),
 
-    2. j'explique les travaux existants, et les résultats qu'ils obtiennent e.g. en terme de bornes de regret
+%     2. j'explique les travaux existants, et les résultats qu'ils obtiennent e.g. en terme de bornes de regret
 
-    3. si j'ai déjà le code pour, je peux montrer UNE simulation
-}
+%     3. si j'ai déjà le code pour, je peux montrer UNE simulation
+% }
 
 
 % ----------------------------------------------------------------------------
@@ -100,6 +101,8 @@ in particular where the devices cannot be assigned to a channel or be assigned a
 Then in such networks, if one wants to apply an algorithm like \MCTopM-\klUCB,
 the $M$ devices need to known their number $M$, and have to receive it from the gateway, as it is the only part of this example of network which knowns $M$.
 It seems unrealistic to ask the gateway to send the fixed value $M$ to each device, and not a unique ID to each device, for instance $\mathrm{id}^j\in\{1,\dots,K\}$.
+
+\TODOL{Expliquer pourquoi ce n'est pas très réaliste ? Le paragraphe ci dessous n'est pas très simple à comprendre, je peux faire mieux!}
 
 If the $M$ players each have a unique ID, then a simple explore-then-commit algorithm running on top of a round-Robin phase can achieve order-optimal regret.
 If the players know the time horizon $T$, then fix a confidence level $\delta$. For the first $T_0$ time steps, the $M$ players will use a simple round-Robin game, using their (unique) ID to stay orthogonal: player $j$ starts at arm $j$, then $j+1$, then cycle in $\{1,\dots,K\}$. They encounter no collision in these time steps, and then user $j$ targets the $j$-th best arm among the set of $M$-best arm.
@@ -382,7 +385,7 @@ Further empirical evaluation would be needed to fully understand the situation, 
 In all the models of IoT networks considered in this thesis, we assume that \emph{the different IoT devices cannot communicate with each other}, and can only communicate with a unique gateway.
 Of course, this hypothesis can be removed, and in practice in some families of wireless networks, communication between devices are possible.
 Note that this extension is not considering a graph of distributed agents all playing cooperatively to solve a unique bandit game, like it is studied in the ``graph bandit'' problem.
-What we are interested here is an extension of our model where players can send some bits to one or all the other players, at every time steps or some time steps.
+What we are interested here is an extension of the model where players can send some bits to one or all the other players, at every time steps or some time steps.
 
 Clearly, the problem is easier by allowing communication, and it is quite immediate to see that the communication capacity between players must be limited otherwise the problem is already known and solved.
 Indeed, imagine that at each time step $t$, all the $M$ players could share an unbounded number of bits with the other players, at no cost, even if this hypothesis is clearly unrealistic for wireless networks.
@@ -425,7 +428,7 @@ Analytic performance guarantees, proving convergence to stable marriage configur
 In the multi-player model presented in this chapter, we assume that the arm distributions are the same for all the players.
 For cognitive radio applications, where arms model channels and players are radio devices, it can be unrealistic to consider that two players, maybe located at different distances from the gateway or equipped with different hardwares, encounter the same mean quality when accessing the same channel.
 %
-Motivated by this weakness, some researchers studied an interesting extension of our model of interest, considering multi-player MAB models with different arms distributions among players.
+Motivated by this weakness, some researchers studied an interesting extension of the model of interest, considering multi-player MAB models with different arms distributions among players.
 %
 Starting in 2012 by \cite{Kalathil12} where arms are Markov chain, this model was studied more actively recently, \cite{DarakHanawal18,Bistritz18,KaufmannAbbas19,Tibrewal2019}.
 
@@ -634,7 +637,7 @@ Despite being more complicated than other approaches, their algorithm ``\texttt{
 \subsection{A note on SMPyBandits}
 
 We have implemented in SMPyBandits \cite{SMPyBandits} the following extensions: evaluating $M$ on the fly (Section~\ref{sub:5:unknownNumberOfPlayers}), piece-wise stationary multi-player bandits (Section~\ref{sub:5:towardsNonStationaryModels}).
-We have not yet implemented the other extensions of our model in SMPyBandits, but we are interested to do it, and it is one of the major future work left on our library.
+We have not yet implemented the other extensions, but we are interested to do it, and it is one of the major future work left on our library.
 For more details, see the issue tickets at \href{https://github.com/SMPyBandits/SMPyBandits/issues/}{\texttt{GitHub.com/SMPyBandits/SMPyBandits/issues/X}}, for tickets number \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}.
 
 
