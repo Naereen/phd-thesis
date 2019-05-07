@@ -480,6 +480,11 @@ We consider as well an increasing number of arms, and we focus again on $7$ valu
 For all experiments, we run $N=100$ independent simulations.
 We show in the snippet of code~\ref{lst:3:BashCodeToLaunchLargeExperiments} in the Appendix below more details about how to run these experiments.
 
+\TODOL{Dans les figures où je montre une seule valeur de $T$ ou de $K$, et $R_T$, $\cT_T$ ou $\cM_T$ en fonction de $K$ ou de $T$, il faudrait avoir plus de valeurs à montrer, et pas une progression exponentielle... J'ai relancé avec :
+    - $T=10000$ et $K = 6, 10, 14, 18, 22, 24, 26, 28, 32$ pour couvrir $2 \dots 32$ avec un pas de $2$,
+    - $K=32$ et $T = 15000, 30000, 35000, 40000, 45000$ pour couvrir $5000 \dots 50000$ avec un pas de $5000$,
+}
+
 
 \subsection{Experiments results}
 
@@ -955,8 +960,10 @@ We give in the figures below the results of the experiments.
 
 \subsection{Observations and summary of the experiments}
 
-\TODOL{Use UCB and klUCB}
-\TODOL{Regret usually scales as $\bigO{K}$ and $\bigO{\log T}$}
+\TODOL{Au lieu d'avoir des longues captions pour les figures, je vais écrire quelques paragraphes donnant les mêmes conclusion et faisant référence aux figures. Je ferai ça très vite si on est contents des figures.}
+
+\TODOL{Use UCB and klUCB, it's enough to be efficient!}
+\TODOL{Regret usually scales as $\bigO{K}$ and $\bigO{\log T}$ !}
 
 
 % I want to show that SMPyBandits contains highly documented implementations of all the most important algorithms designed for stationary single-player multi-armed bandit.
@@ -970,12 +977,12 @@ We give in the figures below the results of the experiments.
 
 
 % ----------------------------------------------------------------------------
-\section{Comparing the time and memory costs of various algorithms}
+\section{Comparing real measurements of time and memory costs}
 \label{sec:3:timeAndMemoryCosts}
 
 % \TODOL{Write text for this Section, write configuration.py file, run short-term experiment, include them, if happy about it, run longer ang larger experiments}
 
-In this section, we report additional experiment results from the simulations described in the previous section.
+In this section, we report additional experiment results from the simulations described in the previous Section~\ref{sec:3:reviewSPAlgorithms}.
 Instead of studying on the efficiency of the algorithms (\ie, their regret), we report results of real measurements in terms of computational time as well as memory storage.
 %
 The goal of this section is to verify that the simplest (but most efficient) algorithms have a memory cost proportional to the number of arms but independent of the horizons, \ie, bounded by $\bigO{K}$, and a time complexity at each time step $t\in\{1,\dots,T\}$ bounded by $\bigO{K}$, independent of $t$.
@@ -991,10 +998,31 @@ Hence, the reported results highly depend on many factors, including how the cod
     As we can safely affirm that the code of the different algorithms has the same level of optimization, the comparison is fair, and we do not favor any algorithm in their implementation in SMPyBandits.
 
     \item About the experimental environment:
-    the exact measurements displayed below highly depend on the machine used for the simulation, the version of the language and its libraries (see above in Section~\ref{sub:3:dependencies} for details about SMPyBandits), as well as the number of CPU cores being used (here, we used $12$ cores in a $12$-core desktop) etc.
+    the exact measurements used for the figures displayed below highly depend on the machine used for the simulation, the version of the language and its libraries (see above in Section~\ref{sub:3:dependencies} for details about SMPyBandits), as well as the number of CPU cores being used (here, we used $12$ cores in a $12$-core desktop) etc.
     As long as the different algorithms and simulations are performed on the same environment, the comparison and conclusions we make from them are fair and do make sense.
+
 \end{itemize}
 
+\pagagraph{About the measurement protocol.}
+%
+To be precise, we used the two following approaches to measure the real time and memory costs of the different algorithms.
+\begin{itemize}
+    \item For time, we used the \texttt{time.time()} function from Python's standard library, that gives the current time in micro-seconds.
+    In the \texttt{Evaluator} object of SMPyBandits, before launching the ``for'' loop on $t\in\{1,\dots,T\}$ for one algorithm, the system time is stored, and when the loop is finished, the time used for this loop is the current system time minus the starting time.
+    This measurement gets averaged on the $N=100$ (independent) repetitions, and consistently measure the time efficiency of the algorithms.
+    \item For memory, we use two different approaches whether the code runs on a UNIX or a Windows system.
+    On UNIX, the \texttt{resource} module allows to measure the memory of the current process, and by counting the difference in memory used by the \texttt{Evaluator} object before and after the ``for'' loop, we can track the memory used by the algorithm to store all its interior variables.
+\end{itemize}
+In both cases, the ``for'' loop takes some time and stores many variables, but the only difference in terms of both time or memory between two algorithms is explained by the difference in the implementation of the algorithms.
+%     def time()
+% time() -> floating point number
+
+% Return the current time in seconds since the Epoch. Fractions of a second may be present if the system clock provides them.
+
+% sys.getsizeof(pickle.dumps(policy))
+% return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+
+\paragraph{Comparing measurements.}
 But what is important in these simulation results is not the exact values, but rather to compare the costs of the different algorithms, and thus only the relative difference in terms of time and memory costs are important.
 Relative difference for costs do not depend much on the code and the machine used for the simulation.
 %
@@ -1006,17 +1034,18 @@ All the considered algorithms in this Chapter are efficient in this aspect, but 
 %
 We can also check that efficient algorithms have a running time and a memory cost linear in the number of arms $K$, while more complex algorithms like BESA suffer from an exponential blow-up of their complexity when $K$ increases.
 
-\paragraph{Normalizing data?}
 
+\paragraph{Normalizing data?}
+%
 The two figures below regret normalized data, in the following way.
 For each algorithm, we ran simulations to obtain its (empirical) regret, computation time and space requirement, for different problems with different values of $K$ and $T$.
 Simply considering the average of such measurements make no sense, as for instance two values of the regret for $T=1000$ or $T=50000$ do not have the same order of magnitude.
 %
 We know that efficient algorithms are expected to follow these patterns:
 \begin{itemize}
-    \item Final regret $R_T$ should scale as $\cO(K \log(T))$,
-    \item Total computation time $\cT_T$ should scale as $\cO(K T)$ (\ie, a computation time of $\cO(K)$ for each time step $t$),
-    \item Total memory cost $\cM_T$ should scale as $\cO(K \log(T))$.
+    \item The final regret $R_T$ should scale as $\cO(K \log(T))$,
+    \item The total computation time $\cT_T$ should scale as $\cO(K T)$ (\ie, a computation time of $\cO(K)$ for each time step $t$),
+    \item The total memory cost $\cM_T$ should scale as $\cO(K)$, independent of the horizon.
 \end{itemize}
 Thus, on the first hand, when we show aggregated results from all the different values of $K$ and $T$, we normalized the data by dividing the regrets by $K \log(T)$, the times by $K T$ and the memory by $K$.
 %
@@ -1538,8 +1567,11 @@ On the other hand, when we plot a quantity ($R_T$, $\cT_T$, $\cM_T$) as a functi
 
 \subsection{Observations and summary of the experiments}
 
+\TODOL{Au lieu d'avoir des longues captions pour les figures, je vais écrire quelques paragraphes donnant les mêmes conclusion et faisant référence aux figures. Je ferai ça très vite si on est contents des figures.}
+
 \TODOL{Use UCB and klUCB}
-\TODOL{Regret usually scales as $\bigO{K}$ and $\bigO{\log T}$}
+\TODOL{Time complexity usually scales as $\bigO{KT}$}
+\TODOL{Memory complexity usually scales as $\bigO{K}$}
 
 
 
@@ -1717,7 +1749,7 @@ $ T=50000 N=100 K=10 ARM_TYPE=Gaussian python main.py
 
 This Appendix section describes seven more algorithms that are also compared with the nine presented above in Section~\ref{sec:3:reviewSPAlgorithms}.
 
-\TODOL{Si on a la place, j'aimerai bien inclure des résultats pour 7 algorithmes de plus, que voici :}
+% \TODOL{Si on a la place, j'aimerai bien inclure des résultats pour 7 algorithmes de plus, que voici :}
 
 \begin{itemize}
     \item Algorithm 10 is
@@ -1738,9 +1770,10 @@ This Appendix section describes seven more algorithms that are also compared wit
     Empirically, it performs usually similarly to \UCB{} and $\mathrm{MOSS}$-$\mathrm{Anytime}$, and is slightly more costly in computation time, but it is much more costly in terms of memory.
 
     \item Algorithm 13 is
-    the anytime variant of KL-UCB-Switch from \cite{GarivierHadiji2018} (\texttt{klUCBswitchAnytime}).
-    It is a very recent variant of the \klUCB{} algorithm \cite{KLUCBJournal},
-    and it mimics the \klUCB{} algorithm but uses a much more complicated function to compute the upper confidence bounds, and uses more storage.
+    the anytime variant of KL-UCB-Switch from \cite{GarivierHadiji2018},
+    is a very recent variant of the \klUCB{} algorithm \cite{KLUCBJournal}
+    (\texttt{klUCBswitchAnytime}).
+    It mimics the \klUCB{} algorithm but uses a much more complicated function to compute the upper confidence bounds, and uses more storage.
     It is anytime, and was proved to obtain good ``best of both world'' performances, meaning that it achieves an asymptotically optimal $\cO(\log(T))$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
     Empirically, it usually outperforms \klUCB{} in terms of regret, and costs about the same memory, but it is slower.
 
