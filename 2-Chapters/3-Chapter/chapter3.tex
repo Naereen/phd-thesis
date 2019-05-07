@@ -39,11 +39,14 @@ However if simulation speed really matters, one should rather refer to less exha
 
 In this Chapter~\ref{chapter:3}, we start by presenting in Section~\ref{sec:3:presentationLibrary} the organization of the library.
 We use the library to compare the most famous and most efficient single-player MAB algorithms in Section~\ref{sec:3:reviewSPAlgorithms},
-then we present in Section~\ref{sec:3:timeAndMemoryCosts} additional numerical simulations to discuss about the time efficient and memory costs of the some MAB algorithms. We focus on the ones being used in the rest of this thesis, \UCB, \klUCB, and Thompson Sampling.
+then we discuss in Section~\ref{sec:3:timeAndMemoryCosts} about the time efficient and memory costs of the some MAB algorithms.
+The take away messages are two-fold:
+from a practical point-of-view, it is usually advised to use the simplest algorithm and we advise to use \UCB{} (as we do in the next Chapter~\ref{chapter:4}),
+and that for theoretical works where optimality of the MAB algorithm matters, we advise to use \klUCB{} (as we do in the next Chapters~\ref{chapter:5} and \ref{chapter:6}).
 % To also illustrate how one can easily extend the SMPyBandits library to add not only add new distributions or new algorithms.
 % but also new bandit models, we detail in Section~\ref{sec:3:markovModels} how we added the possibility to simulate Markovian models (as introduced by \cite{Anantharam87b}).
 %
-Finally, in Appendix~\ref{sec:3:appendix} we include some small files showing how to use the library, as well as details regarding the use of parallel computing to speed-up simulations.
+Finally, in Appendix~\ref{sec:3:appendix} we include some small files showing how to use the library, and we conclude with some details regarding the use of parallel computing to speed-up simulations.
 
 
 \paragraph{Publications.}
@@ -98,19 +101,29 @@ Different collision models has been proposed, and the simplest one consists in g
 Without any centralized supervision or coordination between players, they must learn to access the $M$ best resources (\ie, arms with highest means) without collisions.
 We refer to Chapter~\ref{chapter:5} which introduces and details various multi-player bandit models.
 
-SMPyBandits implements all collision models found in the literature (in the module \texttt{\href{https://SMPyBandits.GitHub.io/docs/Environment.CollisionModels.html}{Environment.CollisionModels}}), as well as all the algorithms known by the authors (in the module \texttt{\href{https://SMPyBandits.GitHub.io/docs/Environment.CollisionModels.html}{Environment.CollisionModels}}).
+SMPyBandits implements all collision models found in the literature (in the module \texttt{\href{https://SMPyBandits.GitHub.io/docs/Environment.CollisionModels.html}{Environment.CollisionModels}}), as well as all the algorithms known by the authors (in the module \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.html}{PoliciesMultiPlayers}}).
 %
 It includes
-\texttt{rhoRand} (\texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html}{PoliciesMultiPlayers.rhoRand}}) from \cite{Anandkumar11},
-\texttt{MEGA} (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html}{Policies.MEGA}}) from \cite{Avner15},
-\texttt{MusicalChair} (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html}{Policies.MusicalChair}}) from \cite{Rosenski16},
+\texttt{rhoRand}
+% (\texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html}{PoliciesMultiPlayers.rhoRand}})
+from \cite{Anandkumar11},
+\texttt{MEGA}
+% (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html}{Policies.MEGA}})
+from \cite{Avner15},
+\texttt{MusicalChair}
+% (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html}{Policies.MusicalChair}})
+from \cite{Rosenski16},
 and our state-of-the-art algorithms
-\texttt{RandTopM} (\texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html}{PoliciesMultiPlayers.RandTopM}}) and
-\texttt{MCTopM} (\texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{PoliciesMultiPlayers.MCTopM}}) from \cite{Besson2018ALT}.
+\texttt{RandTopM}
+% (\texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html}{PoliciesMultiPlayers.RandTopM}})
+and \texttt{MCTopM}
+% (\texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{PoliciesMultiPlayers.MCTopM}})
+from \cite{Besson2018ALT}.
 For comparison, realistic (\eg, \UCB{} for multiple play) or full-knowledge centralized algorithms are also implemented.
 
 Any simulation library targeting multi-player bandit problems must implement at least another component:
-a collision model, and a simulation loop that essentially looks like this.
+% a collision model, and
+a simulation loop that essentially looks like this.
 \begin{itemize}
     \item First, initialize the MAB problem with $M$ players, and one or more cohorts of $M$ players (one player is one algorithm, usually $M$ times the same one),
     \item Then, for $t=1$ to $t=T$ (known before hand), repeat the following block (for each algorithm). Ask each player $\cA^{(j)}$ his chosen arm $A^{(j)}(t)$, then query the collision model\footnote{~The default collision model is the most widely studied in the literature, where a player encounters a collision (\ie, received a zero reward $Y^{(j)}(t)=0$) if she is not the only one to have chosen an arm $k=A^{(j)}(t)$, otherwise $Y^{(j)}(t)=r_{A^{(j)}(t)}(t)$ if she is the only one playing this arm.} to know which player will get a zero reward (for a collision) and which player will get a random reward from the environment. The
@@ -192,14 +205,14 @@ For instance the code specific to the UCB algorithm \cite{LaiRobbins85,Auer02} i
 \end{small}
 
 
-\subsection{Features}
+\subsection{Summary of the features}
 
 With this numerical framework, simulations can run on a single CPU or a multi-core machine using joblib \cite{joblib} (see Appendix~\ref{sub:3:parallelSimulations}),
 and summary plots are automatically saved as high-quality PNG, PDF and EPS, using matplotlib \cite{matplotlib} and seaborn \cite{seaborn}.
 Raw data from each simulation is also saved in a HDF5 file using h5py \cite{h5py}, an efficient and compressed binary format, to allow easy post-mortem exploration of simulation results.
 Making new simulations is very easy, one only needs to write a configuration script (\texttt{configuration.py}), without needing a complete knowledge of the internal code architecture.
 
-A complete Sphinx documentation, for each algorithm and all parts of the codebase, even including the constants in the different configuration files, is available here:
+A complete Sphinx documentation, for each algorithm and all parts of the codebase, even including the constants in the different configuration files:
 \texttt{\href{https://SMPyBandits.GitHub.io}{SMPyBandits.GitHub.io}}.
 
 
@@ -272,12 +285,12 @@ configuration["policies"] = [
 	% \centering
 	\includegraphics[width=1.05\linewidth]{3.pdf}
 	\caption[Example of a single-player simulation showing the average regret and histogram of regrets of $4$ algorithms]{
-		Example of a single-player simulation showing the average regret and histogram of regrets of four algorithms. They all perform very well: each algorithm is known to be order-optimal (\ie, its regret is proved to match the lower-bound up-to a constant), and each but UCB is known to be optimal (\ie, with the constant matching the lower-bound). For instance, Thomson sampling is very efficient in average (in yellow), and UCB shows a larger variance (in red).
+		Example of a single-player simulation showing the average regret and histogram of regrets of four algorithms. They all perform very well: each algorithm is known to be order-optimal (\ie, its regret is proved to match the lower-bound up-to a constant), and each but UCB is known to be optimal (\ie, with the constant matching the lower-bound).
 	}
 	\label{fig:3:firstPlot}
 \end{figure}
 
-Running the simulation as shown above will save figures in a sub-folder, as well as save data (pulls, rewards and regret) in a HDF5 file\footnote{~For example, this simulation produces this HDF5 file\\\texttt{\href{https://github.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5}{GitHub.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5}}}
+Running the simulation as shown above will save figures in a sub-folder, as well as save data (pulls, rewards, regret and other data) in a HDF5 file\footnote{~For example, this simulation produced this HDF5 file\\\texttt{\href{https://github.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5}{GitHub.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5}}}
 \cite{h5py}.
 % \texttt{\href{http://docs.h5py.org/en/stable/high/file.html}{docs.h5py.org/en/stable/high/file.html}}).
 Figure~\ref{fig:3:firstPlot} above shows the average regret for these $4$ algorithms.
@@ -287,7 +300,9 @@ The Figure~\ref{fig:3:firstPlot_hist} below shows the histogram of regret obtain
 \begin{figure}[h!]  % [htbp]
 	% \centering
 	\includegraphics[width=1.05\linewidth]{3_hist.pdf}
-	\caption{Histogram of regret for the same experiment.}
+	\caption{Histogram of regret for the same experiment.
+        For instance, Thomson sampling is very efficient in average (in yellow), and UCB shows a larger variance (in red).
+    }
 	\label{fig:3:firstPlot_hist}
 \end{figure}
 
@@ -316,7 +331,7 @@ These CI services are free for open-source works, and are both triggered wheneve
 Since $2017$, we have been using the free web service provided by Read the Docs (\href{https://readthedocs.org/}{\texttt{ReadTheDocs.org}}).
 Read the Docs allows to automatically build the documentation after every commit. This allows to regularly check that the library is well formatted and can be imported correctly, as well as keeping the online documentation up-to-date.
 Moreover, they offer to host the documentation online, at \href{https://smpybandits.rtfd.io/}{\texttt{SMPyBandits.ReadTheDocs.io}}.
-For more details, see \href{https://readthedocs.org/projects/smpybandits/}{\texttt{https://ReadTheDocs.org/projects/SMPyBandits}}.
+For more details, see \href{https://readthedocs.org/projects/smpybandits/}{\texttt{ReadTheDocs.org/projects/SMPyBandits}}.
 %
 Since its first use, the service did about 180 builds, and about $10\%$ of them were useful to detect newly introduced issues or bugs in the code.
 The build is configured using the \texttt{.readthedocs.yml} file in SMPyBandits main folder, and it builds the documentation in about two minutes.
@@ -336,7 +351,7 @@ Builds typically run for $15$ minutes, and Travis CI have been proved to be very
 
 
 
-\subsection{Research works using SMPyBandits}
+\subsection{List of research works using SMPyBandits}
 
 SMPyBandits was used for the following research articles since $2017$, and it is used for the previous and the next chapters of this thesis (except in Chapter~\ref{chapter:4}).
 
@@ -358,7 +373,7 @@ We also implemented a large benchmark of different problems.
 
 % \TODOL{Write text for this Section, write configuration.py file, run short-term experiment, include them, if happy about it, run longer ang larger experiments}
 
-In this section, we use the SMPyBandits library to compare experimentally various state-of-the-art single-player algorithms on different kinds of multi-armed bandit problems.
+In this section, we use the SMPyBandits library to compare experimentally various state-of-the-art single-player algorithms on some multi-armed bandit problems.
 First, we detail the list of different algorithms that we compare, and the different problems on which they are all tested.
 We give the results of the numerical experiments, in terms of mean regret at the end of the experiment of different horizons $T$.
 Additional results in terms of real measurements of time and memory are given and discussed in the next Section~\ref{sec:3:timeAndMemoryCosts}.
@@ -376,7 +391,8 @@ We give the chosen tuning of the parameters, for parametric algorithms.
 Algorithms that are not anytime use the exact value of the horizon $T$, and when increasing values of $T$ are studied for the same problem, of course they use the correct successive values. \\
 %
 \indent
-For reproducibility, we also give in ``\texttt{typewriter font}'' the name of the corresponding class in the \texttt{Policies} module in SMPyBandits.
+For reproducibility, we also give in ``\texttt{typewriter font}'' the name of the corresponding class in the \texttt{Policies} module in SMPyBandits
+(\eg, $\UCB_1$ is \texttt{Policies.UCBalpha}).
 
 % FIXME order from oldest to most recent, and simplest to more complex
 
@@ -394,7 +410,7 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
     It is a recent variant of the $\mathrm{Exp3}$ algorithm, using an adaptive tuning of its parameter. It is anytime, and was proved to obtain good ``best of both world'' performances, meaning that it achieves $\cO(K\log(T)/\Delta^2)$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
 
     \item Algorithm 4 is
-    $\UCB_1$ from \cite{Auer02}, using $\alpha=1$ (\texttt{UCB}).
+    $\UCB_1$ from \cite{Auer02}, using $\alpha=1$ (\texttt{UCBalpha}).
     It was proved to achieve order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret.
 
     \item Algorithm 5 is
@@ -402,6 +418,7 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
     It was proved to achieve asymptotical optimal problem-dependent bounds with a $\cO(\log(T))$ regret with the scaling factor matching Lai and Robbins' lower-bound \cite{LaiRobbins85}.
     It is computationally more costly that \UCB, as at each time step $t$, to compute the $K$ indexes, a convex optimization problem must be solved approximately, for each arm.
     In practice, a few steps of a Newton method are enough to obtain a precision of more than 10 digits, and empirically we found that even in the worst cases \klUCB{} is an order of magnitude slower than \UCB.
+    \TODOL{Si on en pas parlé avant, ou après dans une annexe, je peux dire un mot ici à propos de l'implémentation en Cython ou en C des fonctions kl et indices kl-UCB !}
 
     \item Algorithm 6 is
     Thompson sampling from \cite{Kaufmann12Thompson}, using a Beta prior and posterior, initially uniform (\ie, $\mathrm{Beta}(1,1)$) (\texttt{Thompson}).
@@ -430,9 +447,10 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
     Due to its binary nature, the extension to more than $K=2$ arms is costly in terms of both time and memory, as illustrated below.
 \end{itemize}
 
-In the results presented in the main text of this chapter, we focus on the most well known algorithms, and two others that are efficient but less known (AdBandits and BESA).
-We present in Appendix~\ref{sub:3:additionalExperiments} seven other algorithms, being more recent (from $2016$, $3$ from $2018$ and $2$ from $2019$) but are usually more complex, or are based on a different point-of-view.
-We include numerical results for these other algorithms as well, to justify empirically that despite their respective qualities, and despite being efficient, it is reasonable to focus on \UCB{} and \klUCB{} algorithms in the rest of this thesis.
+We focussed on the most well known algorithms, and two others that are efficient but less known (AdBandits and BESA),
+but to illustrate that SMPyBandits implements many other solutions to the MAB problem proposed in very recent works, we explain in Appendix~\ref{sub:3:additionalExperiments} seven other algorithms.
+They are more recent (some from $2016$, $3$ from $2018$ and $2$ from early $2019$) and are usually more complex, or are based on a different point-of-view.
+The numerical results presented below include these extra algorithms, to justify empirically that despite their respective qualities, and despite being very efficient, it is reasonable to focus on \UCB{} and \klUCB{} algorithms in the rest of this thesis, as they stay comparable with the state-of-the-art algorithms but are simpler to implement (\eg, when comparing \UCB{} to \texttt{ApproximatedFHGittins} or $\mathrm{MOSS}$-$\mathrm{Anytime}$) to manipulate theoretically (\eg, when comparing \klUCB{} to PHE or RCB)
 
 
 \paragraph{Two different problems}
@@ -460,16 +478,18 @@ For simplicity, we focus on Bernoulli distributed arms, even if similar results 
 We consider increasing values for the horizon, and we focus on $7$ exponentially-spaced values: $T=1000$, $T=2500$, $T=5000$, $T=10000$, $T=20000$, $T=25000$ and $T=50000$.
 We consider as well an increasing number of arms, and we focus again on $7$ values: $K=2$, $K=4$, $K=8$, $K=12$, $K=16$, $K=20$ and $K=32$.
 For all experiments, we run $N=100$ independent simulations.
-See the snippet of code~\ref{lst:3:BashCodeToLaunchLargeExperiments} in the Appendix below.
+We show in the snippet of code~\ref{lst:3:BashCodeToLaunchLargeExperiments} in the Appendix below more details about how to run these experiments.
 
 
 \subsection{Experiments results}
 
-We give in the tables below the results of the experiments. For the two different problems and different values of $T$ and $K$, we give the mean $\pm 1$ standard-variation of the empirical regret $R_T$ obtained by the different algorithms at the end of the experiments.
-Tables~\ref{table:3:meanRegret_problem1} is for the fixed-gap \textbf{problem 1}
-and \ref{table:3:meanRegret_problem2} is for the randomly generated \textbf{problem 2}.
-Each column corresponds to one value of $T$, and each line corresponds to one algorithm.
-For each cell, we report successive values that correspond to the successive values of the number of arms $K$.
+We give in the figures below the results of the experiments.
+% For the two different problems and different values of $T$ and $K$, we give the mean $\pm 1$ standard-variation of the empirical regret $R_T$ obtained by the different algorithms at the end of the experiments.
+% Tables~\ref{table:3:meanRegret_problem1} is for the fixed-gap \textbf{problem 1}
+% and \ref{table:3:meanRegret_problem2} is for the randomly generated \textbf{problem 2}.
+% Each column corresponds to one value of $T$, and each line corresponds to one algorithm.
+% For each cell, we report successive values that correspond to the successive values of the number of arms $K$.
+
 
 % \TODOL{FIXME launch these experiments, for a very short number of repetitions N=4, and if I'm happy about the results and if they are easily copied-and-pasted here, then launch with N=100 or N=1000 depending on the running time of the whole simulations}
 
@@ -939,27 +959,27 @@ For each cell, we report successive values that correspond to the successive val
 \TODOL{Regret usually scales as $\bigO{K}$ and $\bigO{\log T}$}
 
 
-I want to show that SMPyBandits contains highly documented implementations of all the most important algorithms designed for stationary single-player multi-armed bandit.
+% I want to show that SMPyBandits contains highly documented implementations of all the most important algorithms designed for stationary single-player multi-armed bandit.
 
-I will include here formulas about the main algorithms (klUCB, MOSS, etc).
-I will pick some problems (Bernoulli, Gaussian, others), with fixed means or ``Bayesian'' means (\ie, changing at each time) and I will run extensive numerical simulations to compare the main algorithms.
+% I will include here formulas about the main algorithms (klUCB, MOSS, etc).
+% I will pick some problems (Bernoulli, Gaussian, others), with fixed means or ``Bayesian'' means (\ie, changing at each time) and I will run extensive numerical simulations to compare the main algorithms.
 
-The take away message is: klUCB beats UCB, Thompson sampling is great too, all the others algorithms are less efficient or comparable, so we only use klUCB for all the rest of this thesis.
+% The take away message is: klUCB beats UCB, Thompson sampling is great too, all the others algorithms are less efficient or comparable, so we only use klUCB for all the rest of this thesis.
 
-I will include graphs showing the mean regret $R_t$ as a function of time $t$, as well as histograms or boxplots showing the distribution of $R_T$.
+% I will include graphs showing the mean regret $R_t$ as a function of time $t$, as well as histograms or boxplots showing the distribution of $R_T$.
 
 
 % ----------------------------------------------------------------------------
 \section{Comparing the time and memory costs of various algorithms}
 \label{sec:3:timeAndMemoryCosts}
 
-\TODOL{Write text for this Section, write configuration.py file, run short-term experiment, include them, if happy about it, run longer ang larger experiments}
+% \TODOL{Write text for this Section, write configuration.py file, run short-term experiment, include them, if happy about it, run longer ang larger experiments}
 
 In this section, we report additional experiment results from the simulations described in the previous section.
 Instead of studying on the efficiency of the algorithms (\ie, their regret), we report results of real measurements in terms of computational time as well as memory storage.
 %
-The goal of this section is to highlight that the simplest (but most efficient) algorithms have a memory cost proportional to the number of arms but independent of the horizons, \ie, bounded by $\bigO{K}$, and a time complexity at each time step $t\in\{1,\dots,T\}$ bounded by $\bigO{K}$, independent of $t$.
-%
+The goal of this section is to verify that the simplest (but most efficient) algorithms have a memory cost proportional to the number of arms but independent of the horizons, \ie, bounded by $\bigO{K}$, and a time complexity at each time step $t\in\{1,\dots,T\}$ bounded by $\bigO{K}$, independent of $t$.
+
 While the results reported in the previous section should not depend on the implementation of the different algorithms, the results in this section concern real measurements of both time and memory consumptions of the simulation software used for these simulations.
 Hence, the reported results highly depend on many factors, including how the code is written, and where and when it is run.
 
@@ -977,8 +997,8 @@ Hence, the reported results highly depend on many factors, including how the cod
 
 But what is important in these simulation results is not the exact values, but rather to compare the costs of the different algorithms, and thus only the relative difference in terms of time and memory costs are important.
 Relative difference for costs do not depend much on the code and the machine used for the simulation.
-
-The tables~\ref{table:3:time_problem1}, \ref{table:3:time_problem2} \ref{table:3:memory_problem1} and \ref{table:3:memory_problem2} below follow the same structure as the ones given in Section~\ref{sec:3:reviewSPAlgorithms} but report results in terms of computation time (in milli-seconds) and memory (in B).
+%
+% The tables~\ref{table:3:time_problem1}, \ref{table:3:time_problem2} \ref{table:3:memory_problem1} and \ref{table:3:memory_problem2} below follow the same structure as the ones given in Section~\ref{sec:3:reviewSPAlgorithms} but report results in terms of computation time (in milli-seconds) and memory (in B).
 The computation time is \emph{normalized}, that is it is divided by the horizon, to count the (average) time used by an algorithm at time $t$ from $t=1$ to $t=T$, while the memory cost is \emph{not normalized}.
 %
 Thus, we can check that efficient algorithms have a running time independent on the horizon $T$, instead of just observing a linear dependency, and we can check that efficient algorithms have a memory cost independent on the horizon.
@@ -996,14 +1016,16 @@ We know that efficient algorithms are expected to follow these patterns:
 \begin{itemize}
     \item Final regret $R_T$ should scale as $\cO(K \log(T))$,
     \item Total computation time $\cT_T$ should scale as $\cO(K T)$ (\ie, a computation time of $\cO(K)$ for each time step $t$),
-    \item Total memory cost should scale $\cM_T$ as $\cO(K \log(T))$.
+    \item Total memory cost $\cM_T$ should scale as $\cO(K \log(T))$.
 \end{itemize}
-Thus, we normalized the data by dividing the regrets by $K \log(T)$, the times by $K T$ and the memory by $K$.
+Thus, on the first hand, when we show aggregated results from all the different values of $K$ and $T$, we normalized the data by dividing the regrets by $K \log(T)$, the times by $K T$ and the memory by $K$.
+%
+On the other hand, when we plot a quantity ($R_T$, $\cT_T$, $\cM_T$) as a function of $T$ (resp. of $K$) we only normalize by $K$ (resp. by $T$).
 
 
 \subsection{Computational time}
 
-\TODOL{Just one long table for problem 1, not necessary to include other problems}
+% \TODOL{Just one long table for problem 1, not necessary to include other problems}
 
 \begin{figure}[h!]  % [htbp]
 	% \centering
@@ -1257,7 +1279,7 @@ Thus, we normalized the data by dividing the regrets by $K \log(T)$, the times b
 
 \subsection{Memory cost}
 
-\TODOL{Just one long table for problem 1, not necessary to include other problems}
+% \TODOL{Just one long table for problem 1, not necessary to include other problems}
 
 \begin{figure}[h!]  % [htbp]
 	% \centering
@@ -1521,11 +1543,11 @@ Thus, we normalized the data by dividing the regrets by $K \log(T)$, the times b
 
 
 
-I want to show the real numerical costs in terms of computation time and storage requirement of the various algorithms for single-player bandits.
+% I want to show the real numerical costs in terms of computation time and storage requirement of the various algorithms for single-player bandits.
 
-Maybe I can pick one simple problem family (\eg, evenly spaced in $[\varepsilon,1-\varepsilon]$), and run experiments for $T=1000,5000,10000$ etc, and $K=2,3,5,9,20,30,50,100,1000$ and show the evolution of time/memory as a function of $T$ and $K$.
+% Maybe I can pick one simple problem family (\eg, evenly spaced in $[\varepsilon,1-\varepsilon]$), and run experiments for $T=1000,5000,10000$ etc, and $K=2,3,5,9,20,30,50,100,1000$ and show the evolution of time/memory as a function of $T$ and $K$.
 
-The goal is to highlight that the simplest (but most efficient) algorithms have a memory cost bounded by $\bigO{K}$ and a time complexity at each time step $t\in[T]$ bounded by $\bigO{K}$, independent of $t$.
+% The goal is to highlight that the simplest (but most efficient) algorithms have a memory cost bounded by $\bigO{K}$ and a time complexity at each time step $t\in[T]$ bounded by $\bigO{K}$, independent of $t$.
 
 
 % % ----------------------------------------------------------------------------
@@ -1690,7 +1712,7 @@ $ T=50000 N=100 K=10 ARM_TYPE=Gaussian python main.py
 
 
 % --------------------------------------------------------------
-\subsection{Additional experimental results: more recent algorithms}
+\subsection{Description of seven more recent algorithms for experiments in Section~\ref{sec:3:reviewSPAlgorithms}}
 \label{sub:3:additionalExperiments}
 
 This Appendix section describes seven more algorithms that are also compared with the nine presented above in Section~\ref{sec:3:reviewSPAlgorithms}.
@@ -1743,10 +1765,10 @@ This Appendix section describes seven more algorithms that are also compared wit
     Interestingly, its time and memory consumption stay constant with respect to the step number $t$ and the horizon $T$, because generating and summing $t$ pseudo-rewards from a Bernoulli distribution can actually be done in $\cO(1)$ time and space, by using efficient sampling methods for sampling from Binomial distributions.
 \end{itemize}
 
-We give below the results for these additional algorithms, only for the problem 1,
-first in terms of regret in Table~\ref{table:3:meanRegret_problem1_otherAlgorithms},
-then in terms of computation times in Table~\ref{table:3:time_problem1_otherAlgorithms}
-and for storage costs in Table~\ref{table:3:memory_problem1_otherAlgorithms}.
+% We give below the results for these additional algorithms, only for the problem 1,
+% first in terms of regret in Table~\ref{table:3:meanRegret_problem1_otherAlgorithms},
+% then in terms of computation times in Table~\ref{table:3:time_problem1_otherAlgorithms}
+% and for storage costs in Table~\ref{table:3:memory_problem1_otherAlgorithms}.
 
 
 
