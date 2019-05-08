@@ -434,20 +434,20 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
     \item Algorithm 8 is
     AdBandits from \cite{Truzzi13}, using $\alpha=1$ (\texttt{AdBandits}).
     It follows the same assumptions as Thompson sampling and Bayes-UCB, and uses a Beta posteriors on each arm. It uses a random mixture between the two algorithms, and with a certain probability it uses the Thompson decision rule (\ie, choose the arm maximizing one draw of random samples from the posteriors), otherwise it uses the Bayes-UCB decision rule (\ie, choose the arm maximizing the $1-1/t$ quantile).
-    It was proposed in this article and illustrated on empirical simulations, but no theoretical analysis was given, and it did not gain popularity since then.
+    It was proposed in this article \cite{Truzzi13} and illustrated on empirical simulations, but no theoretical analysis was given, and it did not gain popularity since then.
     In practice, it is usually (slighly) more efficient than both Thompson sampling and Bayes-UCB in terms of regret, is comparable in terms of computation times, but costs more memory.
 
     \item Algorithm 9 is
     BESA (Best Empirical Sampled Average) from \cite{Baransi2014}, and it consists in trying to fix a simple observation.
-    For instance in \UCB, if arm $1$ has $100$ samples and arm $2$ has $50$ samples, it should make more sense to only use $50$ samples of arm $1$ to compute any statistics for each arms (\eg, mean).
-    The BESA algorithm for $K=2$ arms is then very simple: at each time step, if arm $1,2$ has $n_1,n_2$ samples and if $n_1>n_2$ (for instance), first sub-sample $n_2$ observations from $n_1$, then compute the mean of these observations, and play the arm maximizing this mean (now that there is the same number of observations for both arms, intuitively it makes more sense to compare these quantities).
+    For instance in \UCB, if arm $1$ has $100$ samples and arm $2$ has $50$ samples, it should make more sense to only use $50$ samples of arm $1$ to compute and compare any statistics for each arms (\eg, mean).
+    The BESA algorithm for $K=2$ arms is then very simple: at each time step, if arms $1$ and $2$ have $n_1$ and $n_2$ samples, and if $n_1>n_2$ (for instance), first it sub-samples $n_2$ observations from $n_1$, then it computes the mean of these observations, and play the arm maximizing this mean (now that there is the same number of observations for both arms, it makes more sense to compare these quantities).
     It was analyzed partially for the two-armed case, and the authors illustrated that it can be very efficient empirically.
     Analyzing it in the generic case was found to be difficult, and is still an open problem.
-    We implemented it using a binary tournament implement in a naive but efficient way (not using recursive functions) (\texttt{BESA} with \texttt{''non\_recursive''=True}).
-    Due to its binary nature, the extension to more than $K=2$ arms is costly in terms of both time and memory, as illustrated below.
+    We implemented it using a binary tournament implement in a naive but efficient way (not using recursive functions, \ie, using the \texttt{BESA} class with \texttt{''non\_recursive''=True}).
+    By using such binary tournament, the extension $K>2$ arms is costly in terms of both time and memory, as illustrated below, and suffer from an exponential blow-up when $K$ increases.
 \end{itemize}
 
-We focussed on the most well known algorithms, and two others that are efficient but less known (AdBandits and BESA),
+We focussed here on the most well known algorithms, and two others that are efficient but less known (AdBandits and BESA),
 but to illustrate that SMPyBandits implements many other solutions to the MAB problem proposed in very recent works, we explain in Appendix~\ref{sub:3:additionalExperiments} seven other algorithms.
 They are more recent (some from $2016$, $3$ from $2018$ and $2$ from early $2019$) and are usually more complex, or are based on a different point-of-view.
 The numerical results presented below include these extra algorithms, to justify empirically that despite their respective qualities, and despite being very efficient, it is reasonable to focus on \UCB{} and \klUCB{} algorithms in the rest of this thesis, as they stay comparable with the state-of-the-art algorithms but are simpler to implement (\eg, when comparing \UCB{} to \texttt{ApproximatedFHGittins} or $\mathrm{MOSS}$-$\mathrm{Anytime}$) to manipulate theoretically (\eg, when comparing \klUCB{} to PHE or RCB)
