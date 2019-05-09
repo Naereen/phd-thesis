@@ -932,7 +932,7 @@ We prefer to state the four cases, to highlight the modularity of the result giv
     \end{enumerate}
 \end{corollary}
 
-The proof of \GLRklUCB{} with Local Changes is only given in Appendix~\ref{proof:6:mainRegretBound}, as it is quite similar to the proof for Global changes given above. The main difficulty relies in defining the ``good event'' $\cE_T$, and proving that it happens with high probability (by showing that the complementary event $\cE_T^c$ is highly unlikely).
+The proof of \GLRklUCB{} with Local Changes is not included, but it can be found in the Appendix of \cite{Besson2019GLRT}, as it is quite similar to the proof for Global changes given above. The main difficulty relies in defining the ``good event'' $\cE_T$, and proving that it happens with high probability (by showing that the complementary event $\cE_T^c$ is highly unlikely).
 
 
 % ----------------------------------------------------------------------------
@@ -1107,7 +1107,7 @@ We let $\tilde{\mu}_{i,s}^{(k)}$ denote the empirical mean of the first $s$ obse
     & \leq \sum_{k=1}^{\Upsilon_T}d_i^{(k)}+ \sum_{i=1}^K \bE\Big[\indic(\cE_T) \sum_{t=\widehat{\tau}^{(k)}+1}^{\tau^{(k+1)}}\left(\mu_{k^*}^{(k)} - \mu_{i}^{(k)}\right)\indic\left(I_t=i,\UCB_{i}(t) \geq \mu_{k^*}^{(k)}\right)\Big] \\
     & \leq \sum_{k=1}^{\Upsilon_T}d_i^{(k)}+ \sum_{i=1}^K \sum_{k=1}^{\Upsilon_T}\left(\mu_{k^*}^{(k)} - \mu_{i}^{(k)}\right)\times \\
     &\hspace{1cm}\bE\Big[\indic(\cE_T) \sum_{t=\hat{\tau}^{(k)}+1}^{\tau^{(k+1)}}\sum_{s=1}^{t-\widehat{\tau}^{(k)}}\indic\left(I_t = i,n_i(t) = s\right) \indic\left(s \, \kl(\tilde{\mu}_{i,s}^{(k)}, \mu_{k^*}^{(k)}) \leq f(\tau^{(k+1)} - \widehat{\tau}^{(k)})\right)\Big]
-\end{align*}
+\end{align*}%
 \begin{align*}
     & \leq \sum_{k=1}^{\Upsilon_T}d_i^{(k)}+ \sum_{i=1}^K \sum_{k=1}^{\Upsilon_T}\left(\mu_{k^*}^{(k)} - \mu_{i}^{(k)}\right)\bE\Big[\indic(\cE_T) \sum_{s=1}^{n_i(\tau^{(k+1)})}\indic\left(s \, \kl(\tilde{\mu}_{i,s}^{(k)}, \mu_{k^*}^{(k)}) \leq f(\tau^{(k+1)} - \tau^{(k)})\right)\Big]  \\
     & \leq \sum_{k=1}^{\Upsilon_T}d_i^{(k)}+ \sum_{i=1}^K \sum_{k=1}^{\Upsilon_T}\left(\mu_{k^*}^{(k)} - \mu_{i}^{(k)}\right)\bE\Big[\indic(\cC^{(k)}) \sum_{s=1}^{n_i(\tau^{(k+1)})}\indic\left(s \, \kl(\tilde{\mu}_{i,s}^{(k)}, \mu_{k^*}^{(k)}) \leq f(\tau^{(k+1)} - \tau^{(k)})\right)\Big].
@@ -1299,40 +1299,50 @@ The test in \MUCB{} usually detects less changes, while the test in \CUSUMUCB{} 
 On the examples presented below as well as large scale examples, all the tests appear to have no false alarm, and always a small detection delay for changes that are ``easy enough'' to be efficiently detected.
 The four algorithms are presented in the order of decreasing performance (\ie, the first one is empirically the most efficient, that is, it obtains a smaller regret in average).
 
-\TODOL{Je ne suis pas sur que cette forme soit la meilleure pour présenter ces exemples, mais je n'aime vraiment pas la forme graphique qu'on avait suggéré ensemble avec Emilie, en fait on voit rien si on met plus d'un algo...}
+% \TODOL{Je ne suis pas sur que cette forme soit la meilleure pour présenter ces exemples, mais je n'aime vraiment pas la forme graphique qu'on avait suggéré ensemble avec Emilie, en fait on voit rien si on met plus d'un algo...}
 
 
 \textbf{Problem $\bm{1}$} has only local changes, and important changes, that denote here changes on the current optimal arm, happen only at $t=2000$ when arm $2$ becomes sub-optimal ($\mu_2$ goes from $0.9$ to $0.1$) and arm $0$ becomes optimal, and at $t=3000$ when arm $0$ stays optimal but sees its mean change from $0.3$ to $0.7$.
 Other changes concern arm $1$ at $t=1000$ and $t=4000$.
 
-\begin{itemize}
-    \item
-    \GLRklUCB{} with \emph{local restarts} restarted at $2014$ from a change detected on arm $2$, after $1970$ pulls of this arm, and at time $3032$ on arm $0$ (after $840$ pulls), and did not restart then. It successfully detects both important changes, and obtains a good performance in terms of regret, with $R_T = 63$ (on only one run).
-    % For a player GLR-klUCB_forGLR(Local, $\Delta n=1$, $\Delta s=1$) a change was detected at time 2014 for arm 2, after 1969 pulls of that arm (giving mean reward = 0.888). Last restart on that arm was at tau = 0
-    % For a player GLR-klUCB_forGLR(Local, $\Delta n=1$, $\Delta s=1$) a change was detected at time 3032 for arm 0, after 771 pulls of that arm (giving mean reward = 0.336). Last restart on that arm was at tau = 0
+Figure~\ref{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1} below displays the locations of the successively detected change-points by four algorithms,
+$1)$ \MklUCB,
+$2)$ \CUSUMklUCB,
+$3)$ \GLRklUCB{} with \emph{local restart},
+$4)$ \GLRklUCB{} with \emph{global restart}.
+In this ``easy'' problem, all algorithms correctly detect the important changes, except \CUSUM{} which detected a change on arm $1$ (in \textcolor{red}{red}) twice after the change-point located at $t=3000$.
+The three other algorithms have a very small delay, for instance only $9$ samples from arm $0$ (in \textcolor{blue}{blue}) after its change at time $t=2000$ are enough for the \GLR{} test to detect a change.
+Very small delays are possible only after having collected a lot of samples of the arm which changed, and for instance the same algorithm obtains a delay of $32$ samples from \textcolor{red}{arm $1$} for the next change at $t=3000$, because this arm was sampled less.
+On this problem, while \MklUCB{} detects the same changes as \GLRklUCB, with larger but comparable delays, it is seen to obtain a larger regret than the two \GLR{} variants, because the tuning of its forced exploration probability makes it explore suboptimal arms more often.
 
-    \item
-    \GLRklUCB{} with \emph{global restarts} restarted at $2009$ from a change detected on arm $2$, after $1972$ pulls of this arm, and at time $3031$ on arm $0$ (after $827$ pulls), and did not restart then. It successfully detects both important changes, and obtains a good performance in terms of regret, with $R_T = 71$.
-    Surprisingly, we do not observe a significant difference with the \emph{local restarts} variant.
-    % For a player GLR-klUCB_forGLR(Global, $\Delta n=1$, $\Delta s=1$) a change was detected at time 2009 for arm 2, after 1972 pulls of that arm (giving mean reward = 0.896). Last restart on that arm was at tau = 0
-    % For a player GLR-klUCB_forGLR(Global, $\Delta n=1$, $\Delta s=1$) a change was detected at time 3031 for arm 0, after 827 pulls of that arm (giving mean reward = 0.32). Last restart on that arm was at tau = 2009
+% \begin{itemize}
+%     \item
+%     \GLRklUCB{} with \emph{local restarts} restarted at $2014$ from a change detected on arm $2$, after $1970$ pulls of this arm, and at time $3032$ on arm $0$ (after $840$ pulls), and did not restart then. It successfully detects both important changes, and obtains a good performance in terms of regret, with $R_T = 63$ (on only one run).
+%     % For a player GLR-klUCB_forGLR(Local, $\Delta n=1$, $\Delta s=1$) a change was detected at time 2014 for arm 2, after 1969 pulls of that arm (giving mean reward = 0.888). Last restart on that arm was at tau = 0
+%     % For a player GLR-klUCB_forGLR(Local, $\Delta n=1$, $\Delta s=1$) a change was detected at time 3032 for arm 0, after 771 pulls of that arm (giving mean reward = 0.336). Last restart on that arm was at tau = 0
 
-    \item
-    \CUSUMklUCB{} restarted at $2011$ from a change detected on arm $2$, after $1861$ pulls of this arm, at time $2512$ on arm $1$ (after $249$ pulls), at time $3027$ on arm $0$ (after $825$ pulls) and again at time $3505$ on arm $0$ (after $466$ pulls), at time $4383$ on arm $1$ (after $123$ pulls), and a last time at $t=4914$ on arm $0$ (after $1304$ pulls), and did not restart then.
-    It restarted too many times on arm $0$ after its last change at $t=3000$, but except this weakness, it successfully detected the two important changes, and obtains a final regret $R_T = 150$.
-    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 2011 for arm 2, after 1861 pulls of that arm (giving mean reward = 0.895). Last restart on that arm was at tau = 0
-    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 2512 for arm 1, after 249 pulls of that arm (giving mean reward = 0.265). Last restart on that arm was at tau = 0
-    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 3027 for arm 0, after 825 pulls of that arm (giving mean reward = 0.33). Last restart on that arm was at tau = 0
-    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 3505 for arm 0, after 466 pulls of that arm (giving mean reward = 0.717). Last restart on that arm was at tau = 3027
-    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 4383 for arm 1, after 123 pulls of that arm (giving mean reward = 0.268). Last restart on that arm was at tau = 2512
-    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 4914 for arm 0, after 1304 pulls of that arm (giving mean reward = 0.699). Last restart on that arm was at tau = 3505
+%     \item
+%     \GLRklUCB{} with \emph{global restarts} restarted at $2009$ from a change detected on arm $2$, after $1972$ pulls of this arm, and at time $3031$ on arm $0$ (after $827$ pulls), and did not restart then. It successfully detects both important changes, and obtains a good performance in terms of regret, with $R_T = 71$.
+%     Surprisingly, we do not observe a significant difference with the \emph{local restarts} variant.
+%     % For a player GLR-klUCB_forGLR(Global, $\Delta n=1$, $\Delta s=1$) a change was detected at time 2009 for arm 2, after 1972 pulls of that arm (giving mean reward = 0.896). Last restart on that arm was at tau = 0
+%     % For a player GLR-klUCB_forGLR(Global, $\Delta n=1$, $\Delta s=1$) a change was detected at time 3031 for arm 0, after 827 pulls of that arm (giving mean reward = 0.32). Last restart on that arm was at tau = 2009
 
-    \item
-    \MklUCB{} restarted at $2055$ from a change detected on arm $2$, after $1811$ pulls of this arm, and at time $3080$ on arm $0$ (after $868$ pulls), and did not restart then.
-    It successfully detects both important changes, and obtains a rather bad performance in terms of regret, with $R_T = 280$.
-    % For a player M-klUCB($w=150$, Global) a change was detected at time 2055 for arm 2, after 1811 pulls of that arm (giving mean reward = 0.0552). Last restart on that arm was at tau = 0
-    % For a player M-klUCB($w=150$, Global) a change was detected at time 1025 for arm 0, after 868 pulls of that arm (giving mean reward = 0.0806). Last restart on that arm was at tau = 2055
-\end{itemize}
+%     \item
+%     \CUSUMklUCB{} restarted at $2011$ from a change detected on arm $2$, after $1861$ pulls of this arm, at time $2512$ on arm $1$ (after $249$ pulls), at time $3027$ on arm $0$ (after $825$ pulls) and again at time $3505$ on arm $0$ (after $466$ pulls), at time $4383$ on arm $1$ (after $123$ pulls), and a last time at $t=4914$ on arm $0$ (after $1304$ pulls), and did not restart then.
+%     It restarted too many times on arm $0$ after its last change at $t=3000$, but except this weakness, it successfully detected the two important changes, and obtains a final regret $R_T = 150$.
+%     % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 2011 for arm 2, after 1861 pulls of that arm (giving mean reward = 0.895). Last restart on that arm was at tau = 0
+%     % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 2512 for arm 1, after 249 pulls of that arm (giving mean reward = 0.265). Last restart on that arm was at tau = 0
+%     % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 3027 for arm 0, after 825 pulls of that arm (giving mean reward = 0.33). Last restart on that arm was at tau = 0
+%     % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 3505 for arm 0, after 466 pulls of that arm (giving mean reward = 0.717). Last restart on that arm was at tau = 3027
+%     % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 4383 for arm 1, after 123 pulls of that arm (giving mean reward = 0.268). Last restart on that arm was at tau = 2512
+%     % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 4914 for arm 0, after 1304 pulls of that arm (giving mean reward = 0.699). Last restart on that arm was at tau = 3505
+
+%     \item
+%     \MklUCB{} restarted at $2055$ from a change detected on arm $2$, after $1811$ pulls of this arm, and at time $3080$ on arm $0$ (after $868$ pulls), and did not restart then.
+%     It successfully detects both important changes, and obtains a rather bad performance in terms of regret, with $R_T = 280$.
+%     % For a player M-klUCB($w=150$, Global) a change was detected at time 2055 for arm 2, after 1811 pulls of that arm (giving mean reward = 0.0552). Last restart on that arm was at tau = 0
+%     % For a player M-klUCB($w=150$, Global) a change was detected at time 1025 for arm 0, after 868 pulls of that arm (giving mean reward = 0.0806). Last restart on that arm was at tau = 2055
+% \end{itemize}
 
 
 \begin{figure}[h!]  % [htbp]
@@ -1342,41 +1352,52 @@ Other changes concern arm $1$ at $t=1000$ and $t=4000$.
     \label{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1}
 \end{figure}
 
-\TODOL{Conclusion à tirer de cet exemple !}
+% \TODOL{Conclusion à tirer de cet exemple !}
 
 
 \textbf{Problem $\bm{2}$} has only global changes, and important changes happen only at $t=1000$ when arm $2$ sees its mean change from $0.9$ to $0.7$, then at $t=2000$ when it becomes sub-optimal ($\mu_2$ goes from $0.7$ to $0.5$) and arm $0$ becomes optimal, and at $t=3000$ and $t=4000$ when arm $0$ stays optimal but sees its mean change from $0.6$ to $0.7$ and then from $0.7$ to $0.8$.
 
-\begin{itemize}
-    \item
-    \GLRklUCB{} with \emph{local restarts} restarted at $1070$ from a change detected on arm $2$, after $1030$ pulls of this arm, again at time $2367$ on arm $0$ (after $1006$ pulls), and at time $4203$ on arm $0$ (after $1873$ pulls), and did not restart then.
-    It successfully detects the important change, and obtains a good performance in terms of regret, with a final regret $R_T = 115$.
-    % For a player GLR-klUCB_forGLR(Local, $\Delta n=1$, $\Delta s=1$) a change was detected at time 1070 for arm 2, after 1030 pulls of that arm (giving mean reward = 0.89). Last restart on that arm was at tau = 0
-    % For a player GLR-klUCB_forGLR(Local, $\Delta n=1$, $\Delta s=1$) a change was detected at time 2367 for arm 2, after 1006 pulls of that arm (giving mean reward = 0.654). Last restart on that arm was at tau = 1070
-    % For a player GLR-klUCB_forGLR(Local, $\Delta n=1$, $\Delta s=1$) a change was detected at time 4203 for arm 0, after 1873 pulls of that arm (giving mean reward = 0.666). Last restart on that arm was at tau = 0
+Like for the first problem, we illustrate the behavior of the same four algorithms in Figure~\ref{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2} below.
+In this other problem, the difference between \MklUCB{} and \CUSUMklUCB{} is clear:
+the first algorithm fails to detect any change, leading to a large regret,
+while the second one detects the changes that happen on the currently optimal arm and some other changes.
+Drawing conclusions on their behavior from a single simulation is tricky, as this example of behavior is counter intuitive:
+On the first hand, \CUSUM{} uses local restarts, and it should be less efficient than global restarts for this problem, as changes are all global.
+On the other hand, \MklUCB{} uses global restarts, but here it fails to detect any changes.
+%
+The two \GLRklUCB{} variants correctly detect the important changes, and we observe that their delays to detect a change can vary, mainly due to the randomness (we remind that we illustrate only one repetition of the simulation here).
+For instance, after the change on arm $1$ (in \textcolor{red}{red}), the \emph{local restart} detects it at time $t=2376$ and the \emph{global restart} detects it at time $t=2701$.
 
-    \item
-    \GLRklUCB{} with \emph{global restarts} restarted at time $1111$ from a change detected on arm $2$, after $1060$ pulls of this arm, and at time $2705$ on arm $0$ (after $1038$ pulls), and did not restart then.
-    It successfully detects the important changes, but with a larger delay than the \emph{local restarts} variant, and also obtains a good performance in terms of regret, with a final regret $R_T = 125$.
-    Here again we do not observe a significant difference with the \emph{local restarts} variant.
-    % For a player GLR-klUCB_forGLR(Global, $\Delta n=1$, $\Delta s=1$) a change was detected at time 1111 for arm 2, after 1060 pulls of that arm (giving mean reward = 0.888). Last restart on that arm was at tau = 0
-    % For a player GLR-klUCB_forGLR(Global, $\Delta n=1$, $\Delta s=1$) a change was detected at time 2705 for arm 2, after 1038 pulls of that arm (giving mean reward = 0.637). Last restart on that arm was at tau = 1111
+% \begin{itemize}
+%     \item
+%     \GLRklUCB{} with \emph{local restarts} restarted at $1070$ from a change detected on arm $2$, after $1030$ pulls of this arm, again at time $2367$ on arm $0$ (after $1006$ pulls), and at time $4203$ on arm $0$ (after $1873$ pulls), and did not restart then.
+%     It successfully detects the important change, and obtains a good performance in terms of regret, with a final regret $R_T = 115$.
+%     % For a player GLR-klUCB_forGLR(Local, $\Delta n=1$, $\Delta s=1$) a change was detected at time 1070 for arm 2, after 1030 pulls of that arm (giving mean reward = 0.89). Last restart on that arm was at tau = 0
+%     % For a player GLR-klUCB_forGLR(Local, $\Delta n=1$, $\Delta s=1$) a change was detected at time 2367 for arm 2, after 1006 pulls of that arm (giving mean reward = 0.654). Last restart on that arm was at tau = 1070
+%     % For a player GLR-klUCB_forGLR(Local, $\Delta n=1$, $\Delta s=1$) a change was detected at time 4203 for arm 0, after 1873 pulls of that arm (giving mean reward = 0.666). Last restart on that arm was at tau = 0
 
-    \item
-    \CUSUMklUCB{} restarted at $1055$ from a change detected on arm $2$, after $963$ pulls of this arm, at time $2051$ again on arm $2$ (after $922$ pulls), at time $2305$ on arm $0$ (after $185$ pulls), at time $2591$ on arm $0$ (after $272$ pulls), at time $3387$ on arm $0$ (after $770$ pulls), at time $3677$ on arm $1$ (after $169$ pulls), and did not restart then.
-    It missed some changes but detected the two ones, and obtained a final regret $R_T=142$ on this run.
-    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 1055 for arm 2, after 963 pulls of that arm (giving mean reward = 0.916). Last restart on that arm was at tau = 0
-    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 2051 for arm 2, after 922 pulls of that arm (giving mean reward = 0.682). Last restart on that arm was at tau = 1055
-    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 2305 for arm 0, after 185 pulls of that arm (giving mean reward = 0.53). Last restart on that arm was at tau = 0
-    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 2591 for arm 0, after 272 pulls of that arm (giving mean reward = 0.618). Last restart on that arm was at tau = 2305
-    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 3387 for arm 0, after 770 pulls of that arm (giving mean reward = 0.653). Last restart on that arm was at tau = 2591
-    % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 3677 for arm 1, after 169 pulls of that arm (giving mean reward = 0.373). Last restart on that arm was at tau = 0
+%     \item
+%     \GLRklUCB{} with \emph{global restarts} restarted at time $1111$ from a change detected on arm $2$, after $1060$ pulls of this arm, and at time $2705$ on arm $0$ (after $1038$ pulls), and did not restart then.
+%     It successfully detects the important changes, but with a larger delay than the \emph{local restarts} variant, and also obtains a good performance in terms of regret, with a final regret $R_T = 125$.
+%     Here again we do not observe a significant difference with the \emph{local restarts} variant.
+%     % For a player GLR-klUCB_forGLR(Global, $\Delta n=1$, $\Delta s=1$) a change was detected at time 1111 for arm 2, after 1060 pulls of that arm (giving mean reward = 0.888). Last restart on that arm was at tau = 0
+%     % For a player GLR-klUCB_forGLR(Global, $\Delta n=1$, $\Delta s=1$) a change was detected at time 2705 for arm 2, after 1038 pulls of that arm (giving mean reward = 0.637). Last restart on that arm was at tau = 1111
 
-    \item
-    \MklUCB{} did not detect any change, thus it obtains bad performance in terms of regret, with $R_T = 570$ (on this run).
-\end{itemize}
+%     \item
+%     \CUSUMklUCB{} restarted at $1055$ from a change detected on arm $2$, after $963$ pulls of this arm, at time $2051$ again on arm $2$ (after $922$ pulls), at time $2305$ on arm $0$ (after $185$ pulls), at time $2591$ on arm $0$ (after $272$ pulls), at time $3387$ on arm $0$ (after $770$ pulls), at time $3677$ on arm $1$ (after $169$ pulls), and did not restart then.
+%     It missed some changes but detected the two ones, and obtained a final regret $R_T=142$ on this run.
+%     % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 1055 for arm 2, after 963 pulls of that arm (giving mean reward = 0.916). Last restart on that arm was at tau = 0
+%     % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 2051 for arm 2, after 922 pulls of that arm (giving mean reward = 0.682). Last restart on that arm was at tau = 1055
+%     % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 2305 for arm 0, after 185 pulls of that arm (giving mean reward = 0.53). Last restart on that arm was at tau = 0
+%     % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 2591 for arm 0, after 272 pulls of that arm (giving mean reward = 0.618). Last restart on that arm was at tau = 2305
+%     % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 3387 for arm 0, after 770 pulls of that arm (giving mean reward = 0.653). Last restart on that arm was at tau = 2591
+%     % For a player CUSUM-klUCB(lazy detect 1) a change was detected at time 3677 for arm 1, after 169 pulls of that arm (giving mean reward = 0.373). Last restart on that arm was at tau = 0
 
-\TODOL{Conclusion à tirer de cet exemple !}
+%     \item
+%     \MklUCB{} did not detect any change, thus it obtains bad performance in terms of regret, with $R_T = 570$ (on this run).
+% \end{itemize}
+
+% \TODOL{Conclusion à tirer de cet exemple !}
 
 \begin{figure}[h!]  % [htbp]
     \centering
@@ -1562,7 +1583,7 @@ and it usually performs similarly to \MklUCB, however it is greatly outperformed
         \hline
         Oracle-Restart \klUCB{} & $\mathbf{68 \pm 40}$ & $\mathbf{86 \pm 50}$ & $126 \pm 54$ \\
         \hline
-        Exp3.S & $551 \pm 63$ & $860 \pm 109$ & $1723 \pm 421$ \\
+        Exp3.S & $551 \pm 63$ & $860 \pm 109$ & $723 \pm 121$ \\
         \hline
         \klUCB{} & $615 \pm 74$ & $1218 \pm 123$ & $106 \pm 36$ \\
         SW-\klUCB{} & $202 \pm 33$ & $322 \pm 47$ & $228 \pm 27$ \\
@@ -1589,13 +1610,21 @@ thus the experiments confirm that an efficient bandit algorithm (\eg, \klUCB) co
 \paragraph{Regret plots.}
 \label{subsub:6:regretPlots}
 
-We also include in Appendix~\ref{app:6:moreFigures} some figures showing the simulation results for the five problems.
+We show below on Figure~\ref{fig:6:meanRegretPb1} and additional in Appendix~\ref{app:6:moreFigures} the simulation results for the five problems.
 The results in terms of mean regret $R_T$ are given above in Tables~\ref{table:6:totalResults1} and \ref{table:6:totalResults2}, but it is also interesting to observe two plots for each experiments.
 %
 First, we show the mean regret as a function of time (\ie, $R_t$ for $1 \leq t \leq T$), for the $9$ algorithms considered (Discounted-\klUCB{} is removed as it is always the most inefficient and suffers high regret).
 %
 Efficient stationary algorithms, like TS and \klUCB, typically suffer a linear regret after a change on the optimal arm changes if they had ``too'' many samples before the change-points (\eg, on Figure~\ref{fig:6:meanRegretPb1} and even more on Figures~\ref{fig:6:meanRegretPb4} and \ref{fig:6:meanRegretPb5}).
 This illustrates the conjecture that classical algorithms can suffer linear regret even on simple piece-wise stationary problems.
+
+
+\begin{figure}[h!]  % [htbp]
+    \centering
+    \includegraphics[width=1.20\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/SP__K3_T5000_N1000__9_algos_pb1/main____env1-1_1316297932259102962.pdf}
+    \caption{Mean regret as a function of time, $R_t$ ($1 \leq t \leq T = 5000$) for problem 1.}
+    \label{fig:6:meanRegretPb1}
+\end{figure}
 
 On simple problems, like problem $1$, all the algorithms being designed for piece-wise stationary environments perform similarly, but as soon as the gaps are smaller or there is more changes, we clearly observe that our approach \GLRklUCB{} can outperform the two other actively adaptive algorithms \CUSUMklUCB{} and \MklUCB{} (\eg, on Figure~\ref{fig:6:meanRegretPb2}), and performs much more than passively adaptive algorithms DTS and SW-\klUCB{}  (\eg, on Figure~\ref{fig:6:meanRegretPb3}).
 Our approach, with the two options of \textbf{Local} or \textbf{Global} restarts, performs very closely to the oracle for problem $4$.
