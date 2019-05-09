@@ -4,19 +4,19 @@
 \label{chapter:3}
 \minitoc
 
-
+\newpage
 \paragraph{Abstract.}
 %
 SMPyBandits is a Python package I have developed since the beginning of my PhD.
 It is designed to allow easy and fast numerical simulations on single-player and multi-players Multi-Armed Bandits (MAB) algorithms.
 %  and SMPyBandits is written in Python.
 This library is by far the most complete open-source implementation of state-of-the-art algorithms and different kinds of MAB models.
-It aims at being extensive, simple to use and maintain, and has a clean and well documented codebase.
-It allows fast prototyping of simulations and experiments, with an easy configuration system and command-line options to customize experiments.
+It aims at being exhaustive, simple to use and maintain, and has a clean and well documented codebase, and it uses the popular open-source Python language.
+It allows fast prototyping of simulations, with an easy configuration system and command-line options to customize experiments.
 Experiment results are saved in an optimized binary format (HDF5) as well as high quality plots of many useful visualizations.
 %
 More than two years of active development have shown how easy it can be to add new algorithms, new arm distributions, and new bandit models (\eg, Markov or non-stationary).
-It uses the most recent technologies, by being hosted on GitHub, and uses two online services of continuous integration to run automated tests and build the documentation.
+It is hosted on GitHub, and uses the most recent technologies, by using two online services of continuous integration to run automated tests and build the documentation.
 
 This chapter details the organization of the library, what it implements in terms of arm distributions, models, algorithms and visualizations.
 Then we use it to perform a numerical comparisons of the main state-of-the-art single-player MAB algorithms, as well as a study to compare time and memory costs of the main algorithms.
@@ -30,16 +30,17 @@ Then we use it to perform a numerical comparisons of the main state-of-the-art s
 
 % This chapter is intended as a long version of the paper presenting SMPyBandits that I wrote in Summer 2018, see https://hal.inria.fr/hal-01840022
 
-SMPyBandits is the most complete open-source implementation of state-of-the-art algorithms and models of Multi-Armed Bandits.
-It aims at being extensive, simple to use and maintain, with a clean and perfectly documented codebase. But most of all it allows fast prototyping of simulations and experiments, with an easy configuration system and command-line options to customize experiments while starting them (see below for an example).
+% SMPyBandits is the most complete open-source implementation of state-of-the-art algorithms and models of Multi-Armed Bandits.
+% It aims at being extensive, simple to use and maintain, with a clean and perfectly documented codebase. But most of all it allows fast prototyping of simulations and experiments, with an easy configuration system and command-line options to customize experiments while starting them (see below for an example).
 
-SMPyBandits does not aim at being blazing fast or optimized in terms of memory usage, as it comes with a pure Python implementation \cite{python}, with no dependency except standard open-source Python packages.
+SMPyBandits stands for \emph{S}ingle and \emph{M}ulti \emph{P}layer \emph{Bandits} in P\emph{y}thon.
+The library does not aim at being blazing fast or optimized in terms of memory usage, as it comes with a pure Python implementation \cite{python}, and uses only standard open-source Python packages (\ie, no hard to install dependencies).
 Some critical parts are also available as a \texttt{C} Python extension, and the just-in-time Numba compiler \cite{numba} is used whenever it is possible, so we can note that we optimized the time efficiency of what could be (easily) optimized.
 However if simulation speed really matters, one should rather refer to less exhaustive but faster implementations, like for example \cite{TorLibbandit} in \texttt{C++} or \cite{VishMABjl} in Julia. Note that both are not maintained anymore, and contain just a few algorithms for the simple stationary MAB model.
 
 In this Chapter~\ref{chapter:3}, we start by presenting in Section~\ref{sec:3:presentationLibrary} the organization of the library.
 We use the library to compare the most famous and most efficient single-player MAB algorithms in Section~\ref{sec:3:reviewSPAlgorithms},
-then we discuss in Section~\ref{sec:3:timeAndMemoryCosts} about the time efficient and memory costs of the some MAB algorithms.
+then we discuss in Section~\ref{sec:3:timeAndMemoryCosts} about the time and memory costs of MAB algorithms.
 The take away messages are two-fold:
 from a practical point-of-view, it is usually advised to use the simplest algorithm and we advise to use \UCB{} (as we do in the next Chapter~\ref{chapter:4}),
 and that for theoretical works where optimality of the MAB algorithm matters, we advise to use \klUCB{} (as we do in the next Chapters~\ref{chapter:5} and \ref{chapter:6}).
@@ -61,11 +62,14 @@ The code for SMPyBandits is hosted online at \texttt{\href{https://GitHub.com/SM
 
 % I want to show what is SMPyBandits, what problems does it solve, what did I implement, how to use it.
 
-We start by explaining how SMPyBandits simulates MAB problems, by detailing the different parts.
+We start by explaining how SMPyBandits simulates MAB problems, by detailing its components:
+MAB problems (single- or multi-players),
+and reward distributions.
+%
 We then detail how it implements MAB algorithms (\eg, \UCB),
 and what kind of information is displayed, saved and plotted after a batch of simulations of bandit problems.
 
-The main goal of the library is to be easily able to simulate a small number of algorithms (\eg, three algorithms like \UCB, \klUCB{} and Thompson sampling) on one or more bandit models (single- or multi-player) defined by the number of arms $K$ and the distributions $\nu_k$, for some time from $t=1$ to the horizon $T$.
+The main goal of the library is to be easily able to simulate MAB algorithms (\eg, three algorithms like \UCB, \klUCB{} and Thompson sampling) on one or more bandit models (single- or multi-player) defined by the number of arms $K$ and the distributions $\nu_k$, for some time from $t=1$ to the horizon $T$.
 After the simulation, the library then displays statistical summary of the (mean) rewards accumulated by each algorithms, as well as regret and other visualizations.
 The same problem is simulated for $N$ independent repetitions (\eg, $N=1000$) in order to show mean results with a low variance.
 
@@ -75,29 +79,29 @@ The same problem is simulated for $N$ independent repetitions (\eg, $N=1000$) in
 For the classical single-player stochastic MAB model, as defined in Chapter~\ref{chapter:2},
 a stochastic MAB problem is defined by $K>1$ distributions $\nu_k$ (also called arms),
 used to sample \iid{} rewards $r_k(t) \sim \nu_k, \forall t$.
-An agent choose arm $A(t)\in\{1,\dots,K\}$ at time $t$ and observes the reward $r_{A(t)}(t)$ without knowing the other (hidden) rewards.
+An agent chooses arm $A(t)\in\{1,\dots,K\}$ at time $t$ and observes the reward $r_{A(t)}(t)$ without knowing the other (hidden) rewards.
 Her goal is to maximize $\sum_{t=1}^T r_{A(t)}(t)$ by sequentially exploring the $K$ arms, and she essentially has to find and exploit the best one as fast as possible.
 
 \paragraph{Simulation loop}
 %
 Any simulation library targeting single-player bandit problems must implement at least three components:
-reward distributions, MAB algorithm, and a simulation loop that essentially looks like this.
+reward distributions, MAB algorithm, and a simulation loop that essentially looks like this:
 \begin{itemize}
     \item First, initialize the MAB problem and one or more algorithms,
-    \item Then, for $t=1$ to $t=T$ (known before hand), repeat the following block (for each algorithm). Ask algorithm $\cA$ his chosen arm $A(t)$, then sample a (random) reward $r(t)$ (\iid) from distribution $\nu_{A(t)}$, and finally feeds the observation $(A(t), r(t))$ to the algorithm,
-    \item At the end, compute the accumulated reward, the regret, plot visualizations etc.
+    \item Then, for $t=1$ to $t=T$ (known before hand), repeat the following block (for each algorithm). Ask algorithm $\cA$ her chosen arm $A(t)$, then sample a (random) reward $r(t)$ (\iid) from distribution $\nu_{A(t)}$, and finally feeds the observation $(A(t), r(t))$ to the algorithm,
+    \item At the end, compute the cumulated reward, the regret, plot visualizations etc.
 \end{itemize}
 %
-Note that the second step should of course be repeated a large number of times if we want to study \emph{mean} regret and not only the regret in one single trajectory.
+Note that the second step is repeated a large number of times (\eg, $N=1000$), in order to study \emph{mean} regret and not only the regret in one single trajectory.
 If one wants to compare algorithms on a same problem, it is possible to sample all the rewards $(r_k(t))_{k\in[K], t\in[T]}$ before-hand, and store them so that for each repetition of the simulation, the randomness from the environment (\ie, the rewards) has the same impact on all the algorithms.
 
 
 \paragraph{Simulation loop for multi-player bandit}
 
-For Cognitive Radio and other applications, a well-studied extension is to consider $M\geq2$ players, interacting on the same $K$ arms.
-Whenever two or more players select the same arm at the same time, they all suffer from a collision.
+For Cognitive Radio dealing with OSA problems and other applications, a well-studied extension is to consider $M\geq2$ players, interacting on the same $K$ arms.
+Whenever two or more players select the same arm at the same time (\eg, for OSA, the same frequency channel), they all suffer from a radio collision.
 %
-Different collision models has been proposed, and the simplest one consists in giving a $0$ reward to each colliding players.
+Different collision models have been proposed, and the simplest one consists in giving a $0$ reward to each colliding players.
 Without any centralized supervision or coordination between players, they must learn to access the $M$ best resources (\ie, arms with highest means) without collisions.
 We refer to Chapter~\ref{chapter:5} which introduces and details various multi-player bandit models.
 
@@ -123,10 +127,10 @@ For comparison, realistic (\eg, \UCB{} for multiple play) or full-knowledge cent
 
 Any simulation library targeting multi-player bandit problems must implement at least another component:
 % a collision model, and
-a simulation loop that essentially looks like this.
+a simulation loop that essentially looks like this:
 \begin{itemize}
     \item First, initialize the MAB problem with $M$ players, and one or more cohorts of $M$ players (one player is one algorithm, usually $M$ times the same one),
-    \item Then, for $t=1$ to $t=T$ (known before hand), repeat the following block (for each algorithm). Ask each player $\cA^{(j)}$ his chosen arm $A^{(j)}(t)$, then query the collision model\footnote{~The default collision model is the most widely studied in the literature, where a player encounters a collision (\ie, received a zero reward $Y^{(j)}(t)=0$) if she is not the only one to have chosen an arm $k=A^{(j)}(t)$, otherwise $Y^{(j)}(t)=r_{A^{(j)}(t)}(t)$ if she is the only one playing this arm.} to know which player will get a zero reward (for a collision) and which player will get a random reward from the environment. The
+    \item Then, for $t=1$ to $t=T$ (known before hand), repeat the following block (for each algorithm). Ask each player $\cA^{(j)}$ her chosen arm $A^{(j)}(t)$, then query the collision model\footnote{~The default collision model is the most widely studied in the literature, where a player encounters a collision (\ie, received a zero reward $Y^{(j)}(t)=0$) if she is not the only one to have chosen an arm $k=A^{(j)}(t)$, otherwise $Y^{(j)}(t)=r_{A^{(j)}(t)}(t)$ if she is the only one playing this arm.} to know which player will get a zero reward (for a collision) and which player will get a random reward from the environment. The
     sample (random) feedback $Y_k(t)$ (\iid) from distributions $\nu_{k}$, and compute the rewards $r^{(j)}(t)$ from the random feedback and the collision model. Finally feeds the observation $(A^{(j)}(t), Y_{A^{(j)}(t)}(t), r^{(j)}(t))$ to player $j$, for all the $M$ players,
     \item At the end, compute the accumulated reward, the regret, plot visualizations etc.
 \end{itemize}
@@ -134,14 +138,15 @@ a simulation loop that essentially looks like this.
 
 \subsection{Reward distributions}
 %
-We focus on one dimensional distributions,
-and supports \emph{Bernoulli} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Bernoulli.html}{Arms.Bernoulli}}), \emph{binomial} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Binomial.html}{Arms.Binomial}}), \emph{Poisson} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Poisson.html}{Arms.Poisson}}), and a generic \emph{discrete} (\texttt{\href{https://smpybandits.github.io/docs/Arms.DiscreteArm.html}{Arms.DiscreteArm}}) distributions,
-as well as \emph{exponential} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Exponential.html}{Arms.Exponential}}), \emph{gamma} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Gamma.html}{Arms.Gamma}}), \emph{Gaussian} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Gaussian.html}{Arms.Gaussian}}) and \emph{uniform} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Uniform.html}{Arms.Uniform}}) continuous distributions,
-which can be truncated to an interval $[a,b]$ or have unbounded support ($\mathbb{R}$).
+We focus on one dimensional distributions, implemented in the \texttt{\href{https://smpybandits.github.io/docs/Arms.html}{Arms}} module.
+The library supports discrete distributions: \emph{Bernoulli} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Bernoulli.html}{Bernoulli}}), \emph{binomial} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Binomial.html}{Binomial}}), \emph{Poisson} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Poisson.html}{Poisson}}), and a generic \emph{discrete} distribution (\texttt{\href{https://smpybandits.github.io/docs/Arms.DiscreteArm.html}{DiscreteArm}}),
+as well as continuous distributions,
+which can be truncated to an interval $[a,b]$ or have unbounded support ($\mathbb{R}$):
+\emph{exponential} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Exponential.html}{Exponential}}), \emph{gamma} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Gamma.html}{Gamma}}), \emph{Gaussian} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Gaussian.html}{Gaussian}}) and \emph{uniform} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Uniform.html}{Uniform}}).
 %
 The default is to use the same distribution for the $K$ arms, but it also possible to mix them (see for instance Figure~\ref{fig:25:HarderMixed}).
 %
-For instance the following code creates three arms, following a Bernoulli distribution with respective means $0.1, 0.5, 0.9$, and a \texttt{MAB} object which encapsulate the problem.
+For instance the following code creates three arms, following a Bernoulli distribution with respective means $0.1, 0.5, 0.9$, and a \texttt{MAB} object which encapsulate sthe problem.
 We give another example for truncated Gaussian distributions, and a visualization of a histogram of $10000$ rewards obtained from the arms, below in Figure~\ref{fig:3:exampleOfRewards}.
 
 % https://tex.stackexchange.com/a/12430/
@@ -175,8 +180,7 @@ gaussian_problem.plotHistogram()  # display the histogram showed below
 	\label{fig:3:exampleOfRewards}
 \end{figure}
 
-
-We do not give more details, but the interested reader can refer to the following Jupyter notebook \cite{jupyter} document hosted at:\\
+For more details, an interested reader can refer to the following Jupyter notebook \cite{jupyter}:
 \begin{small}
     \href{https://smpybandits.github.io/notebooks/Easily_creating_MAB_problems.html}{\texttt{SMPyBandits.GitHub.io/notebooks/Easily\_creating\_MAB\_problems.html}}
 \end{small}
@@ -188,7 +192,7 @@ However, note that our library does support finite-state real-valued Markov MAB 
 \subsection{MAB algorithms}
 
 SMPyBandits is a complete open-source implementation of single-player (classical) bandit algorithms,
-containing over 65 (in the module \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.html}{Policies}}) algorithms.
+containing over 65 algorithms (in the module \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.html}{Policies}}).
 It uses a well-designed hierarchical structure and class inheritance scheme (as detailed on the various UML diagrams showed on the \texttt{\href{https://SMPyBandits.GitHub.io/uml_diagrams/README.html}{uml\_diagrams}} folder) to minimize redundancy in the codebase.
 For instance, most existing algorithms are index-based, and new ones can be written easily by inheriting from the \texttt{IndexPolicy} class (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.IndexPolicy.html}{Policies.IndexPolicy}}).
 An index-based algorithm computes an index $I_k(t)\in\mathbb{R}$ for each arm $k$ at time $t$ and simply play $A(t) = \arg\max_k I_k(t)$.
@@ -212,8 +216,35 @@ and summary plots are automatically saved as high-quality PNG, PDF and EPS, usin
 Raw data from each simulation is also saved in a HDF5 file using h5py \cite{h5py}, an efficient and compressed binary format, to allow easy post-mortem exploration of simulation results.
 Making new simulations is very easy, one only needs to write a configuration script (\texttt{configuration.py}), without needing a complete knowledge of the internal code architecture.
 
-A complete Sphinx documentation, for each algorithm and all parts of the codebase, even including the constants in the different configuration files:
+
+\subsection{Documentation}
+
+A complete documentation, for each algorithm and the entire codebase, is available online at
+% even including the constants in the different configuration files:
 \texttt{\href{https://SMPyBandits.GitHub.io}{SMPyBandits.GitHub.io}}.
+It uses the Sphinx software \cite{sphinx}, and the content is directly written in the Python files as docstring, to allow users to have access to the documentation from within their IDE or the Python console.
+The most interesting component of the library is the many algorithms being implemented: for each of them, the documentation gives at least a reference to a research paper (\eg, \cite{Kaufmann12BUCB} for \texttt{BayesUCB}), as well as a bird-eye view of its behavior.
+For most algorithms, in particular for index policies, the internal variables of the implementation are carefully linked with the notations of each paper, and formulas explaining the way the algorithm selects its arm are usually given.
+Whenever it is appropriate, the documentation also includes warning or information about the empirical performance of costly algorithms.
+The documentation also contains extensive examples of any intermediate numerical functions, that are also used as tests (using \texttt{doctest.testmod} from the standard library).
+For example, Figures~\ref{fig:3:twoScreenshotsOfTheDocumentation} and \ref{fig:3:twoMoreScreenshotsOfTheDocumentation} below show four screenshots from the documentation.
+We show the main page, the list of algorithms in the \texttt{Policies} module, an example of the documentation of one algorithm (for the \klUCB-Switch algorithm from \cite{Garivier18}), and a page detailing the API and organization of the library as well as instructions to follow if someone wants to implement a new model or a new algorithm.
+
+\begin{figure}[h!]  % [htbp]
+    \centering
+	\includegraphics[width=0.49\linewidth]{overview_documentation_1.png}
+    \includegraphics[width=0.49\linewidth]{overview_documentation_2.png}
+	\caption{Screenshots from two pages of the documentation.}
+	\label{fig:3:twoScreenshotsOfTheDocumentation}
+\end{figure}
+
+\begin{figure}[h!]  % [htbp]
+    \centering
+	\includegraphics[width=0.49\linewidth]{overview_documentation_3.png}
+	\includegraphics[width=0.49\linewidth]{overview_documentation_4.png}
+	\caption{Screenshots from two other pages of the documentation.}
+	\label{fig:3:twoMoreScreenshotsOfTheDocumentation}
+\end{figure}
 
 
 \subsection{How to run experiments?}
@@ -260,9 +291,11 @@ $ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=4 \
 
 \subsection{Example of a simulation and illustration}
 
-A small script \texttt{configuration.py} (\texttt{\href{https://SMPyBandits.GitHub.io/docs/configuration.html}{SMPyBandits.GitHub.io/docs/configuration.html}}) is used to import the arm classes (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Arms.html}{SMPyBandits.GitHub.io/docs/Arms.html}}), the policy classes (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.html}{SMPyBandits.GitHub.io/docs/Policies.html}}) and define the problems and the experiments.
-Choosing the algorithms is easy by customizing the \texttt{configuration["policies"]} list in the \texttt{configuration.py} file.
-For instance, one can compare the standard anytime \klUCB{} algorithm (class \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.klUCB.html}{Policies.klUCB}}) against the non-anytime variant $\klUCB^{++}$ algorithm (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.klUCBPlusPlus.html}{Policies.klUCBPlusPlus}}), and also \UCB{} with $\alpha=1$ (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.UCBalpha.html}{Policies.UCB}}) and Thompson sampling (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Thompson.html}{Policies.Thompson}}) with a Beta posterior (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Posterior.Beta.html}{Policies.Posterior.Beta}})).
+A small script \texttt{configuration.py}
+% (\texttt{\href{https://SMPyBandits.GitHub.io/docs/configuration.html}{SMPyBandits.GitHub.io/docs/configuration.html}})
+is used to import the arm classes (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Arms.html}{Arms}} module), the policy classes (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.html}{Policies}} module) and define the problems and the experiments.
+The \texttt{configuration["policies"]} list in the \texttt{configuration.py} file is used to choose the algorithms to include.
+For instance, one can compare the standard anytime \klUCB{} algorithm (class \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.klUCB.html}{klUCB}} in \texttt{Policies} module) against the non-anytime variant $\klUCB^{++}$ algorithm (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.klUCBPlusPlus.html}{klUCBPlusPlus}}), and also \UCB{} with $\alpha=1$ (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.UCBalpha.html}{UCB}}) and Thompson sampling (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Thompson.html}{Thompson}}) with a Beta posterior (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Posterior.Beta.html}{Posterior.Beta}})).
 
 % https://tex.stackexchange.com/a/12430/
 \begin{small}
@@ -282,10 +315,10 @@ configuration["policies"] = [
 \end{small}
 
 \begin{figure}[h!]  % [htbp]
-	% \centering
+	\centering
 	\includegraphics[width=1.05\linewidth]{3.pdf}
-	\caption[Example of a single-player simulation showing the average regret and histogram of regrets of $4$ algorithms]{
-		Example of a single-player simulation showing the average regret and histogram of regrets of four algorithms. They all perform very well: each algorithm is known to be order-optimal (\ie, its regret is proved to match the lower-bound up-to a constant), and each but UCB is known to be optimal (\ie, with the constant matching the lower-bound).
+	\caption[Example of a single-player simulation showing the average regret of $4$ algorithms]{
+		Example of a single-player simulation showing the average regret of four algorithms. They all perform very well: each algorithm is known to be order-optimal (\ie, its regret is proved to match the lower-bound up-to a constant), and each but UCB is known to be optimal (\ie, with the constant matching the lower-bound).
 	}
 	\label{fig:3:firstPlot}
 \end{figure}
@@ -298,11 +331,9 @@ Figure~\ref{fig:3:firstPlot} above shows the average regret for these $4$ algori
 The Figure~\ref{fig:3:firstPlot_hist} below shows the histogram of regret obtained at the end of the experiment (\ie, $R_T$) for the same example.
 
 \begin{figure}[h!]  % [htbp]
-	% \centering
+	\centering
 	\includegraphics[width=1.05\linewidth]{3_hist.pdf}
-	\caption{Histogram of regret for the same experiment.
-        For instance, Thomson sampling is very efficient in average (in yellow), and UCB shows a larger variance (in red).
-    }
+	\caption{Histogram of regret for the same experiment as of Figure~\ref{fig:3:firstPlot}. For instance, Thomson sampling is very efficient in average (in yellow), and UCB shows a larger variance (in red).}
 	\label{fig:3:firstPlot_hist}
 \end{figure}
 
@@ -342,25 +373,26 @@ In the last two years, the documentation saw about 8500 unique visits, while the
 \paragraph{Travis CI.}
 Since $2018$, we have been using the free web service provided by Travis CI (\href{https://travis-ci.org/}{\texttt{Travis-CI.org}}).
 Travis CI allows to automatically run short numerical simulations after every commit.
-This allows to check that each modification on any part of the codebase does not break anything, as well as giving an up-to-date example of log files that shows online the results of different examples of experiments. The tests covers all the main models and almost all the algorithms implemented in SMPyBandits, and it has been proved very useful to quickly find and fix new bugs.
+This allows to check that each modification on any part of the codebase does not break anything, as well as giving an up-to-date example of log files that shows online the results of different examples of experiments. The tests covers all the main models and almost all the algorithms implemented in SMPyBandits, and it has been proven very useful to quickly find and fix new bugs.
 For more details, see \href{https://travis-ci.org/SMPyBandits/SMPyBandits}{\texttt{Travis-CI.org/SMPyBandits/SMPyBandits}}.
 %
 Since its first use, the service did about 160 builds, and about $30\%$ of them were useful to detect newly introduced issues or bugs in the code.
 The build is configured using the \texttt{.travis.yml} file in SMPyBandits main folder, and it runs numerical experiments with a short horizon (\eg, $T=100$ or $T=1000$) and a small number of repetitions (\ie, $N=4$), but covering all the different models implemented by SMPyBandits (and even including some that are not covered in this chapter, like the Markov model, or the sparse multi-player model).
-Builds typically run for $15$ minutes, and Travis CI have been proved to be very useful in our development process.
+Builds typically run for $15$ minutes, and Travis CI have been proven to be very useful in our development process.
 
 
 
 \subsection{List of research works using SMPyBandits}
 
-SMPyBandits was used for the following research articles since $2017$, and it is used for the previous and the next chapters of this thesis (except in Chapter~\ref{chapter:4}).
+SMPyBandits has been used for the following research articles since $2017$, and it is used for the previous and the next chapters of this thesis (except in Chapter~\ref{chapter:4}).
 
 -- In \cite{Besson2018WCNC} and in Chapter~\ref{chapter:2} above, we used SMPyBandits to illustrate and compare different aggregation algorithms\footnote{~See the page \texttt{\href{https://SMPyBandits.GitHub.io/Aggregation.html}{SMPyBandits.GitHub.io/Aggregation.html}} on the documentation, which gives detailed instructions to reproduce the results presented in this research paper, details about the models and the notations, and bibliographic references.}. We designed a variant of the Exp4 algorithm for online aggregation of experts \cite{Bubeck12}, called \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Aggregator.html}{Aggregator}}.
 % Aggregating experts is a well-studied idea in sequential learning and in machine learning in general. We showed that it can be used in practice to select on the run the best bandit algorithm for a certain problem from a fixed pool of experts. This idea and algorithm can have interesting impact for Opportunistic Spectrum Access applications \cite{Jouini09} that use multi-armed bandits algorithms for sequential learning and network efficiency optimization.
 
--- In \cite{Besson2018ALT} and in Chapter~\ref{chapter:5} below, we used SMPyBandits for all the simulations for multi-player bandit algorithms\footnote{~Similarly, see the page \texttt{\href{https://SMPyBandits.GitHub.io/MultiPlayers.html}{SMPyBandits.GitHub.io/MultiPlayers.html}} on the documentation.}. We designed the two \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html}{RandTopM}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{MCTopM}} algorithms and proved than they enjoy logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (\ie, \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html}{rhoRand}}, \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html}{MEGA}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html}{MusicalChair}}).
+-- In \cite{Besson2018ALT} and in Chapter~\ref{chapter:5} below, we used SMPyBandits for all the simulations for multi-player bandit algorithms\footnote{~Similarly, see the page \texttt{\href{https://SMPyBandits.GitHub.io/MultiPlayers.html}{SMPyBandits.GitHub.io/MultiPlayers.html}} on the documentation.}. We designed the two \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html}{RandTopM}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{MCTopM}} algorithms and proved than they obtain logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (\ie, \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html}{rhoRand}}, \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html}{MEGA}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html}{MusicalChair}}).
 
--- In \cite{Besson2018DoublingTricks} (quickly presented in Appendix~\ref{app:2:DoublingTricks}), we used SMPyBandits to illustrate and compare different "doubling trick" schemes\footnote{~Similarly, see the page \texttt{\href{https://SMPyBandits.GitHub.io/DoublingTrick.html}{SMPyBandits.GitHub.io/DoublingTrick.html}} on the documentation.}. and lots of bibliographic referencesIn sequential learning, an algorithm is anytime if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any non-anytime algorithm to an anytime variant is the ``Doubling Trick'': start with an horizon $T_0\in\mathbb{N}^*$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to conserve minimax regret bounds (in $R_T = \mathcal{O}(\sqrt{T})$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to conserve a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to conserve logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can conserve minimax bounds, or "weak" minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
+-- In \cite{Besson2018DoublingTricks} (quickly presented in Appendix~\ref{app:2:DoublingTricks}), we used SMPyBandits to illustrate and compare different "doubling trick" schemes\footnote{~Similarly, see the page \texttt{\href{https://SMPyBandits.GitHub.io/DoublingTrick.html}{SMPyBandits.GitHub.io/DoublingTrick.html}} on the documentation.}.
+In sequential learning, an algorithm is said to be ``anytime'' if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any ``non-anytime'' algorithm to an ``anytime'' variant is the ``Doubling Trick'': start with an horizon $T_0\in\mathbb{N}^*$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to keep minimax regret bounds (in $R_T = \mathcal{O}(\sqrt{T})$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to keep a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to keep logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can keep minimax bounds, or "weak" minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
 
 -- In \cite{Besson2019GLRT} and \cite{Besson2019Gretsi}, and in Chapter~\ref{chapter:6} below, we used SMPyBandits for piece-wise stationary MAB models (only for the single-player case). We illustrate and compare different algorithms designed for this family of non-stationary problems\footnote{~Similarly, see the page \texttt{\href{https://SMPyBandits.GitHub.io/NonStationary.html}{SMPyBandits.GitHub.io/NonStationary.html}} on the documentation.}.
 We designed the \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.GLR_UCB.html}{GLRklUCB}} policy, and implemented most of the policies from state-of-the-art research on passively or active adaptive policies, both adversarial- or stochastic-based, designed to tackle the piece-wise stationary MAB problems.
@@ -378,7 +410,13 @@ First, we detail the list of different algorithms that we compare, and the diffe
 We give the results of the numerical experiments, in terms of mean regret at the end of the experiment of different horizons $T$.
 Additional results in terms of real measurements of time and memory are given and discussed in the next Section~\ref{sec:3:timeAndMemoryCosts}.
 
-Finally, we give some observations on the results, and the main take-away message of this section is the following: in all the rest of this thesis, we focus on using the simple \UCB{} algorithm when simplicity is favored, \ie, in the more applied Chapter~\ref{chapter:4}, and the \klUCB{} algorithm when efficiency is favored, \ie, in the two more theoretical Chapters~\ref{chapter:5} and \ref{chapter:6}.
+Finally, we give some observations on the results, and the main take-away message of this section is the following: in all the rest of this thesis, we focus on using
+\begin{itemize}
+    \item
+    the simple \UCB{} algorithm when simplicity is favored, \ie, in the more applied Chapter~\ref{chapter:4},
+    \item
+    and the \klUCB{} algorithm when efficiency is favored, \ie, in the two more theoretical Chapters~\ref{chapter:5} and \ref{chapter:6}.
+\end{itemize}
 
 
 \subsection{Experimental setup: algorithms and problems}
@@ -386,9 +424,9 @@ Finally, we give some observations on the results, and the main take-away messag
 % \paragraph{List of algorithms}
 
 We consider the nine following algorithms, and seven more are described in Appendix~\ref{sub:3:additionalExperiments}.
-For each of them, we give a bibliographic reference, that corresponds to the most recent article studying it and not the first one which introduced it.
+For each of them, we give a bibliographic reference, that corresponds to a recent article studying it and not the first one which introduced it.
 We give the chosen tuning of the parameters, for parametric algorithms.
-Algorithms that are not anytime use the exact value of the horizon $T$, and when increasing values of $T$ are studied for the same problem, of course they use the correct successive values. \\
+Algorithms that are ``not anytime'' use the exact value of the horizon $T$, and when increasing values of $T$ are studied for the same problem, they use the correct successive values. \\
 %
 \indent
 For reproducibility, we also give in ``\texttt{typewriter font}'' the name of the corresponding class in the \texttt{Policies} module in SMPyBandits
@@ -407,15 +445,15 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
 
     \item Algorithm 3 is
     $\mathrm{Exp}3^{++}$ from \cite{Seldin17}, using $\alpha=3$ and $\beta=256$ as advised (\texttt{Exp3PlusPlus}).
-    It is a recent variant of the $\mathrm{Exp3}$ algorithm, using an adaptive tuning of its parameter. It is anytime, and was proved to obtain good ``best of both world'' performances, meaning that it achieves $\cO(K\log(T)/\Delta^2)$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
+    It is a recent variant of the $\mathrm{Exp3}$ algorithm, using an adaptive tuning of its parameter. It is anytime, and was proven to obtain good ``best of both world'' performances, meaning that it achieves $\cO(K\log(T)/\Delta^2)$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
 
     \item Algorithm 4 is
     $\UCB_1$ from \cite{Auer02}, using $\alpha=1$ (\texttt{UCBalpha}).
-    It was proved to achieve order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret.
+    It achieves order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret.
 
     \item Algorithm 5 is
     \klUCB{} from \cite{KLUCBJournal}, using the Bernoulli KL divergence and the corresponding \klUCB{} indexes, implemented as \texttt{kullback.klucbBern} (\texttt{klUCB}).
-    It was proved to achieve asymptotical optimal problem-dependent bounds with a $\cO(\log(T))$ regret with the scaling factor matching Lai and Robbins' lower-bound \cite{LaiRobbins85}.
+    It achieves asymptotical optimal problem-dependent bounds with a $\cO(\log(T))$ regret with the scaling factor matching Lai and Robbins' lower-bound \cite{LaiRobbins85}.
     It is computationally more costly that \UCB, as at each time step $t$, to compute the $K$ indexes, a convex optimization problem must be solved approximately, for each arm.
     In practice, a few steps of a Newton method are enough to obtain a precision of more than 10 digits, and empirically we found that even in the worst cases \klUCB{} is an order of magnitude slower than \UCB.
     \TODOL{Si on en pas parlé avant, ou après dans une annexe, je peux dire un mot ici à propos de l'implémentation en Cython ou en C des fonctions kl et indices kl-UCB !}
@@ -1754,19 +1792,19 @@ This Appendix section describes seven more algorithms that are also compared wit
 \begin{itemize}
     \item Algorithm 10 is
     $\mathrm{MOSS}$-$\mathrm{Anytime}$ from \cite{Degenne16}, using $\alpha=1$ (\texttt{MOSSAnytime}).
-    It is a recent variant of the $\mathrm{MOSS}$ algorithm \cite{BubeckSlivkins12}, using an adaptive tuning of its parameter. It is anytime, and was proved to obtain good ``best of both world'' performances, meaning that it achieves $\cO(K\log(T)/\Delta^2)$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
+    It is a recent variant of the $\mathrm{MOSS}$ algorithm \cite{BubeckSlivkins12}, using an adaptive tuning of its parameter. It is anytime, and obtains good ``best of both world'' performances, meaning that it achieves $\cO(K\log(T)/\Delta^2)$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
     Empirically, it performs usually similarly to \UCB, and is slightly more costly in terms of both time and memory.
 
     \item Algorithm 11 is
     the approximated Finite-Horizon Gittins from \cite{Lattimore16a}, using $\alpha=1$ (\texttt{ApproximatedFHGittins}).
     It mimics the \UCB{} algorithm but uses a more complicated function to compute the upper confidence bounds.
-    It was proved to achieve order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret.
+    It achieves order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret.
     Empirically, it performs usually similarly to \UCB{} and $\mathrm{MOSS}$-$\mathrm{Anytime}$, and is slightly more costly in terms of both time and memory.
 
     \item Algorithm 12 is
     $\UCB\dagger$ from \cite{Lattimore2018refining}, using $\alpha=1$ (\texttt{UCBdagger}).
     It mimics the \UCB{} algorithm but uses a much more complicated function to compute the upper confidence bounds, and uses more storage.
-    It was also proved to achieve order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret.
+    It also achieves order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret.
     Empirically, it performs usually similarly to \UCB{} and $\mathrm{MOSS}$-$\mathrm{Anytime}$, and is slightly more costly in computation time, but it is much more costly in terms of memory.
 
     \item Algorithm 13 is
@@ -1774,7 +1812,7 @@ This Appendix section describes seven more algorithms that are also compared wit
     is a very recent variant of the \klUCB{} algorithm \cite{KLUCBJournal}
     (\texttt{klUCBswitchAnytime}).
     It mimics the \klUCB{} algorithm but uses a much more complicated function to compute the upper confidence bounds, and uses more storage.
-    It is anytime, and was proved to obtain good ``best of both world'' performances, meaning that it achieves an asymptotically optimal $\cO(\log(T))$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
+    It is anytime, and was prove to obtain good ``best of both world'' performances, meaning that it achieves an asymptotically optimal $\cO(\log(T))$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
     Empirically, it usually outperforms \klUCB{} in terms of regret, and costs about the same memory, but it is slower.
 
     \item Algorithm 14 is
@@ -2386,7 +2424,7 @@ $ BAYES=False ARM_TYPE=Bernoulli N=100 T=10000 K=9 N_JOBS=1 \
 
 As long as the number of jobs (\texttt{N\_JOBS} here) is less then or equal to the number of physical cores in the CPU of the computer, the final speed-up in terms of total computation runtime is almost optimal.
 %  dividing the running time by \texttt{N\_JOBS}.
-But jobs are implemented as threads, so the speed-up cannot be more than the number of cores, and using for instance $20$ jobs on $4$-cores for the $20$ repetitions is sub-optimal, as the CPU will essentially spend all his time (and memory) managing the different jobs, and not actually doing the simulations.
+But jobs are implemented as threads, so the speed-up cannot be more than the number of cores, and using for instance $20$ jobs on $4$-cores for the $20$ repetitions is sub-optimal, as the CPU will essentially spend all its time (and memory) managing the different jobs, and not actually doing the simulations.
 Using the above example, we illustrate the effect of using multi-jobs and multi-cores on the time efficiency of simulations using SMPyBandits. We consider three values of \texttt{N\_JOBS}, $1$ to use only one core and one job, $4$ to use all the $4$ cores of my $i5$ Intel CPU, and $20$ jobs.
 We give in Table~\ref{table:3:speedUpTimeParallelComputations} an example of running time of an experiment with $T=1000$, and different number of repetitions and number of jobs.
 It clearly illustrates that using more jobs than the number of CPU is sub-optimal, and that as soon as the number of repetitions is large enough, using one job by available CPU core (\ie, here $4$ jobs) gives a significant speed-up time.
