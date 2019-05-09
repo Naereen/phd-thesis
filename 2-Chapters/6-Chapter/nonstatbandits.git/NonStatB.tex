@@ -224,6 +224,20 @@ On the one hand, \CUSUMUCB{} performs \emph{local restarts} using this test, to 
 On the other hand, \MUCB{} performs \emph{global restarts} using this test, to reset the history of \emph{all arms} whenever the test detects a change on one of the arms.
 Compared to \CUSUMUCB{}, note that \MUCB{} is numerically much simpler as it only uses a bounded memory, of order $\bigO{K w}$ for $K$ arms.
 
+Another interesting recent work is \cite{AuerGajaneOrtner18}, where the authors propose an efficient algorithm, AdSwitch, for the two-armed case ($K=2$).
+It proceeds in episodes, starting a new episode when the algorithm detects a change in one of the arms. Each episode is an estimation phase, playing both arms alternatingly until their means can be distinguished, then an exploitation phase. With some low probability, an exploration phase is started that checks whether a change has occurred.
+Similarly to what previous approaches did (\eg, \CUSUM{} uses a threshold $\varepsilon$), this phase checks for changes of a certain minimum magnitude, but the innovation in this work is that algorithm does not need any prior knowledge of the minimum magnitude.
+Instead, it uses geometrically decreasing magnitudes $d_i = 2^{-i}$, meaning that even difficult changes should be detected, possibly in a later episode, as each episode only consider a few different values of $d_i$.
+% Our  algorithmAdSwitch(shown  as  Algorithm  1)  proceeds  in  episodes,  where  a  newepisode starts when the algorithm detects a change in one of the arms.  Each episode startswith an estimation phase (Step 2), in which both arms are chosen alternatingly until theirmeans can be distinguished (Step 3).  After the estimation phase,  the algorithm exploitsthe empirical best arm (Step 5).  However,  in order to detect changes,  at each step withsome probability (Step 4) an exploration phase is started that checks whether a change hasoccurred (comparing the resulting empirical means to that obtained from the estimationphase).  During such exploration phases the algorithm checks for changes of certain magni-tudes (denoted bydi).  Note that our algorithm does not require knowledge of the numberof changesL.  The following theorem provides an upper bound on the expected regret ofour algorithm
+They prove it achieves a regret bound of $\cO(\log(T) \sqrt{\Upsilon_T T})$, without a prior knowledge of $\Upsilon_T$.
+However, this work as two drawbacks:
+first, the algorithm currently only applies to two arms, and the generalization does not seem straightforward.
+Then, the theoretical result is valid for ``sufficiently large constants $C_1$ and $C_2$'', with a large constant $C$ hiding in the $\cO(\bullet)$ notation.
+We did some experiments with AdSwitch, even if it is not included in the benchmark presented below in Section~\ref{sec:6:NumericalExperiments}. It uses two parameters $C_1,C_2$ that are set at large values for the theoretical analysis,
+and while we explored numerically different choices, it seemed that setting $C_1=C_2=1$ gave the best performance (which is outside of the comfort zone of the theoretical analysis). Even for this tuning, and for problems with just $K=2$ arms, empirically   this policy is performing poorly in comparison to other policies based on active CD detection and \klUCB{} indexes.
+%  We did not find a practical tuning outperforming GLR-klUCB yet.
+% It would be interesting to compare
+
 
 \paragraph{Expert aggregation.}
 %
@@ -248,11 +262,6 @@ Two examples can be the total variation distance $\|\cdot\|_{TV}$ or the Kullbac
 The RExp3 algorithm can also be qualified as passively adaptive: it is based on (non-adaptive) restarts of the EXP3 algorithm. Note that this algorithm is introduced for a different setting, where the quantity of interest is not $\Upsilon_T$ but a quantity $V_T$ called the total variational budget (satisfying $\Delta^{\text{change}} \Upsilon_T \leq V_T \leq \Upsilon_T$ with $\Delta^{\text{change}}$ the minimum magnitude of a change-point).
 A regret bound of the order of $\cO(V_T^{1/3} T^{2/3})$ is proved, which is weaker than existing results in our setting.
 
-Three recent works proposed algorithms that achieve a small regret under the two models.
-For simple bandits, \cite{WeiSrivastava18Abruptly} proposed the SW-UCB\# and LM-DSEE algorithms FIXME.
-For contextual bandits, \cite{Luo18} and \cite{ChenLeeLuoWei2019} FIXME.
-\TODOL{Parler de ces travaux là, qui sont très forts mais pas non plus encore parfaits.}
-
 This setting is quite different from the setting we are interested by in this chapter, and even if the most recent works on slowly-varying MAB models are very interesting, we preferred to focus on the piece-wise stationary (or abruptly changing) model,
 hence we do no include any of these algorithms in the experiments presented in Section~\ref{sec:6:NumericalExperiments}.
 
@@ -265,10 +274,36 @@ Another interesting point-of-view is the one presented by \cite{WeiSrivastava18A
 where the authors assume that there exists a number $\nu\in(0,1)$ for which $\Upsilon_T = \smallO{T^{\nu}}$,
 and they also assume that any algorithm tackling such problems can know in advance the value of $\nu$ (or an upper-bound on $\nu$), and tweak its parameters from this value $\nu$, but cannot know the exact value of $\Upsilon_T$.
 %
-This interpretation is interesting too, but due to time and space constraints, we preferred to not explore it further.
-Empirically, we found that the SW-UCB\# algorithm proposed in \cite{WeiSrivastava18Abruptly} performs comparably to SW-UCB, and thus we did not include it in the experiments presented below in Section~\ref{sec:6:NumericalExperiments}.
-
+This interpretation is interesting too,
+% but due to time and space constraints, we preferred to not explore it further.
+but empirically we found that the SW-UCB\# algorithm proposed in \cite{WeiSrivastava18Abruptly} performs comparably to SW-UCB, and thus we did not include it in the experiments presented below in Section~\ref{sec:6:NumericalExperiments}.
+%
 % \TODOL{Speak about the article \cite{WeiSrivastava18Abruptly,WeiSrivastava18Distributed} and their point of view on $\Upsilon_T = \bigO{T^{\nu}}$ with known $\nu$ but unknown $\Upsilon_T$}
+
+
+\paragraph{Adversarial or non-stationary contextual bandits.}
+%
+For contextual bandits, two very recent works are \cite{Luo18} and \cite{ChenLeeLuoWei2019}.
+While both works target a more general setting, their algorithms are also applicable to non-contextual bandits, \ie, classical bandits like the model in this chapter.
+From Table~1 in \cite{Luo18}, one can see that their two algorithms Exp4.S and Ada-ILTCB recover the same regret guarantees as we do, in the non-contextual case:
+that is, a $\cO(\Upsilon_T \sqrt{T}$ regret without knowing the number of changes and $\cO(\sqrt{\Upsilon_T T})$ with this knowledge.
+We discuss both these algorithms:
+%
+first, Exp4.S actually reduces to Exp3.S in the non-contextual case, and Exp3.S is discussed above.
+% As already acknowledged in the answer to  Reviewer 1,  we were indeed unaware of the very good theoretical properties of this algorithm in the piece-wise non-stationary setting. We will revise our state-of-the-art section and include the Exp3.S algorithm as a baseline in our experiments. However, preliminary experiments reveal that this algorithm is much less efficient that GLR-klUCB.
+%
+Then, the Ada-ILTCB algorithm is however a less appealing candidate for our setting, for the following reason.
+This algorithm requires as input a parameter $L$ which needs to be an upper bound on the largest stationary sequence in the problem, in order for its regret to scale as $\Upsilon_T \sqrt{L}$ (neglecting $K$ and $\log$ factors).
+It is claimed that the tuning $L=T/\Upsilon_T$ yields the optimal bound $\sqrt{\Upsilon_T T}$.
+However, this tuning is only possible in a ``balanced'' instance without stationary sequence longer than $T/\Upsilon_T$.
+In a piece-wise stationary instance with a stationary sequence of length $T/2$, one cannot get better than $\cO(\Upsilon_T \sqrt{T})$ regret, by setting $L=T/2$ (see for instance the problem 4 in our benchmark below in Section~\ref{sec:6:NumericalExperiments}), and as such the regret bound of Ada-ILTCB appear much worse than the announced $\cO(\sqrt{\Upsilon_T T})$ bound.
+%
+Besides, no experiments are reported by \cite{Luo18}, and the Ada-ILTCB algorithm seems much more complicated to implement than other alternatives,
+so we prefer to not include it in the experiments presented later.
+% with a valid tuning of L in each case.
+
+\TODOL{Okay ça suffit pour ces travaux ?}
+
 
 
 \paragraph{Positionning of our results.}
@@ -1195,8 +1230,10 @@ as well as an ``oracle'' version of \klUCB, that we call Oracle-Restart. This al
 Then, we compare our algorithms to several competitor designed for a piece-wise stationary model. For a fair comparison, all algorithms that use  \UCB{} as a sub-routine were adapted to use \klUCB{} instead, which yields better performance\footnote{\cite{LiuLeeShroff17,CaoZhenKvetonXie18} both mention that extending their analysis to the use of \klUCB{} should not be too difficult.}. Moreover, all the algorithms are tuned as described in the corresponding paper, using in particular the knowledge of the number of breakpoints $\Upsilon_T$ and the horizon $T$. We first include three \emph{passively adaptive algorithms}:
 Discounted \klUCB{} (D-\klUCB, \cite{Kocsis06}), with discount factor $\gamma = 1 - \sqrt{\Upsilon_T/T}/4$; Sliding-Window \klUCB{} (SW-\klUCB,  \cite{Garivier11UCBDiscount}) using window-size $\tau = 2 \sqrt{T\log(T)/\Upsilon_T}$ and Discounted Thompson sampling (DTS, \cite{RajKalyani17}) with discount factor $\gamma = 0.95$. For this last algorithm, the discount factor $\gamma=0.75$ suggested by the authors was performing significantly worse on the problem instances we tried.
 More precisely, we found that $\gamma\leq0.95$ gives better performances for short-term problems (pbs $1,2,4$) and $\gamma\geq0.95$ is better suited for long experiments (pbs $3,5$).
-
+%
 % \TODOE{Tu confirmes bien que $\gamma=0.75$ ne marchait sur AUCUN problème ? Car ta phrase actuelle n'exclut pas que ce choix marche pour les probèmes courts}
+%
+Additionally, we include the Exp3.S algorithm from \cite{Auer02NonStochastic}, setting its parameters as in Corollary 8.3 of the paper, based on a prior knowledge of $T$ and $\Upsilon_T$, using $\alpha=1/T$ and $\gamma = \min(1, \sqrt{K (\Upsilon_T \log(KT) + \mathrm{e}) / ((\mathrm{e}-1)T)})$.
 
 
 Our main goal is to compare against \emph{actively adaptive algorithms}. We include \CUSUMklUCB{} \cite{LiuLeeShroff17}, tuned with $M=150$ and $\varepsilon=0.1$ for easy problems ($1,2,4$) and $\varepsilon=0.001$ for hard problems ($3,5$),
@@ -1448,13 +1485,10 @@ DTS and SW-\klUCB{} can sometimes be more efficient than their stationary counte
 M-\klUCB{} and \CUSUMklUCB{} outperform the previous algorithms, but \GLRklUCB{} is often better.
 %
 On these problems, \GLRklUCB{} with \textbf{Local} restarts is always more efficient than with \textbf{Global} restarts. Note that on problem 2, all means change at every breakpoint, hence one could expect global restart to be more efficient, yet the experiments show the superiority of local restarts on every instances.
+The Exp3.S algorithm was found to outperform other algorithms based on Exp3, including Exp3, and recent variants like Exp3$++$ \cite{Seldin17} or Exp3.R from \cite{Allesiardo17},
+and it usually performs similarly to \MklUCB, however it is greatly outperformed by the oracle algorithm, by \GLRklUCB{} and by \CUSUMklUCB.
 
-\TODOL{I could add the following algorithms, just to illustrate more:
-
-% - OracleRestart with UCB
-% - M- and CUSUM- with UCB (as defined in the papers)
-- Exp3.S
-}
+\TODOL{I HAVE TO add the following algorithms, just to illustrate more Exp3.S}
 
 \begin{table}[ht]
 % \begin{footnotesize}
@@ -1463,6 +1497,8 @@ On these problems, \GLRklUCB{} with \textbf{Local} restarts is always more effic
     \textbf{Algorithms} $\;$ \textbackslash $\;$ \textbf{Problems} & Pb $1$ & Pb $2$ & Pb $3$ \\
         \hline
         Oracle-Restart \klUCB{} & $\mathbf{37 \pm 37}$ & $\mathbf{45 \pm 34}$ & $\mathbf{257 \pm 86}$ \\
+        \hline
+        Exp3.S & $XXX$ & $XXX$ & $XXX$ \\
         \hline
         \klUCB{} & $270 \pm 76$ & $162 \pm 59$ & $529 \pm 148$ \\
         Discounted-\klUCB{} & $1456 \pm 214$ & $1442 \pm 440$ & $1376 \pm 37$ \\
@@ -1477,7 +1513,7 @@ On these problems, \GLRklUCB{} with \textbf{Local} restarts is always more effic
         \GLRklUCB{}(Local) & $\mathbf{74 \pm 31}$ & $\mathbf{113 \pm 34}$ & $513 \pm 97$ \\
         \GLRklUCB{}(Global) & $97 \pm 32$ & $134 \pm 33$ & $621 \pm 103$
     \end{tabular}
-    \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on problems $1$, $2$ (with $T=5000$) and $3$ ($T=20000$).
+    \caption{Mean regret $\pm$ $1$ std-dev, on problems $1$, $2$ (with $T=5000$) and $3$ ($T=20000$).
     }
     \label{table:6:totalResults1}
 % \end{footnotesize}
@@ -1490,6 +1526,8 @@ On these problems, \GLRklUCB{} with \textbf{Local} restarts is always more effic
         \textbf{Algorithms} $\;$ \textbackslash $\;$ \textbf{Problems} & Pb $4$ ($T=5000$) & Pb $4$ ($T=10000$) & Pb $5$ \\
         \hline
         Oracle-Restart \klUCB{} & $\mathbf{68 \pm 40}$ & $\mathbf{86 \pm 50}$ & $126 \pm 54$ \\
+        \hline
+        Exp3.S & $XXX$ & $XXX$ & $XXX$ \\
         \hline
         \klUCB{} & $615 \pm 74$ & $1218 \pm 123$ & $106 \pm 36$ \\
         SW-\klUCB{} & $202 \pm 33$ & $322 \pm 47$ & $228 \pm 27$ \\
@@ -1535,6 +1573,7 @@ We can also verify that the two options, \textbf{Local} and \textbf{Global} rest
 We also show the empirical distribution of the regret $R_T$, on Figure~\ref{fig:6:histogramRegretPb1}. It shows that all algorithms have a rather small variance on their regret, except Thompson Sampling which has a large tail due to its large mean regret on this (easy) non-stationary problems.
 
 
+\newpage
 %----------------------------------------------------------------------------
 \section{Conclusion}
 \label{sub:6:conclusion}
