@@ -71,7 +71,7 @@ and what kind of information is displayed, saved and plotted after a batch of si
 
 The main goal of the library is to be easily able to simulate MAB algorithms (\eg, three algorithms like \UCB, \klUCB{} and Thompson sampling) on one or more bandit models (single- or multi-player) defined by the number of arms $K$ and the distributions $\nu_k$, for some time from $t=1$ to the horizon $T$.
 After the simulation, the library then displays statistical summary of the (mean) rewards accumulated by each algorithms, as well as regret and other visualizations.
-The same problem is simulated for $N$ independent repetitions (\eg, $N=1000$) in order to show mean results with a low variance.
+The same problem is simulated for $N$ independent repetitions (\eg, $N=100$) in order to show mean results with a low variance.
 
 
 \subsection{Single- and multi-player MAB problems}
@@ -92,7 +92,7 @@ reward distributions, MAB algorithm, and a simulation loop that essentially look
     \item At the end, compute the cumulated reward, the regret, plot visualizations etc.
 \end{itemize}
 %
-Note that the second step is repeated a large number of times (\eg, $N=1000$), in order to study \emph{mean} regret and not only the regret in one single trajectory.
+Note that the second step is repeated a large number of times (\eg, $N=100$), in order to study \emph{mean} regret and not only the regret in one single trajectory.
 If one wants to compare algorithms on a same problem, it is possible to sample all the rewards $(r_k(t))_{k\in[K], t\in[T]}$ before-hand, and store them so that for each repetition of the simulation, the randomness from the environment (\ie, the rewards) has the same impact on all the algorithms.
 
 
@@ -144,7 +144,10 @@ as well as continuous distributions,
 which can be truncated to an interval $[a,b]$ or have unbounded support ($\mathbb{R}$):
 \emph{exponential} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Exponential.html}{Exponential}}), \emph{gamma} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Gamma.html}{Gamma}}), \emph{Gaussian} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Gaussian.html}{Gaussian}}) and \emph{uniform} (\texttt{\href{https://smpybandits.github.io/docs/Arms.Uniform.html}{Uniform}}).
 %
-The default is to use the same distribution for the $K$ arms, but it also possible to mix them (see for instance Figure~\ref{fig:25:HarderMixed}).
+The default is to use the same distribution for the $K$ arms, as this is the setting studied in the literature,
+but it also possible to mix them.
+%  (\eg, one arm is Bernoulli-distributed and another).
+%  (see for instance Figure~\ref{fig:25:HarderMixed}).
 %
 For instance the following code creates three arms, following a Bernoulli distribution with respective means $0.1, 0.5, 0.9$, and a \texttt{MAB} object which encapsulate sthe problem.
 We give another example for truncated Gaussian distributions, and a visualization of a histogram of $10000$ rewards obtained from the arms, below in Figure~\ref{fig:3:exampleOfRewards}.
@@ -294,7 +297,8 @@ $ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=4 \
 A small script \texttt{configuration.py}
 % (\texttt{\href{https://SMPyBandits.GitHub.io/docs/configuration.html}{SMPyBandits.GitHub.io/docs/configuration.html}})
 is used to import the arm classes (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Arms.html}{Arms}} module), the policy classes (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.html}{Policies}} module) and define the problems and the experiments.
-The \texttt{configuration["policies"]} list in the \texttt{configuration.py} file is used to choose the algorithms to include.
+Choosing the algorithms to include is done by changing
+the \texttt{configuration["policies"]} list in the \texttt{configuration.py} file.
 For instance, one can compare the standard anytime \klUCB{} algorithm (class \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.klUCB.html}{klUCB}} in \texttt{Policies} module) against the non-anytime variant $\klUCB^{++}$ algorithm (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.klUCBPlusPlus.html}{klUCBPlusPlus}}), and also \UCB{} with $\alpha=1$ (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.UCBalpha.html}{UCB}}) and Thompson sampling (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Thompson.html}{Thompson}}) with a Beta posterior (\texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.Posterior.Beta.html}{Posterior.Beta}})).
 
 % https://tex.stackexchange.com/a/12430/
@@ -303,7 +307,8 @@ For instance, one can compare the standard anytime \klUCB{} algorithm (class \te
     \begin{minted}[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{python3}
 configuration["policies"] = [
   {"archtype": klUCB, "params": {"klucb": klucbBern}},
-  {"archtype": klUCBPlusPlus, "params": {"horizon": T, "klucb": klucbBern}},
+  {"archtype": klUCBPlusPlus,
+   "params": {"horizon": T, "klucb": klucbBern}},
   {"archtype": UCBalpha, "params": {"alpha": 1}},
   {"archtype": Thompson, "params": {"posterior": Beta}}
 ]
@@ -318,7 +323,7 @@ configuration["policies"] = [
 	\centering
 	\includegraphics[width=1.05\linewidth]{3.pdf}
 	\caption[Example of a single-player simulation showing the average regret of $4$ algorithms]{
-		Example of a single-player simulation showing the average regret of four algorithms. They all perform very well: each algorithm is known to be order-optimal (\ie, its regret is proved to match the lower-bound up-to a constant), and each but UCB is known to be optimal (\ie, with the constant matching the lower-bound).
+		Example of a single-player simulation showing the average regret of four algorithms. They all perform very well: each algorithm is known to be order-optimal (\ie, its regret is proved to match the lower-bound up-to a constant), and each but UCB is known to be asymptotically optimal (\ie, with the constant matching the lower-bound).
 	}
 	\label{fig:3:firstPlot}
 \end{figure}
@@ -410,12 +415,12 @@ First, we detail the list of different algorithms that we compare, and the diffe
 We give the results of the numerical experiments, in terms of mean regret at the end of the experiment of different horizons $T$.
 Additional results in terms of real measurements of time and memory are given and discussed in the next Section~\ref{sec:3:timeAndMemoryCosts}.
 
-Finally, we give some observations on the results, and the main take-away message of this section is the following: in all the rest of this thesis, we focus on using
+Finally, we give some observations on the results, and the main take-away message of this section is the following: in all the rest of this thesis, we focus on two algorithms depending if simplicity or efficiency is favored:
 \begin{itemize}
     \item
-    the simple \UCB{} algorithm when simplicity is favored, \ie, in the more applied Chapter~\ref{chapter:4},
+    \UCB{} is used in the more applied Chapter~\ref{chapter:4}, when simplicity is favored,
     \item
-    and the \klUCB{} algorithm when efficiency is favored, \ie, in the two more theoretical Chapters~\ref{chapter:5} and \ref{chapter:6}.
+    \klUCB{} is used, in the two more theoretical Chapters~\ref{chapter:5} and \ref{chapter:6}, when efficiency is favored.
 \end{itemize}
 
 
@@ -431,8 +436,6 @@ Algorithms that are ``not anytime'' use the exact value of the horizon $T$, and 
 \indent
 For reproducibility, we also give in ``\texttt{typewriter font}'' the name of the corresponding class in the \texttt{Policies} module in SMPyBandits
 (\eg, $\UCB_1$ is \texttt{Policies.UCBalpha}).
-
-% FIXME order from oldest to most recent, and simplest to more complex
 
 \begin{itemize}
     \item Algorithm 1 is
@@ -454,8 +457,9 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
     \item Algorithm 5 is
     \klUCB{} from \cite{KLUCBJournal}, using the Bernoulli KL divergence and the corresponding \klUCB{} indexes, implemented as \texttt{kullback.klucbBern} (\texttt{klUCB}).
     It achieves asymptotical optimal problem-dependent bounds with a $\cO(\log(T))$ regret with the scaling factor matching Lai and Robbins' lower-bound \cite{LaiRobbins85}.
-    It is computationally more costly that \UCB, as at each time step $t$, to compute the $K$ indexes, a convex optimization problem must be solved approximately, for each arm.
-    In practice, a few steps of a Newton method are enough to obtain a precision of more than 10 digits, and empirically we found that even in the worst cases \klUCB{} is an order of magnitude slower than \UCB.
+    It is computationally more costly that \UCB, as at each time step $t$ and for each arm $k$, a convex optimization problem must be solved approximately, in order to compute the $K$ indexes.
+    In practice, a few steps of a simple Newton method are enough to obtain a good numerical precision, and empirically we found that even in the worst cases \klUCB{} is no more than an order of magnitude slower than \UCB.
+    % of more than 10 digits
     \TODOL{Si on en pas parlé avant, ou après dans une annexe, je peux dire un mot ici à propos de l'implémentation en Cython ou en C des fonctions kl et indices kl-UCB !}
 
     \item Algorithm 6 is
@@ -471,9 +475,9 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
 
     \item Algorithm 8 is
     AdBandits from \cite{Truzzi13}, using $\alpha=1$ (\texttt{AdBandits}).
-    It follows the same assumptions as Thompson sampling and Bayes-UCB, and uses a Beta posteriors on each arm. It uses a random mixture between the two algorithms, and with a certain probability it uses the Thompson decision rule (\ie, choose the arm maximizing one draw of random samples from the posteriors), otherwise it uses the Bayes-UCB decision rule (\ie, choose the arm maximizing the $1-1/t$ quantile).
+    It follows the same assumptions as Thompson sampling and Bayes-UCB, and uses a Beta posterior on each arm. It uses a random mixture between the two algorithms, and with a certain probability it uses the Thompson decision rule (\ie, choose the arm maximizing one draw of random samples from the posteriors), otherwise it uses the Bayes-UCB decision rule (\ie, choose the arm maximizing the $1-1/t$ quantile).
     It was proposed in this article \cite{Truzzi13} and illustrated on empirical simulations, but no theoretical analysis was given, and it did not gain popularity since then.
-    In practice, it is usually (slighly) more efficient than both Thompson sampling and Bayes-UCB in terms of regret, is comparable in terms of computation times, but costs more memory.
+    In practice, it is usually (slighly) more efficient than both Thompson sampling and Bayes-UCB in terms of regret, it is comparable in terms of computation times, but costs more memory.
 
     \item Algorithm 9 is
     BESA (Best Empirical Sampled Average) from \cite{Baransi2014}, and it consists in trying to fix a simple observation.
@@ -1031,8 +1035,8 @@ Hence, the reported results highly depend on many factors, including how the cod
 \begin{itemize}
     \item Quality and optimization of the code:
     The same level of optimization is used in all the codebase of SMPyBandits, and most of the time, the code is pure and naive Python and was not optimized.
-    Mathematical functions (\eg, $\sqrt{\bullet}, \log$) and random numbers used are using \texttt{numpy} and \texttt{numpy.random} modules \cite{numpy}, which are based on C and Cython code and can be considered highly efficient.
-    Computations of Kullback-Leibler and indexes for \klUCB{} algorithms are based on a compiled CPython extension written in C and can also be considered highly efficient.
+    Mathematical functions (\eg, $\sqrt{\bullet}, \log$) and random numbers used are using \texttt{numpy} and \texttt{numpy.random} modules \cite{numpy}, which are based on C and Cython code \cite{cython} and can be considered highly efficient.
+    Computations of Kullback-Leibler and indexes for \klUCB{} algorithms are based on a compiled CPython extension written in C \cite{python} and can also be considered highly efficient.
     As we can safely affirm that the code of the different algorithms has the same level of optimization, the comparison is fair, and we do not favor any algorithm in their implementation in SMPyBandits.
 
     \item About the experimental environment:
@@ -1708,8 +1712,8 @@ I would also love to be able in the next to teach a graduate or under-graduate c
 \section{Appendix}
 \label{sec:3:appendix}
 
-In this Appendix, we start by giving a small but complete example of use of SMPyBandits, then we give additional experimental results completing those presented in Section~\ref{sec:3:reviewSPAlgorithms} and \ref{sec:3:timeAndMemoryCosts} above.
-We conclude by a discussion on parallel computations and the use of multi-core CPU to speed-up simulations in SMPyBandits.
+We start by giving a small but complete example of use of SMPyBandits, then we give additional experimental results completing those presented in Section~\ref{sec:3:reviewSPAlgorithms} and \ref{sec:3:timeAndMemoryCosts} above.
+We conclude by a discussion on parallel multi-core CPU computations to speed-up SMPyBandits.
 
 
 \subsection{Minimalist example of use of SMPyBandits}
@@ -1721,7 +1725,8 @@ With Python 3.6 this example shows that the algorithm got a mean reward very clo
 \begin{verbatim}
 The UCB algorithm obtains here a mean reward = 0.886
 \end{verbatim}
-
+% \vspace*{-10pt} % WARNING
+%
 % https://tex.stackexchange.com/a/12430/
 \begin{small}
 % \begin{listing}[h!]
@@ -1819,7 +1824,7 @@ This Appendix section describes seven more algorithms that are also compared wit
     \textsc{Tsallis-Inf} from \cite{Zimmert2018}, using $\alpha=1/2$ (it seems to be the most efficient of the algorithms described in the article) (\texttt{TsallisInf}).
     It is based on the online mirror descent algorithm with a Tsallis entropy regularizer, and it is anytime.
     It was also proved to to obtain good ``best of both world'' performances.
-    Empirically, we were unable to find any problem were it performs as well as \UCB{} (or any other efficient algorithm), and we are confident that our implementation is correct\footnote{Despite a serious amount of time spent on this implementation, maybe it has some bug which explains the poor empirical performance obtained by \textsc{Tsallis-Inf} in our simulations. Exploring in more details this kind of algorithms is very interesting, as algorithms based on online mirror descent make a rich connexion between multi-armed bandit and online convex optimization \cite{Hazan2016introduction},Hazan2016introduction and a short-term future work in SMPyBandits will be to explore different values of $\alpha$ for Tsallis entropy regularization, or other families of regularization.}.
+    Empirically, we were unable to find any problem were it performs as well as \UCB{} (or any other efficient algorithm), and we are confident that our implementation is correct\footnote{Despite a serious amount of time spent on this implementation, maybe it has some bug which explains the poor empirical performance obtained by \textsc{Tsallis-Inf} in our simulations. Exploring in more details this kind of algorithms is very interesting, as algorithms based on online mirror descent make a rich connexion between multi-armed bandit and online convex optimization \cite{Hazan2016introduction}, and a short-term future work in SMPyBandits will be to explore different values of $\alpha$ for Tsallis entropy regularization, or other families of regularization.}.
     \textsc{Tsallis-Inf} is also slower than \UCB{} (about as slow as KL-UCB-Switch), and costs an-order-of-magnitude more memory.
 
     \item Algorithm 15 is

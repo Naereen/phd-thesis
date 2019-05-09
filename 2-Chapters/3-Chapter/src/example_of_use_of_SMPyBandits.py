@@ -2,14 +2,11 @@
 See https://SMPyBandits.GitHub.io/API.html for more details!"""
 import numpy as np
 np.random.seed(0)  # for reproducibility
-
 from SMPyBandits.Arms import Bernoulli
 arms = [Bernoulli(0.1), Bernoulli(0.9)]
-
 from SMPyBandits.Environment import MAB
 my_MAB_problem = MAB(arms)
 nbArms = my_MAB_problem.nbArms  # 2 arms !
-
 from SMPyBandits.Policies import UCB
 my_UCB_algo = UCB(nbArms)
 my_UCB_algo.startGame()  # reset internal memory
