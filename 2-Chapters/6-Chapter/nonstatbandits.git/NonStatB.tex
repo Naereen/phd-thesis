@@ -9,7 +9,7 @@
 
 
 % -----------------------------------------------------------------
-\section{Motivation}
+\section{Motivation for non stationary MAB models}
 \label{sec:6:Introduction}
 
 % \TODOL{Be much more concise: in the thesis, MAB models and applications have already been introduced, motivated etc!}
@@ -1170,7 +1170,7 @@ Hence, the probability in the right-hand side of \eqref{eq:6:FromHereGlobal} is 
 
 % \TODOE{note that in this corollary $\Delta^{\text{change}}$ could be defined as the smallest value of $\Delta^{(k)}$ which can be larger than the smallest change on any arm... But for the sake of uniformity between the two corollaries, we may prefer to keep it like that}
 
-\section{Experimental results}
+\section{Experimental results for piece-wise stationary bandit problems}
 \label{sec:6:NumericalExperiments}
 % ----------------------------------------------------------------------------
 
@@ -1365,13 +1365,13 @@ Like problem $3$, this harder problem is also inspired from synthetic data obtai
 It is much harder, with $\Upsilon=81$ change-points on $K=5$ arms for a longer horizon of $T=100000$.
 Some arms change at almost every time steps, for a total number of breakpoints $C=179$, but the optimal arm is almost always the same one (\textcolor{red}{arm $0$, with $\bullet$}).
 It is a good benchmark to see if the actively adaptive policies do not detect \emph{too many changes}, as the Oracle-Restart policy suffers higher regret in comparison to \klUCB.
-Means are also bounded in $[0.01, 0.07]$, with small gaps of amplitude ranging from $0.02$ to $0.001$,
+Means are also bounded in $[0.01, 0.07]$, with small gaps of amplitude in $[0.001, 0.02]$,
 as shown in Figure~\ref{fig:6:Problem_6}.
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=0.80\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_6.pdf}
-    \caption{\textbf{Problem $5$}: $K=5$, $T=100000$, $C=179$ changes occur on some arms at $\Upsilon=81$ break-points.}
+    \includegraphics[width=0.90\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_6.pdf}
+    \caption{\textbf{Pb $5$}: $K=5$, $T=100000$, $C=179$ changes occur on some arms at $\Upsilon=81$ break-points.}
     % \caption{\textbf{Problem 5}: $K=5$, $T=100000$, $\Upsilon=81$ changes occurring on some arms at every time ($C=179$).}
     \label{fig:6:Problem_6}
 \end{figure}
@@ -1379,6 +1379,57 @@ as shown in Figure~\ref{fig:6:Problem_6}.
 % \TODOE{tu as bien tuné CUSUM-UCB avec $\epsilon = 0.02$ dans ce cas?}
 
 % \TODOE{La notion $\Delta^{\text{change}}$ est déjà définie dans la section 4, et ici elle ne veut pas dire la même chose...}
+
+
+
+\paragraph{First experiment: \UCB{} vs \klUCB{}.}
+%
+% The first experiment is considering $K=9$ arms, with means $\bm{\mu}=[0.1,0.2,\dots,0.9]$, and $M=3$ then $6$ then $9$ players.
+% Note that here and as in all this section we consider different algorithms that know the number of players $M$ (see Section~\ref{sub:5:unknownNumberOfPlayers} below for a discussion on the case when $M$ could be unknown).
+% %
+% Performance is measured with the \emph{expected} regret up to horizon $T=10000$, estimated based on $1000$ repetitions on the same bandit instance.
+
+% In our numerical experiments, we are indeed comparing the two variants of our approach to *modified* versions of M-UCB and CUSUM-UCB, that are based on klUCB instead of UCB. As we explained, klUCB is known to perform uniformly better than UCB in stochastic bandits with bounded rewards, and so we are actually helping our competitors by allowing them to use klUCB. The reason for this is that we don’t want the paper to be another illustration of "klUCB is better than UCB". Our comparison therefore gives a better idea of which change-point detector should be used in combination with a good bandit algorithm.
+
+Similarly to what is presented in Chapter~\ref{chapter:5} in Table~\ref{table:5:comparisonUCB_klUCB}, we start by some experiments that justify the focus on the \klUCB{} index policy.
+The purpose of this work is not to optimize on the index policy, but rather propose new ways of using indices for piece-wise stationary problems.
+%
+Consider two experiments on \textbf{problems 1} and \textbf{2}, with a horizon of $T=20000$ and $1000$ independent repetitions,
+for which we compare \CUSUMUCB{} against \CUSUMklUCB, \MUCB{} against \MklUCB, and the oracle policy using \UCB{} against \klUCB.
+We report in the Table~\ref{table:6:comparisonUCB_klUCB} below the results (in terms of mean regret),
+and we observe that using \klUCB{} rather than \UCB{} indices always yield better practical performance.
+%
+Thus it is fair to compare our proposal against the modified versions of the two algorithms CUSUM and M- that use the \klUCB{} index policy instead of \UCB, as they perform uniformly better with \klUCB{} than with \UCB{} (the same tendency was observed on all other problems).
+We also note that, without surprise, the oracle policy also performs (much) better with \klUCB{} than with \UCB.
+Consequently, from now on we only report results for \klUCB.
+
+% for N in 4 100; do for PROBLEMS in 1 2; do DEBUG=True SAVEALL=False NOPLOTS=True M=$M PROBLEMS=$PROBLEMS N_JOBS=-1 N=$N T=10000 make nonstationary; echo "Done for N=$N and M=$M"; read; done; echo "Done for N=$N"; read; done
+%
+\begin{table}[ht]
+  % \begin{footnotesize}
+      \centering
+      \begin{tabular}{c|cc}
+        \textbf{Algorithm} $\;$ \textbackslash $\;$ Problems & Pb 1 & Pb 2 \\
+        \hline
+        Oracle-Restart \UCB{} & $216$ & $67$ \\
+        Oracle-Restart \klUCB{} & $\mathbf{54}$ & $\mathbf{219}$ \\
+        \hline
+        \MUCB{} & $878$ & $2040$ \\
+        \MklUCB{} & $817$ & $1485$ \\
+        \hline
+        \CUSUMUCB{} & $439$ & $381$ \\
+        \CUSUMklUCB{} & $304$ & $316$ \\
+        \hline
+        \GLRklUCB{}(Local) & $\mathbf{132}$ & $\mathbf{186}$
+      \end{tabular}
+      \caption{Using \klUCB{} is much more efficient than using \UCB{}, for non-stationary bandit.}
+      \label{table:6:comparisonUCB_klUCB}
+  % \end{footnotesize}
+  \end{table}
+
+%   - For Problem 1: CUSUM-klUCB got a mean regret of 304, CUSUM-UCB got 439, M-klUCB got 817 and M-UCB 878, where OracleRestart-klUCB obtained 54 and OracleRestart-UCB got 216, and our approach GLR-klUCB got 132.
+%   - For Problem 2: CUSUM-klUCB got a mean regret of 316, CUSUM-UCB got 381, M-klUCB got 1485 and M-UCB 2040, where OracleRestart-klUCB obtained 67 and OracleRestart-UCB got 219, and our approach GLR-klUCB got 186.
+
 
 
 % -----------------------------------------------------------------
@@ -1400,8 +1451,8 @@ On these problems, \GLRklUCB{} with \textbf{Local} restarts is always more effic
 
 \TODOL{I could add the following algorithms, just to illustrate more:
 
-- OracleRestart with UCB
-- M- and CUSUM- with UCB (as defined in the papers)
+% - OracleRestart with UCB
+% - M- and CUSUM- with UCB (as defined in the papers)
 - Exp3.S
 }
 
@@ -1484,7 +1535,6 @@ We can also verify that the two options, \textbf{Local} and \textbf{Global} rest
 We also show the empirical distribution of the regret $R_T$, on Figure~\ref{fig:6:histogramRegretPb1}. It shows that all algorithms have a rather small variance on their regret, except Thompson Sampling which has a large tail due to its large mean regret on this (easy) non-stationary problems.
 
 
-
 %----------------------------------------------------------------------------
 \section{Conclusion}
 \label{sub:6:conclusion}
@@ -1497,8 +1547,16 @@ We believe that our new proof technique could be used to analyze \GLRklUCB{} und
 We also believe that combining change-point \emph{localization} with an efficient change-point detection algorithm, such as \GLRklUCB, could lead to an interesting class of algorithms, as suggested by \cite{Maillard2018GLR}.
 Finally, we would like to study in the future possible extension of our approach to the slowly varying model, as studied in \cite{Besbes14stochastic,WeiSrivastava18Abruptly}.
 
-\TODOL{Evoke here the possibility of study the piece-wise stationary distributed multi-player bandit model introduced in \cite{WeiSrivastava18Distributed} by using \MCTopM{} and \GLRklUCB{} with each other? }
-
+As mentioned at the end of Chapter~\ref{chapter:5}, another interesting direction of future work is to study non-stationary distributed multi-player bandits.
+A natural extension of the non-stationary model presented in this Chapter is to consider non-communicating players cooperating in a decentralized way to play the same bandit game, as it was proposed recently in \cite{WeiSrivastava18Distributed}.
+The authors build on their recent work \cite{WeiSrivastava18Abruptly} and show that a regret bounded by $\cO(\sqrt{T^{\frac{1+\nu}{2}} \log(T)})$ can still be achieved by $M$ players, in the number of breaking points is $\Upsilon_T = \cO(T^{\nu})$.
+Their algorithm assume that player $j$ knows its ID $j\in\{1,\dots,M\}$ as well as $\nu$, and removing these hypotheses is an interesting direction of future work.
+% \TODOL{Evoke here the possibility of study the piece-wise stationary distributed multi-player bandit model introduced in \cite{WeiSrivastava18Distributed} by using \MCTopM{} and \GLRklUCB{} with each other? }
+Furthermore, a promising direction is to directly try to join our contributions from Chapter~\ref{chapter:5} and \ref{chapter:6}, and propose an efficient algorithm using three parts:
+\klUCB{} indexes for arm selection,
+\MCTopM{} for orthogonalization (\ie, dealing with collisions),
+and \GLRklUCB{} for non-stationarity (\ie, dealing with abrupt changes).
+%
 % Finally, we hope that our proposal can be combined with our state-of-the-art $\mathrm{MCTopM}$ algorithm \cite{Besson2018ALT}, to efficiently tackle the piece-wise stationary distributed multi-player bandit model introduced in \cite{WeiSrivastava18Distributed}.
 
 
