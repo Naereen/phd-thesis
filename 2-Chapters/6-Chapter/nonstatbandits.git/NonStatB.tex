@@ -28,8 +28,21 @@
 For both cognitive radio and recommender systems, the assumption that the arms distribution \emph{do not change over time} may be a big limitation. Indeed, in cognitive radio new devices can enter or leave the network, which impacts the availability of the radio channel they use to communicate; whereas in online recommendation, the popularity of items is also subject to trends. Hence, there has been some interest on how to take those \emph{non-stationary} aspects into account within a multi-armed bandit model.
 
 A first possibility to cope with non-stationary is to model the decision making problem as an \emph{adversarial bandit problem} \cite{Auer02NonStochastic}. Under this model, rewards are completely arbitrary and are not assumed to follow any probability distribution.
-For adversarial environments, the pseudo-regret, which compares the accumulated reward of a given strategy with that of the best fixed-arm policy, is often studied. The pseudo regret of the EXP3 algorithm has been shown to be $\cO(\sqrt{KT})$, which matches the lower bound given by \cite{Auer02NonStochastic}. However, this model is a bit too general for the considered applications, where reward distributions do not necessarily vary at every round. For these reasons, an intermediate model, called the \emph{piece-wise stationary MAB}, has been introduced by \cite{Kocsis06} and \cite{YuMannor09}.
-It is sometimes referred to as the abruptly changing \cite{WeiSrivastava18Abruptly}, or switching environments \cite{MellorShapiro13}.
+For adversarial environments, the pseudo-regret, which compares the accumulated reward of a given strategy with that of the best fixed-arm policy, is often studied. The pseudo regret of the EXP3 algorithm has been shown to be $\cO(\sqrt{KT})$, which matches the lower bound given by \cite{Auer02NonStochastic}.
+However, this model is a bit too general for the considered applications, where reward distributions do not necessarily vary at every round.
+For these reasons, an intermediate model, called the \emph{piece-wise stationary MAB}, has been introduced in Section~8 of the seminal paper \cite{Auer02NonStochastic}.
+They propose a simple extension of the EXP3 policy, referred to as Exp3.S, that uses exponential weights like EXP3 tweaked with an adaptive forced exploration probability to passively adapt to changes.
+It was shown that Exp3.S attains a regret of $\cO(\sqrt{K T S \log(K T)})$, when comparing with an arbitrary sequence of comparators that does not switch for more than $S-1$ times.
+Running their algorithm over the non-stationary problem, and picking their comparators sequence as the best arm in each stationary interval, one can already get $\sqrt(\Upsilon_T T \log(T))$ regret, and the only prior knowledge needed to run the Exp3.S algorithm is $T$ and $\Upsilon_T$. Moreover, Exp3.S is efficient both in term of storage and computation time, and simple to implement.
+
+It could seem that the problem is considered as solved by this simple Exp3.S algorithm, but it was actively studied since the seminal paper \cite{Auer02NonStochastic}.
+Two main reasons explain the dynamic research on this problem:
+first, it is well known that despite their qualities, exponential-weights algorithms like Exp3 can usually be greatly outperformed by UCB-based algorithms, for stochastic problems, and so it is expected that Exp3.S can be outperformed by other algorithms, thus any practical application might benefit from algorithms more efficient than Exp3.S.
+%
+The second reason is that passively adaptive algorithms function as black-box models: they do not try to detect changes and do not explain why they changed from one arm to another. A lot of the recent research has been focussed on actively adaptive algorithms, precisely because they allow to interpret their decisions, by detecting changes on arms with statistical tests.
+The piece-wise stationary MAB model was then studied by \cite{Kocsis06} and \cite{YuMannor09}.
+%
+This model is sometimes referred to as the abruptly changing \cite{WeiSrivastava18Abruptly}, or switching environments \cite{MellorShapiro13}.
 %
 In this model, described in full details in Section~\ref{sec:6:BanditSetting}, the (random) reward of arm $i$ at round $t$ has some mean $\mu_i(t)$, that is constant on intervals between two \emph{breakpoints}, and the regret is measured with respect to the \emph{current} best arm $i_t^* = \arg\max_{i} \mu_i(t)$.
 
@@ -91,13 +104,13 @@ We illustrate the two extreme cases in problems $1$ and $2$ presented in Figures
 %
 The piece-wise stationary bandit model can be viewed as an interpolation between stationary and adversarial models, as the stationary model corresponds to $\Upsilon_T = 0$, while some adversarial models can be considered as a special (worst) case, with $\Upsilon_T = T$ (when considering an adaptive or an oblivious adversary).
 However, analyzing an algorithm for the piece-wise stationary bandit model requires to assume a small number of changes, typically $\Upsilon_T = o(\sqrt{T})$.
-Note that the adversarial model of \cite{Auer02NonStochastic} is quite powerful, and the authors presented in Section~8 of their paper the EXP3.S algorithm for the piece-wise stationary problem.
-\TODOL{Explain here that we should have been more careful regarding this sentence?}
+Note that the adversarial model of \cite{Auer02NonStochastic} is quite powerful, and the authors presented in Section~8 of their paper the EXP3.S algorithm for the piece-wise stationary problem, as explained in Section~\ref{sec:6:Introduction} above.
+% \TODOL{Explain here that we should have been more careful regarding this sentence?}
 
 
-\paragraph{Illustrations of two problems.}\label{par:6:benchmark1}
+\paragraph{Two example of problems.}\label{par:6:benchmark1}
 
-To illustrate the setup presented above, we give here two examples of piece-wise stationary problems.
+To illustrate the model, we give here two examples of piece-wise stationary problems.
 % problems of our benchmark,
 used for the numerical experiments presented in Section~\ref{sec:6:NumericalExperiments}.
 
@@ -112,8 +125,8 @@ and the optimal arm changes once at $\tau_2^{(1)}=2000$.
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=0.90\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_1.pdf}
-    \subcaption{\textbf{Problem $1$}: $K=3$ arms with $T=5000$, and $\Upsilon=4$ changes occur on only one arm at a time (\ie, $C=4$).}
+    \includegraphics[width=1.05\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_1.pdf}
+    \subcaption{\textbf{Pb $1$}: $K=3$ arms with $T=5000$, and $\Upsilon=4$ changes occur on only one arm at a time (\ie, $C=4$).}
     \label{fig:6:Problem_1}
 \end{figure}
 
@@ -127,7 +140,7 @@ The first optimal arm decreases at every change (\textcolor{blue}{$2$ with $\nab
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=0.90\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_2.pdf}
+    \includegraphics[width=1.05\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_2.pdf}
     \subcaption{\textbf{Problem $2$}: $K=3$ arms with $T=5000$, and $\Upsilon=4$ changes occur on all arms (\ie, $C=12$).}
     \label{fig:6:Problem_2}
 \end{figure}
@@ -347,6 +360,7 @@ Previous works focussed on using \UCB{} \cite{LiuLeeShroff17,CaoZhenKvetonXie18}
 but we propose to use \klUCB{} instead, as it is known to be more efficient for Bernoulli rewards as well as for a more generic case of bounded or one-dimensional exponential families \cite{KLUCBJournal}.
 Theoretical results for these works were only given for \UCB, but they both suggest that extending the results to \klUCB{} (or other efficient stationary policies) should not be difficult.
 For a fair comparison, we therefore chose to compare the different change-point detector algorithms combined with \klUCB.
+We also include in Table~\ref{table:6:comparisonUCB_klUCB} a comparison of the performance of different algorithms when using \UCB{} or \klUCB{} indexes, to illustrate that using a more efficient index policy always improves performance, as predicted.
 
 
 % -----------------------------------------------------------------
