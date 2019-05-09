@@ -11,10 +11,11 @@ In this Chapter~\ref{chapter:5}, we are interested in a more formal approach to 
 We restrict to the easier case of at most $M \leq K$ devices in a network with $K$ channels, because it was found very hard to analyze the aforementioned IoT network model.
 %
 We start by reviewing previous works on multi-player MAB models, which all considered the easier case of \emph{sensing feedback}.
+
 For this first model, we present two algorithms, \RandTopM{} and \MCTopM, based on the combination of an efficient MAB index policy (we chose \klUCB) and a smart orthogonalization procedure, based on a random hoping procedure called Musical Chair.
 Like in previous works, we consider the centralized system regret (multi-player regret).
 We start by showing an improved asymptotical regret lower-bound for any algorithm of a certain class, including previous solutions such as \rhoRand{} and our two solutions.
-We then analyze our \MCTopM{} algorithm and we show that its regret upper-bound is logarithmic and order-optimal, improving over the previous state-of-the-art.
+We then analyze the \MCTopM{} algorithm and we show that its regret upper-bound is logarithmic and order-optimal, improving over the previous state-of-the-art.
 %  with a regret bounded by $\bigO{\log(T)}$ for a game at horizon $T$.
 We also present extensive numerical simulations that show that our proposal outperforms all previous solutions and is much more efficient in this easier model of sensing feedback with a fixed and known number of players $M \leq K$ accessing $K$ channels.
 
@@ -24,8 +25,8 @@ Even if empirical simulations showed that \Selfish-\klUCB{} performs very well, 
 They both proposed new algorithms, proved to achieve logarithmic regret under the no sensing model.
 We include numerical simulations to compare their proposals, and we present in details the current state-of-the-art of research on multi-player MAB models without sensing.
 
-Finally, we review other extensions of our model, and give a overview of the current state-of-the-art.
-For some extensions, we discuss how to adapt our proposal and illustrate the empirical performances of such modification of \MCTopM-\klUCB{}, leaving theoretical analyses as future works.
+Finally, we review other extensions of the models, and give a overview of the current state-of-the-art.
+For some extensions, we discuss how to adapt our proposals and illustrate the empirical performances of such modification of \MCTopM-\klUCB{}, leaving theoretical analyses as future works.
 
 
 \vfill{}
@@ -47,7 +48,7 @@ This chapter is mainly based on the following publication: \cite{Besson2018ALT}.
 \newpage  % WARNING
 % ----------------------------------------------------------------------------
 % ----------------------------------------------------------------------------
-\section{Literature review of many extensions of our models}
+\section{Literature review of many extensions of the models}
 \label{sec:5:literatureReviewOtherModels}
 % ----------------------------------------------------------------------------
 
@@ -60,7 +61,7 @@ Another example is the model with different arm means among players, who was ini
 % By following actively the research on multi-player bandit models since the last three years, we believe to be able to give an exhaustive literature review, but it is of course possible that we missed an important research work. In this case, it is our mistake and not an intentional choice as we included all the different extensions of our models that we were aware of.
 
 Many extensions of the simpler model of multi-player bandits have been considered.
-The number of players $M$ can be fixed but initially unknown to the players, the sensing information can be absent (like our \modeltrois{} presented above), there could be communications between players (happening at each time step or only occasionally), or $M$ could evolve over time to model the possibility of arrivals or departures of players (\ie, connexions and disconnections of devices in a wireless networks).
+The number of players $M$ can be fixed but initially unknown to the players, the sensing information can be absent (like the model \modeltrois{} presented above), there could be communications between players (happening at each time step or only occasionally), or $M$ could evolve over time to model the possibility of arrivals or departures of players (\ie, connexions and disconnections of devices in a wireless networks).
 Also inspired by real-world wireless networks, the arm means may vary among players, for instance to model players located at different distance of the gateway, and we can also consider networks with some ``jammers'' whose purpose is not to communicate to the gateway in a collaborative way, like the $M$ devices, but to interfere with the communications of the $M$ devices.
 
 Finally, we can also be interested by models where $M$ stays fixed, but the environment evolves, for instance with abrupt changes in the means of arms. This last model makes a good connexion between this chapter and the next one, and an exciting future work is to further study this model in order to tackle this kind of problems by merging our contributions for stationary multi-player bandits and for non-stationary single-player bandits.
@@ -82,13 +83,13 @@ Finally, we can also be interested by models where $M$ stays fixed, but the envi
 
 In the model we presented above, we assumed the number of players $M$ to be fixed in time during the learning process.
 Without removing this hypothesis (we study this case below in Section~\ref{sub:5:arrivalDepartures}), it is interesting to remark that we made no hypothesis on whether the players can known this value $M$ or not.
-Our proposals, \RandTopM{} and \MCTopM, both assume to know $M$ beforehand, like it was done for our main inspiration \RhoRand.
+Our proposals, \RandTopM{} and \MCTopM, both assume to know $M$ beforehand, like it was done for their main inspiration, \RhoRand.
 
 
 \paragraph{Performance of our proposals for a wrong value of $M$?}
 \label{par:5:usingWrongValueofM}
 %
-We can start by asking whether our most efficient proposal, \MCTopM-\klUCB, is still efficient if it uses a value $M'$ different than the real number of players $M$.
+We can start by asking whether the most efficient algorithm, \MCTopM-\klUCB, is still efficient if it uses a value $M'$ different than the real number of players $M$.
 Even though we did not include numerical simulations for this case in Section~\ref{sec:5:experiments} above, we did some tests, which confirmed two disappointing results that were also proved analytically.
 First, the three algorithms (\RhoRand, \RandTopM{} and \MCTopM) give linear regret if they are using a value $M'$ strictly smaller than $M$ (and if $\mu^*_{M-1} > \mu^*_M$), as players will converge to play about $T-\bigO{\log(T)}$ times the $M-1$ best arms, leading to at least one collision most of the time, and thus a linear regret.
 Second, if the $M$ players falsely use a value $M' > M$, then there is also a certain (fixed) probability to achieve a linear regret. Indeed, imagine one player ($M=1$) running \MCTopM{} with the false knowledge of $M'=2$, and if it learned to accurately identify the set of the $2$ best arms, then the \MCTopM{} orthogonalization scheme can make it play the worst of the two arms, and as $M=1$ this player will never encounter any collision, thus playing this suboptimal arm for about $T-\bigO{\log(T)}$ times, also leading to linear regret.
@@ -139,8 +140,8 @@ We note that all the following works assume some sort of prior knowledge on the 
 \paragraph{Extension of our proposals to learn the value of $M$.}
 
 Similarly to what was proposed for the \rhoRandEst{} algorithm in \cite{Anandkumar11}, we could have worked on proposing and analyzing an extension of our proposals that could efficiently learn the value of $M$ the number of player.
-We implemented this \rhoRandEst{} policy in our library SMPyBandits \cite{SMPyBandits}, as well as this mechanism for our proposals \RandTopM{} and \MCTopM.
-Building from the theoretical analysis given for \rhoRandEst{} in \cite{Anandkumar11}, and our analysis of \MCTopM-\klUCB, we believe it is possible to show that the aforementioned extension of our proposal also achieves sub-linear regret without requiring players to know $M$ in the beginning of the bandit game.
+We implemented this \rhoRandEst{} policy in our library SMPyBandits \cite{SMPyBandits}, as well as this mechanism for \RandTopM{} and \MCTopM.
+Building from the theoretical analysis given for \rhoRandEst{} in \cite{Anandkumar11}, and the analysis of \MCTopM-\klUCB, we believe it is possible to show that the aforementioned extension also achieves sub-linear regret without requiring players to know $M$ in the beginning of the bandit game.
 More precisely, we believe that \MCTopM-\klUCB{} can still give order-optimal logarithmic regret if $M$ players use it, and this extension of Theorem~\ref{thm:5:LogarithmicRegret_MCTopMklUCB} is not included due to space constraints.
 Writing its proof and performing more simulations are left as possible future work.
 
@@ -185,14 +186,14 @@ For the two non-extreme cases ($M=3,6$), the performance drop when having to est
 The extreme case of $M=K$ players is of highest interest, as \MCTopM{} achieves a very small regret (proved to be $\cO(1)$ as it is just the expected time of the orthogonalization process), while the same algorithm with unknown $M$ suffers from a much larger regret.
 In this extreme case, \RhoRand{} and its extension both perform very closely, as expected, and much worse than \MCTopM.
 %
-Additional simulations, for increasing time horizons $T$, confirmed the expected order-optimal regret of this extension of our proposal \MCTopM-\klUCB.
+Additional simulations, for increasing time horizons $T$, confirmed the expected order-optimal regret of this extension of \MCTopM-\klUCB.
 
 
 % ----------------------------------------------------------------------------
 \subsection{Arrival and departures of players: the ``dynamic setting''}
 \label{sub:5:arrivalDepartures}
 
-As reminded above, our model assumes the number of players $M$ remain fixed during all the bandit game.
+As reminded above, the model assumes the number of players $M$ remain fixed during all the bandit game.
 However, in real-world wireless networks, when players model communicating devices connected to a single gateway, devices can arrive or leave the network at any time.
 The existing previous work on multi-player bandit models are all motivated by possible applications to wireless networks, but most of them assume $M$ to be fixed.
 The first work studying the relaxation of this hypothesis is \cite{Rosenski16}, where this case is called the ``dynamic setting''.
@@ -215,7 +216,7 @@ Applied to the \MusicalChair{} algorithm, the authors in \cite{Rosenski16} call 
 Under the simple hypothesis that the overall number of players entering and leaving the game is sub-linear in $T$ (\ie, a $\smallO{T}$), they analyze the regret of Dynamic \MusicalChair{} and prove it is also sub-linear (see Theorem~2 in Section~3.4).
 %
 Under the same hypothesis, and if the lower-bound $L$ is known before-hand and is large enough, then we could also apply the same idea as from \cite{Rosenski16} to our approach. We believe that we could easily prove that a sub-linear regret is achievable, if all players run \MCTopM-\klUCB{} (and if currently active players restart their memory of the past observations every $L$ time steps).
-As the regret guarantees are stronger (\ie, smaller regret upper-bound) for \MCTopM{} than \MusicalChair, we also believe that in this ``slowly varying'' dynamic setting, applying the idea of Dynamic \MusicalChair{} from \cite{Rosenski16} to our proposal \MCTopM{} would also give a small regret upper-bound.
+As the regret guarantees are stronger (\ie, smaller regret upper-bound) for \MCTopM{} than \MusicalChair, we also believe that in this ``slowly varying'' dynamic setting, applying the idea of Dynamic \MusicalChair{} from \cite{Rosenski16} to \MCTopM{} would also give a small regret upper-bound.
 
 After being introduced in \cite{Rosenski16}, some more recent works studied the case of arrival or departures of players, usually referred to as ``dynamic setting'' or ``dynamic case''.
 For instance, \cite{BoursierPerchet18} studies in Section~4 the first algorithm proposed for the dynamic case under the no-sensing model.
@@ -242,10 +243,10 @@ If all arriving players are using their \textsc{Dyn-MMAB} algorithm, the ``dynam
 \label{sub:5:withoutSensing}
 
 We presented in Section~\ref{sec:5:model} the model \modeltrois, without sensing information. Players can only observe $Y_k(t)$, the product of the \iid{} random sensing information from arm $k$ and of the no-collision indicator.
-This model seems harder than the model with sensing information, and even though our proposal \Selfish{} works fine in simulations (in terms of average regret), we proved that it can yield linear regret.
+This model seems harder than the model with sensing information, and even though the proposal \Selfish{} works fine in simulations (in terms of average regret), we proved that it can yield linear regret.
 In our paper \cite{Besson2018ALT} as well as the previous sections, it was left as a future work to know if an algorithm can achieve sub-linear regret in this harder model without sensing information.
 
-Inspired by our article \cite{Besson2018ALT},
+Inspired by \cite{Besson2018ALT},
 Boursier and Perchet studied this question in the summer $2018$ following its publication \cite{BoursierPerchet18}.
 Their answer is that the model without sensing information is essentially not harder than the model with sensing information.
 %
@@ -278,7 +279,7 @@ The results presented in \cite{LugosiMehrabian18} are based on some hypotheses, 
 In Section~4 they explain how to relax the assumptions of their results.
 For the same example, the ``doubling trick'' technique can be used to obtain a regret upper bound for an algorithm unaware of the value of $T$, within a constant multiplicative factor of the upper bound given for the algorithm aware of $T$ (Section~4.1). Because the regret bound is of the form $\bigO{\sqrt{T} \log(T)}$, a simple ``doubling trick'' of increasing horizons of lengths $T_i = 2^i$ works well, as proposed in \cite{CesaLugosi06} and as studied in depth in our article \cite{Besson2018DoublingTricks}, and quickly presented in Appendix~\ref{app:2:DoublingTricks}.
 %
-They also study in Section~4.3 an extension of the model for the case with more players than arms, but we do not give more details on this aspect. Their definition of a centralized regret for this case is an interesting and natural generalization of our definition, and they also proposed an algorithm achieving $\bigO{M K \log(T) \exp(4M/K) / \Delta^2}$ regret in this case.
+They also study in Section~4.3 an extension of the model for the case with more players than arms, but we do not give more details on this aspect. Their definition of a centralized regret for this case is an interesting and natural generalization of the definition, and they also proposed an algorithm achieving $\bigO{M K \log(T) \exp(4M/K) / \Delta^2}$ regret in this case.
 Finally, they also proposed in Section~4.4 an extension of their algorithm to estimate the number of players $M$, which is analyzed as for the Musical Chair algorithm in \cite{Rosenski16}, and also achieve logarithmic regret.
 Note that it is significantly harder to estimate $M$ without collision information, and Algorithm~3 in page 24 is quite complex.
 We did not implement it, and it would be interesting to run some numerical simulations in order to validate it empirically.
@@ -498,7 +499,7 @@ The first work is \cite{NaparstekCohen17}, which proposes to use a decentralized
 The work of \cite{AvnerMannor18} is discussed above for the case with communicating players, and their model is very interesting from the point-of-view of real-world wireless communication protocols.
 
 Finally, the very recent work of \cite{Zafaruddin2019} is the first one to present experiments of reinforcement learning done on simulated LTE and 5G channels.
-The mathematics behind their model are actually quite close to our model, but they explain it in terms of OFDMA and Quality-of-Service (QoS).
+The mathematics behind their model are actually quite close to the model, but they explain it in terms of OFDMA and Quality-of-Service (QoS).
 Their algorithm is essentially based on a pre-agreement of the $M$ players, that will deterministically run an alternance of exploration phase, auction phase and exploitation phase, of (exponentially) increasing durations.
 By diving into the details of the modulation and giving explicitly the form of the uplink messages sent by the devices, the authors are able to set-up two different uplink packets, to efficiently perform the auction phase (see Figure~2).
 They prove a regret upper-bound of the order $R_T = \bigO{\log(T)}$, with no special care regarding the constants, but we can also note that their algorithm require a prior knowledge of $\Delta_{\min}$ a problem-dependent constant (Theorem~3).
@@ -518,7 +519,7 @@ This algorithm is implemented in SMPyBandits and named \rhoLearn\footnote{See \h
 Even if no theoretical guarantee backs up this idea of second-stage learning with Bayes-UCB, empirical simulations found that it can be efficient.
 We illustrate this in Table~\ref{table:5:comparisonRhoRandRhoLearn} below, where we consider the same problem as described above in Section~\ref{sub:5:withoutSensing} (Table~\ref{table:5:meanRegretSimulationsNoSensing}).
 The first \rhoLearn uses \klUCB{}, Bayes-UCB or Exp3 for the second-stage learning,
-and we include both the centralized multi-play version of \klUCB{} and our proposal \MCTopM-\klUCB{} for comparison.
+and we include both the centralized multi-play version of \klUCB{} and \MCTopM-\klUCB{} for comparison.
 
 % DONE run the simulations with N=100 and not N=4
 % for M in 3 6 9; do DEBUG=False SAVEALL=False NOPLOTS=True M=$M K=9 N_JOBS=-1 N=100 T=10000 make moremultiplayers; read; done
@@ -550,7 +551,7 @@ Other works in the same line of research included \cite{modiDemo2016} implemente
 and the first work of a research team based in IIT Dehli, \cite{kumar2016two}.
 %
 More recent works by the same team, \cite{KumarYadav2018,SawantKumar2018,JoshiKumar2018}, all follow the same approach and include an experimental section that shows the results of an implementation of the proposed algorithms on USRP boards.
-\TODOL{I should explain more, no? Who does what and why? So long...}
+% \TODOL{I should explain more, no? Who does what and why? So long...}
 
 
 % ----------------------------------------------------------------------------
@@ -592,8 +593,8 @@ The SW-UCB\# algorithm is discussed more in details in the literature review of 
 %
 If $\Upsilon_T$ is bounded by $\Upsilon_T = \bigO{T^{\gamma}}$, for a known $\gamma$ but an unknown $\Upsilon_T$, they prove for instance in Theorem~2 \cite{WeiSrivastava18Distributed} that the expected cumulative regret of their RR-SW-UCB\# algorithm is bounded by $R_T = \bigO{T^{\frac{1+\gamma}{2}} \log(T)}$ (what we call the centralized system regret).
 This bound is of the same order as the bound obtained by the same authors for the SW-UCB\# algorithm in \cite{WeiSrivastava18Abruptly} for the single-player case.
-If $\Upsilon_T = \bigO{T^{\gamma}}$, this bound is comparable to the results obtained for most of the research literature on piece-wise stationary bandits (earlier works like D-UCB in \cite{Garivier11UCBDiscount} have the $\log(T)$ outside the square root, while more recent works all improved this aspect and have the $\log(T)$ in the square root, like for instance our proposals \GLRklUCB{} in \cite{Besson2019GLRT} and presented in Chapter~\ref{chapter:6}).
-Even if their analysis is not explicit regarding the constant, in the case where $\Upsilon_T = \bigO{T^{\gamma}}$ for a known $\gamma$, their regret upper-bound actually matches our conjectured lower-bound, up to a logarithmic factor $\log(T)$. \\
+If $\Upsilon_T = \bigO{T^{\gamma}}$, this bound is comparable to the results obtained for most of the research literature on piece-wise stationary bandits (earlier works like D-UCB in \cite{Garivier11UCBDiscount} have the $\log(T)$ outside the square root, while more recent works all improved this aspect and have the $\log(T)$ in the square root, like for instance our algorithm \GLRklUCB{} in \cite{Besson2019GLRT} and presented in Chapter~\ref{chapter:6}).
+Even if their analysis is not explicit regarding the constant, in the case where $\Upsilon_T = \bigO{T^{\gamma}}$ for a known $\gamma$, their regret upper-bound actually matches the conjectured lower-bound, up to a logarithmic factor $\log(T)$. \\
 %
 \indent
 And finally, even though numerical simulations in their papers \cite{WeiSrivastava18Abruptly,WeiSrivastava18Distributed} are interesting and confirm the regret upper-bounds, they do not compare with any other algorithm, and it is left as an interesting future work to study this direction in more details.
@@ -614,7 +615,7 @@ As soon as the ``coordinator'' can effectively use one algorithm to decide the a
 (their notation uses $K$ for $M$ the number of players and $N$ for $K$ the number of arms).
 This bound is much worse than the one obtained for the first article \cite{WeiSrivastava18Distributed}, but is more general, and it is much worse than the bound of $\bigO{\sqrt{K T \log(K)}}$ obtained for Exp3 for the single-player adversarial setting in \cite{Auer02NonStochastic}.
 Note that this bound in $T^{2/3}$ is of the same order as the one given in \cite{Avner15}, for the \MEGA{} algorithm.
-However, we note that the dependency in $M$ is surprisingly better for their result than for our regret upper-bound for \MCTopM-\klUCB, as its regret scales in $M^3$ in Theorem~\ref{thm:5:LogarithmicRegret_MCTopMklUCB}.\\
+However, we note that the dependency in $M$ is surprisingly better for their result than for the regret upper-bound for \MCTopM-\klUCB, as its regret scales in $M^3$ in Theorem~\ref{thm:5:LogarithmicRegret_MCTopMklUCB}.\\
 \indent
 Moreover, at first sight, this idea of ``meta'' arms implies an exponential blow up in terms of computational and storage cost, as there is ${M \choose K}$ such ``meta arms'', but
 the authors provide in Section~4.1 and Lemma~4.1 an interesting discussion regarding the time efficiency of their proposed algorithm, and they show it can stay polynomial in $M$ and $K$ by leveraging techniques from the Determinental Point Processes (DPP, see \cite{GaBaVa18} for a good review).
@@ -630,7 +631,7 @@ Despite being more complicated than other approaches, their algorithm ``\texttt{
     - Modification: only a change-point on the arm on which player is sitting can make him move? It's already the case: the \GLR{} test can only detect change-point on an arm that was played, and the \MCTopM{} orthogonalization procedure forces to play the same arm as long as the player is sitting.
 }
 
-\TODOL{Je peux faire des expériences pour cette approche, est-ce que j'en fais ? Ici, ou à la fin du chapitre 6 ? Ou en conclusion ?}
+% \TODOL{Je peux faire des expériences pour cette approche, est-ce que j'en fais ? Ici, ou à la fin du chapitre 6 ? Ou en conclusion ?}
 
 
 % ----------------------------------------------------------------------------
@@ -652,9 +653,9 @@ To sum up, we presented in this Chapter three variants of Multi-Player Multi-Arm
 with different level of feedback being available to the decentralized players, under which we proposed efficient algorithms.
 For the two easiest models --with sensing--, our theoretical contribution improves both the state-of-the-art upper and lower bounds on the regret. In the absence of sensing, we also provide some motivation for the practical use of the interesting \Selfish{} heuristic, a simple index policy based on hybrid indices that are directly taking  into account the collision information.
 %
-We also reviewed various variants of this model, and for some interesting variants we discussed the related literature, which has proved to be very active in the last two years. For some models, we explained why our approach does not work efficiently without modifications, but we detailed and illustrated how to adapt our proposal \MCTopM{} to other settings.
+We also reviewed various variants of this model, and for some interesting variants we discussed the related literature, which has proved to be very active in the last two years. For some models, we explained why our approach does not work efficiently without modifications, but we detailed and illustrated how to adapt \MCTopM{} to other settings.
 For example, it assumes to know the number of players $M$ before-hand, but we illustrated that previously introduced technique to estimate $M$ can also be applied to our proposal and give satisfactory empirical performances.
-Further works would be required to adapt our theoretical analysis to these various extensions.
+Further works would be required to adapt the theoretical analysis to these various extensions.
 
 This Chapter suggests several interesting further research directions.
 First, one could want to investigate the notion of \emph{optimal algorithms} in the decentralized multi-player model with sensing information. So far we provided the first matching upper and lower bound on the expected number of sub-optimal arms selections, which suggests some form of (asymptotic) optimality. However, sub-optimal draws turn out not be the dominant terms in the regret, both in our upper bounds and in practice, thus an interesting future work is to identify some notion of \emph{minimal number of collisions}.
@@ -682,7 +683,7 @@ and we refer to the following page for details on how to reproduce them,
 \section{Appendix}
 \label{sec:5:appendix}
 
-We include here some missing proofs and additional simulation results for this Chapter.
+% We include here some missing proofs and additional simulation results for this Chapter.
 
 % ----------------------------------------------------------------------------
 \input{2-Chapters/5-Chapter/ALT_2018__MPBandits.git/mpBandits_appendix.tex}

@@ -265,7 +265,7 @@ which suggests us to resort to MAB algorithms for the channel selection for both
 \begin{figure}[htp!]  % [htbp]
 	\centering
 	% \includegraphics[width=0.65\linewidth]{Approximation_m10.eps}
-	\includegraphics[width=0.65\linewidth]{Approximation_m10-eps-converted-to.pdf}
+	\includegraphics[width=0.80\linewidth]{Approximation_m10-eps-converted-to.pdf}
 	\caption[Proposed approximation for the probability of collision at the second transmission]{Proposed approximation for the probability of collision at the second transmission. It is more precise for smaller values of $N$.}
 	\label{fig:43:Approximation_m10}
 \end{figure}
@@ -406,10 +406,11 @@ $A(t) = \arg\max_{1\leq k \leq K} U_k(t)$.
 % \end{small} % XXX remove if needed
 
 
-\paragraph{A warning about notations: local (device) time vs global (gateway) time.}
+\paragraph{\textcolor{red}{Small warning about notations: local (device) time vs global (gateway) time}.}
 %
 In all the algorithms and notations presented in this Section, the time steps $t$ do not refer to the global time steps (as seen from the gateway), but rather the current number of uplink transmissions (or retransmissions) that was carried out by the device.
 In other words, each device wakes up whenever it has to send some data, following its random emission process (here, we propose a Bernoulli process of small probability, \eg, $p=10^{-3}$), and when it woke up, it sends its packet, and will send again for at most $M$ times (\eg, $M=10$) until it receives an \Ack.
+
 To be clear, once again, we repeat that the time steps $t$ in the following algorithms denote the number of time the device sent an uplink packet, and these uplink (re)transmissions can happen at different (real-world) times, more or less spread out in time, it does not matter to the learning part of this model and work.
 
 
@@ -438,7 +439,7 @@ In this first proposal, the device uses a random channel selection, following a 
 It is described below in Algorithm~\ref{algo:43:UCBthenRandom}.
 More precisely, the first-stage \UCB{} use rewards built from the acknowledgments that the device received or not for its first-stage transmission, but do not use any feedback about any of the retransmissions of any message.
 
-\vspace*{-3pt}
+% \vspace*{-3pt}
 \begin{figure}[h!]
 	\centering
     \begin{framed}
@@ -472,7 +473,7 @@ Note that, we use the subscript $({}^r)$ to denote the variables
 $\widehat{\mu^r_k}(t)$, $B^r_k(t)$ and $U^r_k(t)$,
 related to the \UCB{} algorithm employed for the retransmission.
 
-\vspace*{-3pt}
+% \vspace*{-3pt}
 % \begin{small} % XXX remove if needed
 \begin{figure}[h!]
 	\centering
@@ -505,7 +506,7 @@ It means that after a failed first transmission in channel $j$, the device relie
 The corresponding algorithm is depicted in Algorithm~\ref{algo:43:UCBthenKp1}.
 Each of these algorithms are denoted using the subscript $({}^{j})$, for $j\in\llbracket 1, K \rrbracket$.
 
-\vspace*{-3pt}
+% \vspace*{-3pt}
 % \begin{small} % XXX remove if needed
 \begin{figure}[h!]
 	\centering
@@ -553,12 +554,12 @@ and start to rely on the second stage \UCB{} after $\Delta$ transmissions.
 The selection for the first steps is handled with the random retransmission.
 
 The idea behind this delay is to allow the first stage \UCB{} to start learning the best channel, before starting the second stage \UCB{} (see details in Algorithm~\ref{algo:43:UCBwithDelay}).
-The number of transmissions to wait before applying the second algorithm is denoted by $\Delta$, it has to be fixed before-hand\footnote{~Choosing the value of $\Delta$ could be done by extensive benchmarks but such approach goes against the reinforcement learning idea: an heuristic should work against any problem, without the need to simulate the problem before-hand to find a good value of some internal parameter. As such, we only consider a delay of $\Delta=100$.}.
+The number of transmissions to wait before applying the second algorithm is denoted by $\Delta$, it has to be fixed before-hand\footnote{~Choosing the value of $\Delta$ could be done by extensive benchmarks but such approach goes against the reinforcement learning idea: an heuristic should work against any problem, without the need to simulate the problem before-hand to find a good value of some internal parameter. As such, we only consider a delay of $\Delta=100$ in our experiments, and we did not try to optimize it.}.
 %
 Note that, we use the subscript $({}^d)$ to denote the variables
 related to the delayed second-stage \UCB{} algorithm.
 
-\vspace*{-3pt}
+% \vspace*{-3pt}
 % \begin{small} % XXX remove if needed
 \begin{figure}[h!]
 	\centering
@@ -588,16 +589,17 @@ related to the delayed second-stage \UCB{} algorithm.
 % \end{small} % XXX remove if needed
 
 
-\paragraph{Other ideas that we did not explore}
+\paragraph{Other ideas that we did not explore.}
 %
 Instead of considering a first-stage \UCB{} followed by a random channel retransmission, we could have considered a random first-stage channel retransmission followed by a second-stage \UCB.
 This was not considered in our study \cite{Bonnefoi2019WCNC}, and we preferred to not add it to the experiments presented below, for three reasons: to avoid clutter in the plots, to win some time as these experiments had to run for quite a long time, but mainly because the first-stage channel selection is most important one as we illustrate by the large difference in terms of performance between the uniform channel selection and the ``only UCB'' heuristic, below in Figures~\ref{fig:43:mainExperiment1} and \ref{fig:43:mainExperiment2}.
 
-\textbf{Remark.}
+\paragraph{Using another bandit policy?}
 %
 Similarly, Philippe Mary asked me at the MoTION workshop where I presented \cite{Bonnefoi2019WCNC}, why didn't we rather used Bayes-UCB instead of \UCB{} (from \cite{Kaufmann12BUCB}), as it is known to empirically outperform \UCB{} (as illustrated for instance in \cite{darak2016bayesian,kumar2016two}).
 We could have chose any bandit algorithm for the ``first stage'' component used in this Section, and for simplicity and clarity we focussed on a simple but efficient one (\UCB).
 We believe that the same empirical results, but more importantly, the same conclusions, could be given if we used Bayes-UCB or other bandit algorithm for the base building block in the different heuristics proposed in Section~\ref{sub:43:heuristics}.
+The goal of this Section was not to optimize on the bandit policy (as we presented in Section~\ref{sec:3:reviewSPAlgorithms} some numerical simulations doing precisely this), but rather to compare the different heuristics, for a fixed bandit policy (for which we preferred to use \UCB{} for simplicity).
 
 
 % ----------------------------------------------------------------------

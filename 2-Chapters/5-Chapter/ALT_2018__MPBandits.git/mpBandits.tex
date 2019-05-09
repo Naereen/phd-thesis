@@ -230,7 +230,8 @@ With this definition, maximizing the expected sum of global reward of the system
 
 
 % -----------------------------------------------------------------
-\section{An improved asymptotic regret lower bound (for some algorithms)}
+% \section{An improved asymptotic regret lower bound (for some algorithms)}
+\section{Decomposing the regret to get an intuition for the design of efficient decentralized algorithms}
 \label{sec:5:lowerbound}
 % -----------------------------------------------------------------
 
@@ -244,7 +245,8 @@ In this section, we provide a useful decomposition of the regret (Lemma~\ref{lem
   The proof we gave in the Appendix of our paper \cite{Besson2018ALT} was wrong in just one step,
   but the results stated in this section are now correct,
   thanks to the modifications proposed by Emilie Kaufmann and Abbas Mehrabian in Appendix~E of \cite{KaufmannAbbas19}.
-  The cost for this modification is to restrict the lower-bound to a smaller class of algorithms, which contains both \RhoRand{} and our two proposals \RandTopM{} and \MCTopM{} but not the two algorithms proposed SIC-MMAB from \cite{BoursierPerchet18} and Multiplayer Explore-then-Commit (M-ETC) from \cite{KaufmannAbbas19}.
+  The cost for this modification is to restrict the lower-bound to a smaller class of algorithms, which \emph{should} contain \RhoRand, \RandTopM{} and \MCTopM, but not the two algorithms proposed SIC-MMAB from \cite{BoursierPerchet18} and Multiplayer Explore-then-Commit (M-ETC) from \cite{KaufmannAbbas19}.
+  Proving that the proposed algorithms are in this class is left as an open question.
 % \end{framed}
 % FIXME
 
@@ -353,6 +355,7 @@ In this decomposition, term \ref{eq:5:term1} counts the lost rewards due to \emp
 The regret decomposition in Lemma~\ref{lem:5:DecompositionRegret} is valid for both centralized and decentralized algorithms.
 For centralized algorithms, due to the absence of collisions, \ref{eq:5:term3} is obviously zero, and \ref{eq:5:term2} is non-negative, as $T_k(T) \leq T$. For decentralized algorithms, \ref{eq:5:term3} may be significantly large, and term \ref{eq:5:term2} may be negative, as many collisions on arm $k$ may lead to $T_k(T) > T$ (which is counter intuitive with such notations).
 However, a careful manipulation of this decomposition shows that the regret is always lower bounded by term \ref{eq:5:term1}.
+The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized____env6} in Appendix illustrate two cases of $M<K$ and $M=K$ and the different impact of the three terms (\ref{eq:5:term1}, \ref{eq:5:term2} and \ref{eq:5:term3}) on the regret.
 
 \begin{lemma}\label{lem:5:1stLowerBound}
     For any strategy $\rho$ and $\boldsymbol{\mu}\in\cP_M$, it holds that
@@ -401,8 +404,8 @@ we use the Kullback-Leibler divergence to express our lower bound.
 Let $\kl(x,y) := x\log(x/y) + (1-x)\log((1-x)/(1-y))$ be KL divergence between the Bernoulli distribution of mean $x$ and that of mean $y$.
 %
 We first introduce the assumption under which we derive a regret lower bound, that generalizes a classical assumption made by \cite{LaiRobbins85} in single-player bandit models.
-Our lower bound will only be valid for algorithms of a certain class, that do not obtain much information from the collision indicator variables.
-This class contains our proposals, \RandTopM{} and \MCTopM, but rules out the \textsc{Sic-MMAB} algorithm of \cite{BoursierPerchet18}.
+% Our lower bound will only be valid for algorithms of a certain class, that do not obtain much information from the collision indicator variables.
+% This class contains our proposals, \RandTopM{} and \MCTopM, but rules out the \textsc{Sic-MMAB} algorithm of \cite{BoursierPerchet18}.
 
 \begin{definition}\label{def:5:DecentralizedUniformEfficiency}
   A strategy $\rho$  is \emph{\textbf{strongly uniformly efficient}} if for all $\boldsymbol{\mu} \in \cP_M$ and for all $\alpha \in (0,1)$,
@@ -433,7 +436,8 @@ ${T}- \E_{\mu}[T_k(T)] {=} o(T^{\alpha})$, and so
 The additional assumption in \eqref{eq:5:SUE} further implies some notion of \emph{fairness}, as it suggests that each of the $M$ players spends on average the same amount of time on each of the $M$ best arms. Note that this assumption is satisfied by any strategy that is invariant under every permutation of the players, \ie, for which the distribution of the observations under $\rho^{\gamma} = (\rho^{\gamma(1)},\dots,\rho^{\gamma(M)})$ is independent from the choice of permutation $\gamma \in \Sigma_M$. In that case, it holds that  $\E_{\mu}[T_k^j(T)]=\E_{\mu}[T_k^{j'}(T)]$ for every arm $k$ and $(j,j') \in \{1,\dots,M\}$, hence \eqref{eq:5:SUE} and \eqref{eq:5:intermediate} are equivalent, and strong uniform efficiency is equivalent to standard uniform efficiency. Note that all our proposed algorithms are permutation invariant and \MCTopM{} is thus an example of strongly uniformly efficient algorithm, as we prove in Section~\ref{sec:5:upperbounds} that its regret is logarithmic on every instance $\mu \in \cP_M$.
 
 As it was discovered in \cite{BoursierPerchet18} and further explained in Appendix~E of \cite{KaufmannAbbas19}, our lower-bound was not true for any algorithm, as we wrongly claimed in \cite{Besson2018ALT} that the ``collision information term'' is zero for any algorithm $\rho$.
-However, we wanted to be still able to present the derivations of our lower-bound, mainly because its proof and its form give insights on how to design an asymptotically optimal algorithm $\rho$, and because it still applies to algorithms of the \RhoRand{} family as well as our proposals \RandTopM{} and \MCTopM.
+However, we wanted to be still able to present the derivations of our lower-bound, mainly because its proof and its form give important insights on how to design an asymptotically optimal algorithm $\rho$.
+% and because it still applies to algorithms of the \RhoRand{} family as well as our proposals \RandTopM{} and \MCTopM.
 
 % FIXME
 The following notations and the hypothesis on the collision information term \eqref{eq:5:collisionInformationTerm} come from Appendix~E of \cite{KaufmannAbbas19}.
@@ -441,7 +445,9 @@ Fix a player $j\in\{1,\dots,M\}$, and we consider the observations $\cO_t$ gathe
 \[ \cO_t := \left( U^j(1), Y_{A^j(1),1}, C^j(1), \ldots, U^j(t), Y_{A^j(t),t}, C^j(t) \right),\]
 where $U^j(t)$ denotes some external source of randomness useful to select $A^j(t+1)$ (\eg, for an algorithm based on ranks and \UCB{} indexes, like \RhoRand, when two arms have the same maximum index, the decision is an $\argmax$ that is usually a uniform random selection among the arms with maximum index).
 
-Fix a problem $\bm{\mu}$, and as we do in Appendix~\ref{proof:5:BetterLowerBound}, introduce an alternative model parametrized by $\bm{\lambda}$, with a small difference between $\bm{\mu}$.
+Fix a problem $\bm{\mu}$,
+% and as we do in Appendix~\ref{proof:5:BetterLowerBound},
+then introduce an alternative model parametrized by $\bm{\lambda}$, with a small difference between $\bm{\mu}$.
 Fix a sub-optimal arm $k$ and $\varepsilon>0$, and $\lambda_k = \mu^*_M + \varepsilon$ and $\lambda_{\ell} = \mu_{\ell}$ for any $\ell\neq k$.
 We denote $\Pr_{\bm{\mu}}^{\cO_t}$ the distribution of the vector $\cO_t$ under the model $\bm{\mu}$ when using algorithm $\rho$.
 Then we introduce the \emph{collision information term} as:
@@ -452,7 +458,9 @@ Then we introduce the \emph{collision information term} as:
 For a \emph{decentralized strategy} $\rho$ that has access to the sensing information (\ie, ruling out model \modeltrois), and satisfies $\cI_{\bm{\mu},\bm{\lambda}}(\rho,T) = \smallO{\log(T)}$,
 we now state a problem-dependent asymptotic lower bound on the number of sub-optimal arms selections.
 The additional hypothesis on $\cI_{\bm{\mu},\bm{\lambda}}(\rho,T)$ essentially says that ``the collisions do not bring too much information on the arm means'', as stated in \cite{KaufmannAbbas19}.
-The theorem stated below is proved in Appendix~\ref{proof:5:BetterLowerBound}, and it also yields an asymptotic logarithmic lower bound on the regret.
+The theorem stated below is proved in the Appendix of \cite{Besson2018ALT},
+% \ref{proof:5:BetterLowerBound},
+and it also yields an asymptotic logarithmic lower bound on the regret.
 
 \begin{theorem}\label{thm:5:BetterLowerBound}
   Under observation models $\modelun$ and $\modeldeux$, for any strongly uniformly efficient \emph{decentralized} policy $\rho$ and $\boldsymbol{\mu}\in\cP_M$.
@@ -485,6 +493,8 @@ It is worth mentioning that \cite{Zhao10} proved a lower bound under the more ge
 Our result could be extended to this case but we chose to keep the notation simple and focus on \emph{fair allocation} of the optimal arms between players.
 
 
+\paragraph{Price of decentralized learning?}
+%
 Interestingly, our lower bound is exactly a multiplicative constant factor $M$ away from the lower bound given by \cite{Anantharam87a} for centralized algorithms (which is clearly a simpler setting). This intuitively suggests the number of players $M$ as the (multiplicative) \emph{``price of decentralized learning''}. However, to establish our regret bound, we lower bounded the number of collisions by zero, which may be too optimistic.
 %
 Indeed, for an algorithm to attain the lower bound \eqref{eq:5:ourLowerBound}, the number of selections of each sub-optimal arm should match the lower bound \eqref{eq:5:LBDraws} \emph{and} term \ref{eq:5:term2} and term \ref{eq:5:term3} in the regret decomposition of Lemma~\ref{lem:5:DecompositionRegret} should be negligible compared to  $\log(T)$.
@@ -588,7 +598,7 @@ Note that $\widetilde{\mu_k}^j(t)$ is no longer meant to be an unbiased estimate
 Given any of these two index policies (\UCB{} or \klUCB), the \Selfish{} algorithm is defined by,
 %
 \begin{equation}
-  A^j(t) = \argmax{ k \in \{1,\dots,K\}} \ \widetilde{g_k}^j(t-1).\label{algo:5:Selfish}
+  A^j(t) = \argmax_{ k \in \{1,\dots,K\}} \ \widetilde{g_k}^j(t-1).\label{algo:5:Selfish}
 \end{equation}
 The name comes from the fact that each player is targeting, in a ``selfish'' way, the arm that has the highest index, instead of accepting to target only one of the $M$ best.
 The reason that this may work precisely comes from the fact that $\widetilde{g_k}^j(t)$ is no longer an upper-confidence on $\mu_k$,
@@ -608,7 +618,7 @@ As such, the algorithm does not appear to be well justified, and one may rather 
 However, we found out empirically that \Selfish{} is doing surprisingly well when using \UCB-like indexes, greatly outperforming \Selfish{} based on $\mathrm{EXP3}$,
 like what we found in Chapter~\ref{chapter:4} in harder settings.
 
-We show in Section~\ref{sub:5:SelfishFails} that \Selfish{} does have a (very) small probability to fail (badly), for some problem with small $K$,
+We illustrate in Section~\ref{sub:5:SelfishFails} that \Selfish{} does have a (very) small probability to fail (badly), for some problem with small $K$,
 which precludes the possibility of a logarithmic regret for any problem.
 In most cases, it empirically performs similarly to all the algorithms described before,
 and usually outperforms \rhoRand,
@@ -677,6 +687,10 @@ We now propose two alternatives to this strategy, that do not rely on ranks and 
 \end{equation}
 
 
+\paragraph{The \RandTopM{} algorithm.}
+%
+We precisely state our first proposal below in Algorithm~\ref{algo:5:RandTopM}.
+
 % \vspace*{-5pt}  % XXX remove if problem
 % \begin{small}  % XXX remove if problem
   \begin{figure}[h!]
@@ -722,11 +736,8 @@ We now propose two alternatives to this strategy, that do not rely on ranks and 
 % \vspace*{-5pt}  % XXX remove if problem
 
 
-\paragraph{The \RandTopM{} algorithm.}
-%
-First, we precisely state the \RandTopM{} algorithm above in Algorithm~\ref{algo:5:RandTopM}.
-It is essentially a refinement over the \RhoRand{} algorithm, to not use the indirection of ranks, and a simpler version of \MCTopM.
-The difference with \MCTopM{} is that the later algorithm introduces a concept of a ``Chair'', by considering a binary ``being fixed'' state $s^j(t)$, as presented in Algorithm~\ref{algo:5:MCTopM} below.
+\RandTopM{} is essentially a refinement over \RhoRand, to not use the indirection of ranks, and a simpler version of \MCTopM.
+The difference with \MCTopM{} is that the later introduces a concept of a ``Chair'', by considering a binary ``being fixed'' state $s^j(t)$, as presented in Algorithm~\ref{algo:5:MCTopM} below.
 %
 In \RandTopM{}, player $j$ is always considered ``not fixed'',
 and a \emph{collision always forces a uniform sampling of the next arm} from $\TopM(t)$.
@@ -829,7 +840,7 @@ The five different transitions $(1)$, $(2)$, $(3)$, $(4)$, $(5)$ refer to the no
 
 \begin{figure}[h!]
   \resizebox{1.00\textwidth}{!}{
-  \begin{tikzpicture}[>=latex',line join=bevel,scale=5.5]
+  \begin{tikzpicture}[>=latex',line join=bevel,scale=5.8]
       %
       \node (start) at (1.5,0.30) {$(0)$ Start $t=0$};
       \node (notfixed) at (1,0) [draw,rectangle,thick] {Not fixed, $\overline{s^j(t)}$};
@@ -914,19 +925,21 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
   %
   \end{align*}
   Considering the relative position of the upper-confidence bound $g_{m^*}^j(t)$ and the corresponding mean $\mu_m^* = \mu_{m^*}$, one can write the decomposition
-  \begin{align*}
-    \E_{\mu}[T_k^j(T)] &\leq \sum_{t=1}^T\Pr_{\bm{\mu}} \left(A^j(t) = k,\;\; \exists m \in\{1,\dots,M\}:\; g_{m^*}(t) \leq g_k(t) , \forall m \in \{1,\dots,M\}: \;  g_{m^*}(t) \geq \mu_m^* \right)\\
-    &\;\;\;\;\;\;\;\; + \sum_{t=1}^T\Pr_{\bm{\mu}} \left( \exists m \in\{1,\dots,M\}: \; g_{m^*}(t) < \mu_m^* \right) \\
-    &\leq \sum_{t=1}^T\Pr_{\bm{\mu}} \left(A^j(t) = k,\;\; \exists m \in\{1,\dots,M\}:\; \mu_{m}^* \leq g_k(t)\right)+ \sum_{m=1}^M\sum_{t=1}^T\Pr_{\bm{\mu}} \left(g_{m^*}(t) < \mu_m^* \right) \\
+  \begin{align}
+    \E_{\mu}[T_k^j(T)] &\leq
+    \sum_{t=1}^T\Pr_{\bm{\mu}} \left( \exists m_1 \in \{1,\dots,M\}: \; g_{m_1^*}(t) < \mu_m^* \right) + \notag \\
+    \;\;\;\;
+    \sum_{t=1}^T\Pr_{\bm{\mu}} & \left(A^j(t) = k,\;\; \exists m_2 \in \{1,\dots,M\}:\; g_{m_2^*}(t) \leq g_k(t) , \forall {m_3} \in \{1,\dots,M\}: \;  g_{{m_3}^*}(t) \geq \mu_{m_3}^* \right) \notag \\
+    &\leq \sum_{m_1=1}^M\sum_{t=1}^T\Pr_{\bm{\mu}} \left(g_{m_1^*}(t) < \mu_{m_1}^* \right) + \sum_{t=1}^T\Pr_{\bm{\mu}} \left(A^j(t) = k,\;\; \exists m_2 \in \{1,\dots,M\}:\; \mu_{m_2}^* \leq g_k(t)\right) \notag \\
     %
-    & \leq \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\; \mu_{M^*} \leq g_k(t) \right)
-    + \sum_{m=1}^M \sum_{t=1}^T \Pr_{\bm{\mu}} \left( g_{m^*}(t) < \mu_m^* \right)
-    \hspace*{80pt} (\heartsuit)  % TODO cleaner?
-  \end{align*}
+    & \leq \sum_{m_1=1}^M \sum_{t=1}^T \Pr_{\bm{\mu}} \left( g_{m_1^*}(t) < \mu_{m_1}^* \right)
+    + \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\; \mu_{M^*} \leq g_k(t) \right)
+    \label{eq:5:sumOfProbaForTkj}
+  \end{align}
   where the last inequality (for the first term) comes from the fact that $\mu_{M^*}$ is the smallest of the $\mu_{m^*}$ for $m \in \{1, \dots,M\}$.
 
-  Now each of the two terms in the right hand side of $(\heartsuit)$ can directly be upper bounded using tools developed by \cite{KLUCBJournal} for the analysis of kl-UCB.
-  The rightmost term in $(\heartsuit)$ can be controlled using Lemma~\ref{lem:5:Fact1KLUCB} below that relies on a self-normalized deviation inequality, whose proof exactly follows from the proof of Fact~1 in Appendix~A of \cite{KLUCBJournal}.
+  Now each of the two terms in the right hand side of \eqref{eq:5:sumOfProbaForTkj} can directly be upper bounded using tools developed by \cite{KLUCBJournal} for the analysis of kl-UCB.
+  The leftmost term in \eqref{eq:5:sumOfProbaForTkj} can be controlled using Lemma~\ref{lem:5:Fact1KLUCB} below that relies on a self-normalized deviation inequality, whose proof exactly follows from the proof of Fact~1 in Appendix~A of \cite{KLUCBJournal}.
 
   \begin{lemma}\label{lem:5:Fact1KLUCB}
       For any arm $k$, if $g_k^{j}(t)$ is the \klUCB{} index with exploration function $f(t)=\log(t)+3\log\log(t)$,
@@ -935,7 +948,7 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
       \end{equation}
   \end{lemma}
 
-  The leftmost term in $(\heartsuit)$ can be controlled using Lemma~\ref{lem:5:Fact2KLUCB}, that is a direct consequence of the proof of Fact~2 in Appendix~A of \cite{KLUCBJournal}.
+  The rightmost term in \eqref{eq:5:sumOfProbaForTkj} can be controlled using Lemma~\ref{lem:5:Fact2KLUCB}, that is a direct consequence of the proof of Fact~2 in Appendix~A of \cite{KLUCBJournal}.
   Denote $\kl'(x,y)$ the derivative of the function $x \mapsto \kl(x,y)$ (for any fixed $y\neq 0, 1$).
 
   \begin{lemma}\label{lem:5:Fact2KLUCB}
