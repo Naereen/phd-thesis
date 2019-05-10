@@ -14,7 +14,7 @@
 
 % \TODOL{Be much more concise: in the thesis, MAB models and applications have already been introduced, motivated etc!}
 
-% Multi-Armed Bandit (MAB) problems form a well-studied class of sequential decision making problems, in which an agent repeatedly chooses an action $I_t \in\{1,\dots,K\}$ or ``arm'' --in reference to the arm of a one-armed bandit-- among a set of $K$ arms. In the most standard version of the stochastic bandit model, each arm $i$ is associated with an \iid{} sequence of rewards $(r_{i,t})$ that follow some distribution of mean $\mu_i$. Upon selecting arm $I_t$, the agent receives the reward $r_{I_t,t}$ associated to the chosen arm, and her goal is to adopt a sequential sampling strategy that maximize the expected sum of these rewards. This is equivalent to minimizing the \emph{regret}, defined as the difference between the total reward of the oracle strategy always selecting the arm with largest mean, $\mu^*$, and that of our strategy:
+% Multi-Armed Bandit (MAB) problems form a well-studied class of sequential decision making problems, in which an agent repeatedly chooses an action $I_t \in[K]$ or ``arm'' --in reference to the arm of a one-armed bandit-- among a set of $K$ arms. In the most standard version of the stochastic bandit model, each arm $i$ is associated with an \iid{} sequence of rewards $(r_{i,t})$ that follow some distribution of mean $\mu_i$. Upon selecting arm $I_t$, the agent receives the reward $r_{I_t,t}$ associated to the chosen arm, and her goal is to adopt a sequential sampling strategy that maximize the expected sum of these rewards. This is equivalent to minimizing the \emph{regret}, defined as the difference between the total reward of the oracle strategy always selecting the arm with largest mean, $\mu^*$, and that of our strategy:
 
 % \[ R_T = \bE[\sum_{t=1}^T(\mu^* - \mu_{I_t})]. \]
 
@@ -71,7 +71,7 @@ Numerical experiments are presented in Section~\ref{sec:6:NumericalExperiments},
 \label{sec:6:BanditSetting}
 
 A \emph{piece-wise stationary bandit model} is characterized by a set of $K$ arms.
-A (random) stream of rewards $(X_{i,t})_{t\in\N^*}$ is associated to each arm $i \in \{1,\dots,K\}$. We assume that the rewards are bounded, and without loss of generality we assume that $X_{i,t} \in [0,1]$. We denote by $\mu_{i}(t) :=  \bE[X_{i,t}]$ the mean reward of arm $i$ at round $t$. At each round $t$, a decision maker has to select an arm $I_t\in\{1,\dots,K\}$, based on past observation and receives the corresponding reward $r(t) = X_{I_t,t}$. At time $t$, we denote by $i_t^*$ an arm with maximal expected reward, \ie, $\mu_{i_t^*}(t) = \max_i \mu_i(t)$, called an optimal arm (possibly not unique).
+A (random) stream of rewards $(X_{i,t})_{t\in\N^*}$ is associated to each arm $i \in [K]$. We assume that the rewards are bounded, and without loss of generality we assume that $X_{i,t} \in [0,1]$. We denote by $\mu_{i}(t) :=  \bE[X_{i,t}]$ the mean reward of arm $i$ at round $t$. At each round $t$, a decision maker has to select an arm $I_t\in[K]$, based on past observation and receives the corresponding reward $r(t) = X_{I_t,t}$. At time $t$, we denote by $i_t^*$ an arm with maximal expected reward, \ie, $\mu_{i_t^*}(t) = \max_i \mu_i(t)$, called an optimal arm (possibly not unique).
 
 A policy $\pi$ chooses the next arm to play based on the sequence of past plays and obtained rewards.
 The performance of $\pi$ is measured by its (piece-wise stationary) \emph{regret}, the difference between the expected reward obtained by an oracle policy playing an optimal arm $i^*_t$ at time $t$, and that of the policy $\pi$,
@@ -81,7 +81,7 @@ The performance of $\pi$ is measured by its (piece-wise stationary) \emph{regret
 \end{equation}
 
 
-In the piece-wise \iid{} model, we furthermore assume that there is a (relatively small) number of \emph{breakpoints}, denoted by $\Upsilon_T:=\sum_{t=1}^{T-1} \indic\left(\exists i\in\{1,\dots,K\}: \mu_t(i) \neq \mu_{t+1}(i)\right)$.
+In the piece-wise \iid{} model, we furthermore assume that there is a (relatively small) number of \emph{breakpoints}, denoted by $\Upsilon_T:=\sum_{t=1}^{T-1} \indic\left(\exists i\in[K]: \mu_t(i) \neq \mu_{t+1}(i)\right)$.
 If we denote $\tau^{(0)} = 0$, we define the $k$-th breakpoint recursively by
 \begin{equation}
     \tau^{(k)} = \inf\{t > \tau^{(k-1)} : \exists i : \mu_i(t) \neq \mu_{i}(t+1)\}.
@@ -179,7 +179,7 @@ They prove that tuning its window-size to $\tau = 2 \sqrt{T\log(T)/\Upsilon_T}$,
 Both D-UCB and SW-UCB builds on a stationary policy, but for example EXP3.S from \cite{Auer02NonStochastic}
 builds on the EXP3 policy, which is designed for the adversarial case.
 EXP3.S actually achieves a good regret upper-bound, of the form $\cO(\sqrt{K \Upsilon_T T})$, with no additional prior knowledge except that of $T$ and $\Upsilon_T$.
-It constitues a good baseline for our numerical experiments in ,
+It constitues a good baseline for our numerical experiments in Section~\ref{sec:6:NumericalExperiments},
 even if we did find that EXP3.S performs worse that the most of the other approaches based on extensions of stationary bandit algorithms (\eg, SW-UCB).
 % , so we do not include it in .
 Similarly, previous works showed that older algorithms have no or weaker regret guarantees, and have been proved to be less efficient empirically, or are designed for more specific settings.
@@ -224,7 +224,7 @@ In comparison, \MUCB{} uses a much simpler test, based on the $w$ most recent ob
 %
 Both approaches also introduced a mechanism to force a uniform exploration of each arm, parametered by $\alpha\in(0,1)$.
 % \CUSUMUCB{} uses a randomized exploration, by sampling arm $i$ with probability $\alpha/K$ at each time step,
-% and \MUCB{} uses a more deterministic scheme, to force exploring the $K$ arms (when the time since the last restart, $t - \tau$, is found to be in $\{1,\dots,K\}$ modulo $\left\lceil 1/\alpha \right\rceil$).
+% and \MUCB{} uses a more deterministic scheme, to force exploring the $K$ arms (when the time since the last restart, $t - \tau$, is found to be in $[K]$ modulo $\left\lceil 1/\alpha \right\rceil$).
 % Both solutions ensure that all arms are sampled enough on each stationary sequence, in order for the CD algorithm to have enough \iid{} samples to detect changes.
 
 When all their parameters are tuned correctly, both approaches are proved to achieve a good regret upper-bound, of order $\cO(K \sqrt{\Upsilon_T T \log(K T)})$.
@@ -697,16 +697,16 @@ This algorithm, formally stated as Algorithm~\ref{algo:6:GLRklUCB}, can be used 
         % \KwData{Data}
         % \KwResult{Result}
         % XXX Algorithm
-        \textbf{Initialization: } $\forall i \in \{1,\dots,K\}$, $\tau_i \leftarrow 0$ and $n_i \leftarrow 0$ \\
+        \textbf{Initialization: } $\forall i \in [K]$, $\tau_i \leftarrow 0$ and $n_i \leftarrow 0$ \\
         \For{$t=1,2,\ldots, T$}{
             \uIf{
-                $\alpha>0$ and $t \mod \left\lfloor \frac{K}{\alpha}\right\rfloor \in \{1,\dots,K\}$
+                $\alpha>0$ and $t \mod \left\lfloor \frac{K}{\alpha}\right\rfloor \in [K]$
             }{
                 $A_t \leftarrow t \mod \left\lfloor \frac{K}{\alpha}\right\rfloor$
                 \tcp*[f]{forced exploration} \\
             }
             \Else{
-                $A_t \leftarrow \arg\max\limits_{i\in \{1,\dots,K\}} \mbox{UCB}_i(t)$ as defined in \eqref{def:6:UCB}
+                $A_t \leftarrow \arg\max\limits_{i\in [K]} \mbox{UCB}_i(t)$ as defined in \eqref{def:6:UCB}
             }
             \mbox{Play arm } $A_t$ \mbox{and receive the reward } $X_{A_t,t}$ : $n_{A_t} \leftarrow n_{A_t} + 1; Z_{A_t, n_{A_t}} \leftarrow X_{A_t,t}$ \\
             \uIf(\tcp*[f]{Change point is detected}){
@@ -714,7 +714,7 @@ This algorithm, formally stated as Algorithm~\ref{algo:6:GLRklUCB}, can be used 
             }
             {
                 \uIf{Global restart}{
-                    $\forall i\in \{1,\dots,K\}, \tau_i \leftarrow t$ and $n_i \leftarrow 0 $.
+                    $\forall i\in [K], \tau_i \leftarrow t$ and $n_i \leftarrow 0 $.
                     \tcp*[f]{global restart}
                     }
                 \Else{
@@ -785,7 +785,7 @@ To sum-up these simulations, they validate the use of a simpler and more explici
 The forced exploration scheme used in \GLRklUCB{} (lines $3$-$5$) generalizes the deterministic exploration scheme proposed for \MUCB{} by \cite{CaoZhenKvetonXie18}, whereas \CUSUMUCB{} performs a uniform random exploration.
 Both approaches are parameterized by $\alpha\in(0,1)$.
 More precisely, \CUSUMUCB{} samples arm $i$ with probability $\alpha/K$ at each time step,
-and \MUCB{} uses a deterministic scheme, to force exploring the $K$ arms: when the time since the last restart, $t - \tau$, is found to be in $\{1,\dots,K\}$ modulo $\left\lceil 1/\alpha \right\rceil$.
+and \MUCB{} uses a deterministic scheme, to force exploring the $K$ arms: when the time since the last restart, $t - \tau$, is found to be in $[K]$ modulo $\left\lceil 1/\alpha \right\rceil$.
 Both solutions ensure that all arms are sampled enough on each stationary sequence, in order for the CD algorithm to have enough \iid{} samples to detect changes.
 %
 A consequence of this forced exploration is given in Proposition~\ref{prop:6:EnoughSamples} below.
@@ -798,10 +798,10 @@ A consequence of this forced exploration is given in Proposition~\ref{prop:6:Eno
 \end{proposition}
 
 \begin{proof}
-    We consider one arm $i\in\{1,\dots,K\}$, and when the \GLRklUCB{} algorithm is running,
+    We consider one arm $i\in[K]$, and when the \GLRklUCB{} algorithm is running,
     we consider two time steps $s\leq t\in\N^*$, chosen between two restart times for that arm $i$.
     Lines~$3$-$4$ state that $A_u = u \mod \lceil \frac{K}{\alpha} \rceil$
-    if $u \mod \lceil \frac{K}{\alpha} \rceil \in \{1,\dots,K\}$,
+    if $u \mod \lceil \frac{K}{\alpha} \rceil \in [K]$,
     % (see Algorithm~\ref{algo:6:GLRklUCB} for details).
     thus we directly find
     \begin{align*}
@@ -1541,7 +1541,7 @@ DTS and SW-\klUCB{} can sometimes be more efficient than their stationary counte
 M-\klUCB{} and \CUSUMklUCB{} outperform the previous algorithms, but \GLRklUCB{} is often better.
 %
 On these problems, \GLRklUCB{} with \textbf{Local} restarts is always more efficient than with \textbf{Global} restarts. Note that on problem 2, all means change at every breakpoint, hence one could expect global restart to be more efficient, yet the experiments show the superiority of local restarts on every instances.
-The Exp3.S algorithm was found to outperform other algorithms based on Exp3, including Exp3, and recent variants like Exp3$++$ \cite{Seldin17} or Exp3.R from \cite{Allesiardo17},
+The Exp3.S algorithm was found to outperform other algorithms based on Exp3, including recent variants like Exp3$++$ \cite{Seldin17} or Exp3.R from \cite{Allesiardo17},
 and it usually performs similarly to \MklUCB, however it is greatly outperformed by the oracle algorithm, by \GLRklUCB{} and by \CUSUMklUCB.
 
 % \TODOL{I HAVE TO add the following algorithms, just to illustrate more Exp3.S}
@@ -1554,7 +1554,8 @@ and it usually performs similarly to \MklUCB, however it is greatly outperformed
         \hline
         Oracle-Restart \klUCB{} & $\mathbf{37 \pm 37}$ & $\mathbf{45 \pm 34}$ & $\mathbf{257 \pm 86}$ \\
         \hline
-        Exp3.S & $352 \pm 51$ & $310 \pm 62$ & $665 \pm 93$ \\
+        Exp3.S & $352 \pm 51$ & $310 \pm 62$ & XXX \\
+        % XXX for pb3 = $665 \pm 93$
         \hline
         \klUCB{} & $270 \pm 76$ & $162 \pm 59$ & $529 \pm 148$ \\
         Discounted-\klUCB{} & $1456 \pm 214$ & $1442 \pm 440$ & $1376 \pm 37$ \\
@@ -1583,7 +1584,8 @@ and it usually performs similarly to \MklUCB, however it is greatly outperformed
         \hline
         Oracle-Restart \klUCB{} & $\mathbf{68 \pm 40}$ & $\mathbf{86 \pm 50}$ & $126 \pm 54$ \\
         \hline
-        Exp3.S & $551 \pm 63$ & $860 \pm 109$ & $723 \pm 121$ \\
+        Exp3.S & $551 \pm 63$ & $860 \pm 109$ & XXX \\
+        % XXX for pb5 = $723 \pm 121$ ?
         \hline
         \klUCB{} & $615 \pm 74$ & $1218 \pm 123$ & $106 \pm 36$ \\
         SW-\klUCB{} & $202 \pm 33$ & $322 \pm 47$ & $228 \pm 27$ \\
@@ -1653,7 +1655,7 @@ Finally, we would like to study in the future possible extension of our approach
 As mentioned at the end of Chapter~\ref{chapter:5}, another interesting direction of future work is to study non-stationary distributed multi-player bandits.
 A natural extension of the non-stationary model presented in this Chapter is to consider non-communicating players cooperating in a decentralized way to play the same bandit game, as it was proposed recently in \cite{WeiSrivastava18Distributed}.
 The authors build on their recent work \cite{WeiSrivastava18Abruptly} and show that a regret bounded by $\cO(\sqrt{T^{\frac{1+\nu}{2}} \log(T)})$ can still be achieved by $M$ players, in the number of breaking points is $\Upsilon_T = \cO(T^{\nu})$.
-Their algorithm assume that player $j$ knows its ID $j\in\{1,\dots,M\}$ as well as $\nu$, and removing these hypotheses is an interesting direction of future work.
+Their algorithm assume that player $j$ knows its ID $j\in[M]$ as well as $\nu$, and removing these hypotheses is an interesting direction of future work.
 % \TODOL{Evoke here the possibility of study the piece-wise stationary distributed multi-player bandit model introduced in \cite{WeiSrivastava18Distributed} by using \MCTopM{} and \GLRklUCB{} with each other? }
 Furthermore, a promising direction is to directly try to join our contributions from Chapter~\ref{chapter:5} and \ref{chapter:6}, and propose an efficient algorithm using three parts:
 \klUCB{} indexes for arm selection,

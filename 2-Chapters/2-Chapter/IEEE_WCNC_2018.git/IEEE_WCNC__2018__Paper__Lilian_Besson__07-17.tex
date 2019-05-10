@@ -62,11 +62,11 @@ Ideally $\Alg_{\mathrm{aggr}}$ should perform similarly to the best of the $\Alg
 %
 To simplify the presentation, we only aggregate bandit algorithms that give deterministic recommendations:
 one arm is chosen with probability $1$ and the others with probability $0$.
-However, both \ExpQ{} and \Aggr{} can be adapted to aggregate randomized bandit algorithms, \ie, algorithms that output a probability distribution $\xi_t$ over the arms $\{1,\dots,K\}$ at each time step, and draw the next selected arm according to this distribution.
+However, both \ExpQ{} and \Aggr{} can be adapted to aggregate randomized bandit algorithms, \ie, algorithms that output a probability distribution $\xi_t$ over the arms $[K]$ at each time step, and draw the next selected arm according to this distribution.
 
 The aggregation algorithm maintains a probability distribution $\pi^{t}$ on the $N$ algorithms $\Alg_a$, starting from a uniform distribution:
 $\pi^t_a$ is the probability of trusting the decision made by algorithm $\Alg_a$ at time $t$.
-$\Alg_{\mathrm{aggr}}$ then simply performs a weighted vote on its algorithms: it decides whom to trust by sampling $a \in \{1,\dots,N\}$ from $\pi^t$, then follows $\Alg_a$'s decision.
+$\Alg_{\mathrm{aggr}}$ then simply performs a weighted vote on its algorithms: it decides whom to trust by sampling $a \in [N]$ from $\pi^t$, then follows $\Alg_a$'s decision.
 The main questions are then to know what observations (\ie, arms and rewards) should be given as feedback to which algorithms,
 and how to update the trusts at each step, and our proposal \Aggr{} differs from \ExpQ{} on these very points.
 
@@ -88,7 +88,7 @@ Our proposed \Aggr{} is detailed in Algorithm~\ref{algo:25:Aggr}.
 			\KwIn{Number of arms, $K \geq 2$}
 			\KwIn{Time horizon, $T \geq 1$, \textbf{not} used for the learning}
 			\KwIn{A sequence of learning rates, $(\eta_t)_{t \geq 1}$}
-			\KwData{Initial uniform distribution, $\pi^{0} = U(\{1, \dots, N\})$}
+			\KwData{Initial uniform distribution, $\pi^{0} = U([N])$}
 			\KwResult{$\Alg_{\mathrm{aggr}}=\Aggr\left[\Alg_1, \dots, \Alg_N\right]$}
 			% XXX Algorithm
 			\For(\tcp*[f]{At every time step})
@@ -97,7 +97,7 @@ Our proposed \Aggr{} is detailed in Algorithm~\ref{algo:25:Aggr}.
 				% \tcp{First, run each algorithm $\Alg_a$}
 				\For(\tcp*[f]{Can be parallel}){$a = 1, \dots, N$}{
 					$\Alg_a$ updates its indexes (e.g., \UCB{} indexes)\;
-					It chooses $A^{t+1}_{a} \in \{1, \dots, K\}$.
+					It chooses $A^{t+1}_{a} \in [K]$.
 				}
 				%
 				% \tcp{The more algorithms have chosen arm $j$, the more probable it is to be chosen.}

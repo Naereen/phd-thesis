@@ -278,13 +278,13 @@ One can write
 \begin{align*}
     &\bP\left(\exists r \in \N^* : s \, \kl\left(\widehat{\mu}_{s},\mu\right) + r \, \kl\left(\widehat{\mu}_r',\mu'\right) > 3\ln(1+\ln(s)) + 3\ln(1+\ln(r)) + u\right) \\
     & \leq \bP\left(\exists r \in \N^* : M^\lambda(s)W^\lambda(r) > e^{\lambda u - 2g(\lambda)}\right) \\
-    & = \lim_{n \rightarrow \infty} \bP\left(\exists r \in \{1,\dots,n\} :  M^\lambda(s)W^\lambda(r) > e^{\lambda u - 2g(\lambda)}\right) \\
-    & = \lim_{n \rightarrow \infty} \bP\left(\sup_{r \in \{1,\dots,n\}}  M^\lambda(s)W^\lambda(r) > e^{\lambda u - 2g(\lambda)}\right).
+    & = \lim_{n \rightarrow \infty} \bP\left(\exists r \in [n] :  M^\lambda(s)W^\lambda(r) > e^{\lambda u - 2g(\lambda)}\right) \\
+    & = \lim_{n \rightarrow \infty} \bP\left(\sup_{r \in [n]}  M^\lambda(s)W^\lambda(r) > e^{\lambda u - 2g(\lambda)}\right).
 \end{align*}
 %
 Using that $\tilde{M}(r) = M^\lambda(s)W^\lambda(r)$ is a super-martingale with respect to the filtration \[\tilde{\cF}_r = \sigma(X_1,\dots,X_s, Y_1,\dots,Y_r),\] one can apply Doob's maximal inequality to obtain
 \begin{eqnarray*}
-    \bP\left(\sup_{r \in \{1,\dots,n\}}  M^\lambda(s)W^\lambda(r) > e^{\lambda u - 2g(\lambda)}\right) &\leq& e^{-(\lambda u - 2g(\lambda))}\bE[\tilde{M}(1))] \\
+    \bP\left(\sup_{r \in [n]}  M^\lambda(s)W^\lambda(r) > e^{\lambda u - 2g(\lambda)}\right) &\leq& e^{-(\lambda u - 2g(\lambda))}\bE[\tilde{M}(1))] \\
     & = & e^{-(\lambda u - 2g(\lambda))}\bE[M^\lambda(s)W^\lambda(1)] \\
     & \leq & e^{-(\lambda u - 2g(\lambda))},
 \end{eqnarray*}
@@ -519,7 +519,7 @@ We begin by reviewing the costs of the algorithms designed for stationary proble
 \paragraph{Classical algorithms.}
 %
 For a stationary bandit problem, almost all \emph{classical algorithms} (\ie, designed for stationary problems) need and use a storage proportional to the number of arms, \ie, $\bigO{K}$, as most of them only need to store a number of pulls and the empirical mean of rewards for each arm.
-They also have a time complexity $\bigO{K}$ at every time step $t\in\{1,\dots,T\}$, hence an optimal total time complexity of $\bigO{KT}$.
+They also have a time complexity $\bigO{K}$ at every time step $t\in[T]$, hence an optimal total time complexity of $\bigO{KT}$.
 In particular, this case includes \UCB, Thompson sampling and \klUCB.
 
 \paragraph{Oracle algorithms.}
@@ -580,7 +580,7 @@ We include here an extensive comparison of memory costs of the different algorit
 For instance on the same experiment as the one used for Table~\ref{table:6:effectOptimizations}, that is problem 1 with $T=5000$, and then with $T=10000$ and $T=20000$, and $100$ independent runs,
 in our Python implementation (using the SMPyBandits library, \cite{SMPyBandits}), we can measure the (mean) real memory cost\footnote{We used one core of an Intel $i5$ Core CPU, with GNU/Linux Ubuntu $18.04$, Python v$3.6$, and $8$ Gb of RAM.} of the different algorithms.
 The Tables \ref{table:6:TimeCosts} and \ref{table:6:MemoryCosts} included below give the mean ($\pm$ 1 standard-deviation) of real computation time and memory consumption, used by the algorithms.
-The computation time is normalized by the horizon, to reflect the (mean) time used for each time steps $t\in\{1,\dots,T\}$.
+The computation time is normalized by the horizon, to reflect the (mean) time used for each time steps $t\in[T]$.
 %
 We also found that our two optimizations described below in \ref{sub:6:IdeasOptimizations} do not reduce the memory, thus we used $\Delta n = \Delta s = 20$ to speed-up the simulations.
 %
@@ -608,7 +608,7 @@ The conclusions to draw for these two Tables \ref{table:6:TimeCosts} and \ref{ta
         \GLRklUCB{} & $314 \,\mu\text{s} \pm 50 \,\mu\text{s}$ & $399 \,\mu\text{s} \pm 33 \,\mu\text{s}$ & $920 \,\mu\text{s} \pm 180 \,\mu\text{s}$ \\
 
     \end{tabular}
-    \caption{\textbf{Normalized} computation time, for each time step $t\in\{1,\dots,T\}$, for different horizons.}
+    \caption{\textbf{Normalized} computation time, for each time step $t\in[T]$, for different horizons.}
     \label{table:6:TimeCosts}
     \end{small} %XXX WARNING
 \end{table}
@@ -665,14 +665,14 @@ we suggest here two simple optimizations tweaks on \GLRklUCB{} (see Algorithm~\r
 \begin{enumerate}
     \item
     The first optimization, parametrized by a constant $\Delta n \in\N^*$, is the following idea.
-    We can test for statistical changes not at all time steps $t\in\{1,\dots,T\}$ but only every $\Delta n$ time steps (\ie, for $t$ satisfying $t \mod \Delta n = 0$).
+    We can test for statistical changes not at all time steps $t\in[T]$ but only every $\Delta n$ time steps (\ie, for $t$ satisfying $t \mod \Delta n = 0$).
     In practice, instead of sub-sampling for the \emph{time} $t$, we propose to sub-sample for the number of samples of arm $i$ before calling \GLR{} to check for a change on arm $i$, that is, $n_i(t)$ in Algorithm~\ref{algo:6:GLRklUCB}.
     %
     Note that the first heuristic using $\Delta n$ can be applied to \MUCB{} as well as \CUSUM-\UCB{} and \PHT-\UCB{} (and variants using \klUCB), with similar speed-up and typically leading to similar consequences on the algorithm's performance.
 
     \item
     The second optimization is in the same spirit, and uses a parameter $\Delta s \in\N^*$.
-    When running the \GLR{} test with data $Z_1,\dots,Z_t$, instead of considering every splitting time steps $s\in\{1,\dots,t\}$, in the same spirit, we can skip some and test not at all time steps $s$ but only every $\Delta s$ time steps.
+    When running the \GLR{} test with data $Z_1,\dots,Z_t$, instead of considering every splitting time steps $s\in[t]$, in the same spirit, we can skip some and test not at all time steps $s$ but only every $\Delta s$ time steps.
 \end{enumerate}
 
 % DONE Include precise reference to the point in the previous section when Emilie introduced this idea mathematically, with the sub-sampling ideas for $\cT$ and $\cS_t$
@@ -899,14 +899,14 @@ Note that the analysis we gave in Section~\ref{sec:6:RegretAnalysis} is based on
     \item
     The \textbf{deterministic exploration}
     corresponds to one described in Algorithm~\ref{algo:6:GLRklUCB}.
-    At time $t$, if $t \mod \left\lfloor \frac{K}{\alpha}\right\rfloor \in \{1,\dots,K\}$, then the arm $A_t \leftarrow t \mod \left\lfloor \frac{K}{\alpha}\right\rfloor$ is played.
+    At time $t$, if $t \mod \left\lfloor \frac{K}{\alpha}\right\rfloor \in [K]$, then the arm $A_t \leftarrow t \mod \left\lfloor \frac{K}{\alpha}\right\rfloor$ is played.
     It is the simplest, both the compute numerically and to handle mathematically, as the proof of Proposition~\ref{prop:6:EnoughSamples} is short and simple.
     Its deterministic nature makes it the easiest choice for the proof skeleton given in Section~\ref{sub:6:proofSkeleton}, as the set $\cD(T,\alpha)$ used in the decomposition \eqref{eq:6:GeneRegretBound} of the regret is deterministic and thus it greatly simplifies the manipulation of expectations and random events.
     Note that this mechanism is also the one used by \MUCB{} \cite{CaoZhenKvetonXie18}.
 
     \item
     The \textbf{uniform random exploration} is the one proposed for \CUSUMUCB{} \cite{LiuLeeShroff17}.
-    At time $t$, a random arm is played with probability $\alpha/K$. That is, first we sample a boolean variable from a Bernoulli law of mean $\alpha$, so that $0$ indicates a random play, and $1$ indicates a play using the $\UCB$ indexes. Then if it is a random play, arm $i\in\{1,\dots,K\}$ is selected uniformly at random (with probability $1/K$), and arm $A_t = i$ is played.
+    At time $t$, a random arm is played with probability $\alpha/K$. That is, first we sample a boolean variable from a Bernoulli law of mean $\alpha$, so that $0$ indicates a random play, and $1$ indicates a play using the $\UCB$ indexes. Then if it is a random play, arm $i\in[K]$ is selected uniformly at random (with probability $1/K$), and arm $A_t = i$ is played.
     Proving a result like Proposition~\ref{prop:6:EnoughSamples} is not much harder for this second mechanism,
     but the difficulty lies in extending the proof skeleton we give in Section~\ref{sub:6:proofSkeleton} to have a random set $\cD(T,\alpha)$.
 

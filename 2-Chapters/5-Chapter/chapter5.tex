@@ -101,12 +101,12 @@ One could criticize our approach if we study a wireless networks with no central
 in particular where the devices cannot be assigned to a channel or be assigned a unique ID by the gateway when they first log in the network.
 Then in such networks, if one wants to apply an algorithm like \MCTopM-\klUCB,
 the $M$ devices need to known their number $M$, and have to receive it from the gateway, as it is the only part of this example of network which knowns $M$.
-It seems unrealistic to ask the gateway to send the fixed value $M$ to each device, and not a unique ID to each device, for instance $\mathrm{id}^j\in\{1,\dots,K\}$.
+It seems unrealistic to ask the gateway to send the fixed value $M$ to each device, and not a unique ID to each device, for instance $\mathrm{id}^j\in[K]$.
 
 \TODOL{Expliquer pourquoi ce n'est pas très réaliste ? Le paragraphe ci dessous n'est pas très simple à comprendre, je peux faire mieux!}
 
 If the $M$ players each have a unique ID, then a simple explore-then-commit algorithm running on top of a round-Robin phase can achieve order-optimal regret.
-If the players know the time horizon $T$, then fix a confidence level $\delta$. For the first $T_0$ time steps, the $M$ players will use a simple round-Robin game, using their (unique) ID to stay orthogonal: player $j$ starts at arm $j$, then $j+1$, then cycle in $\{1,\dots,K\}$. They encounter no collision in these time steps, and then user $j$ targets the $j$-th best arm among the set of $M$-best arm.
+If the players know the time horizon $T$, then fix a confidence level $\delta$. For the first $T_0$ time steps, the $M$ players will use a simple round-Robin game, using their (unique) ID to stay orthogonal: player $j$ starts at arm $j$, then $j+1$, then cycle in $[K]$. They encounter no collision in these time steps, and then user $j$ targets the $j$-th best arm among the set of $M$-best arm.
 If $T_0$ is large enough, all players have built the same estimate of the ranking of the arms (and not only correctly identified the set of $M$-best arms), with high probability (at least $\delta$), and thus they will also encounter no collision and no regret from after time $T_0$.
 The mean regret of such approach is easily bounded by $R_T \leq M T_0 + (1 - \delta) (T - T_0)$, so by using $\delta = 1-1/T$, $R_T = \bigO{T_0}$.
 By calibrating $T_0$ based on $\delta$ (which needs prior knowledge of $T$) and the minimal gap $\Delta$ between \Mbest{} and \Mworst, one can show, using similar arguments as used by \cite{Rosenski16} for the Musical Chair policy, that with large probability a constant regret is obtained. A logarithmic regret can be obtained from the same bound, proving the order-optimality of this simple approach, if we assume that user $j$ knows it is user number $j$.
@@ -514,7 +514,7 @@ we list here some related works, dating back from $2016$, who proposed a similar
 All the similar works that we are aware of also used USRP boards, and implemented the demonstration using either the Simulink and MATLAB softwares, or the GNU Radio software like we did \cite{Besson2018ICT}.
 
 In \cite{darak2016bayesian,Darak16}, the authors study the same model and focussed on the \RhoRand{} policy, which was the state-of-the-art back in $2016$, combined with \UCB{} or \klUCB, as well as an extension using Bayes-UCB from \cite{Kaufmann12BUCB}.
-Their idea is to use the same skeleton as \RhoRand, that is to assign a \emph{rank} to each player, and make players change their rank after any collision. But instead of selecting a new rank uniformly at random among $\{1,\dots,M\}$, they proposed to use a ``second-stage'' learning policy\footnote{This is a very natural idea: use a bandit algorithm to balance the exploration/exploitation aspect of rank selection, instead of a random hoping.}, based on Bayes-UCB, to (try to) learn the best rank while still exploring each rank from time to time.
+Their idea is to use the same skeleton as \RhoRand, that is to assign a \emph{rank} to each player, and make players change their rank after any collision. But instead of selecting a new rank uniformly at random among $[M]$, they proposed to use a ``second-stage'' learning policy\footnote{This is a very natural idea: use a bandit algorithm to balance the exploration/exploitation aspect of rank selection, instead of a random hoping.}, based on Bayes-UCB, to (try to) learn the best rank while still exploring each rank from time to time.
 This algorithm is implemented in SMPyBandits and named \rhoLearn\footnote{See \href{https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoLearn.html}{\texttt{SMPyBandits.github.io/docs/PoliciesMultiPlayers.rhoLearn.html}} for its documentation.}, where it can use Bayes-UCB or any of the $65$ or more bandit algorithms available in the library.
 Even if no theoretical guarantee backs up this idea of second-stage learning with Bayes-UCB, empirical simulations found that it can be efficient.
 We illustrate this in Table~\ref{table:5:comparisonRhoRandRhoLearn} below, where we consider the same problem as described above in Section~\ref{sub:5:withoutSensing} (Table~\ref{table:5:meanRegretSimulationsNoSensing}).
@@ -588,7 +588,7 @@ We conjecture that any reasonable decentralized bandit algorithm must suffer a r
 On the first hand, piece-wise stationary multi-players MAB can be tackled by extending algorithms developed for the single-player case.
 In \cite{WeiSrivastava18Distributed}, the authors study exactly the same multi-players bandit model as our model, and they propose two distributed algorithms that can efficiently be used by $M \leq K$ players to achieve sub-linear regret for piece-wise stationary problems, essentially by considering it as a harder case of a stationary problem. \\
 \indent
-The proposed the RR-SW-UCB\# algorithm, which combines their SW-UCB\# algorithm, previously proposed in \cite{WeiSrivastava18Abruptly}, and a Round-Robin hoping, under the assumption that each user $j\in\{1,\dots,M\}$ knows its ID $j$ (see above the discussion we give on this unrealistic assumption).
+The proposed the RR-SW-UCB\# algorithm, which combines their SW-UCB\# algorithm, previously proposed in \cite{WeiSrivastava18Abruptly}, and a Round-Robin hoping, under the assumption that each user $j\in[M]$ knows its ID $j$ (see above the discussion we give on this unrealistic assumption).
 The SW-UCB\# algorithm is discussed more in details in the literature review of Chapter~\ref{chapter:6} below.
 %
 If $\Upsilon_T$ is bounded by $\Upsilon_T = \bigO{T^{\gamma}}$, for a known $\gamma$ but an unknown $\Upsilon_T$, they prove for instance in Theorem~2 \cite{WeiSrivastava18Distributed} that the expected cumulative regret of their RR-SW-UCB\# algorithm is bounded by $R_T = \bigO{T^{\frac{1+\gamma}{2}} \log(T)}$ (what we call the centralized system regret).
@@ -598,7 +598,7 @@ Even if their analysis is not explicit regarding the constant, in the case where
 %
 \indent
 And finally, even though numerical simulations in their papers \cite{WeiSrivastava18Abruptly,WeiSrivastava18Distributed} are interesting and confirm the regret upper-bounds, they do not compare with any other algorithm, and it is left as an interesting future work to study this direction in more details.
-Sadly, a major drawback of their work is that assume that player $j\in\{1,\dots,M\}$ knows its index $j$, and as we explained above this small hypothesis is actually quite strong, as it allows players to be already orthogonal, and it reduces greatly the difficulty of the decentralized bandit problem.
+Sadly, a major drawback of their work is that assume that player $j\in[M]$ knows its index $j$, and as we explained above this small hypothesis is actually quite strong, as it allows players to be already orthogonal, and it reduces greatly the difficulty of the decentralized bandit problem.
 
 On the other hand, another possibility is to extend ideas developed for the adversarial setting.
 In \cite{AlaturLevyKrause19}, the authors essentially consider the piece-wise stationary as an easier case of an adversarial problem.

@@ -79,7 +79,7 @@ The same problem is simulated for $N$ independent repetitions (\eg, $N=100$) in 
 For the classical single-player stochastic MAB model, as defined in Chapter~\ref{chapter:2},
 a stochastic MAB problem is defined by $K>1$ distributions $\nu_k$ (also called arms),
 used to sample \iid{} rewards $r_k(t) \sim \nu_k, \forall t$.
-An agent chooses arm $A(t)\in\{1,\dots,K\}$ at time $t$ and observes the reward $r_{A(t)}(t)$ without knowing the other (hidden) rewards.
+An agent chooses arm $A(t)\in[K]$ at time $t$ and observes the reward $r_{A(t)}(t)$ without knowing the other (hidden) rewards.
 Her goal is to maximize $\sum_{t=1}^T r_{A(t)}(t)$ by sequentially exploring the $K$ arms, and she essentially has to find and exploit the best one as fast as possible.
 
 \paragraph{Simulation loop}
@@ -1029,7 +1029,7 @@ We give in the figures below the results of the experiments.
 In this section, we report additional experiment results from the simulations described in the previous Section~\ref{sec:3:reviewSPAlgorithms}.
 Instead of studying on the efficiency of the algorithms (\ie, their regret), we report results of real measurements in terms of computational time as well as memory storage.
 %
-The goal of this section is to verify that the simplest (but most efficient) algorithms have a memory cost proportional to the number of arms but independent of the horizons, \ie, bounded by $\bigO{K}$, and a time complexity at each time step $t\in\{1,\dots,T\}$ bounded by $\bigO{K}$, independent of $t$.
+The goal of this section is to verify that the simplest (but most efficient) algorithms have a memory cost proportional to the number of arms but independent of the horizons, \ie, bounded by $\bigO{K}$, and a time complexity at each time step $t\in[T]$ bounded by $\bigO{K}$, independent of $t$.
 
 While the results reported in the previous section should not depend on the implementation of the different algorithms, the results in this section concern real measurements of both time and memory consumptions of the simulation software used for these simulations.
 Hence, the reported results highly depend on many factors, including how the code is written, and where and when it is run.
@@ -1052,7 +1052,7 @@ Hence, the reported results highly depend on many factors, including how the cod
 To be precise, we used the two following approaches to measure the real time and memory costs of the different algorithms.
 \begin{itemize}
     \item For time, we used the \texttt{time.time()} function from Python's standard library, that gives the current time in micro-seconds.
-    In the \texttt{Evaluator} object of SMPyBandits, before launching the ``for'' loop on $t\in\{1,\dots,T\}$ for one algorithm, the system time is stored, and when the loop is finished, the time used for this loop is the current system time minus the starting time.
+    In the \texttt{Evaluator} object of SMPyBandits, before launching the ``for'' loop on $t\in[T]$ for one algorithm, the system time is stored, and when the loop is finished, the time used for this loop is the current system time minus the starting time.
     This measurement gets averaged on the $N=100$ (independent) repetitions, and consistently measure the time efficiency of the algorithms.
     \item For memory, we use two different approaches whether the code runs on a UNIX or a Windows system.
     On UNIX, the \texttt{resource} module allows to measure the memory of the current process, and by counting the difference in memory used by the \texttt{Evaluator} object before and after the ``for'' loop, we can track the memory used by the algorithm to store all its interior variables.

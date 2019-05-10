@@ -147,13 +147,13 @@ However we mention that our lower bound and all our algorithms (and their analys
 
 
 % explain the interaction protocol and the GOAL
-In the multi-player MAB setting, there are $M \in \{1,\dots,K\}$ players (or agents),
+In the multi-player MAB setting, there are $M \in [K]$ players (or agents),
 that have to make decisions at some pre-specified time instants.
 At time step $t \in\mathbb{N},t\geq1$, player $j$ selects an arm $A^j(t)$, independently from the other players' selections.
 
 \begin{definition}
   A \emph{collision} occurs at time $t$ if at least two players choose the same arm.
-  We introduce the two events, for $j\in\{1,\dots,M\}$ and $k\in\{1,\dots,K\}$,
+  We introduce the two events, for $j\in[M]$ and $k\in[K]$,
   \begin{equation}
     C^j(t) :=  \{ \exists j' \neq j : A^{j'}(t) = A^j(t) \}
     \ \ \ \text{and} \ \ \ C_k(t) :=  \left\{ \# \{ j : A^j(t) = k\} > 1 \right\},
@@ -213,7 +213,7 @@ More formally, $A^j(t)$ is assumed to be $\cF^j_{t-1}$-measurable.
   then $\Mbest = \{k_1, \dots, k_M\}$.
   %
   Similarly, \Mworst{} denotes the set of indices of the $K-M$ arms with smallest means (\emph{worst arms}),
-  $\{1, \dots, K\} \setminus \Mbest$.
+  $[K] \setminus \Mbest$.
 
   Note that they are both uniquely defined if $\mu_M^* > \mu_{M+1}^*$.
 \end{definition}
@@ -266,12 +266,12 @@ We introduce additional notations in the following definition.
   \label{def:5:nbSelections_nbCollisions}
   % \label{def:5:nbSelections}
   Let $T^j_k(T) := \sum_{t=1}^T \indic(A^j(t) = k)$,
-  and denote $T_k(T) := \sum_{j=1}^M T^j_k(T)$ the \emph{number of selections} of arm $k\in\{1,\dots,K\}$ by any player $j\in\{1,\dots,M\}$, up to time $T$.
+  and denote $T_k(T) := \sum_{j=1}^M T^j_k(T)$ the \emph{number of selections} of arm $k\in[K]$ by any player $j\in[M]$, up to time $T$.
   % and $\cC_k(T)$ be the number of collisions on arm $k$ up-to time $T$.
 % \end{definition}
 
 % \begin{definition}[]\label{def:5:nbCollisions}
-  Let $\cC_k(T)$ be the \emph{number of colliding players} on arm $k\in\{1,\dots,K\}$ up to horizon $T$:
+  Let $\cC_k(T)$ be the \emph{number of colliding players} on arm $k\in[K]$ up to horizon $T$:
   % \vspace*{-5pt}  % XXX
   \begin{equation}
     \cC_k(T) :=
@@ -320,7 +320,7 @@ In this decomposition, term \ref{eq:5:term1} counts the lost rewards due to \emp
     &= \sum_{k=1}^{K} \sum_{j=1}^{M} (\overline{\mu}^* - \mu_k) \E_{\mu}\left[ T^j_k(T) \right]
       + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
     %
-    \intertext{Let $\overline{\Delta_k} := \overline{\mu}^* - \mu_k$ be the gap between the mean of the arm $k$ and the $M$-best average mean, and if $M^*$ denotes the index of the worst of the $M$-best arms (\ie, $M^* = \arg\min_{k\in\Mbest}(\mu_k)$), then by splitting $\{1,\dots,K\}$ into three disjoint sets $\Mbest \cupdot \Mworst = (\Mbest\setminus\{M^*\}) \cupdot \{M^*\} \cupdot \Mworst$, we get}
+    \intertext{Let $\overline{\Delta_k} := \overline{\mu}^* - \mu_k$ be the gap between the mean of the arm $k$ and the $M$-best average mean, and if $M^*$ denotes the index of the worst of the $M$-best arms (\ie, $M^* = \arg\min_{k\in\Mbest}(\mu_k)$), then by splitting $[K]$ into three disjoint sets $\Mbest \cupdot \Mworst = (\Mbest\setminus\{M^*\}) \cupdot \{M^*\} \cupdot \Mworst$, we get}
     %
     &= \sum_{k \in \Mbest\setminus\{M\}} \overline{\Delta_k} \E_{\mu}\left[ T_k(T) \right]
       + \overline{\Delta_{M^*}} \E_{\mu}\left[ T_{M^*}(T) \right] \\
@@ -417,7 +417,7 @@ We first introduce the assumption under which we derive a regret lower bound, th
   \begin{align}
     & R_T(\boldsymbol{\mu},M,\rho) \mathop{=}\limits_{T \to +\infty} o(T^\alpha) \\
     \text{and} & \;
-    \forall j \in \{1,\dots,M\}, k \in \Mbest, \;\;
+    \forall j \in [M], k \in \Mbest, \;\;
     % a_{j,k}
     \frac{T}{M}
     - \E_{\mu}[T^j_k(T)] \mathop{=}\limits_{T \to +\infty} o(T^{\alpha}).
@@ -437,7 +437,7 @@ ${T}- \E_{\mu}[T_k(T)] {=} o(T^{\alpha})$, and so
   \sum_{j =1}^M\left(\frac{T}{M} - \E_{\mu}[T^j_k(T)]\right) = o(T^{\alpha}).
   % \vspace*{-5pt}  % XXX
 \end{equation}
-The additional assumption in \eqref{eq:5:SUE} further implies some notion of \emph{fairness}, as it suggests that each of the $M$ players spends on average the same amount of time on each of the $M$ best arms. Note that this assumption is satisfied by any strategy that is invariant under every permutation of the players, \ie, for which the distribution of the observations under $\rho^{\gamma} = (\rho^{\gamma(1)},\dots,\rho^{\gamma(M)})$ is independent from the choice of permutation $\gamma \in \Sigma_M$. In that case, it holds that  $\E_{\mu}[T_k^j(T)]=\E_{\mu}[T_k^{j'}(T)]$ for every arm $k$ and $(j,j') \in \{1,\dots,M\}$, hence \eqref{eq:5:SUE} and \eqref{eq:5:intermediate} are equivalent, and strong uniform efficiency is equivalent to standard uniform efficiency. Note that all our proposed algorithms are permutation invariant and \MCTopM{} is thus an example of strongly uniformly efficient algorithm, as we prove in Section~\ref{sec:5:upperbounds} that its regret is logarithmic on every instance $\mu \in \cP_M$.
+The additional assumption in \eqref{eq:5:SUE} further implies some notion of \emph{fairness}, as it suggests that each of the $M$ players spends on average the same amount of time on each of the $M$ best arms. Note that this assumption is satisfied by any strategy that is invariant under every permutation of the players, \ie, for which the distribution of the observations under $\rho^{\gamma} = (\rho^{\gamma(1)},\dots,\rho^{\gamma(M)})$ is independent from the choice of permutation $\gamma \in \Sigma_M$. In that case, it holds that  $\E_{\mu}[T_k^j(T)]=\E_{\mu}[T_k^{j'}(T)]$ for every arm $k$ and $(j,j') \in [M]$, hence \eqref{eq:5:SUE} and \eqref{eq:5:intermediate} are equivalent, and strong uniform efficiency is equivalent to standard uniform efficiency. Note that all our proposed algorithms are permutation invariant and \MCTopM{} is thus an example of strongly uniformly efficient algorithm, as we prove in Section~\ref{sec:5:upperbounds} that its regret is logarithmic on every instance $\mu \in \cP_M$.
 
 As it was discovered in \cite{BoursierPerchet18} and further explained in Appendix~E of \cite{KaufmannAbbas19}, our lower-bound was not true for any algorithm, as we wrongly claimed in \cite{Besson2018ALT} that the ``collision information term'' is zero for any algorithm $\rho$.
 However, we wanted to be still able to present the derivations of our lower-bound, mainly because its proof and its form give important insights on how to design an asymptotically optimal algorithm $\rho$.
@@ -445,7 +445,7 @@ However, we wanted to be still able to present the derivations of our lower-boun
 
 % FIXME
 The following notations and the hypothesis on the collision information term \eqref{eq:5:collisionInformationTerm} come from Appendix~E of \cite{KaufmannAbbas19}.
-Fix a player $j\in\{1,\dots,M\}$, and we consider the observations $\cO_t$ gathered by this player after $t$ rounds of its algorithm $\rho^j$:
+Fix a player $j\in[M]$, and we consider the observations $\cO_t$ gathered by this player after $t$ rounds of its algorithm $\rho^j$:
 \[ \cO_t := \left( U^j(1), Y_{A^j(1),1}, C^j(1), \ldots, U^j(t), Y_{A^j(t),t}, C^j(t) \right),\]
 where $U^j(t)$ denotes some external source of randomness useful to select $A^j(t+1)$ (\eg, for an algorithm based on ranks and \UCB{} indexes, like \RhoRand, when two arms have the same maximum index, the decision is an $\argmax$ that is usually a uniform random selection among the arms with maximum index).
 
@@ -471,7 +471,7 @@ and it also yields an asymptotic logarithmic lower bound on the regret.
   Furthermore, if $\rho$ satisfies $\cI_{\bm{\mu},\bm{\lambda}}(\cA,T) = \smallO{\log(T)}$, then
   % \vspace*{-10pt}  % XXX
   \begin{equation}\label{eq:5:LBDraws}
-    \forall j \in \{1,\dots,M\}, \ \forall k \in \Mworst, \ \ \ \liminf_{T\to \infty} \frac{\E_{\mu}[T_k^j(T)]}{\log(T)} \geq \frac{1}{\kl(\mu_k, \mu_M^*)}.
+    \forall j \in [M], \ \forall k \in \Mworst, \ \ \ \liminf_{T\to \infty} \frac{\E_{\mu}[T_k^j(T)]}{\log(T)} \geq \frac{1}{\kl(\mu_k, \mu_M^*)}.
   \end{equation}
 
   % \vspace{-0.3cm}  % XXX
@@ -490,7 +490,7 @@ given by \cite{Zhao10}, that states that
   \mathop{\lim\inf}\limits_{T \to +\infty} \frac{R_T(\boldsymbol{\mu}, M, \rho)}{\log(T)}
   \geq \sum_{k \in \Mworst} \left( \sum_{j=1}^{M} \frac{(\mu_M^* -  \mu_k)}{\kl(\mu_k, \mu_{j}^*)} \right),
 \end{equation}
-as for every $k \in \Mworst$ and $j \in \{1,\dots,M\}$, $\kl(\mu_k, \mu_j^*) \geq \kl(\mu_k, \mu_M^*)$
+as for every $k \in \Mworst$ and $j \in [M]$, $\kl(\mu_k, \mu_j^*) \geq \kl(\mu_k, \mu_M^*)$
 (see Figure~\ref{fig:5:CompLowerBounds} in Appendix~\ref{app:5:illustrationLowerBound}).
 %
 It is worth mentioning that \cite{Zhao10} proved a lower bound under the more general assumption for $\rho$ that there exists some numbers $(a_{k}^j)$ such that $a_{k}^j T - \E_{\mu}[T_k^j(T)] = o(T^\alpha)$ whereas in Definition~\ref{def:5:DecentralizedUniformEfficiency} we make the choice $a_{k}^j = 1/M$.
@@ -538,7 +538,7 @@ The following result shows that term \ref{eq:5:term2} can be related to the numb
     T - \E_{\mu}[T_k(T)] & \leq T - \E_{\mu}\left[\sum_{t=1}^T \indic(\exists j : A^j(t) = k)\right] \\
     & = \E_{\mu}\left[\sum_{t=1}^T \indic(\forall j, A_j(t) \neq k)\right] = \E_{\mu}\left[\sum_{t=1}^T \indic(k \notin \widehat{S}_t)\right],
   \end{eqnarray*}
-  where we denote by $\widehat{S}_t = \{A^j(t), j \in \{1,\dots,M\}\}$ the set of selected arms at time $t$ (with no repetition). With this notation one can write
+  where we denote by $\widehat{S}_t = \{A^j(t), j \in [M]\}$ the set of selected arms at time $t$ (with no repetition). With this notation one can write
   \begin{eqnarray*}
   \ref{eq:5:term2} & \leq & (\mu_1 - \mu_{M^*})  \sum_{k \in \Mbest} \left(T - \E_{\mu}[T_k(T)]\right) \leq  (\mu_1 - \mu_{M^*})  \E_{\mu}\left[\sum_{k \in \Mbest} \sum_{t = 1}^T \indic(k \notin \widehat{S}_t)\right] \\
   & = &  (\mu_1 - \mu_{M^*})  \E_{\mu}\left[ \sum_{t = 1}^T \sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t)\right].
@@ -602,7 +602,7 @@ Note that $\widetilde{\mu_k}^j(t)$ is no longer meant to be an unbiased estimate
 Given any of these two index policies (\UCB{} or \klUCB), the \Selfish{} algorithm is defined by,
 %
 \begin{equation}
-  A^j(t) = \argmax_{ k \in \{1,\dots,K\}} \ \widetilde{g_k}^j(t-1).\label{algo:5:Selfish}
+  A^j(t) = \argmax_{ k \in [K]} \ \widetilde{g_k}^j(t-1).\label{algo:5:Selfish}
 \end{equation}
 The name comes from the fact that each player is targeting, in a ``selfish'' way, the arm that has the highest index, instead of accepting to target only one of the $M$ best.
 The reason that this may work precisely comes from the fact that $\widetilde{g_k}^j(t)$ is no longer an upper-confidence on $\mu_k$,
@@ -674,13 +674,13 @@ Even though some alternative without pre-agreement are proposed, they are quite 
 On the other hand, the \rhoRand{} algorithm \citep{Anandkumar11} relies on randomly selected \emph{ranks}. %\footnote{\rhoRand{} only works if $M$ is known, and \cite{Anandkumar11} extended it to the case of an unknown $U$, with \rhoRandEst. Extending our algorithms for the case of unknown number of players $M$ is an interesting future work.}.
 %
 More formally, letting $\pi(k,\mathbf{g})$ be the index of the $k$-th largest entry in a vector $\mathbf{g}$,
-% (for $k\in\{1,\dots,K\}$),
-in \rhoRand{} each player maintains at time $t$ an internal rank $R^j(t)\in\{1,\dots,M\}$
+% (for $k\in[K]$),
+in \rhoRand{} each player maintains at time $t$ an internal rank $R^j(t)\in[M]$
 and selects at time $t$,
 \begin{equation}
   A^j(t) := \pi\left(R^j(t), [g^j_\ell(t)]_{\ell=1,\dots,K}\right).
 \end{equation}
-If a collision occurs, a new rank is drawn uniformly at random, $R^j(t+1) \sim \cU(\{1,\dots,M\})$.
+If a collision occurs, a new rank is drawn uniformly at random, $R^j(t+1) \sim \cU([M])$.
 
 
 % Now, our algorithms !!
@@ -709,11 +709,11 @@ We precisely state our first proposal below in Algorithm~\ref{algo:5:RandTopM}.
           % \LinesNumbered  % XXX Option to number the line
           % \RestyleAlgo{boxed}
           % XXX Input, data and output
-          % \KwIn{$K$ and policy $P^j$ for arms set $\{1,\dots,K\}$\;}
+          % \KwIn{$K$ and policy $P^j$ for arms set $[K]$\;}
           % \KwData{Data}
           % \KwResult{Result}
           % XXX Algorithm
-              Let $A^j(1) \sim \cU(\{1,\dots,K\})$ and $C^j(1)=\mathrm{False}$ \\
+              Let $A^j(1) \sim \cU([K])$ and $C^j(1)=\mathrm{False}$ \\
               \For{$t = 0, \dots, T - 1$}{
                   %
                   \eIf{$A^j(t) \notin \TopM(t)$}{
@@ -774,11 +774,11 @@ When a collision occurs for a player implementing the \RandTopM{} algorithm, tha
           % \LinesNumbered  % XXX Option to number the line
           % \RestyleAlgo{boxed}
           % XXX Input, data and output
-          % \KwIn{$K$ and policy $P^j$ for arms set $\{1,\dots,K\}$\;}
+          % \KwIn{$K$ and policy $P^j$ for arms set $[K]$\;}
           % \KwData{Data}
           % \KwResult{Result}
           % XXX Algorithm
-              Let $A^j(1) \sim \cU(\{1,\dots,K\})$ and $C^j(1)=\mathrm{False}$ and $s^j(1)=\mathrm{False}$ \\
+              Let $A^j(1) \sim \cU([K])$ and $C^j(1)=\mathrm{False}$ and $s^j(1)=\mathrm{False}$ \\
               \For{$t = 0, \dots, T-1$}{
                    \uIf(\tcp*[f]{transition $(3)$ or $(5)$}){
                       $A^j(t) \notin \TopM(t)$}
@@ -891,7 +891,7 @@ Explicit expressions for $C_{\boldsymbol{\mu}}$, $D_{\boldsymbol{\mu}}$ can be f
 
 \begin{lemma}\label{lem:5:SubOptimalSelections}
   For any $\boldsymbol{\mu}\in\cP_M$,
-  let player $j\in\{1,\dots,M\}$ use the \RandTopM-, \MCTopM- or \rhoRand-\klUCB{}
+  let player $j\in[M]$ use the \RandTopM-, \MCTopM- or \rhoRand-\klUCB{}
   decentralized policy with exploration function $f(t) = \log(t) + 3 \log\log(t)$.
   Then for any sub-optimal arm $k \in \Mworst$, there exists two problem-dependent positive constants $C_{\boldsymbol{\mu}}, D_{\boldsymbol{\mu}} > 0$ such that
   % %
@@ -912,7 +912,7 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
   %     Recall $g_k^j(t) \in \mathbb{R}$ denote the index of arm $k$ for user $j$ at time $t$.
   %     As only user $j$ is considered here, the superscript $j$ is dropped.
   %
-  Fix $k\in\Mworst$ and a player $j \in \{1,\dots,M\}$.
+  Fix $k\in\Mworst$ and a player $j \in [M]$.
   The key observation is that for \MCTopM, \RandTopM{} as well as the \rhoRand{} algorithm, it holds that
   \begin{equation}\left(A^j(t) = k\right) = \left(A^j(t) = k , \exists m \in \Mbest : g_m^j(t) < g_k^j(t) \right).\label{eq:5:KeyInclusion}\end{equation}
   Indeed, for the three algorithms, an arm selected at time $t+1$ belongs to the set $\TopM(t)$ of arms with $M$ largest indices.
@@ -925,22 +925,22 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
   &= \E_{\mu}\left[ \sum_{t=1}^T \mathbbm{1}\left( A^j(t) = k \right) \right]
   = \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k \right).\\
   %&= \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\;\; \exists m \in\Mbest,\; g_m(t) < g_k(t) \right) \\
-  &= \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\;\; \exists m \in\{1,\dots,M\}:\; g_{m^*}^j(t) < g_k^j(t) \right).
+  &= \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\;\; \exists m \in[M]:\; g_{m^*}^j(t) < g_k^j(t) \right).
   %
   \end{align*}
   Considering the relative position of the upper-confidence bound $g_{m^*}^j(t)$ and the corresponding mean $\mu_m^* = \mu_{m^*}$, one can write the decomposition
   \begin{align}
     \E_{\mu}[T_k^j(T)] &\leq
-    \sum_{t=1}^T\Pr_{\bm{\mu}} \left( \exists m_1 \in \{1,\dots,M\}: \; g_{m_1^*}(t) < \mu_m^* \right) + \notag \\
+    \sum_{t=1}^T\Pr_{\bm{\mu}} \left( \exists m_1 \in [M]: \; g_{m_1^*}(t) < \mu_m^* \right) + \notag \\
     \;\;\;\;
-    \sum_{t=1}^T\Pr_{\bm{\mu}} & \left(A^j(t) = k,\;\; \exists m_2 \in \{1,\dots,M\}:\; g_{m_2^*}(t) \leq g_k(t) , \forall {m_3} \in \{1,\dots,M\}: \;  g_{{m_3}^*}(t) \geq \mu_{m_3}^* \right) \notag \\
-    &\leq \sum_{m_1=1}^M\sum_{t=1}^T\Pr_{\bm{\mu}} \left(g_{m_1^*}(t) < \mu_{m_1}^* \right) + \sum_{t=1}^T\Pr_{\bm{\mu}} \left(A^j(t) = k,\;\; \exists m_2 \in \{1,\dots,M\}:\; \mu_{m_2}^* \leq g_k(t)\right) \notag \\
+    \sum_{t=1}^T\Pr_{\bm{\mu}} & \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; g_{m_2^*}(t) \leq g_k(t) , \forall {m_3} \in [M]: \;  g_{{m_3}^*}(t) \geq \mu_{m_3}^* \right) \notag \\
+    &\leq \sum_{m_1=1}^M\sum_{t=1}^T\Pr_{\bm{\mu}} \left(g_{m_1^*}(t) < \mu_{m_1}^* \right) + \sum_{t=1}^T\Pr_{\bm{\mu}} \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; \mu_{m_2}^* \leq g_k(t)\right) \notag \\
     %
     & \leq \sum_{m_1=1}^M \sum_{t=1}^T \Pr_{\bm{\mu}} \left( g_{m_1^*}(t) < \mu_{m_1}^* \right)
     + \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\; \mu_{M^*} \leq g_k(t) \right)
     \label{eq:5:sumOfProbaForTkj}
   \end{align}
-  where the last inequality (for the first term) comes from the fact that $\mu_{M^*}$ is the smallest of the $\mu_{m^*}$ for $m \in \{1, \dots,M\}$.
+  where the last inequality (for the first term) comes from the fact that $\mu_{M^*}$ is the smallest of the $\mu_{m^*}$ for $m \in [M]$.
 
   Now each of the two terms in the right hand side of \eqref{eq:5:sumOfProbaForTkj} can directly be upper bounded using tools developed by \cite{KLUCBJournal} for the analysis of kl-UCB.
   The leftmost term in \eqref{eq:5:sumOfProbaForTkj} can be controlled using Lemma~\ref{lem:5:Fact1KLUCB} below that relies on a self-normalized deviation inequality, whose proof exactly follows from the proof of Fact~1 in Appendix~A of \cite{KLUCBJournal}.
@@ -1003,7 +1003,7 @@ happen a logarithmic number of times. The proof of this result is given below.
 
 \begin{lemma}\label{lem:5:elementaryLemma_RandTopM_MCTopM}
   For any $\boldsymbol{\mu}\in\cP_M$,
-  any player $j \in \{1, \dots, M\}$ using
+  any player $j \in [M]$ using
   \RandTopM- or \MCTopM-\klUCB,
   and any arm $k$,
   it holds that
