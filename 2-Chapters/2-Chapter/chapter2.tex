@@ -167,23 +167,40 @@ From now on until the last chapter of this thesis, we only consider stochastic r
 %
 % Everything is implemented and documented at
 % https://smpybandits.github.io/docs/Arms.html
-We also focus on real-valued rewards, meaning that $r_k(t)\in\R$ for all $k$ and $t$.
+We also focus only on real-valued rewards, meaning that $r_k(t)\in\R$ for all $k$ and $t$.
 An important hypothesis is whether rewards are bounded or not,
 and whether the player knows if they are bounded or not before starting the bandit game.
 Moreover, if rewards are known to be bounded, let say in an interval $[a,b]$, another important hypothesis is whether the player knows the values of $a$ and $b$.
 %
 Intuitively, the bandit game is easier if the player knows the support of the distributions, and we restrict to this case in all the thesis.
 Most of the algorithms proposed in the literature follow this hypothesis as well.
-
+%
 The mostly used
 infinitely supported distributions are Gaussian, exponential and Poisson,
 while in the literature, the Bernoulli distribution is the most common case of finitely supported distributions.
+Continuous distributions with finite support also included truncated versions of infinitely supported distributions, in particular truncated Gaussian are used for numerical experiments in lots of research articles.
+
+% Just bounded, in $[a,b]$ but without loss of generality in $[0,1]$ etc.
+\paragraph{The normalization trick.}
+If the player knows that reward are bounded in an interval $[a,b]$, and if she knows $a$ and $b$ ($a<b$), then with no loss of generality we can restrict to the interval $[0,1]$, as if $r\in[a,b]$, the player can instead consider the normalized reward $r' = $ that lies in $[0,1]$.
+Note that this ``normalization trick'' is implemented for any policy in SMPyBandits, with the \texttt{lower} and \texttt{amplitude} optional arguments, respectively representing $a$ the lower-bound on rewards and $b-a$ the length of the interval of possible values of rewards.
 
 % Bernoulli, Gaussian, sub-Bernoulli, sub-Gaussian, Exponential, sub-Exponential...
 
-One dimensional exponential family...
+\paragraph{On one-dimensional exponential family.}
+%
+On one-dimensional exponential family...
 
-Just bounded, in $[a,b]$ but without loss of generality in $[0,1]$ etc.
+
+\paragraph{Other kind of hypothesis: sub-Gaussian and sub-Bernoulli distributions.}
+%
+A lot of research works considers rewards distributions that are not Gaussian but sub-Gaussian, of a known variance, for instance $1/4$.
+For instance, bounded distributions on $[0,1]$ are $1/4$ sub-Gaussian, and this fact is used for instance in \cite{Maillard2018GLR}.
+It means that their moment generating function is dominated by that of a Gaussian distribution with the same mean and a variance $1/4$).
+In Chapter~\ref{chapter:6}, we instead consider sub-Bernoulli distributions, formally introduced in Definition~\ref{def:6:subBernoulliDistributions}.
+%
+Such hypothesis is also proposed for other families of distributions, for instance \cite{KimTewari2019} analyses their Follow-the-Perturbed-Leader algorithm for perturbations following any sub-Weibull distribution (sub-Weibull distributions generalize both sub-Gaussian and sub-Exponential distributions).
+
 
 
 \paragraph{About Markov models.}
@@ -207,31 +224,55 @@ For instance, \cite{Melian15} proposed a cognitive radio model mixing MAB and Hi
 \label{sec:2:applicationsofStationaryMAB}
 
 The blooming success of the research on multi-armed bandits is easily explained by the different spectrum of applications of MAB models to real-world discrete-time decision making problems.
-This research field has been very active since the years 2010s, but it started as early as 1933 with \cite{Thompson33}, and was active since the 1980s \cite{LaiRobbins85,Anantharam87a,Anantharam87b}.
+This research field has been very active since the years 2010s, but it started as early as 1933 with \cite{Thompson33}, and was active since the 1980s and the seminal works by Lai and Robbins \cite{LaiRobbins85} and by Anantharam and others \cite{Anantharam87a,Anantharam87b}.
+%
+MAB have been applied successfully to various decision making problems, including clinical trials and cognitive radio that we mentioned above.
+
+Other popular applications include the following:
+\begin{itemize}
+    \item
+    A/B testing of websites
+    \cite{Kaufmann14,Jamieson17ABTest}
+
+    \item
+    - online content recommandation
+    \cite{Li10,Louedec16}
+
+    \item
+    - hyper-parameters tuning of deep neural networks etc
+\end{itemize}
+
+% - clinical trial
+% - A/B testing of websites
+% - online content recommandation
+% - wireless communication, lots of possibilities, one is frequency/channel selection in the OSA paradigm, detailed after
+% - hyper-parameters tuning of deep neural networks etc
 
 
-\subsection{Various possible applications}
-
-- clinical trial
-- A/B testing of websites
-- online content recommandation
-- wireless communication, lots of possibilities, one is frequency/channel selection in the OSA paradigm, detailed after
-- hyper-parameters tuning of deep neural networks etc
+Other interesting applications are discussed in \cite{bouneffouf2019survey}.
 
 
-Citation: \cite{bouneffouf2019survey}
-
-
-\subsection{Application for Opportunistic Spectrum Access}
-
-Detail the analogy arm = channel in a licensed spectrum, rewards $r_k(t)$ = 1 if no Primary User or 0 if channel $k$ is busy at time $t$.
-
-Detail the previous work from our team SCEE on bandits + OSA : Wassim, Navik
-
-\cite{Jouini09,Jouini10,Jouini12}
-\cite{MoyWSR2014}
-\cite{RobertSDR2014}
-\cite{modiDemo2016,Modi17QoS}
+\paragraph{Application for Opportunistic Spectrum Access.}
+% Detail the previous work from our team SCEE on bandits + OSA : Wassim, Navik
+%
+Previous works of our SCEE team showed that MAB can be used to model the problem of spectrum access for a secondary user accessing a licensed spectrum.
+In this model, arms represent a finite set of orthogonal channels, \ie, different frequency bands in a licensed spectrum.
+In the model with sensing, the rewards $r_k(t)$ represents the feedback obtained by the CR-equipped device after sensing the channel $k$ at time $t$.
+A reward of $r_k(t) = 1$ indicates that no Primary User was sensed, while a reward of $r_k(t)=0$ indicates that the channel $k$ is busy at time $t$ and no uplink message can be sent.
+%
+This model was first introduced by Wassim Jouini during his PhD thesis,
+in \cite{Jouini09} and later studied in both \cite{Jouini10,Jouini12}.
+Proof-of-concepts using real-world radio hardware was first propsed in \cite{MoyWSR2014,RobertSDR2014}.
+In a second PhD thesis supervised by Christophe Moy, Navikkumar Modi studied the impact
+of using MAB algorithms to optimize channel selection
+on the battery life of a wireless device.
+On the one hand, running a MAB algorithm such as UCB-like algorithms was proved to be useful and can bring significant improvement in terms of successful transmission rates, directly increasing the battery life of the device.
+On the other hand, classical MAB algorithms tend to switch arms a lot of times, especially in the beginning of the learning process, and this induces a lot of dynamical hardware reconfiguration for the wireless device, as selecting a different channel requires a change in the radio hardware used by the device.
+Each hardware reconfiguration costs energy for the device, and quickly switching algorithms will lead to a reduction of the battery life.
+The tradeoff between the two aspects is studied empirically in
+\cite{modiDemo2016}.
+%
+Another interesting works is \cite{Modi17QoS}, FIXME
 
 
 % ----------------------------------------------------------------------------
