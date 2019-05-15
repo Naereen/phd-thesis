@@ -5,41 +5,40 @@
 \label{chapter:2}
 \minitoc
 
-
 \TODOL{L'abstract ici est trop long, mais je l'ai écrit avant de commencer le chapitre, pour avoir une idée de ce que je devais faire ! Je couperai à la fin !}
 
 \paragraph{Abstract.}
 %
-In this chapter, we present the first model of multi-armed bandit (MAB) studied in this thesis,
+In this chapter, we present the common base of all the models studied in this thesis:
 the single-player and stationary stochastic MAB model.
-MAB models a decision-making game, where a \emph{player} has to sequentially select one action in a (usually finite) set of actions, and only receives a (random) feedback about the action she selected, also called \emph{reward}.
-Her goal is to maximize its sum of received rewards, from time $t=1$ to $t=T$ if the game is played at an horizon $T$. The difficulty comes from balancing the trade-off between \emph{exploration}, because she has to observe as much as possible all the arms to get more knowledge about the distributions of their rewards, and \emph{exploitation}, because she also has to select as much as possible the best arm.
-%
-We focus on the model with finite arms, and binary or real-valued stochastic rewards.
-After introducing formally the notations used in all this thesis, for arms, distributions, rewards etc, we review shortly various possible applications of multi-armed bandits.
-The focus of this work is on cognitive radio and IoT networks, where arms can represent wireless orthogonal channels, but more generally any resource characterizing the communication of a device to a gateway (\eg, spreading factor for LoRa, power allocation for NOMA etc).
+We focus on decision-making models with a finite number of resources, called arms, and on stochastic models, where an arm is associated with a one-dimensional distribution.
+In all this thesis, we consider one-dimensional exponential families, and in particular Bernoulli distributions.
 
-We explain the measure of performance used in this thesis, defined as the regret and written $R_T^{\cA}$ for algorithm $\cA$ and horizon $T$. The regret compares the performance of the decision-making player and the oracle who knows in advance the best arm and always selects it.
+We review quickly the possible applications of bandits, that range from recommender systems and information retrieval to healthcare, finance. In the rest of this thesis, we focus on cognitive radio, an important field of research where bandits can be applied with success.
+
+We then explain the measure of performance used in this thesis, defined as the regret and written $R_T^{\cA}$ for algorithm $\cA$ and horizon $T$. The regret compares the performance of the decision-making player and the oracle who knows in advance the best arm and always selects it.
 Other measures of performance, such as best-arm identification, are not used later on in this document, but they are also shortly discussed.
 %
-We give an overview of the main families of algorithms designed to tackle the stochastic MAB model, and we mainly focus on the \UCB{} and \klUCB{} algorithms, as they are the two we used in the next chapters.
-Part of the work presented in Chapter~\ref{chapter:4} also used the Thompson sampling algorithm, but no theoretical analyses were done about it.
-When presenting our library SMPyBandits in Chapter~\ref{chapter:3} our library SMPyBandits, designed to perform numerical simulations of MAB problem, we use it to compare the empirical performances of the most famous and most efficient algorithms, on a few different problems.
+We review the main theoretical results from famous previous works, that give a lower-bound on the regret of any algorithm, essentially showing that we cannot find an algorithm achieving a sub-logarithmic regret, in this stochastic MAB model.
+
+We give an overview of the main families of algorithms designed to tackle the stochastic MAB model, and we mainly focus on the \UCB, \klUCB{} and Thompson sampling algorithms, as they are the two we used in the next chapters.
+% Part of the work presented in Chapter~\ref{chapter:4} also used the Thompson sampling algorithm, but no theoretical analyses were done about it.
+When presenting our library SMPyBandits in Chapter~\ref{chapter:3}, designed to perform numerical simulations of MAB problem, we use it to compare the empirical performances of the most famous and most efficient algorithms, on different problems.
 %
-In the point-of-view of practical simulations, one must also take care of two other measures of performance: time and memory complexity, which can vary greatly between different families of algorithms.
+In the point-of-view of numerical simulations or real-world applications of bandits on embedded systems, one must also take care of two other measures of performance: time and memory complexities, which can vary greatly between different families of algorithms.
 We also give an empirical comparison of different algorithms for these two measures in Chapter~\ref{chapter:3}.
 
-We then review the main theoretical results from famous previous works, that give a lower-bound on the regret of any algorithm, essentially showing that we cannot find an algorithm achieving a sub-logarithmic regret, in this stochastic MAB model.
 We also gives regret upper-bounds of the two main algorithms used in this thesis, \UCB{} and \klUCB, to highlight the difference between their finite-time regret upper-bounds. They both attain a logarithmic regret, proving their order optimality (\ie, their regret upper-bound asymptotically matches the lower-bound), moreover \klUCB{} is known to be optimal for a wide range of arms distributions.
-A sketch of the proof of both results is given in Appendix.
+% A sketch of the proof of both results is given in Appendix.
 
-Finally, we explore the problem of algorithm selection: as there is many different algorithms, all having different qualities and properties, how one can decide which algorithm to use for a particular application?
-We present one of the first contribution made during my PhD \cite{Besson2018WCNC}, consisting of an efficient algorithm for aggregating algorithms. We illustrate its performance empirically, but no satisfactory theoretical result is given, as the bound we hoped for have been proved unachievable since then.
+Finally, we explore the problem of algorithm selection: as there are many different algorithms, all having different qualities and properties, how one can decide which algorithm to use for a particular application?
+We present one of the first contribution made during my PhD \cite{Besson2018WCNC}, consisting of an efficient algorithm for aggregating algorithms.
+We illustrate its performance empirically, but no satisfactory theoretical result is given, as the bound we had hoped for have been proved unachievable since then.
 
 
-\paragraph{Publications.}
+\paragraph{Publication.}
 %
-Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is based on the following publication: \cite{Besson2018WCNC}.
+Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is based on \cite{Besson2018WCNC}.
 The notations used in this thesis are the usual notations in all the MAB literature, and we follow closely the formalism of \cite{Kaufmann12PhD}, as well as \cite{Slivkins2019,LattimoreBanditAlgorithmsBook,Bubeck12}.
 
 
@@ -47,29 +46,125 @@ The notations used in this thesis are the usual notations in all the MAB literat
 %
 For more details and a more pedagogical introduction to multi-armed bandits, we suggest to the interested reader to read the short text-book \cite{Slivkins2019}.
 Another excellent but reasonably short survey is \cite{Bubeck12}, while the more recent book \cite{LattimoreBanditAlgorithmsBook} is the most complete resource about bandit algorithms.
+Finally, we recommend \cite{bouneffouf2019survey} for a short but good survey on applications of MAB.
 
 
-% \newpage
+\newpage
 % Write miniTOC just after the title
 \graphicspath{{2-Chapters/2-Chapter/Images/}}
+
 
 % ----------------------------------------------------------------------------
 \section{Stationary MAB models}
 \label{sec:2:notations}
 
+
+Multi-Armed Bandits models were first introduced by Thompson as early as 1933 in \cite{Thompson33}, and later studied from the 1950s by Robbins \cite{Robbins52}.
+This family of models was first proposed for clinical trials, and later applied to a wide range of different problems.
+The name \emph{multi-armed bandits} comes from the one-armed bandit found in casinos, see Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem__step0} below.
+% The seminal paper by Lai and Robbins \cite{LaiRobbins85} was the first to introduce the measure of performance widely used in the literature, the notion of \emph{regret}, and to analyze a lower-bound on the performance of any algorithm against a fixed problem.
+% Since then, many efficient algorithms were proposed, XXX
+
+%
+A MAB is a model of a decision-making game, where a \emph{player} has to sequentially select one action in a (usually finite) set of actions, and only receives a (random) feedback about the action she selected, also called \emph{reward}.
+More formally, we consider $K\in\N, K\geq2$ arms, and the player's decision at time $t$ is denoted $A(t)\in\{1,\dots,K\}$, after what she receives a reward $r_{A(t)}(t)\in\R$, and so on for $t\in\N^*$.
+The goal of the player is to maximize its sum of received rewards, from time $t=1$ to $t=T$ if the game is played at an horizon $T$. The difficulty comes from balancing the trade-off between \emph{exploration}, because she has to observe as much as possible all the arms to get more knowledge about the distributions of their rewards, and \emph{exploitation}, because she also has to select as much as possible the best arm.
+The MAB model is a famous example of a reinforcement learning model, where the decision-making process has to adapt to an unknown environment using noisy observations and a discrete time, alternating between decisions and observations.
+We illustrate this cycle in Figure~\ref{fig:2:ReinforcementLearningCycleMABmodel} below.
+
+\tikzstyle{block} = [align=center, draw, fill=gray!25, rectangle, minimum height=3em, minimum width=6em]
+\begin{figure}[h!]
+    \centering
+    \resizebox{0.40\textwidth}{!}{
+        \begin{tikzpicture}[auto,node distance=5cm,>=latex,scale=2]
+            %
+            % We start by placing the blocks
+            \node [block] (player) at (0,0) {Player};
+            % We draw an edge between the player and system block to
+            \node [block] (environment) at (2,0) {MAB problem};
+            % Once the nodes are placed, connecting them is easy.
+            \draw [->] (player) to[bend left=90] node[pos=0.5] {Discrete action $k=A(t) \in\{1,\dots,K\}$} (environment);
+            \draw [->] (environment) to[bend left=90] node[pos=0.5] {Real-valued reward $r_k(t) \in \R$} (player);
+            %
+        \end{tikzpicture}
+    }
+\caption{Reinforcement learning cycle in a MAB model, for time steps $t=1,\dots,T$.}
+\label{fig:2:ReinforcementLearningCycleMABmodel}
+\end{figure}
+
+
+The first application of MAB models was for clinical trials, were an arm represent a treatment, and the distribution associated with such treatment can be a Bernoulli distribution: a reward of $0$ means the drug did not heal the disease, and a reward of $1$ indicates a success. The mean of an arm, in this application, represents the mean success rate of a treatment, and the goal of a doctor in a clinical trial is to identify the best treatment, \ie, the arm with highest mean, in a number of trials as short as possible.
+%
+The focus of this work is on cognitive radio and IoT networks, where arms can represent wireless orthogonal channels, but more generally any resource characterizing the communication of a device to a gateway (\eg, spreading factor for LoRa, power allocation for NOMA etc).
+%
+After introducing formally the notations used in all this thesis, we review below possible applications of multi-armed bandits.
+
+
 % ----------------------------------------------------------------------------
 \subsection{Finite arms and stochastic rewards}
 
-In this thesis, we only consider models with finite arms.
-No linear bandits, no contextual bandits etc.
+
+In all this thesis, we focus on the model with finite arms, and binary or real-valued stochastic rewards, that is $A(t)\in\{1,\dots,K\}$ for a fixed and known number of arms $K\in\N,K\geq2$, and $r_{A(t)}(t)\in\R$.
+%
+Restricting to models with a finite number of arms
+rules out an entire domain of the recent research on MAB, in particular we do not consider linear nor contextual bandits (for more details, see Parts V and VI of \cite{LattimoreBanditAlgorithmsBook}).
+
+We also restrict to stochastic rewards, that is we associate a real-valued distribution to each arm, denoted $\nu_k$ for arm $k\in\{1,\dots,\}=[K]$.
+Rewards are stochastic and stationary, meaning that $(r_k(t))_{t\in\N^*}$ is independent and identically distributed (\iid), $r_k(t) \sim \nu_k$ for any $t\geq1$.
+
+
+\paragraph{Interactive demo for the novice.}
+%
+If you are discovering the concept of bandit model here, I would like to recommend you to go online and play a few times with an interactive demonstration.
+On this demo, you are playing against a MAB problem with $K=5$ arms, when you have $T=100$ decisions to make.
+The demo is hosted online, on my website, at \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}.
+
+The webpage looks like Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem} below.
+The arms follow Bernoulli distributions, \ie, $\nu_k = \mathcal{B}(\mu_k)$, of unknown means $\mu_k\in[0,1]$, and your goal in this interactive demonstration is to obtain the highest possible cumulated reward in $100$ steps, $\sum_{t=1}^{100} r_{A(t)(t)$.
+Your decisions have to be made sequentially: at time $t$, you pick one of the arms, $A(t) \in\{1,2,3,4,5\}$, then the demo shows the random reward obtained from this (virtual) casino machine (in \textcolor{gold}{yellow}), \ie, the binary value $r_{A(t)}(t)\in\{0,1}$, that is sampled \iid{} from $\nu_k$.
+%
+The UI of the demo also shows the current value of $t$ (``total plays'') and $\sum_{s=1}^t r_{A(s)}(s)$ the ``total reward''.
+For each arm, we show the sum of rewards obtained from that arm, \ie, $X_k(t) = \sum_{s=1}^t r_k(s) \mathbbm{1}(A(s) = k)$, in the ``Rewards'' line, and the number of pulls of that arm, \ie, $N_k(t) = \sum_{s=1}^t \mathbbm{1}(A(s) = k)$ in the ``Pulls'' line.
+%
+The demo also shows the estimated probability of each arm, that is $\widehat{\mu_k}(t) = X_k(t) / N_k(t)$ (when $N_k(t)>0$), in the ``Estimated probs'' line.
+
+We first illustrate in Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem} the current state of the game at time $t=24$.
+% Currently at time $t=24$ (out of $T=100$ total time steps),
+At this step, the player has collected a sum of rewards of $14$, by observing $X(t) = [6,2,2,2,2]$ rewards of value $1$ in the $K=5$ different arms. Arms were sampled $N(t) = [8,4,4,4,4]$ times, meaning that the value $0$ was seen respectively $[2,2,2,2,2]$ times, and currently arm $1$ appears to be the best one. The true means of the arms are $\bm{\mu}=[0.6, 0.2, 0.55, 0.7, 0.5]$, and (much) more samples are needed before the player can accurately identify arm $4$ as the best arm.
+%
+We also illustrate in Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem__step100} the result of an example of run, when the player was following the \UCB{} algorithm from \cite{Auer02}.
+After $T=100$ steps, the player obtained a cumulated reward of $56$, by playing mostly arms $4,3,5,1,0$ (in decreasing order of number of plays). The empirical means $\widehat{\mu_k}(T)$ correctly identify the best arm (arm $4$), but do not correctly rank the arms as arms $1$ and $3$ obtained means of $\widehat{\mu_1}(T) = 0.5 < \widehat{\mu_3}(T)=0.6$ but the true means are $\mu_3 = 0.55 < \mu_1 = 0.6$
+
+% \begin{figure}[h!]  % [htbp]
+%     \centering
+%     \includegraphics[width=0.75\linewidth]{2-Chapters/2-Chapter/Images/example_of_a_5_arm_bandit_problem__step0.png}
+%     \caption{See }
+%     \label{fig:2:example_of_a_5_arm_bandit_problem__step0}
+% \end{figure}
+
+\begin{figure}[h!]  % [htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{2-Chapters/2-Chapter/Images/example_of_a_5_arm_bandit_problem.png}
+    \caption{Screenshot of the demonstration available online on my website, for a current step of $t=24$. See \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}.}
+    \label{fig:2:example_of_a_5_arm_bandit_problem}
+\end{figure}
+
+\begin{figure}[h!]  % [htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{2-Chapters/2-Chapter/Images/example_of_a_5_arm_bandit_problem__step100.png}
+    \caption{Screenshot of the demonstration, after the end of the game, after $t=T=100$ steps.}
+    \label{fig:2:example_of_a_5_arm_bandit_problem__step100}
+\end{figure}
+
+
 
 \TODOL{Write this!}
-
-For now, we only consider stochastic rewards. Piece-wise stochastic models are studied in Chapter~\ref{chapter:6}.
 
 
 % ----------------------------------------------------------------------------
 \subsection{Different hypotheses on rewards distributions}
+
+From now on until the last chapter of this thesis, we only consider stochastic rewards. The piece-wise stationary model is studied in Chapter~\ref{chapter:6}.
 
 Everything is implemented and documented at
 https://smpybandits.github.io/docs/Arms.html
@@ -80,7 +175,7 @@ One dimensional exponential family...
 
 Just bounded, in $[a,b]$ but without loss of generality in $[0,1]$ etc.
 
-Markov models: presented later in Section~\ref{sec:3:markovModels}.
+Markov models: we do not present it in this thesis.
 
 
 % ----------------------------------------------------------------------------
@@ -104,6 +199,39 @@ Citation: \cite{bouneffouf2019survey}
 Detail the analogy arm = channel in a licensed spectrum, rewards $r_k(t)$ = 1 if no Primary User or 0 if channel $k$ is busy at time $t$.
 
 Detail the previous work from our team SCEE on bandits + OSA : Wassim, Navik
+
+
+% ----------------------------------------------------------------------------
+\section{Lower and upper bounds on regret}
+\label{sec:2:lowerUpperBoundsRegret}
+
+
+\subsection{Measuring performance with the (mean) regret}
+
+Explain what is regret
+
+
+\subsection{Regret lower bounds: do not detail too much, don't explain the tools behind the results}
+
+- [Lai and Robbins] lower-bound in $\Omega(\log(T))$
+- Worst case lower-bound in $\Omega(\sqrt{T})$
+- Adversarial lower-bound in $\Omega(\sqrt{T})$ (also useful for piece-wise stationary models)
+
+
+\subsection{Regret upper bounds, tools and different kinds of bounds}
+
+- useful decomposition, with number of samples (see Claire's PhD)
+- different kinds of bounds, problem-dependent with $\bigO{C \log(T)}$ with $C$ a measure of the problem complexity, or problem-independent with $\bigO{\sqrt{KT}}$ ?
+- tools to show regret upper-bounds, concentration inequalities,
+- short proof of UCB or klUCB? just to start to show the tools
+
+
+\subsection{Other measures of performances}
+
+- Best Arm Identification?
+- Quantile regret or just histogram of regrets
+- Worst case regret (max $R_T^{r}$ for $r$ index of Monte-Carlo simulation?)
+- Fairness
 
 
 % ----------------------------------------------------------------------------
@@ -202,37 +330,6 @@ of about 20/30 algorithms?
 
 
 % ----------------------------------------------------------------------------
-\section{Lower and upper bounds on regret}
-\label{sec:2:lowerUpperBoundsRegret}
-
-
-\subsection{Measuring performance with the (mean) regret}
-Explain what is regret
-
-
-\subsection{Regret lower bounds: do not detail too much, don't explain the tools behind the results}
-
-- [Lai and Robbins] lower-bound in $\Omega(\log(T))$
-- Worst case lower-bound in $\Omega(\sqrt{T})$
-- Adversarial lower-bound in $\Omega(\sqrt{T})$ (also useful for piece-wise stationary models)
-
-
-\subsection{Regret upper bounds, tools and different kinds of bounds}
-
-- useful decomposition, with number of samples (see Claire's PhD)
-- different kinds of bounds, problem-dependent with $\bigO{C \log(T)}$ with $C$ a measure of the problem complexity, or problem-independent with $\bigO{\sqrt{KT}}$ ?
-- tools to show regret upper-bounds, concentration inequalities,
-- short proof of UCB or klUCB? just to start to show the tools
-
-
-\subsection{Other measures of performances}
-
-- Quantile regret or just histogram of regrets
-- Worst case regret (max $R_T^{r}$ for $r$ index of Monte-Carlo simulation?)
-- Fairness
-
-
-% ----------------------------------------------------------------------------
 \section{Different approaches on algorithm selection}
 \label{sec:2:chooseYourPreferredBanditAlgorithm}
 
@@ -265,9 +362,11 @@ In this chapter, presented
 \section{Appendix}
 \label{sec:2:appendix}
 
-\TODOL{Write this!}
+\TODOL{Write this ?}
 
 \subsection{Efficient numerical computation of Kullback-Leibler divergences and \klUCB{} indexes}
+
+\TODOL{On s'en fout en fait de ça, non ? Ma thèse n'a pas étudiée klUCB, et les implémentations en C ne sont pas de moi mais viennent de pymaBandits... Donc inutile de parler de ça !}
 
 I want to detail the maths behind an implementation of klUCB, see https://smpybandits.github.io/docs/Policies.kullback.html and all what is detailed there.
 
