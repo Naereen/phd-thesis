@@ -5,6 +5,7 @@
 \label{chapter:2}
 \minitoc
 
+\newpage
 \TODOL{L'abstract ici est trop long, mais je l'ai écrit avant de commencer le chapitre, pour avoir une idée de ce que je devais faire ! Je couperai à la fin !}
 
 \paragraph{Abstract.}
@@ -13,7 +14,7 @@ In this chapter, we present the common base of all the models studied in this th
 the single-player and stationary stochastic MAB model.
 We focus on decision-making models with a finite number of resources, called arms, and on stochastic models, where an arm is associated with a one-dimensional distribution.
 In all this thesis, we consider one-dimensional exponential families, and in particular Bernoulli distributions.
-
+%
 We review quickly the possible applications of bandits, that range from recommender systems and information retrieval to healthcare, finance. In the rest of this thesis, we focus on cognitive radio, an important field of research where bandits can be applied with success.
 
 We then explain the measure of performance used in this thesis, defined as the regret and written $R_T^{\cA}$ for algorithm $\cA$ and horizon $T$. The regret compares the performance of the decision-making player and the oracle who knows in advance the best arm and always selects it.
@@ -161,24 +162,53 @@ After $T=100$ steps, the player obtained a cumulated reward of $56$, by playing 
 \subsection{Different hypotheses on rewards distributions}
 
 \TODOL{Write this!}
-
+In the example above, we consider Bernoulli distributions, but other distributions have been studied in the literature.
 From now on until the last chapter of this thesis, we only consider stochastic rewards. The piece-wise stationary model is studied in Chapter~\ref{chapter:6}.
+%
+% Everything is implemented and documented at
+% https://smpybandits.github.io/docs/Arms.html
+We also focus on real-valued rewards, meaning that $r_k(t)\in\R$ for all $k$ and $t$.
+An important hypothesis is whether rewards are bounded or not,
+and whether the player knows if they are bounded or not before starting the bandit game.
+Moreover, if rewards are known to be bounded, let say in an interval $[a,b]$, another important hypothesis is whether the player knows the values of $a$ and $b$.
+%
+Intuitively, the bandit game is easier if the player knows the support of the distributions, and we restrict to this case in all the thesis.
+Most of the algorithms proposed in the literature follow this hypothesis as well.
 
-Everything is implemented and documented at
-https://smpybandits.github.io/docs/Arms.html
+The mostly used
+infinitely supported distributions are Gaussian, exponential and Poisson,
+while in the literature, the Bernoulli distribution is the most common case of finitely supported distributions.
 
-Bernoulli, Gaussian, sub-Bernoulli, sub-Gaussian, Exponential, sub-Exponential...
+% Bernoulli, Gaussian, sub-Bernoulli, sub-Gaussian, Exponential, sub-Exponential...
 
 One dimensional exponential family...
 
 Just bounded, in $[a,b]$ but without loss of generality in $[0,1]$ etc.
 
-Markov models: we do not present it in this thesis.
+
+\paragraph{About Markov models.}
+%
+% Markov models: we do not present it in this thesis.
+Finally, we note that Markov models, while being implemented in SMPyBandits, are not used in this thesis.
+They were introduced in the 1980s, by Whittle in \cite{Whittle1988} and Anantharam and others in \cite{Anantharam87b}.
+A Markov MAB model maps an arm to a Markov chain \cite{Norris98}, instead of a distribution, and such models come in two flavors: rested or restless.
+For $K$ arms, each Markov chain has a finite number of state $s$, each corresponding to a (constant) reward that the player obtains if she selects this arm while its Markov chain is in state $s$.
+Rested Markov models means that only the state of the selected arm's Markov chain can change, following its Markov transition matrix.
+Restless models remove this hypothesis, making them harder to track and solve.
+%
+Such models were less studied than stationary or adversarial models, but some interesting works focussed on Markov models in the last 10 years.
+For instance, \cite{Melian15} proposed a cognitive radio model mixing MAB and Hidden Markov Models (HMM), solved by a mixed policy called UCB-HMM.
+
+\TODOL{On garde ce petit paragraphe, par curiosité ?}
 
 
 % ----------------------------------------------------------------------------
 \section{Applications of stationary MAB}
 \label{sec:2:applicationsofStationaryMAB}
+
+The blooming success of the research on multi-armed bandits is easily explained by the different spectrum of applications of MAB models to real-world discrete-time decision making problems.
+This research field has been very active since the years 2010s, but it started as early as 1933 with \cite{Thompson33}, and was active since the 1980s \cite{LaiRobbins85,Anantharam87a,Anantharam87b}.
+
 
 \subsection{Various possible applications}
 
@@ -197,6 +227,11 @@ Citation: \cite{bouneffouf2019survey}
 Detail the analogy arm = channel in a licensed spectrum, rewards $r_k(t)$ = 1 if no Primary User or 0 if channel $k$ is busy at time $t$.
 
 Detail the previous work from our team SCEE on bandits + OSA : Wassim, Navik
+
+\cite{Jouini09,Jouini10,Jouini12}
+\cite{MoyWSR2014}
+\cite{RobertSDR2014}
+\cite{modiDemo2016,Modi17QoS}
 
 
 % ----------------------------------------------------------------------------
@@ -354,11 +389,14 @@ Second solution, if one has some prior knowledge about the domain or setting for
 
 In this chapter, we presented the multi-armed bandit model, focussing on a finite number of arms, and real-valued rewards.
 Our main focus is on one-dimensional exponential families of distributions, and on stochastic and stationary problems.
-By showcasing an interactive demonstration made available online\footnote{~The demo is hosted on my website, at \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}.}, we presented the notations used in all this thesis.
+By showcasing an interactive demonstration made available online,
+% XXX ?
+% (\href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}),
+we presented the notations used in all this thesis.
 
-We ended this chapter by presenting the first contribution of this manuscript \cite{Besson2018WCNC}, in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}. We tackle the question of how to select a particular bandit algorithm when a practitioner is facing a particular (unknown) bandit problem.
+The first contribution of this manuscript \cite{Besson2018WCNC} concluded this chapter, in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}. We tackle the question of how to select a particular bandit algorithm when a practitioner is facing a particular (unknown) bandit problem.
 Instead of always choosing a fixed algorithm, or running costly benchmarks before real-world deployment of the chosen algorithm, we advise to select a few candidate algorithms, where at least one is expected to be very efficient for the given problem, and use online algorithm selection to automatically and dynamically decide the best candidate.
-We proposed an extension of the Exp4 algorithm for this problem, \Aggr, and illustrate its performance on a set of small bandit problems.
+We proposed an extension of the Exp4 algorithm for this problem, \Aggr, and illustrate its performance on some bandit problems.
 %
 The numerical simulations used our Python open-source library, SMPyBandits, that is presented in details in the next Chapter~\ref{chapter:3}.
 The next chapter also includes simulations of the most important MAB algorithms that we presented above, on Bernoulli distributed problems of various sizes and durations.
