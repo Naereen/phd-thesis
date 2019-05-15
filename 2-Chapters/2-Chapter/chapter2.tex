@@ -326,6 +326,7 @@ A huge table in one page in portrait mode, giving:
 
 of about 20/30 algorithms?
 
+\newpage
 
 % ----------------------------------------------------------------------------
 \section{Different approaches on algorithm selection}
@@ -345,31 +346,58 @@ Second solution, if one has some prior knowledge about the domain or setting for
 % Include here the discussion about expert aggregation and my \textbf{Aggregator} algorithm, see https://hal.inria.fr/hal-01705292
 
 
+\newpage  % FIXME
 
 % ----------------------------------------------------------------------------
 \section{Conclusion}
 \label{sec:2:conclusion}
 
-In this chapter, presented 
+In this chapter, we presented the multi-armed bandit model, focussing on a finite number of arms, and real-valued rewards.
+Our main focus is on one-dimensional exponential families of distributions, and on stochastic and stationary problems.
+By showcasing an interactive demonstration made available online\footnote{~The demo is hosted on my website, at \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}.}, we presented the notations used in all this thesis.
 
-\TODOL{Write this!}
+We ended this chapter by presenting the first contribution of this manuscript \cite{Besson2018WCNC}, in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}. We tackle the question of how to select a particular bandit algorithm when a practitioner is facing a particular (unknown) bandit problem.
+Instead of always choosing a fixed algorithm, or running costly benchmarks before real-world deployment of the chosen algorithm, we advise to select a few candidate algorithms, where at least one is expected to be very efficient for the given problem, and use online algorithm selection to automatically and dynamically decide the best candidate.
+We proposed an extension of the Exp4 algorithm for this problem, \Aggr, and illustrate its performance on a set of small bandit problems.
+%
+The numerical simulations used our Python open-source library, SMPyBandits, that is presented in details in the next Chapter~\ref{chapter:3}.
+The next chapter also includes simulations of the most important MAB algorithms that we presented above, on Bernoulli distributed problems of various sizes and durations.
+
+We presented the simplest MAB model studied in this chapter, by focussing on one agent playing a stationary game.
+Both hypotheses are removed or weaken in the rest of this manuscript,
+% first in Chapter~\ref{chapter:4} where we consider many XXX
+first by considering players facing a stationary problem in a decentralized way in Chapter~\ref{chapter:5},
+and then by considering a single player facing a non-stationary or a piece-wise stationary problem in Chapter~\ref{chapter:6}.
+%
+For both directions, we present in the two final chapters natural extensions of the base model, and we detail our contributions that obtained state-of-the-art results for the two problems
+of stationary multi-player and piece-wise stationary bandits.
+
+We take another approach in Chapter~\ref{chapter:4}, where the MAB model is generalized to study decentralized learning of a large set of independent players, all having different activation times.
+This extension is significantly harder than the two previously evoked ones, and we were unfortunately unable to obtain any strong theoretical results under these loose hypotheses.
+This model is however more generic and as such it was found suitable for applications to Internet of Things (IoT) networks, where arms model orthogonal wireless channels, players model communicating devices (\ie, IoT end-devices) and rewards model successes or failures of a wireless packet sent by a device.
 
 
+\paragraph{Possible future works.}
+%
+We focussed in this thesis on finite-arms and one-dimensional bandit problems,
+and thus two possible directions of future works could be to extend our works
+to MAB models with either multidimensional rewards, like contextual bandits, or infinite arms, like Lipschitz bandits.
 
-% ----------------------------------------------------------------------------
-\section{Appendix}
-\label{sec:2:appendix}
 
-\TODOL{Write this ?}
+% % ----------------------------------------------------------------------------
+% \section{Appendix}
+% \label{sec:2:appendix}
 
-\subsection{Efficient numerical computation of Kullback-Leibler divergences and \klUCB{} indexes}
+% \TODOL{Write this ?}
 
-\TODOL{On s'en fout en fait de ça, non ? Ma thèse n'a pas étudiée klUCB, et les implémentations en C ne sont pas de moi mais viennent de pymaBandits... Donc inutile de parler de ça !}
+% \subsection{Efficient numerical computation of Kullback-Leibler divergences and \klUCB{} indexes}
 
-I want to detail the maths behind an implementation of klUCB, see https://smpybandits.github.io/docs/Policies.kullback.html and all what is detailed there.
+% \TODOL{On s'en fout en fait de ça, non ? Ma thèse n'a pas étudiée klUCB, et les implémentations en C ne sont pas de moi mais viennent de pymaBandits... Donc inutile de parler de ça !}
 
-How to write a fast version of klBern and klucbBern (the two most used functions), using C or Numba or Cython, maybe I can include the speed up simulations here? First piece of code, before really presenting SMPyBandits ?
+% I want to detail the maths behind an implementation of klUCB, see https://smpybandits.github.io/docs/Policies.kullback.html and all what is detailed there.
 
-My work for this part is also published on https://github.com/Naereen/Kullback-Leibler-divergences-and-kl-UCB-indexes
-(in Python) and https://github.com/Naereen/KullbackLeibler.jl (in Julia).
+% How to write a fast version of klBern and klucbBern (the two most used functions), using C or Numba or Cython, maybe I can include the speed up simulations here? First piece of code, before really presenting SMPyBandits ?
+
+% My work for this part is also published on https://github.com/Naereen/Kullback-Leibler-divergences-and-kl-UCB-indexes
+% (in Python) and https://github.com/Naereen/KullbackLeibler.jl (in Julia).
 
