@@ -16,9 +16,9 @@ restricting to the single-player and stationary stochastic case.
 We focus on decision-making models with a finite number of resources, called arms, and on stochastic models, where an arm is associated with a one-dimensional distribution.
 In all this thesis, we only consider one-dimensional exponential families, and in particular Bernoulli distributions.
 %
-We review quickly the possible applications of bandits, that range from recommender systems and information retrieval to healthcare and finance. In the rest of this thesis, we focus on cognitive radio, an important field of research where bandits has already been applied with success.
+We review quickly the possible applications of bandits, that range from recommender systems and information retrieval to healthcare and finance. In the rest of this thesis, we focus on cognitive radio, an important field of research where bandits has already been applied with success in the last ten years.
 
-We then explain the measure of performance used in this thesis, defined as the regret and written $R_T^{\cA}$ for algorithm $\cA$ and horizon $T$. The regret compares the performance of the decision-making player and the oracle who knows in advance the best arm and always selects it.
+We then explain the main measure of performance used in this thesis, defined as the regret and written $R_T^{\cA}$ for algorithm $\cA$ and horizon $T$. The regret compares the performance of the decision-making player and the oracle who knows in advance the best arm and always selects it.
 Other measures of performance, such as best-arm identification, are not used later on in this document, but they are also shortly discussed.
 %
 We review the main theoretical results from famous previous works, that give a lower-bound on the regret of any algorithm, essentially showing that we cannot find an algorithm achieving a sub-logarithmic regret, in this stochastic MAB model ($R_T^{\cA} = \Omega(\log(T))$).
@@ -28,7 +28,7 @@ When presenting our library SMPyBandits in next Chapter~\ref{chapter:3}, designe
 %
 In the point-of-view of numerical simulations or real-world applications of bandits on embedded systems, one must also take care of two other measures of performance: time and memory complexities, which can vary greatly between different families of algorithms.
 We also give an empirical comparison of different algorithms for these two measures in Section~\ref{sec:3:timeAndMemoryCosts}.
-
+%
 We also give regret upper-bounds of the two main algorithms used in this thesis, \UCB{} and \klUCB, to highlight the difference between their finite-time regret upper-bounds. They both attain a logarithmic regret, proving their order optimality (\ie, their regret upper-bound asymptotically matches the lower-bound up-to a constant factor). Moreover, \klUCB{} is known to be optimal for a wide range of arms distributions.
 % A sketch of the proof of both results is given in Appendix.
 
@@ -39,8 +39,7 @@ We illustrate its performance empirically, but no satisfactory theoretical resul
 
 \paragraph{Publication.}
 %
-Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is based on \cite{Besson2018WCNC}.
-The notations used in this thesis are the usual notations in all the MAB literature, and we follow closely the formalism of \cite{Kaufmann12PhD}, as well as \cite{Slivkins2019,LattimoreBanditAlgorithmsBook,Bubeck12}.
+Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is based on the article \cite{Besson2018WCNC}.
 
 
 \paragraph{Main references for the curious reader.}
@@ -48,6 +47,9 @@ The notations used in this thesis are the usual notations in all the MAB literat
 For more details and a more formal introduction to multi-armed bandits, we suggest to the interested reader to work on a very recent text-book by Slivkins \cite{Slivkins2019}.
 Another excellent but reasonably short survey is the book by Bubeck and Cesa-Bianchi \cite{Bubeck12}, while the more recent book by Lattimore and Szepesv{\'a}ri \cite{LattimoreBanditAlgorithmsBook} is the most complete resource about bandit algorithms.
 Finally, we recommend \cite{bouneffouf2019survey} for a short but good survey on applications of MAB.
+
+The notations used in this thesis are the usual notations in all the MAB literature, and we follow closely the formalism of \cite{Kaufmann12PhD}, as well as \cite{Slivkins2019,LattimoreBanditAlgorithmsBook,Bubeck12}.
+The Nomenclature includes a summary of the notations, see Page~\pageref{chapter:nomenclature}.
 
 
 \newpage
@@ -78,8 +80,7 @@ From a mathematical point-of-view, this quantity $\sum_{t=1}^T r_{A(t)}(t)$ is i
 First, the cumulated rewards depend on the randomness from the environment, that is, the unknown and unpredictable values of $r_k(t)$ for all $k$ and $t$.
 Then, this quantity also depends on the decision-making policy followed the player, that is, the choices $A(t)$, that are based on (all) the past observations ($A(1), r_{A(1)}(1), \dots, A(t-1), r_{A(t-1)}(t-1)$), and possibly on an external source of randomness.
 Without loss of generality, it can be given by a sequence $U_0,U_1,\dots$ of \iid{} random values, following the uniform distribution on $[0,1]$, and that has to be independent from the rewards $r_k(t)$.
-This source of randomness is used in most MAB algorithm, for instance to break ties in a uniformly random manner.
-%  in the decision making rule.
+This source of randomness is used in most MAB algorithms, for instance to break ties uniformly in an index policy.
 
 \tikzstyle{block} = [align=center, draw, fill=gray!25, rectangle, minimum height=3em, minimum width=6em]
 \begin{figure}[h!]
@@ -104,7 +105,7 @@ This source of randomness is used in most MAB algorithm, for instance to break t
 
 The difficulty of this decision-making game comes from balancing the trade-off between \emph{exploration}, because the player has to observe as much as possible all the arms to get more knowledge about the distributions of their rewards, and \emph{exploitation}, because she also has to select as much as possible the best arm.
 The MAB model is a famous example of a reinforcement learning model, where the decision-making process has to adapt to an unknown environment using noisy observations and a discrete time, alternating between decisions and observations.
-We illustrate this cycle in Figure~\ref{fig:2:ReinforcementLearningCycleMABmodel} below.
+We illustrate this cycle in Figure~\ref{fig:2:ReinforcementLearningCycleMABmodel} above.
 For more details on reinforcement learning, in particular about more generic models, we refer to the famous book \cite{SuttonBarto2018}.
 
 
@@ -121,11 +122,11 @@ We also restrict to \emph{stochastic} rewards, that is we associate a real-value
 Rewards are stationary, meaning that $(r_k(t))_{t\in\N^*}$ is independent and identically distributed (\iid), $r_k(t) \sim \nu_k$ for any $t\geq1$.
 
 
-\paragraph{Interactive demo for the novice.}
+\paragraph{An interactive demo to discover the MAB problem (for the novice).}
 %
 If you are discovering the concept of bandit model here, I would like to recommend you to go online and play a few times with an interactive demonstration.
-On this demo, you are playing against a MAB problem with $K=5$ arms, when you have $T=100$ decisions to make.
-The demo is hosted online, on my website, at \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}.
+On this demo, you will be facing a MAB problem with $K=5$ arms, and you have $T=100$ decisions to make.
+The demo is hosted on my website, at \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}, and illustrated below.
 
 % \begin{figure}[h!]  % [htbp]
 %     \centering
@@ -179,14 +180,15 @@ An algorithm is said to be deterministic if it does not depend on the external r
 
 The most common objective for the player is to maximize its expected rewards, that is $\E[\sum_{t=1}^T Y_t] = \E[\sum_{t=1}^T r_{A(t)}(t)]$.
 The expectancy is taken on the randomness of the rewards $(r_k(t))_{k,t}$ as well as the randomness $(U_s)_s$.
+%
+Other common objective include best-arm identification (BAI) \cite{audibert2010best}.
 
-\TODOL{A finir, a faire comme dans https://tel.archives-ouvertes.fr/tel-02121614/document page 19}
+% \TODOL{A finir, a faire comme dans https://tel.archives-ouvertes.fr/tel-02121614/document page 19}
 
 
 % ----------------------------------------------------------------------------
 \subsection{Different hypotheses on rewards distributions}
 
-\TODOL{Write this!}
 In the example above, we consider Bernoulli distributions, but other distributions have been studied in the literature.
 From now on until the last chapter of this thesis, we only consider stochastic rewards. The piece-wise stationary model is studied in Chapter~\ref{chapter:6}.
 %
@@ -290,7 +292,7 @@ Restless models remove this hypothesis, making them harder to track and solve.
 Such models were less studied than stationary or adversarial models, but some interesting works focussed on Markov models in the last 10 years.
 For instance, \cite{Melian15} proposed a cognitive radio model mixing MAB and Hidden Markov Models (HMM), solved by a mixed policy called UCB-HMM.
 
-\TODOL{On garde ce petit paragraphe sur les modèles de bandits Markovien, par curiosité ?}
+\TODOL{On garde ça sur les modèles de bandits Markovien, par curiosité ?}
 
 
 % ----------------------------------------------------------------------------
@@ -308,15 +310,24 @@ The focus of this work is on cognitive radio and IoT networks, where arms can re
 %
 % After introducing formally the notations used in all this thesis, we review below possible applications of multi-armed bandits.
 
+
 Other popular applications include the following:
+%
 \begin{itemize}
     \item
-    A/B testing of websites
-    \cite{Kaufmann14,Jamieson17ABTest}
+    A/B testing of websites is a popular application of the best arm identification problem,
+    where the task is purely exploratory and the player is asked to identify the best of two options (or more), in a finite number of steps \cite{audibert2010best}.
+    The problem can either consider a fixed budget and no freedom on the ending of the game (\ie, an known horizon $T$), or a fixed confidence (\ie, the identified arm must be the true best arm with probability at least $1-\delta$) and a certain freedom on the budget \cite{Garivier16BAI}.
+    The theoretical complexity of this use of bandit for A/B testing was first studied in \cite{Kaufmann14},
+    and later on a more practical point-of-view was proposed in \cite{Jamieson17ABTest}.
 
     \item
-    - online content recommandation
-    \cite{Li10,Louedec16}
+    MAB can also be applied to a broader setting of online content recommandation,
+    with more than two options.
+    The seminal work of \cite{Li10} studies the application of contextual bandit to news article recommendation, as it is used in practice on platforms such as Microsoft's Bing news website,
+    or in applications like Netflix.
+    In such models, the arms correspond to items to recommend (\eg, articles or movies), and the contexts contain features about each user of the system.
+    An interesting work is \cite{Louedec16}, who studies slowly-varying non-stationary models applied to recommender systems.
 
     \item
     Using bandit algorithms to improve machine learning models or algorithms has been an active research domain for the last ten years or so.
@@ -328,9 +339,8 @@ Other popular applications include the following:
 
     % FIXME this is copied pasted from \cite{bouneffouf2019survey}
     It is well known that performance of machine learning algorithms depends critically on identifying a good set of hyper-parameters.
-    While recent approaches use Bayesian optimizationto adaptively select optimal hyper-parameter configurations, they rather focus on speeding up random search
-    through adaptive resource allocation and early-stopping.
-    A different approach was initiated in \cite{LiJamieson2018}, by formulating hyper-parameter optimization as a pure-exploration non-stochastic infinite-armed bandit problem, where a predefined resources, such as iterations, data samples, or features are allocated to randomly sampled configurations. This work introduced a novel algorithm, Hyperband, for this framework and analyze its theoretical properties, providing several desirable guarantees.
+    While recent approaches use Bayesian optimization to adaptively select optimal hyper-parameter configurations, they rather focus on speeding up random search through adaptive resource allocation and early-stopping.
+    A different approach was initiated in \cite{LiJamieson2018}, by formulating hyper-parameter optimization as a pure-exploration non-stochastic infinite-armed bandit problem, where predefined resources, such as iterations, data samples, or features are allocated to randomly sampled configurations. This work introduced a novel algorithm, Hyperband, for this framework and analyzed its theoretical properties, providing several desirable guarantees.
     Furthermore, Hyperband was compared with popular Bayesian optimization methods on a suite of hyper-parameter optimization problems; it was observed that Hyperband can provide more than an order-of-magnitude speedup over its competitors on a variety of deep-learning and kernel-based learning problems.
 
 \end{itemize}
@@ -341,8 +351,8 @@ Other popular applications include the following:
 % - wireless communication, lots of possibilities, one is frequency/channel selection in the OSA paradigm, detailed after
 % - hyper-parameters tuning of deep neural networks etc
 
-
-Other interesting applications are discussed in \cite{bouneffouf2019survey}.
+The three applications detailed above are still active research directions,
+and a curious reader will find other interesting applications of MAB models and algorithms in \cite{bouneffouf2019survey}.
 
 
 \paragraph{Application for Opportunistic Spectrum Access.}
