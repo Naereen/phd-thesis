@@ -147,8 +147,8 @@ The demo is hosted on my website, at \href{https://perso.crans.org/besson/phd/MA
 
 
 The webpage looks like Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem} above.
-The arms follow Bernoulli distributions, \ie, $\nu_k = \mathcal{B}(\mu_k)$, of unknown means $\mu_k\in[0,1]$, and your goal in this interactive demonstration is to obtain the highest possible cumulated reward in $100$ steps, $\sum_{t=1}^{100} r_{A(t)(t)$.
-Your decisions have to be made sequentially: at time $t$, you pick one of the arms, $A(t) \in\{1,2,3,4,5\}$, then the demo shows the random reward obtained from this (virtual) casino machine (in \textcolor{gold}{yellow}), \ie, the binary value $r_{A(t)}(t)\in\{0,1}$, that is sampled \iid{} from $\nu_k$.
+The arms follow Bernoulli distributions, \ie, $\nu_k = \mathcal{B}(\mu_k)$, of unknown means $\mu_k\in[0,1]$, and your goal in this interactive demonstration is to obtain the highest possible cumulated reward in $100$ steps, $\sum_{t=1}^{100} r_{A(t)}(t)$.
+Your decisions have to be made sequentially: at time $t$, you pick one of the arms, $A(t) \in\{1,2,3,4,5\}$, then the demo shows the random reward obtained from this (virtual) casino machine (in \textcolor{gold}{yellow}), \ie, the binary value $r_{A(t)}(t)\in\{0,1\}$, that is sampled \iid{} from $\nu_k$.
 %
 The UI of the demo also shows the current value of $t$ (``total plays'') and $\sum_{s=1}^t r_{A(s)}(s)$ the ``total reward''.
 For each arm, we show the sum of rewards obtained from that arm, \ie, $X_k(t) = \sum_{s=1}^t r_k(s) \mathbbm{1}(A(s) = k)$, in the ``Rewards'' line, and the number of pulls of that arm, \ie, $N_k(t) = \sum_{s=1}^t \mathbbm{1}(A(s) = k)$ in the ``Pulls'' line.
@@ -228,7 +228,7 @@ We follow the notations from the course on statistical learning (Stat 260) taugh
 
 Given a measure $\lambda$, that is usually the natural Lebesgue measure on $\R^d$, an exponential family of probability distributions is defined as the distributions whose density (relative to $\lambda$) have the following form:
 \begin{equation}\label{eq:2:exponentialFamily}
-    \Pr(x | \lambda) = h(x) \exp \let( \eta^T T(x) - A(\eta) \right),
+    \Pr(x | \lambda) = h(x) \exp \left( \eta^T T(x) - A(\eta) \right),
 \end{equation}
 for a parameter vector $\eta$ (the canonical parameter), and given functions $T$ (the sufficient statistic) and $h$.
 $A(\eta)$ is the cumulant function, and it is entirely determined by the $\eta$, $h$, $T$,
@@ -443,7 +443,7 @@ We can rewrite this to obtain the following definition of the regret.
 \begin{defn}[Regret]\label{def:2:regret}
     For an algorithm $\cA$, a bandit problem of $K$ arms characterized with their means $\bm{\mu} = \mu_1,\dots,\mu_K$ and if $\mu^* = \max_k \mu_k$, then the (mean) regret at horizon $T$ is defined as
     \begin{equation}
-        R_T^{\cA} = T \mu^* - \sum_{t=1}^T \E\left[ Y(t) \right = T \mu^* - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right].
+        R_T^{\cA} = T \mu^* - \sum_{t=1}^T \E\left[ Y(t) \right] = T \mu^* - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right].
     \end{equation}
 \end{defn}
 
