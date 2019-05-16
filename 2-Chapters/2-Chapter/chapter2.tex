@@ -27,9 +27,9 @@ We give an overview of the main families of algorithms designed to tackle the st
 When presenting our library SMPyBandits in next Chapter~\ref{chapter:3}, designed to perform numerical simulations of MAB problem, we use it to compare the empirical performances of the most famous and most efficient algorithms, in terms of regret and by evaluating them on different problems.
 %
 In the point-of-view of numerical simulations or real-world applications of bandits on embedded systems, one must also take care of two other measures of performance: time and memory complexities, which can vary greatly between different families of algorithms.
-We also give an empirical comparison of different algorithms for these two measures in Section~\ref{sec:3:timeAndMemoryCosts}.
+We also empirically compare different algorithms for these two measures in Section~\ref{sec:3:timeAndMemoryCosts}.
 %
-We also give regret upper-bounds of the two main algorithms used in this thesis, \UCB{} and \klUCB, to highlight the difference between their finite-time regret upper-bounds. They both attain a logarithmic regret, proving their order optimality (\ie, their regret upper-bound asymptotically matches the lower-bound up-to a constant factor). Moreover, \klUCB{} is known to be optimal for a wide range of arms distributions.
+We then give regret upper-bounds of the two main algorithms used in this thesis, \UCB{} and \klUCB, to highlight the difference between their finite-time regret upper-bounds. They both attain a logarithmic regret, proving their order optimality (\ie, their regret upper-bound asymptotically matches the lower-bound up-to a constant factor). Moreover, \klUCB{} is known to be optimal for a wide range of arms distributions.
 % A sketch of the proof of both results is given in Appendix.
 
 Finally, we explore the problem of algorithm selection: as there are many different algorithms, all having different qualities and properties, how one can decide which algorithm to use for a particular application?
@@ -62,9 +62,9 @@ The Nomenclature includes a summary of the notations, see Page~\pageref{chapter:
 \label{sec:2:notations}
 
 
-Multi-Armed Bandits models were first introduced by Thompson as early as 1933 in \cite{Thompson33}, and later studied from the 1950s by Robbins \cite{Robbins52} and others.
+Multi-Armed Bandits (MAB) models were introduced by Thompson as early as in 1933 \cite{Thompson33}, and later studied from the 1950s by Robbins \cite{Robbins52} and others.
 This family of models was first proposed for clinical trials, and later applied to a wide range of different problems.
-Their name comes from the one-armed bandit found in casinos, see Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem} below.
+Their name refers to one-armed bandits found in casinos, as showed in Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem} below.
 % The seminal paper by Lai and Robbins \cite{LaiRobbins85} was the first to introduce the measure of performance widely used in the literature, the notion of \emph{regret}, and to analyze a lower-bound on the performance of any algorithm against a fixed problem.
 % Since then, many efficient algorithms were proposed, XXX
 
@@ -74,13 +74,14 @@ We consider $K\in\N, K\geq2$ arms, and discrete times $t\in\N^*$.
 When the player decides at time $t$ to play (or pull) the arm $A(t)\in\{1,\dots,K\}=[K]$, she receives a reward $r_{A(t)}(t)\in\R$, and so on for a finite number of steps $t$, from $t=1$ until $t=T$ for an horizon $T$.
 %
 A commonly studied goal for the player is to maximize its sum of received rewards, $\sum_{t=1}^T r_{A(t)}(t)$
-(or its expectancy in stochastic and stationary models).
+(or its mean in stochastic and stationary models).
 
-From a mathematical point-of-view, this quantity $\sum_{t=1}^T r_{A(t)}(t)$ is indeed random, and it depends on two aspects.
-First, the cumulated rewards depend on the randomness from the environment, that is, the unknown and unpredictable values of $r_k(t)$ for all $k$ and $t$.
-Then, this quantity also depends on the decision-making policy followed the player, that is, the choices $A(t)$, that are based on (all) the past observations ($A(1), r_{A(1)}(1), \dots, A(t-1), r_{A(t-1)}(t-1)$), and possibly on an external source of randomness.
-Without loss of generality, it can be given by a sequence $U_0,U_1,\dots$ of \iid{} random values, following the uniform distribution on $[0,1]$, and that has to be independent from the rewards $r_k(t)$.
-This source of randomness is used in most MAB algorithms, for instance to break ties uniformly in an index policy.
+
+The difficulty of this decision-making game comes from balancing the trade-off between \emph{exploration}, because the player has to observe as much as possible all the arms to get more knowledge about the distributions of their rewards, and \emph{exploitation}, because she also has to select as much as possible the best arm.
+The MAB model is a famous example of a reinforcement learning model, where the decision-making process has to adapt to an unknown environment using noisy observations and a discrete time, alternating between decisions and observations.
+We illustrate this cycle in Figure~\ref{fig:2:ReinforcementLearningCycleMABmodel} below.
+For more details on reinforcement learning, in particular about more generic models, we refer to the famous book \cite{SuttonBarto2018}.
+
 
 \tikzstyle{block} = [align=center, draw, fill=gray!25, rectangle, minimum height=3em, minimum width=6em]
 \begin{figure}[h!]
@@ -103,10 +104,12 @@ This source of randomness is used in most MAB algorithms, for instance to break 
 \end{figure}
 
 
-The difficulty of this decision-making game comes from balancing the trade-off between \emph{exploration}, because the player has to observe as much as possible all the arms to get more knowledge about the distributions of their rewards, and \emph{exploitation}, because she also has to select as much as possible the best arm.
-The MAB model is a famous example of a reinforcement learning model, where the decision-making process has to adapt to an unknown environment using noisy observations and a discrete time, alternating between decisions and observations.
-We illustrate this cycle in Figure~\ref{fig:2:ReinforcementLearningCycleMABmodel} above.
-For more details on reinforcement learning, in particular about more generic models, we refer to the famous book \cite{SuttonBarto2018}.
+This quantity $\sum_{t=1}^T r_{A(t)}(t)$ is indeed random, and depends on two aspects.
+First, the rewards depend on the randomness of the environment, \ie, the unknown and unpredictable values $r_k(t)$.
+Then, this quantity also depends on the player's decision-making policy, \ie, the choices $A(t)$, that are based on (all) the past observations, \ie, $A(1)$, $r_{A(1)}(1)$, $\dots$, $A(t-1)$, $r_{A(t-1)}(t-1)$, and possibly on an external source of randomness.
+%
+Without loss of generality, it can be given by a sequence $U_0,U_1,\dots$ of \iid{} random values, following the uniform distribution on $[0,1]$, and that has to be independent from the rewards $r_k(t)$.
+External randomness is used in most MAB algorithms, for instance to break ties uniformly in an index policy.
 
 
 % ----------------------------------------------------------------------------
@@ -176,14 +179,12 @@ to an arm $\cA_t(\cO_t) = A(t) \in[K]$,
 if we denote $Y_s = r_{A(s)}(s)$ she $s$-th reward.
 The initial information is reduced to $\cO_1 = (U_0)$, and the first decision is $A(1) = \cA_1(\cO_1)$. Usually, most algorithms starts by selecting $A(1)=1,\dots,A(K)=K$ (or a permutation of the $K$ arms) in the $K$ first steps.
 %
-An algorithm is said to be deterministic if it does not depend on the external randomness $U_0,U_1,\dots$, but in this thesis we only use non-deterministic strategies.
+An algorithm is said to be deterministic if it does not depend on the external randomness $U_0,U_1,\dots$, but in this thesis we only use non-deterministic algorithms.
 
-The most common objective for the player is to maximize its expected rewards, that is $\E[\sum_{t=1}^T Y_t] = \E[\sum_{t=1}^T r_{A(t)}(t)]$.
-The expectancy is taken on the randomness of the rewards $(r_k(t))_{k,t}$ as well as the randomness $(U_s)_s$.
+The most common objective for the player is to maximize its expected rewards $\E[\sum_{t=1}^T Y_t] = \sum_{t=1}^T \E[r_{A(t)}(t)]$.
+The expectancy is taken on the rewards $(r_k(t))_{k,t}$, and the extern random variables $(U_s)_s$.
 %
-Other common objective include best-arm identification (BAI) \cite{audibert2010best}.
-
-% \TODOL{A finir, a faire comme dans https://tel.archives-ouvertes.fr/tel-02121614/document page 19}
+Other common objectives include best-arm identification (BAI) \cite{audibert2010best}.
 
 
 % ----------------------------------------------------------------------------
@@ -225,10 +226,12 @@ Our main interest is Bernoulli distributions, but we prefer to present here the 
 We follow the notations from the course on statistical learning (Stat 260) taught in 2010 by Michael Jordan at the University of Berkeley \cite{JordanCourseStatBerkeley}, that are also the notations used for instance in Emilie Kaufmann's PhD in 2014 \cite{Kaufmann12PhD}.
 
 Given a measure $\lambda$, that is usually the natural Lebesgue measure on $\R$, an exponential family of probability distributions is defined as the distributions whose density (relative to $\lambda$) have the following form:
-\[ \Pr(x | \lambda) = h(x) \exp(\eta^T T(x) - A(\eta)), \]
+\begin{equation}\label{eq:2:exponentialFamily}
+    \Pr(x | \lambda) = h(x) \exp \let( \eta^T T(x) - A(\eta) \right),
+\end{equation}
 for a parameter vector $\eta$ (the canonical parameter), and given functions $T$ (the sufficient statistic) and $h$.
 $A(\eta)$ is the cumulant function, and it is entirely determined by the $\eta$, $h$, $T$,
-$A(\eta) = \log \int h(x) \exp(\eta^T T(x)) \lambda(\mathrm{d} x)$.
+$A(\eta) = \log \left( \int h(x) \exp(\eta^T T(x)) \lambda(\mathrm{d} x) \right)$.
 %
 The natural parameter space is the set of values of $\eta$ such that this integral $A(\eta)$ is finite,
 and usually the literature focusses on regular and minimal exponential families (when the natural parameter space is an non-empty open set in $\R$).
@@ -238,32 +241,44 @@ That is why such one-dimensional distributions are entirely characterized by the
 
 A second important result is a simplified form for the Kullback-Leibler divergence \cite{KullbackLeibler51}, for two distributions lying in the same exponential family.
 The KL divergence between two distributions $d_1=\Pr(x|\eta_1)$ and $d_2=\Pr(x|\eta_2)$ is defined as
-\[ \KL(\Pr(x|\eta_1), \Pr(x|\eta_2)) = \int \Pr(x|\eta_1) \log(\frac{\Pr(x|\eta_1)}{\Pr(x|\eta_1)}) \lambda(\mathrm{d}x) = \E_{d_1}[ \log(\frac{\Pr(x|\eta_1)}{\Pr(x|\eta_1)}) ]. \]
+\begin{equation}\label{eq:2:Kullback-LeiblerDivergenceExpFamily1}
+    \KL\left(\Pr(x|\eta_1), \Pr(x|\eta_2)\right) = \int \Pr(x|\eta_1) \log(\frac{\Pr(x|\eta_1)}{\Pr(x|\eta_1)}) \lambda(\mathrm{d}x) = \E_{d_1}[ \log(\frac{\Pr(x|\eta_1)}{\Pr(x|\eta_1)}) ].
+\end{equation}
 %
-So it can be written $\KL( \eta_1,  \eta_2)) = \KL(\Pr(x|\eta_1), \Pr(x|\eta_2))$ and simplified to
-\[ \KL(\Pr(x|\eta_1), \Pr(x|\eta_2)) = \E_{d_1}[ (\eta_1 - \eta_2)^T T(X) ] - A(\eta_1) + A(\eta_2) = (\eta_1 - \eta_2)^T \mu_1 - A(\eta_1) + A(\eta_2), \]
-where $\mu_1 = \E_{\eta_1}[T(X)]$ is the mean of distribution $d_1$.
-
-
-Without diving too much in the details, it is interesting to illustrate these notations for two examples.
-On the first hand, Bernoulli distributions can be seen as an exponential family with
-$T(x) = x$ and $h(x) = 1$,
-and for a Bernoulli distribution of mean $\mu\in[0,1]$,
-the parameter is $\eta = \mu / (1 - \mu)$, giving $A(\eta) = \log(1 + \mathrm{e}^{\eta})$
-(with the limit behavior $\eta=+\infty$ if $\mu=0$).
+So this KL divergence can be written $\KL( \eta_1, \eta_2 ) = \KL(\Pr(x|\eta_1), \Pr(x|\eta_2))$, and it can be simplified to an expression using only the two parameters $\eta_1$ and $\eta_2$,
+and $\mu_1 = \E_{\eta_1}[T(X)]$ the mean of distribution $d_1$:
 %
-On the other hand, Gaussian distributions use
-$T(x) = [x ; x^2]^T$ and $h(x) = 1/\sqrt(2\pi)$,
-and for $\cN(\mu,\sigma^2)$ a Gaussian distribution with mean $\mu\in\R$ and variance $\sigma^2$,
-$\eta = [\mu/\sigma^2 ; -1/\sigma^2]^T$, giving $A(\eta) = -\eta_1^2/4\eta_2 -1/2 \log(-2\eta_2)$ (see Chapter~8 of \cite{JordanCourseStatBerkeley}).
-Thus fixing the variance $\sigma$ gives indeed a one-dimensional exponential family.
+\begin{equation}\label{eq:2:Kullback-LeiblerDivergenceExpFamily2}
+    \KL\left( \eta_1, \eta_2 \right) = \E_{d_1}[ (\eta_1 - \eta_2)^T T(X) ] - A(\eta_1) + A(\eta_2) = (\eta_1 - \eta_2)^T \mu_1 - A(\eta_1) + A(\eta_2),
+\end{equation}
 
 
-In the rest of this thesis, we only consider bounded rewards, and we mostly focus on Bernoulli distributions.
+Without diving more in the details of exponential families,
+it is interesting to illustrate this definition and the notations with two important examples:
+%
+\begin{itemize}
+    \item
+    On the first hand, Bernoulli distributions can be seen as an exponential family with
+    $T(x) = x$ and $h(x) = 1$,
+    and for a Bernoulli distribution of mean $\mu\in[0,1]$,
+    the parameter is $\eta = \mu / (1 - \mu)$, giving $A(\eta) = \log(1 + \mathrm{e}^{\eta})$
+    (with the limit behavior $\eta=+\infty$ if $\mu=0$).
+
+    \item
+    On the other hand, Gaussian distributions use
+    $T(x) = [x ; x^2]^T$ and $h(x) = 1/\sqrt(2\pi)$,
+    and for $\cN(\mu,\sigma^2)$ a Gaussian distribution with mean $\mu\in\R$ and variance $\sigma^2$,
+    $\eta = [\mu/\sigma^2 ; -1/\sigma^2]^T$, giving $A(\eta) = -\eta_1^2/4\eta_2 -1/2 \log(-2\eta_2)$ (see Chapter~8 of \cite{JordanCourseStatBerkeley}).
+    For a generic variance, this form shows that the Gaussian distributions are a two-dimensional exponential families,
+    and fixing the variance $\sigma$ gives indeed a one-dimensional exponential family.
+\end{itemize}
+
+
+In the rest of this thesis, \emph{we only consider bounded rewards in the mathematical developments}, and we mostly focus on Bernoulli distributions.
 First, we restrict for simplicity to Bernoulli distributions for the simulations shown in Chapter~\ref{chapter:3}, even if our library does implement all the distributions commonly found in the literature (including unbounded one-dimensional exponential families and even Markov models).
 % Then in Chapter~\ref{chapter:4}, each static IoT device in the noisy environment is assumed to be following a Bernoulli emission pattern in a fixed channel, FIXME
 %
-For example when we study multi-player bandits in Chapter~\ref{chapter:5} (for the model without sensing) we explain that restricting to the Bernoulli case is interesting as it the harder one, as continuous distributions with a null mass on $r(t)=0$ yield a much simpler problem.
+For example when we study multi-player bandits in Chapter~\ref{chapter:5}, for the model without sensing, we explain that restricting to the Bernoulli case is interesting and it is actually the hardest one, as continuous distributions with a null mass on $r(t)=0$ yield a much simpler problem.
 %
 Finally, in Chapter~\ref{chapter:6} we analyze our proposed algorithm in the setting on bounded distributions, without restricting to Bernoulli distributions, but we use the fact that bounded distributions on $[0,1]$ are sub-Bernoulli, and we use Bernoulli Kullback-Leibler divergences in our analysis.
 
@@ -304,9 +319,9 @@ This research field has been very active since the years 2010s, but it started a
 %
 MAB have been applied successfully to various decision making problems, including clinical trials and cognitive radio that we mentioned above.
 
-The first application of MAB models was for clinical trials, were an arm represent a treatment, and the distribution associated with such treatment can be a Bernoulli distribution: a reward of $0$ means the drug did not heal the disease, and a reward of $1$ indicates a success. The mean of an arm, in this application, represents the mean success rate of a treatment, and the goal of a doctor in a clinical trial is to identify the best treatment, \ie, the arm with highest mean, in a number of trials as short as possible.
+Historically, MAB models were first applied to clinical trials, where an arm represents a treatment, and the distribution associated with such treatment can be a Bernoulli distribution: a reward of $0$ means the drug did not heal the disease, and a reward of $1$ indicates a success. The mean of an arm, in this application, represents the mean success rate of a treatment, and the goal of a doctor in a clinical trial is to identify the best treatment, \ie, the arm with highest mean, in a number of trials as short as possible.
 %
-The focus of this work is on cognitive radio and IoT networks, where arms can represent wireless orthogonal channels, but more generally any resource characterizing the communication of a device to a gateway (\eg, spreading factor for LoRa, power allocation for NOMA etc).
+The focus of this work is on cognitive radio and IoT networks, where arms can represent wireless orthogonal channels, but more generally any resource characterizing the communication between a wireless device and a gateway (\eg, spreading factor for LoRa \cite{KerkoucheAlami18}, power allocation for NOMA etc ). In cognitive radio using centralized supervision, for instance if the gateway can decide the allocation of devices to resources, MAB can also be used to let the gateway explore different allocations and learn by itself a good allocation, see for instance this article that consider 5G-like networks with small cells \cite{Maghsudi16}.
 %
 % After introducing formally the notations used in all this thesis, we review below possible applications of multi-armed bandits.
 
@@ -376,6 +391,7 @@ The tradeoff between the two aspects is studied empirically in
 \cite{modiDemo2016}.
 %
 Another interesting works is \cite{Modi17QoS}.
+
 \TODOL{FIXME Finir ce blabla inutile ? Ou alors ce sera déjà fait en intro/chapitre1 ??}
 
 
@@ -383,10 +399,88 @@ Another interesting works is \cite{Modi17QoS}.
 \section{Lower and upper bounds on regret}
 \label{sec:2:lowerUpperBoundsRegret}
 
+As explained above, the main objective of a player facing a bandit game is to maximize its (expected) cumulated reward.
+In Machine Learning, we usually prefer to aim at minimizing certain quantity, such as error rate in supervised learning, or the distance to the optimum in an optimization problem.
+We introduce in this section the notion of \emph{regret}, and the equivalence for a player between maximizing its sum of rewards and minimizing its regret.
+
 
 \subsection{Measuring performance with the (mean) regret}
 
-Explain what is regret
+Let us first introduce some notations.
+We consider from now on a stochastic and stationary MAB problem, with $K$ arms of distributions $(\nu_k)_k$, that is, for any time $t$, $r_k(t)\sim \nu_k$.
+We denote $\mu_k$ the mean of the distribution of arm $k$ (it will be referred to as the mean of arm $k$ in the rest of the manuscript), that is $\mu_k = \E[r_k(t)]$.
+%
+% \paragraph{Defining the regret.}
+%
+To define the regret, we first need to distinguish between \emph{optimal} and \emph{sub-optimal} arms.
+
+\begin{defn}[Optimal and sub-optimal arms]\label{def:2:optimalSubOptimalArms}
+    Now consider $\mu^* = \max_k \mu_k$ the mean of the best arm.
+    The best arm can be non unique, and any arm $k$ having $\mu_k = \mu^*$ is said to be \emph{optimal},
+    while arms satisfying $\mu_k < \mu^*$ are called \emph{sub-optimal}.
+\end{defn}
+
+If the goal is to maximize $\E[\sum_{t=1}^T r_{A(t)}(t)]$,
+the optimal strategy for this bandit problem is to always pull an optimal arm, but of course it is unrealistic as the player does not know the true means and cannot know which arm is optimal.
+%
+Comparing the difference between the performance a fixed baseline and that of the player is a common approach in machine learning research,
+and here we can compare with the oracle strategy that obtains an expected reward of $\mu^*$ at each time step.
+%
+For a fixed horizon $T$, if $k^*$ denotes the index of any optimal arm,
+let us introduce the (mean) regret $R_T^{\cA}$ of an algorithm $\cA$ as
+\[ R_T^{\cA} = \E\left[ \sum_{t=1}^T r_{k^*}(t) - r_{A(t)}(t) \right]. \]
+%
+We can rewrite this to obtain the following definition of the regret.
+\begin{align}
+    R_T^{\cA}
+    &= \E\left[ \sum_{t=1}^T r_{k^*}(t) \right] - \E\left[ \sum_{t=1}^T r_{A(t)}(t) \right] \\
+    &= T \E\left[ r_{k^*}(1) \right] - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right] \\
+    &= T \mu^* - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right].
+\end{align}
+
+
+\begin{defn}[Regret]\label{def:2:regret}
+    For an algorithm $\cA$, a bandit problem of $K$ arms characterized with their means $\bm{\mu} = \mu_1,\dots,\mu_K$ and if $\mu^* = \max_k \mu_k$, then the (mean) regret at horizon $T$ is defined as
+    \begin{equation}
+        R_T^{\cA} = T \mu^* - \sum_{t=1}^T \E\left[ Y(t) \right = T \mu^* - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right].
+    \end{equation}
+\end{defn}
+
+\TODOL{Est-ce qu'il faut autre chose ?}
+
+
+\paragraph{A useful decomposition of the regret.}
+%
+As introduced above, let $N_k(t) = \sum_{s=1}^t \mathbbm{1}(A(s) = k)$ be the number of times arm $k$ was selected until between times $1$ and $t$.
+Remember that the rewards $r_k(t)$ are all \iid{} of mean $\mu_k$.
+Thus one can use the chain rule of expectation, and because the expectation is taken on the randomness of the rewards and of the decisions of the player,
+one can rewrite the expected cumulated rewards like this:
+%
+\begin{align}
+    \E \left[ \sum_{t=1}^T r_{A(t)}(t) \right]
+    &= \E \left[ \sum_{k=1}^K \sum_{t=1}^T r_k(t) \mathbbm{1}(A(t) = k) \right] \nonumber\\
+    &= \sum_{k=1}^K \E [ r_k(1) \underbrace{\sum_{t=1}^T \mathbbm{1}(A(t) = k)}_{= N_k(T)} ] \nonumber\\
+    &= \sum_{k=1}^K \mu_k \E \left[ N_k(T) \right].
+\end{align}
+
+If we introduce the \emph{gap} $\Delta_k = \mu^* - \mu_k$ between any arm $k\in[K]$ and an optimal arm,
+then an arm $k$ is sub-optimal if $\Delta_k > 0$, and we can write the following decomposition on the regret,
+
+\begin{lemma}[Regret decomposition]\label{lem:2:RegretDecomposition}
+    The (mean) regret $R_T^{\cA}$ can be written like
+    \begin{equation}
+        R_T^{\cA} = \sum_{k=1}^K \Delta_k \E[ N_k(T) ].
+    \end{equation}
+\end{lemma}
+
+\begin{proof}\label{proof:2:RegretDecomposition}
+    Thanks to the tower rule, we had
+    $\E \left[ \sum_{t=1}^T r_{A(t)}(t) \right] = \sum_{k=1}^K \mu_k \E \left[ N_k(T) \right]$, thus
+    \[ R_T^{\cA} = \sum_{k=1}^K \Delta_k \E[ N_k(T) ]. \]
+    FIXME more details?
+\end{proof}
+
+\TODOL{Est-ce qu'il faut autre chose ?}
 
 
 \subsection{Regret lower bounds: do not detail too much, don't explain the tools behind the results}
