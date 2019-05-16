@@ -164,7 +164,7 @@ After $T=100$ steps, the player obtained a cumulated reward of $56$, by playing 
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=0.95\linewidth]{2-Chapters/2-Chapter/Images/example_of_a_5_arm_bandit_problem__step100.png}
+    \includegraphics[width=0.75\linewidth]{2-Chapters/2-Chapter/Images/example_of_a_5_arm_bandit_problem__step100.png}
     \caption{Screenshot of the demonstration, after the end of the game, after $t=T=100$ steps.  See \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}}
     \label{fig:2:example_of_a_5_arm_bandit_problem__step100}
 \end{figure}
@@ -196,6 +196,7 @@ From now on until the last chapter of this thesis, we only consider stochastic r
 % Everything is implemented and documented at
 % https://smpybandits.github.io/docs/Arms.html
 We also focus only on real-valued rewards, meaning that $r_k(t)\in\R$ for all $k$ and $t$.
+
 An important hypothesis is whether rewards are bounded or not,
 and whether the player knows if they are bounded or not before starting the bandit game.
 Moreover, if rewards are known to be bounded, let say in an interval $[a,b]$, another important hypothesis is whether the player knows the values of $a$ and $b$.
@@ -225,7 +226,7 @@ One-dimensional exponential families include Bernoulli and Poisson distributions
 Our main interest is Bernoulli distributions, but we prefer to present here the notations on a generic exponential family.
 We follow the notations from the course on statistical learning (Stat 260) taught in 2010 by Michael Jordan at the University of Berkeley \cite{JordanCourseStatBerkeley}, that are also the notations used for instance in Emilie Kaufmann's PhD in 2014 \cite{Kaufmann12PhD}.
 
-Given a measure $\lambda$, that is usually the natural Lebesgue measure on $\R$, an exponential family of probability distributions is defined as the distributions whose density (relative to $\lambda$) have the following form:
+Given a measure $\lambda$, that is usually the natural Lebesgue measure on $\R^d$, an exponential family of probability distributions is defined as the distributions whose density (relative to $\lambda$) have the following form:
 \begin{equation}\label{eq:2:exponentialFamily}
     \Pr(x | \lambda) = h(x) \exp \let( \eta^T T(x) - A(\eta) \right),
 \end{equation}
@@ -236,10 +237,10 @@ $A(\eta) = \log \left( \int h(x) \exp(\eta^T T(x)) \lambda(\mathrm{d} x) \right)
 The natural parameter space is the set of values of $\eta$ such that this integral $A(\eta)$ is finite,
 and usually the literature focusses on regular and minimal exponential families (when the natural parameter space is an non-empty open set in $\R$).
 
-An important result on exponential families is that a distribution in such family is entirely characterized by its parameter $\eta$.
+-- An important result on exponential families is that a distribution in such family is entirely characterized by its parameter $\eta$.
 That is why such one-dimensional distributions are entirely characterized by their mean, as $\mu = \E_{\eta}[T(X)]$.
 
-A second important result is a simplified form for the Kullback-Leibler divergence \cite{KullbackLeibler51}, for two distributions lying in the same exponential family.
+-- A second important result is a simplified form for the Kullback-Leibler divergence \cite{KullbackLeibler51}, for two distributions lying in the same exponential family.
 The KL divergence between two distributions $d_1=\Pr(x|\eta_1)$ and $d_2=\Pr(x|\eta_2)$ is defined as
 \begin{equation}\label{eq:2:Kullback-LeiblerDivergenceExpFamily1}
     \KL\left(\Pr(x|\eta_1), \Pr(x|\eta_2)\right) = \int \Pr(x|\eta_1) \log(\frac{\Pr(x|\eta_1)}{\Pr(x|\eta_1)}) \lambda(\mathrm{d}x) = \E_{d_1}[ \log(\frac{\Pr(x|\eta_1)}{\Pr(x|\eta_1)}) ].
@@ -286,8 +287,8 @@ Finally, in Chapter~\ref{chapter:6} we analyze our proposed algorithm in the set
 \paragraph{Other kind of hypothesis: sub-Gaussian and sub-Bernoulli distributions.}
 %
 A lot of research works considers rewards distributions that are not Gaussian but sub-Gaussian, of a known variance, for instance $1/4$.
-For instance, bounded distributions on $[0,1]$ are $1/4$ sub-Gaussian, and this fact is used for instance in \cite{Maillard2018GLR}.
-It means that their moment generating function is dominated by that of a Gaussian distribution with the same mean and a variance $1/4$).
+For instance, bounded distributions on $[0,1]$ are known to be $1/4$ sub-Gaussian, and this fact is used for instance in \cite{Maillard2018GLR}.
+It means that their moment generating function is dominated by that of a Gaussian distribution with the same mean and a variance $1/4$.
 In Chapter~\ref{chapter:6}, we instead consider sub-Bernoulli distributions, formally introduced in Definition~\ref{def:6:subBernoulliDistributions}.
 %
 Such hypothesis is also proposed for other families of distributions, for instance \cite{KimTewari2019} analyses their Follow-the-Perturbed-Leader algorithm for perturbations following any sub-Weibull distribution (sub-Weibull distributions generalize both sub-Gaussian and sub-Exponential distributions).
@@ -370,7 +371,7 @@ The three applications detailed above are still active research directions,
 and a curious reader will find other interesting applications of MAB models and algorithms in \cite{bouneffouf2019survey}.
 
 
-\paragraph{Application for Opportunistic Spectrum Access.}
+\paragraph{Applications for Opportunistic Spectrum Access.}
 % Detail the previous work from our team SCEE on bandits + OSA : Wassim, Navik
 %
 Previous works of our SCEE team showed that MAB can be used to model the problem of spectrum access for a secondary user accessing a licensed spectrum.
@@ -392,11 +393,11 @@ The tradeoff between the two aspects is studied empirically in
 %
 Another interesting works is \cite{Modi17QoS}.
 
-\TODOL{FIXME Finir ce blabla inutile ? Ou alors ce sera déjà fait en intro/chapitre1 ??}
+\TODOL{FIXME Finir ce blabla rapidement ? Ou alors ce sera déjà fait en intro/chapitre1 ??}
 
 
 % ----------------------------------------------------------------------------
-\section{Lower and upper bounds on regret}
+\section{Regret: definition, decomposition, and lower bounds}
 \label{sec:2:lowerUpperBoundsRegret}
 
 As explained above, the main objective of a player facing a bandit game is to maximize its (expected) cumulated reward.
@@ -472,12 +473,12 @@ then an arm $k$ is sub-optimal if $\Delta_k > 0$, and we can write the following
         R_T^{\cA} = \sum_{k=1}^K \Delta_k \E[ N_k(T) ].
     \end{equation}
 \end{lemma}
-
+%
 \begin{proof}\label{proof:2:RegretDecomposition}
     Thanks to the tower rule, we had
     $\E \left[ \sum_{t=1}^T r_{A(t)}(t) \right] = \sum_{k=1}^K \mu_k \E \left[ N_k(T) \right]$, thus
     \[ R_T^{\cA} = \sum_{k=1}^K \Delta_k \E[ N_k(T) ]. \]
-    FIXME more details?
+    % FIXME more details?
 \end{proof}
 
 \TODOL{Est-ce qu'il faut autre chose ?}
@@ -485,17 +486,29 @@ then an arm $k$ is sub-optimal if $\Delta_k > 0$, and we can write the following
 
 \subsection{Regret lower bounds: do not detail too much, don't explain the tools behind the results}
 
-- [Lai and Robbins] lower-bound in $\Omega(\log(T))$
-- Worst case lower-bound in $\Omega(\sqrt{T})$
-- Adversarial lower-bound in $\Omega(\sqrt{T})$ (also useful for piece-wise stationary models)
+\begin{itemize}
+    \item
+    - [Lai and Robbins] lower-bound in $\Omega(\log(T))$
+    \item
+    - Worst case lower-bound in $\Omega(\sqrt{T})$
+    \item
+    - Adversarial lower-bound in $\Omega(\sqrt{T})$ (also useful for piece-wise stationary models)
+\end{itemize}
 
 
 \subsection{Regret upper bounds, tools and different kinds of bounds}
 
-- useful decomposition, with number of samples (see Claire's PhD)
-- different kinds of bounds, problem-dependent with $\bigO{C \log(T)}$ with $C$ a measure of the problem complexity, or problem-independent with $\bigO{\sqrt{KT}}$ ?
-- tools to show regret upper-bounds, concentration inequalities,
-- short proof of UCB or klUCB? just to start to show the tools
+
+\begin{itemize}
+    \item
+    - different kinds of bounds, problem-dependent with $\bigO{C \log(T)}$ with $C$ a measure of the problem complexity, or problem-independent with $\bigO{\sqrt{KT}}$ ?
+    \item
+    - tools to show regret upper-bounds, concentration inequalities?
+    FIXME non j'ai pas la place
+    \item
+    - short proof of UCB or klUCB? just to start to show the tools
+    FIXME non j'ai pas la place
+\end{itemize}
 
 
 \subsection{Other measures of performances}
@@ -503,7 +516,8 @@ then an arm $k$ is sub-optimal if $\Delta_k > 0$, and we can write the following
 - Best Arm Identification?
 - Quantile regret or just histogram of regrets
 - Worst case regret (max $R_T^{r}$ for $r$ index of Monte-Carlo simulation?)
-- Fairness
+- Fairness ?
+- Switching cost? \cite{modiDemo2016} \cite{Koren17}
 
 
 % ----------------------------------------------------------------------------
