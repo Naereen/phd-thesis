@@ -6,7 +6,7 @@
 \minitoc
 
 \newpage
-\TODOL{L'abstract ici est trop long, mais je l'ai écrit avant de commencer le chapitre, pour avoir une idée de ce que je devais faire ! Je couperai à la fin !}
+% \TODOL{L'abstract ici est trop long, mais je l'ai écrit avant de commencer le chapitre, pour avoir une idée de ce que je devais faire ! Je couperai à la fin !}
 
 \paragraph{Abstract.}
 %
@@ -16,15 +16,16 @@ restricting to the single-player and stationary stochastic case.
 We focus on decision-making models with a finite number of resources, called arms, and on stochastic models, where an arm is associated with a one-dimensional distribution.
 In all this thesis, we only consider one-dimensional exponential families, and in particular Bernoulli distributions.
 %
-We review quickly the possible applications of bandits, that range from recommender systems and information retrieval to healthcare and finance. In the rest of this thesis, we focus on cognitive radio, an important field of research where bandits has already been applied with success in the last ten years.
+We quickly review the possible applications of bandits, that range from recommender systems and information retrieval to healthcare and finance. In the rest of this thesis, we focus on cognitive radio, an important field of research where bandits has already been applied with success in the last ten years.
 
-We then explain the main measure of performance used in this thesis, defined as the regret and written $R_T^{\cA}$ for algorithm $\cA$ and horizon $T$. The regret compares the performance of the decision-making player and the oracle who knows in advance the best arm and always selects it.
-Other measures of performance, such as best-arm identification, are not used later on in this document, but they are also shortly discussed.
+We then explain the main measure of performance used in this thesis, defined as the regret and written $R_T^{\cA}$ for algorithm $\cA$ and for horizon $T$. The regret compares the performance of the decision-making player and the oracle who knows in advance the best arm and always selects it.
+Other measures of performance, such as best-arm identification, are not used later on in this document.
+% , but they are also shortly discussed.
 %
-We review the main theoretical results from famous previous works, that give a lower-bound on the regret of any algorithm, essentially showing that we cannot find an algorithm achieving a sub-logarithmic regret, in this stochastic MAB model ($R_T^{\cA} = \Omega(\log(T))$).
+We explain the main theoretical result from previous works: a lower-bound on the regret of any algorithm, essentially showing that no algorithm can achieve sub-logarithmic regret on all problems, in this stochastic MAB model (\ie, $R_T^{\cA} = \Omega(\log(T))$).
 
-We give an overview of the main families of algorithms designed to tackle the stochastic MAB model, and we mainly focus on the \UCB, \klUCB{} and Thompson sampling algorithms, as they are used in the rest of the manuscript.
-When presenting our library SMPyBandits in next Chapter~\ref{chapter:3}, designed to perform numerical simulations of MAB problem, we use it to compare the empirical performances of the most famous and most efficient algorithms, in terms of regret and by evaluating them on different problems.
+We give an overview of the main families of algorithms designed to tackle stochastic MAB problems, and we mainly focus on the \UCB, \klUCB{} and Thompson sampling algorithms, as they are used in the rest of the manuscript.
+We present SMPyBandits in the next Chapter~\ref{chapter:3}, a Python open-source library, designed to run numerical simulations of MAB problems, one of the main contribution of this thesis. We use it to compare the empirical performances of the most famous and most efficient algorithms, in terms of regret and by evaluating them on different problems.
 %
 In the point-of-view of numerical simulations or real-world applications of bandits on embedded systems, one must also take care of two other measures of performance: time and memory complexities, which can vary greatly between different families of algorithms.
 We also empirically compare different algorithms for these two measures in Section~\ref{sec:3:timeAndMemoryCosts}.
@@ -86,7 +87,7 @@ For more details on reinforcement learning, in particular about more generic mod
 \tikzstyle{block} = [align=center, draw, fill=gray!25, rectangle, minimum height=3em, minimum width=6em]
 \begin{figure}[h!]
     \centering
-    \resizebox{0.50\textwidth}{!}{
+    \resizebox{0.750\textwidth}{!}{
         \begin{tikzpicture}[auto, node distance=5cm, >=latex]
             %
             % We start by placing the blocks
@@ -140,7 +141,7 @@ The demo is hosted on my website, at \href{https://perso.crans.org/besson/phd/MA
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=0.85\linewidth]{2-Chapters/2-Chapter/Images/example_of_a_5_arm_bandit_problem.png}
+    \includegraphics[width=0.75\linewidth]{2-Chapters/2-Chapter/Images/example_of_a_5_arm_bandit_problem.png}
     \caption{Screenshot of the demonstration available online on my website, for a current step of $t=24$.}
     \label{fig:2:example_of_a_5_arm_bandit_problem}
 \end{figure}
@@ -259,14 +260,14 @@ it is interesting to illustrate this definition and the notations with two impor
 %
 \begin{itemize}
     \item
-    On the first hand, Bernoulli distributions can be seen as an exponential family with
+    \textbf{Bernoulli distributions} can be seen as an exponential family with
     $T(x) = x$ and $h(x) = 1$,
     and for a Bernoulli distribution of mean $\mu\in[0,1]$,
     the parameter is $\eta = \mu / (1 - \mu)$, giving $A(\eta) = \log(1 + \mathrm{e}^{\eta})$
     (with the limit behavior $\eta=+\infty$ if $\mu=0$).
 
     \item
-    On the other hand, Gaussian distributions use
+    \textbf{Gaussian distributions} use
     $T(x) = [x ; x^2]^T$ and $h(x) = 1/\sqrt(2\pi)$,
     and for $\cN(\mu,\sigma^2)$ a Gaussian distribution with mean $\mu\in\R$ and variance $\sigma^2$,
     $\eta = [\mu/\sigma^2 ; -1/\sigma^2]^T$, giving $A(\eta) = -\eta_1^2/4\eta_2 -1/2 \log(-2\eta_2)$ (see Chapter~8 of \cite{JordanCourseStatBerkeley}).
@@ -331,14 +332,14 @@ Other popular applications include the following:
 %
 \begin{itemize}
     \item
-    A/B testing of websites is a popular application of the best arm identification problem,
+    \textbf{A/B testing} of websites is a popular application of the best arm identification problem,
     where the task is purely exploratory and the player is asked to identify the best of two options (or more), in a finite number of steps \cite{audibert2010best}.
     The problem can either consider a fixed budget and no freedom on the ending of the game (\ie, an known horizon $T$), or a fixed confidence (\ie, the identified arm must be the true best arm with probability at least $1-\delta$) and a certain freedom on the budget \cite{Garivier16BAI}.
     The theoretical complexity of this use of bandit for A/B testing was first studied in \cite{Kaufmann14},
     and later on a more practical point-of-view was proposed in \cite{Jamieson17ABTest}.
 
     \item
-    MAB can also be applied to a broader setting of online content recommandation,
+    MAB can also be applied to a broader setting of \textbf{online content recommandation},
     with more than two options.
     The seminal work of \cite{Li10} studies the application of contextual bandit to news article recommendation, as it is used in practice on platforms such as Microsoft's Bing news website,
     or in applications like Netflix.
@@ -346,7 +347,7 @@ Other popular applications include the following:
     An interesting work is \cite{Louedec16}, who studies slowly-varying non-stationary models applied to recommender systems.
 
     \item
-    Using bandit algorithms to improve machine learning models or algorithms has been an active research domain for the last ten years or so.
+    Using bandit algorithms for \textbf{improved machine learning} models or algorithms has been an active research domain for the last ten years or so.
     As presented below in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}, a certain ``master'' bandit algorithm can be used to select on the run the best bandit algorithm from a pool of ``slave'' algorithms.
     Other possible use cases include hyper-parameter optimization, or feature selection.
     Hyper-parameters include real-valued parameters, like $\alpha\in[0,\infty)$ for the \UCB{} or $\varepsilon$ for the $\varepsilon$-greedy bandit algorithms, a step size multiplier in a gradient method, or the width of a radial based function (RBF) kernel method.
@@ -401,37 +402,37 @@ Another interesting works is \cite{Modi17QoS}.
 \label{sec:2:lowerUpperBoundsRegret}
 
 As explained above, the main objective of a player facing a bandit game is to maximize its (expected) cumulated reward.
-In Machine Learning, we usually prefer to aim at minimizing certain quantity, such as error rate in supervised learning, or the distance to the optimum in an optimization problem.
+In Machine Learning, we usually prefer to aim at minimizing certain quantities, such as the error rate in supervised learning, or the distance to the optimum in an optimization problem.
 We introduce in this section the notion of \emph{regret}, and the equivalence for a player between maximizing its sum of rewards and minimizing its regret.
 
 
 \subsection{Measuring performance with the (mean) regret}
 
 Let us first introduce some notations.
-We consider from now on a stochastic and stationary MAB problem, with $K$ arms of distributions $(\nu_k)_k$, that is, for any time $t$, $r_k(t)\sim \nu_k$.
-We denote $\mu_k$ the mean of the distribution of arm $k$ (it will be referred to as the mean of arm $k$ in the rest of the manuscript), that is $\mu_k = \E[r_k(t)]$.
+From now on, we consider a stochastic and stationary MAB problem, with $K$ arms of distributions $(\nu_k)_k$, that is, for any time $t$, $r_k(t)\sim \nu_k$.
+We denote $\mu_k$ the mean of the distribution of arm $k$ (it will be referred to as the mean of arm $k$ in the rest of the manuscript), that is $\mu_k = \E[r_k(t)] \in \R$.
 %
 % \paragraph{Defining the regret.}
 %
 To define the regret, we first need to distinguish between \emph{optimal} and \emph{sub-optimal} arms.
 
 \begin{defn}[Optimal and sub-optimal arms]\label{def:2:optimalSubOptimalArms}
-    Now consider $\mu^* = \max_k \mu_k$ the mean of the best arm.
+    Denote $\mu^* = \max_k \mu_k$ the largest mean.
     The best arm can be non unique, and any arm $k$ having $\mu_k = \mu^*$ is said to be \emph{optimal},
     while arms satisfying $\mu_k < \mu^*$ are called \emph{sub-optimal}.
 \end{defn}
 
-If the goal is to maximize $\E[\sum_{t=1}^T r_{A(t)}(t)]$,
+If the goal of the player is to maximize $\E[\sum_{t=1}^T r_{A(t)}(t)]$,
 the optimal strategy for this bandit problem is to always pull an optimal arm, but of course it is unrealistic as the player does not know the true means and cannot know which arm is optimal.
 %
-Comparing the difference between the performance a fixed baseline and that of the player is a common approach in machine learning research,
-and here we can compare with the oracle strategy that obtains an expected reward of $\mu^*$ at each time step.
+Comparing the difference between the performance of a fixed baseline and that of the player is a common approach in machine learning research,
+and here we can compare with the oracle strategy that obtains an (expected) reward of $\mu^*$ at each time step.
 %
 For a fixed horizon $T$, if $k^*$ denotes the index of any optimal arm,
 let us introduce the (mean) regret $R_T^{\cA}$ of an algorithm $\cA$ as
 \[ R_T^{\cA} = \E\left[ \sum_{t=1}^T r_{k^*}(t) - r_{A(t)}(t) \right]. \]
 %
-We can rewrite this to obtain the following definition of the regret.
+We can rewrite this expression to obtain the following definition of the regret.
 \begin{align}
     R_T^{\cA}
     &= \E\left[ \sum_{t=1}^T r_{k^*}(t) \right] - \E\left[ \sum_{t=1}^T r_{A(t)}(t) \right] \\
@@ -441,7 +442,7 @@ We can rewrite this to obtain the following definition of the regret.
 
 
 \begin{defn}[Regret]\label{def:2:regret}
-    For an algorithm $\cA$, a bandit problem of $K$ arms characterized with their means $\bm{\mu} = \mu_1,\dots,\mu_K$ and if $\mu^* = \max_k \mu_k$, then the (mean) regret at horizon $T$ is defined as
+    For an algorithm $\cA$, a bandit problem of $K$ arms characterized by their means $\bm{\mu} = \mu_1,\dots,\mu_K$ and if $\mu^* = \max_k \mu_k$, then the (mean) regret at horizon $T$ is defined as
     \begin{equation}
         R_T^{\cA} = T \mu^* - \sum_{t=1}^T \E\left[ Y(t) \right] = T \mu^* - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right].
     \end{equation}
@@ -452,9 +453,9 @@ We can rewrite this to obtain the following definition of the regret.
 
 \paragraph{A useful decomposition of the regret.}
 %
-As introduced above, let $N_k(t) = \sum_{s=1}^t \mathbbm{1}(A(s) = k)$ be the number of times arm $k$ was selected until between times $1$ and $t$.
+As introduced above, let $N_k(t) = \sum_{s=1}^t \mathbbm{1}(A(s) = k)$ be the number of times arm $k$ was selected between times $1$ and $t$.
 Remember that the rewards $r_k(t)$ are all \iid{} of mean $\mu_k$.
-Thus one can use the chain rule of expectation, and because the expectation is taken on the randomness of the rewards and of the decisions of the player,
+Thus one can use the chain rule of expectation, and because the expectation is taken on the randomness of the (\iid) rewards $(r_k(t))_t$ and on the decisions of the player $(A(t))_t$ (which are measurable wrt to the past observations $\cO_t$),
 one can rewrite the expected cumulated rewards like this:
 %
 \begin{align}
@@ -488,11 +489,11 @@ then an arm $k$ is sub-optimal if $\Delta_k > 0$, and we can write the following
 
 \begin{itemize}
     \item
-    - [Lai and Robbins] lower-bound in $\Omega(\log(T))$
+    - [Lai and Robbins] lower-bound in $\Omega(\log(T))$ \cite{LaiRobbins85}
     \item
-    - Worst case lower-bound in $\Omega(\sqrt{T})$
+    - Worst case lower-bound in $\Omega(\sqrt{T})$ \cite{Auer02,Auer02NonStochastic,Bubeck12}
     \item
-    - Adversarial lower-bound in $\Omega(\sqrt{T})$ (also useful for piece-wise stationary models)
+    - Adversarial lower-bound in $\Omega(\sqrt{T})$ (also useful for piece-wise stationary models) \cite{Auer02NonStochastic}
 \end{itemize}
 
 
@@ -513,11 +514,39 @@ then an arm $k$ is sub-optimal if $\Delta_k > 0$, and we can write the following
 
 \subsection{Other measures of performances}
 
-- Best Arm Identification?
-- Quantile regret or just histogram of regrets
-- Worst case regret (max $R_T^{r}$ for $r$ index of Monte-Carlo simulation?)
-- Fairness ?
-- Switching cost? \cite{modiDemo2016} \cite{Koren17}
+In this thesis, we only study analytically the mean regret $R^{\cA}$ (in Chapters \ref{chapter:5,chapter:6}), but we quickly mention other measures of performances introduced in the literature.
+
+% - Quantile regret or just histogram of regrets
+First, when doing numerical experiments about bandits, if one studies the regret as an empirical mean based on a large number of random repetitions (\eg, $N=1000$ repetitions), it is important to not only show the mean value but also the variance of the values taken by the regret on each repetition, to verify that all algorithms perform consistently.
+Indeed, by only visualizing the mean of $1000$ values, it is possible that we miss some ``bad runs'': if $1$ run out of the $1000$ gives linear regret (\ie, $R_T^{\cA} \propto T$) and the $999$ other give logarithmic regret, then the mean will appear logarithmic.
+This is the case of the \Selfish{} algorithm that is defined and explored in Chapter~\ref{chapter:5}.
+By visualizing the entire \emph{distribution} (as an histogram), or the variance of the values of $R_T^{\cA}$, and if the number $N$ is reasonably large, we can verify that the regret appears logarithmic for all runs.
+
+% - Best Arm Identification?
+Other measures of performance that has been studied in the literature include
+the best arm identification (BAI) rate
+and the best arm selection (BAS) rate.
+The BAI rate counts the frequency at which an algorithm $\cA$ correctly identified the best arm(s) at the horizon $T$,
+while the BAS rate counts the total number of time steps during which $\cA$ selected (one of) the best arm(s).
+Both quantities are computed and stored in all numerical simulations using SMPyBandits, but visualizations for both have not been included in this thesis.
+
+% - Worst case regret (max $R_T^{r}$ for $r$ index of Monte-Carlo simulation?)
+The switching cost $SC^{\cA}(T)$ counts how many times the player's decision has changed from one time step to the next one, \ie, $SC^{\cA}(T) = \sum_{t=1}^{T-1} \indic(A(t) \neq A(t+1))$.
+It has recently gained interest in the literature, for instance in \cite{Koren17}.
+% FIXME give the main result proved in this paper?
+In single-player models,
+it is easy to show that achieving logarithmic regret directly implies a logarithmic upper-bound on the switching cost, and conversely the lower-bound from \cite{LaiRobbins85} also gives an asymptotic logarithmic lower-bound.
+But even if $SC^{\cA}(T) = \Theta(\log T)$ for an efficient algorithm, it can be interesting to numerically evaluate this quantity, as a large value might indicate an algorithm that is alternating too much between the optimal arm and other arms.
+%
+% FIXME we give notations but I don't use them in Chapter5 
+It is more interesting to studying $SC_M^{\cA}(T)$, the sum of the switching costs of the $M$ players in a multi-player bandit game, as in this case, it is possible that the players follow an efficient centralized or decentralized algorithm (which gives a logarithmic centralized regret) while still suffering from a linear switching cost.
+It is very satisfying to obtain a logarithmic switching cost for our algorithm \MCTopM-\klUCB{} in Chapter~\ref{chapter:5}, even if minimizing the switching cost was not one of our objective, and the bound we obtain on $SC_M^{\cA}(T)$ is just a consequence of our proof of the control we give on the regret $R^{\cA}(T)$.
+% - Switching cost? \cite{modiDemo2016} \cite{Koren17}
+On a more experimental note, it was showed in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-player bandits, \rhoRand, could be tuned to run in batches\footnote{~The batch bandit setting means that all players use the same decisions for instance for $50$ consecutive times, and update their decisions only once every $50$ time steps. For more details, see \cite{modiDemo2016} for the multi-player case, or \cite{perchet2016,gao2019batched,kolnogorov2019multi}.}, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret.
+
+
+% - Fairness ?
+Finally, another interesting measure of performance is the \emph{fairness} between the $M$ players in a multi-player bandit models, as we explain in Chapter~\ref{chapter:5}.
 
 
 % ----------------------------------------------------------------------------
