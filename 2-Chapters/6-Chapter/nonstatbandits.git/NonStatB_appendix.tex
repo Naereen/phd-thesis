@@ -61,11 +61,12 @@ In other words, we illustrate in Figures~\ref{fig:6:meanRegretPb3} and \ref{fig:
 % ----------------------------------------------------------------------------
 
 This Appendix gives some proofs omitted in the main text of this chapter.
+Missing proofs can be found in the article \cite{Besson2019GLRT}.
 
 % ----------------------------------------------------------------------------
 \subsubsection{Pinsker's inequality}\label{proof:6:Pinsker}
 
-We state the Pinsker's inequality precisely in Lemma~\ref{lem:6:Pinsker} below, and prove it with simple real analysis arguments\footnote{~The proof is inspired by Lemma~10.2 from \cite{LattimoreBanditAlgorithmsBook} (version $1699$ of January $2019$).}.
+Pinsker's inequality is proved below, using simple real analysis arguments\footnote{~The proof is inspired by Lemma~10.2 from \cite{LattimoreBanditAlgorithmsBook} (version $1699$ of January $2019$).}.
 
 \begin{lemma}[Pinsker's inequality]\label{lem:6:Pinsker}
     Let $p,q\in[0,1]$, and $\kl(p,q) = p \ln\left(\frac{p}{q}\right) + (1-p)\ln\left(\frac{1-p}{1-q}\right)$.
@@ -258,9 +259,9 @@ We state the Pinsker's inequality precisely in Lemma~\ref{lem:6:Pinsker} below, 
 \label{app:6:proofConcFirst}
 %
 Using the same construction as in the proof of Theorem~14 in \cite{KK18Martingales}, one can prove that for every $\lambda \in I$ (for an interval $I$), there exists a non-negative super-martingale $M^\lambda (s)$ with respect to the filtration $\cF_t = \sigma(X_1,\dots,X_t)$ that satisfies $\bE[M^\lambda(s)] \leq 1$ and
-\[\forall s \in \N^*, \ \ M^\lambda (s) \geq e^{\lambda [s\kl(\widehat{\mu}_s,\mu) - 3\ln(1+\ln(s))] - g(\lambda)}\]
+\[\forall s \in \N^*, \ \ M^\lambda (s) \geq \mathrm{e}^{\lambda [s \, \kl(\widehat{\mu}_s,\mu) - 3\ln(1+\ln(s))] - g(\lambda)}\]
 for some function $g : I \rightarrow \R$. This super-martingale is of the form
-\[M^\lambda (s) = \int e^{\eta\sum_{i=1}^s X_i - \phi_\mu(\lambda)s} d\pi(\eta)\]
+$M^\lambda (s) = \int \mathrm{e}^{\eta\sum_{i=1}^s X_i - \phi_\mu(\lambda)s} d\pi(\eta)$,
 for a well-chosen probability distribution $\pi$, and the function $g$ can be chosen to be any
 \begin{eqnarray*}
     g_{\xi} : \left[0; 1/(1+\xi)\right] & \longrightarrow & \R \\
@@ -269,29 +270,30 @@ for a well-chosen probability distribution $\pi$, and the function $g$ can be ch
 for a parameter $\xi \in [0,1/2]$.
 
 Similarly, there exists an independent super-martingale $W^\lambda (r)$ w.r.t. the filtration $\cF_r' = \sigma(Y_1,\dots,Y_r)$ such that
-\[\forall r \in \N^*, \ \ W^\lambda (r) \geq e^{\lambda [r\kl(\widehat{\mu}'_r,\mu) - 3\ln(1+\ln(r))] - g(\lambda)},\]
-for the same function $g(\lambda)$. In the terminology of \cite{KK18Martingales}, the processes $\bm{X}(s) = s \, \kl(\widehat{\mu}_s,\mu) - 3\ln(1+\ln(s))$ and $\bm{Y}(s) = r \, \kl(\widehat{\mu}_r,\mu) - 3\ln(1+\ln(r))$ are called $g$-DCC for Doob-Cram\'er-Chernoff, as Doob's inequality can be applied in combination with the Cram\'er-Chernoff method to obtain deviation inequalities that are uniform in time.
+\[\forall r \in \N^*, \ \ W^\lambda (r) \geq \mathrm{e}^{\lambda [r\kl(\widehat{\mu}'_r,\mu) - 3\ln(1+\ln(r))] - g(\lambda)},\]
+for the same function $g(\lambda)$.
+In the terminology of \cite{KK18Martingales}, the processes $\bm{X}(s) = s \, \kl(\widehat{\mu}_s,\mu) - 3\ln(1+\ln(s))$ and $\bm{Y}(s) = r \, \kl(\widehat{\mu}_r,\mu) - 3\ln(1+\ln(r))$ are called $g$-DCC for Doob-Cram\'er-Chernoff, as Doob's inequality can be applied in combination with the Cram\'er-Chernoff method to obtain deviation inequalities that are uniform in time.
 
 Here we have to modify the technique used in their Lemma 4 in order to take into account the two stochastic processes, and the presence of super-martingales instead of martingales (for which Doob inequality still works).
 One can write
 %
 \begin{align*}
-    &\bP\left(\exists r \in \N^* : s \, \kl\left(\widehat{\mu}_{s},\mu\right) + r \, \kl\left(\widehat{\mu}_r',\mu'\right) > 3\ln(1+\ln(s)) + 3\ln(1+\ln(r)) + u\right) \\
-    & \leq \bP\left(\exists r \in \N^* : M^\lambda(s)W^\lambda(r) > e^{\lambda u - 2g(\lambda)}\right) \\
-    & = \lim_{n \rightarrow \infty} \bP\left(\exists r \in [n] :  M^\lambda(s)W^\lambda(r) > e^{\lambda u - 2g(\lambda)}\right) \\
-    & = \lim_{n \rightarrow \infty} \bP\left(\sup_{r \in [n]}  M^\lambda(s)W^\lambda(r) > e^{\lambda u - 2g(\lambda)}\right).
+    &\bP\bigl( \exists r \in \N^* : s \, \kl\left(\widehat{\mu}_{s},\mu\right) + r \, \kl\left(\widehat{\mu}_r',\mu'\right) > 3\ln(1+\ln(s)) + 3\ln(1+\ln(r)) + u \bigr) \\
+    & \leq \bP\left(\exists r \in \N^* : M^\lambda(s)W^\lambda(r) > \mathrm{e}^{\lambda u - 2g(\lambda)}\right) \\
+    & = \lim_{n \rightarrow \infty} \bP\left(\exists r \in [n] :  M^\lambda(s)W^\lambda(r) > \mathrm{e}^{\lambda u - 2g(\lambda)}\right) \\
+    & = \lim_{n \rightarrow \infty} \bP\left(\sup_{r \in [n]}  M^\lambda(s)W^\lambda(r) > \mathrm{e}^{\lambda u - 2g(\lambda)}\right).
 \end{align*}
 %
-Using that $\tilde{M}(r) = M^\lambda(s)W^\lambda(r)$ is a super-martingale with respect to the filtration \[\tilde{\cF}_r = \sigma(X_1,\dots,X_s, Y_1,\dots,Y_r),\] one can apply Doob's maximal inequality to obtain
+Using that $\tilde{M}(r) = M^\lambda(s)W^\lambda(r)$ is a super-martingale with respect to the filtration $\tilde{\cF}_r = \sigma(X_1,\dots,X_s, Y_1,\dots,Y_r)$, one can apply Doob's maximal inequality to obtain
 \begin{eqnarray*}
-    \bP\left(\sup_{r \in [n]}  M^\lambda(s)W^\lambda(r) > e^{\lambda u - 2g(\lambda)}\right) &\leq& e^{-(\lambda u - 2g(\lambda))}\bE[\tilde{M}(1))] \\
-    & = & e^{-(\lambda u - 2g(\lambda))}\bE[M^\lambda(s)W^\lambda(1)] \\
-    & \leq & e^{-(\lambda u - 2g(\lambda))},
+    \bP\left(\sup_{r \in [n]}  M^\lambda(s)W^\lambda(r) > \mathrm{e}^{\lambda u - 2g(\lambda)}\right) &\leq& \mathrm{e}^{-(\lambda u - 2g(\lambda))}\bE[\tilde{M}(1))] \\
+    & = & \mathrm{e}^{-(\lambda u - 2g(\lambda))}\bE[M^\lambda(s)W^\lambda(1)] \\
+    & \leq & \mathrm{e}^{-(\lambda u - 2g(\lambda))},
 \end{eqnarray*}
 using that $M^\lambda(s)$ and $W^\lambda(1)$ are independent and have an expectation smaller than $1$.
 
 Putting things together yields
-\[\bP\left(\exists r \in \N^* : s \, \kl\left(\widehat{\mu}_{s},\mu\right) + r \, \kl\left(\widehat{\mu}_r',\mu'\right) > 3\ln(1+\ln(s)) + 3\ln(1+\ln(r)) + u\right) \leq e^{-\left(\lambda u - 2g_{\xi}(\lambda)\right)},\]
+\[\bP\left(\exists r \in \N^* : s \, \kl\left(\widehat{\mu}_{s},\mu\right) + r \, \kl\left(\widehat{\mu}_r',\mu'\right) > 3\ln(1+\ln(s)) + 3\ln(1+\ln(r)) + u\right) \leq \mathrm{e}^{-\left(\lambda u - 2g_{\xi}(\lambda)\right)},\]
 for any function $g_{\xi}$ defined above.
 %
 The conclusion follows by optimizing for both $\lambda$ and $\xi$, using Lemma~18 in \cite{KK18Martingales}.
@@ -323,10 +325,14 @@ and those two quantities can be upper-bounded similarly using the Cram\'er-Chern
 Let $(X_i)$ and $(Y_i)$ be two \iid{} sequences that are $\sigma^2$ sub-Gaussian with mean $\mu_1$ and $\mu_2$ respectively. Let $n_1$ and $n_2$ be two integers and $\widehat{\mu}_{1,n_1}$ and $\widehat{\mu}_{2,n_2}$ denote the two empirical means based on $n_1$ observations from $X_i$, and $n_2$ observations from $Y_i$ respectively.
 Then for every $\lambda > 0$, we have
 \begin{eqnarray*}
-    \bP\left(\widehat{\mu}_{1,n_1} - \widehat{\mu}_{2,n_2} \geq \mu_1 - \mu_2 + x \right) & \leq & \bP\left(\frac{1}{n_1}\sum_{i=1}^{n_1} (X_i-\mu_1) - \frac{1}{n_2}\sum_{i=1}^{n_2} (Y_i - \mu_2) \geq x \right)\\
-    & \leq & \bP\left(e^{\lambda \left(\frac{1}{n_1}\sum\limits_{i=1}^{n_1} (X_i-\mu_1) - \frac{1}{n_2}\sum\limits_{i=1}^{n_2} (Y_i - \mu_2)\right)} \geq e^{\lambda x} \right) \\
-    \text{(using Markov's inequality)}
-    & \leq & e^{-\lambda x}\bE\left[e^{\lambda \frac{1}{n_1}\sum\limits_{i=1}^{n_1} (X_i-\mu_1)}\right]\bE\left[e^{-\lambda \frac{1}{n_2}\sum\limits_{i=1}^{n_2} (Y_i-\mu_2)}\right] \\
+    \bP\left(\widehat{\mu}_{1,n_1} - \widehat{\mu}_{2,n_2} \geq \mu_1 - \mu_2 + x \right)
+    & \leq & \bP\left(\frac{1}{n_1}\sum_{i=1}^{n_1} (X_i-\mu_1) - \frac{1}{n_2}\sum_{i=1}^{n_2} (Y_i - \mu_2) \geq x \right)\\
+    & \leq & \bP\left(\mathrm{e}^{\lambda \left(\frac{1}{n_1}\sum\limits_{i=1}^{n_1} (X_i-\mu_1) - \frac{1}{n_2}\sum\limits_{i=1}^{n_2} (Y_i - \mu_2)\right)} \geq \mathrm{e}^{\lambda x} \right)
+\end{eqnarray*}
+And so thanks to Markov's inequality, we obtain
+\begin{eqnarray*}
+    \bP\left(\widehat{\mu}_{1,n_1} - \widehat{\mu}_{2,n_2} \geq \mu_1 - \mu_2 + x \right)
+    & \leq & \mathrm{e}^{-\lambda x}\bE\left[\mathrm{e}^{\lambda \frac{1}{n_1}\sum\limits_{i=1}^{n_1} (X_i-\mu_1)}\right]\bE\left[\mathrm{e}^{-\lambda \frac{1}{n_2}\sum\limits_{i=1}^{n_2} (Y_i-\mu_2)}\right] \\
     & = & \exp\left(- \lambda x + n_1\phi_{X_1 - \mu_1}\left(\frac{\lambda}{n_1}\right) + n_2\phi_{Y_1 - \mu_2}\left(-\frac{\lambda}{n_2}\right)\right) \\
     & \leq & \exp\left(- \lambda x + \frac{\lambda^2\sigma^2}{2n_2} + \frac{\lambda^2\sigma^2}{2n_1}\right),
 \end{eqnarray*}
@@ -659,27 +665,28 @@ These measurements validate the upper-bound we gave on their memory costs, $\big
 %-----------------------------------------------------------------------------
 \subsection{Two numerical optimization tricks for \GLRklUCB}\label{sub:6:IdeasOptimizations}
 
-In order to empirically improve the main weakness of our proposal, that is its numerical efficiency as shown in Tables~\ref{table:6:TimeCosts},
-we suggest here two simple optimizations tweaks on \GLRklUCB{} (see Algorithm~\ref{algo:6:GLRklUCB}) to drastically speed-up its computation time.
+As the main weakness of \GLRklUCB{} is its numerical efficiency, as shown in Table~\ref{table:6:TimeCosts},
+% In order to empirically improve
+we suggest here two simple ideas to drastically speed-up its computation time.
 
 \begin{enumerate}
     \item
-    The first optimization, parametrized by a constant $\Delta n \in\N^*$, is the following idea.
+    The \emph{first optimization}, parametrized by a constant $\Delta n \in\N^*$, is the following idea.
     We can test for statistical changes not at all time steps $t\in[T]$ but only every $\Delta n$ time steps (\ie, for $t$ satisfying $t \mod \Delta n = 0$).
     In practice, instead of sub-sampling for the \emph{time} $t$, we propose to sub-sample for the number of samples of arm $i$ before calling \GLR{} to check for a change on arm $i$, that is, $n_i(t)$ in Algorithm~\ref{algo:6:GLRklUCB}.
     %
-    Note that the first heuristic using $\Delta n$ can be applied to \MUCB{} as well as \CUSUM-\UCB{} and \PHT-\UCB{} (and variants using \klUCB), with similar speed-up and typically leading to similar consequences on the algorithm's performance.
+    Note that the first heuristic using $\Delta n$ can be applied to \MUCB{} as well as \CUSUM-\UCB{} and \PHT-\UCB{}, with similar speed-up and typically leading to similar consequences on the algorithm's performance.
 
     \item
-    The second optimization is in the same spirit, and uses a parameter $\Delta s \in\N^*$.
+    The \emph{second optimization} is in the same spirit, and uses a parameter $\Delta s \in\N^*$.
     When running the \GLR{} test with data $Z_1,\dots,Z_t$, instead of considering every splitting time steps $s\in[t]$, in the same spirit, we can skip some and test not at all time steps $s$ but only every $\Delta s$ time steps.
 \end{enumerate}
 
 % DONE Include precise reference to the point in the previous section when Emilie introduced this idea mathematically, with the sub-sampling ideas for $\cT$ and $\cS_t$
 
 The new \GLR{} test is using the stopping time $\tilde{T_\delta}$ defined in \eqref{def:6:GLRTricks},
-with $\cT = \{t \in [1, T], t \mod \Delta n = 0\}$
-and $\cS_t = \{s \in [1, t], s \mod \Delta s = 0\}$.
+with $\cT = \{t \in [T], t \mod \Delta n = 0\}$
+and $\cS_t = \{s \in [t], s \mod \Delta s = 0\}$.
 The goal is to speed up the computation time of every call to the \GLR{} test (\eg, choosing $\Delta s = 10$, every call should be about $10$ times faster), and to speed up the overhead cost of running the tests on top of the index policy (\klUCB), by testing for changes less often (\eg, choosing $\Delta n = 10$ should speed up the all computation by a factor $10$).
 
 \paragraph{Empirical validation of these optimization tricks.}
@@ -723,7 +730,7 @@ With such numerical optimization, \GLRklUCB{} is not significantly slower than \
             $\Delta n$ $\;$ \textbackslash $\;$ $\Delta s$
             & $1$ & $5$ & $10$ & $20$ \\
             \hline
-            $1$ & $\mathbf{50 \,\text{s}\, \pm 4.5 \,\text{s}}$ & $11.1$ s $\pm$ $1.16$ s & $5.8$ s $\pm$ $0.5$ s & $3.3$ s $\pm$ $0.3$ s \\
+            $1$ & $\mathbf{50 \,\text{s}\, \pm 4.5 \,\text{s}}$ & $11.1$ s $\pm$ $1.2$ s & $5.8$ s $\pm$ $0.5$ s & $3.3$ s $\pm$ $0.3$ s \\
             $5$ & $17.9$ s $\pm$ $1.6$ s & $5.08$ s $\pm$ $3.3$ s & $2.5$ s $\pm$ $0.3$ s & $1.7$ s $\pm$ $0.2$ s  \\
             $10$ & $14.9$ s $\pm$ $1.9$ s & $3.47$ s $\pm$ $0.4$ s & $2.1$ s $\pm$ $0.2$ s & $1.4$ s $\pm$ $0.2$ s \\
             $20$ & $12.1$ s $\pm$ $1.1$ s & $3.02$ s $\pm$ $0.3$ s & $1.9$ s $\pm$ $0.2$ s & $\mathbf{1.4 \,\text{s}\, \pm 0.1 \,\text{s}}$

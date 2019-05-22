@@ -321,7 +321,7 @@ Besides, no experiments are reported by \cite{Luo18}, and the Ada-ILTCB algorith
 so we prefer to not include it in the experiments presented later.
 % with a valid tuning of L in each case.
 
-\TODOL{Okay ça suffit pour ces travaux ?}
+% \TODOL{Okay ça suffit pour ces travaux ?}
 
 
 
@@ -378,7 +378,7 @@ We refer to the book \cite{Basseville93} for a survey.
 %
 In this section, we are interested in detecting changes on the mean of a probability distribution with bounded support.
 
-Assume that we collect independent samples $X_1,X_2,\ldots$ all from some distribution supported in $[0,1]$.
+Assume that we collect independent samples $X_1,X_2,\ldots$ all from some distributions supported in $[0,1]$.
 We want to discriminate between two possible scenarios: all the samples come from distributions that have a common mean $\mu_0$, or there exists a \emph{change-point} $\tau > 1$ such that $X_1,\ldots,X_\tau$ have some mean $\mu_0$ and $X_{\tau +1},X_{\tau+2},\ldots$ have a different mean $\mu_1 \neq \mu_0$.
 %
 A sequential change-point detector is a stopping time $\widehat{\tau}$ with respect to the filtration $\cF_t = \sigma(X_1,\dots,X_t)$ such that $(\hat \tau < \infty)$ means that we reject the hypothesis
@@ -394,7 +394,7 @@ We propose instead to exploit the fact that bounded distributions are also domin
 \end{definition}
 
 Lemma~1 of \cite{KLUCBJournal} establishes that any bounded distribution supported in $[0,1]$ is a sub-Bernoulli distribution.
-Our work can be applied to any bounded distribution without loss of generality, as a reward in $r\in[a,b]$ can clearly be mapped to $[0,1]$ simply by using $r' = (r-a)/(b-a)$ (we assume that the decision maker or the algorithm know before hand the values of $a,b$).
+As explained in in Section~\ref{par:2:normalizationTrick}, our work can be applied to any bounded distribution without loss of generality, as a reward in $r\in[a,b]$ can clearly be mapped to $[0,1]$ simply by using $r' = (r-a)/(b-a)$ (we assume that the decision maker or the algorithm knows before hand the values of $a$ and $b$).
 
 
 \subsection{Presentation of the test}\label{sub:6:presentationOfGLRTest}
@@ -437,7 +437,7 @@ where for $k \leq k'$, $\widehat{\mu}_{k:k'} := \frac{1}{k - k' + 1} \sum_{l=k}^
         \log\ell(X_1, \ldots, X_n ; \mu_0)
         &= \sum_{i=1}^n X_i \log(\mu_0) + (1-X_i) \log(1-\mu_0) \\
         &= \log(\mu_0) \times \left( \sum_{i=1}^n X_i \right) + \log(1-\mu_0) \times \left( n - \sum_{i=1}^n X_i \right) \\
-        &= n \left[ \widehat{\mu}_{1:n} \log(\mu_0) + (1 - \widehat{\mu}_{1:n}) \log(1-\mu_0) \right].
+        &= n \left( \widehat{\mu}_{1:n} \log(\mu_0) + (1 - \widehat{\mu}_{1:n}) \log(1-\mu_0) \right).
     \end{align*}
     %
     For a constant $a\in[0,1]$, let $h(x) := a \log(x) + (1-a) \log(1-x)$ on $(0,1)$,
@@ -468,12 +468,18 @@ where for $k \leq k'$, $\widehat{\mu}_{k:k'} := \frac{1}{k - k' + 1} \sum_{l=k}^
         % &= \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_n ; \mu_0)}, \\
         &= \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\mu_0) + (1 - \widehat{\mu}_{1:n}) \log(1-\mu_0) \right) \right] }, \\
         &= \sup\limits_{\mu_0,\mu_1,\tau < n} \frac{\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right) \right] }, \\
-        &= \exp \Bigl[ \sup\limits_{\mu_0,\mu_1,\tau < n} \Bigl[ \log\Bigl[ \frac{\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right) \right] } \Bigr] \Bigr] \Bigr],  \\
-        &= \exp \Bigl[ \sup\limits_{\mu_0,\mu_1, 1 < s < n} \Bigl[
+        &= \exp \Bigl[ \sup\limits_{\mu_0,\mu_1,\tau < n} \Bigl[ \log\Bigl[ \frac{\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right) \right] } \Bigr] \Bigr] \Bigr],
+    \end{align*}
+    When the last equation comes from the fact that $\exp$ is increasing.
+    Thus by taking the logarithm of both sides, we obtain
+    \begin{align*}
+        \log \GLR(n)
+        &= \sup\limits_{\mu_0,\mu_1,\tau < n} \Bigl[ \log\Bigl[ \frac{\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right) \right] } \Bigr] \Bigr],  \\
+        &= \sup\limits_{\mu_0,\mu_1, 1 < s < n} \Bigl[
             s \bigl( \widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0) \bigr) \\
             & \hspace{35pt} + (n-s) \bigl( \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1) \bigr) \\
             & \hspace{35pt} - n \bigl( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \bigr)
-        \Bigr] \Bigr].
+        \Bigr].
     \end{align*}
     By linearity and independence, we can separate the joint optimization problem on $\mu_0,\mu_1,s$ in two optimizations problems for $\mu_0,s$ and $\mu_1,s$, that can first be solved explicitly for $\mu_0$ (resp. $\mu_1$) and then left to be solved for $s$.
     By definition, $n \; \widehat{\mu}_{1:n} = \sum_{i=1}^n X_i = s \;\widehat{\mu}_{1:s} + (n-s) \;\widehat{\mu}_{s+1:n}$, so the right hand side (negative) part involving $\widehat{\mu}_{1:n}$ can be distributed in the two left hand side (positive) terms,
@@ -486,8 +492,8 @@ where for $k \leq k'$, $\widehat{\mu}_{k:k'} := \frac{1}{k - k' + 1} \sum_{l=k}^
     Finally, by replacing the two expressions of the solutions for $\mu_0$ and $\mu_1$,
     we obtain
     \begin{align*}
-        \GLR(n)
-        = \exp \Bigl[ \sup\limits_{1 < s < n} \Bigl[
+        \log \GLR(n)
+        = \sup\limits_{1 < s < n} \Bigl[
             s \times \Bigl(
                     & \widehat{\mu}_{1:s} \log(\widehat{\mu}_{1:s}) + (1 - \widehat{\mu}_{1:s}) \log(1-\widehat{\mu}_{1:s}) \\
                     & - \widehat{\mu}_{1:s} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:s}) \log(1-\widehat{\mu}_{1:n})
@@ -496,7 +502,7 @@ where for $k \leq k'$, $\widehat{\mu}_{k:k'} := \frac{1}{k - k' + 1} \sum_{l=k}^
                 & \widehat{\mu}_{s+1:n} \log(\widehat{\mu}_{s+1:n}) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\widehat{\mu}_{s+1:n}) \\
                 & - \widehat{\mu}_{s+1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\widehat{\mu}_{1:n})
             \Bigr)
-        \Bigr] \Bigr].
+        \Bigr].
     \end{align*}
     We conclude by recognizing the expressions of $s \times \kl(\widehat{\mu}_{1:s}, \widehat{\mu}_{1:n})$
     and $(n-s) \times \kl(\widehat{\mu}_{s+1:n}, \widehat{\mu}_{1:n})$.
@@ -626,8 +632,9 @@ In the bandit analysis to follow, the detection delay will be crucially used to 
 \end{lemma}
 %
 \begin{proof}
-    It is actually not used as such in the proofs of the regret upper bound given below, but a similar result is used and proved in the proofs.
-    \TODOL{We have to give the proof, or remove this result? Je ne vois pas le problème de le laisser là, ça formalise le résultat mais on a pas besoin de celui là, ça permet de bien formaliser ce qu'on entend par contrôler le délai, et dans la preuve plus bas on prouve ce qu'on souhaite.}
+    It is actually not used as such in the proofs of the regret upper bounds given below, because a similar but more specific result is used and proved in the proofs.
+    For instance, see below in Section~\ref{par:6:controllingDelayInOneProof} in page~\pageref{par:6:controllingDelayInOneProof}.
+    % \TODOL{We have to give the proof, or remove this result? Je ne vois pas le problème de le laisser là, ça formalise le résultat mais on a pas besoin de celui là, ça permet de bien formaliser ce qu'on entend par contrôler le délai, et dans la preuve plus bas on prouve ce qu'on souhaite.}
 \end{proof}
 
 For a threshold $\beta$ chosen as in the Lemma~\ref{lem:6:FalseAlarm}, we can show that a consequence of the Lemma~\ref{lem:6:Delay} is that if the break-point $\tau$ takes place after $\Delta^{-2} \ln(1/\delta)$ samples, the detection time may be of the same magnitude (with high probability).
@@ -968,19 +975,20 @@ Note that \MUCB{} \cite{CaoZhenKvetonXie18} is also analyzed for the same type o
 \label{sec:6:proofRegret}
 
 This Section starts by giving a unified analysis of regret of the two variants of our algorithm, then we give the proof of the finite-time regret bound for the variant using ``global restarts''.
-The proof of the other variant using ``local restarts'' follows the skeleton of the unified analysis, and can be found in Appendix~E of \cite{Besson2019GLRT}.
+The proof of the other variant using ``local restarts'' follows the skeleton of the unified analysis, and it can be found in Appendix~E of \cite{Besson2019GLRT}.
 
 %-----------------------------------------------------------------------------
 \subsection{Sketch of the unified regret analysis}
 \label{sub:6:proofSkeleton}
 
-In this section, we sketch a unified proof for the two Theorems \ref{thm:6:mainRegretBoundGlobal} and \ref{thm:6:mainRegretBound} given below, whose detailed proofs are given in Section~\ref{proof:6:mainRegretBoundGlobal} and in Appendix~E of our paper \cite{Besson2019GLRT} respectively.
+In this section, we sketch a unified proof for the two Theorems \ref{thm:6:mainRegretBoundGlobal} and \ref{thm:6:mainRegretBound} given above.
+%  whose detailed proofs are given in Section~\ref{proof:6:mainRegretBoundGlobal} and in Appendix~E of our paper \cite{Besson2019GLRT} respectively.
 We emphasize that our approach is significantly different from those proposed by \cite{CaoZhenKvetonXie18} for \MUCB{} and by \cite{LiuLeeShroff17} for \CUSUMUCB.
-
-Recall that the regret is defined as $R_T = \bE\left[\sum_{t=1}^T(\mu_{i^*_t}(t) - \mu_{I_t}(t))\right]$.
-Introducing $\cD(T,\alpha)$ the (deterministic) set of time steps at which the forced exploration is performed before time $T$ (see lines $3$-$4$ in Algorithm~\ref{algo:6:GLRklUCB}),
-we observe that we have $\mu_{i^*_t} - \mu_{I_t} \leq 1$ because rewards are assumed to be bounded in $[0,1]$,
-and thus we can write a first decomposition of the regret,
+%
+Recall that in this Chapter, the regret is defined as $R_T = \bE\left[\sum_{t=1}^T(\mu_{i^*_t}(t) - \mu_{I_t}(t))\right]$.
+First, we introduce $\cD(T,\alpha)$ the (deterministic) set of time steps at which the forced exploration is performed before time $T$ (see lines $3$-$4$ in Algorithm~\ref{algo:6:GLRklUCB}),
+and as we observe that $\mu_{i^*_t} - \mu_{I_t} \leq 1$ because rewards are assumed to be bounded in $[0,1]$,
+we can write a first decomposition of the regret,
 \begin{align*}
  & \sum_{t=1}^T (\mu_{i^*_t}(t) - \mu_{I_t}(t)) \\
  & \hspace{1cm} \leq  \sum_{t=1}^{T} \indic(t \in \cD(T,\alpha)) + \sum_{t=1}^T (\mu_{i^*_t}(t) - \mu_{I_t}(t))\indic\left(t \notin\cD(T,\alpha), \UCB_{I_t}(t) \geq \UCB_{i^*_t}(t)\right) \\
@@ -1163,6 +1171,7 @@ Using Lemma~\ref{lem:6:ConcFirst}, term $(a)$ is upper bounded by $K\delta$.
 
 
 \paragraph{Upper bound on term $(b)$: controlling the delay.}
+\label{par:6:controllingDelayInOneProof}
 %
 From the definition of $\Delta^{(k)}$, there exists an arm $i$ such that $\Delta^{(k)} = |\mu_i^{(k)} - \mu_i^{(k-1)}|$. We shall prove that it is unlikely that the change-point detector associated to $i$ doesn't trigger within the delay $d^{(k)}$.
 
@@ -1178,7 +1187,11 @@ the event $\left(\widehat{\tau}^{(k)} \geq \tau^{(k)} + d^{(k)}\right)$ further 
 where $\tilde{\mu}^{k-1}_{i,s}$ denotes the empirical mean of the $s$ first observation of arm $i$ since the $(k-1)$-th restart $\hat{\tau}^{(k-1)}$ and  $\tilde{\mu}^{k-1}_{i,s:s'}$ the empirical mean that includes observation number $s$ to number $s'$. Conditionally to $\cC^{(k-1)}$, $\tilde{\mu}^{k-1}_{i,n_i(\tau^{(k)})}$ is the empirical mean of $n_i(\tau^{(k)})$ \iid{} replications of mean $\mu^{k-1}$, whereas $\tilde{\mu}^{k-1}_{i,n_i(\tau^{(k)}) : n_i(\overline{t})}$ is the empirical mean of $\overline{r}$ \iid{} replications of mean $\mu_i^{k}$.
 
 Moreover, due to Proposition~\ref{prop:6:EnoughSamples}, $n_i(\tau^{(k)})$ lies in the interval $
-\left[\left\lfloor \frac{\alpha}{K}\left(\tau^{(k)}-\widehat{\tau}^{(k-1)}\right)\right\rfloor,\left(\tau^{(k)}-\widehat{\tau}^{(k-1)}\right)\right]$. Conditionally to $\cC^{(k-1)}$, one obtains furthermore using that $d^{(k-1)} \leq (\tau^{(k)} - \tau^{(k-1)})/2$ -- which follows from Assumption~\ref{ass:6:LongPeriodsGlobal} -- that
+\left[\left\lfloor \frac{\alpha}{K}\left(\tau^{(k)}-\widehat{\tau}^{(k-1)}\right)\right\rfloor,\left(\tau^{(k)}-\widehat{\tau}^{(k-1)}\right)\right]$.
+Conditionally to $\cC^{(k-1)}$,
+by using Assumption~\ref{ass:6:LongPeriodsGlobal},
+we can prove that $d^{(k-1)} \leq (\tau^{(k)} - \tau^{(k-1)})/2$,
+and thus we obtain furthermore that
 %
 \begin{eqnarray*}
     n_i(\tau^{(k)})& \in& \left\{ \left\lfloor \frac{\alpha}{2K} (\tau^{(k)}-\tau^{(k-1)} )\right\rfloor, \dots, \tau^{(k)}-\tau^{(k-1)} \right\} := \cI_k.
@@ -1347,12 +1360,10 @@ On this problem, while \MklUCB{} detects the same changes as \GLRklUCB, with lar
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=1.00\linewidth]{2-Chapters/6-Chapter/Images/Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1.pdf}
-    \caption{Location of the detected change-points for four algorithms on Problem 1.}
+    \includegraphics[width=0.90\linewidth]{2-Chapters/6-Chapter/Images/Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1.pdf}
+    \caption{Locations of the detected change-points for four algorithms on Problem 1.}
     \label{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1}
 \end{figure}
-
-% \TODOL{Conclusion à tirer de cet exemple !}
 
 
 \textbf{Problem $\bm{2}$} has only global changes, and important changes happen only at $t=1000$ when arm $2$ sees its mean change from $0.9$ to $0.7$, then at $t=2000$ when it becomes sub-optimal ($\mu_2$ goes from $0.7$ to $0.5$) and arm $0$ becomes optimal, and at $t=3000$ and $t=4000$ when arm $0$ stays optimal but sees its mean change from $0.6$ to $0.7$ and then from $0.7$ to $0.8$.
@@ -1397,12 +1408,10 @@ For instance, after the change on arm $1$ (in \textcolor{red}{red}), the \emph{l
 %     \MklUCB{} did not detect any change, thus it obtains bad performance in terms of regret, with $R_T = 570$ (on this run).
 % \end{itemize}
 
-% \TODOL{Conclusion à tirer de cet exemple !}
-
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=1.00\linewidth]{2-Chapters/6-Chapter/Images/Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2.pdf}
-    \caption{Location of the detected change-points for four algorithms on Problem 2.}
+    \includegraphics[width=0.90\linewidth]{2-Chapters/6-Chapter/Images/Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2.pdf}
+    \caption{Locations of the detected change-points for four algorithms on Problem 2.}
     \label{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2}
 \end{figure}
 
@@ -1631,8 +1640,9 @@ This illustrates the conjecture that classical algorithms can suffer linear regr
     \label{fig:6:meanRegretPb1}
 \end{figure}
 
-On simple problems, like problem $1$, all the algorithms being designed for piece-wise stationary environments perform similarly, but as soon as the gaps are smaller or there is more changes, we clearly observe that our approach \GLRklUCB{} can outperform the two other actively adaptive algorithms \CUSUMklUCB{} and \MklUCB{} (\eg, on Figure~\ref{fig:6:meanRegretPb2}), and performs much more than passively adaptive algorithms DTS and SW-\klUCB{}  (\eg, on Figure~\ref{fig:6:meanRegretPb3}).
-Our approach, with the two options of \textbf{Local} or \textbf{Global} restarts, performs very closely to the oracle for problem $4$.
+On simple problems, like problem $1$, all the algorithms being designed for piece-wise stationary environments perform similarly, but as soon as the gaps are smaller or there are more changes, we clearly observe that our approach \GLRklUCB{} can outperform the two other actively adaptive algorithms \CUSUMklUCB{} and \MklUCB{} (\eg, on Figure~\ref{fig:6:meanRegretPb2}), and performs much better than passively adaptive algorithms DTS and SW-\klUCB{}  (\eg, on Figure~\ref{fig:6:meanRegretPb3}).
+% Our approach, with the two options of \textbf{Local} or \textbf{Global} restarts, performs very closely to the oracle for problem $4$.
+Our approach is the algorithm which performs the closer to the oracle for problem $4$.
 
 Finally, in the case of hard problems, like problems $3$ and $5$, that have a lot of changes but where the optimal arm barely changes, we verify in Figure~\ref{fig:6:meanRegretPb5} that \klUCB{} and TS can outperform the oracle policy.
 Indeed the oracle policy is suboptimal as it restarts as soon as one arm change but is unaware of the meaningful changes, and stationary policies which quickly identify the best arm will play it most of the times, achieving a smaller regret.
