@@ -4,6 +4,8 @@
 \chapter{The Stochastic Multi-Armed Bandits Model}
 \label{chapter:2}
 \minitoc
+% Write miniTOC just after the title
+\graphicspath{{2-Chapters/2-Chapter/Images/}}
 
 \newpage
 % \TODOL{L'abstract ici est trop long, mais je l'ai écrit avant de commencer le chapitre, pour avoir une idée de ce que je devais faire ! Je couperai à la fin !}
@@ -40,7 +42,7 @@ We illustrate its performance empirically, but no satisfactory theoretical resul
 
 \paragraph{Publication.}
 %
-Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is based on the article \cite{Besson2018WCNC}.
+The Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is based on the article \cite{Besson2018WCNC}.
 
 
 \paragraph{Main references for the curious reader.}
@@ -53,9 +55,7 @@ The notations used in this thesis are the usual notations in all the MAB literat
 The Nomenclature includes a summary of the notations, see Page~\pageref{chapter:nomenclature}.
 
 
-\newpage
-% Write miniTOC just after the title
-\graphicspath{{2-Chapters/2-Chapter/Images/}}
+% \newpage
 
 
 % ----------------------------------------------------------------------------
@@ -87,7 +87,7 @@ For more details on reinforcement learning, in particular about more generic mod
 \tikzstyle{block} = [align=center, draw, fill=gray!25, rectangle, minimum height=3em, minimum width=6em]
 \begin{figure}[h!]
     \centering
-    \resizebox{0.350\textwidth}{!}{
+    \resizebox{0.50\textwidth}{!}{
         \begin{tikzpicture}[auto, node distance=5cm, >=latex]
             %
             % We start by placing the blocks
@@ -219,7 +219,7 @@ Note that this ``normalization trick'' is implemented for any policy in SMPyBand
 
 % Bernoulli, Gaussian, sub-Bernoulli, sub-Gaussian, Exponential, sub-Exponential...
 
-\paragraph{On one-dimensional exponential family.}
+\paragraph{We restrict to one-dimensional exponential family.}
 %
 % On one-dimensional exponential family...
 
@@ -243,12 +243,18 @@ and usually the literature focusses on regular and minimal exponential families 
 That is why such one-dimensional distributions are entirely characterized by their mean, as $\mu = \E_{\eta}[X]$.
 
 -- A second important result is a simplified form for the \emph{Kullback-Leibler divergence} \cite{KullbackLeibler51}, for two distributions lying in the same exponential family.
-The KL divergence between two distributions $d_1=\Pr(x|\eta_1)$ and $d_2=\Pr(x|\eta_2)$ is defined as
-\begin{equation}\label{eq:2:Kullback-LeiblerDivergenceExpFamily1}
-    \KL\left(\Pr(x|\eta_1), \Pr(x|\eta_2)\right) = \int \Pr(x|\eta_1) \log\left(\frac{\Pr(x|\eta_1)}{\Pr(x|\eta_1)}\right) \lambda(\mathrm{d}x) = \E_{d_1} \left[ \log\left(\frac{\Pr(x|\eta_1)}{\Pr(x|\eta_1)}\right) \right].
-\end{equation}
-%
-So this KL divergence can be written $\KL( \eta_1, \eta_2 ) = \KL(\Pr(x|\eta_1), \Pr(x|\eta_2))$, and it can be simplified to an expression using only the two parameters $\eta_1$ and $\eta_2$,
+The KL divergence is also called the relative entropy is a measure of how one probability distribution is different from a second, reference probability distribution.
+
+\begin{defn}[Kullback-Leibler divergence]\label{def:2:KLDivergence}
+    The KL divergence between two distributions $d_1$ and $d_2$ is defined as
+    \begin{equation}\label{eq:2:Kullback-LeiblerDivergenceExpFamily1}
+        \KL\left(d_1, d_2\right) = \int d_1 \log\left(\frac{d_2}{d_1}\right) \lambda(\mathrm{d}x) = \E_{d_1} \left[ \log\left(\frac{d_2}{d_1}\right) \right].
+    \end{equation}
+\end{defn}
+
+Following this Definition~\ref{def:2:KLDivergence} for two distributions
+$d_1=\Pr(x|\eta_1)$ and $d_2=\Pr(x|\eta_2)$,
+we can write $\KL( \eta_1, \eta_2 ) = \KL(\Pr(x|\eta_1), \Pr(x|\eta_2))$, which can be simplified to use only the two parameters $\eta_1$ and $\eta_2$,
 and $\mu_1 = \E_{\eta_1}[X]$ the mean of distribution $d_1$:
 %
 \begin{equation}\label{eq:2:Kullback-LeiblerDivergenceExpFamily2}
@@ -262,9 +268,12 @@ it is interesting to illustrate this definition and the notations with two impor
 \begin{itemize}
     \item
     \textbf{Bernoulli distributions} can be seen as an exponential family with $h(x) = 1$,
-    and for a Bernoulli distribution of mean $\mu\in[0,1]$,
+    and for a Bernoulli distribution of mean $\mu\in[0,1]$, denoted $B(\mu)$,
     the parameter is $\eta = \mu / (1 - \mu)$, giving $A(\eta) = \log(1 + \mathrm{e}^{\eta})$
     (with the limit behavior $\eta=+\infty$ if $\mu=0$).
+    %
+    Moreover, the KL divergence between $B(x)$ and $B(y)$, of parameters $\eta$, $\eta'$ is given by
+    $\kl(x,y) = \KL_{B}(\eta,\eta') = x \log(x/y) + (1-x) \log((1-x)/(1-y))$.
 
     \item
     \textbf{Gaussian distributions} of a fixed variance are a one-dimensional exponential family,
@@ -272,23 +281,26 @@ it is interesting to illustrate this definition and the notations with two impor
     For a variance of $\sigma^2$, the family uses
     % $T(x) = [x ; x^2]^T$ and
     $h(x) = 1/\sqrt{2\pi\sigma^2} \exp(-x^2/(2\sigma^2))$,
-    and for a Gaussian distribution with mean $\mu\in\R$ (\ie, $\cN(\mu,\sigma^2)$),
+    and for a Gaussian distribution with mean $\mu\in\R$, denoted $\cN(\mu,\sigma^2)$,
     the parameter is $\eta = \mu/\sigma^2$, giving $A(\eta) = \mu^2/(2\sigma^2)$
     (see Chapter~8 of \cite{JordanCourseStatBerkeley}).
     % % For a generic variance,
     % This shows that the Gaussian distributions
     % % are a two-dimensional exponential families,
     % with a fixed variance $\sigma^2$ form indeed a one-dimensional exponential family.
+    %
+    Moreover, the KL divergence between $\cN(x,\sigma^2)$ and $\cN(x,\sigma^2)$, of parameters $\eta$, $\eta'$ is given by
+    $d(x,y) = \KL_{\cN}(\eta,\eta') = (x-y)^2 / (2\sigma^2)$.
 \end{itemize}
 
 
-In the rest of this thesis, \emph{we only consider bounded rewards in the mathematical developments}, and we mostly focus on Bernoulli distributions.
+In the rest of this thesis, \emph{we only consider bounded rewards in the mathematical developments}, and we mostly focus on Bernoulli distributions, because they are usually the most relevant choice for the application of choice.
 First, we restrict for simplicity to Bernoulli distributions for the simulations shown in Chapter~\ref{chapter:3}, even if our library does implement all the distributions commonly found in the literature (including unbounded one-dimensional exponential families and even Markov models).
 % Then in Chapter~\ref{chapter:4}, each static IoT device in the noisy environment is assumed to be following a Bernoulli emission pattern in a fixed channel, FIXME
 %
 For example when we study multi-player bandits in Chapter~\ref{chapter:5}, for the model without sensing, we explain that restricting to the Bernoulli case is interesting and it is actually the hardest one, as continuous distributions with a null mass on $r(t)=0$ yield a much simpler problem.
 %
-Finally, in Chapter~\ref{chapter:6} we analyze our proposed algorithm in the setting on bounded distributions, without restricting to Bernoulli distributions, but we use the fact that bounded distributions on $[0,1]$ are sub-Bernoulli, and we use Bernoulli Kullback-Leibler divergences in our analysis.
+Finally, in Chapter~\ref{chapter:6} we analyze our proposed algorithm in the setting on bounded distributions, without restricting to Bernoulli distributions, but we use the fact that bounded distributions on $[0,1]$ are sub-Bernoulli, and we use the Bernoulli Kullback-Leibler divergence in our analysis.
 
 
 \paragraph{Other kind of hypothesis: sub-Gaussian and sub-Bernoulli distributions.}
@@ -376,7 +388,7 @@ and a curious reader will find other interesting applications of MAB models and 
 \paragraph{Applications for Opportunistic Spectrum Access.}
 % Detail the previous work from our team SCEE on bandits + OSA : Wassim, Navik
 
-The focus of this work is on cognitive radio and IoT networks, where arms can represent wireless orthogonal channels, but more generally any resource characterizing the communication between a wireless device and a gateway (\eg, spreading factor for LoRa \cite{KerkoucheAlami18}, power allocation for NOMA etc ). In cognitive radio using centralized supervision, for instance if the gateway can decide the allocation of devices to resources, MAB can also be used to let the gateway explore different allocations and learn by itself a good allocation, see for instance this article that consider 5G-like networks with small cells \cite{Maghsudi16}.
+The focus of this work is on cognitive radio and IoT networks, where arms can represent wireless orthogonal channels, but more generally any resource characterizing the communication between a wireless device and a gateway (\eg, spreading factor for LoRa \cite{KerkoucheAlami18}, power allocation for NOMA etc). In cognitive radio using centralized supervision, for instance if the gateway can decide the allocation of devices to resources, MAB can also be used to let the gateway explore different allocations and learn by itself a good allocation, see for instance this article that consider 5G-like networks with small cells \cite{Maghsudi16}.
 
 Previous works of our SCEE team showed that MAB can be used to model the problem of spectrum access for a secondary user accessing a licensed spectrum.
 In this model, arms represent a finite set of orthogonal channels, \ie, different frequency bands in a licensed spectrum.
@@ -429,7 +441,7 @@ To define the regret, we first need to distinguish between \emph{optimal} and \e
     while arms satisfying $\mu_k < \mu^*$ are called \emph{sub-optimal}.
 \end{defn}
 
-If the goal of the player is to maximize $\E[\sum_{t=1}^T r_{A(t)}(t)]$,
+If the goal of the player is to maximize $\E\left[\sum_{t=1}^T r_{A(t)}(t)\right]$,
 the optimal strategy for this bandit problem is to always pull an optimal arm, but of course it is unrealistic as the player does not know the true means and cannot know which arm is optimal.
 %
 Comparing the difference between the performance of a fixed baseline and that of the player is a common approach in machine learning research,
@@ -482,13 +494,16 @@ then an arm $k$ is sub-optimal if $\Delta_k > 0$, and we can write the following
     $\E \left[ \sum_{t=1}^T r_{A(t)}(t) \right] = \sum_{k=1}^K \mu_k \E \left[ N_k(T) \right]$, thus $R_T^{\cA} = \sum_{k=1}^K \Delta_k \E[ N_k(T) ].$
 \end{proof}
 
+
+\textbf{Applications:}
+%
 Such decomposition of the regret is useful for at least two reasons.
 %
 On the first hand, from a numerical simulation point-of-view, when we run a finite number of repetitions of the same stochastic experiment, if one wants to compute and visualize the regret, she can either use the definition with the rewards, or the decomposition and simply sum the gaps $\Delta_k$ with the number of sub-optimal draws.
 Mathematically, both quantities are equal in expectation, but with only a finite number of trajectories and observations, the first estimate is more noisy than the second one, since the randomness on the rewards is (partially) removed.
 In our library SMPyBandits, we implement both possibilities, and all values of regret used in this thesis are based on the second estimator, using the decomposition of Lemma~\ref{lem:2:RegretDecomposition}, because it gives smoother curves and faster convergence to the limit behavior.
 %
-On the second hand, this decomposition is necessary as theoretical analyses of the regret of MAB algorithms are usually based on controlling the suboptimal draws $N_k(T$ and not directly the regret $R_T^{\cA}$.
+On the second hand, this decomposition is necessary as theoretical analyses of the regret of MAB algorithms are usually based on controlling the suboptimal draws $N_k(T)$ and not directly the regret $R_T^{\cA}$.
 For example, we extend this decomposition to the multi-player case in Chapter~\ref{chapter:3}, in Lemma~\ref{lem:5:DecompositionRegret}, and as it also uses the draws $N_k(T)$, it is the first quantity we prove to be bounded by $\bigO{\log(T)}$ when we prove the regret upper-bound of our proposal \MCTopM-\klUCB.
 
 
@@ -500,9 +515,9 @@ Then, a \emph{worst-case result} states that any algorithm can perform as badly 
 %
 In a certain family of problems, \eg, $K$ Bernoulli distributed arms, the difficulty of a problem is characterized by a measure that depends only on the arms means. This measure of difficulty of a problem is hidden in the $\Omega$ notation of the lower-bound.
 
-In all this section, we restrict to stationary stochastic bandits with $K\geq2$ arms.
+In all this section, we restrict to stationary stochastic problems with $K\geq2$ arms.
 We do not give proofs of the following theorems, as they can be found in the historical papers, and simpler proofs are given in recent references, such as \cite{Bubeck12}, \cite{LattimoreBanditAlgorithmsBook}, or Chapter~2 in \cite{Slivkins2019} for instance.
-
+%
 Let $\cI$ denote the set of all problem instances, with $K \geq 2$ arms whose rewards lie in $[0,1]$ (and no other hypothesis).
 To specify the dependency on an instance $I$, we denote the regret of $\cA$ on instance $I$ and horizon $T$ by $R_T^{\cA}(I)$.
 
@@ -743,16 +758,16 @@ Randomized Confidence Bound (RCB) with uniform perturbations performs as well as
 https://smpybandits.github.io/docs/Policies.RandomizedIndexPolicy.html
 
 
-\subsection{Summary of classification of the most famous algorithms}
+% \subsection{Summary of classification of the most famous algorithms}
 
-A huge table in one page in portrait mode, giving:
-- name
-- reference, year
-- family, classification
-- time/memory complexity ?
-- regret bound for stochastic regret
+% A huge table in one page in portrait mode, giving:
+% - name
+% - reference, year
+% - family, classification
+% - time/memory complexity ?
+% - regret bound for stochastic regret
 
-of about 20/30 algorithms?
+% of about 20/30 algorithms?
 
 \newpage
 
@@ -760,11 +775,81 @@ of about 20/30 algorithms?
 \section{Different approaches on algorithm selection}
 \label{sec:2:chooseYourPreferredBanditAlgorithm}
 
-\subsection{Naive approach: use UCB or Thompson sampling, and forget about the rest!}
-First solution: be naive, only use UCB everywhere
+For any real-world applications of MAB algorithms,
+several solutions have been explored based on various models.
+Thus, when a practitioner is facing a problem where MAB algorithms could be used, it is not an easy task to decide which model and which algorithms to use.
+It is hard to predict which solution could be the best for real-world conditions at every instants,
+and even by assuming a stationary environment, when one is facing a certain problem but has limited information about it, it is hard to know beforehand which algorithm can be the best solution.
 
-\subsection{Use prior knowledge about the future application to select beforehand the chosen algorithm}
-Second solution, if one has some prior knowledge about the domain or setting for which the learning algorithms will be deployed, she can run synthetic or real-world simulations, compare many algorithms before deployment, and select the best algorithm!
+In this Section, we first present two naive approaches for selecting an algorithm when facing a new problem, then we detail the online approach that uses a ``master'' MAB algorithm running on top of a pool of ``followers'' algorithms, and we present our contribution that is a new ``master'' algorithm based on \ExpQ.
+This section is based on our article \cite{Besson2018WCNC}.
+
+
+% ----------------------------------------------------------------------
+\subsection{Motivation for online algorithm selection}\label{sub:25:introduction}
+
+Many different learning algorithms have been proposed by the machine learning community,
+and most of them depend on several parameters, for instance $\alpha$ for \UCB, the prior for Thompson sampling or BayesUCB,
+the $\kl$ function for \klUCB{} etc.
+Every time a new MAB algorithm $\Alg$ is introduced, it is compared and benchmarked on some bandit instance, parameterized by $\boldsymbol{\mu} = (\mu_1,\dots,\mu_K)$, usually by focusing on its expected regret $R_T = \E_{\boldsymbol{\mu}}[\widetilde{R_T}]$.
+%
+For a known and specific instance, simulations help to select the best algorithm in a pool of algorithms.
+But when one wants to tackle an \emph{unknown} real-world problem, one expects to be efficient against \emph{any} problem, of any kind, size and complexity:
+ideally one would like to use an algorithm that can be applied identically against any problem.
+
+\paragraph{Naive approaches.}
+%
+On the first hand, a practitioner can decide to pick one algorithm, maybe because it seems efficient on other problems, or because it is simple enough to be used in its application. For instance, it can be hard to implement complicated algorithms on limited hardware such as embedded chips in a very low-cost IoT end-device, and so a practitioner could chose to only consider the \UCB{} algorithm (or other low-cost algorithm).
+%
+On the other hand, if prior knowledge on the application at hand is available, one could implement some benchmarks, and compare a set of algorithms on different problems. If a leader appears clearly, it is then possible to choose it for the application.
+
+
+\paragraph{Small example.}
+%
+For instance, if you know that the considered problem can either have $K$ arms with very close means, or one optimal arm far away from the other, two versions of a \UCB{} algorithms will perform quite differently in the two problems:
+using a large $\alpha$, \ie, favoring exploration, will give low regret in the first case,
+while using a low $\alpha$, \ie, favoring exploitation, will give low regret in the second case.
+One approach can be to use an intermediate value, as $\alpha=1/2$ suggested by theory, but another approach could be to consider an aggregated vote of different versions of \UCB, each running with a different value of $\alpha$ (\eg, in a logarithmic grid), and let another learning algorithm decide which value of $\alpha$ is the best for the problem at hand.
+
+\paragraph{The online approach.}
+%
+Another possibility is to consider an online approach, which is interested in the case where the computation power or memory storage of the application is not a limitation factor, but where one cannot run benchmarks before deploying the application.
+We consider a fixed set of algorithms, and we use another learning algorithm on top of this set, to learn \emph{on the fly} which one should be trusted more, and eventually, used on its own.
+
+The aggregation approach is especially interesting if we know that the problem the device will face is one of a few known kinds of problems.
+In such cases, if there is $N$ different sorts of problems, and if one has prior knowledge on it, one can use the naive approach to select an algorithm $\cA_i$ which should perform well on problem $i$, for $i\in[N]$,
+and use the aggregation of $\cA_1,\dots,\cA_N$ when facing the unknown problem.
+
+% To choose the best algorithm, three approaches can be followed:
+% \begin{itemize}
+%     \item
+% \end{itemize}
+% either extensive benchmarks are done beforehand -- if this is possible -- to select the algorithm and its optimal parameters, or an adaptive algorithm is used to learn \emph{on the fly} its parameters.
+
+% We present a simple adaptive solution, that aggregates several learning algorithms in parallel and adaptively chooses which one to trust the most.
+
+% \paragraph{Outline}
+% This section is organized as follows.
+% First, we explain in Section~\ref{sub:25:aggregation} how to combine such algorithms for aggregation.
+% Then we present our proposed algorithm, called \Aggr, in Section~\ref{sub:25:Aggr},
+% Finally, we present numerical experiments in Section~\ref{sub:25:numExp},
+% on Bernoulli and non-Bernoulli MAB problems,
+% comparing the regret of several algorithms against different aggregation algorithms.
+% Theoretical guarantees are shortly discussed in Section~\ref{sub:25:theory}, and Section~\ref{sub:25:conclusion} concludes.
+
+
+% \subsection{Naive approaches}
+
+% As mentioned, there are two naive approaches
+
+% use UCB or Thompson sampling, and forget about the rest!}
+% First solution: be naive, only use UCB everywhere
+
+
+% \subsection{Use prior knowledge about the future application to select beforehand the chosen algorithm}
+
+% Second solution, if one has some prior knowledge about the domain or setting for which the learning algorithms will be deployed, she can run synthetic or real-world simulations, compare many algorithms before deployment, and select the best algorithm!
+
 
 \subsection{Online algorithm selection with expert aggregation}
 
@@ -787,7 +872,8 @@ By showcasing an interactive demonstration made available online,
 % (\href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}),
 we presented the notations used in all this thesis.
 
-The first contribution of this manuscript \cite{Besson2018WCNC} concluded this chapter, in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}. We tackle the question of how to select a particular bandit algorithm when a practitioner is facing a particular (unknown) bandit problem.
+The first contribution of this manuscript concludes this chapter, in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}, and corresponds to our article \cite{Besson2018WCNC}.
+We tackle the question of how to select a particular bandit algorithm when a practitioner is facing a particular (unknown) bandit problem.
 Instead of always choosing a fixed algorithm, or running costly benchmarks before real-world deployment of the chosen algorithm, we advise to select a few candidate algorithms, where at least one is expected to be very efficient for the given problem, and use online algorithm selection to automatically and dynamically decide the best candidate.
 We proposed an extension of the Exp4 algorithm for this problem, \Aggr, and illustrate its performance on some bandit problems.
 %

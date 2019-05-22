@@ -1,55 +1,25 @@
 % - ``Aggregation of Multi-Armed Bandits learning algorithms for Opportunistic Spectrum Access'', see https://hal.inria.fr/hal-01705292
 
-For any real-world applications of MAB algorithms, several solutions have been explored based on various models.
-However, it is hard to exactly predict which solution could be the best for real-world conditions at every instants.
-As we saw before, a possible approach is to pick one algorithm and simply use it, or to run simulations before-hand, if possible.
-But a third possible approach is to select \emph{on the run} the best algorithm for a specific situation, for which the so-called \emph{expert aggregation algorithms} can be useful.
+As we said, a third possible approach is to select \emph{on the run} the best algorithm for a specific situation, for which the so-called \emph{expert aggregation algorithms} can be useful.
 %
-To the best of our knowledge, aggregation algorithms, such as \ExpQ{} dating back from 2002 (\cite{Auer02}),
-have never been used for stochastic MAB problems,
-and we show that it appears empirically sub-efficient when applied to simple stochastic problems.
-%
-In this section, we present an improved variant of \ExpQ, called \Aggr.
-For synthetic MAB problems,
-with Bernoulli distributions or other distributions for arms,
-simulation results are presented to demonstrate its empirical efficiency.
+To the best of our knowledge, aggregation algorithms, such as \ExpQ{} which dates back from 2002 \cite{Auer02},
+have never been used for stochastic MAB problems.
+% and we show that it appears empirically sub-optimal when applied to simple stochastic problems.
+
+We present an improved variant of \ExpQ, called \Aggr.
+For synthetic MAB problems, with Bernoulli distributions or other distributions for $K$ arms, simulation results are presented to demonstrate its empirical efficiency.
 We combine classical algorithms, such as Thompson sampling, Upper-Confidence Bounds algorithms (\UCB{} and variants), and Bayesian or Kullback-Leibler UCB.
 %
 Our algorithm offers good performance compared to state-of-the-art algorithms
-(\ExpQ{}, \CORRAL{} or \LearnExp{}) \cite{Agarwal16,Singla17}),
+(\ExpQ{}, \CORRAL{} or \LearnExp{}) \cite{Agarwal16,Singla17},
 and appears as a robust approach to select on the run the best algorithm for any stochastic MAB problem, being more realistic to real-world radio settings than any tuning-based approach.
 
-\TODOL{This chapter is basically a raw include from my paper ``Aggregation of Multi-Armed Bandits learning algorithms for Opportunistic Spectrum Access'', see https://hal.inria.fr/hal-01705292}
+% \TODOL{This chapter is basically a raw include from my paper ``Aggregation of Multi-Armed Bandits learning algorithms for Opportunistic Spectrum Access'', see https://hal.inria.fr/hal-01705292}
 
 
 % ----------------------------------------------------------------------
-\subsection{Motivation for online algorithm selection}\label{sub:25:introduction}
-
-Many different learning algorithms have been proposed by the machine learning community,
-and most of them depend on several parameters, for instance $\alpha$ for \UCB, the prior for Thompson sampling or BayesUCB,
-the $\kl$ function for \klUCB{} etc.
-Every time a new MAB algorithm $\Alg$ is introduced, it is compared and benchmarked on some bandit instance, parameterized by $\boldsymbol{\mu} = (\mu_1,\dots,\mu_K)$, usually by focusing on its expected regret $R_T = \E_{\boldsymbol{\mu}}[\widetilde{R_T}]$.
-%
-For a known and specific instance, simulations help to select the best algorithm in a pool of algorithms.
-But when one wants to tackle an \emph{unknown} real-world problem, one expects to be efficient against \emph{any} problem, of any kind, size and complexity:
-ideally one would like to use an algorithm that can be applied identically against any problem.
-To choose the best algorithm, two approaches can be followed:
-either extensive benchmarks are done beforehand -- if this is possible -- to select the algorithm and its optimal parameters, or an adaptive algorithm is used to learn \emph{on the fly} its parameters.
-We present a simple adaptive solution, that aggregates several learning algorithms in parallel and adaptively chooses which one to trust the most.
-
-
-\paragraph{Outline}
-This section is organized as follows.
-First, we explain in Section~\ref{sub:25:aggregation} how to combine such algorithms for aggregation.
-Then we present our proposed algorithm, called \Aggr, in Section~\ref{sub:25:Aggr},
-Finally, we present numerical experiments in Section~\ref{sub:25:numExp},
-on Bernoulli and non-Bernoulli MAB problems,
-comparing the regret of several algorithms against different aggregation algorithms.
-Theoretical guarantees are shortly discussed in Section~\ref{sub:25:theory}, and Section~\ref{sub:25:conclusion} concludes.
-
-
-% ----------------------------------------------------------------------
-\subsection{Aggregating bandit algorithms}\label{sub:25:aggregation}
+% \subsection{Aggregating bandit algorithms}\label{sub:25:aggregation}
+\paragraph{Aggregating bandit algorithms}\label{sub:25:aggregation}
 
 We assume to have $N \geq 2$ MAB algorithms, $\Alg_1, \dots, \Alg_N$,
 and let $\Alg_{\mathrm{aggr}}$ be an aggregation algorithm,
@@ -62,7 +32,8 @@ Ideally $\Alg_{\mathrm{aggr}}$ should perform similarly to the best of the $\Alg
 %
 To simplify the presentation, we only aggregate bandit algorithms that give deterministic recommendations:
 one arm is chosen with probability $1$ and the others with probability $0$.
-However, both \ExpQ{} and \Aggr{} can be adapted to aggregate randomized bandit algorithms, \ie, algorithms that output a probability distribution $\xi_t$ over the arms $[K]$ at each time step, and draw the next selected arm according to this distribution.
+However, both \ExpQ{} and \Aggr{} can be adapted to aggregate randomized bandit algorithms, \ie, algorithms that output a probability distribution $\xi_t$ over the arms $[K]$ at each time step, and draw the next selected arm according to this distribution
+(\eg, Thompson sampling).
 
 The aggregation algorithm maintains a probability distribution $\pi^{t}$ on the $N$ algorithms $\Alg_a$, starting from a uniform distribution:
 $\pi^t_a$ is the probability of trusting the decision made by algorithm $\Alg_a$ at time $t$.
@@ -72,7 +43,7 @@ and how to update the trusts at each step, and our proposal \Aggr{} differs from
 
 
 % ----------------------------------------------------------------------
-\subsubsection{The \Aggr{} algorithm}\label{sub:25:Aggr}
+\subsection{Our contribution: the \Aggr{} algorithm}\label{sub:25:Aggr}
 
 Our proposed \Aggr{} is detailed in Algorithm~\ref{algo:25:Aggr}.
 %
@@ -173,9 +144,10 @@ Second, after having computed the loss estimate $\ell$, \ExpQ{} updates the esti
 $\widetilde{L}_a(t) = \sum_{s=1}^{t} \ell_{A_a^s}(s) \times \mathbbm{1}(A^{s}_{a} = A^{s}_{\mathrm{aggr}})$.
 %
 Instead
-\footnote{It is the same in the case of constant learning rates, and does not differ much even for decreasing learning rates.}
+\footnote{~It is the same in the case of constant learning rates, and does not differ much even for decreasing learning rates.}
 of updating $\pi^{t}$ multiplicatively as we do for our proposal, \ExpQ{} recomputes it, proportionally to
 $\exp(- \eta_t \widetilde{L}_a(t))$.
+
 
 \paragraph{How to choose the learning rates $(\eta_t)$?}
 %
@@ -195,14 +167,14 @@ We also stick to this choice of $(\eta_t)_{t \geq 1}$ for \Aggr.
 % ----------------------------------------------------------------------
 \subsection{Experiments on simulated MAB problems}\label{sub:25:numExp}
 
-\TODOL{Je pense refaire complètement les expériences de ce morceau.
+% \TODOL{Je pense refaire complètement les expériences de ce morceau.
 
-- C'est un peu bête de montrer des problèmes chelous genre Gaussien et "mixed" quand tout le reste de la thèse s'intéresse vraiment aux Bernoulli.
+% - C'est un peu bête de montrer des problèmes chelous genre Gaussien et "mixed" quand tout le reste de la thèse s'intéresse vraiment aux Bernoulli.
 
-- C'est un peu naze de montrer en log-y ou en log-log, alors que le reste de la thèse s'intéresse uniquement à des plots x-y, ou des histogrammes.
+% - C'est un peu naze de montrer en log-y ou en log-log, alors que le reste de la thèse s'intéresse uniquement à des plots x-y, ou des histogrammes.
 
-- Pour être plus consistant avec les sections suivantes, je pourrais inclure juste 1/2 courbes de regret, et un tableau de résultats pour d'autres problèmes ?
-}
+% - Pour être plus consistant avec les sections suivantes, je pourrais inclure juste 1/2 courbes de regret, et un tableau de résultats pour d'autres problèmes ?
+% }
 
 % - explain the problem studied in the simulation
 We focus on \emph{i.i.d.} MAB problems, with $K = 9$ channels\footnote{~Similar behaviors are observed for any not-too-large values of $K$, we tried up-to $K = 100$ and the same results were obtained.}.
@@ -216,7 +188,7 @@ using the parameter-free learning rate sequence, $\eta_t := \log{N} / (t K)$.
 The Lai \& Robbins' logarithmic lower-bound \cite{LaiRobbins85} is also plotted, and it is crucial to note that it is only asymptotic, and as such one should not be surprised to see regret curves smaller than the lower-bound (\eg, for the easier Bernoulli problem in Figure~\ref{fig:25:EasyBernoulli}).
 %
 Note that for each of the $1000$ simulations, we choose to generate all the rewards beforehand, \ie, one full matrix $(r_k(t))_{1\leq k \leq K, 1 \leq t \leq T}$ for every repetition, in order to compare the algorithms on the same realizations%
-\footnote{Similar plots and similar results are obtained if this choice is not made, but it makes more sense to compare them against the same randomization. Note that this choice is the default in SMPyBandits, but the other possibility is implemented as well, by changing \texttt{cache\_rewards} to \texttt{true} or \texttt{false} in the \texttt{configuration} dictionary. See Section~\ref{sub:3:miniConfigurationFileSMPyBandits}.}
+\footnote{Similar plots and similar results are obtained if this choice is not made, but it makes more sense to compare them against the same randomization. Note that this choice is the default in SMPyBandits, but the other possibility is implemented as well, by changing \texttt{cache\_rewards} to \texttt{true} or \texttt{false} in the \texttt{configuration} dictionary. See Section~\ref{sub:3:miniConfigurationFileSMPyBandits} for explanations on this \texttt{configuration.py} file, or the online documentation.}
 of the MAB problem.
 
 We compare our \Aggr{} algorithm,
@@ -277,7 +249,7 @@ Especially in difficult problems with mixed or unknown distributions, \Aggr{} sh
 
 
 % ----------------------------------------------------------------------
-\subsection{No theoretical guarantees yet}\label{sub:25:theory}
+\paragraph{No theoretical guarantees yet}\label{sub:25:theory}
 
 The \Aggr{} does not have satisfying theoretical guarantees in terms of regret $R_T$, unlike many bandit algorithms.
 %
@@ -308,7 +280,7 @@ Further theoretical developments are left as future work.
 
 
 % ----------------------------------------------------------------------
-\subsection{Conclusion about our \Aggr{} algorithm}\label{sub:25:conclusion}
+\paragraph{Conclusion about our \Aggr{} algorithm}\label{sub:25:conclusion}
 
 We presented the use of aggregation algorithms in the context of Opportunistic Spectrum Access for Cognitive Radio,
 especially for the real-world setting of unknown problem instances,
@@ -341,7 +313,8 @@ But this direction does not appear very useful, as in the case of \CORRAL{}  the
 
 \paragraph{Reproducility of the experiments.}
 %
-Experiments presented in this Section are based on our library SMPyBandits, and instructions to reproduce them are given on the page \texttt{SMPyBandits.GitHub.io/Aggregation.html}.
+Experiments presented in this Section are based on our library SMPyBandits,
+and the page \texttt{SMPyBandits.GitHub.io/Aggregation.html} gives instructions to reproduce them.
 
 
 % ----------------------------------------------------------------------------
