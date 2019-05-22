@@ -532,8 +532,7 @@ This means that an upper-bound is proven on the regret of algorithm $\cA$, that 
 Moreover, this lower-bound can be directly used to design efficient algorithms, as thanks to the regret decomposition given in Lemma~\ref{lem:2:RegretDecomposition} above, the expression in \eqref{eq:2:forSecondLogTLowerBound2} essentially says that any efficient algorithm
 should sample each sub-optimal arm $k$ about $\log(T)/\KL(\mu_k,\mu^*)$ times.
 Tracking this quantity is used for instance in the OSSB algorithm proposed in \cite{Combes17}.
-It states that FIXME interpret!
-FIXME explain why this is interesting for the rest of this manuscript!
+% FIXME explain why this is interesting for the rest of this manuscript!
 
 \begin{theorem}\label{thm:2:firstLogTLowerBound}
     No algorithm $\cA$ can achieve a regret $R_T^{\cA}(I) = \smallO{c_I \log(T)}$ for all problem instances $I \in \cI$,
@@ -592,12 +591,12 @@ This third theorem specifies possible values of the constants $C_I$ for the two 
 
 For a fixed horizon $T$, it is interesting to note that one can find instances $I$ that are so ``hard'' that a logarithmic regret (lower or upper) bound that uses the constants $C_I$ no longer bring any information.
 We naively have that $R_T^{\cA} \leq (\max_k \Delta_k) T$, and thus if 
+\TODOL{Finish this!}
 
 For this reason, it is interesting to quote another lower-bound on the regret, that also
 The following theorem was proven in \cite{Auer02NonStochastic}.
 
-It states that FIXME interpret!
-FIXME explain why this is interesting for the rest of this manuscript!
+\TODOL{It states that FIXME interpret! FIXME explain why this is interesting for the rest of this manuscript!}
 
 \begin{theorem}\label{thm:2:worstCaseLowerBound}
     Fix the number of arms $K$, and the algorithm $\cA$.
@@ -622,24 +621,24 @@ FIXME explain why this is interesting for the rest of this manuscript!
 
 
 
-\subsection{Regret upper bounds, tools and different kinds of bounds}
+% \subsection{Regret upper bounds, tools and different kinds of bounds}
 
 
-\begin{itemize}
-    \item
-    - different kinds of bounds, problem-dependent with $\bigO{C \log(T)}$ with $C$ a measure of the problem complexity, or problem-independent with $\bigO{\sqrt{KT}}$ ?
-    \item
-    - tools to show regret upper-bounds, concentration inequalities?
-    FIXME non j'ai pas la place
-    \item
-    - short proof of UCB or klUCB? just to start to show the tools
-    FIXME non j'ai pas la place
-\end{itemize}
+% \begin{itemize}
+%     \item
+%     - different kinds of bounds, problem-dependent with $\bigO{C \log(T)}$ with $C$ a measure of the problem complexity, or problem-independent with $\bigO{\sqrt{KT}}$ ?
+%     \item
+%     - tools to show regret upper-bounds, concentration inequalities?
+%     FIXME non j'ai pas la place
+%     \item
+%     - short proof of UCB or klUCB? just to start to show the tools
+%     FIXME non j'ai pas la place
+% \end{itemize}
 
 
 \subsection{Other measures of performances}
 
-In this thesis, we only study analytically the mean regret $R^{\cA}$ (in Chapters \ref{chapter:5,chapter:6}), but we quickly mention other measures of performances used in our work.
+In this thesis, we only study analytically the mean regret $R^{\cA}$ (in Chapters \ref{chapter:5} and \ref{chapter:6}), but we quickly mention other measures of performances used in our work.
 
 % - Quantile regret or just histogram of regrets
 First, when doing numerical experiments about bandits, if one studies the regret as an empirical mean based on a large number of random repetitions (\eg, $N=1000$ repetitions), it is important to not only show the mean value but also the variance of the values taken by the regret on each repetition, to verify that all algorithms perform consistently.
@@ -657,7 +656,7 @@ By visualizing the entire \emph{distribution} (as an histogram), or the variance
 % Both quantities are computed and stored in all numerical simulations using SMPyBandits, but visualizations for both have not been included in this thesis.
 
 % - Worst case regret (max $R_T^{r}$ for $r$ index of Monte-Carlo simulation?)
-The switching cost $SC^{\cA}(T)$ counts how many times the player's decision has changed from one time step to the next one, \ie, $SC^{\cA}(T) = \sum_{t=1}^{T-1} \indic(A(t) \neq A(t+1))$.
+The \emph{switching cost} $SC^{\cA}(T)$ counts how many times the player's decision has changed from one time step to the next one, \ie, $SC^{\cA}(T) = \sum_{t=1}^{T-1} \indic(A(t) \neq A(t+1))$.
 It has recently gained interest in the literature, for instance in \cite{Koren17}.
 % FIXME give the main result proved in this paper?
 In single-player models,
@@ -696,12 +695,20 @@ https://smpybandits.github.io/docs/Policies.ExploreThenCommit.html
 % ----------------------------------------------------------------------------
 \subsection{Index policies: UCB and others}
 
+\TODOL{Expliquer UCB}
+\TODOL{Expliquer que les indices UCB = des UCB sur les moyennes + principle of optimism in face of uncertainty}
+
+\TODOL{Expliquer klUCB}
+\TODOL{Expliquer que les indices klUCB = des UCB sur les moyennes + principle of optimism in face of uncertainty}
+
 \subsubsection{UCB}
 Optimism in face of uncertainty, for UCB etc.
 
 
 \subsubsection{klUCB}
 Optimal upper confidence bounds based on Kullback-Leibler divergence and klUCB indexes
+
+\TODOL{Short note on how to implement such policy, using Newton's method ?}
 
 \subsubsection{Other policies inspired by UCB}
 
