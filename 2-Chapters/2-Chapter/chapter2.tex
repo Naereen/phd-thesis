@@ -153,7 +153,7 @@ The demo is hosted on my website, at \href{https://perso.crans.org/besson/phd/MA
 \end{figure}
 
 
-The webpage looks like Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem} above.
+The webpage looks like Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem} below.
 The arms follow Bernoulli distributions, \ie, $\nu_k = \mathcal{B}(\mu_k)$, of unknown means $\mu_k\in[0,1]$, and your goal in this interactive demonstration is to obtain the highest possible cumulated reward in $100$ steps, $\sum_{t=1}^{100} r_{A(t)}(t)$.
 Your decisions have to be made sequentially: at time $t$, you pick one of the arms, $A(t) \in\{1,2,3,4,5\}$, then the demo shows the random reward obtained from this (virtual) casino machine (in \textcolor{gold}{yellow}), \ie, the binary value $r_{A(t)}(t)\in\{0,1\}$, that is sampled \iid{} from $\nu_k$.
 %
@@ -225,7 +225,7 @@ Note that this ``normalization trick'' is implemented for any policy in SMPyBand
 
 In all this thesis we restrict to distributions that have a certain form, and focus on real-valued distributions lying in an exponential families.
 One-dimensional exponential families include Bernoulli and Poisson distributions, as well as Gaussian distributions with a fixed variance.
-Our main interest is Bernoulli distributions, but we prefer to present here the notations on a generic exponential family in one dimension.
+Our main interest is Bernoulli distributions, but we prefer to present the notations of exponential families in one dimension.
 % We follow the notations from the course on statistical learning (Stat 260) taught in 2010 by Michael Jordan at the University of Berkeley \cite{JordanCourseStatBerkeley}, that are also the notations used for instance in Emilie Kaufmann's PhD in 2014 \cite{Kaufmann12PhD}.
 
 Given a measure $\lambda$, that is usually the natural Lebesgue measure on $\R$, an exponential family of probability distributions is defined as the distributions whose density (relative to $\lambda$) can be written as
@@ -271,7 +271,7 @@ it is interesting to illustrate this definition and the notations with two impor
     and for a Bernoulli distribution of mean $\mu\in[0,1]$, denoted $B(\mu)$,
     the parameter is $\eta = \mu / (1 - \mu)$, giving $A(\eta) = \log(1 + \mathrm{e}^{\eta})$
     (with the limit behavior $\eta=+\infty$ if $\mu=0$).
-    %
+
     Moreover, the KL divergence between $B(x)$ and $B(y)$, of parameters $\eta$, $\eta'$ is given by
     $\kl(x,y) = \KL_{B}(\eta,\eta') = x \log(x/y) + (1-x) \log((1-x)/(1-y))$.
 
@@ -288,7 +288,7 @@ it is interesting to illustrate this definition and the notations with two impor
     % This shows that the Gaussian distributions
     % % are a two-dimensional exponential families,
     % with a fixed variance $\sigma^2$ form indeed a one-dimensional exponential family.
-    %
+
     Moreover, the KL divergence between $\cN(x,\sigma^2)$ and $\cN(x,\sigma^2)$, of parameters $\eta$, $\eta'$ is given by
     $d(x,y) = \KL_{\cN}(\eta,\eta') = (x-y)^2 / (2\sigma^2)$.
 \end{itemize}
@@ -321,7 +321,7 @@ Finally, we note that Markov models, while being implemented in SMPyBandits, are
 They were introduced in the 1980s, by Whittle in \cite{Whittle1988} and Anantharam and others in \cite{Anantharam87b}.
 A Markov MAB model maps an arm to a Markov chain \cite{Norris98}, instead of a distribution, and thus they are no longer stochastic nor stationary.
 Such Markov models come in two flavors: rested or restless.
-For $K$ arms, each Markov chain has a finite number of state $s$, each corresponding to a (constant) reward that the player obtains if she selects this arm while its Markov chain is in state $s$.
+For $K$ arms, each Markov chain has a finite number of states $s$, each corresponding to a (constant) reward that the player obtains if she selects this arm while its Markov chain is in state $s$.
 Rested Markov models means that only the state of the selected arm's Markov chain can change, following its Markov transition matrix.
 Restless models remove this hypothesis, making them harder to track and solve.
 %
@@ -382,7 +382,7 @@ Historically, MAB models were first applied to \textbf{clinical trials}, where a
 % - hyper-parameters tuning of deep neural networks etc
 
 The different applications detailed above are still active research directions,
-and a curious reader will find other interesting applications of MAB models and algorithms in \cite{bouneffouf2019survey}.
+and a curious reader can find other interesting applications of MAB models and algorithms in \cite{bouneffouf2019survey}.
 
 
 \paragraph{Applications for Opportunistic Spectrum Access.}
@@ -436,6 +436,7 @@ We denote $\mu_k$ the mean of the distribution of arm $k$ (it will be referred t
 To define the regret, we first need to distinguish between \emph{optimal} and \emph{sub-optimal} arms.
 
 \begin{defn}[Optimal and sub-optimal arms]\label{def:2:optimalSubOptimalArms}
+    Consider a bandit problem of $K$ arms with distributions characterized by their means $\bm{\mu}=\mu_1,\dots,\mu_k$.
     Denote $\mu^* = \max_k \mu_k$ the largest mean.\\
     The best arm can be non unique, and any arm $k$ having $\mu_k = \mu^*$ is said to be \emph{optimal},
     while arms satisfying $\mu_k < \mu^*$ are called \emph{sub-optimal}.
@@ -485,24 +486,25 @@ then an arm $k$ is sub-optimal if $\Delta_k > 0$, and we can write the following
 \begin{lemma}[Regret decomposition]\label{lem:2:RegretDecomposition}
     The (mean) regret $R_T^{\cA}$ can be written like
     \begin{equation}
-        R_T^{\cA} = \sum_{k=1}^K \Delta_k \E[ N_k(T) ].
+        R_T^{\cA} = \sum_{k=1}^K \Delta_k \E[ N_k(T) ] = \sum_{k=1,\dots,K : \Delta_k > 0} \Delta_k \E[ N_k(T) ].
     \end{equation}
 \end{lemma}
 %
 \begin{proof}\label{proof:2:RegretDecomposition}
-    Thanks to the tower rule, we had
-    $\E \left[ \sum_{t=1}^T r_{A(t)}(t) \right] = \sum_{k=1}^K \mu_k \E \left[ N_k(T) \right]$, thus $R_T^{\cA} = \sum_{k=1}^K \Delta_k \E[ N_k(T) ].$
+    Thanks to the tower rule, we can do as above and obtain
+    $\E \left[ \sum_{t=1}^T r_{A(t)}(t) \right] = \sum_{k=1}^K \mu_k \E \left[ N_k(T) \right]$, thus $R_T^{\cA} = \sum_{k=1}^K \Delta_k \E[ N_k(T) ]$.
+    The sum can then be simplified to only count sub-optimal arms, \ie, arms $k$ such that $\Delta_k > 0$.
 \end{proof}
 
 
-\textbf{Applications:}
+\paragraph{Consequences.}
 %
 Such decomposition of the regret is useful for at least two reasons.
-%
+
 On the first hand, from a numerical simulation point-of-view, when we run a finite number of repetitions of the same stochastic experiment, if one wants to compute and visualize the regret, she can either use the definition with the rewards, or the decomposition and simply sum the gaps $\Delta_k$ with the number of sub-optimal draws.
 Mathematically, both quantities are equal in expectation, but with only a finite number of trajectories and observations, the first estimate is more noisy than the second one, since the randomness on the rewards is (partially) removed.
 In our library SMPyBandits, we implement both possibilities, and all values of regret used in this thesis are based on the second estimator, using the decomposition of Lemma~\ref{lem:2:RegretDecomposition}, because it gives smoother curves and faster convergence to the limit behavior.
-%
+
 On the second hand, this decomposition is necessary as theoretical analyses of the regret of MAB algorithms are usually based on controlling the suboptimal draws $N_k(T)$ and not directly the regret $R_T^{\cA}$.
 For example, we extend this decomposition to the multi-player case in Chapter~\ref{chapter:3}, in Lemma~\ref{lem:5:DecompositionRegret}, and as it also uses the draws $N_k(T)$, it is the first quantity we prove to be bounded by $\bigO{\log(T)}$ when we prove the regret upper-bound of our proposal \MCTopM-\klUCB.
 
@@ -527,7 +529,7 @@ To specify the dependency on an instance $I$, we denote the regret of $\cA$ on i
 The following two theorems were proven in \cite{LaiRobbins85}.
 These lower-bounds are of highest interest to design efficient algorithms,
 and a significant part of the research literature on MAB algorithms has focussed on finding algorithms that matches the Lai and Robbins' lower-bound asymptotically.
-This means that an upper-bound is proven on the regret of algorithm $\cA$, that asymptotically match the lower-bound, with the same constant in the big-$\cO$ notation (in which case we say that the algorithm is optimal), or with a larger constant (the algorithm is said order-optimal in such case).
+This means that an upper-bound is proven on the regret of algorithm $\cA$, that asymptotically match the lower-bound, with the same constant in the big-$\cO$ notation (in which case we say that the algorithm is \emph{optimal}), or with a larger constant (the algorithm is said to be \emph{order-optimal} in such case).
 
 Moreover, this lower-bound can be directly used to design efficient algorithms, as thanks to the regret decomposition given in Lemma~\ref{lem:2:RegretDecomposition} above, the expression in \eqref{eq:2:forSecondLogTLowerBound2} essentially says that any efficient algorithm
 should sample each sub-optimal arm $k$ about $\log(T)/\KL(\mu_k,\mu^*)$ times.
@@ -539,9 +541,9 @@ Tracking this quantity is used for instance in the OSSB algorithm proposed in \c
     where this notation means that the ``constant'' $c_I$ can depend on the problem instance $I$ (\eg, on the means and on $K$) but not on the time horizon $T$.
 \end{theorem}
 
-Then we consider algorithms that uniformly efficient\footnote{This notion is then extended for ``strongly uniformly efficiency'' in the multi-player case with Definition~\ref{def:5:DecentralizedUniformEfficiency}.}, meaning that we rule out algorithms that can achieve low regret on some problem instance while achieving linear regret on other instances.
-In particular, it is necessary to rule out algorithms that always pick the same arms, as on some problem instance such fixed-arm algorithm can achieve zero regret.
-For instance, the \UCB{} algorithm is uniformly efficient.
+We consider uniformly efficient\footnote{This notion is then extended for ``strongly uniformly efficiency'' in the multi-player case with Definition~\ref{def:5:DecentralizedUniformEfficiency}.} algorithms, to rule out algorithms achieving low regret on some problem instances while achieving linear regret on other instances.
+In particular, it is necessary to rule out algorithms that always pick the same arm, as on some problem instances such fixed-arm algorithms can achieve zero regret.
+This class contains for instance the \UCB{} algorithm, as its regret is proven to be logarithmic on any problem instance.
 
 \begin{defn}[Uniformly efficient algorithm]\label{def:2:uniformlyEfficientAlgorithm}
     An algorithm $\cA$ is \emph{uniformly efficient} if it satisfies
@@ -675,7 +677,7 @@ Finally, another interesting measure of performance is the \emph{fairness} betwe
 
 
 % ----------------------------------------------------------------------------
-\section{Review of MAB algorithms}
+\section{Review of stochastic MAB algorithms}
 \label{sec:2:famousMABalgorithms}
 
 Everything is implemented and documented at
