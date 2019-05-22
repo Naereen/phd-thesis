@@ -1,7 +1,7 @@
 %!TEX root = ../PhD_thesis__Lilian_Besson
 
 % First chapter begins here
-\chapter{The Stochastic Multi-Armed Bandits Model}
+\chapter{Stochastic Multi-Armed Bandits Models}
 \label{chapter:2}
 \minitoc
 % Write miniTOC just after the title
@@ -59,7 +59,7 @@ The Nomenclature includes a summary of the notations, see Page~\pageref{chapter:
 
 
 % ----------------------------------------------------------------------------
-\section{The stochastic Multi-Armed Bandit model}
+\section{The stochastic Multi-Armed Bandit models}
 \label{sec:2:notations}
 
 
@@ -362,7 +362,7 @@ Historically, MAB models were first applied to \textbf{clinical trials}, where a
 
     % \item
     Using bandit algorithms for \textbf{improved machine learning} models or algorithms has been an active research domain for the last ten years or so.
-    As presented below in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}, a certain ``master'' bandit algorithm can be used to select on the run the best bandit algorithm from a pool of ``slave'' algorithms.
+    As presented below in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}, a certain ``leader'' bandit algorithm can be used to select on the run the best bandit algorithm from a pool of ``followers'' algorithms.
     Other possible use cases include hyper-parameter optimization, or feature selection.
     Hyper-parameters include real-valued parameters, like $\alpha\in[0,\infty)$ for the \UCB{} or $\varepsilon$ for the $\varepsilon$-greedy bandit algorithms, a step size multiplier in a gradient method, or the width of a radial based function (RBF) kernel method.
     Discrete-valued parameters are also common, like a choice in a fixed set of kernel functions or the depth of neural networks,
@@ -783,12 +783,13 @@ https://smpybandits.github.io/docs/Policies.RandomizedIndexPolicy.html
 \label{sec:2:chooseYourPreferredBanditAlgorithm}
 
 For any real-world applications of MAB algorithms,
-several solutions have been explored based on various models.
-Thus, when a practitioner is facing a problem where MAB algorithms could be used, it is not an easy task to decide which model and which algorithms to use.
+several solutions have been explored based on various models, and for any model, typically there are many algorithms available, as we have seen above.
+%
+Thus, when a practitioner is facing a problem where MAB algorithms could be used, it is not an easy task to decide which algorithm to use.
 It is hard to predict which solution could be the best for real-world conditions at every instants,
 and even by assuming a stationary environment, when one is facing a certain problem but has limited information about it, it is hard to know beforehand which algorithm can be the best solution.
 
-In this Section, we first present two naive approaches for selecting an algorithm when facing a new problem, then we detail the online approach that uses a ``master'' MAB algorithm running on top of a pool of ``followers'' algorithms, and we present our contribution that is a new ``master'' algorithm based on \ExpQ.
+In this Section, we first present two naive approaches for selecting an algorithm when facing a new problem, and then we detail the online approach that uses a ``leader'' MAB algorithm running on top of a pool of ``followers'' algorithms, and we present our contribution that is a new ``leader'' algorithm based on \ExpQ.
 This section is based on our article \cite{Besson2018WCNC}.
 
 
@@ -798,20 +799,21 @@ This section is based on our article \cite{Besson2018WCNC}.
 Many different learning algorithms have been proposed by the machine learning community,
 and most of them depend on several parameters, for instance $\alpha$ for \UCB, the prior for Thompson sampling or BayesUCB,
 the $\kl$ function for \klUCB{} etc.
-Every time a new MAB algorithm $\Alg$ is introduced, it is compared and benchmarked on some bandit instance, parameterized by $\boldsymbol{\mu} = (\mu_1,\dots,\mu_K)$, usually by focusing on its expected regret $R_T = \E_{\boldsymbol{\mu}}[\widetilde{R_T}]$.
+Every time a new MAB algorithm $\Alg$ is introduced, it is compared and benchmarked on some bandit instance, parameterized by $\boldsymbol{\mu} = (\mu_1,\dots,\mu_K)$, usually by focusing on its expected regret $R_T^{\Alg}$.
 %
 For a known and specific instance, simulations help to select the best algorithm in a pool of algorithms.
-But when one wants to tackle an \emph{unknown} real-world problem, one expects to be efficient against \emph{any} problem, of any kind, size and complexity:
-ideally one would like to use an algorithm that can be applied identically against any problem.
+But when one wants to tackle an \emph{unknown} real-world problem, one expects to be efficient against \emph{any} problem, of any size and complexity in a certain family:
+ideally one would like to use an algorithm that can be applied identically against any problem of such family.
+
 
 \paragraph{Naive approaches.}
 %
-On the first hand, a practitioner can decide to pick one algorithm, maybe because it seems efficient on other problems, or because it is simple enough to be used in its application. For instance, it can be hard to implement complicated algorithms on limited hardware such as embedded chips in a very low-cost IoT end-device, and so a practitioner could chose to only consider the \UCB{} algorithm (or other low-cost algorithm).
+On the first hand, a practitioner can decide to pick one algorithm, maybe because it seems efficient on other problems, or maybe because it is simple enough to be used in its application. It might be unrealistic to implement complicated algorithms on limited hardware such as embedded chips in a very low-cost IoT end-device, and for instance a practitioner could chose to only consider the \UCB{} algorithm (or other low-cost algorithms).
 %
 On the other hand, if prior knowledge on the application at hand is available, one could implement some benchmarks, and compare a set of algorithms on different problems. If a leader appears clearly, it is then possible to choose it for the application.
 
 
-\paragraph{Small example.}
+\paragraph{Illustrative example.}
 %
 For instance, if you know that the considered problem can either have $K$ arms with very close means, or one optimal arm far away from the other, two versions of a \UCB{} algorithms will perform quite differently in the two problems:
 using a large $\alpha$, \ie, favoring exploration, will give low regret in the first case,
@@ -823,8 +825,8 @@ One approach can be to use an intermediate value, as $\alpha=1/2$ suggested by t
 Another possibility is to consider an online approach, which is interested in the case where the computation power or memory storage of the application is not a limitation factor, but where one cannot run benchmarks before deploying the application.
 We consider a fixed set of algorithms, and we use another learning algorithm on top of this set, to learn \emph{on the fly} which one should be trusted more, and eventually, used on its own.
 
-The aggregation approach is especially interesting if we know that the problem the device will face is one of a few known kinds of problems.
-In such cases, if there is $N$ different sorts of problems, and if one has prior knowledge on it, one can use the naive approach to select an algorithm $\cA_i$ which should perform well on problem $i$, for $i\in[N]$,
+The aggregation approach is especially interesting if we know that the problem the application will face is one of a few known kinds of problems.
+In such cases, if there are $N$ different sorts of problems, and if the practitioner has prior knowledge on it, one can use the naive approach to select an algorithm $\cA_i$ which should perform well on problem $i$, for $i\in[N]$,
 and use the aggregation of $\cA_1,\dots,\cA_N$ when facing the unknown problem.
 
 % To choose the best algorithm, three approaches can be followed:
@@ -879,7 +881,8 @@ By showcasing an interactive demonstration made available online,
 % (\href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}),
 we presented the notations used in all this thesis.
 
-The first contribution of this manuscript concludes this chapter, in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}, and corresponds to our article \cite{Besson2018WCNC}.
+The first contribution of this manuscript concludes this chapter, in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}.
+% and corresponds to our article \cite{Besson2018WCNC}.
 We tackle the question of how to select a particular bandit algorithm when a practitioner is facing a particular (unknown) bandit problem.
 Instead of always choosing a fixed algorithm, or running costly benchmarks before real-world deployment of the chosen algorithm, we advise to select a few candidate algorithms, where at least one is expected to be very efficient for the given problem, and use online algorithm selection to automatically and dynamically decide the best candidate.
 We proposed an extension of the Exp4 algorithm for this problem, \Aggr, and illustrate its performance on some bandit problems.
