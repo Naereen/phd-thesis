@@ -83,9 +83,9 @@ We then analyze our \MCTopM{} algorithm and we show that its regret upper-bound 
 %  with a regret bounded by $\bigO{\log(T)}$ for a game at horizon $T$.
 We also present extensive numerical simulations that show that our proposal outperforms all previous solutions and is much more efficient in this easier model of sensing feedback with a fixed and known number of players $M$ accessing $K \geq M$ channels.
 
-% FIXME
-\TODOL{Est-ce qu'on enlève toute mention de la lower-bound et de "order-optimal" du coup ?!}
-% FIXME
+% % FIXME
+% \TODOL{Est-ce qu'on enlève toute mention de la lower-bound et de "order-optimal" du coup ?!}
+% % FIXME
 
 
 The goal for every player is to select most of the time one of the $M$ best arms, without colliding too often with other players.
@@ -188,8 +188,8 @@ But for Bernoulli distributions, one may consider the following three observatio
     We note that this first model was never previously studied, but we do not focus on it because of its unrealistic aspect, and its simplicity (it is easier than the following model, for which we obtain good theoretical results).
   \item[\modeldeux]
     \textbf{Sensing, then collision}: player $j$ observes $Y_{A^j(t),t}$, \emph{then} observes the reward, and thus also $C^j(t)$ only if $Y_{A^j(t),t} = 1$.
-    This common setup, studied for example by \cite{Anandkumar11,Avner15,Rosenski16}, is relevant to model the OSA problem: the device first checks for the presence of primary users in the chosen channel.
-    If this channel is free ($Y_{A^j(t),t}=1$), the transmission is successful ($r^j(t)=1$) if no collision occurs with other smart devices ($\overline{C^j(t)}$).
+    This common setup, studied for example by \cite{Anandkumar11,Rosenski16}, is relevant to model the OSA problem: the device first checks for the presence of primary users in the chosen channel,
+    if this channel is free ($Y_{A^j(t),t}=1$), the transmission is successful ($r^j(t)=1$) if no collision occurs with other smart devices ($\overline{C^j(t)}$).
   \item[\modeltrois]
     \textbf{No sensing}: player $j$ only observes the reward $r^j(t)$.
     For IoT networks, this reward can be interpreted as an acknowledgement from a Base Station,
@@ -235,7 +235,7 @@ With this definition, maximizing the expected sum of global reward of the system
 
 % -----------------------------------------------------------------
 % \section{An improved asymptotic regret lower bound (for some algorithms)}
-\section{Decomposing the regret to get an intuition for the design of efficient decentralized algorithms}
+\section[Decomposing the regret to get an intuition about efficient decentralized algorithms]{Decomposing the regret to get an intuition for the design of efficient decentralized algorithms}
 \label{sec:5:lowerbound}
 % -----------------------------------------------------------------
 
@@ -403,11 +403,12 @@ The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized___
 \subsection{An improved asymptotic lower bound on the regret}
 \label{sub:5:betterLowerBound}
 
-Similarly to what we present above in Chapter~\ref{chapter:2}, Section~\ref{sec:2:lowerUpperBoundsRegret},
+Similarly to what we present above in Section~\ref{sec:2:lowerUpperBoundsRegret},
 we use the Kullback-Leibler divergence to express our lower bound.
 Let $\kl(x,y) := x\log(x/y) + (1-x)\log((1-x)/(1-y))$ be KL divergence between the Bernoulli distribution of mean $x$ and that of mean $y$.
 %
-We first introduce the assumption under which we derive a regret lower bound, that generalizes a classical assumption made by \cite{LaiRobbins85} in single-player bandit models.
+We first introduce the assumption under which we derive a regret lower bound, that generalizes the assumption of uniform efficiency given in Definition~\ref{def:2:uniformlyEfficientAlgorithm},
+a classical assumption made by \cite{LaiRobbins85} in single-player bandit models.
 % Our lower bound will only be valid for algorithms of a certain class, that do not obtain much information from the collision indicator variables.
 % This class contains our proposals, \RandTopM{} and \MCTopM, but rules out the \textsc{Sic-MMAB} algorithm of \cite{BoursierPerchet18}.
 
@@ -437,7 +438,7 @@ ${T}- \E_{\mu}[T_k(T)] {=} o(T^{\alpha})$, and so
   \sum_{j =1}^M\left(\frac{T}{M} - \E_{\mu}[T^j_k(T)]\right) = o(T^{\alpha}).
   % \vspace*{-5pt}  % XXX
 \end{equation}
-The additional assumption in \eqref{eq:5:SUE} further implies some notion of \emph{fairness}, as it suggests that each of the $M$ players spends on average the same amount of time on each of the $M$ best arms. Note that this assumption is satisfied by any strategy that is invariant under every permutation of the players, \ie, for which the distribution of the observations under $\rho^{\gamma} = (\rho^{\gamma(1)},\dots,\rho^{\gamma(M)})$ is independent from the choice of permutation $\gamma \in \Sigma_M$. In that case, it holds that  $\E_{\mu}[T_k^j(T)]=\E_{\mu}[T_k^{j'}(T)]$ for every arm $k$ and $(j,j') \in [M]$, hence \eqref{eq:5:SUE} and \eqref{eq:5:intermediate} are equivalent, and strong uniform efficiency is equivalent to standard uniform efficiency. Note that all our proposed algorithms are permutation invariant and \MCTopM{} is thus an example of strongly uniformly efficient algorithm, as we prove in Section~\ref{sec:5:upperbounds} that its regret is logarithmic on every instance $\mu \in \cP_M$.
+The additional assumption in \eqref{eq:5:SUE} further implies some notion of \emph{fairness}, as it suggests that each of the $M$ players spends on average the same amount of time on each of the $M$ best arms. Note that this assumption is satisfied by any strategy that is invariant under every permutation of the players, \ie, for which the distribution of the observations under $\rho^{\sigma} = (\rho^{\sigma(1)},\dots,\rho^{\sigma(M)})$ is independent from the choice of permutation $\sigma \in \Sigma_M$. In that case, it holds that  $\E_{\mu}[T_k^j(T)]=\E_{\mu}[T_k^{j'}(T)]$ for every arm $k$ and $(j,j') \in [M]$, hence \eqref{eq:5:SUE} and \eqref{eq:5:intermediate} are equivalent, and strong uniform efficiency is equivalent to standard uniform efficiency. Note that all our proposed algorithms are permutation invariant and \MCTopM{} is thus an example of strongly uniformly efficient algorithm, as we prove in Section~\ref{sec:5:upperbounds} that its regret is logarithmic on every instance $\mu \in \cP_M$.
 
 As it was discovered in \cite{BoursierPerchet18} and further explained in Appendix~E of \cite{KaufmannAbbas19}, our lower-bound was not true for any algorithm, as we wrongly claimed in \cite{Besson2018ALT} that the ``collision information term'' is zero for any algorithm $\rho$.
 However, we wanted to be still able to present the derivations of our lower-bound, mainly because its proof and its form give important insights on how to design an asymptotically optimal algorithm $\rho$.
@@ -1389,30 +1390,35 @@ We illustrate below the (empirical mean) regret $R_t$ as a function of time and 
 % for N in 4 100; do for M in 3 6 9; do DEBUG=True SAVEALL=False NOPLOTS=True M=$M K=30 N_JOBS=-1 N=$N T=10000 make moremultiplayers; echo "Done for N=$N and M=$M"; read; done; echo "Done for N=$N"; read; done
 %
 \begin{table}[ht]
-  % \begin{footnotesize}
+  \begin{small}  % XXX
       \centering
-      \begin{tabular}{c|ccc}
-      \textbf{Algorithm} $\;$ \textbackslash $\;$ Number of players & $M=3$ & $M=6$ & $M=9$ \\
+      \begin{tabular}{cc|ccc}
+          \textbf{Algorithm} & \textbf{Index policy} & $M=3$ players & $M=6$ players & $M=9$ players \\
           \hline
-          Centralized multiple-play with \UCB{} & $321 \pm 30$ & $233 \pm 25$ & $0$ \\
-          Centralized multiple-play with \klUCB{} & $94 \pm 17$ & $68 \pm 18$ & $0$ \\
+          \multirow{2}{*}{Centralized multiple-play}
+          & \UCB{} & $321 \pm 30$ & $233 \pm 25$ & $0$ \\
+          & \klUCB{} & $94 \pm 17$ & $68 \pm 18$ & $0$ \\
           \hline
-          \Selfish{} with \UCB{} & $1263 \pm 157$ & $3694 \pm 387$ & $12420 \pm 404$ \\
-          \Selfish{} with \klUCB{} & $243 \pm 31$ & $743 \pm 113$ & $3005 \pm 492$ \\
+          \multirow{2}{*}{\Selfish}
+          & \UCB{} & $1263 \pm 157$ & $3694 \pm 387$ & $12420 \pm 404$ \\
+          & \klUCB{} & $243 \pm 31$ & $743 \pm 113$ & $3005 \pm 492$ \\
           \hline
-          \RhoRand{} with \UCB{} & $1455 \pm 208$ & $4775 \pm 463$ & $11794 \pm 1083$ \\
-          \RhoRand{} with \klUCB{} & $394 \pm 96$ & $2385 \pm 412$ & $7057 \pm 1053$ \\
+          \multirow{2}{*}{\RhoRand}
+          & \UCB{} & $1455 \pm 208$ & $4775 \pm 463$ & $11794 \pm 1083$ \\
+          & \klUCB{} & $394 \pm 96$ & $2385 \pm 412$ & $7057 \pm 1053$ \\
           \hline
-          \RandTopM{} with \UCB{} & $1020 \pm 92$ & $2899 \pm 418$ & $470 \pm 346$ \\
-          \RandTopM{} with \klUCB{} & $258 \pm 43$ & $902 \pm 234$ & $551 \pm 520$ \\
+          \multirow{2}{*}{\RandTopM}
+          & \UCB{} & $1020 \pm 92$ & $2899 \pm 418$ & $470 \pm 346$ \\
+          & \klUCB{} & $258 \pm 43$ & $902 \pm 234$ & $551 \pm 520$ \\
           \hline
-          \MCTopM{} with \UCB{} & $980 \pm 76$ & $1466 \pm 132$ & $43 \pm 13$ \\
-          \MCTopM{} with \klUCB{} & $\mathbf{248 \pm 40}$ & $\mathbf{410 \pm 54}$ & $\mathbf{42 \pm 10}$ \\
+          \multirow{2}{*}{\MCTopM}
+          & \UCB{} & $980 \pm 76$ & $1466 \pm 132$ & $43 \pm 13$ \\
+          & \klUCB{} & $\mathbf{248 \pm 40}$ & $\mathbf{410 \pm 54}$ & $\mathbf{42 \pm 10}$ \\
           \hline
       \end{tabular}
-      \caption{Using \klUCB{} is much more efficient than using \UCB{}, for multi-player bandit (here in a simple problem with $K=9$ arms).}
+      \caption{No matter the orthogonalization policy, using \klUCB{} is much more efficient than using \UCB{}, for multi-player bandit (here in a simple problem with $K=9$ arms).}
       \label{table:5:comparisonUCB_klUCB}
-  % \end{footnotesize}
+  \end{small}  % XXX
   \end{table}
 
 
