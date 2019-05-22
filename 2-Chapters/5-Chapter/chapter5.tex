@@ -96,6 +96,7 @@ Second, if the $M$ players falsely use a value $M' > M$, then there is also a ce
 
 
 \paragraph{Interpretation of the hypothesis of knowning $M$ for real-world networks.}
+\label{par:5:knowingYourIDinMPBanditsGame}
 %
 One could criticize our approach if we study a wireless networks with no central coordination from the gateway,
 in particular where the devices cannot be assigned to a channel or be assigned a unique ID by the gateway when they first log in the network.
@@ -156,33 +157,42 @@ Then we compare the \RhoRand, \RandTopM{} and \MCTopM{} algorithms, using \klUCB
 % for M in 3 6 9; do DEBUG=False SAVEALL=True NOPLOTS=True M=$M K=9 N_JOBS=-1 N=100 T=10000 make moremultiplayers; read; done
 
 
+
 \begin{table}[ht]
-% \begin{footnotesize}
+\begin{small}  % WARNING
     \centering
-    \begin{tabular}{c|ccc}
-    \textbf{Algorithms} $\;$ \textbackslash $\;$ \textbf{Number of players} & $M=3$ & $M=6$ & $M=9$ \\
+    \begin{tabular}{cc|ccc}
+    \textbf{Algorithms} & \textbf{Hyp. on $M$} & $M=3$ players & $M=6$ players & $M=9$ players \\
         \hline
-        Centralized multiple-play \klUCB{} & $\mathbf{92 \pm 20}$ & $\mathbf{70 \pm 16}$ & $\mathbf{0}$ \\
-        \Selfish-\klUCB{} & $250 \pm 34$ & $735 \pm 85$ & $3010 \pm 472$ \\
+        Centralized multiple-play
+        & Known $M$ & $\mathbf{92 \pm 20}$ & $\mathbf{70 \pm 16}$ & $\mathbf{0}$ \\
         \hline
-        \RhoRand-\klUCB{} & $417 \pm 103$ & $2481 \pm 449$ & $6639 \pm 1035$ \\
-        \RhoRand-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$1422 \pm 1051$} & \textcolor{red}{$9030 \pm 1922$} & \textcolor{red}{$7264 \pm 1009 $} \\
+        \Selfish
+        & Don't need $M$ & $250 \pm 34$ & $735 \pm 85$ & $3010 \pm 472$ \\
         \hline
-        \RandTopM-\klUCB{} & $268 \pm 45$ & $941 \pm 217$ & $437 \pm 367$ \\
-        \RandTopM-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$688 \pm 614$} & \textcolor{red}{$4256 \pm 2701$} & \textcolor{red}{$1155 \pm 544$} \\
+        \multirow{2}{*}{\RhoRand}
+        & Known $M$ & $417 \pm 103$ & $2481 \pm 449$ & $6639 \pm 1035$ \\
+        & \textcolor{red}{Estimate $M$} & \textcolor{red}{$1422 \pm 1051$} & \textcolor{red}{$9030 \pm 1922$} & \textcolor{red}{$7264 \pm 1009 $} \\
         \hline
-        \MCTopM-\klUCB{} & $244 \pm 39$ & $401 \pm 55$ & $44 \pm 13$ \\
-        \MCTopM-\klUCB{} + \textcolor{red}{Estimate $M$} & \textcolor{red}{$563 \pm 546$} & \textcolor{red}{$1560 \pm 1293$} & \textcolor{red}{$618 \pm 29$} \\
+        \multirow{2}{*}{\RandTopM}
+        & Known $M$ & $268 \pm 45$ & $941 \pm 217$ & $437 \pm 367$ \\
+        & \textcolor{red}{Estimate $M$} & \textcolor{red}{$688 \pm 614$} & \textcolor{red}{$4256 \pm 2701$} & \textcolor{red}{$1155 \pm 544$} \\
+        \hline
+        \multirow{2}{*}{\MCTopM}
+        & Known $M$ & $244 \pm 39$ & $401 \pm 55$ & $44 \pm 13$ \\
+        & \textcolor{red}{Estimate $M$} & \textcolor{red}{$563 \pm 546$} & \textcolor{red}{$1560 \pm 1293$} & \textcolor{red}{$618 \pm 29$} \\
         \hline
     \end{tabular}
-    \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on the same problem with $M=3,6,9$, comparing algorithms which knows $M$ against algorithms which estimate $M$ on the fly.}
+    \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on the same problem with $M=3,6,9$, comparing algorithms which knows $M$ against algorithms which estimate $M$ on the fly. All use \klUCB.}
     \label{table:5:meanRegretSimulationsEstimatingM}
-% \end{footnotesize}
+\end{small}  % WARNING
 \end{table}
 
 One can observe in Table~\ref{table:5:meanRegretSimulationsEstimatingM} the empirical performances of different algorithms in an example problem, in each case of low, medium and maximum number of players ($M=3,6,9$ for $K=9$ arms).
 The three algorithms \RhoRand, \RandTopM{} and \MCTopM{} all suffer from similar increase on their regret when they have to estimate $M$ on the fly (written ``Estimate $M$'' in red, in Table~\ref{table:5:meanRegretSimulationsEstimatingM}). Our proposals are still much more efficient than \RhoRand{} when using the procedure to estimate $M$ described from \cite{Anandkumar11}.
-For the two non-extreme cases ($M=3,6$), the performance drop when having to estimate $M$ is quite large (on the three algorithms and two cases, about $\times 3.4$), and consistent on the different algorithm.
+For the two non-extreme cases ($M=3,6$), the performance drop when having to estimate $M$ is quite large,
+% (on the three algorithms and two cases, about $\times 3.4$),
+and consistent on the different algorithms.
 The extreme case of $M=K$ players is of highest interest, as \MCTopM{} achieves a very small regret (proved to be $\cO(1)$ as it is just the expected time of the orthogonalization process), while the same algorithm with unknown $M$ suffers from a much larger regret.
 In this extreme case, \RhoRand{} and its extension both perform very closely, as expected, and much worse than \MCTopM.
 %
@@ -324,7 +334,8 @@ Further empirical evaluation would be needed to fully understand the situation, 
         Improved \MusicalChair{} & $\textcolor{red}{12149 \pm 60}$ & $\textcolor{red}{22341 \pm 77}$ & $\textcolor{red}{27462 \pm 85}$ \\
         \hline
     \end{tabular}
-    \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on the same problem with $M=3,6,9$, for the ``no sensing'' case.}
+    % \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on the same problem with $M=3,6,9$, for the ``no sensing'' case.}
+    \caption{Comparison for different algorithms on the same problem with $M=3,6,9$ players, for the ``no sensing'' case. We give the mean regret $\pm$ $1$ std-dev, and more work is needed on our implementation on Improved \MusicalChair. The results on \textsc{Sic-MMAB} appear to confirm the numerical experiments in the paper \cite{BoursierPerchet18}.}
     \label{table:5:meanRegretSimulationsNoSensing}
 % \end{footnotesize}
 \end{table}
@@ -385,7 +396,7 @@ Further empirical evaluation would be needed to fully understand the situation, 
 
 In all the models of IoT networks considered in this thesis, we assume that \emph{the different IoT devices cannot communicate with each other}, and can only communicate with a unique gateway.
 Of course, this hypothesis can be removed, and in practice in some families of wireless networks, communication between devices are possible.
-Note that this extension is not considering a graph of distributed agents all playing cooperatively to solve a unique bandit game, like it is studied in the ``graph bandit'' problem.
+Note that this extension is not considering a graph of distributed agents all playing cooperatively to solve a unique bandit game, like it is studied in the ``\emph{graph bandit}'' problem.
 What we are interested here is an extension of the model where players can send some bits to one or all the other players, at every time steps or some time steps.
 
 Clearly, the problem is easier by allowing communication, and it is quite immediate to see that the communication capacity between players must be limited otherwise the problem is already known and solved.
@@ -449,7 +460,7 @@ The question is to know if it is possible to obtain a logarithmic --or even sub-
 This question was first answered in \cite{Bistritz18}, and proposed an algorithm based on alternating three phases, and increasing their lengths after the end of each epoch ($2^p$ for the $p$-th epoch).
 First, players explore in order to estimate the expectations of the arm rewards ; then players use their ``Game of Thrones'' dynamics (inspired by Musical Chair \cite{Rosenski16}) and play the optimal solution most of the time ; finally players play the action they played most of the time in the recent GoT phases.
 % combining Musical Chair with an epoch-based alternative phases of forced exploration and pure exploitation.
-They analyse their ``Game of Thrones'' algorithm and proved that it achieves a regret of $\cO((\log(T))^{2+\kappa})$ for any positive constant $\kappa$, as small as possible, if $\kappa$ is known by the algorithm.
+They analyze their ``Game of Thrones'' algorithm and proved that it achieves a regret of $\cO((\log(T))^{2+\kappa})$ for any positive constant $\kappa$, as small as possible, if $\kappa$ is known by the algorithm.
 
 Until the very recent work of \cite{KaufmannAbbas19}, it was unknown if a logarithmic regret was possible.
 They proposed an algorithm that is based on two phases: first, players will learn $M$ and learn orthogonal ranks, using the ``communication trick'' by \cite{BoursierPerchet18}, and then one player is elected as a leader and the others are followers.
@@ -540,7 +551,7 @@ and we include both the centralized multi-play version of \klUCB{} and \MCTopM-\
         \MCTopM-\klUCB{} & $244 \pm 39$ & $401 \pm 55$ & $44 \pm 13$ \\
         \hline
     \end{tabular}
-    \caption{Comparing \RhoRand{} and \rhoLearn on a simple MP bandit problem with $K=9$ arms.}
+    \caption{Comparing \RhoRand{} and \rhoLearn{} on a simple MP bandit problem with $K=9$ arms.}
     \label{table:5:comparisonRhoRandRhoLearn}
 % \end{footnotesize}
 \end{table}
@@ -588,7 +599,7 @@ We conjecture that any reasonable decentralized bandit algorithm must suffer a r
 On the first hand, piece-wise stationary multi-players MAB can be tackled by extending algorithms developed for the single-player case.
 In \cite{WeiSrivastava18Distributed}, the authors study exactly the same multi-players bandit model as our model, and they propose two distributed algorithms that can efficiently be used by $M \leq K$ players to achieve sub-linear regret for piece-wise stationary problems, essentially by considering it as a harder case of a stationary problem. \\
 \indent
-The proposed the RR-SW-UCB\# algorithm, which combines their SW-UCB\# algorithm, previously proposed in \cite{WeiSrivastava18Abruptly}, and a Round-Robin hoping, under the assumption that each user $j\in[M]$ knows its ID $j$ (see above the discussion we give on this unrealistic assumption).
+The proposed the RR-SW-UCB\# algorithm, which combines their SW-UCB\# algorithm, previously proposed in \cite{WeiSrivastava18Abruptly}, and a Round-Robin hoping, under the assumption that each user $j\in[M]$ knows its ID $j$ (we criticize this unrealistic assumption in Section~\ref{par:5:knowingYourIDinMPBanditsGame} above).
 The SW-UCB\# algorithm is discussed more in details in the literature review of Chapter~\ref{chapter:6} below.
 %
 If $\Upsilon_T$ is bounded by $\Upsilon_T = \bigO{T^{\gamma}}$, for a known $\gamma$ but an unknown $\Upsilon_T$, they prove for instance in Theorem~2 \cite{WeiSrivastava18Distributed} that the expected cumulative regret of their RR-SW-UCB\# algorithm is bounded by $R_T = \bigO{T^{\frac{1+\gamma}{2}} \log(T)}$ (what we call the centralized system regret).
@@ -624,22 +635,22 @@ In this second work also, we can note the poor experimental section, as the prop
 Despite being more complicated than other approaches, their algorithm ``\texttt{C \& P}'' should not be too hard to implement ourself, and studying its empirical performances is an interesting future work.
 
 
-\TODOL{Explain that we think the following approach can work very efficiently:
+% \TODOL{Explain that we think the following approach can work very efficiently:
 
-    - Combine \MCTopM{} with \GLRklUCB{} instead of \klUCB,
-    - and incorporate also the detected change-points by B-\GLR{} test in the orthogonalization procedure: after any change-point, the player is not sitting anymore.
-    - Modification: only a change-point on the arm on which player is sitting can make him move? It's already the case: the \GLR{} test can only detect change-point on an arm that was played, and the \MCTopM{} orthogonalization procedure forces to play the same arm as long as the player is sitting.
-}
+%     - Combine \MCTopM{} with \GLRklUCB{} instead of \klUCB,
+%     - and incorporate also the detected change-points by B-\GLR{} test in the orthogonalization procedure: after any change-point, the player is not sitting anymore.
+%     - Modification: only a change-point on the arm on which player is sitting can make him move? It's already the case: the \GLR{} test can only detect change-point on an arm that was played, and the \MCTopM{} orthogonalization procedure forces to play the same arm as long as the player is sitting.
+% }
 
 % \TODOL{Je peux faire des expériences pour cette approche, est-ce que j'en fais ? Ici, ou à la fin du chapitre 6 ? Ou en conclusion ?}
 
 
 % ----------------------------------------------------------------------------
-\subsection{A note on SMPyBandits}
+\subsection{Some future work on SMPyBandits}
 
 We have implemented in SMPyBandits \cite{SMPyBandits} the following extensions: evaluating $M$ on the fly (Section~\ref{sub:5:unknownNumberOfPlayers}), piece-wise stationary multi-player bandits (Section~\ref{sub:5:towardsNonStationaryModels}).
 We have not yet implemented the other extensions, but we are interested to do it, and it is one of the major future work left on our library.
-For more details, see the issue tickets at \href{https://github.com/SMPyBandits/SMPyBandits/issues/}{\texttt{GitHub.com/SMPyBandits/SMPyBandits/issues/X}}, for tickets number \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}.
+For more details, see the issue tickets at \href{https://github.com/SMPyBandits/SMPyBandits/issues/}{\texttt{GitHub.com/SMPyBandits/SMPyBandits/issues/}}, for tickets number \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}.
 
 
 
