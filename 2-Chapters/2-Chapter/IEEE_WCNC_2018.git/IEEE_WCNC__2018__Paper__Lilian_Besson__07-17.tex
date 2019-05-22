@@ -145,7 +145,8 @@ The loss estimate is unbiased in the following sense. If one had access to the r
 % - Precise some tricky points
 An important feature of \Aggr{} is the feedback provided to each underlying bandit algorithm, upon the observation of arm $A^{t+1}$. Rather than updating only the trusted algorithms (that is the algorithms which would have drawn arm $A^{t+1}$) with the observed reward $r_{A^{t+1}}(t+1)=1 - \ell_{A^{t+1}}(t+1)$,  we found that updating each algorithm with the (original) loss observed for arm $A^{t+1}$ improves the performance drastically.
 %
-As expected, the more feedback they get, the faster the underlying algorithms learn, and the better the aggregation algorithm will be. This intuition is backed up by theory explained in \cite{Maillard11}.
+As expected, the more feedback they get, the faster the underlying algorithms learn, and the better the aggregation algorithm is.
+This intuition is backed up by theory explained in \cite{Maillard11}.
 
 
 Regarding the update of $\pi^t$, one can note that the trust probabilities are not all updated before the normalization step,
@@ -164,8 +165,8 @@ is similar to \Aggr{}, presented in Algorithm \ref{algo:25:Aggr},
 but differs in the two following points.
 %
 First, $a\sim\pi^t$ is sampled first and the arm chosen by $\Alg_a$ is trusted, whereas \Aggr{}
-needs to listen to the $N$ decisions to perform the updates on $\pi^{t+1}$,
-and \ExpQ{} gives back an observation (arm, reward) only to the last trusted algorithm
+needs to listen to the $N$ decisions to perform the updates on $\pi^{t+1}$.
+Then, \ExpQ{} gives back an observation (arm, reward) only to the last trusted algorithm
 whereas \Aggr{} gives it to all algorithms.
 %
 Second, after having computed the loss estimate $\ell$, \ExpQ{} updates the estimated cumulative loss for each algorithm,
@@ -178,11 +179,12 @@ $\exp(- \eta_t \widetilde{L}_a(t))$.
 
 \paragraph{How to choose the learning rates $(\eta_t)$?}
 %
-The sequence of non-negative learning rates $(\eta_t)_{t \geq 1}$ used by \ExpQ{} can be arbitrary, it can be constant but should be non-increasing \cite[Theorem 4.2]{Bubeck12}.
+The sequence of non-negative learning rates $(\eta_t)_{t \geq 1}$ used by \ExpQ{} can be arbitrary.
+It can be constant but should be non-increasing \cite[Theorem 4.2]{Bubeck12}.
 % helps to choose a good sequence.
 If the horizon $T$ is known (and fixed), the best choice is given by $\eta_t = \eta := 2 \log(N) / (T K)$.
-However, for real-world communication problems, it is unrealistic to assume a fixed and known time horizon, so we prefer the alternative horizon-free choice%
-\footnote{~It is non-increasing, and is obtained by minimizing the upper-bound on the contextual regret derived in \cite[pp48]{Bubeck12}.}
+However, for real-world communication problems, it can be considered unrealistic\footnote{~For more discussion on this hypothesis, we refer to Section~1 of our article \cite{Besson2018DoublingTricks}.} to assume a fixed and known time horizon, so we prefer the alternative horizon-free choice%
+\footnote{~It is non-increasing, and is obtained by minimizing the upper-bound on the regret derived in \cite[pp48]{Bubeck12}.}
 of learning rates,
 $\eta_t := \log(N) / (t K)$ suggested by \cite{Bubeck12}.
 We compare both approaches empirically, and the second one usually performs better.
@@ -204,17 +206,17 @@ We also stick to this choice of $(\eta_t)_{t \geq 1}$ for \Aggr.
 
 % - explain the problem studied in the simulation
 We focus on \emph{i.i.d.} MAB problems, with $K = 9$ channels\footnote{~Similar behaviors are observed for any not-too-large values of $K$, we tried up-to $K = 100$ and the same results were obtained.}.
-For Bernoulli problem, the first one uses $\boldsymbol{\mu}=[0.1,\dots,0.9]$,
-and the second one is divided in three groups:
-2 very bad arms ($\mu = 0.01, 0.02$), 5 average arms ($\mu = 0.3$ to $0.6$) and 3 very good arms ($\mu = 0.78, 0.8, 0.82$).
+For Bernoulli problem, the first one uses $\boldsymbol{\mu}=[0.1,\dots,0.9]$, and is considered as a ``simple'' problem.
+The second one is divided in three groups:
+2 very bad arms ($\mu = 0.01, 0.02$), 5 average arms ($\mu = 0.3$ to $0.6$) and 3 very good arms ($\mu = 0.78, 0.8, 0.82$), and it is considered as a ``harder'' problem.
 The horizon is set to $T = 20000$ (but its value is unknown to all algorithms), and simulations are repeated $1000$ times, to estimate the expected regret.
 %
 This empirical estimation of the expected regret $R_T$ is plotted below, as a function of $T$, comparing some algorithms $\Alg_1,\dots,\Alg_N$ (for $N=6$), and their aggregation with \Aggr{} (displayed in orange bold),
 using the parameter-free learning rate sequence, $\eta_t := \log{N} / (t K)$.
-The Lai \& Robbins' logarithmic lower-bound \cite{LaiRobbins85} is also plotted, and it is crucial to note that it is only asymptotic and to not be surprised by having regret curves smaller than the lower-bound (\eg, for the easier Bernoulli problem).
+The Lai \& Robbins' logarithmic lower-bound \cite{LaiRobbins85} is also plotted, and it is crucial to note that it is only asymptotic, and as such one should not be surprised to see regret curves smaller than the lower-bound (\eg, for the easier Bernoulli problem in Figure~\ref{fig:25:EasyBernoulli}).
 %
 Note that for each of the $1000$ simulations, we choose to generate all the rewards beforehand, \ie, one full matrix $(r_k(t))_{1\leq k \leq K, 1 \leq t \leq T}$ for every repetition, in order to compare the algorithms on the same realizations%
-\footnote{Similar plots and similar results are obtained if this trick is not used, but it makes more sense to compare them against the same randomization.}
+\footnote{Similar plots and similar results are obtained if this choice is not made, but it makes more sense to compare them against the same randomization. Note that this choice is the default in SMPyBandits, but the other possibility is implemented as well, by changing \texttt{cache\_rewards} to \texttt{true} or \texttt{false} in the \texttt{configuration} dictionary. See Section~\ref{sub:3:miniConfigurationFileSMPyBandits}.}
 of the MAB problem.
 
 We compare our \Aggr{} algorithm,
@@ -277,11 +279,12 @@ Especially in difficult problems with mixed or unknown distributions, \Aggr{} sh
 % ----------------------------------------------------------------------
 \subsection{No theoretical guarantees yet}\label{sub:25:theory}
 
-The \Aggr{} does not have satisfying theoretical guarantees in terms of regret $R_T$ yet, unlike many bandit algorithms.
+The \Aggr{} does not have satisfying theoretical guarantees in terms of regret $R_T$, unlike many bandit algorithms.
 %
 Another notion, the \emph{adversarial regret}, denoted by $\overline{R_T}$,
 measures the difference in terms of rewards,
-between the aggregation algorithm $\Alg_{\mathrm{aggr}}$ and the best aggregated algorithm $\Alg_a$. This is in contrast with the (classical) regret, which measure the difference with the best fixed-arm strategy (Eq.~\eqref{eq:5:classicalregret}). Thus,  even if the aggregated algorithms have logarithmic (classical) regret, having an adversarial regret scaling as $\sqrt{T}$ does not permit to exhibit a logarithmic (classical) regret for the aggregation algorithm.
+between the aggregation algorithm $\Alg_{\mathrm{aggr}}$ and the best aggregated algorithm $\Alg_a$. This is in contrast with the (classical) regret, which measure the difference with the best fixed-arm strategy (Definition~\ref{def:2:regret}).
+Thus, even if the aggregated algorithms have logarithmic (classical) regret, having an adversarial regret scaling as $\sqrt{T}$ does not permit to exhibit a logarithmic (classical) regret for the aggregation algorithm.
 %
 %
 Under some additional hypotheses,
@@ -331,13 +334,14 @@ As expected, the \Aggr{} is never able to outperform any of the aggregated algor
 %
 What matters the most is that, empirically, \Aggr{} is able to quickly discover \emph{on the fly} the best algorithms to trust, and then performs almost as well as if it was following it from the beginning.
 
-Our \Aggr{} algorithm can probably be rewritten as an Online Mirror Descent, as \ExpQ{} and \CORRAL,
-but this does not appear useful as in the case of \CORRAL{}  the analysis cannot bring a logarithmic bound on the regret even by aggregating asymptotically optimal algorithms.
-We will continue investigating regret bounds for \Aggr,
-and other directions include possible applications to the non-stochastic case (\eg, rested or restless Markovian problems, like it was very recently studied in \cite{Luo18}).
+Our \Aggr{} algorithm could be rewritten as an Online Mirror Descent \cite{Hazan2016introduction,Zimmert2018}, as it is the case for both \ExpQ{} and \CORRAL.
+But this direction does not appear very useful, as in the case of \CORRAL{}  the analysis cannot bring a logarithmic regret bound, even by aggregating asymptotically optimal algorithms.
+% We will continue investigating regret bounds for \Aggr,
+% and other directions include possible applications to the non-stochastic case (\eg, rested or restless Markovian problems, like it was very recently studied in \cite{Luo18}).
 
-\paragraph{A note on the simulation code}
-The page \texttt{SMPyBandits.GitHub.io/Aggregation.html} explains how to reproduce the experiments used for this Section.
+\paragraph{Reproducility of the experiments.}
+%
+Experiments presented in this Section are based on our library SMPyBandits, and instructions to reproduce them are given on the page \texttt{SMPyBandits.GitHub.io/Aggregation.html}.
 
 
 % ----------------------------------------------------------------------------
