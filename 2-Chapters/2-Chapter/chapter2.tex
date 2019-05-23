@@ -147,7 +147,7 @@ The demo is hosted on my website, at \href{https://perso.crans.org/besson/phd/MA
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=0.75\linewidth]{2-Chapters/2-Chapter/Images/example_of_a_5_arm_bandit_problem.png}
+    \includegraphics[width=0.85\linewidth]{2-Chapters/2-Chapter/Images/example_of_a_5_arm_bandit_problem.png}
     \caption{Screenshot of the demonstration available online on my website, for a current step of $t=24$.}
     \label{fig:2:example_of_a_5_arm_bandit_problem}
 \end{figure}
@@ -171,7 +171,7 @@ After $T=100$ steps, the player obtained a cumulated reward of $56$, by playing 
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=0.75\linewidth]{2-Chapters/2-Chapter/Images/example_of_a_5_arm_bandit_problem__step100.png}
+    \includegraphics[width=0.85\linewidth]{2-Chapters/2-Chapter/Images/example_of_a_5_arm_bandit_problem__step100.png}
     \caption{Screenshot of the demonstration, after the end of the game, after $t=T=100$ steps.  See \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}}
     \label{fig:2:example_of_a_5_arm_bandit_problem__step100}
 \end{figure}
@@ -346,9 +346,9 @@ Historically, MAB models were first applied to \textbf{clinical trials}, where a
 %
 % \begin{itemize}
 %     \item
-    \textbf{A/B testing} of websites is a popular application of the best arm identification problem,
+    \textbf{A/B testing}, for instance for websites, is a popular application of the best arm identification problem,
     where the task is purely exploratory and the player is asked to identify the best of two options (or more), in a finite number of steps \cite{audibert2010best}.
-    The problem can either consider a fixed budget and no freedom on the ending of the game (\ie, an known horizon $T$), or a fixed confidence (\ie, the identified arm must be the true best arm with probability at least $1-\delta$) and a certain freedom on the budget \cite{Garivier16BAI}.
+    The problem can either consider a fixed budget and no freedom on the ending of the game (\ie, an known horizon $T$), or a fixed confidence and a certain freedom on the budget (\ie, the identified arm must be the true best arm with probability at least $1-\delta$) \cite{Garivier16BAI}.
     The theoretical complexity of this use of bandit for A/B testing was first studied in \cite{Kaufmann14},
     and later on a more practical point-of-view was proposed in \cite{Jamieson17ABTest}.
 
@@ -692,6 +692,58 @@ Why Follow-the-Leader (EmpiricalMeans https://smpybandits.github.io/docs/Policie
 See
 https://smpybandits.github.io/docs/Policies.EpsilonGreedy.html
 https://smpybandits.github.io/docs/Policies.ExploreThenCommit.html
+
+\begin{itemize}
+    \item Algorithm 1 is
+    an $\varepsilon$-greedy algorithm, as described in \cite{Bubeck12}, using $\varepsilon_t = \varepsilon_0 / t$, and $\varepsilon_0 = 0.1$ (chosen arbitrarily) (\texttt{EpsilonDecreasing}).
+    It has a very small cost in terms of time and memory, but it usually achieves linear regret.
+
+    \item Algorithm 2 is
+    an Explore-then-Commit algorithm from \cite{GarivierETC2016}, that knows the horizon, and a lower-bound on the gap between arms (chosen arbitrarily as $\delta=0.01$, valid for all problems) (\texttt{ETC\_KnownGap}).
+    Similarly to $\varepsilon$-greedy, it has a very small footprint in terms of time and memory, but only obtain large (linear) regret.
+
+    \item Algorithm 3 is
+    $\mathrm{Exp}3^{++}$ from \cite{Seldin17}, using $\alpha=3$ and $\beta=256$ as advised (\texttt{Exp3PlusPlus}).
+    It is a recent variant of the $\mathrm{Exp3}$ algorithm, using an adaptive tuning of its parameter. It is anytime, and was proven to obtain good ``best of both world'' performances, meaning that it achieves $\cO(K\log(T)/\Delta^2)$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
+
+    \item Algorithm 4 is
+    $\UCB_1$ from \cite{Auer02}, using $\alpha=1$ (\texttt{UCBalpha}).
+    It achieves order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret.
+
+    \item Algorithm 5 is
+    \klUCB{} from \cite{KLUCBJournal}, using the Bernoulli KL divergence and the corresponding \klUCB{} indexes, implemented as \texttt{kullback.klucbBern} (\texttt{klUCB}).
+    It achieves asymptotical optimal problem-dependent bounds with a $\cO(\log(T))$ regret with the scaling factor matching Lai and Robbins' lower-bound \cite{LaiRobbins85}.
+    It is computationally more costly that \UCB, as at each time step $t$ and for each arm $k$, a convex optimization problem must be solved approximately, in order to compute the $K$ indexes.
+    In practice, a few steps of a simple Newton method are enough to obtain a good numerical precision, and empirically we found that even in the worst cases \klUCB{} is no more than an order of magnitude slower than \UCB.
+    % of more than 10 digits
+    \TODOL{Si on en pas parlé avant, ou après dans une annexe, je peux dire un mot ici à propos de l'implémentation en Cython ou en C des fonctions kl et indices kl-UCB !}
+
+    \item Algorithm 6 is
+    Thompson sampling from \cite{Kaufmann12Thompson}, using a Beta prior and posterior, initially uniform (\ie, $\mathrm{Beta}(1,1)$) (\texttt{Thompson}).
+    It was also proved to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12Thompson,AgrawalGoyal11}.
+    It is efficient in terms of storage, and even if $K$ random samples must be sampled from the arms posteriors at each time step $t$, Thompson sampling is not much slower than \UCB, if the random number generator used for the simulations is efficient (it is the case for SMPyBandits, as we use \texttt{numpy.random} module which relies on C or Cython code, highly optimized).
+
+    \item Algorithm 7 is
+    Bayes-UCB from \cite{Kaufmann12BUCB}, using a Beta prior and posterior, initially uniform (\ie, $\mathrm{Beta}(1,1)$) (\texttt{BayesUCB}).
+    It was also proved to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12BUCB}.
+    It is comparable to Thompson sampling in terms of memory complexity, but slower in terms of time complexity as computing a $1-1/t$ quantile is more costly than sampling from a distribution.
+    But in particular for Bernoulli distributed arms and for Beta posteriors and priors, Bayes-UCB is only about twice as slow as Thompson sampling.
+
+    \item Algorithm 8 is
+    AdBandits from \cite{Truzzi13}, using $\alpha=1$ (\texttt{AdBandits}).
+    It follows the same assumptions as Thompson sampling and Bayes-UCB, and uses a Beta posterior on each arm. It uses a random mixture between the two algorithms, and with a certain probability it uses the Thompson decision rule (\ie, choose the arm maximizing one draw of random samples from the posteriors), otherwise it uses the Bayes-UCB decision rule (\ie, choose the arm maximizing the $1-1/t$ quantile).
+    It was proposed in this article \cite{Truzzi13} and illustrated on empirical simulations, but no theoretical analysis was given, and it did not gain popularity since then.
+    In practice, it is usually (slighly) more efficient than both Thompson sampling and Bayes-UCB in terms of regret, it is comparable in terms of computation times, but costs more memory.
+
+    \item Algorithm 9 is
+    BESA (Best Empirical Sampled Average) from \cite{Baransi2014}, and it consists in trying to fix a simple observation.
+    For instance in \UCB, if arm $1$ has $100$ samples and arm $2$ has $50$ samples, it should make more sense to only use $50$ samples of arm $1$ to compute and compare any statistics for each arms (\eg, mean).
+    The BESA algorithm for $K=2$ arms is then very simple: at each time step, if arms $1$ and $2$ have $n_1$ and $n_2$ samples, and if $n_1>n_2$ (for instance), first it sub-samples $n_2$ observations from $n_1$, then it computes the mean of these observations, and play the arm maximizing this mean (now that there is the same number of observations for both arms, it makes more sense to compare these quantities).
+    It was analyzed partially for the two-armed case, and the authors illustrated that it can be very efficient empirically.
+    Analyzing it in the generic case was found to be difficult, and is still an open problem.
+    We implemented it using a binary tournament implement in a naive but efficient way (not using recursive functions, \ie, using the \texttt{BESA} class with \texttt{''non\_recursive''=True}).
+    By using such binary tournament, the extension $K>2$ arms is costly in terms of both time and memory, as illustrated below, and suffer from an exponential blow-up when $K$ increases.
+\end{itemize}
 
 
 % ----------------------------------------------------------------------------
