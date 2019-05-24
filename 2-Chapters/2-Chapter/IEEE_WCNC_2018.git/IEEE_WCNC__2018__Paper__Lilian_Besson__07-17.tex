@@ -77,11 +77,11 @@ Our proposed \Aggr{} is detailed in Algorithm~\ref{algo:25:Aggr}.
 				% \tcp{First, run each algorithm $\Alg_a$}
 				\For(\tcp*[f]{Can be parallel}){$a = 1, \dots, N$}{
 					$\Alg_a$ updates its internal state (e.g., \UCB{} indexes)\;
-					It chooses $A(t+1)_{a} \in [K]$.
+					It chooses $A_a(t+1) \in [K]$.
 				}
 				%
 				% \tcp{The more algorithms have chosen arm $j$, the more probable it is to be chosen.}
-				Let $p^{t+1}_j := \sum\limits_{a = 1}^{N} \pi^{t}_a \times \mathbbm{1}(\{A(t+1)_{a} = j\}), \;\forall 1\leq j \leq K$\;
+				Let $p^{t+1}_j := \sum\limits_{a = 1}^{N} \pi^{t}_a \times \mathbbm{1}(\{A_a(t+1) = j\}), \;\forall 1\leq j \leq K$\;
 				% \tcp*{Sum trusts}
 				Then $\Alg_{\mathrm{aggr}}$ chooses arm $A(t+1) \sim p^{t+1}$\;
 				% $\P(A(t+1)_{\mathrm{aggr}} = j) = p^{t+1}_j$
@@ -93,19 +93,20 @@ Our proposed \Aggr{} is detailed in Algorithm~\ref{algo:25:Aggr}.
 				% \tcp{Finally, use the instantaneous bandit feedback (loss $\ell_{A(t+1),t}$) to update $\pi^{t}$}
 				% \For(\tcp*[f]{Can be parallel}){$a = 1, \dots, N$}{
 				\For{$a = 1, \dots, N$}{
-					% \eIf{$\Alg_a$ was trusted, \ie, $A(t+1)_{a} = A(t+1)$}{
-					\If{$\Alg_a$ was trusted, \ie, $A(t+1)_{a} = A(t+1)$}{
+					% \eIf{$\Alg_a$ was trusted, \ie, $A_a(t+1) = A(t+1)$}{
+					\eIf{$\Alg_a$ was trusted, \ie, $A_a(t+1) = A(t+1)$}{
 						$ \pi^{t+1}_{a} = \exp(\eta_t \ell^{t+1}) \times \pi^{t}_{a} $
-						% \tcp*{More trusted}
-						}%{
+						\tcp*{Trusted more}
+						}{
 						% $ \pi^{t+1}_{a} = \exp(- \eta_t \ell^{t+1}) \times \pi^{t}_{a} $
-						% \tcp*{Less trusted}
-					% }
+						$ \pi^{t+1}_{a} = \pi^{t}_{a} $
+						\tcp*{Do not update the trust now}
+					}
 				}
-				Renormalize the new $\pi$: $\pi^{t+1} := \pi^{t+1} / \sum_{a=1}^{N} \pi^{t+1}_{a}$.
+				Renormalize the new weights $\pi^{t+1}$: $\pi^{t+1} := \pi^{t+1} / \sum_{a=1}^{N} \pi^{t+1}_{a}$.
 				% \tcp*{Project it back to $\Delta_N$}
 			}
-			\caption{Our aggregation algorithm \Aggr.}
+			\caption{Our algorithm \Aggr{} aggregating $\Alg_1,\dots,\Alg_N$.}
 			\label{algo:25:Aggr}
 		\end{algorithm}
 		\end{framed}
@@ -119,11 +120,11 @@ a multiplicative exponential factor (using the learning rate and the \emph{unbia
 %
 Only the algorithms $\Alg_a$ who advised the last decision get their trust updated, in order to trust more the ``reliable'' algorithms.
 
-The loss estimate is unbiased in the following sense. If one had access to the rewards $r_k(t+1)$ (or the losses $\ell_k(t+1)$) for all arms $k$, the loss incurred by algorithm $a$ at time $t+1$ would be $\tilde{\ell}_{a,t+1} = \ell_{A_A(t+1)}(t+1)$. This quantity can only be observed for those algorithms for which $A_{a}^{t+1}=A(t+1)$. However, by dividing by the probability of observing this recommendation, one obtains an unbiased estimate of $\tilde{\ell}_{a,t}$. More precisely, if we define the estimate by
+The loss estimate is unbiased in the following sense. If one had access to the rewards $r_k(t+1)$ (or the losses $\ell_k(t+1)$) for all arms $k$, the loss incurred by algorithm $a$ at time $t+1$ would be $\widetilde{\ell_{a,t+1}} = \ell_{A_a(t+1)}(t+1)$. This quantity can only be observed for those algorithms for which $A_{a}^{t+1}=A(t+1)$. However, by dividing by the probability of observing this recommendation, one obtains an unbiased estimate of $\widetilde{\ell_{a,t}}$. More precisely, if we define the estimate by
 \begin{equation}
-	\hat{\ell}_{a,t+1} = \frac{\ell_{A_A(t+1)}(t+1)}{p_{A_A(t+1)}^{t+1}} \mathbbm{1}(A_A(t+1) = A(t+1))
+	\widehat{\ell_{a,t+1}} = \frac{\ell_{A_a(t+1)}(t+1)}{p_{A_a(t+1)}^{t+1}} \mathbbm{1}(A_a(t+1) = A(t+1))
 \end{equation}
-satisfies $\mathbb{E}[\hat{\ell}_{a,t+1} | \mathcal{H}_t] = \tilde{\ell}_{a,t+1}$, for all $a$, where the expectation is taken conditionally to the history of observations up to round $t$, $\mathcal{H}_{t}$. Observe that $\tilde{\ell}_{a,t+1}=\ell^{t+1}$ for all algorithms $a$ such that $A_A(t+1)=A(t+1)$, and $\tilde{\ell}_{a,t+1}=0$ otherwise.
+satisfies $\mathbb{E}[\widehat{\ell_{a,t+1}} | \mathcal{H}_t] = \widetilde{\ell_{a,t+1}}$, for all $a$, where the expectation is taken conditionally to the history of observations up to round $t$, $\mathcal{H}_{t}$. Observe that $\widetilde{\ell_{a,t+1}}=\ell^{t+1}$ for all algorithms $a$ such that $A_a(t+1)=A(t+1)$, and $\widetilde{\ell_{a,t+1}}=0$ otherwise.
 
 
 % - Precise some tricky points
@@ -135,7 +136,7 @@ This intuition is backed up by theory explained in \cite{Maillard11}.
 
 Regarding the update of $\pi^t$, one can note that the trust probabilities are not all updated before the normalization step,
 and an alternative would be to
-increase $\pi_{a}$ if $A(t+1)_a = A(t+1)$ and to decrease it otherwise.
+increase $\pi_{a}$ if $A_a(t+1) = A(t+1)$ and to decrease it otherwise.
 It would not be so different, as there is a final renormalization step, and empirically this variation has little impact on the performance of \Aggr{}.
 
 
