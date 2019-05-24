@@ -672,7 +672,7 @@ But even if $SC^{\cA}(T) = \Theta(\log T)$ for an efficient algorithm, it can be
 It is more interesting to studying $SC_M^{\cA}(T)$, the sum of the switching costs of the $M$ players in a multi-player bandit game, as in this case, it is possible that the players follow an efficient centralized or decentralized algorithm (which gives a logarithmic centralized regret) while still suffering from a linear switching cost.
 It is very satisfying to obtain a logarithmic switching cost for our algorithm \MCTopM-\klUCB{} in Chapter~\ref{chapter:5}, even if minimizing the switching cost was not one of our objective, and the bound we obtain on $SC_M^{\cA}(T)$ is just a consequence of our proof of the control we give on the regret $R^{\cA}(T)$.
 % - Switching cost? \cite{modiDemo2016} \cite{Koren17}
-On a more experimental note, it was showed in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-player bandits, \rhoRand, could be tuned to run in batches\footnote{~The batch bandit setting means that all players use the same decisions for instance for $50$ consecutive times, and update their decisions only once every $50$ time steps. For more details, see \cite{modiDemo2016} for the multi-player case, or \cite{perchet2016,gao2019batched,kolnogorov2019multi}.}, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret.
+On a more experimental note, it was showed in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-player bandits, \rhoRand, could be tuned to run in batches\footnote{~The batch bandit setting means that all players use the same decisions for instance for $50$ consecutive times, and update their decisions only once every $50$ time steps. For more details, see \cite{modiDemo2016} for experiments on the multi-player case, or \cite{perchet2016,gao2019batched,kolnogorov2019multi} for theoretical developments on the single-player case.}, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret.
 
 
 % - Fairness ?
@@ -730,15 +730,45 @@ On the first hand, the $\varepsilon$-greedy strategy, from \cite{SuttonBarto2018
 Fix $0<\varepsilon<1$, then at each round, with probability $\varepsilon$ the player selects an arm uniformly at random (exploration) and with probability $1-\varepsilon$ the arm with highest empirical mean is selected (exploitation).
 If $\varepsilon$ is constant, then the (mean) regret is still growing linearly as it is lower bounded by $\varepsilon \frac{1}{K} \sum_{k=1}^K \Delta_k T$.
 But if we consider $\varepsilon_t$ decreasing with time $t$, for instance $\varepsilon_t = 6 K / (d^2 t)$, for a constant $0 < d < \min_{k: \Delta_k > 0} \Delta_k$,
-then it was shown in \cite{Auer02} that the regret is of the order of $K \log(T) / d + \smallO{T}$.
+then it was shown in \cite{Auer02} that the regret is of the order of $K \log(T) / d + \smallO{T}$, which leads to an order-optimal regret of $\bigO{\log(T)}$.
 
 
 % https://smpybandits.github.io/docs/Policies.ExploreThenCommit.html
-On the other hand, the ``explore-then-commit'' strategy, also introduced in \cite{SuttonBarto2018} and studied for instance in \cite{GarivierETC2016}, consists in first exploring uniformly the $K$ arms for $T_0$ time steps, then only exploiting the best arm.
-If $T_0$ is fixed independently of $T$ and the problem difficulty, the regret is again growing linearly.
+On the other hand, the ``explore-then-exploit'' strategy, also introduced in \cite{SuttonBarto2018} and studied for instance in \cite{GarivierETC2016}, consists in first exploring uniformly the $K$ arms for $T_0$ time steps, then only exploiting the best arm.
+If $T_0$ is fixed independently of $T$ and the problem difficulty, the regret is again growing linearly, as $R_T \geq (\min_{k: \Delta_k > 0} \Delta_k) K T_0 + p (T - T_0)$, if $p$ denotes the probability that the chosen arm is not optimal.
+As $p$ only depends on the number of collected samples $T_0$ and not $T$, $R_T = \Omega(T)$.
+
+\begin{proof}
+    For the case of two arms,
+    for instance, if the distributions are Bernoulli (or sub-Gaussian), we can use Hoeffding's inequality from \cite{hoeffding1963probability} to control this probability $p$.
+    %
+    Indeed if $Z_1,\dots,Z_n$ are \iid{} samples from a Bernoulli distribution of parameter $\mu$, of mean $\hat{Z}_n$ we have
+    \begin{align}
+        \forall x < \mu, \bP(\hat{Z}_n) \leq \exp(-2 n (x-\mu)^2),\\
+        \forall x > \mu, \bP(\hat{Z}_n) \geq \exp(-2 n (x-\mu)^2).
+    \end{align}
+    %
+    If $\mu_1 = \mu_2 + \Delta$, then
+    $p = \bP(\widehat{\mu_1} < \widehat{\mu_2}) \leq \bP(\widehat{\mu_1} < \widehat{\mu_2}) + \bP(\widehat{\mu_1} < \widehat{\mu_2})$, and both terms can be bounded by using Hoeffding's inequality with $n=T_0/2$ samples,
+    to obtain $p \leq 2 \exp(-T_0 \Delta^2 / 4)$.
+    %
+    For $K$ arms, the same proofs applies and we can obtain
+    $p \leq 2 K \exp(-T_0 d^2 / 4)$ if $d$ is a lower-bound on the positive gaps.
+    %
+    It shows that $p$ is a constant wrt $T$.
+\end{proof}
+
+Using the same analysis, if a lower-bound $d$ on the positive gaps is known beforehand, one can find a tuning of $T_0$ that gives a logarithmic regret, like for the previous strategy.
+%
+Like for the lower-bound, we have $R_T \leq (\max_{k: \Delta_k > 0} \Delta_k) K T_0 + p (T - T_0)$, thus $R_T \leq K T_0 + K \exp(-T_0 d^2/4) T$ using Hoeffding's inequality again. Optimizing on $T_0$ gives $T_0 = 4/d^2 \log(d^2 T / 4)$
+and $R_T \leq K 4/d^2 (1 + \log(d^2 T / 4)) = \bigO{\log(T)}$.
 
 
-Both strategies give linear regret if they are tuned independently of the problem at hand, but they can be tuned to be efficient (\ie, with logarithmic regret) if lower-bound on the gaps $\Delta_k$ is known.
+An extension of the ``exploit-then-exploit'' is to consider not a fixed time $T_0$ but a random time $\tau$ at which exploration stops.
+This time $\tau$ must be a \emph{stopping time} in the sense that it is a measurable random variable, dependent of the past observations, as introduced by \cite{Wald45}. The strategy is then referred to as ``explore-then-commit'' (ETC), and the idea is to use a statistical test at every time step $t$, and stop as soon as enough samples were collected to effectively identify the best arm with a certain confidence level $\delta$. Choosing $\delta \propto 1/T$ typically lead to a logarithmic upper-bound on the regret.
+
+
+For both cases, the strategy obtains a linear regret if it is tuned independently of the problem at hand, but they can be tuned to be efficient (\ie, with logarithmic regret) if lower-bound on the gaps $\Delta_k$ is known.
 %  \ie, they require a prior knowledge on the problem difficulty.
 As such, they are not applicable on an unknown problem and are less interesting from a practical point-of-view.
 
@@ -808,14 +838,45 @@ As such, they are not applicable on an unknown problem and are less interesting 
 \TODOL{Expliquer klUCB}
 \TODOL{Expliquer que les indices klUCB = des UCB sur les moyennes + principle of optimism in face of uncertainty}
 
+
+% \begin{small} % XXX remove if needed
+\begin{figure}[h!]
+	\centering
+    \begin{framed}
+	\begin{algorithm}[H]
+		\begin{small} % XXX remove if needed
+		\For(){$t = 1, \dots, T$}{
+            \uIf{$t \leq K$}{
+                Play arm $A(t) = t$\;
+            }
+			\Else(){
+                For each arm, compute the index $U_k(t)$\;
+                Play arm $A(t) = \arg\max_{1\leq k \leq K} U_k(t)$\;
+            }
+            Observe a reward $r_{A(t)}(t)$\;
+            Update both $X_k(t)$ and $N_k(t)$\;
+		}
+		\caption{A generic index policy.}
+		\label{algo:2:indexPolicy}
+		\end{small} % XXX remove if needed
+	\end{algorithm}
+	\end{framed}
+\end{figure}
+% \end{small} % XXX remove if needed
+
 \subsubsection{UCB}
 Optimism in face of uncertainty, for UCB etc.
+
+compute the index $U_k(t) = \widehat{\mu_k}(t) + \sqrt{\alpha \log(t) / N_k(t)}$.
 
 
 \subsubsection{klUCB}
 Optimal upper confidence bounds based on Kullback-Leibler divergence and klUCB indexes
 
 \TODOL{Short note on how to implement such policy, using Newton's method ?}
+
+compute the index $U_k(t) = XXX$.
+
 
 \subsubsection{Other policies inspired by UCB}
 
@@ -837,7 +898,7 @@ The Beta posterior and others (https://smpybandits.github.io/docs/Policies.Poste
 % ----------------------------------------------------------------------------
 \subsection{Other policies: BESA and others}
 
-It's a good opportunity to show off and say that I worked on my own on some non-standard policies.
+It's a good opportunity to show that I worked on my own on some non-standard policies.
 
 - One of the first paper I read in 2016 was defining AdBandits, https://smpybandits.github.io/docs/Policies.AdBandits.html, a mixture between Thompson sampling and BayesUCB (very efficient in practice)
 - I especially love the BESA algorithm by [? and ? and Maillard].
