@@ -484,15 +484,16 @@ If we introduce the \emph{gap} $\Delta_k = \mu^* - \mu_k$ between any arm $k\in[
 then an arm $k$ is sub-optimal if $\Delta_k > 0$, and we can write the following decomposition on the regret,
 
 \begin{lemma}[Regret decomposition]\label{lem:2:RegretDecomposition}
-    The (mean) regret $R_T^{\cA}$ can be written like
-    \begin{equation}
+    The (mean) regret $R_T^{\cA}$ can be decomposed as a sum of the number of selections of sub-optimal arms $k$,
+    weighted by their gap, like this:
+    \begin{equation}\label{eq:2:RegretDecomposition}
         R_T^{\cA} = \sum_{k=1}^K \Delta_k \E[ N_k(T) ] = \sum_{k=1,\dots,K : \Delta_k > 0} \Delta_k \E[ N_k(T) ].
     \end{equation}
 \end{lemma}
 %
 \begin{proof}\label{proof:2:RegretDecomposition}
-    Thanks to the tower rule, we can do as above and obtain
-    $\E \left[ \sum_{t=1}^T r_{A(t)}(t) \right] = \sum_{k=1}^K \mu_k \E \left[ N_k(T) \right]$, thus $R_T^{\cA} = \sum_{k=1}^K \Delta_k \E[ N_k(T) ]$.
+    The tower rule of expectation yields
+    $\E \left[ \sum_{t=1}^T r_{A(t)}(t) \right] = \sum_{k=1}^K \mu_k \E \left[ N_k(T) \right]$ as above, and thus $R_T^{\cA} = \sum_{k=1}^K \Delta_k \E[ N_k(T) ]$.
     The sum can then be simplified to only count sub-optimal arms, \ie, arms $k$ such that $\Delta_k > 0$.
 \end{proof}
 
@@ -502,8 +503,8 @@ then an arm $k$ is sub-optimal if $\Delta_k > 0$, and we can write the following
 Such decomposition of the regret is useful for at least two reasons.
 
 On the first hand, from a numerical simulation point-of-view, when we run a finite number of repetitions of the same stochastic experiment, if one wants to compute and visualize the regret, she can either use the definition with the rewards, or the decomposition and simply sum the gaps $\Delta_k$ with the number of sub-optimal draws.
-Mathematically, both quantities are equal in expectation, but with only a finite number of trajectories and observations, the first estimate is more noisy than the second one, since the randomness on the rewards is (partially) removed.
-In our library SMPyBandits, we implement both possibilities, and all values of regret used in this thesis are based on the second estimator, using the decomposition of Lemma~\ref{lem:2:RegretDecomposition}, because it gives smoother curves and faster convergence to the limit behavior.
+Mathematically, both quantities are equal in expectation, but with only a finite number of trajectories and observations, the first estimate is more noisy than the second one, since the randomness on the rewards is (partially) removed in the decomposition \eqref{eq:2:RegretDecomposition}.
+In our library SMPyBandits, we implement both estimators, and all values of regret used in this thesis are based on the one using the decomposition of Lemma~\ref{lem:2:RegretDecomposition}, because it gives smoother curves and faster convergence to the limit behavior.
 
 On the second hand, this decomposition is necessary as theoretical analyses of the regret of MAB algorithms are usually based on controlling the suboptimal draws $N_k(T)$ and not directly the regret $R_T^{\cA}$.
 For example, we extend this decomposition to the multi-player case in Chapter~\ref{chapter:3}, in Lemma~\ref{lem:5:DecompositionRegret}, and as it also uses the draws $N_k(T)$, it is the first quantity we prove to be bounded by $\bigO{\log(T)}$ when we prove the regret upper-bound of our proposal \MCTopM-\klUCB.
@@ -537,16 +538,16 @@ Tracking this quantity is used for instance in the OSSB algorithm proposed in \c
 % FIXME explain why this is interesting for the rest of this manuscript!
 
 \begin{theorem}\label{thm:2:firstLogTLowerBound}
-    No algorithm $\cA$ can achieve a regret $R_T^{\cA}(I) = \smallO{c_I \log(T)}$ for all problem instances $I \in \cI$,
+    No algorithm $\cA$ can achieve a (mean) regret $R_T^{\cA}(I) = \smallO{c_I \log(T)}$ for all problem instances $I \in \cI$,
     where this notation means that the ``constant'' $c_I$ can depend on the problem instance $I$ (\eg, on the means and on $K$) but not on the time horizon $T$.
 \end{theorem}
 
-We consider uniformly efficient\footnote{This notion is then extended for ``strongly uniformly efficiency'' in the multi-player case with Definition~\ref{def:5:DecentralizedUniformEfficiency}.} algorithms, to rule out algorithms achieving low regret on some problem instances while achieving linear regret on other instances.
+We consider uniformly efficient\footnote{This notion is then extended for ``strongly uniformly efficiency'' in the multi-player case with Definition~\ref{def:5:DecentralizedUniformEfficiency}, where we also include a notion of (expected) fairness.} algorithms, to rule out algorithms achieving low regret on some problem instances while achieving linear regret on other instances.
 In particular, it is necessary to rule out algorithms that always pick the same arm, as on some problem instances such fixed-arm algorithms can achieve zero regret.
 This class contains for instance the \UCB{} algorithm, as its regret is proven to be logarithmic on any problem instance.
 
-\begin{defn}[Uniformly efficient algorithm]\label{def:2:uniformlyEfficientAlgorithm}
-    An algorithm $\cA$ is \emph{uniformly efficient} if it satisfies
+\begin{defn}\label{def:2:uniformlyEfficientAlgorithm}
+    An algorithm $\cA$ is \emph{uniformly efficient} if its (mean) regret satisfies
     \begin{equation}
         R_T^{\cA}(I) = \bigO{C_{I,\alpha} T^{\alpha}}
     \end{equation}
@@ -587,18 +588,29 @@ This third theorem specifies possible values of the constants $C_I$ for the two 
 \end{theorem}
 
 
+Many algorithms have been proved to achieve logarithmic regret in the stochastic case,
+and in particular it is the case of the algorithms used in this thesis, \UCB{} from \cite{Auer02}, Thompson sampling from \cite{Thompson33} and analyzed in \cite{AgrawalGoyal11,Kaufmann12Thompson}, and \klUCB{} from \cite{Garivier11KL,KLUCBJournal}.
+%
+Such bounds are valid in different settings, and in particular \UCB{} is order-optimal for bounded rewards or one-dimensional exponential families,
+while Thompson sampling is optimal for bounded rewards, and \klUCB{} have been proven to be optimal for both cases.
 
 
 \paragraph{Worst-case lower-bound in $\sqrt{T}$}
 
-For a fixed horizon $T$, it is interesting to note that one can find instances $I$ that are so ``hard'' that a logarithmic regret (lower or upper) bound that uses the constants $C_I$ no longer bring any information.
-We naively have that $R_T^{\cA} \leq (\max_k \Delta_k) T$, and thus if 
-\TODOL{Finish this!}
+For a fixed horizon $T$, it is interesting to note that one can find instances $I$ that are so ``hard'' that a logarithmic regret (lower or upper) bound that uses a constant $C_I$ no longer bring any information.
+Indeed, we can naively bound the regret by $R_T^{\cA} \leq (\max_k \Delta_k) T$, and thus if $(\max_k \Delta_k)$ can be taken so small that $C_I \log(T) \gg (\max_k \Delta_k) T$, and thus a regret upper bound like $R_T^{\cA} \leq C_I \log(T)$ is useless.
 
-For this reason, it is interesting to quote another lower-bound on the regret, that also
+For an example, consider any large horizon $T>10$, and $K=2$ Bernoulli arms.
+Chose any small $\varepsilon$ such that $\varepsilon \ll \sqrt{4 \log(T) / T}$, then if the means are $\mu_1 = 1/2$ and $\mu_2 = 1/2 - \varepsilon$.
+The constant $C_I$ from \eqref{eq:2:forSecondLogTLowerBound} is $C_I = 1 / (4 \varepsilon)$ and $\Delta=\varepsilon$,
+and thus the logarithmic upper-bound is useless in such case, as
+\begin{equation}
+    \varepsilon \ll \sqrt{\frac{4 \log(T)}{T}} \Longleftrightarrow \frac{1}{4\varepsilon} \log(T) \gg \Delta T.
+\end{equation}
+
+For this reason, the research literature has also looked with interest another family of bounds on regret, that are not problem-dependent but worst-case, also called minimax \cite{Audibert2009minimax,audibert2010minimax}.
+Hence it is interesting to quote another lower-bound on the regret, that can bring useful information in such settings.
 The following theorem was proven in \cite{Auer02NonStochastic}.
-
-\TODOL{It states that FIXME interpret! FIXME explain why this is interesting for the rest of this manuscript!}
 
 \begin{theorem}\label{thm:2:worstCaseLowerBound}
     Fix the number of arms $K$, and the algorithm $\cA$.
@@ -607,6 +619,14 @@ The following theorem was proven in \cite{Auer02NonStochastic}.
         R_T^{\cA}(I_T) \geq \Omega(\sqrt{K T}).
     \end{equation}
 \end{theorem}
+
+\TODOL{FIXME explain why this is interesting for the rest of this manuscript!}
+
+Similarly to what is considered for the first lower-bound,
+a natural question is to know if there is an algorithm that achieve a regret upper-bound of the form $R_T^{\cA}(I) \leq \bigO{\sqrt{K T}}$ for any instance, independently on the problem difficulty.
+It is the case for the Exp3 algorithm from \cite{Auer02}, for example.
+Since a few years, some algorithms were shown to achieve both a problem-dependent logarithmic and a minimax upper-bounds,
+like MOSS in \cite{Audibert2009minimax} or recently \KLUCBpp{} in \cite{Menard17}.
 
 
 % % do not detail too much, don't explain the tools behind the result
@@ -618,23 +638,6 @@ The following theorem was proven in \cite{Auer02NonStochastic}.
 %     - Worst case lower-bound in $\Omega(\sqrt{T})$ \cite{Auer02,Auer02NonStochastic,Bubeck12}
 %     \item
 %     - Adversarial lower-bound in $\Omega(\sqrt{T})$ (also useful for piece-wise stationary models) \cite{Auer02NonStochastic}
-% \end{itemize}
-
-
-
-
-% \subsection{Regret upper bounds, tools and different kinds of bounds}
-
-
-% \begin{itemize}
-%     \item
-%     - different kinds of bounds, problem-dependent with $\bigO{C \log(T)}$ with $C$ a measure of the problem complexity, or problem-independent with $\bigO{\sqrt{KT}}$ ?
-%     \item
-%     - tools to show regret upper-bounds, concentration inequalities?
-%     FIXME non j'ai pas la place
-%     \item
-%     - short proof of UCB or klUCB? just to start to show the tools
-%     FIXME non j'ai pas la place
 % \end{itemize}
 
 
@@ -680,18 +683,68 @@ Finally, another interesting measure of performance is the \emph{fairness} betwe
 \section{Review of stochastic MAB algorithms}
 \label{sec:2:famousMABalgorithms}
 
-Everything is implemented and documented at
-https://smpybandits.github.io/docs/Policies.html
+In this Section, we start by discussing two naive strategies which fail dramatically.
+%
+We then expose two simple strategies, which performs efficiently only if they are tuned using a prior knowledge of the problem difficulty, and are thus unusable for practical applications.
+%
+We continue by presenting a first efficient policy, \UCB, that uses upper confidence bounds (UCB) on the mean estimates, and is known to be order-optimal for bounded rewards.
+Two other well-known and optimal algorithms are exposed: \klUCB{} extends the idea of \UCB{} but use smaller confidence intervals and thus typically has better theoretical results, and Thompson sampling which takes a Bayesian point-of-view instead of relying on the principle of optimism in the face of uncertainty.
+%
+Finally, we conclude this Section by briefly exposing other families of algorithms.
 
 
-\subsubsection{Why do we need smart algorithms?}
-Why Follow-the-Leader (EmpiricalMeans https://smpybandits.github.io/docs/Policies.EmpiricalMeans.html) don't work, example.
+\textbf{Implementation:}
+%
+We describe our library SMPyBandits in more details in Chapter~\ref{chapter:3}, but all the described algorithms are implemented and documented in SMPyBandits, alongside with many more algorithms (there were about 65 for single-player stochastic problems at the time of writing this thesis).
+A complete list of the implemented policies can be found on the following web page on the documentation,
+\href{https://smpybandits.github.io/docs/Policies.html}{\texttt{SMPyBandits.GitHub.io/docs/Policies.html}}, and on the \texttt{Policies} module.
 
-\subsection{Simple but efficient algorithms when well tuned: $\varepsilon$-greedy and Explore-then-Commit}
 
-See
-https://smpybandits.github.io/docs/Policies.EpsilonGreedy.html
-https://smpybandits.github.io/docs/Policies.ExploreThenCommit.html
+% ---------------------------------------------------
+\subsubsection{Naive strategies: pure exploitation or pure exploration}
+
+Let us first describe two naive strategies, that both fail dramatically.
+We recall the notations introduced above, the sum of rewards $X_k(t) = \sum_{s=1}^t r_k(s) \mathbbm{1}(A(s) = k)$, and the number of samples $N_k(t) = \sum_{s=1}^t \mathbbm{1}(A(s) = k)$.
+%
+The estimated means, or empirical averages, are $\widehat{\mu_k}(t) = X_k(t) / N_k(t)$ (when $N_k(t)>0$).
+
+% Why Follow-the-Leader (EmpiricalMeans https://smpybandits.github.io/docs/Policies.EmpiricalMeans.html) don't work, example.
+On the first hand, consider the ``\emph{Follow-the-Leader}'' strategy which consists in first playing once each arm, then always playing $A(t)\in\argmax \widehat{\mu_k}(t)$.
+The player only exploits the collected information, and this strategy can fail dramatically, \ie, obtain linear regret in some problems.
+Indeed consider $K=2$ Bernoulli arms of means $\mu_1=1/2$ and $\mu_2=\varepsilon$ where $\varepsilon < 1/2$, then with probability $\varepsilon/2$ the player observes a reward of $0$ for arm $1$ then $1$ for arm $2$ on the first rounds, and so she will play arm $2$ for all the $T-2$ rounds, giving a linear regret $R_T \geq \frac{\varepsilon}{2}\left(1/2 - \varepsilon\right) (T-1)$.
+
+On the other hand, consider the uniform strategy which consists in always playing the $K$ uniformly at random.
+The player only explores without using the collected information, and this strategy fails dramatically for any non trivial problem (\ie, linear regret).
+Indeed it obtains a linear regret $R_T = \frac{1}{K} \sum_{k=1}^K \Delta_k T$
+which gives $R_T \propto T$ for any problem with at least one sub-optimal arms (\ie, all problems expect where $\mu_1=\mu_2=\dots=\mu_K$).
+
+
+% ---------------------------------------------------
+\subsubsection{Simple efficient strategies: $\varepsilon$-greedy and Explore-then-Commit}
+
+As the two examples illustrated, an efficient strategy needs to solve the trade-off between exploration and exploitation.
+The two following solutions both consist in splitting the $T$ time steps into $T_0$ steps of exploration and $T-T_0$ steps of exploitation, either in an alternative way or in a fixed way (``explore then exploit'').
+
+% https://smpybandits.github.io/docs/Policies.EpsilonGreedy.html
+On the first hand, the $\varepsilon$-greedy strategy, from \cite{SuttonBarto2018}, consists in alternating exploration and exploitation at a certain ratio.
+Fix $0<\varepsilon<1$, then at each round, with probability $\varepsilon$ the player selects an arm uniformly at random (exploration) and with probability $1-\varepsilon$ the arm with highest empirical mean is selected (exploitation).
+If $\varepsilon$ is constant, then the (mean) regret is still growing linearly as it is lower bounded by $\varepsilon \frac{1}{K} \sum_{k=1}^K \Delta_k T$.
+But if we consider $\varepsilon_t$ decreasing with time $t$, for instance $\varepsilon_t = 6 K / (d^2 t)$, for a constant $0 < d < \min_{k: \Delta_k > 0} \Delta_k$,
+then it was shown in \cite{Auer02} that the regret is of the order of $K \log(T) / d + \smallO{T}$.
+
+
+% https://smpybandits.github.io/docs/Policies.ExploreThenCommit.html
+On the other hand, the ``explore-then-commit'' strategy, also introduced in \cite{SuttonBarto2018} and studied for instance in \cite{GarivierETC2016}, consists in first exploring uniformly the $K$ arms for $T_0$ time steps, then only exploiting the best arm.
+If $T_0$ is fixed independently of $T$ and the problem difficulty, the regret is again growing linearly.
+
+
+Both strategies give linear regret if they are tuned independently of the problem at hand, but they can be tuned to be efficient (\ie, with logarithmic regret) if lower-bound on the gaps $\Delta_k$ is known.
+%  \ie, they require a prior knowledge on the problem difficulty.
+As such, they are not applicable on an unknown problem and are less interesting from a practical point-of-view.
+
+
+
+\newpage
 
 \begin{itemize}
     \item Algorithm 1 is
