@@ -608,7 +608,7 @@ For an example, consider any large horizon $T>10$, and $K=2$ Bernoulli arms.
 Chose any small $\varepsilon$ such that $\varepsilon \ll \sqrt{4 \log(T) / T}$, then chose let $\mu_1 = 1/2$ and $\mu_2 = 1/2 - \varepsilon$.
 The constant $C_I$ from \eqref{eq:2:forSecondLogTLowerBound} is $C_I = 1 / (4 \varepsilon)$ and $\Delta=\varepsilon$ and it becomes so large that
 the logarithmic upper-bound is useless in such case, as
-\[ \varepsilon \ll \sqrt{\frac{4 \log(T)}{T}} \Longleftrightarrow \frac{1}{4\varepsilon} \log(T) \gg \Delta T. \]
+$\varepsilon \ll \sqrt{\frac{4 \log(T)}{T}} \Longleftrightarrow \frac{1}{4\varepsilon} \log(T) \gg \Delta T$.
 
 For this reason, the research literature has also looked with interest another family of bounds on regret, that are not problem-dependent but worst-case, also called minimax \cite{Audibert2009minimax,audibert2010minimax}.
 Hence it is interesting to quote another lower-bound on the regret, that can bring useful information in such settings.
@@ -622,7 +622,7 @@ The following theorem was proven in \cite{Auer02NonStochastic}.
     \end{equation}
 \end{theorem}
 
-\TODOL{FIXME explain why this is interesting for the rest of this manuscript!}
+% \TODOL{FIXME explain why this is interesting for the rest of this manuscript!}
 
 Similarly to what is considered for the first lower-bound,
 a natural question is to know if there is an algorithm that achieve a regret upper-bound of the form $R_T^{\cA}(I) \leq \bigO{\sqrt{K T}}$ for any instance, independently on the problem difficulty.
@@ -771,8 +771,9 @@ so if $T_0$ is fixed independently of $T$ and the problem difficulty, the regret
 Using the same analysis, if a lower-bound $d$ on the positive gaps is known beforehand, one can find a tuning of $T_0$ that gives a logarithmic regret.
 %
 Like for the lower-bound, we have $R_T \leq (\max_{k: \Delta_k > 0} \Delta_k) T_0 + p (T - T_0)$, thus $R_T \leq K T_0 + K \exp(-T_0 d^2/4) T$ using Hoeffding's inequality again. Optimizing on $T_0$ gives $T_0 = 4/d^2 \log(d^2 T / 4)$
-and proves that the ``explore-then-exploit'' strategy can also obtain an order-optimal regret, $R_T \leq K 4/d^2 (1 + \log(d^2 T / 4)) = \bigO{\log(T)}$.
-
+and proves that the ``explore-then-exploit'' strategy can also obtain an order-optimal regret, $R_T \leq K 4/d^2 (1 + \log(d^2 T / 4)) = \bigO{\log(T)}$, if it is tuned with a fixed time $T_0$ using prior knowledge on the problem (\ie, $d$) and the horizon $T$.
+%
+This strategy is also referred to as ``explore-first'', and in the case without prior knowledge on the problem, it can achieve $R_T = \bigO{T^{2/3} (K \log(T))^{1/3}}$ as shown in Section~1 of \cite{Slivkins2019}.
 
 An extension of this strategy is to consider not a fixed time $T_0$ but a random time $\tau$ at which exploration stops.
 This time $\tau$ must be a \emph{stopping time} in the sense that it is a measurable random variable, dependent of the past observations, as introduced by \cite{Wald45}. The strategy is then referred to as ``explore-then-commit'' (ETC), and the idea is to use a statistical test at every time step $t$, and stop as soon as enough samples were collected to effectively identify the best arm with a certain confidence level $\delta$.
@@ -811,31 +812,6 @@ As such, they are not applicable on an unknown problem and are less interesting 
     % of more than 10 digits
     \TODOL{Si on en pas parlé avant, ou après dans une annexe, je peux dire un mot ici à propos de l'implémentation en Cython ou en C des fonctions kl et indices kl-UCB !}
 
-    \item Algorithm 6 is
-    Thompson sampling from \cite{Kaufmann12Thompson}, using a Beta prior and posterior, initially uniform (\ie, $\mathrm{Beta}(1,1)$) (\texttt{Thompson}).
-    It was also proved to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12Thompson,AgrawalGoyal11}.
-    It is efficient in terms of storage, and even if $K$ random samples must be sampled from the arms posteriors at each time step $t$, Thompson sampling is not much slower than \UCB, if the random number generator used for the simulations is efficient (it is the case for SMPyBandits, as we use \texttt{numpy.random} module which relies on C or Cython code, highly optimized).
-
-    \item Algorithm 7 is
-    Bayes-UCB from \cite{Kaufmann12BUCB}, using a Beta prior and posterior, initially uniform (\ie, $\mathrm{Beta}(1,1)$) (\texttt{BayesUCB}).
-    It was also proved to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12BUCB}.
-    It is comparable to Thompson sampling in terms of memory complexity, but slower in terms of time complexity as computing a $1-1/t$ quantile is more costly than sampling from a distribution.
-    But in particular for Bernoulli distributed arms and for Beta posteriors and priors, Bayes-UCB is only about twice as slow as Thompson sampling.
-
-    \item Algorithm 8 is
-    AdBandits from \cite{Truzzi13}, using $\alpha=1$ (\texttt{AdBandits}).
-    It follows the same assumptions as Thompson sampling and Bayes-UCB, and uses a Beta posterior on each arm. It uses a random mixture between the two algorithms, and with a certain probability it uses the Thompson decision rule (\ie, choose the arm maximizing one draw of random samples from the posteriors), otherwise it uses the Bayes-UCB decision rule (\ie, choose the arm maximizing the $1-1/t$ quantile).
-    It was proposed in this article \cite{Truzzi13} and illustrated on empirical simulations, but no theoretical analysis was given, and it did not gain popularity since then.
-    In practice, it is usually (slighly) more efficient than both Thompson sampling and Bayes-UCB in terms of regret, it is comparable in terms of computation times, but costs more memory.
-
-    \item Algorithm 9 is
-    BESA (Best Empirical Sampled Average) from \cite{Baransi2014}, and it consists in trying to fix a simple observation.
-    For instance in \UCB, if arm $1$ has $100$ samples and arm $2$ has $50$ samples, it should make more sense to only use $50$ samples of arm $1$ to compute and compare any statistics for each arms (\eg, mean).
-    The BESA algorithm for $K=2$ arms is then very simple: at each time step, if arms $1$ and $2$ have $n_1$ and $n_2$ samples, and if $n_1>n_2$ (for instance), first it sub-samples $n_2$ observations from $n_1$, then it computes the mean of these observations, and play the arm maximizing this mean (now that there is the same number of observations for both arms, it makes more sense to compare these quantities).
-    It was analyzed partially for the two-armed case, and the authors illustrated that it can be very efficient empirically.
-    Analyzing it in the generic case was found to be difficult, and is still an open problem.
-    We implemented it using a binary tournament implement in a naive but efficient way (not using recursive functions, \ie, using the \texttt{BESA} class with \texttt{''non\_recursive''=True}).
-    By using such binary tournament, the extension $K>2$ arms is costly in terms of both time and memory, as illustrated below, and suffers from an exponential blow-up when $K$ increases.
 \end{itemize}
 
 
@@ -888,7 +864,7 @@ Optimal upper confidence bounds based on Kullback-Leibler divergence and klUCB i
 compute the index $U_k(t) = XXX$.
 
 
-\subsubsection{Other policies inspired by UCB}
+\subsubsection{Variants on UCB}
 
 - UCB-H and klUCB-H
 - UCB-V
@@ -896,63 +872,113 @@ compute the index $U_k(t) = XXX$.
 - UCBoost
 - UCB+ and klUCB+
 
-
-% ----------------------------------------------------------------------------
-\subsection{Bayesian policies: Thompson Sampling and others}
-
-Idea behind Thompson sampling and Bayesian philosophy.
-
-The Beta posterior and others (https://smpybandits.github.io/docs/Policies.Posterior.html) and Thompson Sampling.
+\paragraph{Other policies inspired by UCB}
+%
+The ``Successive Elimination'' policy also uses confidence bounds, and use both UCB and Lower Confidence Bounds (LCB). After playing each active arms once, it eliminates arm $a$ if it is statistically safe that it is sub-optimal, \ie, if there is another arm $a' \neq a$ such that $\UCB_a(t) < \mathrm{LCB}_{a'}(t)$.
+It also achieves a $\bigO{\log(T)}$ problem-dependent regret upper bound, and a $\bigO{\sqrt{K T \log(T)}}$ problem-independent bound.
 
 
 % ----------------------------------------------------------------------------
-\subsection{Other policies: BESA and others}
+\subsection{Bayesian policies}
 
-It's a good opportunity to show that I worked on my own on some non-standard policies.
+% Idea behind Thompson sampling and Bayesian philosophy.
 
-- One of the first paper I read in 2016 was defining AdBandits, https://smpybandits.github.io/docs/Policies.AdBandits.html, a mixture between Thompson sampling and BayesUCB (very efficient in practice)
-- I especially love the BESA algorithm by [? and ? and Maillard].
+% The Beta posterior and others (https://smpybandits.github.io/docs/Policies.Posterior.html) and Thompson Sampling.
+
+Thompson sampling is the oldest known MAB algorithms, dating back from the first paper by Thompson in 1933 \cite{Thompson33}.
+It became popular since its asymptotical and finite-time analyses in \cite{AgrawalGoyal11,Kaufmann12Thompson}.
+%
+Thompson sampling uses a Bayesian point of view:
+instead of building confidence intervals on the means of the arms like \UCB{} does,
+it starts with a prior on the $K$ distributions (\eg, a flat uniform prior), and then after every observation $(k, r(t))$ it updates the posterior distribution of the arm $k$ with a new data $r(t)$.
+If $P_k(t)$ denotes this posterior distribution, Thompson sampling makes its decision at time $t$ by first sampling a random sample $s_k \sim P_k(t)$, and then playing according to the ``optimism in face of uncertainty'' philosophy if these samples represent the arms (expected) quality: $C(t) \argmax_k s_k$.
+
+For problems with Bernoulli distributions on the $K$ arms,
+the best choice of prior is a Beta distribution, that starts as an initially uniform prior (\ie, $\mathrm{Beta}(1,1)$),
+and maintain a distribution $\mathrm{Beta}(X_k(t)+1,N_k(t)-X_k(t)+1)$ after $X_k(t)$ successes observed on arm $k$ and $N_k(t)-X_k(t)$.
+%
+In this setting as well as for Gaussian distributions,
+Thompson sampling was proved to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12Thompson,AgrawalGoyal11}.
+
+Bayes-UCB from \cite{Kaufmann12BUCB} also uses the Bayesian point of view, updated like for Thompson sampling, but used in a different way.
+Instead of sampling from the posteriors and playing the arms with maximum sample, Bayes-UCB computes the $1-1/t$ quantile of each arm, at time $t$, and plays the arm with the largest quantile.
+It was also proved to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12BUCB}.
+%
+Bayes-UCB is comparable to Thompson sampling in terms of memory complexity, but it can be slower in terms of time complexity as computing a $1-1/t$ quantile is generally more costly than sampling from a distribution.
+% a Beta prior and posterior, initially uniform (\ie, $\mathrm{Beta}(1,1)$) (\texttt{BayesUCB}).
+% But in particular for Bernoulli distributed arms and for Beta posteriors and priors, Bayes-UCB is only about twice as slow as Thompson sampling.
+
+For curiosity, we mention a third Bayesian algorithm, AdBandits introduced in \cite{Truzzi13}, mainly because it has not gained any popularity despite its good empirical performance.
+%  using $\alpha=1$ (\texttt{AdBandits}).
+AdBandits follows the same assumptions as Thompson sampling and Bayes-UCB, and for instance for Bernoulli problems it uses a Beta posterior on each arm.
+It uses a random mixture between the two algorithms, and with a certain probability it uses the Thompson sampling decision rule, otherwise it uses the Bayes-UCB decision rule.
+It was proposed in this article \cite{Truzzi13} and illustrated on empirical simulations, but no theoretical analysis was given.
+%  and it did not gain popularity since then.
+In practice, AdBandits is usually (slighly) more efficient than both Thompson sampling and Bayes-UCB in terms of regret, it is comparable in terms of computation times, but costs more memory.
+
+Finally, we would like to mention that a recent work \cite{KimTewari2019} presented an approach that lies between the principle of optimism in the face of uncertainty and the Bayesian point-of-view.
+%  underlying the approaches based on UCB, might not be necessary at all.
+% With perturbation: maybe we don't need optimism in face of uncertainty, we just need uniform sampling!
+They showed that their Randomized Confidence Bound (RCB) algorithm can achieve the same regret upper bounds as \UCB{} or Thompson sampling, with uniform perturbations.
+Their RCB algorithm ressembles \UCB, and builds the same confidence intervals $\mathrm{LCB}_k(t), \UCB_k(t)$ on arm $k$ at time $t$. But instead of playing the arm with maximum UCB, a random sample is taken on each interval, and the played arm is the one maximizing this sample.
+% https://smpybandits.github.io/docs/Policies.RandomizedIndexPolicy.html
 
 
 % ----------------------------------------------------------------------------
-\subsection{Policies for adversarial bandits: Exp3 and others}
+\subsection{Other policies}
+
+We briefly mention other families of policies.
+
+% It's a good opportunity to show that I worked on my own on some non-standard policies.
+
+% - One of the first paper I read in 2016 was defining AdBandits, https://smpybandits.github.io/docs/Policies.AdBandits.html, a mixture between Thompson sampling and BayesUCB (very efficient in practice)
+% - I especially love the BESA algorithm by [? and ? and Maillard].
+
+BESA (Best Empirical Sampled Average) from \cite{Baransi2014}, and it consists in trying to fix a simple observation.
+For instance in \UCB, if arm $1$ has $100$ samples and arm $2$ has $50$ samples, it should make more sense to only use $50$ samples of arm $1$ to compute and compare any statistics for each arms (\eg, mean).
+The BESA algorithm for $K=2$ arms is then very simple: at each time step, if arms $1$ and $2$ have $n_1$ and $n_2$ samples, and if $n_1>n_2$ (for instance), first it sub-samples $n_2$ observations from $n_1$, then it computes the mean of these observations, and play the arm maximizing this mean (now that there is the same number of observations for both arms, it makes more sense to compare these quantities).
+It was analyzed partially for the two-armed case, and the authors illustrated that it can be very efficient empirically.
+Analyzing it in the generic case was found to be difficult, and it is still an open problem.
+% We implemented it using a binary tournament implement in a naive but efficient way (not using recursive functions, \ie, using the \texttt{BESA} class with \texttt{''non\_recursive''=True}).
+% By using such binary tournament, the extension $K>2$ arms is costly in terms of both time and memory, as illustrated below, and suffers from an exponential blow-up when $K$ increases.
+
+
+% ----------------------------------------------------------------------------
+\paragraph{Policies for adversarial bandits}
 
 Exp3, Exp3++ etc
 https://smpybandits.github.io/docs/Policies.Exp3.html
 https://smpybandits.github.io/docs/Policies.Exp3PlusPlus.html
 
-Softmax: is it the same, but written differently?
-https://smpybandits.github.io/docs/Policies.Softmax.html
+
+It is a recent variant of the $\mathrm{Exp3}$ algorithm
+is $\mathrm{Exp}3^{++}$ from \cite{Seldin17},
+and it uses an adaptive tuning of its parameters.
+It is anytime, and was proven to obtain good ``best of both world'' performances, meaning that it achieves $\cO(K\log(T)/\Delta^2)$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
+
+% Softmax: is it the same, but written differently?
+% https://smpybandits.github.io/docs/Policies.Softmax.html
 
 
 % ----------------------------------------------------------------------------
-\subsection{Hybrid policies: MOSS, klUCB++ and klUCB-Switch and others}
+\paragraph{Hybrid policies}
 
-Recent work.
-https://smpybandits.github.io/docs/Policies.MOSS.html
-https://smpybandits.github.io/docs/Policies.IMED.html
-https://smpybandits.github.io/docs/Policies.klUCBPlusPlus.html
-https://smpybandits.github.io/docs/Policies.klUCBSwitch.html
+As explained before, in the last few years, the MAB research community has been interested in finding algorithms which achieves both a problem-dependent logarithmic and a minimax upper-bounds.
+The first example is MOSS from \cite{Audibert2009minimax}, or recently \KLUCBpp{} in \cite{Menard17}.
+They are both index-based, using XXX
 
-Talk about these?
-https://smpybandits.github.io/docs/Policies.OCUCB.html
-https://smpybandits.github.io/docs/Policies.OSSB.html
+More recently, the \klUCB-switch from \cite{Garivier18} XXX
 
-With perturbation: maybe we don't need optimism in face of uncertainty, we just need uniform sampling!
-Randomized Confidence Bound (RCB) with uniform perturbations performs as well as UCB!
-https://smpybandits.github.io/docs/Policies.RandomizedIndexPolicy.html
+% Recent work.
+% https://smpybandits.github.io/docs/Policies.MOSS.html
+% https://smpybandits.github.io/docs/Policies.IMED.html
+% https://smpybandits.github.io/docs/Policies.klUCBPlusPlus.html
+% https://smpybandits.github.io/docs/Policies.klUCBswitch.html
 
+% Talk about these?
+% https://smpybandits.github.io/docs/Policies.OCUCB.html
+% https://smpybandits.github.io/docs/Policies.OSSB.html
 
-% \subsection{Summary of classification of the most famous algorithms}
-
-% A huge table in one page in portrait mode, giving:
-% - name
-% - reference, year
-% - family, classification
-% - time/memory complexity ?
-% - regret bound for stochastic regret
-
-% of about 20/30 algorithms?
 
 \newpage
 

@@ -468,29 +468,31 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
 
     \item Algorithm 6 is
     Thompson sampling from \cite{Kaufmann12Thompson}, using a Beta prior and posterior, initially uniform (\ie, $\mathrm{Beta}(1,1)$) (\texttt{Thompson}).
-    It was also proved to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12Thompson,AgrawalGoyal11}.
+    % It was also proved to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12Thompson,AgrawalGoyal11}.
     It is efficient in terms of storage, and even if $K$ random samples must be sampled from the arms posteriors at each time step $t$, Thompson sampling is not much slower than \UCB, if the random number generator used for the simulations is efficient (it is the case for SMPyBandits, as we use \texttt{numpy.random} module which relies on C or Cython code, highly optimized).
 
     \item Algorithm 7 is
     Bayes-UCB from \cite{Kaufmann12BUCB}, using a Beta prior and posterior, initially uniform (\ie, $\mathrm{Beta}(1,1)$) (\texttt{BayesUCB}).
-    It was also proved to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12BUCB}.
+    % It was also proved to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12BUCB}.
     It is comparable to Thompson sampling in terms of memory complexity, but slower in terms of time complexity as computing a $1-1/t$ quantile is more costly than sampling from a distribution.
     But in particular for Bernoulli distributed arms and for Beta posteriors and priors, Bayes-UCB is only about twice as slow as Thompson sampling.
 
     \item Algorithm 8 is
     AdBandits from \cite{Truzzi13}, using $\alpha=1$ (\texttt{AdBandits}).
-    It follows the same assumptions as Thompson sampling and Bayes-UCB, and uses a Beta posterior on each arm. It uses a random mixture between the two algorithms, and with a certain probability it uses the Thompson decision rule (\ie, choose the arm maximizing one draw of random samples from the posteriors), otherwise it uses the Bayes-UCB decision rule (\ie, choose the arm maximizing the $1-1/t$ quantile).
-    It was proposed in this article \cite{Truzzi13} and illustrated on empirical simulations, but no theoretical analysis was given, and it did not gain popularity since then.
+    % It follows the same assumptions as Thompson sampling and Bayes-UCB, and uses a Beta posterior on each arm. It uses a random mixture between the two algorithms, and with a certain probability it uses the Thompson decision rule (\ie, choose the arm maximizing one draw of random samples from the posteriors), otherwise it uses the Bayes-UCB decision rule (\ie, choose the arm maximizing the $1-1/t$ quantile).
+    % It was proposed in this article \cite{Truzzi13} and illustrated on empirical simulations, but no theoretical analysis was given, and it did not gain popularity since then.
     In practice, it is usually (slighly) more efficient than both Thompson sampling and Bayes-UCB in terms of regret, it is comparable in terms of computation times, but costs more memory.
 
     \item Algorithm 9 is
-    BESA (Best Empirical Sampled Average) from \cite{Baransi2014}, and it consists in trying to fix a simple observation.
-    For instance in \UCB, if arm $1$ has $100$ samples and arm $2$ has $50$ samples, it should make more sense to only use $50$ samples of arm $1$ to compute and compare any statistics for each arms (\eg, mean).
-    The BESA algorithm for $K=2$ arms is then very simple: at each time step, if arms $1$ and $2$ have $n_1$ and $n_2$ samples, and if $n_1>n_2$ (for instance), first it sub-samples $n_2$ observations from $n_1$, then it computes the mean of these observations, and play the arm maximizing this mean (now that there is the same number of observations for both arms, it makes more sense to compare these quantities).
-    It was analyzed partially for the two-armed case, and the authors illustrated that it can be very efficient empirically.
-    Analyzing it in the generic case was found to be difficult, and is still an open problem.
-    We implemented it using a binary tournament implement in a naive but efficient way (not using recursive functions, \ie, using the \texttt{BESA} class with \texttt{''non\_recursive''=True}).
-    By using such binary tournament, the extension $K>2$ arms is costly in terms of both time and memory, as illustrated below, and suffer from an exponential blow-up when $K$ increases.
+    BESA (Best Empirical Sampled Average) from \cite{Baransi2014},
+    % , and it consists in trying to fix a simple observation.
+    % For instance in \UCB, if arm $1$ has $100$ samples and arm $2$ has $50$ samples, it should make more sense to only use $50$ samples of arm $1$ to compute and compare any statistics for each arms (\eg, mean).
+    % The BESA algorithm for $K=2$ arms is then very simple: at each time step, if arms $1$ and $2$ have $n_1$ and $n_2$ samples, and if $n_1>n_2$ (for instance), first it sub-samples $n_2$ observations from $n_1$, then it computes the mean of these observations, and play the arm maximizing this mean (now that there is the same number of observations for both arms, it makes more sense to compare these quantities).
+    % It was analyzed partially for the two-armed case, and the authors illustrated that it can be very efficient empirically.
+    % Analyzing it in the generic case was found to be difficult, and is still an open problem.
+    which is implemented using a binary tournament, written in a naive but efficient way
+    (\ie, not using recursive functions, by using the \texttt{BESA} class with \texttt{''non\_recursive''=True}).
+    By using such binary tournament, the extension $K>2$ arms is costly in terms of both time and memory, as illustrated below, and suffers from an exponential blow-up when $K$ increases.
 \end{itemize}
 
 We focussed here on the most well known algorithms, and two others that are efficient but less known (AdBandits and BESA),
