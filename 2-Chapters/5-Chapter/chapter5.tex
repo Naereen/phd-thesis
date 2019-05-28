@@ -3,34 +3,20 @@
 % \chapter[Multi-Player Multi-Armed Bandits Models]{Multi-Player Multi-Armed Bandits Models and Algorithms}
 \chapter{Multi-Player Multi-Armed Bandits}
 \label{chapter:5}
-\minitoc
 
-\TODOL{Intégrer les commentaires de Christophe, le plus rapidement possible !}
 
-\newpage
 \paragraph{Abstract}
-
+%
 In this Chapter~\ref{chapter:5}, we are interested in a more formal approach to the decentralized learning problem presented in Chapter~\ref{chapter:4}.
 We restrict to the easier case of at most $M \leq K$ devices in a network with $K$ channels, because it was found very hard to analyze the aforementioned IoT network model.
 %
-We start by reviewing previous works on multi-player MAB models, which all considered the easier case of \emph{sensing feedback}.
+We discuss three feedback levels that give variants of the multi-players MAB model previously studied in the literature.
+Using a decomposition of the centralized system regret, we start by explaining the intuition about what an efficient decentralized algorithm should do, and then we propose \RandTopM{} and \MCTopM, two new orthogonalization schemes.
+Combining them with the \klUCB{} index policy gives order-optimal algorithms, that achieve state-of-the-art performance,
+as illustrated by numerical similations.
+We conclude by reviewing different extensions of the multi-player models.
 
-For this first model, we present two algorithms, \RandTopM{} and \MCTopM, combining an efficient MAB index policy (we chose \klUCB) and a smart orthogonalization procedure, based on a random hoping procedure called Musical Chair.
-Like in previous works, we consider the centralized system regret (multi-player regret).
-We start by showing an improved asymptotical regret lower-bound for any algorithm of a certain class, including previous solutions such as \rhoRand{} and our two solutions.
-We then analyze the \MCTopM{} algorithm and we show that its regret upper-bound is logarithmic and order-optimal, improving over the previous state-of-the-art.
-%  with a regret bounded by $\bigO{\log(T)}$ for a game at horizon $T$.
-We also present extensive numerical simulations that show that our proposal outperforms all previous solutions and is much more efficient in this easier model of sensing feedback with a fixed and known number of players $M \leq K$ accessing $K$ channels.
-
-We are also interested in the harder model where devices do not have access to the two feedback information (sensing and \Ack) but only have access to the \Ack.
-Our article \cite{Besson2018ALT} was the first to propose this ``no sensing'' model, for which we only proposed an heuristic, the naive \Selfish{} strategy as it was already used in Chapter~\ref{chapter:4}.
-Even if empirical simulations showed that \Selfish-\klUCB{} performs very well, we conjectured that it suffers from linear regret, and it was later confirmed by two works inspired by our article \cite{LugosiMehrabian18,BoursierPerchet18}.
-They both proposed new algorithms, proved to achieve logarithmic regret under the no sensing model.
-We include numerical simulations to compare their proposals, and we present in details the current state-of-the-art of research on multi-player MAB models without sensing.
-
-Finally, we review other extensions of the models, and give a overview of the current state-of-the-art.
-For some extensions, we discuss how to adapt our proposals and illustrate the empirical performances of such modification of \MCTopM-\klUCB{}, leaving theoretical analyses as future works.
-
+\minitoc
 
 \vfill{}
 

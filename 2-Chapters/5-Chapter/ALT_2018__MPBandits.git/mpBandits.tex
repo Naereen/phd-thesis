@@ -10,11 +10,55 @@
 % and provide some first theoretical elements for the understanding of its behavior.
 
 
+% -----------------------------------------------------------------
+\section{Introduction}
+\label{sec:5:introduction}
+% -----------------------------------------------------------------
+
+For the development of Cognitive Radio, a crucial step is to insert \emph{multiple} smart devices in the \emph{same} background traffic (at least $M \geq 2$), as we explained in Chapters~\ref{chapter:1} and \ref{chapter:4}.
+%
+In this Chapter~\ref{chapter:5}, we are interested in a more formal approach to the decentralized learning problem presented in Chapter~\ref{chapter:4}.
+Such networks can be modelled using a decentralized multi-player multi-armed bandit problem, where arms are channels and players are dynamic IoT devices.
+%
+The decentralized hypothesis means that the central base station does not given any direct order to the devices, they are all in charge of deciding the channel they each want to use at each time step.
+Moreover, the devices are independent and do not directly communicate with each other either.
+We show that dynamic end-devices are able to use limited feedback sent by the gateway to learn to find orthogonal affectations of the group of end-devices to the best radio channels, automatically and without explicit communication with each other.
+In other words, the end-devices are able to learn to cooperate efficiently, in a completely decentralized and autonomous manner.
+
+
+We start by reviewing previous works on multi-player MAB models, which all considered the easier case of \emph{sensing feedback}.
+%
+For this first model, we present two algorithms, \RandTopM{} and \MCTopM, combining an efficient MAB index policy (we chose \klUCB) and a smart orthogonalization procedure, based on a random hoping procedure called Musical Chair.
+Like in previous works, we consider the centralized system regret (multi-player regret).
+We start by showing an improved asymptotical regret lower-bound for any algorithm of a certain class, including previous solutions such as \rhoRand{} and our two solutions.
+We then analyze the \MCTopM{} algorithm and we show that its regret upper-bound is logarithmic and order-optimal, improving over the previous state-of-the-art.
+%  with a regret bounded by $\bigO{\log(T)}$ for a game at horizon $T$.
+We also present extensive numerical simulations that show that our proposal outperforms all previous solutions and is much more efficient in this easier model of sensing feedback with a fixed and known number of players $M \leq K$ accessing $K$ channels.
+
+We are also interested in the harder model where devices do not have access to the two feedback information (sensing and \Ack) but only have access to the \Ack.
+Our article \cite{Besson2018ALT} was the first to propose this ``no sensing'' model, for which we only proposed an heuristic, the naive \Selfish{} strategy as it was already used in Chapter~\ref{chapter:4}.
+Even if empirical simulations showed that \Selfish-\klUCB{} performs very well, we conjectured that it suffers from linear regret, and it was later confirmed by two works inspired by our article \cite{LugosiMehrabian18,BoursierPerchet18}.
+They both proposed new algorithms, proved to achieve logarithmic regret under the no sensing model.
+We include numerical simulations to compare their proposals, and we present in details the current state-of-the-art of research on multi-player MAB models without sensing.
+
+Finally, we review other extensions of the models, and give a overview of the current state-of-the-art.
+For some extensions, we discuss how to adapt our proposals and illustrate the empirical performances of such modification of \MCTopM-\klUCB{}, leaving theoretical analyses as future works.
+
+\paragraph{Outline.}
+%
+This chapter is organized as follows.
+First we motivate the model of multi-player multi-armed bandits in Section~\ref{sec:5:motivation}
+We introduce the multi-player bandit model with three feedback levels in Section~\ref{sec:5:model}, and give a new regret lower bound in Section~\ref{sec:5:lowerbound}.
+The \RandTopM, \MCTopM{} and \Selfish{} algorithms are introduced in Section~\ref{sec:5:algorithms},
+for which we present our theoretical analysis in Section~\ref{sec:5:upperbounds}.
+The result of our experimental study reported in Section~\ref{sec:5:experiments}.
+Finally, we present in Section~\ref{sec:5:literatureReviewOtherModels} a review of the recent literature which studies variants of the model presented in this Chapter.
+% and finally Section~\ref{sec:5:conclusion} concludes.
 
 
 % -----------------------------------------------------------------
 \section{Motivations for multi-player MAB models}
-\label{sec:5:introduction}
+\label{sec:5:motivation}
 % -----------------------------------------------------------------
 
 
@@ -41,20 +85,19 @@
 
 % the need for multiple players in cognitive radio
 
-For the development of Cognitive Radio, a crucial step is to insert \emph{multiple} smart devices in the \emph{same} background traffic (at least $M \geq 2$), as we explained in Chapters~\ref{chapter:1},\ref{chapter:4}.
-%
-In this Chapter~\ref{chapter:5}, we are interested in a more formal approach to the decentralized learning problem presented in Chapter~\ref{chapter:4}.
 We consider $M \leq K$ identical dynamic IoT devices, communicating with a unique gateway, in $K$ orthogonal channels and in a acknowledgment-based wireless protocol slotted in time.
 A perfect time and frequency synchronization is assumed,
 and some \iid{} background traffic is assumed to be non-uniformly in the $K$ channels.
 As before, if two or more devices decide to use the same channel at the same time, a \emph{collision} arises and none of sent uplink packet can be received by the gateway.
 %
-Such networks can be modelled using a decentralized multi-player multi-armed bandit problem, where arms are channels and players are dynamic IoT devices.
-Unfortunately, it is very hard to formally analyze the IoT network model we presented in Chapter~\ref{chapter:4}, mainly because of the random activation process of all the dynamic learning devices.
+Unfortunately, it is very hard to formally analyze the IoT network models we presented in Chapter~\ref{chapter:4}, mainly because of the random activation process of all the dynamic (\ie, learning) devices.
 Even if there are many identical bandit algorithms learning independently and in a decentralized way, the difficulty mainly comes from the fact that all of them are only communicating at some (random) time steps, and at each time step the number of communicating devices is random and unpredictable.
 
-Mainly for these two reasons, for this Chapter~\ref{chapter:5} we prefer to only consider the easier case of at most $M \leq K$ devices, communicating at each time step.
-Each device will use a Multi-Armed Bandit algorithm, to maximize its number of successful communications, by using the received acknowledgement \Ack{} as a (random) binary reward after each uplink message (\ie, at each time step).
+
+Mainly for these two reasons, for this Chapter~\ref{chapter:5} we prefer to only consider at most $M \leq K$ devices, communicating at each time step.
+Note that in the model of Chapter~\ref{chapter:4}, this hypothesis $M \leq K$ corresponds to choosing a probability of activation of $p=1$, as we assumed that (in average) no more than $K$ devices should be active at the same step.
+%
+In our model in Chapter~\ref{chapter:5}, each device will use a Multi-Armed Bandit algorithm, to maximize its number of successful communications, by using the received acknowledgement \Ack{} as a (random) binary reward after each uplink message (\ie, at each time step).
 %
 With the presence of a central controller that can assign the devices to separate channels, this amounts to choosing at each time step \emph{several} arms of a MAB in order to maximize the global rewards, and can thus be viewed as an application of the multiple-play bandit, introduced by \cite{Anantharam87a} and recently studied by \cite{Komiyama15}.
 They essentially proved that existing algorithms can be easily extended to the multiple-play case, with provable guarantees on their regret.
@@ -93,17 +136,17 @@ A first difficulty relies in the well-known trade-off between \emph{exploration}
 The decentralized setting considers wireless protocol with no direct or explicit exchange of information between players, and assumes that the players only know $K$ and $M$. To avoid collisions, players should furthermore find orthogonal configurations, \ie, the $M$ players use the $M$ best arms without any collision, without explicitly communicating\footnote{One must now be careful about this aspect when stating that ``no explicit communications are allowed between players'' in the model, as \cite{BoursierPerchet18} proved that even in the no sensing case, the ``communication trick'' can be used to exchange information between players, by generating collisions at some pre-agreed times. We discuss this work more in details at the end of this chapter, in Section~\ref{sub:5:withoutSensing}.} with each other.
 Hence, in that case the trade-off is to be found between exploration, exploitation \emph{and} low collisions.
 
-All these above-mentioned works are motivated by the OSA problem, in which it is assumed that \emph{sensing} occurs, that is each smart device observes the availability of a channel (sample from the arm) \emph{before} trying to transmit and possibly experiment a collision with other smart devices.
+All these above-mentioned works are motivated by the OSA problem, in which it is assumed that \emph{sensing} occurs, that is, each smart device observes the availability of a channel (\ie, a reward from the arm) \emph{before} trying to transmit and possibly experiment a collision with other smart devices.
 However some real radio networks do not use sensing at all, \eg, emerging standards currently or recently developed for \emph{Internet of Things} (IoT) networks, such as LoRaWAN.
 Thus, to take into account these new applications, algorithms with additional constraints on the available feedback have to be proposed within the multiple-player MAB model.
 Especially, the typical approach that combines a (single-player) bandit algorithm based on the sensing information --to learn the quality of the channels while targeting the best ones-- with a low-complexity decentralized collision avoidance protocol, is no longer possible.
 %
 Our article \cite{Besson2018ALT} was the first to study this other model of multi-player bandits for the ``no sensing'' case,
 % We are also interested in the harder model where devices do not have access to the two feedback information (sensing and \Ack) but only have access to the \Ack.
-% Our article \cite{Besson2018ALT} was the first to propose this ``no sensing'' model, 
+% Our article \cite{Besson2018ALT} was the first to propose this ``no sensing'' model,
 for which we only proposed an heuristic, the naive \Selfish{} strategy as it was already used in Chapter~\ref{chapter:4}.
-Even if empirical simulations showed that \Selfish-\klUCB{} performs very well, it is a mistake to only consider mean regret, as we found on numerical simulations as well as formal derivation on a simple example of $K=M=2$ that the \Selfish{} heuristic can has a linear regret with a low probability (and so asymptotically it has linear expected regret and fails to solve ``no sensing'' multi-player MAB problems).
-We do not propose any other efficient algorithm, but our work presented in April~$2018$ inspired two articles shorlty after \cite{LugosiMehrabian18,BoursierPerchet18}.
+Even if empirical simulations showed that \Selfish-\klUCB{} performs very well, it is a mistake to only consider mean regret, as we found on numerical simulations as well as formal derivation on a simple example of $K=M=2$ that the \Selfish{} heuristic can have a linear regret with a low probability (and so asymptotically it has linear expected regret and fails to solve ``no sensing'' multi-player MAB problems).
+We do not propose any other efficient algorithm, but our work presented in April~$2018$ has strongly inspired two articles shorlty after \cite{LugosiMehrabian18,BoursierPerchet18}.
 They confirmed our finding that \Selfish{} can have a linear regret, and they both proposed new algorithms.
 We include some numerical simulations to compare some of them, and we present in details the current state-of-the-art of research on multi-player MAB models without sensing.
 
@@ -111,18 +154,6 @@ We include some numerical simulations to compare some of them, and we present in
 
 % Another interesting extension of the studied model is to consider different channels utility for each devices. It is a very interesting extension of our model, as for instance the devices could be located on different parts of a building or a field and suffer from different mean qualities of access to each channels.
 % This extension is not studied per say but we quickly review the existing literature, consisting in the two recent works \cite{Bistritz18,KaufmannAbbas19}, and we discuss the possible real-world usage of the existing algorithms.
-
-
-
-\paragraph{Outline.}
-%
-The rest of the chapter is organized as follows.
-We introduce the multi-player bandit model with three feedback levels in Section~\ref{sec:5:model}, and give a new regret lower bound in Section~\ref{sec:5:lowerbound}.
-The \RandTopM, \MCTopM{} and \Selfish{} algorithms are introduced in Section~\ref{sec:5:algorithms},
-for which we present our theoretical analysis in Section~\ref{sec:5:upperbounds}.
-The result of our experimental study reported in Section~\ref{sec:5:experiments}.
-Finally, we present in Section~\ref{sec:5:literatureReviewOtherModels} a review of the recent literature which studies variants of the model presented in this Chapter.
-% and finally Section~\ref{sec:5:conclusion} concludes.
 
 
 % -----------------------------------------------------------------
@@ -136,8 +167,8 @@ we consider a $K$-armed Bernoulli bandit model, % (for $K\geq2$),
 in which arm $k$ is a Bernoulli distribution with mean $\mu_k\in[0,1]$.
 We denote $(Y_{k,t})_{t\in\N}$ the \iid{} (binary) \emph{reward stream} for arm $k$, that satisfies $\Pr(Y_{k,t}=1) = \mu_k$ and that is independent from the other rewards streams.
 
-\textbf{Only Bernoulli?}
-However we mention that our lower bound and all our algorithms (and their analysis) can be easily extended to one-dimensional exponential families (just like for the \klUCB{} algorithm of \cite{KLUCBJournal}). For simplicity, we focus on the Bernoulli case, that is also the most relevant for Cognitive Radio, as it can model channel availabilities.
+\textbf{Only Bernoulli.}
+However we mention that our lower bound and all our algorithms (and their analysis) can be easily extended to one-dimensional exponential families (just like for the \klUCB{} algorithm of \cite{KLUCBJournal}). For simplicity, we focus on the Bernoulli case, that is also the most relevant for Cognitive Radio problems, based on channel availability.
 
 
 % stochastic bandit model in which each arm distribution is assumed to belong to a one-dimensional canonical exponential family. That is, arm $k$ has a density with respect to a reference measure that takes the form
@@ -166,8 +197,9 @@ $r^j(t) \in \{0,1\}$,
 \begin{equation}
   r^j(t) := Y_{A^j(t),t} \; \indic(\overline{C^j(t)}).
 \end{equation}
-In words, she receives the reward of the selected arm if she is the only one to select this arm, and a reward zero otherwise.
-This provides another reason to focus on the Bernoulli model. It is the hardest model, in the sense that receiving a reward zero is not enough to detect collisions. For other models, the data streams $(Y_{k,s})_s$ are usually continuously distributed, with no mass at zero. Hence receiving $r^j(t) = 0$ directly gives $\indic(C^j(t)) = 1$.
+In other words, she receives the reward of the selected arm if she is the only one to select this arm, and a reward zero otherwise.
+This provides another reason to focus on the Bernoulli model. It is the hardest model, in the sense that receiving a reward zero is \emph{not enough} to detect collisions. For other models, the data streams $(Y_{k,s})_s$ are usually continuously distributed, with no probability mass at the value of zero (\eg, Gaussian).
+Hence receiving $r^j(t) = 0$ directly gives $\indic(C^j(t)) = 1$.
 
 Note that other models for rewards loss have also been proposed in the literature, for instance the reward is randomly allocated to one of the players selecting it.
 To stay consistent and for simplicity, with the model presented in the previous Chapter~\ref{chapter:4},
