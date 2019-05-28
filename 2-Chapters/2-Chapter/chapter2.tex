@@ -949,7 +949,7 @@ We briefly mention other families of policies.
 % - I especially love the BESA algorithm by [? and ? and Maillard].
 
 BESA (Best Empirical Sampled Average) was introduced in \cite{Baransi2014}, in order to fix a simple observation:
-For instance in \UCB, if arm $1$ has $100$ samples and arm $2$ has $50$ samples, it should make more sense to only use $50$ samples of arm $1$ to compute and compare any statistics for each arms (\eg, their empirical mean).
+for instance in \UCB, if arm $1$ has $100$ samples and arm $2$ has $50$ samples, it should make more sense to only use $50$ samples of arm $1$ to compute and compare any statistics for each arms (\eg, their empirical mean).
 The BESA algorithm for $K=2$ arms is then very simple: at each time step, if arms $1$ and $2$ have respectively $n_1$ and $n_2$ samples, and if $n_1>n_2$ (for instance), first it sub-samples $n_2$ observations from $n_1$, then it computes the mean of these observations, and play the arm maximizing this mean (now that there is the same number of observations for both arms, it makes more sense to compare these quantities).
 It was analyzed partially, for the two-armed case it was proved to be asymptotically optimal for one-dimensional exponential families, and the authors illustrated that it can be very efficient empirically.
 Analyzing it in the generic case was found to be difficult, and it is still an open problem.
@@ -958,21 +958,34 @@ Analyzing it in the generic case was found to be difficult, and it is still an o
 
 
 % ----------------------------------------------------------------------------
-\paragraph{Policies for adversarial bandits}
+\paragraph{Policies for adversarial bandits.}
 
-FIXME
-Exp3, Exp3++ etc
-https://smpybandits.github.io/docs/Policies.Exp3.html
-https://smpybandits.github.io/docs/Policies.Exp3PlusPlus.html
+Another important family of bandits algorithms are the algorithms proposed for the adversarial setting \cite{Auer02NonStochastic}.
+The first of them is the Exp3 policy, for ``\emph{Exp}onential weights for \emph{Exp}loitation and \emph{Exp}loiration'',
+which is an example of the well-known \emph{multiplicative weights update algorithm}\footnote{~For more details see
+the Wikipedia \href{https://en.wikipedia.org/wiki/Multiplicative_weight_update_method}{\texttt{en.wikipedia.org/wiki/Multiplicative\_weight\_update\_method}},
+or this blog post by Jeremy Kun \href{https://jeremykun.com/2017/02/27/the-reasonable-effectiveness-of-the-multiplicative-weights-update-algorithm/}{\texttt{JeremyKun.com/2017/02/27/the-reasonable-effectiveness-of-the-}}\\
+\href{https://jeremykun.com/2017/02/27/the-reasonable-effectiveness-of-the-multiplicative-weights-update-algorithm/}{\texttt{multiplicative-weights-update-algorithm}},
+which comes with an interactive online demonstration to help understanding the behavior of the algorithm, hosted at \href{https://j2kun.github.io/mwua/index.html}{\texttt{j2kun.GitHub.io/mwua/}} (accessed the 24th of May 2019). More details can be found in the survey \cite{Arora2012multiplicative}.},
+a family of algorithms developed since the 1950s, and applied to a wide range of different domains.
+% https://smpybandits.github.io/docs/Policies.Exp3.html
+%
+The Exp3 policy maintains weights $w_k(t)$ on the $K$ arms, and at time $t$ it samples an arm from the distribution which is a mixture of $\bm{w}(t)=[w_1(t),\dots,w_K(t)]$ and the uniform distribution:
+$\Pr(C(t)=k) = (1-\gamma) w_k(t) + \gamma \frac{1}{K}$.
+The weights are initially uniform, \ie, $w_k(0)=\frac{1}{K}$, and then at each time after observing a reward $r_k(t)$ from arm $k$, Exp3 updates the weight of the chosen arm multiplicatively, using $w_k(t+1) = w_k(t) \times \exp(\widehat{r_k}(t) / (\gamma N_k(t)))$. The weights are then renormalized, the have a sum $\sum_k w_k(t+1) = 1$.
+This notation $\widehat{r_k}(t)$ means an unbiased estimator of the reward $r_k(t)$, that is, $\widehat{r_k}(t) = \Pr(C(t)=k)$.
+%
+Like for the $\varepsilon$-greedy policy, the parameter $\gamma$ can be constant, or can be a decreasing sequence $(\gamma_t)_t$.
+%
+It was proved in \cite{Auer02NonStochastic} that Exp3 with constant temperature parameter $\gamma$ achieves $R_T = \bigO{\sqrt{K T \log(T)}}$ problem-independent regret,
+while using a decreasing sequence, such as $\gamma_t = \sqrt{\log(K) / K} \log(t) / t$ gives an order-optimal problem-independent regret upper-bound of $\bigO{\sqrt{K T}}$.
+For a short proof of this results as well as more details on Exp3, see \cite{Bubeck12}.
 
-
-It is a recent variant of the $\mathrm{Exp3}$ algorithm
-is $\mathrm{Exp}3^{++}$ from \cite{Seldin17},
-and it uses an adaptive tuning of its parameters.
+% https://smpybandits.github.io/docs/Policies.Exp3PlusPlus.html
+Finally, it is worth mentioning the Exp3$^{++}$ algorithm, as a recent variant of Exp3, proposed by \cite{Seldin17},
+that uses an adaptive tuning of its parameters.
 It is anytime, and was proven to obtain good ``best of both world'' performances, meaning that it achieves $\cO(K\log(T)/\Delta^2)$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
 
-% Softmax: is it the same, but written differently?
-% https://smpybandits.github.io/docs/Policies.Softmax.html
 
 
 % ----------------------------------------------------------------------------
@@ -992,23 +1005,17 @@ If we denote $g(t, T, K) = \log^+(y (1 + \log^+(y)^2))$, and $y = \frac{T}{K t}$
 
 Both algorithms are index policies, that are not anytime.
 For any $K$, $T$, and problem instances $I$ in a certain family $\cI$ (\eg, with Bernoulli distributions),
-they enjoy regret bounds like the following, for two constants $c_{\cA}$ and $c'_{\cA}$ that depend on the algorithm, and a constant $C_I$ that depend on the problem instance only:
-\begin{equation}\label{eq:2:regretBoundsForHybridPolicies}
-    R_T^{\cA} \leq \min( c_{\cA} \sqrt{K T}, c'_{\cA} C_I \log(T)).
-\end{equation}
+they enjoy regret bounds like the following, for two constants $c_{\cA}$ and $c'_{\cA}$ that depend on the algorithm, and a constant $C_I$ that depend on the problem instance only: $R_T^{\cA} \leq \min( c_{\cA} \sqrt{K T}, c'_{\cA} C_I \log(T))$.
 
 More recently, the \klUCB-switch from \cite{Garivier18} is the first algorithm to be proved to
 enjoy simultaneously a distribution-free regret bound of optimal order $\sqrt{KT}$, and a distribution-dependent regret bound of optimal order as well, that is, matching the $C_I \ln(T)$ lower bound by \cite{LaiRobbins85}.
 It is an index policy that uses a modified version of the indexes of the \klUCB$^+$ algorithm, for arms that are not sampled much, and a modified version of the indexes of the MOSS$^+$ algorithm, for the other arms.
-To detail this, first let $f(T, K) = \lfloor \rfloor$ for $\gamma=1/5$,
+To detail this, first let $f(T, K) = \lfloor (T/K)^{\gamma}\rfloor$ for $\gamma=1/5$,
 then \klUCB-switch use the index defined as follows:
 %
 \begin{align}\label{eq:2:indexes_for_klUCBswitch}
-    \forall k,\;\;\;
     U^{\mathrm{MOSS}+}_k(t) &= \frac{X_k(t)}{N_k(t)} + \sqrt{\max\left(0, \frac{\log\left(\frac{T}{K N_k(t)}\right)}{N_k(t)}\right)}. \\
-    \forall k,\;\;\;
     U^{\KLUCB+}_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu}_k(t), q) \leq \frac{c \log(T / (K * N_k(t)))}{N_k(t)} \right\} \\
-    \forall k,\;\;\;
     U^{\klUCB\text{-}\mathrm{switch}}_k(t) &= \begin{cases}
         U^{KL+}_k(t) & \text{if } N_k(t) \leq f(T, K), \\
         U^{MOSS+}_k(t) & \text{if } N_k(t) > f(T, K).
@@ -1026,7 +1033,9 @@ then \klUCB-switch use the index defined as follows:
 % https://smpybandits.github.io/docs/Policies.OSSB.html
 
 
-% FIXME?
+FIXME?
+\TODOL{Je dois conclure un peu cette section...}
+
 % \newpage
 
 % ----------------------------------------------------------------------------
