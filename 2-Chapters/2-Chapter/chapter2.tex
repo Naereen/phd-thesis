@@ -3,11 +3,15 @@
 % First chapter begins here
 \chapter{Stochastic Multi-Armed Bandits Models}
 \label{chapter:2}
+
+\TODOL{Abstract ici et plus court, et petite introduction !}
+
 \minitoc
 % Write miniTOC just after the title
 \graphicspath{{2-Chapters/2-Chapter/Images/}}
 
 \newpage
+
 % \TODOL{L'abstract ici est trop long, mais je l'ai écrit avant de commencer le chapitre, pour avoir une idée de ce que je devais faire ! Je couperai à la fin !}
 
 \paragraph{Abstract.}
@@ -553,10 +557,10 @@ This class contains for instance the \UCB{} algorithm, as its regret is proven t
 \begin{defn}\label{def:2:uniformlyEfficientAlgorithm}
     An algorithm $\cA$ is \emph{uniformly efficient} if its (mean) regret satisfies
     \begin{equation}
-        R_T^{\cA}(I) = \bigO{C_{I,\alpha} T^{\alpha}}
+        R_T^{\cA}(I) = \smallO{C_{I,\alpha} T^{\alpha}}
     \end{equation}
     for any value $\alpha>0$ and any problem instance $I\in \cI$,
-    where this notation means that the ``constant'' $C_{I,\alpha}$ can depend on the problem instance $I$ and on $\alpha$, but not on the time horizon $T$.
+    where this notation means that the ``constant'' $C_{I,\alpha}$ can depend on the problem instance $I$ and on $\alpha$, but \emph{not} on the time horizon $T$.
 \end{defn}
 
 Now we can state the second logarithmic lower-bound, for algorithms in this family:
@@ -628,7 +632,8 @@ Similarly to what is considered for the first lower-bound,
 a natural question is to know if there is an algorithm that achieve a regret upper-bound of the form $R_T^{\cA}(I) \leq \bigO{\sqrt{K T}}$ for any instance, independently on the problem difficulty.
 It is the case for the Exp3 algorithm from \cite{Auer02}, for example.
 Since a few years, some algorithms were shown to achieve both a problem-dependent logarithmic and a minimax upper-bounds,
-like MOSS in \cite{Audibert2009minimax} or recently \KLUCBpp{} in \cite{Menard17}.
+like MOSS in \cite{Audibert2009minimax} or recently \KLUCBpp{} in \cite{Menard17},
+and such results are usually referred to as ``best of both worlds''.
 
 
 % % do not detail too much, don't explain the tools behind the result
@@ -774,7 +779,7 @@ so if $T_0$ is fixed independently of $T$ and the problem difficulty, the regret
 
 Using the same analysis, if a lower-bound $d$ on the positive gaps is known beforehand, one can find a tuning of $T_0$ that gives a logarithmic regret.
 %
-Like for the lower-bound, we have $R_T \leq (\max_{k: \Delta_k > 0} \Delta_k) T_0 + p (T - T_0)$, thus $R_T \leq K T_0 + K \exp(-T_0 d^2/4) T$ using Hoeffding's inequality again. Optimizing on $T_0$ gives $T_0 = 4/d^2 \log(d^2 T / 4)$
+Like for the lower-bound, we have $R_T \leq (\max_{k: \Delta_k > 0} \Delta_k) T_0 + p (T - T_0)$, thus Hoeffding's inequality gives $R_T \leq K T_0 + K \exp(-T_0 d^2/4) T$. Optimizing on $T_0$ gives $T_0 = 4/d^2 \log(d^2 T / 4)$
 and proves that the ``explore-then-exploit'' strategy can also obtain an order-optimal regret, $R_T \leq K 4/d^2 (1 + \log(d^2 T / 4)) = \bigO{\log(T)}$, if it is tuned with a fixed time $T_0$ using prior knowledge on the problem (\ie, $d$) and the horizon $T$.
 %
 This strategy can also achieve $R_T = \bigO{T^{2/3} (K \log(T))^{1/3}}$ without prior knowledge on the problem, as shown in Section~1 of \cite{Slivkins2019}.
@@ -784,9 +789,9 @@ This time $\tau$ must be a \emph{stopping time} in the sense that it is a measur
 Choosing $\delta \propto 1/T$ and using a lower-bound $d$ on the gaps typically lead to an order-optimal algorithm as shown in \cite{GarivierETC2016}.
 
 
-For both cases, the strategy obtains a linear regret if it is tuned independently of the problem at hand, but they can be tuned to be efficient (\ie, with logarithmic regret) if lower-bound on the gaps $\Delta_k$ is known.
+For both cases, the strategy obtains sub-optimal regret if it is tuned independently of the problem at hand, but they can be tuned to be efficient (\ie, with logarithmic regret) if a lower-bound on the gaps $\Delta_k$ is known.
 %  \ie, they require a prior knowledge on the problem difficulty.
-As such, they are not applicable on an unknown problem and are less interesting from a practical point-of-view.
+As such, this weakness make them unapplicable on an unknown problem, and so these first strategies are less interesting from a practical point-of-view.
 
 
 % ----------------------------------------------------------------------------
