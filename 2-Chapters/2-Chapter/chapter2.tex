@@ -793,8 +793,8 @@ As such, they are not applicable on an unknown problem and are less interesting 
 \subsection{Index policies, \UCB, \klUCB{} and others}
 
 A large family of algorithms are index policies, that compute an index $U_k(t)$ on each arm $k$ at time $t$.
-The indexes should represent the expected quality of each arm, thus index policies play the arm that maximizes their index, \ie, $C(t) = \argmax_k U_k(t)$.
-If more than one index maximizes $(U_k(t))_k$, the arm is chosen among the set, usually in a uniform random manner: $C(t) \sim \cU(\argmax_k U_k(t))$.
+The indexes should represent the expected quality of each arm, thus index policies play the arm that maximizes their index, \ie, $A(t) = \argmax_k U_k(t)$.
+If more than one index maximizes $(U_k(t))_k$, the arm is chosen among the set, usually in a uniform random manner: $A(t) \sim \cU(\argmax_k U_k(t))$.
 %
 The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, that include well known and efficient algorithms such as \UCB, \klUCB{} and many others.
 
@@ -846,7 +846,7 @@ Either reason makes this arm worth choosing.
 Furthermore, these two terms $\widehat{\mu_k}(t)$ and $\xi_k(t)$ in the \UCB{}  respectively represent exploitation and exploration, and summing them up is a natural way to trade off the two.
 The parameter $\alpha$ in $\xi_k(t)$ also controls this trade-off, and the theoretical analysis suggests to restrict to $\alpha\geq1/2$, and to chose $\alpha=1/2$ for optimal uniform performance.
 
-To analyze the algorithm $\UCB_1$, we denote again $k^*$ an optimal arm, and $C(t)$ is the arm chosen by the algorithm in round $t$.
+To analyze the algorithm $\UCB_1$, we denote again $k^*$ an optimal arm, and $A(t)$ is the arm chosen by the algorithm in round $t$.
 According to the algorithm, $\UCB_k(t) \geq \UCB_{k^*}(t)$.
 %
 Under the clean event,μ(at) +rt(at)≥ ̄μt(at)andUCBt(a∗)≥μ(a∗). Therefore:
@@ -912,7 +912,7 @@ It became popular since its asymptotical and finite-time analyses in \cite{Agraw
 Thompson sampling uses a Bayesian point of view:
 instead of building confidence intervals on the means of the arms like \UCB{} does,
 it starts with a prior on the $K$ distributions (\eg, a flat uniform prior), and then after every observation $(k, r(t))$ it updates the posterior distribution of the arm $k$ with a new data $r(t)$.
-If $\pi_k(t)$ denotes this posterior distribution, Thompson sampling makes its decision at time $t$ by first sampling a random sample $s_k \sim \pi_k(t)$, and then playing according to the ``optimism under uncertainty'' philosophy if these samples represent the arms (expected) quality: $C(t) \in \argmax_k s_k$.
+If $\pi_k(t)$ denotes this posterior distribution, Thompson sampling makes its decision at time $t$ by first sampling a random sample $s_k \sim \pi_k(t)$, and then playing according to the ``optimism under uncertainty'' philosophy if these samples represent the arms (expected) quality: $A(t) \in \argmax_k s_k$.
 
 For problems with Bernoulli distributions on the $K$ arms,
 the best choice of prior is a Beta distribution, that starts as an initially uniform prior (\ie, $\mathrm{Beta}(1,1)$),
@@ -1004,9 +1004,9 @@ a family of algorithms developed since the 1950s, and applied to a wide range of
 % https://smpybandits.github.io/docs/Policies.Exp3.html
 %
 The Exp3 policy maintains weights $w_k(t)$ on the $K$ arms, and at time $t$ it samples an arm from the distribution which is a mixture of $\bm{w}(t)=[w_1(t),\dots,w_K(t)]$ and the uniform distribution:
-$\Pr(C(t)=k) = (1-\gamma) w_k(t) + \gamma \frac{1}{K}$.
+$\Pr(A(t)=k) = (1-\gamma) w_k(t) + \gamma \frac{1}{K}$.
 The weights are initially uniform, \ie, $w_k(0)=\frac{1}{K}$, and then at each time after observing a reward $r_k(t)$ from arm $k$, Exp3 updates the weight of the chosen arm multiplicatively, using $w_k(t+1) = w_k(t) \times \exp(\widehat{r_k}(t) / (\gamma N_k(t)))$. The weights are then renormalized, the have a sum $\sum_k w_k(t+1) = 1$.
-This notation $\widehat{r_k}(t)$ means an unbiased estimator of the reward $r_k(t)$, that is, $\widehat{r_k}(t) = \Pr(C(t)=k)$.
+This notation $\widehat{r_k}(t)$ means an unbiased estimator of the reward $r_k(t)$, that is, $\widehat{r_k}(t) = \Pr(A(t)=k)$.
 %
 Like for the $\varepsilon$-greedy policy, the parameter $\gamma$ can be constant, or can be a decreasing sequence $(\gamma_t)_t$.
 %
@@ -1109,7 +1109,7 @@ On the other hand, if prior knowledge on the application at hand is available, o
 For instance, if you know that the considered problem can either have $K$ arms with very close means, or one optimal arm far away from the other, two versions of a \UCB{} algorithms will perform quite differently in the two problems:
 using a large $\alpha$, \ie, favoring exploration, will give low regret in the first case,
 while using a low $\alpha$, \ie, favoring exploitation, will give low regret in the second case.
-One approach can be to use an intermediate value, as $\alpha=1/2$ suggested by theory, but another approach could be to consider an aggregated vote of different versions of \UCB, each running with a different value of $\alpha$ (\eg, in a logarithmic grid), and let another learning algorithm decide which value of $\alpha$ is the best for the problem at hand.
+One approach can be to use an intermediate value, as $\alpha=1/2$ suggested by theory, but another approach could be to consider an aggregated vote of different versions of \UCB, each running with a different value of $\alpha$ (\eg, in a logarithmic grid), and let another learning algorithm decide which value of $\alpha$ is the best \emph{for the problem at hand}.
 
 \paragraph{The online approach.}
 %
