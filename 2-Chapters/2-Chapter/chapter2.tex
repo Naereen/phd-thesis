@@ -37,7 +37,8 @@ We give an overview of the main families of algorithms designed to tackle stocha
 % In the point-of-view of numerical simulations or real-world applications of bandits on embedded systems, one must also take care of two other measures of performance: time and memory complexities, which can vary greatly between different families of algorithms.
 % We also empirically compare different algorithms for these two measures in Section~\ref{sec:3:timeAndMemoryCosts}.
 %
-We then give regret upper-bounds of the two main algorithms used in this thesis, \UCB{} and \klUCB, to highlight the difference between their finite-time regret upper-bounds. They both attain a logarithmic regret, proving their order optimality (\ie, their regret upper-bound asymptotically matches the lower-bound up-to a constant factor).
+We then give regret upper-bounds of the two main algorithms used in this thesis, \UCB{} and \klUCB, to highlight the difference between their finite-time regret upper-bounds. They both attain a logarithmic regret, proving their order optimality.
+% (\ie, their regret upper-bound asymptotically matches the lower-bound up-to a constant factor).
 % Moreover, \klUCB{} is known to be optimal for a wide range of arms distributions.
 % A sketch of the proof of both results is given in Appendix.
 
@@ -58,6 +59,8 @@ For more details and a more formal introduction to multi-armed bandits, we sugge
 Another excellent but reasonably short survey is the book by Bubeck and Cesa-Bianchi \cite{Bubeck12}, while the more recent book by Lattimore and Szepesv{\'a}ri \cite{LattimoreBanditAlgorithmsBook} is the most complete resource about bandit algorithms.
 Finally, we recommend \cite{bouneffouf2019survey} for a short but good survey on applications of MAB.
 
+\paragraph{About notations.}
+%
 The notations used in this thesis are the usual notations in all the MAB literature, and we follow closely the formalism of \cite{Kaufmann12PhD}, as well as \cite{Slivkins2019,LattimoreBanditAlgorithmsBook,Bubeck12}.
 The Nomenclature includes a summary of the notations, see Page~\pageref{chapter:nomenclature}.
 
@@ -133,17 +136,17 @@ We also restrict to \emph{stochastic} rewards, that is we associate a real-value
 Rewards are stationary, meaning that $(r_k(t))_{t\in\N^*}$ is independent and identically distributed (\iid), $r_k(t) \sim \nu_k$ for any $t\geq1$.
 
 The most common objective for the player is to maximize its expected rewards $\E[\sum_{t=1}^T Y_t] = \sum_{t=1}^T \E[r_{A(t)}(t)]$.
-The expectancy is taken on the rewards $(r_k(t))_{k,t}$, and the extern random variables $(U_s)_s$.
+The expectancy is taken on the rewards $(r_k(t))_{k,t}$, and the extern random variables $(U_s)_s$ (\ie, on the algorithm's decisions).
 %
-Other common objectives include best-arm identification (BAI) \cite{audibert2010best}.
+Other commonly studied objectives include best-arm identification (BAI) \cite{audibert2010best}.
 
 
 \paragraph{An interactive demo to discover the MAB problem (for the novice).}
 \label{par:2:interactiveDemoDiscoverMAB}
 %
-If you are discovering the concept of bandit model here, I would like to recommend you to go online and play a few times with an interactive demonstration.
+If you are discovering here the concept of bandits, I would like to recommend you to go online and play a few times with an interactive demonstration.
 On this demo, you will be facing a MAB problem with $K=5$ arms, and you have $T=100$ decisions to make.
-The demo is hosted on my website, at \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}, and illustrated below.
+The demo is hosted on my website, at \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}, and it is illustrated below.
 
 % \begin{figure}[h!]  % [htbp]
 %     \centering
@@ -186,12 +189,13 @@ After $T=100$ steps, the player obtained a cumulated reward of $56$, by playing 
 
 \paragraph{Decisions can use the past observations.}
 
-A bandit algorithm $\cA$, also referred to as a strategy or a policy, and sometimes denoted by $\pi$ or $\rho$, selects an arm $A(t)$ at time $t$ by using the past observations and the past external randomness.
-More formally, one could state that an algorithm is a sequence of measurable functions $(\cA_t)_{t\geq1}$,
-where $\cA_t$ maps the past observations $\cO_t = (U_0, Y_1, U_1, \dots, Y_{t-1}, U_{t-1})$
-to an arm $\cA_t(\cO_t) = A(t) \in[K]$,
+A bandit algorithm $\cA$ is also referred to as a strategy or a policy, and sometimes it is denoted by $\pi$ or $\rho$ in the literature.
+The algorithm $\cA$ selects an arm $A(t)$ at time $t$ by using the past observations and the past external randomness.
+More formally, one could state that an algorithm is a sequence of \emph{measurable} functions $(\cA_t)_{t\geq1}$,
+where $\cA_t$ maps the past observations $O_t = (U_0, Y_1, U_1, \dots, Y_{t-1}, U_{t-1})$
+to an arm $\cA_t(O_t) = A(t) \in[K]$,
 if we denote $Y_s = r_{A(s)}(s)$ the $s$-th reward.
-The initial information is reduced to $\cO_1 = (U_0)$, and the first decision is $A(1) = \cA_1(\cO_1)$. Usually, most algorithms starts by selecting $A(1)=1,\dots,A(K)=K$ (or a permutation of the $K$ arms) in the $K$ first steps.
+The initial information is reduced to $O_1 = (U_0)$, and the first decision is $A(1) = \cA_1(O_1)$. Usually, most algorithms starts by selecting $A(1)=1,\dots,A(K)=K$ (or a permutation of the $K$ arms) in the $K$ first steps.
 %
 An algorithm is said to be deterministic if it does not depend on the external randomness $U_0,U_1,\dots$, but in this thesis we only use non-deterministic algorithms.
 
@@ -204,19 +208,19 @@ From now on until the last chapter of this thesis, we only consider stochastic r
 %
 % Everything is implemented and documented at
 % https://smpybandits.github.io/docs/Arms.html
-We also focus only on real-valued rewards, meaning that $r_k(t)\in\R$ for all $k$ and $t$.
+We also focus only on real-valued rewards, meaning that $r_k(t)\in\R$ for all arm $k$ and time $t$.
 
 An important hypothesis is whether rewards are bounded or not,
 and whether the player knows if they are bounded or not before starting the bandit game.
-Moreover, if rewards are known to be bounded, let say in an interval $[a,b]$, another important hypothesis is whether the player knows the values of $a$ and $b$.
+Moreover, if rewards are known to be bounded, let say in an interval $[a,b]$, another important hypothesis is whether the player knows the values of $a$ and $b$ or not.
 %
-Intuitively, the bandit game is easier if the player knows the support of the distributions, and we restrict to this case in all the thesis.
+Intuitively, the bandit game is easier if the player knows the support of the distributions, and we restrict to this case in all the thesis, \ie, \emph{$a,b$ are always supposed to be known}.
 Most of the algorithms proposed in the literature follow this hypothesis as well.
 %
 The mostly used
 infinitely supported distributions are Gaussian, exponential and Poisson,
 while in the literature, the Bernoulli distribution is the most common case of finitely supported distributions.
-Continuous distributions with finite support also included truncated versions of infinitely supported distributions, in particular truncated Gaussian are used for numerical experiments in lots of research articles.
+Continuous-valued distributions with finite support also included truncated versions of infinitely supported distributions, in particular truncated Gaussian are used for numerical experiments in lots of research articles.
 
 % Just bounded, in $[a,b]$ but without loss of generality in $[0,1]$ etc.
 \paragraph{The normalization trick.}\label{par:2:normalizationTrick}
@@ -246,11 +250,17 @@ $A(\eta) = \log \left( \int h(x) \exp(\eta x) \lambda(\mathrm{d} x) \right)$.
 The natural parameter space is the set of values of $\eta$ such that this integral $A(\eta)$ is finite,
 and usually the literature focusses on regular and minimal exponential families (when the natural parameter space is an non-empty open set in $\R$).
 
--- An important result on exponential families is that \emph{a distribution in such family is entirely characterized by its parameter $\eta$}.
-That is why such one-dimensional distributions are entirely characterized by their mean, as $\mu = \E_{\eta}[X]$.
+We have to quote two important results on exponential families:
 
--- A second important result is a simplified form for the \emph{Kullback-Leibler divergence} \cite{KullbackLeibler51}, for two distributions lying in the same exponential family.
-The KL divergence is also called the relative entropy is a measure of how one probability distribution is different from a second, reference probability distribution.
+\begin{enumerate}
+    \item
+    \emph{A distribution in such family is entirely characterized by its parameter $\eta$}.
+    That is why one-dimensional distributions are entirely characterized by their mean, as $\mu = \E_{\eta}[X]$.
+
+    \item
+    A second important result is a simplified form for the \emph{Kullback-Leibler divergence} \cite{KullbackLeibler51}, for two distributions lying in the same exponential family.
+    The KL divergence is also called the relative entropy is a measure of how one probability distribution is different from a second, reference probability distribution.
+\end{enumerate}
 
 \begin{defn}[Kullback-Leibler divergence]\label{def:2:KLDivergence}
     The KL divergence between two distributions $d_1$ and $d_2$ is defined as
@@ -280,7 +290,8 @@ it is interesting to illustrate this definition and the notations with two impor
     (with the limit behavior $\eta=+\infty$ if $\mu=0$).
 
     Moreover, the KL divergence between $B(x)$ and $B(y)$, of parameters $\eta$, $\eta'$ is given by
-    $\kl(x,y) = \KL_{B}(\eta,\eta') = x \log(x/y) + (1-x) \log((1-x)/(1-y))$.
+    $\kl(x,y) = \KL_{B}(\eta,\eta') = x \log(x/y) + (1-x) \log((1-x)/(1-y))$,
+    and it is also called the \emph{relative binary entropy}.
 
     \item
     \textbf{Gaussian distributions} of a fixed variance are a one-dimensional exponential family,
@@ -297,17 +308,17 @@ it is interesting to illustrate this definition and the notations with two impor
     % with a fixed variance $\sigma^2$ form indeed a one-dimensional exponential family.
 
     Moreover, the KL divergence between $\cN(x,\sigma^2)$ and $\cN(x,\sigma^2)$, of parameters $\eta$, $\eta'$ is given by
-    $d(x,y) = \KL_{\cN}(\eta,\eta') = (x-y)^2 / (2\sigma^2)$.
+    $d(x,y) = \KL_{\cN,\sigma^2}(\eta,\eta') = (x-y)^2 / (2\sigma^2)$.
 \end{itemize}
 
 
-In the rest of this thesis, \emph{we only consider bounded rewards in the mathematical developments}, and we mostly focus on Bernoulli distributions, because they are usually the most relevant choice for the application of choice.
+In the rest of this thesis, \emph{we only consider bounded rewards in the mathematical developments}, and we mostly focus on Bernoulli distributions, because they are usually the most relevant choice for the applications of choice.
 First, we restrict for simplicity to Bernoulli distributions for the simulations shown in Chapter~\ref{chapter:3}, even if our library does implement all the distributions commonly found in the literature (including unbounded one-dimensional exponential families and even Markov models).
-% Then in Chapter~\ref{chapter:4}, each static IoT device in the noisy environment is assumed to be following a Bernoulli emission pattern in a fixed channel, FIXME
+In Chapter~\ref{chapter:4}, we only study models with binary rewards.
 %
-For example when we study multi-player bandits in Chapter~\ref{chapter:5}, for the model without sensing, we explain that restricting to the Bernoulli case is interesting and it is actually the hardest one, as continuous distributions with a null mass on $r(t)=0$ yield a much simpler problem.
+Then, when we study multi-player bandits in Chapter~\ref{chapter:5}, for the model without sensing, we explain that restricting to the Bernoulli case is interesting and not restrictive, as it is actually the hardest case (since continuous distributions has a null mass on $r(t)=0$, they yield a much simpler problem as the sensing/no sensing distinction no longer makes sense).
 %
-Finally, in Chapter~\ref{chapter:6} we analyze our proposed algorithm in the setting on bounded distributions, without restricting to Bernoulli distributions, but we use the fact that bounded distributions on $[0,1]$ are sub-Bernoulli, and we use the Bernoulli Kullback-Leibler divergence in our analysis.
+Finally, in Chapter~\ref{chapter:6} we analyze our proposed algorithm in the setting on bounded distributions, without restricting to Bernoulli distributions, but we use the fact that bounded distributions on $[0,1]$ are sub-Bernoulli, and we use the Bernoulli Kullback-Leibler divergence $\kl$ in our analysis.
 
 
 \paragraph{Other kind of hypothesis: sub-Gaussian and sub-Bernoulli distributions.}
@@ -317,7 +328,7 @@ For instance, bounded distributions on $[0,1]$ are known to be $1/4$ sub-Gaussia
 It means that their moment generating function is dominated by that of a Gaussian distribution with the same mean and a variance $1/4$.
 In Chapter~\ref{chapter:6}, we instead consider sub-Bernoulli distributions, formally introduced in Definition~\ref{def:6:subBernoulliDistributions}.
 %
-Such hypothesis is also proposed for other families of distributions, for instance \cite{KimTewari2019} analyses their Follow-the-Perturbed-Leader algorithm for perturbations following any sub-Weibull distribution (sub-Weibull distributions generalize both sub-Gaussian and sub-Exponential distributions).
+Such hypothesis is also proposed for other families of distributions, for instance the recent article \cite{KimTewari2019} analyses their Follow-the-Perturbed-Leader algorithm for perturbations following any sub-Weibull distribution (sub-Weibull distributions generalize both sub-Gaussian and sub-Exponential distributions).
 
 
 
@@ -332,8 +343,8 @@ For $K$ arms, each Markov chain has a finite number of states $s$, each correspo
 Rested Markov models means that only the state of the selected arm's Markov chain can change, following its Markov transition matrix.
 Restless models remove this hypothesis, making them harder to track and solve.
 %
-Such models were less studied than stationary or adversarial models, but some interesting works focussed on Markov models in the last 10 years.
-For instance, \cite{Melian15} proposed a cognitive radio model mixing MAB and Hidden Markov Models (HMM), solved by a mixed policy called UCB-HMM.
+Such models were less studied than stationary or adversarial models, but some interesting works focussed on Markov models in the last 10 years\footnote{~
+For instance, \cite{Melian15} proposed a cognitive radio model mixing MAB and Hidden Markov Models (HMM), solved by a mixed policy called UCB-HMM.}.
 
 
 % ----------------------------------------------------------------------------
@@ -357,7 +368,7 @@ Historically, MAB models were first applied to \textbf{clinical trials}, where a
     where the task is purely exploratory and the player is asked to identify the best of two options (or more), in a finite number of steps \cite{audibert2010best}.
     The problem can either consider a fixed budget and no freedom on the ending of the game (\ie, an known horizon $T$), or a fixed confidence and a certain freedom on the budget (\ie, the identified arm must be the true best arm with probability at least $1-\delta$) \cite{Garivier16BAI}.
     The theoretical complexity of this use of bandit for A/B testing was first studied in \cite{Kaufmann14},
-    and later on a more practical point-of-view was proposed in \cite{Jamieson17ABTest}.
+    and a more practical point-of-view was proposed in \cite{Jamieson17ABTest}.
 
     % \item
     MAB can also be applied to a broader setting of \textbf{online content recommandation},
@@ -370,10 +381,10 @@ Historically, MAB models were first applied to \textbf{clinical trials}, where a
     % \item
     Using bandit algorithms for \textbf{improved machine learning} models or algorithms has been an active research domain for the last ten years or so.
     As presented below in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}, a certain ``leader'' bandit algorithm can be used to select on the run the best bandit algorithm from a pool of ``followers'' algorithms.
-    Other possible use cases include hyper-parameter optimization, or feature selection.
+    Other possible use cases include hyper-parameter optimization, or features selection.
     Hyper-parameters include real-valued parameters, like $\alpha\in[0,\infty)$ for the \UCB{} or $\varepsilon$ for the $\varepsilon$-greedy bandit algorithms, a step size multiplier in a gradient method, or the width of a radial based function (RBF) kernel method.
     Discrete-valued parameters are also common, like a choice in a fixed set of kernel functions or the depth of neural networks,
-    and higher dimensional or more complex hyper-parameters include the entire architecture of a neural network.
+    and higher dimensional or more complex hyper-parameters can for instance be the entire architecture of a neural network.
 
     % % FIXME this is copied pasted from \cite{bouneffouf2019survey}
     % It is well known that performance of machine learning algorithms depends critically on identifying a good set of hyper-parameters.
@@ -425,7 +436,7 @@ Another interesting works is \cite{Modi17QoS}.
 \label{sec:2:lowerUpperBoundsRegret}
 
 As explained above, the main objective of a player facing a bandit game is to maximize its (expected) cumulated reward.
-An efficient algorithm should obtain a mean reward converging to the maximum reward.
+An efficient algorithm should see its mean reward converge to the maximum reward.
 We introduce in this section the notion of \emph{regret}, and the equivalence for a player between maximizing its sum of rewards and minimizing its regret.
 In Machine Learning, we usually prefer to aim at minimizing certain quantities, such as the error rate in supervised learning, or the distance to the optimum in an optimization problem,
 but the main interest of studying the regret is to be able to obtain higher-order information about the convergence of the mean reward to the max reward,
@@ -435,16 +446,17 @@ or in other words, to quantify the speed of convergence of a MAB algorithm.
 \subsection{Measuring performance with the (mean) regret}
 
 Let us first introduce some notations.
-From now on, we consider a stochastic and stationary MAB problem, with $K$ arms of distributions $(\nu_k)_k$, that is, for any time $t$, $r_k(t)\sim \nu_k$.
-We denote $\mu_k$ the mean of the distribution of arm $k$ (it will be referred to as the mean of arm $k$ in the rest of the manuscript), that is $\mu_k = \E[r_k(t)] \in \R$.
+From now on, we consider a stochastic and stationary MAB problem, with $K$ arms of distributions $\nu_1,\dots,\nu_K=(\nu_k)_k$, that is, for any time $t$, $r_k(t)\sim \nu_k$.
+We denote $\mu_k$ the mean of the distribution of arm $k$ (it will be referred to as the \emph{mean of arm $k$} in the rest of the manuscript), that is $\mu_k = \E[r_k(t)] \in \R$.
 %
 % \paragraph{Defining the regret.}
 %
 To define the regret, we first need to distinguish between \emph{optimal} and \emph{sub-optimal} arms.
 
-\begin{defn}[Optimal and sub-optimal arms]\label{def:2:optimalSubOptimalArms}
+\begin{defn}\label{def:2:optimalSubOptimalArms}
+    % [Optimal and sub-optimal arms]
     Consider a bandit problem of $K$ arms with distributions characterized by their means $\bm{\mu}=\mu_1,\dots,\mu_k$.
-    Denote $\mu^* = \max_k \mu_k$ the largest mean.\\
+    Denote $\mu^* = \max_k \mu_k$ the largest mean.
     The best arm can be non unique, and any arm $k$ having $\mu_k = \mu^*$ is said to be \emph{optimal},
     while arms satisfying $\mu_k < \mu^*$ are called \emph{sub-optimal}.
 \end{defn}
