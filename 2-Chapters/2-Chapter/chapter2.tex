@@ -37,7 +37,8 @@ We give an overview of the main families of algorithms designed to tackle stocha
 % In the point-of-view of numerical simulations or real-world applications of bandits on embedded systems, one must also take care of two other measures of performance: time and memory complexities, which can vary greatly between different families of algorithms.
 % We also empirically compare different algorithms for these two measures in Section~\ref{sec:3:timeAndMemoryCosts}.
 %
-We then give regret upper-bounds of the two main algorithms used in this thesis, \UCB{} and \klUCB, to highlight the difference between their finite-time regret upper-bounds. They both attain a logarithmic regret, proving their order optimality.
+We then give regret upper-bounds of the two main algorithms used in this thesis, \UCB{} and \klUCB, to highlight the difference between their finite-time regret upper-bounds. They are order-optimal as they attain a logarithmic regret.
+% proving their order optimality.
 % (\ie, their regret upper-bound asymptotically matches the lower-bound up-to a constant factor).
 % Moreover, \klUCB{} is known to be optimal for a wide range of arms distributions.
 % A sketch of the proof of both results is given in Appendix.
@@ -187,7 +188,7 @@ After $T=100$ steps, the player obtained a cumulated reward of $56$, by playing 
 \end{figure}
 
 
-\paragraph{Decisions can use the past observations.}
+\paragraph{Decisions can (and should) depend on the past observations.}
 
 A bandit algorithm $\cA$ is also referred to as a strategy or a policy, and sometimes it is denoted by $\pi$ or $\rho$ in the literature.
 The algorithm $\cA$ selects an arm $A(t)$ at time $t$ by using the past observations and the past external randomness.
@@ -367,7 +368,9 @@ Historically, MAB models were first applied to \textbf{clinical trials}, where a
     \textbf{A/B testing}, for instance for websites, is a popular application of the best arm identification problem,
     where the task is purely exploratory and the player is asked to identify the best of two options (or more), in a finite number of steps \cite{audibert2010best}.
     The problem can either consider a fixed budget and no freedom on the ending of the game (\ie, an known horizon $T$), or a fixed confidence and a certain freedom on the budget (\ie, the identified arm must be the true best arm with probability at least $1-\delta$) \cite{Garivier16BAI}.
-    The theoretical complexity of this use of bandit for A/B testing was first studied in \cite{Kaufmann14},
+    The theoretical complexity of this problem
+    % use of bandit for A/B testing
+    was first studied in \cite{Kaufmann14},
     and a more practical point-of-view was proposed in \cite{Jamieson17ABTest}.
 
     % \item
@@ -508,13 +511,16 @@ and thus we can write the following decomposition on the regret.
 \end{lemma}
 %
 \begin{proof}\label{proof:2:RegretDecomposition}
-    One can use the chain rule of expectation, and because the expectation is taken on the randomness of the (\iid) rewards $(r_k(t))_t$ and on the decisions of the player $(A(t))_t$ (which are measurable wrt to the past observations $\cO_t$),
-    one can rewrite the expected cumulated rewards like this,
-    $\E \left[ \sum_{t=1}^T r_{A(t)}(t) \right]$
-    $= \E \left[ \sum_{k=1}^K \sum_{t=1}^T r_k(t) \mathbbm{1}(A(t) = k) \right]$
-    $= \sum_{k=1}^K \E [ r_k(1) \sum_{t=1}^T \mathbbm{1}(A(t) = k) ]$
-    % \underbrace{XXX}_{= N_k(T)}
-    $= \sum_{k=1}^K \mu_k \E \left[ N_k(T) \right].$
+    We use the chain rule of expectation, and because the expectation is taken on the randomness of the (\iid) rewards $(r_k(t))_t$ and on the decisions of the player $(A(t))_t$ (which are measurable wrt to the past observations $\cO_t$),
+    we can rewrite the expected cumulated rewards:
+    \begin{align*}
+        \E \left[ \sum_{t=1}^T r_{A(t)}(t) \right]
+        &= \E \left[ \sum_{k=1}^K \sum_{t=1}^T r_k(t) \mathbbm{1}(A(t) = k) \right] \\
+        &= \sum_{k=1}^K \E \left[ r_k(1) \sum_{t=1}^T \mathbbm{1}(A(t) = k) \right]
+        % \underbrace{XXX}_{= N_k(T)}
+        = \sum_{k=1}^K \mu_k \E \left[ N_k(T) \right].
+    \end{align*}
+    % FIXME there is a conditionning to do here!
     %
     Thus $R_T^{\cA} = \sum_{k=1}^K \Delta_k \E[ N_k(T) ]$.
     The sum can then be simplified to only account for sub-optimal arms, \ie, arms $k$ such that $\Delta_k > 0$.
@@ -697,7 +703,7 @@ But even if $SC^{\cA}(T) = \Theta(\log T)$ for an efficient algorithm, it can be
 It is more interesting to studying $SC_M^{\cA}(T)$, the sum of the switching costs of the $M$ players in a multi-player bandit game, as in this case, it is possible that the players follow an efficient centralized or decentralized algorithm (which gives a logarithmic centralized regret) while still suffering from a linear switching cost.
 It is very satisfying to obtain a logarithmic switching cost for our algorithm \MCTopM-\klUCB{} in Chapter~\ref{chapter:5}, even if minimizing the switching cost was not one of our objective, and the bound we obtain on $SC_M^{\cA}(T)$ is just a consequence of our proof of the control we give on the regret $R^{\cA}(T)$.
 % - Switching cost? \cite{modiDemo2016} \cite{Koren17}
-On a more experimental note, it was showed in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-player bandits, \rhoRand, could be tuned to run in batches\footnote{~The batch bandit setting means that all players use the same decisions for instance for $50$ consecutive times, and update their decisions only once every $50$ time steps. For more details, see \cite{modiDemo2016} for experiments on the multi-player case, or \cite{perchet2016,gao2019batched,kolnogorov2019multi} for theoretical developments on the single-player case.}, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret.
+On a more experimental note, it was showed in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-player bandits, \rhoRand, could be tuned to run in batches\footnote{~The batch bandit setting implies that all players use the same decisions for instance for $50$ consecutive times, and update their decisions only once every $50$ time steps. For more details, see \cite{modiDemo2016} for experiments on the multi-player case, or \cite{perchet2016,gao2019batched,kolnogorov2019multi} for theoretical developments on the single-player case.}, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret.
 
 
 % - Fairness ?
@@ -734,19 +740,45 @@ A complete list of the implemented policies can be found on the following web pa
 \paragraph{Naive strategies: pure exploitation or pure exploration}
 
 Let us first describe two naive strategies, that both fail dramatically.
+They are detailed in Algorithm~\ref{algo:2:naiveStrategies} below.
 We recall the notations introduced above in Section~\ref{par:2:interactiveDemoDiscoverMAB}, the sums of rewards are $X_k(t) = \sum_{s=1}^t r_k(s) \mathbbm{1}(A(s) = k)$, and the numbers of samples are $N_k(t) = \sum_{s=1}^t \mathbbm{1}(A(s) = k)$.
 %
 The estimated means, or empirical averages, are $\widehat{\mu_k}(t) = X_k(t) / N_k(t)$ (when $N_k(t)>0$).
 
-% Why Follow-the-Leader (EmpiricalMeans https://smpybandits.github.io/docs/Policies.EmpiricalMeans.html) don't work, example.
--- The ``\emph{Follow-the-Leader}'' strategy consists in first playing once each arm, then always playing $A(t)\in\argmax \widehat{\mu_k}(t)$.
-The player only exploits the collected information, and this strategy can fail dramatically, \ie, obtain linear regret in some problems.
-Indeed consider $K=2$ Bernoulli arms of means $\mu_1=1/2$ and $\mu_2=\varepsilon$ where $\varepsilon < 1/2$, then with probability $\varepsilon/2$ the player observes a reward of $0$ for arm $1$ then $1$ for arm $2$ on the first rounds, and so she will play arm $2$ for the $T-2$ remaining rounds, giving a linear (mean) regret $R_T \geq \frac{\varepsilon}{2}\left(\frac{1}{2} - \varepsilon\right) (T-1)$.
-
 -- The uniform strategy always plays the $K$ arms uniformly at random.
-The player only explores without using the collected information, and this strategy fails dramatically for any non trivial problem (\ie, linear regret).
+The player \textcolor{darkgreen}{\emph{only explores}} without using the collected information, and this strategy fails dramatically for any non trivial problem (\ie, linear regret).
 Indeed it obtains a linear (mean) regret $R_T = \frac{1}{K} \sum_{k=1}^K \Delta_k T$
 which gives $R_T \propto T$ for any problem with at least one sub-optimal arms (\ie, all problems expect where $\mu_1=\mu_2=\dots=\mu_K$).
+
+% Why Follow-the-Leader (EmpiricalMeans https://smpybandits.github.io/docs/Policies.EmpiricalMeans.html) don't work, example.
+-- The ``\emph{Follow-the-Leader}'' strategy consists in first playing once each arm, then always playing $A(t)\in\argmax \widehat{\mu_k}(t)$.
+The player \textcolor{blue}{\emph{only exploits}} the collected information, and this strategy can fail dramatically, \ie, obtain linear regret in some problems.
+Indeed consider $K=2$ Bernoulli arms of means $\mu_1=1/2$ and $\mu_2=\varepsilon$ where $\varepsilon < 1/2$, then with probability $\varepsilon/2$ the player observes a reward of $0$ for arm $1$ then $1$ for arm $2$ on the first rounds, and so she will play arm $2$ for the $T-2$ remaining rounds, giving a linear (mean) regret $R_T \geq \frac{\varepsilon}{2}\left(\frac{1}{2} - \varepsilon\right) (T-1)$.
+
+% \begin{small} % XXX remove if needed
+\begin{figure}[h!]
+	\centering
+    \begin{framed}
+	\begin{algorithm}[H]
+		% \begin{small} % XXX remove if needed
+		\For(){$t = 1, 2, \dots, T$}{
+            \uIf{\textcolor{darkgreen}{pure exploration}}{
+                Play uniformly at random \textcolor{darkgreen}{$A(t) \in \cU(\{1,\dots,K\})$}
+                \tcp*[f]{Explore}
+            }
+            \uIf{\textcolor{blue}{pure exploitation}}{
+                Play uniformly among the arms of maximal empirical mean: \textcolor{blue}{$A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} \widehat{\mu_k}(t))$}
+                \tcp*[f]{Exploit}\\
+                Observe a reward $r_{A(t)}(t)$, and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$
+            }
+		}
+		\caption{Naive strategies: \textcolor{darkgreen}{pure exploitation} or \textcolor{blue}{pure exploration}.}
+		\label{algo:2:naiveStrategies}
+		% \end{small} % XXX remove if needed
+	\end{algorithm}
+	\end{framed}
+\end{figure}
+% \end{small} % XXX remove if needed
 
 
 % ---------------------------------------------------
@@ -755,20 +787,62 @@ which gives $R_T \propto T$ for any problem with at least one sub-optimal arms (
 As illustrated by the two previous examples, an efficient strategy needs to solve the trade-off between exploration and exploitation.
 The two following solutions both consist in splitting the $T$ time steps into $T_0$ steps of exploration and $T-T_0$ steps of exploitation.
 %  either in an alternative way or in a fixed way (``explore then exploit'').
+They are detailed in Algorithm~\ref{algo:2:naiveStrategies}.
 
 % https://smpybandits.github.io/docs/Policies.EpsilonGreedy.html
--- The $\varepsilon$-greedy strategy consists in alternating exploration and exploitation at a certain ratio \cite{SuttonBarto2018,Bubeck12,LattimoreBanditAlgorithmsBook}.
+-- The \textcolor{deeppurple}{$\varepsilon$-greedy strategy} consists in alternating exploration and exploitation at a certain ratio \cite{SuttonBarto2018,Bubeck12,LattimoreBanditAlgorithmsBook}.
 Fix $0<\varepsilon<1$, then at each round, with probability $\varepsilon$ the player selects an arm uniformly at random (exploration) and with probability $1-\varepsilon$ the arm with highest empirical mean is selected (exploitation).
 If $\varepsilon$ is constant, then the (mean) regret is still growing linearly as it is lower bounded by $\varepsilon \frac{1}{K} \sum_{k=1}^K \Delta_k T$.
 In this first case, in average $T_0 = \varepsilon T$ steps are spent on exploration.
 %
-But if we consider $\varepsilon_t$ decreasing with time $t$, for instance $\varepsilon_t = \varepsilon_0 \frac{1}{t}$ with $\varepsilon_0 = 6 K / d^2$, for a constant $0 < d < \min_{k: \Delta_k > 0} \Delta_k$,
+But if we consider $\varepsilon_t$ decreasing with time $t$, for instance $\varepsilon_t = \varepsilon_0 / t$ with $\varepsilon_0 = 6 K / d^2$, for a constant $0 < d < \min_{k: \Delta_k > 0} \Delta_k$,
 then it was shown in \cite{Auer02} that the regret is of the order of $K \log(T) / d + \smallO{T}$, which leads to an order-optimal regret of $\bigO{\log(T)}$.
-In this second case, about $T_0 \leq \varepsilon_0 \log(T)$ steps are spent on exploration.
+In this second case, an average of $T_0 \leq \varepsilon_0 \log(T)$ steps are spent on exploration.
+
+% \begin{small} % XXX remove if needed
+\begin{figure}[h!]
+	\centering
+    \begin{framed}
+	\begin{algorithm}[H]
+		% \begin{small} % XXX remove if needed
+		\For(){$t = 1, 2, \dots, T$}{
+            \uIf{\textcolor{deeppurple}{$\varepsilon$-greedy}}{
+                Sample a value uniformly in $[0,1]$: $U_t\sim\cU([0,1])$\\
+                \uIf{\textcolor{deeppurple}{$U_t < \varepsilon$ (\ie, with probability $\varepsilon$)}}{
+                    Play uniformly at random $A(t) \in \cU(\{1,\dots,K\})$
+                    \tcp*[f]{Explore}
+                }
+                \uElse{
+                    Play uniformly among the arms of maximal empirical mean: $A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} \widehat{\mu_k}(t))$
+                    \tcp*[f]{or Exploit}
+                }
+            }
+            \uIf{\textcolor{deepgold}{Explore-then-Exploit}}{
+                \uIf{$t \leq \textcolor{deepgold}{T_0}$}{
+                    Play uniformly at random $A(t) \in \cU(\{1,\dots,K\})$
+                    \tcp*[f]{Explore}
+                }
+                \uElse{
+                    \uIf{$t = \textcolor{deepgold}{T_0}$}{
+                        Pick one arm $A(\textcolor{deepgold}{T_0})=k$ uniformly among the arms of maximal empirical mean: \textcolor{deepgold}{$A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} \widehat{\mu_k}(\textcolor{deepgold}{T_0}))$}
+                        \tcp*[f]{then Exploit}
+                    }
+                    Play the same arm $A(t) = A(\textcolor{deepgold}{T_0})$
+                }
+            }
+            Observe a reward $r_{A(t)}(t)$, and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$
+		}
+		\caption{Simple efficient strategies: \textcolor{deeppurple}{$\varepsilon$-greedy} and \textcolor{deepgold}{Explore-then-Exploit}.}
+		\label{algo:2:naiveStrategies}
+		% \end{small} % XXX remove if needed
+	\end{algorithm}
+	\end{framed}
+\end{figure}
+% \end{small} % XXX remove if needed
 
 
 % https://smpybandits.github.io/docs/Policies.ExploreThenCommit.html
--- The ``explore-then-exploit'' strategy, as studied for instance in \cite{GarivierETC2016}, consists in first exploring uniformly the $K$ arms for $T_0$ time steps, then only exploiting the best arm.
+-- The ``\textcolor{deepgold}{Explore-then-Exploit}'' strategy, as studied for instance in \cite{GarivierETC2016}, consists in first exploring uniformly the $K$ arms for $T_0$ time steps, then only exploiting the best arm.
 We can lower bound the regret of this strategy by
 $R_T \geq K (\min_{k: \Delta_k > 0} \Delta_k) T_0/K + p (T - T_0)$,
 if $p$ denotes the probability that the chosen arm is not optimal (\ie, the arm with highest mean after $T_0/K$ samples of each arms).
@@ -779,7 +853,7 @@ so if $T_0$ is fixed independently of $T$ and the problem difficulty, the regret
     We prove it for the case of two arms.
     If the distributions are Bernoulli (or sub-Gaussian), we can use Hoeffding's inequality from \cite{hoeffding1963probability} to control this probability $p$.
     %
-    Indeed if $Z_1,\dots,Z_n$ are \iid{} samples from a Bernoulli distribution of parameter $\mu$, of mean $\widehat{Z_n}$ we have
+    Indeed if $Z_1,\dots,Z_n$ are \iid{} samples from a Bernoulli distribution of parameter $\mu$, of mean $\widehat{Z_n} = \frac{1}{n} \sum_{i=1}^n Z_i$, Hoeffding's inequality gives both
     \begin{equation}
         \forall x < \mu, \bP(\widehat{Z_n} < x) \leq \exp(-2 n (x-\mu)^2),
         \;\;\;
@@ -789,8 +863,8 @@ so if $T_0$ is fixed independently of $T$ and the problem difficulty, the regret
     If $\mu_1 = \mu_2 + \Delta$, then
     $p = \bP(\widehat{\mu_1} < \widehat{\mu_2}) \leq \bP(\widehat{\mu_1} < \mu_1 - \Delta/2) + \bP(\widehat{\mu_2} > \mu_2 + \Delta/2)$, and both terms can be bounded by using Hoeffding's inequality with $n=T_0/2$ samples,
     to obtain $p \leq 2 \exp(-T_0 \Delta^2 / 4)$.
-    %
-    For $K$ arms, the same proofs applies, and we can obtain
+
+    A simple union bound extends the proof for $K$ arms, giving
     $p \leq 2 K \exp(-T_0 d^2 / 4)$, if $d$ is a lower-bound on the positive gaps.
     %
     In all cases, it shows that $p$ is a constant wrt $T$.
@@ -828,18 +902,17 @@ The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, tha
     \begin{framed}
 	\begin{algorithm}[H]
 		% \begin{small} % XXX remove if needed
-		\For(){$t = 1, \dots, T$}{
+		\For(){$t = 1, 2, \dots, T$}{
             \uIf{$t \leq K$}{
                 Play arm $A(t) = t$\;
             }
 			\Else(){
-                For each arm, compute the index $U_k(t)$\;
-                Play arm $A(t) = \arg\max_{1\leq k \leq K} U_k(t)$\;
+                For each arm, compute the \textcolor{blue}{index $U_k(t)$}\;
+                Play arm $A(t)$ uniformly among the arms of maximal index: \textcolor{blue}{$A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} U_k(t))$}\;
             }
-            Observe a reward $r_{A(t)}(t)$\;
-            Update both $X_k(t)$ and $N_k(t)$\;
+            Observe a reward $r_{A(t)}(t)$ and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$\;
 		}
-		\caption{A generic index policy, using indexes $U_k(t)$ (\eg, \UCB, \klUCB{} etc).}
+		\caption{A generic \textcolor{blue}{index} policy, using \textcolor{blue}{indexes $U_k(t)$} (\eg, \UCB, \klUCB{} etc).}
 		\label{algo:2:indexPolicy}
 		% \end{small} % XXX remove if needed
 	\end{algorithm}
@@ -858,17 +931,18 @@ the \emph{average reward} $\widehat{\mu_k}(t)=\frac{X_k(t)}{N_k(t)}$
 and a \emph{confidence radius} $\xi_k(t) = \sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}\right)}$.
 %
 \begin{align}\label{eq:UCB_index}
-    U_k^{\UCB}(t) = \underbrace{\frac{X_k(t)}{N_k(t)}}_{\widehat{\mu_k}(t)} + \underbrace{\sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}\right)}}_{\xi_k(t)}.
+    U_k^{\UCB_1}(t) = \UCB_k(t) = \underbrace{\frac{X_k(t)}{N_k(t)}}_{\widehat{\mu_k}(t)} + \underbrace{\sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}\right)}}_{\xi_k(t)}.
 \end{align}
 
-This selection rule makes sense for the following reason:
-an arm $k$ is chosen at step $t$ because it has a large $U_k^{\UCB}(t) = \UCB_k(t)$, which can happen for two reasons:
-$i)$ because the average reward $\widehat{\mu_k}(t)$ is large, in which case this arm is likely to have a high reward,
+This selection rule \eqref{eq:UCB_index} makes sense for the following reason:
+an arm $k$ is chosen at step $t$ because it has a large $\UCB_k(t)$, which can happen for two reasons:
+$i)$ because the average reward $\widehat{\mu_k}(t)$ is large, in which case this arm is likely to have a high mean reward $\mu_k$,
 $ii)$ and/or because the confidence radius $\xi_k(t)$ is large, in which case this arm has not been explored much.
 Either reason makes this arm worth choosing.
+One can also observe that $\xi_k(t)\to\infty$ if $t\to\infty$ but $N_k(t)\ll\log(t)$, thus all arms must be explored at least $\mathcal{O}(\log(T))$ times.
 %
-Furthermore, these two terms $\widehat{\mu_k}(t)$ and $\xi_k(t)$ in the \UCB{}  respectively represent exploitation and exploration, and summing them up is a natural way to trade off the two.
-The parameter $\alpha$ in $\xi_k(t)$ also controls this trade-off, and the theoretical analysis suggests to restrict to $\alpha\geq1/2$, and to chose $\alpha=1/2$ for optimal uniform performance.
+Furthermore, these two terms $\widehat{\mu_k}(t)$ and $\xi_k(t)$ in the \UCB{}  respectively represent exploitation and exploration, and summing them up is a natural way of trading them off.
+The parameter $\alpha$ in $\xi_k(t)$ also controls this trade-off, and the theoretical analysis suggests to restrict to $\alpha\geq1/2$, and to choose $\alpha=1/2$ for optimal uniform performance.
 
 To analyze the algorithm $\UCB_1$, we denote again $k^*$ an optimal arm, and $A(t)$ is the arm chosen by the algorithm in round $t$.
 According to the algorithm, $\UCB_k(t) \geq \UCB_{k^*}(t)$.
@@ -877,9 +951,9 @@ Under the clean event,μ(at) +rt(at)≥ ̄μt(at)andUCBt(a∗)≥μ(a∗). There
 XXX
 It follows that
 XXX
+\TODOL{Expliquer la fin}
 
 More details on the proofs can be found for instance in Chapter~2 of \cite{Bubeck12}, or Section~1.3 of \cite{Slivkins2019}.
-% \TODOL{Expliquer la fin}
 The $\UCB_1$ algorithm achieves order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret.
 
 It has the advantage of not relying on any prior knowledge of the problem difficulty, of being anytime, and computationally simple, for both memory and time aspects.
@@ -896,14 +970,39 @@ This is why it is used in our demonstration presented in Section~\ref{sec:4:gnur
 \TODOL{Expliquer klUCB}
 \TODOL{Expliquer que les indices klUCB = des UCB sur les moyennes + principle of optimism in face of uncertainty}
 
+The \klUCB{} algorithm XXX
 Optimal upper confidence bounds based on Kullback-Leibler divergence and klUCB indexes
 
-If rewards lie in $[a,b]$, then the indexes are computed as follows:
+% If rewards lie in $[a,b]$, then t
+The indexes are computed as follows, for an exploration function $f(t)$
+that is typically chosen as $f(t)=\log(t)+3\log(\log(t))$ for the theoretical analyses,
+and $f(t)=\log(t)$ in practice.
+The constant $c>0$ is usually chosen as $c=1$.
 \begin{align}\label{eq:klUCB_index}
-    U_k^{\klUCB}(t) = \sup\limits_{q \in [a, b]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{c \log(t)}{N_k(t)} \right\}.
+    U_k^{\klUCB}(t) = \sup\limits_{q \in [0, 1]} \left\{ q : \KL\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{c f(t}{N_k(t)} \right\}.
 \end{align}
 
-\TODOL{Short note on how to implement such policy, using Newton's method ?}
+
+\paragraph{A note about the implementation of \klUCB{} algorithmes.}
+%
+% \TODOL{Short note on how to implement such policy, using Newton's method ?}
+Implementing this kind of policy requires to implement two things.
+The first piece is usually easy: one has to implement a way to compute $\KL(x,y)$ the Kullback-Leibler divergence of the considered one-dimensional family,
+for instance $\kl$ for Bernoulli distributions has a closed form and is easy to compute.
+The second piece is less obvious: one has to solve the optimisation problem defining the $\sup$ in \eqref{eq:klUCB_index}.
+Any iterative algorithm for numerical optimization of one-dimensional functions can be used (\eg, see \cite{BoydVanderberghe04} for a survey), but as the $\KL(x,\bullet)$ function is usually convex (for any $x$), one practical and mathematically correct solution is to use Newton's method.
+The search space for $q$ can be restricted to $[\frac{X_k(t)}{N_k(t)}, 1]$ instead of $[0,1]$, and Newton's method guarantees that a small number of steps yield a given precision level $\varepsilon$.
+For instance, $\varepsilon=10^{-8}$ is enough for numerical simulations, and typically Newton's method terminates in between $8$ to $12$ steps.
+
+If we perform numerical simulations with \klUCB{} algorithms, we are interested in having efficient implementations, and ideally \klUCB{} should not be significantly slower than \UCB. The bottleneck of the performance is the computations of the $\KL(x,y)$ functions and the optimization problem,
+and we note that our library SMPyBandits implements both parts in both a naive Python implementation (file \href{https://github.com/SMPyBandits/SMPyBandits/blob/master/SMPyBandits/Policies/kullback.py}{\texttt{kullback.py}}) and in a Python module written in a
+C file\footnote{~We also note that we wrote an intermediate implementation that uses Cython \cite{cython}, to have a file with a syntax closer to Python, while gaining from almost the same performance speed-up as with the optimized C version, see file \href{https://github.com/SMPyBandits/SMPyBandits/blob/master/SMPyBandits/Policies/kullback_cython.pyx}{\texttt{kullback\_cython.pyx}}.
+    These implementations of $\KL(x,y)$ and \klUCB{} indexes are also published as an independent Python package, hosted on \href{https://github.com/Naereen/Kullback-Leibler-divergences-and-kl-UCB-indexes}{\texttt{GitHub.com/Naereen/Kullback-Leibler-divergences-and-kl-UCB-indexes}} and installable from Pypi.
+    A Julia version of the same package is also available at \href{https://github.com/Naereen/KullbackLeibler.jl}{\texttt{GitHub.com/Naereen/KullbackLeibler.jl}},
+    and installable with \texttt{Pkg.add("KullbackLeibler")}.
+},
+in an optimized way (file \href{https://github.com/SMPyBandits/SMPyBandits/blob/master/SMPyBandits/Policies/C/kullback_py3.c}{\texttt{kullback\_py3.c}}).
+For the supported families of distributions (including Bernoulli, Gaussian, exponential and Poisson), we wrote both a naive and an optimized version of $\KL(x,y)$ and the $\sup_q \KL(x,q) \leq z$ optimization problem, using Newton's method.
 
 
 \paragraph{Variants on \UCB}
@@ -955,11 +1054,10 @@ Thompson sampling was proven to achieve asymptotical optimal problem-dependent b
     \begin{framed}
 	\begin{algorithm}[H]
         % \begin{small} % XXX remove if needed
-		\For(){$t = 1, \dots, T$}{
+		\For(){$t = 1, 2, \dots, T$}{
             For each arm, sample $s_k(t) \sim \pi_k(t-1)$ from the posterior of arm $k$, $\pi_k(t-1)=\mathrm{Beta}(X_k(t-1)+1,N_k(t-1)-X_k(t-1)+1)$\;
-            Play arm $A(t) = \arg\max_{1\leq k \leq K} U_k(t)$\;
-            Observe a reward $r_{A(t)}(t)$\;
-            Update both $X_k(t)$ and $N_k(t)$\;
+            Play arm $A(t)$ uniformly among the arms of maximal random sample: $A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} U_k(t))$\;
+            Observe a reward $r_{A(t)}(t)$ and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$\;
 		}
 		\caption{Thompson Sampling for Beta prior and posteriors, on Bernoulli rewards.}
 		\label{algo:2:ThompsonSampling}
@@ -971,10 +1069,10 @@ Thompson sampling was proven to achieve asymptotical optimal problem-dependent b
 
 
 Bayes-UCB from \cite{Kaufmann12BUCB} also uses the Bayesian point of view, updated like for Thompson sampling, but used in a different way.
-Instead of sampling from the posteriors and playing the arms with maximum sample, Bayes-UCB computes the $1-1/t$ quantile of each arm, at time $t$, and plays the arm with the largest quantile.
+Instead of sampling from the posteriors and playing the arms with maximum sample, Bayes-UCB computes the $(1-1/t)$ quantile of each arm, at time $t$, and plays the arm with the largest quantile.
 It was also proved to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12BUCB}.
 %
-Bayes-UCB is comparable to Thompson sampling in terms of memory complexity, but it can be slower in terms of time complexity as computing a $1-1/t$ quantile is generally more costly than sampling from a distribution.
+Bayes-UCB is comparable to Thompson sampling in terms of memory complexity, but it can be slower in terms of time complexity as computing a quantile is generally more costly than just sampling from a distribution.
 % a Beta prior and posterior, initially uniform (\ie, $\mathrm{Beta}(1,1)$) (\texttt{BayesUCB}).
 % But in particular for Bernoulli distributed arms and for Beta posteriors and priors, Bayes-UCB is only about twice as slow as Thompson sampling.
 
@@ -991,7 +1089,8 @@ Finally, we would like to mention that a recent work \cite{KimTewari2019} presen
 %  underlying the approaches based on UCB, might not be necessary at all.
 % With perturbation: maybe we don't need optimism in face of uncertainty, we just need uniform sampling!
 The authors of \cite{KimTewari2019} showed that their Randomized Confidence Bound (RCB) algorithm can achieve the same regret upper bounds as \UCB{} or Thompson sampling, with uniform perturbations.
-Their RCB algorithm ressembles \UCB, and builds the same confidence intervals $\mathrm{LCB}_k(t), \UCB_k(t)$ on arm $k$ at time $t$. But instead of playing the arm with maximum UCB, a random sample is taken on each interval, and the played arm is the one maximizing this sample.
+Their RCB algorithm ressembles \UCB, and builds the same confidence intervals $[ \mathrm{LCB}_k(t), \UCB_k(t) ]$ on arm $k$ at time $t$ (the lower confidence bound is $\mathrm{LCB}_k(t) = \widehat{\mu_k}(t) - \xi_k(t)$).
+But instead of playing the arm with maximum UCB, a random sample is taken on each interval, and the played arm is the one maximizing this sample.
 % https://smpybandits.github.io/docs/Policies.RandomizedIndexPolicy.html
 
 
@@ -1005,7 +1104,7 @@ We can briefly mention other families of policies.
 % - One of the first paper I read in 2016 was defining AdBandits, https://smpybandits.github.io/docs/Policies.AdBandits.html, a mixture between Thompson sampling and BayesUCB (very efficient in practice)
 % - I especially love the BESA algorithm by [? and ? and Maillard].
 
-BESA (Best Empirical Sampled Average) was introduced in \cite{Baransi2014}, in order to fix a simple observation:
+\textbf{BESA} (Best Empirical Sampled Average) was introduced in \cite{Baransi2014}, in order to fix a simple observation:
 for instance in \UCB, if arm $1$ has $100$ samples and arm $2$ has $50$ samples, it should make more sense to only use $50$ samples of arm $1$ to compute and compare any statistics for each arms (\eg, their empirical mean).
 The BESA algorithm for $K=2$ arms is then very simple: at each time step, if arms $1$ and $2$ have respectively $n_1$ and $n_2$ samples, and if $n_1>n_2$ (for instance), first it sub-samples $n_2$ observations from $n_1$, then it computes the mean of these observations, and play the arm maximizing this mean (now that there is the same number of observations for both arms, it makes more sense to compare these quantities).
 It was analyzed partially, for the two-armed case it was proved to be asymptotically optimal for one-dimensional exponential families, and the authors illustrated that it can be very efficient empirically.
@@ -1050,15 +1149,15 @@ It is anytime, and was proven to obtain good ``best of both world'' performances
 
 As explained before, in the last few years, the MAB research community has been interested in finding algorithms which achieves both a problem-dependent logarithmic and a minimax upper-bounds.
 The first example is MOSS from \cite{Audibert2009minimax}, or recently \KLUCBpp{} in \cite{Menard17}.
-They are both index-based, using the following indexes:
+They are both index-based (see Algorithm~\ref{algo:2:indexPolicy}), using the following indexes:
 \begin{align}\label{eq:2:indexes_for_MOSS_klUCBpp}
-    U^{\mathrm{MOSS}}_k(t) &= \frac{X_k(t)}{N_k(t)} + \sqrt{\max\left(0, \frac{\log\left(\frac{t}{K N_k(t)}\right)}{N_k(t)}\right)}. \\
+    U^{\mathrm{MOSS}}_k(t) &= \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \frac{\log\left(\frac{t}{K N_k(t)}\right)}{N_k(t)} } \right). \\
     U^{\KLUCBpp}_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{g(N_k(t), T, K)}{N_k(t)} \right\}.
 \end{align}
 %
-If we denote $g(t, T, K) = \log^+(y (1 + \log^+(y)^2))$, and $y = \frac{T}{K t}$, where $\log^+(x) = \max(0, \log(x))$.
+If we denote $g(t, T, K) = \log^+(y(t) (1 + \log^+(y(t))^2))$, and $y(t) = \frac{T}{K t}$, with $\log^+(x) = \max(0, \log(x))$.
 
-Both algorithms are index policies, that are not anytime.
+Both algorithms are index policies, but they are not anytime.
 For any $K$, $T$, and problem instances $I$ in a certain family $\cI$ (\eg, with Bernoulli distributions),
 they enjoy regret bounds like the following, for two constants $c_{\cA}$ and $c'_{\cA}$ that depend on the algorithm, and a constant $C_I$ that depend on the problem instance only: $R_T^{\cA} \leq \min( c_{\cA} \sqrt{K T}, c'_{\cA} C_I \log(T))$.
 
@@ -1069,7 +1168,7 @@ To detail this, first let $f(T, K) = \lfloor (T/K)^{\gamma}\rfloor$ for $\gamma=
 then \klUCB-switch use the index defined as follows:
 %
 \begin{align}\label{eq:2:indexes_for_klUCBswitch}
-    U^{\mathrm{MOSS}+}_k(t) &= \frac{X_k(t)}{N_k(t)} + \sqrt{\max\left(0, \frac{\log\left(\frac{T}{K N_k(t)}\right)}{N_k(t)}\right)}. \\
+    U^{\mathrm{MOSS}+}_k(t) &= \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \frac{\log\left(\frac{T}{K N_k(t)}\right)}{N_k(t)}} \right). \\
     U^{\KLUCB+}_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{\log(T / (K N_k(t)))}{N_k(t)} \right\} \\
     U^{\klUCB\text{-}\mathrm{switch}}_k(t) &= \begin{cases}
         U^{\KLUCB+}_k(t) & \text{if } N_k(t) \leq f(T, K), \\
@@ -1087,9 +1186,14 @@ then \klUCB-switch use the index defined as follows:
 % https://smpybandits.github.io/docs/Policies.OCUCB.html
 % https://smpybandits.github.io/docs/Policies.OSSB.html
 
-
-FIXME?
-\TODOL{Je dois conclure un peu cette section...}
+\paragraph{Summary.}
+%
+We gave an overview of the most well known families of algorithms for multi-armed bandits,
+focussing on algorithms designed and analyzed for the single-player stationary and stochastic MAB model.
+Except the naive and simple strategies given as introductory examples, most of the policies presented above are order-optimal for Bernoulli distributed problems or bounded rewards (or one-dimensional exponential families),
+and some of them are known to be optimal in different settings.
+%
+In the rest of this thesis, we mainly use the \UCB{} or Thompson sampling algorithms when simplicity is favored (\ie, Chapter~\ref{chapter:4}), and the \klUCB{} algorithm when optimality is important and where we give mathematical developments (\ie, Chapters~\ref{chapter:5} and \ref{chapter:6}).
 
 % \newpage
 
