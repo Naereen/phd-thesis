@@ -447,6 +447,7 @@ or in other words, to quantify the speed of convergence of a MAB algorithm.
 
 Let us first introduce some notations.
 From now on, we consider a stochastic and stationary MAB problem, with $K$ arms of distributions $\nu_1,\dots,\nu_K=(\nu_k)_k$, that is, for any time $t$, $r_k(t)\sim \nu_k$.
+We focus on distributions fully characterized by their means, that can be Bernoulli or any one-dimensional exponential family.
 We denote $\mu_k$ the mean of the distribution of arm $k$ (it will be referred to as the \emph{mean of arm $k$} in the rest of the manuscript), that is $\mu_k = \E[r_k(t)] \in \R$.
 %
 % \paragraph{Defining the regret.}
@@ -455,7 +456,7 @@ To define the regret, we first need to distinguish between \emph{optimal} and \e
 
 \begin{defn}\label{def:2:optimalSubOptimalArms}
     % [Optimal and sub-optimal arms]
-    Consider a bandit problem of $K$ arms with distributions characterized by their means $\bm{\mu}=\mu_1,\dots,\mu_k$.
+    Consider a bandit problem of $K$ arms with distributions of means $\bm{\mu}=\mu_1,\dots,\mu_k$.
     Denote $\mu^* = \max_k \mu_k$ the largest mean.
     The best arm can be non unique, and any arm $k$ having $\mu_k = \mu^*$ is said to be \emph{optimal},
     while arms satisfying $\mu_k < \mu^*$ are called \emph{sub-optimal}.
@@ -474,13 +475,14 @@ let us introduce the (mean) regret $R_T^{\cA}$ of an algorithm $\cA$ as
 We can rewrite this expression to obtain the following definition of the regret:
 $R_T^{\cA}$
 $= \E\left[ \sum_{t=1}^T r_{k^*}(t) \right] - \E\left[ \sum_{t=1}^T r_{A(t)}(t) \right]$
-$= T \E\left[ r_{k^*}(1) \right] - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right]$
+$= T \times \E\left[ r_{k^*}(t=1) \right] - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right]$
 $= T \mu^* - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right]$.
 % This is the definition we give below.
 
 
 \begin{defn}[Regret]\label{def:2:regret}
-    For an algorithm $\cA$, a bandit problem of $K$ arms characterized by their means $\bm{\mu} = \mu_1,\dots,\mu_K$ and if $\mu^* = \max_k \mu_k$, then the (mean) regret at horizon $T$ is defined as
+    For an algorithm $\cA$, a bandit problem of $K$ arms characterized by their means $\bm{\mu} = \mu_1,\dots,\mu_K$ and if $\mu^* = \max_k \mu_k$, then the (mean) regret at horizon $T$ is $R_T^{\cA}$ and it is defined as
+    %
     \begin{equation}
         R_T^{\cA} = T \mu^* - \sum_{t=1}^T \E\left[ Y(t) \right] = T \mu^* - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right].
     \end{equation}
@@ -493,14 +495,15 @@ Remember that $N_k(t) = \sum_{s=1}^t \mathbbm{1}(A(s) = k)$ denotes the number o
 %
 and that the rewards $r_k(t)$ are all \iid{} of mean $\mu_k$.
 The \emph{gap} between any arm $k\in[K]$ and an optimal arm is defined as $\Delta_k = \mu^* - \mu_k$
-(an arm $k$ is sub-optimal if $\Delta_k > 0$),
-and thus we can write the following decomposition on the regret,
+(an arm $k$ is thus sub-optimal if and only if $\Delta_k > 0$),
+and thus we can write the following decomposition on the regret.
 
 \begin{lemma}[Regret decomposition]\label{lem:2:RegretDecomposition}
     The (mean) regret $R_T^{\cA}$ can be decomposed as a sum of the number of selections of sub-optimal arms $k$,
     weighted by their gap, like this:
     \begin{equation}\label{eq:2:RegretDecomposition}
-        R_T^{\cA} = \sum_{k=1}^K \Delta_k \E[ N_k(T) ] = \sum_{k=1,\dots,K : \Delta_k > 0} \Delta_k \E[ N_k(T) ].
+        R_T^{\cA} = \sum_{k=1}^K \Delta_k \; \E[ N_k(T) ]
+        = \sum_{\substack{k=1,\dots,K\\\Delta_k > 0}} \Delta_k \; \E[ N_k(T) ].
     \end{equation}
 \end{lemma}
 %
@@ -514,7 +517,7 @@ and thus we can write the following decomposition on the regret,
     $= \sum_{k=1}^K \mu_k \E \left[ N_k(T) \right].$
     %
     Thus $R_T^{\cA} = \sum_{k=1}^K \Delta_k \E[ N_k(T) ]$.
-    The sum can then be simplified to only count sub-optimal arms, \ie, arms $k$ such that $\Delta_k > 0$.
+    The sum can then be simplified to only account for sub-optimal arms, \ie, arms $k$ such that $\Delta_k > 0$.
 \end{proof}
 
 
@@ -522,21 +525,25 @@ and thus we can write the following decomposition on the regret,
 %
 Such decomposition of the regret is useful for at least two reasons.
 
--- On the one hand, from a numerical simulation point-of-view, when we run a finite number of repetitions of the same stochastic experiment, if one wants to compute and visualize the regret, she can either use the definition with the rewards, or the decomposition and simply sum the gaps $\Delta_k$ with the number of sub-optimal draws.
+\begin{itemize}
+    \item
+On the one hand, from a numerical simulation point-of-view, when we run a finite number of repetitions of the same stochastic experiment, if one wants to compute and visualize the regret, she can either use the definition with the rewards, or the decomposition and simply sum the gaps $\Delta_k$ with the number of sub-optimal draws.
 Mathematically, both quantities are equal in expectation, but with only a finite number of trajectories and observations, the first estimate is more noisy than the second one, since the randomness on the rewards is (partially) removed in the decomposition \eqref{eq:2:RegretDecomposition}.
 In our library SMPyBandits, we implement both estimators, and all values of regret used in this thesis are based on the one using the decomposition of Lemma~\ref{lem:2:RegretDecomposition}, because it gives smoother curves and faster convergence to the limit behavior.
 
--- On the other hand, this decomposition is necessary as theoretical analyses of the regret of MAB algorithms are usually based on controlling the suboptimal draws $N_k(T)$ and not directly the regret $R_T^{\cA}$.
+    \item
+On the other hand, this decomposition is necessary as theoretical analyses of the regret of MAB algorithms are usually based on controlling the suboptimal draws $N_k(T)$ and not directly the regret $R_T^{\cA}$.
 For example, we extend this decomposition to the multi-player case in Chapter~\ref{chapter:3}, in Lemma~\ref{lem:5:DecompositionRegret}, and as it also uses the draws $N_k(T)$, it is the first quantity we prove to be bounded by $\bigO{\log(T)}$ when we prove the regret upper-bound of our proposal \MCTopM-\klUCB.
+\end{itemize}
 
 
 \subsection{Regret lower bounds}
 
-We include in this section two well-known results about what bandit algorithms \emph{cannot} do.
+We include here two well-known results about what bandit algorithms \emph{cannot} do.
 First, a \emph{problem-dependent lower-bound} states that any algorithm suffers a regret at least $\Omega(\log T)$ on any problem (from \cite{LaiRobbins85}).
 Then, a \emph{worst-case result} states that any algorithm can perform as badly as $\Omega(\sqrt{K T})$ on a certain problem instance, designed specifically to make it perform badly (a result from \cite{Auer02NonStochastic}),
 %
-In a certain family of problems, \eg, $K$ Bernoulli distributed arms, the difficulty of a problem is characterized by a measure that depends only on the arms means. This measure of difficulty of a problem is hidden in the $\Omega$ notation of the lower-bound.
+In certain families of problems, \eg, $K$ Bernoulli distributed arms, the difficulty of a problem is characterized by a constant that depends only on the arms means. This measure of difficulty of a problem is hidden in the $\Omega$ notation in these lower-bounds.
 
 In all this section, we restrict to stationary stochastic problems with $K\geq2$ arms.
 We do not give proofs of the following theorems, as they can be found in the historical papers, and simpler proofs are given in recent references, such as \cite{Bubeck12}, \cite{LattimoreBanditAlgorithmsBook}, or Chapter~2 in \cite{Slivkins2019} for instance.
@@ -545,26 +552,24 @@ Let $\cI$ denote the set of all problem instances, with $K \geq 2$ arms. We assu
 To specify the dependency on an instance $I$, we denote the regret of $\cA$ on instance $I$ and horizon $T$ by $R_T^{\cA}(I)$.
 
 
-\paragraph{Problem-dependent lower-bound in $\log T$}
-
+\paragraph{Problem-dependent lower-bound in $\Omega(\log T)$.}
+%
 The following two theorems were proven in \cite{LaiRobbins85}.
 These lower-bounds are of highest interest to design efficient algorithms,
 and a significant part of the research literature on MAB algorithms has focussed on finding algorithms that matches the Lai and Robbins' lower-bound asymptotically.
 This means that an upper-bound is proven on the regret of algorithm $\cA$, that asymptotically match the lower-bound, with the same constant in the big-$\cO$ notation (in which case we say that the algorithm is \emph{optimal}), or with a larger constant (the algorithm is said to be \emph{order-optimal} in such case).
 
-Moreover, this lower-bound can be directly used to design efficient algorithms, as thanks to the regret decomposition given in Lemma~\ref{lem:2:RegretDecomposition} above, the expression in \eqref{eq:2:forSecondLogTLowerBound2} essentially says that any efficient algorithm
-should sample each sub-optimal arm $k$ about $\log(T)/\KL(\mu_k,\mu^*)$ times.
-Tracking this quantity is used for instance in the OSSB algorithm proposed in \cite{Combes17}.
-% FIXME explain why this is interesting for the rest of this manuscript!
+Moreover, it is interesting to note that this lower-bound can be directly used to design efficient algorithms\footnote{~Tracking this quantity, by using empirical estimates of the means, is used for instance in the OSSB algorithm proposed in \cite{Combes17}, which is proved to attain the lower-bound for a wider range of problems (for problems called structured stochastic bandits).}, as thanks to the regret decomposition given in Lemma~\ref{lem:2:RegretDecomposition} above, the expression in \eqref{eq:2:forSecondLogTLowerBound2} essentially says that any efficient algorithm
+should sample each sub-optimal arm $k$ about $\log(T)/\KL(\mu_k,\mu^*)$ times in the total of $T$ time steps.
+
 
 \begin{theorem}\label{thm:2:firstLogTLowerBound}
     No algorithm $\cA$ can achieve a (mean) regret $R_T^{\cA}(I) = \smallO{c_I \log(T)}$ for all problem instances $I \in \cI$,
     where this notation means that the ``constant'' $c_I$ can depend on the problem instance $I$ (\eg, on the means and on $K$) but not on the time horizon $T$.
 \end{theorem}
 
-We consider uniformly efficient\footnote{This notion is then extended for ``strongly uniformly efficiency'' in the multi-player case with Definition~\ref{def:5:DecentralizedUniformEfficiency}, where we also include a notion of (expected) fairness.} algorithms, to rule out algorithms achieving low regret on some problem instances while achieving linear regret on other instances.
+We consider uniformly efficient\footnote{This notion is then extended to ``\emph{strongly uniformly efficient} algorithms'', in the multi-player case with Definition~\ref{def:5:DecentralizedUniformEfficiency}, where we also include a notion of (expected) fairness.} algorithms, to rule out algorithms achieving low regret on some problem instances while achieving linear regret on other instances.
 In particular, it is necessary to rule out algorithms that always pick the same arm, as on some problem instances such fixed-arm algorithms can achieve zero regret.
-This class contains for instance the \UCB{} algorithm, as its regret is proven to be logarithmic on any problem instance.
 
 \begin{defn}\label{def:2:uniformlyEfficientAlgorithm}
     An algorithm $\cA$ is \emph{uniformly efficient} if its (mean) regret satisfies
@@ -575,6 +580,7 @@ This class contains for instance the \UCB{} algorithm, as its regret is proven t
     where this notation means that the ``constant'' $C_{I,\alpha}$ can depend on the problem instance $I$ and on $\alpha$, but \emph{not} on the time horizon $T$.
 \end{defn}
 
+This family is non-empty as it contains for instance the \UCB{} algorithm, as its regret is proven to be logarithmic on any problem instance.
 Now we can state the second logarithmic lower-bound, for algorithms in this family:
 
 \begin{theorem}\label{thm:2:secondLogTLowerBound}
@@ -597,12 +603,12 @@ This third theorem specifies possible values of the constants $C_I$ for the two 
         \item
         The bound from Theorem~\ref{thm:2:secondLogTLowerBound} holds with,
         \begin{equation}\label{eq:2:forSecondLogTLowerBound}
-            C_I = \mu^* (1 - \mu^*) \sum_{k: \Delta_k > 0} \frac{1}{\Delta_k}.
+            C_I = \mu^* (1 - \mu^*) \sum_{\substack{k=1,\dots,K\\\Delta_k > 0}} \frac{1}{\Delta_k}.
         \end{equation}
         \item
-        For any $\varepsilon>0$, the bound from Theorem~\ref{thm:2:secondLogTLowerBound} holds with,
+        For any $\varepsilon>0$, the bound from Theorem~\ref{thm:2:secondLogTLowerBound} also holds with,
         \begin{equation}\label{eq:2:forSecondLogTLowerBound2}
-            C_I = \sum_{k: \Delta_k > 0} \frac{\Delta_k}{\KL(\mu_k, \mu^*)} - \varepsilon.
+            C_I = \sum_{\substack{k=1,\dots,K\\\Delta_k > 0}} \frac{\Delta_k}{\KL(\mu_k, \mu^*)} - \varepsilon.
         \end{equation}
     \end{itemize}
 \end{theorem}
@@ -615,8 +621,8 @@ Such bounds are valid in different settings, and in particular \UCB{} is order-o
 while Thompson sampling is optimal for bounded rewards, and \klUCB{} have been proven to be optimal for both cases.
 
 
-\paragraph{Worst-case lower-bound in $\sqrt{T}$}
-
+\paragraph{Worst-case lower-bound in $\Omega(\sqrt{T})$.}
+.
 For a fixed horizon $T$, it is interesting to note that one can find instances $I$ that are so ``hard'' that a logarithmic regret (lower or upper) bound that uses a constant $C_I$ no longer bring any information.
 Indeed, we can naively bound the regret by $R_T^{\cA} \leq (\max_k \Delta_k) T$, and thus if $(\max_k \Delta_k)$ can be taken so small that $C_I \log(T) \gg (\max_k \Delta_k) T$, and thus a regret upper bound like $R_T^{\cA} \leq C_I \log(T)$ is useless.
 
@@ -626,9 +632,9 @@ The constant $C_I$ from \eqref{eq:2:forSecondLogTLowerBound} is $C_I = 1 / (4 \v
 the logarithmic upper-bound is useless in such case, as
 $\varepsilon \ll \sqrt{\frac{4 \log(T)}{T}} \Longleftrightarrow \frac{1}{4\varepsilon} \log(T) \gg \Delta T$.
 
-For this reason, the research literature has also looked with interest another family of bounds on regret, that are not problem-dependent but worst-case, also called minimax \cite{Audibert2009minimax,audibert2010minimax}.
+For this reason, the research literature has also been interested by another family of regret bounds, that are not problem-dependent but worst-case, or also called minimax \cite{Audibert2009minimax,audibert2010minimax} or problem-independent.
 Hence it is interesting to quote another lower-bound on the regret, that can bring useful information in such settings.
-The following theorem was proven in \cite{Auer02NonStochastic}.
+The following theorem is from \cite{Auer02NonStochastic}.
 
 \begin{theorem}\label{thm:2:worstCaseLowerBound}
     Fix the number of arms $K$, and the algorithm $\cA$.
@@ -696,6 +702,7 @@ On a more experimental note, it was showed in \cite{modiDemo2016} that the previ
 
 % - Fairness ?
 Finally, another interesting measure of performance is the \emph{fairness} between the $M$ players in a multi-player bandit models, as we explain in Chapter~\ref{chapter:5}.
+It was not studied much, and only a very recent article studies this measure of performance under a formal approach, \cite{Patil2019stochastic}.
 
 
 % ----------------------------------------------------------------------------
