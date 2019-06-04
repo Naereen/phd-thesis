@@ -4,15 +4,13 @@
 \chapter{Stochastic Multi-Armed Bandits Models}
 \label{chapter:2}
 
-\TODOL{Abstract ici et plus court, et petite introduction !}
+\TODOL{Abstract ici et plus court, et petite introduction ?}
 
 \minitoc
 % Write miniTOC just after the title
 \graphicspath{{2-Chapters/2-Chapter/Images/}}
 
 \newpage
-
-% \TODOL{L'abstract ici est trop long, mais je l'ai écrit avant de commencer le chapitre, pour avoir une idée de ce que je devais faire ! Je couperai à la fin !}
 
 \paragraph{Abstract.}
 %
@@ -51,7 +49,8 @@ and we illustrate its performance empirically.
 
 \paragraph{Publication.}
 %
-The Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is based on the article \cite{Besson2018WCNC}.
+The first Sections~\ref{sec:2:notations}, \ref{sec:2:applicationsofStochasticMAB}, \ref{sec:2:lowerUpperBoundsRegret} and \ref{sec:2:famousMABalgorithms} of this chapter are based on existing works,
+and Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is based on our article \cite{Besson2018WCNC}.
 
 
 \paragraph{Main references for the curious reader.}
@@ -92,7 +91,7 @@ A commonly studied goal for the player is to maximize its sum of received reward
 The difficulty of this decision-making game comes from balancing the trade-off between \emph{exploration}, because the player has to observe as much as possible all the arms to get more knowledge about the distributions of their rewards, and \emph{exploitation}, because she also has to select as much as possible the best arm.
 The MAB model is a famous example of a reinforcement learning model, where the decision-making process has to adapt to an unknown environment using noisy observations and a discrete time, alternating between decisions and observations.
 We illustrate this cycle in Figure~\ref{fig:2:ReinforcementLearningCycleMABmodel} below.
-For more details on reinforcement learning, in particular about more generic models, we refer to the famous book \cite{SuttonBarto2018}.
+For more details on reinforcement learning, in particular about more generic models, we refer to the famous book by Sutton and Barto \cite{SuttonBarto2018}.
 
 
 \tikzstyle{block} = [align=center, draw, fill=gray!25, rectangle, minimum height=3em, minimum width=6em]
@@ -106,8 +105,8 @@ For more details on reinforcement learning, in particular about more generic mod
             % We draw an edge between the player and system block to
             \node [block] (environment) at (4,0) {MAB problem};
             % Once the nodes are placed, connecting them is easy.
-            \draw [->] (player) to[bend left=90] node[pos=0.5] {Chooses a discrete action $k=A(t) \in\{1,\dots,K\}$} (environment);
-            \draw [->] (environment) to[bend left=90] node[pos=0.5] {Observes a real-valued reward $r_k(t) \in \R$} (player);
+            \draw [->] (player) to[bend left=90] node[pos=0.5] {Chooses a \textbf{discrete} action $k=A(t) \in\{1,\dots,K\}$} (environment);
+            \draw [->] (environment) to[bend left=90] node[pos=0.5] {Observes a \textbf{real-valued} reward $r_k(t) \in \R$} (player);
             %
         \end{tikzpicture}
     }
@@ -116,7 +115,7 @@ For more details on reinforcement learning, in particular about more generic mod
 \end{figure}
 
 
-This quantity $\sum_{t=1}^T r_{A(t)}(t)$ can indeed be random, and usually depends on two aspects.
+This quantity $\sum_{t=1}^T r_{A(t)}(t)$ can indeed be random, and it usually depends on two aspects.
 First, the rewards may depend on the randomness of the environment, \ie, the unknown and unpredictable values $r_k(t)$.
 Then this quantity also depends on the player's decision-making policy, \ie, the choices $A(t)$, that are based on (all) the past observations, \ie, $A(1)$, $r_{A(1)}(1)$, $\dots$, $A(t-1)$, $r_{A(t-1)}(t-1)$, and possibly on an external source of randomness.
 %
@@ -190,13 +189,15 @@ After $T=100$ steps, the player obtained a cumulated reward of $56$, by playing 
 
 \paragraph{Decisions can (and should) depend on the past observations.}
 
-A bandit algorithm $\cA$ is also referred to as a strategy or a policy, and sometimes it is denoted by $\pi$ or $\rho$ in the literature.
-The algorithm $\cA$ selects an arm $A(t)$ at time $t$ by using the past observations and the past external randomness.
-More formally, one could state that an algorithm is a sequence of \emph{measurable} functions $(\cA_t)_{t\geq1}$,
+A \emph{bandit algorithm} $\cA$ is also referred to as a strategy or a policy, and sometimes it is denoted by $\pi$ or $\rho$ in the literature.
+The algorithm $\cA$ selects an arm $A(t)$ at time $t$, possibly by using the past observations and the past external randomness.
+As shown below, being oblivious to the past yields very poor performance (the pure exploration policy is discussed in Section~\ref{sub:2:naiveSimpleStrategies}), so efficient policies indeed depend on the environment feedback.
+%
+More formally, an algorithm can be defined as a sequence of \emph{measurable} functions $(\cA_t)_{t\geq1}$,
 where $\cA_t$ maps the past observations $O_t = (U_0, Y_1, U_1, \dots, Y_{t-1}, U_{t-1})$
 to an arm $\cA_t(O_t) = A(t) \in[K]$,
 if we denote $Y_s = r_{A(s)}(s)$ the $s$-th reward.
-The initial information is reduced to $O_1 = (U_0)$, and the first decision is $A(1) = \cA_1(O_1)$. Usually, most algorithms starts by selecting $A(1)=1,\dots,A(K)=K$ (or a permutation of the $K$ arms) in the $K$ first steps.
+The initial information is reduced to $O_1 = (U_0)$, and the first decision is $A(1) = \cA_1(O_1)$. Usually, most algorithms starts by selecting $A(1)=1,\dots,A(K)=K$ (or a permutation of the $K$ arms) in the $K$ first steps, as illustrated for example in Algorithm~\ref{algo:2:indexPolicy} below.
 %
 An algorithm is said to be deterministic if it does not depend on the external randomness $U_0,U_1,\dots$, but in this thesis we only use non-deterministic algorithms.
 
@@ -204,8 +205,8 @@ An algorithm is said to be deterministic if it does not depend on the external r
 % ----------------------------------------------------------------------------
 \subsection{Hypotheses on rewards distributions}
 
-In the example above, we consider Bernoulli distributions, but other distributions have been studied in the literature.
-From now on until the last chapter of this thesis, we only consider stochastic rewards. The piece-wise stationary model is studied in Chapter~\ref{chapter:6}.
+In the example above, we consider Bernoulli distributions, but other real-valued distributions have been studied in the literature.
+From now on and until the last chapter of this thesis, we only consider stochastic rewards. The piece-wise stationary model is studied in Chapter~\ref{chapter:6}.
 %
 % Everything is implemented and documented at
 % https://smpybandits.github.io/docs/Arms.html
@@ -221,7 +222,7 @@ Most of the algorithms proposed in the literature follow this hypothesis as well
 The mostly used
 infinitely supported distributions are Gaussian, exponential and Poisson,
 while in the literature, the Bernoulli distribution is the most common case of finitely supported distributions.
-Continuous-valued distributions with finite support also included truncated versions of infinitely supported distributions, in particular truncated Gaussian are used for numerical experiments in lots of research articles.
+Continuous-valued distributions with finite support also included truncated versions of infinitely supported distributions, in particular \emph{truncated} Gaussian are used for numerical experiments in lots of research articles.
 
 % Just bounded, in $[a,b]$ but without loss of generality in $[0,1]$ etc.
 \paragraph{The normalization trick.}\label{par:2:normalizationTrick}
@@ -272,7 +273,7 @@ We have to quote two important results on exponential families:
 
 Following this Definition~\ref{def:2:KLDivergence} for two distributions
 $d_1=\Pr(x|\eta_1)$ and $d_2=\Pr(x|\eta_2)$,
-we can write $\KL( \eta_1, \eta_2 ) = \KL(\Pr(x|\eta_1), \Pr(x|\eta_2))$, which can be simplified to use only the two parameters $\eta_1$ and $\eta_2$,
+we can write $\KL( \eta_1, \eta_2 ) = \KL(\Pr(x|\eta_1), \Pr(x|\eta_2))$, which can be simplified to use only the two parameters $\eta_1$ and $\eta_2$ of $d_1$ and $d_2$,
 and $\mu_1 = \E_{\eta_1}[X]$ the mean of distribution $d_1$:
 %
 \begin{equation}\label{eq:2:Kullback-LeiblerDivergenceExpFamily2}
@@ -313,7 +314,7 @@ it is interesting to illustrate this definition and the notations with two impor
 \end{itemize}
 
 
-\textbf{Hypotheses in this thesis.}
+\paragraph{Hypotheses in this thesis.}
 %
 In the rest of this thesis, \emph{we only consider bounded rewards in the mathematical developments}, and we mostly focus on Bernoulli distributions, because they are usually the most relevant choice for the considered applications.
 First, we restrict for simplicity to Bernoulli distributions for the simulations shown in Chapter~\ref{chapter:3}, even if our library does implement all the distributions commonly found in the literature (including unbounded one-dimensional exponential families and even Markov models).
@@ -408,6 +409,8 @@ A reward of $r_k(t) = 1$ indicates that no Primary User was sensed, while a rewa
 This model was first introduced by Wassim Jouini during his PhD thesis,
 in \cite{Jouini09} and later studied in both \cite{Jouini10,Jouini12}.
 Proof-of-concepts using real-world radio hardware was first propsed in \cite{MoyWSR2014,RobertSDR2014}.
+
+\TODOL{Je sais pas à quel point je veux parler de la thèse de Navik? Peut-être que j'en aurai dit assez au Chapitre 1, et que là ça suffira...}
 In a second PhD thesis supervised by Christophe Moy, Navikkumar Modi studied the impact
 of using MAB algorithms to optimize channel selection
 on the battery life of a wireless device.
@@ -497,8 +500,7 @@ The \emph{gap} between any arm $k\in[K]$ and an optimal arm is defined as $\Delt
 and thus we can write the following decomposition on the regret.
 
 \begin{lemma}[Regret decomposition]\label{lem:2:RegretDecomposition}
-    The (mean) regret $R_T^{\cA}$ can be decomposed as a sum of the number of selections of sub-optimal arms $k$,
-    weighted by their gaps, like this:
+    The (mean) regret $R_T^{\cA}$ can be decomposed as a sum of the number of selections of sub-optimal arms $k$, weighted by their gaps:
     \begin{equation}\label{eq:2:RegretDecomposition}
         R_T^{\cA} = \sum_{k=1}^K \Delta_k \; \E[ N_k(T) ]
         = \sum_{\substack{k=1,\dots,K\\\Delta_k > 0}} \Delta_k \; \E[ N_k(T) ].
@@ -509,7 +511,9 @@ and thus we can write the following decomposition on the regret.
     We use the chain rule of expectation and a conditioning on $O_t$,
     because the expectation is taken on the randomness of the (\iid) rewards $(r_k(t))_t$ and on the decisions of the player $(A(t))_t$, which are measurable wrt to the past observations $O_t = (U_0, Y_1, U_1, \dots, Y_{t-1}, U_{t-1})$.
     Thus we can rewrite the expected cumulated rewards as follows:
-
+    %
+    % FIXME add a blank line or a negative space if it looks weird
+    %
     % \vspace*{-20pt}
     \begin{align*}
         \E \left[ \sum_{t=1}^T r_{A(t)}(t) \right]
@@ -529,7 +533,7 @@ and thus we can write the following decomposition on the regret.
 \end{proof}
 
 
-\textbf{Consequences.}
+\textbf{Consequences of Lemma~\ref{lem:2:RegretDecomposition}.}
 %
 Such decomposition of the regret is useful for at least two reasons:
 
@@ -583,7 +587,7 @@ In particular, it is necessary to rule out algorithms that always pick the same 
     where this notation means that the ``constant'' $C_{I,\alpha}$ can depend on the problem instance $I$ and on $\alpha$, but \emph{not} on the time horizon $T$.
 \end{defn}
 
-This family is non-empty as it contains for instance the $\UCB_1$ algorithm, as its regret is proven to be logarithmic on any problem instance.
+This family is non-empty as it contains for instance the $\UCB_1$ algorithm, as its regret is proven to be logarithmic on any problem instance with bounded rewards (in Theorem~\ref{thm:2:UCBregretBound} below).
 Now we can state the second logarithmic lower-bound, for algorithms in this family:
 
 \begin{theorem}\label{thm:2:secondLogTLowerBound}
@@ -606,17 +610,17 @@ This third theorem specifies possible values of the constants $C_I$ for the two 
         \item
         The bound from Theorem~\ref{thm:2:secondLogTLowerBound} holds with,
         % \begin{equation}\label{eq:2:forSecondLogTLowerBound}
-        $C_I = \mu^* (1 - \mu^*) \sum\limits_{\substack{k=1,\dots,K\\\Delta_k > 0}} \frac{1}{\Delta_k}$.
+        $C_I = \mu^* (1 - \mu^*) \sum\limits_{k: \Delta_k > 0} \frac{1}{\Delta_k}$.
         % \end{equation}
         \item
         For any $\varepsilon>0$, the bound from Theorem~\ref{thm:2:secondLogTLowerBound} also holds with,
         % \begin{equation}\label{eq:2:forSecondLogTLowerBound2}
-        $C_I = \sum\limits_{\substack{k=1,\dots,K\\\Delta_k > 0}} \frac{\Delta_k}{\KL(\mu_k, \mu^*)} - \varepsilon$.
+        $C_I = \sum\limits_{k: \Delta_k > 0} \frac{\Delta_k}{\KL(\mu_k, \mu^*)} - \varepsilon$.
         % \end{equation}
     \end{itemize}
 \end{theorem}
 
-Moreover, it is interesting to note that the second lower-bound of Theorem~\ref{thm:2:forSecondLogTLowerBound} can be directly used to design efficient algorithms\footnote{~Tracking this quantity, by using empirical estimates of the means, is used for instance in the OSSB algorithm proposed in \cite{Combes17}, which is proved to attain the lower-bound for a wider range of problems (for problems called structured stochastic bandits).}, as thanks to the regret decomposition given in Lemma~\ref{lem:2:RegretDecomposition} above, the expression of $C_I$ essentially says that any efficient algorithm
+Moreover, it is interesting to note that the second lower-bound of Theorem~\ref{thm:2:forSecondLogTLowerBound} can be directly used to design efficient algorithms\footnote{~Tracking this quantity, by using empirical estimates of the means, is used for instance in the OSSB algorithm proposed in \cite{Combes17}, which is proven to attain the lower-bound for a wider range of problems (for problems called structured stochastic bandits).}, as thanks to the regret decomposition given in Lemma~\ref{lem:2:RegretDecomposition} above, the expression of $C_I$ essentially says that any efficient algorithm
 should sample each sub-optimal arm $k$ about $\log(T)/\KL(\mu_k,\mu^*)$ times in the total of $T$ time steps.
 
 
@@ -629,14 +633,16 @@ while Thompson sampling is optimal for bounded rewards, and \klUCB{} have been p
 
 \paragraph{Worst-case lower-bound in $\Omega(\sqrt{T})$.}
 %
-For a fixed horizon $T$, it is interesting to note that one can find instances $I$ that are so ``hard'' that a logarithmic regret (lower or upper) bound that uses a constant $C_I$ no longer bring any information.
+For a fixed horizon $T$, it is interesting to note that one can find instances $I$ that are so ``hard'' that a logarithmic regret (lower or upper) bound that uses a constant $C_I$ no longer brings any information.
 Indeed, we can naively bound the regret by $R_T^{\cA} \leq (\max_k \Delta_k) T$, and thus if $(\max_k \Delta_k)$ can be taken so small that $C_I \log(T) \gg (\max_k \Delta_k) T$, and thus a regret upper bound like $R_T^{\cA} \leq C_I \log(T)$ is useless.
-
-For an example, consider any large horizon $T>10$, and $K=2$ Bernoulli arms.
-Chose any small $\varepsilon$ such that $\varepsilon \ll \sqrt{4 \log(T) / T}$, then chose let $\mu_1 = 1/2$ and $\mu_2 = 1/2 - \varepsilon$.
-The constant $C_I$ from the first case of Theorem~\ref{thm:2:forSecondLogTLowerBound} is $C_I = 1 / (4 \varepsilon)$ and $\Delta=\varepsilon$ and it becomes so large that
-the logarithmic upper-bound is useless in such case, as
-$\varepsilon \ll \sqrt{\frac{4 \log(T)}{T}} \Longleftrightarrow \frac{1}{4\varepsilon} \log(T) \gg \Delta T$.
+%
+\begin{proof}
+    For an example, consider any large horizon $T>10$, and $K=2$ Bernoulli arms.
+    Chose any small $\varepsilon$ such that $\varepsilon \ll \sqrt{4 \log(T) / T}$, then chose let $\mu_1 = 1/2$ and $\mu_2 = 1/2 - \varepsilon$.
+    The constant $C_I$ from the first case of Theorem~\ref{thm:2:forSecondLogTLowerBound} is $C_I = 1 / (4 \varepsilon)$ and $\Delta=\varepsilon$ and it becomes so large that
+    the logarithmic upper-bound is useless in such case, as
+    $\varepsilon \ll \sqrt{\frac{4 \log(T)}{T}} \Longleftrightarrow \frac{1}{4\varepsilon} \log(T) \gg \Delta T$.
+\end{proof}
 
 For this reason, the research literature has also been interested by another family of regret bounds, that are not problem-dependent but worst-case, or also called minimax \cite{Audibert2009minimax,audibert2010minimax} or problem-independent.
 Hence it is interesting to quote another lower-bound on the regret, that can bring useful information in such settings.
@@ -672,7 +678,7 @@ and such results are usually referred to as ``best of both worlds''.
 
 \subsection{Other measures of performances}
 
-In this thesis, we only study analytically the mean regret $R^{\cA}$ (in Chapters \ref{chapter:5} and \ref{chapter:6}), but we quickly mention other measures of performances used in our work.
+In this thesis, we only study analytically the mean regret $R_T^{\cA}$ (in Chapters \ref{chapter:5} and \ref{chapter:6}), but we quickly mention other measures of performances used in our work.
 
 % - Quantile regret or just histogram of regrets
 First, when doing numerical experiments about bandits, if one studies the regret as an empirical mean based on a large number of random repetitions (\eg, $N=1000$ repetitions), it is important to not only show the mean value but also the variance of the values taken by the regret on each repetition, to verify that all algorithms perform consistently.
@@ -690,21 +696,22 @@ By visualizing the entire \emph{distribution} (as an histogram), or the variance
 % Both quantities are computed and stored in all numerical simulations using SMPyBandits, but visualizations for both have not been included in this thesis.
 
 % - Worst case regret (max $R_T^{r}$ for $r$ index of Monte-Carlo simulation?)
-The \emph{switching cost} $SC^{\cA}(T)$ counts how many times the player's decision has changed from one time step to the next one, \ie, $SC^{\cA}(T) = \sum_{t=1}^{T-1} \indic(A(t) \neq A(t+1))$.
+The \textbf{switching cost} $SC^{\cA}(T)$ counts how many times the player's decision has changed from one time step to the next one, \ie, $SC^{\cA}(T) = \sum_{t=1}^{T-1} \indic(A(t) \neq A(t+1))$.
 It has recently gained interest in the literature, for instance in \cite{Koren17}.
 % FIXME give the main result proved in this paper?
 In single-player models,
 it is easy to show that achieving logarithmic regret directly implies a logarithmic upper-bound on the switching cost, and conversely the lower-bound from \cite{LaiRobbins85} also gives an asymptotic logarithmic lower-bound.
 But even if $SC^{\cA}(T) = \Theta(\log T)$ for an efficient algorithm, it can be interesting to numerically evaluate this quantity, as a large value might indicate an algorithm that is alternating too much between the optimal arm and other arms.
 %
-It is more interesting to studying $SC_M^{\cA}(T)$, the sum of the switching costs of the $M$ players in a multi-player bandit game, as in this case, it is possible that the players follow an efficient centralized or decentralized algorithm (which gives a logarithmic centralized regret) while still suffering from a linear switching cost.
-It is very satisfying to obtain a logarithmic switching cost for our algorithm \MCTopM-\klUCB{} in Chapter~\ref{chapter:5}, even if minimizing the switching cost was not one of our objective, and the bound we obtain on $SC_M^{\cA}(T)$ is just a consequence of our proof of the control we give on the regret $R^{\cA}(T)$.
+It is more interesting to study $SC^{\cA_1,\dots,\cA_M}(T)$, the sum of the switching costs of the $M$ players in a multi-player bandit game (if player $j$ uses algorithm $\cA_j$ for $j=1,\dots,M$). Indeed in this case it is possible that the players attain a logarithmic centralized regret, by following an efficient centralized or decentralized algorithm, while still suffering from a linear switching cost.
+%
+It is very satisfying to obtain a logarithmic switching cost for our algorithm \MCTopM-\klUCB{} in Chapter~\ref{chapter:5}, even if minimizing the switching cost was not one of our objective, and the bound we obtain on $SC^{\cA_1,\dots,\cA_M}(T)$ is just a consequence of our proof of the control we give on the regret $R^{\cA}(T)$.
 % - Switching cost? \cite{modiDemo2016} \cite{Koren17}
-On a more experimental note, it was showed in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-player bandits, \rhoRand, could be tuned to run in batches\footnote{~The batch bandit setting implies that all players use the same decisions for instance for $50$ consecutive times, and update their decisions only once every $50$ time steps. For more details, see \cite{modiDemo2016} for experiments on the multi-player case, or \cite{perchet2016,gao2019batched,kolnogorov2019multi} for theoretical developments on the single-player case.}, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret.
+On a more experimental note, it was showed in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-player bandits, \rhoRand, could be tuned to run in batches\footnote{~The batch bandit setting implies that all players use the same decisions for instance for $50$ consecutive times, and update their decisions only once every $50$ time steps. For more details, see \cite{modiDemo2016} for experiments on the multi-player case, or \cite{perchet2016,gao2019batched,kolnogorov2019multi} for theoretical developments on the single-player case.}, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret. While such ideas can interest a practitioner, they does not change the asymptotic behavior of $SC^{\cA_1,\dots,\cA_M}(T)$, which is $\Theta(\log(T))$ for any efficient policy.
 
 
 % - Fairness ?
-Finally, another interesting measure of performance is the \emph{fairness}.
+Finally, another interesting measure of performance is the \textbf{fairness}.
 It was not studied much for single-player problems, and usually it means that each arm must be explored at least a given fraction of the total horizon $T$ (\ie, ``arm-wise fairness'').
 It was studied in a very recent article \cite{Patil2019stochastic},
 where a different notion of regret is introduced to account for the fairness constraint. The authors show that different algorithms, based on $\UCB_1$ or Thompson sampling, can achieve logarithmic regret while respecting the fairness constraints.
@@ -1443,7 +1450,7 @@ to MAB models with either multidimensional rewards, like contextual bandits, or 
 % ----------------------------------------------------------------------------
 \subsubsection{Pinsker's inequality}\label{proof:2:Pinsker}
 
-Pinsker's inequality is proved below, using simple real analysis arguments\footnote{~The proof is inspired by Lemma~10.2 from \cite{LattimoreBanditAlgorithmsBook} (version $1699$ of January $2019$).}.
+Pinsker's inequality is proven below, using simple real analysis arguments\footnote{~The proof is inspired by Lemma~10.2 from \cite{LattimoreBanditAlgorithmsBook} (version $1699$ of January $2019$).}.
 %
 This Lemma is again used in Chapter~\ref{chapter:6}.
 
