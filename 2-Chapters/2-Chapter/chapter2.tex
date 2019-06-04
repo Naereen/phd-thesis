@@ -681,7 +681,7 @@ and such results are usually referred to as ``best of both worlds''.
 In this thesis, we only study analytically the mean regret $R_T^{\cA}$ (in Chapters \ref{chapter:5} and \ref{chapter:6}), but we quickly mention other measures of performances used in our work.
 
 % - Quantile regret or just histogram of regrets
-First, when doing numerical experiments about bandits, if one studies the regret as an empirical mean based on a large number of random repetitions (\eg, $N=1000$ repetitions), it is important to not only show the mean value but also the variance of the values taken by the regret on each repetition, to verify that all algorithms perform consistently.
+First, when doing numerical experiments about bandits, if one studies the regret as an empirical mean based on a ``large'' number of random repetitions (\eg, $N=1000$ repetitions), it is important to not only show the mean value but also the variance of the values taken by the regret on each repetition, to verify that all algorithms perform consistently.
 Indeed, by only visualizing the mean of $1000$ values, it is possible that we miss some ``bad runs'': if $1$ run out of the $1000$ gives linear regret (\ie, $R_T^{\cA} \propto T$) and the $999$ other give logarithmic regret, then the mean will appear logarithmic.
 This is the case of the \Selfish{} algorithm that is defined and explored in Chapter~\ref{chapter:5}.
 By visualizing the entire \emph{distribution} (as an histogram), or the variance of the values of $R_T^{\cA}$, and if the number $N$ is reasonably large, we can verify that the regret appears logarithmic for all runs.
@@ -696,14 +696,13 @@ By visualizing the entire \emph{distribution} (as an histogram), or the variance
 % Both quantities are computed and stored in all numerical simulations using SMPyBandits, but visualizations for both have not been included in this thesis.
 
 % - Worst case regret (max $R_T^{r}$ for $r$ index of Monte-Carlo simulation?)
-The \textbf{switching cost} $SC^{\cA}(T)$ counts how many times the player's decision has changed from one time step to the next one, \ie, $SC^{\cA}(T) = \sum_{t=1}^{T-1} \indic(A(t) \neq A(t+1))$.
-It has recently gained interest in the literature, for instance in \cite{Koren17}.
-% FIXME give the main result proved in this paper?
-In single-player models,
-it is easy to show that achieving logarithmic regret directly implies a logarithmic upper-bound on the switching cost, and conversely the lower-bound from \cite{LaiRobbins85} also gives an asymptotic logarithmic lower-bound.
-But even if $SC^{\cA}(T) = \Theta(\log T)$ for an efficient algorithm, it can be interesting to numerically evaluate this quantity, as a large value might indicate an algorithm that is alternating too much between the optimal arm and other arms.
+The \textbf{switching cost} $\mathrm{SC}^{\cA}(T)$ counts how many times the player's decision has changed from one time step to the next one, \ie, $\mathrm{SC}^{\cA}(T) = \sum_{t=1}^{T-1} \indic(A(t) \neq A(t+1))$.
+It has recently gained interest in the literature, for instance the authors of \cite{Koren17} proposed an algorithm that adaptatively tries to balance the trade-off between minimizing the regret and minimizing the switching cost.
 %
-It is more interesting to study $SC^{\cA_1,\dots,\cA_M}(T)$, the sum of the switching costs of the $M$ players in a multi-player bandit game (if player $j$ uses algorithm $\cA_j$ for $j=1,\dots,M$). Indeed in this case it is possible that the players attain a logarithmic centralized regret, by following an efficient centralized or decentralized algorithm, while still suffering from a linear switching cost.
+Indeed, in single-player models it is easy to show that achieving logarithmic regret directly implies a logarithmic upper-bound on the switching cost, and conversely the lower-bound from \cite{LaiRobbins85} also gives an asymptotic logarithmic lower-bound.
+But even if $\mathrm{SC}^{\cA}(T) = \Theta(\log T)$ for an efficient algorithm, it can be interesting to numerically evaluate this quantity, as a large value might indicate an algorithm that is alternating too much between the optimal arm and other arms.
+%
+It is more interesting to study $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, the sum of the switching costs of the $M$ players in a multi-player bandit game (if player $j$ uses algorithm $\cA_j$ for $j=1,\dots,M$). Indeed in this case it is possible that the players attain a logarithmic centralized regret, by following an efficient centralized or decentralized algorithm, while still suffering from a linear switching cost.
 %
 It is very satisfying to obtain a logarithmic switching cost for our algorithm \MCTopM-\klUCB{} in Chapter~\ref{chapter:5}, even if minimizing the switching cost was not one of our objective, and the bound we obtain on $SC^{\cA_1,\dots,\cA_M}(T)$ is just a consequence of our proof of the control we give on the regret $R^{\cA}(T)$.
 % - Switching cost? \cite{modiDemo2016} \cite{Koren17}
@@ -760,7 +759,7 @@ The estimated means, or empirical averages, are $\widehat{\mu_k}(t) = X_k(t) / N
 -- The uniform strategy always plays the $K$ arms uniformly at random.
 The player \textcolor{darkgreen}{\emph{only explores}} without using the collected information, and this strategy fails dramatically for any non trivial problem (\ie, linear regret).
 Indeed it obtains a linear (mean) regret $R_T = \frac{1}{K} \sum_{k=1}^K \Delta_k T$
-which gives $R_T \propto T$ for any problem with at least one sub-optimal arms (\ie, all problems expect where $\mu_1=\mu_2=\dots=\mu_K$).
+which gives $R_T \propto T$ for any problem with at least one sub-optimal arms (\ie, all non trivial problems, rulling out the case where $\mu_1=\mu_2=\dots=\mu_K$).
 
 % Why Follow-the-Leader (EmpiricalMeans https://smpybandits.github.io/docs/Policies.EmpiricalMeans.html) don't work, example.
 -- The ``\emph{Follow-the-Leader}'' strategy consists in first playing once each arm, then always playing $A(t)\in\argmax \widehat{\mu_k}(t)$.
@@ -804,12 +803,13 @@ They are detailed in Algorithm~\ref{algo:2:naiveStrategies}.
 % https://smpybandits.github.io/docs/Policies.EpsilonGreedy.html
 -- The \textcolor{deeppurple}{$\varepsilon$-greedy strategy} consists in alternating exploration and exploitation at a certain ratio \cite{SuttonBarto2018,Bubeck12,LattimoreBanditAlgorithmsBook}.
 Fix $0<\varepsilon<1$, then at each round, with probability $\varepsilon$ the player selects an arm uniformly at random (exploration) and with probability $1-\varepsilon$ the arm with highest empirical mean is selected (exploitation).
-If $\varepsilon$ is constant, then the (mean) regret is still growing linearly as it is lower bounded by $\varepsilon \frac{1}{K} \sum_{k=1}^K \Delta_k T$.
-In this first case, in average $T_0 = \varepsilon T$ steps are spent on exploration.
+On the one hand, if $\varepsilon$ is constant, then the (mean) regret still grows linearly, as it is lower bounded by $(\varepsilon \frac{1}{K} \sum_{k=1}^K \Delta_k) T$.
+In average, $T_0 = \varepsilon T$ steps are spent on exploration.
 %
-But if we consider $\varepsilon_t$ decreasing with time $t$, for instance $\varepsilon_t = \varepsilon_0 / t$ with $\varepsilon_0 = 6 K / d^2$, for a constant $0 < d < \min_{k: \Delta_k > 0} \Delta_k$,
-then it was shown in \cite{Auer02} that the regret is of the order of $K \log(T) / d + \smallO{T}$, which leads to an order-optimal regret of $\bigO{\log(T)}$.
-In this second case, an average of $T_0 \leq \varepsilon_0 \log(T)$ steps are spent on exploration.
+On the other hand, if a lower-bound $d$ on the positive gaps is known beforehand,
+we can consider $\varepsilon_t$ decreasing with time $t$, for instance $\varepsilon_t = \varepsilon_0 / t$ with $\varepsilon_0 = 6 K / d^2$, for a constant $0 < d < \min_{k: \Delta_k > 0} \Delta_k$.
+Then it was shown in \cite{Auer02} that the regret of $\varepsilon$-greedy is of the order of $K \log(T) / d + \smallO{T}$, which leads to an order-optimal regret of $\bigO{K \log(T)}$.
+Here again, an average of $T_0 \leq \varepsilon_0 \log(T)$ steps are spent on exploration.
 
 % \begin{small} % XXX remove if needed
 \begin{figure}[h!]
@@ -831,7 +831,7 @@ In this second case, an average of $T_0 \leq \varepsilon_0 \log(T)$ steps are sp
             }
             \uIf{\textcolor{deepgold}{Explore-then-Exploit}}{
                 \uIf{$t \leq \textcolor{deepgold}{T_0}$}{
-                    Play uniformly at random $A(t) \in \cU(\{1,\dots,K\})$
+                    Play sequentially $A(t) \in 1 + (t \mod K)$
                     \tcp*[f]{Explore}
                 }
                 \uElse{
@@ -854,44 +854,52 @@ In this second case, an average of $T_0 \leq \varepsilon_0 \log(T)$ steps are sp
 
 
 % https://smpybandits.github.io/docs/Policies.ExploreThenCommit.html
--- The ``\textcolor{deepgold}{Explore-then-Exploit}'' strategy, as studied for instance in \cite{GarivierETC2016}, consists in first exploring uniformly the $K$ arms for $T_0$ time steps, then only exploiting the best arm.
-We can lower bound the regret of this strategy by
+-- The ``\textcolor{deepgold}{Explore-then-Exploit}'' strategy, as studied for instance in \cite{GarivierETC2016}, first explores uniformly the $K$ arms for $T_0$ time steps, then only exploits the arm identified as the best arm after these first $T_0$ steps
+(\ie, one of the arms with highest empirical means, after $T_0/K$ samples of each arm).
+Usually we restrict to $T_0$ being a multiple of $K$.
+On the one hand, we can lower bound its regret by
 $R_T \geq K (\min_{k: \Delta_k > 0} \Delta_k) T_0/K + p (T - T_0)$,
-if $p$ denotes the probability that the chosen arm is not optimal (\ie, the arm with highest mean after $T_0/K$ samples of each arms).
+if $p$ denotes the probability that the chosen arm is not optimal.
 And we can show that $p$ only depends on the number of collected samples $T_0$ and the gaps $\Delta_k$,
 so if $T_0$ is fixed independently of $T$ and the problem difficulty, the regret is again growing linearly, \ie, $R_T = \Omega(T)$.
+
+On the other hand, if a lower-bound $d>0$ on the positive gaps is known beforehand, one can find a tuning of $T_0$ that gives a logarithmic regret.
 %
-To prove a bound on $p$, we use the following lemma, well known as Hoeffding's inequality, from \cite{hoeffding1963probability}.
+To prove a bound on $p$, we use Hoeffding's inequality from \cite{hoeffding1963probability}, reminded below in Lemma~\ref{lem:2:HoeffdingInequality}.
+%
+We have $R_T \leq (\max_{k: \Delta_k > 0} \Delta_k) T_0 + p (T - T_0)$, thus Hoeffding's inequality gives $R_T \leq K T_0 + K \exp(-T_0 d^2/4) T$. Optimizing on $T_0$ gives $T_0 = K (4/d^2) \log(d^2 T / 4)$
+and proves that the ``explore-then-exploit'' strategy can also obtain an order-optimal regret, $R_T \leq K (4/d^2) (1 + \log(d^2 T / 4)) = \bigO{K \log(T)}$, if it is tuned with a fixed time $T_0$ using prior knowledge on the problem (\ie, $d$) and the horizon $T$.
+%
+We note that this strategy can also achieve $R_T = \bigO{T^{2/3} (K \log(T))^{1/3}}$ without prior knowledge on the problem, as shown in Section~1 of \cite{Slivkins2019}.
+%
+\begin{proof}
+    Let us prove the inequality $p \leq 2 K \exp(-T_0 d^2 / 4)$.\\
+    \indent
+    %
+    First for the case of two arms:
+    if the distributions are Bernoulli (or sub-Gaussian), we can use Hoeffding's inequality to control this probability $p$.
+    %
+    If $\mu_1 = \mu_2 + \Delta$, then
+    $p = \bP(\widehat{\mu_1} < \widehat{\mu_2}) \leq \bP(\widehat{\mu_1} < \mu_1 - \Delta/2) + \bP(\widehat{\mu_2} > \mu_2 + \Delta/2)$, and both terms can be bounded by using Hoeffding's inequality with a (non-random) number of samples $n=T_0/2$,
+    to obtain $p \leq 2 \exp(-T_0 \Delta^2 / 4)$.\\
+    \indent
+    %
+    Then for $K\geq2$ arms, a simple union bound gives
+    $p \leq 2 K \exp(-T_0 d^2 / 4)$, if $d$ is a lower-bound on the positive gaps $\Delta_k$.
+    %
+    In all cases, we showed that $p$ is controlled by $T_0$.
+\end{proof}
 
 \begin{lemma}[Hoeffding's inequality]\label{lem:2:HoeffdingInequality}
     Let $Z_1,\dots,Z_n$ be $n$ \iid{} samples from a Bernoulli distribution of parameter $\mu$, of empirical mean $\widehat{Z_n} = \frac{1}{n} \sum\limits_{i=1}^n Z_i$, Hoeffding's inequality gives both
     \begin{align}\label{eq:2:HoeffdingInequality}
-        \forall x < \mu, \;\;\; & \bP(\widehat{Z_n} < x) \leq \exp(-2 n (x-\mu)^2),
-        \\
-        \forall x > \mu, \;\;\; & \bP(\widehat{Z_n} > x) \leq \exp(-2 n (x-\mu)^2).
+        \begin{cases}
+            \forall x < \mu, \;\;\; & \bP(\widehat{Z_n} < x) \leq \exp(-2 n (x-\mu)^2),
+            \\
+            \forall x > \mu, \;\;\; & \bP(\widehat{Z_n} > x) \leq \exp(-2 n (x-\mu)^2).
+        \end{cases}
     \end{align}
 \end{lemma}
-
-\begin{proof}
-    We prove it for the case of two arms.
-    If the distributions are Bernoulli (or sub-Gaussian), we can use Hoeffding's inequality to control this probability $p$.
-    %
-    If $\mu_1 = \mu_2 + \Delta$, then
-    $p = \bP(\widehat{\mu_1} < \widehat{\mu_2}) \leq \bP(\widehat{\mu_1} < \mu_1 - \Delta/2) + \bP(\widehat{\mu_2} > \mu_2 + \Delta/2)$, and both terms can be bounded by using Hoeffding's inequality with $n=T_0/2$ samples,
-    to obtain $p \leq 2 \exp(-T_0 \Delta^2 / 4)$.
-
-    A simple union bound extends the proof for $K$ arms, giving
-    $p \leq 2 K \exp(-T_0 d^2 / 4)$, if $d$ is a lower-bound on the positive gaps.
-    %
-    In all cases, it shows that $p$ is a constant wrt $T$.
-\end{proof}
-
-Using the same analysis, if a lower-bound $d$ on the positive gaps is known beforehand, one can find a tuning of $T_0$ that gives a logarithmic regret.
-%
-Like for the lower-bound, we have $R_T \leq (\max_{k: \Delta_k > 0} \Delta_k) T_0 + p (T - T_0)$, thus Hoeffding's inequality gives $R_T \leq K T_0 + K \exp(-T_0 d^2/4) T$. Optimizing on $T_0$ gives $T_0 = 4/d^2 \log(d^2 T / 4)$
-and proves that the ``explore-then-exploit'' strategy can also obtain an order-optimal regret, $R_T \leq K 4/d^2 (1 + \log(d^2 T / 4)) = \bigO{\log(T)}$, if it is tuned with a fixed time $T_0$ using prior knowledge on the problem (\ie, $d$) and the horizon $T$.
-%
-This strategy can also achieve $R_T = \bigO{T^{2/3} (K \log(T))^{1/3}}$ without prior knowledge on the problem, as shown in Section~1 of \cite{Slivkins2019}.
 
 An extension of this strategy is to consider not a fixed time $T_0$ but a random time $\tau$ at which exploration stops.
 This time $\tau$ must be a \emph{stopping time} in the sense that it is a measurable random variable, dependent of the past observations, as introduced by \cite{Wald45}. The strategy is then referred to as ``explore-then-commit'' (ETC), and the idea is to use a statistical test at every time step $t$, and stop as soon as enough samples were collected to effectively identify the best arm with a certain confidence level $\delta$.
@@ -978,6 +986,7 @@ What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal pr
 \end{theorem}
 %
 \begin{proof}
+    \TODOL{J'aimerai bien rajouter des couleurs sur $k$ et $k^*$ partout plus bas ?}
     As we focus on bounded distributions in $[0,1]$, for which Hoeffding's inequality gives \eqref{eq:2:HoeffdingInequality}, as stated above in Lemma~\ref\label{lem:2:HoeffdingInequality}.
     Thanks to the regret decomposition from Lemma~\ref{lem:2:RegretDecomposition}, we can focus on bounding $\E[N_k(T)]$ for any sub-optimal arm $k$.\\
     %
@@ -1069,8 +1078,6 @@ This is why it is used in our demonstration presented in Section~\ref{sec:4:gnur
 
 \paragraph{The \klUCB{} index policy.}
 %
-\TODOL{Expliquer klUCB}
-
 The \klUCB{} algorithm follows the same spirit as the $\UCB_1$ algorithm presented above,
 it is an index policy (see Algorithm~\ref{algo:2:indexPolicy}),
 which also builds upper confidence bounds on the empirical samples.
@@ -1260,7 +1267,7 @@ It is anytime, and was proven to obtain good ``best of both world'' performances
 \textbf{Hybrid policies.}
 %
 As explained before, in the last few years, the MAB research community has been interested in finding algorithms which achieves both a problem-dependent logarithmic and a minimax upper-bounds.
-The first example is MOSS from \cite{Audibert2009minimax}, or recently \KLUCBpp{} in \cite{Menard17}.
+The first example is MOSS from \cite{Audibert2009minimax}, or \KLUCBpp{} in \cite{Menard17}.
 They are both index-based (see Algorithm~\ref{algo:2:indexPolicy}), using the following indexes:
 \begin{align}\label{eq:2:indexes_for_MOSS_klUCBpp}
     U^{\mathrm{MOSS}}_k(t) &= \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \frac{\log\left(\frac{t}{K N_k(t)}\right)}{N_k(t)} } \right). \\
