@@ -853,17 +853,21 @@ $R_T \geq K (\min_{k: \Delta_k > 0} \Delta_k) T_0/K + p (T - T_0)$,
 if $p$ denotes the probability that the chosen arm is not optimal (\ie, the arm with highest mean after $T_0/K$ samples of each arms).
 And we can show that $p$ only depends on the number of collected samples $T_0$ and the gaps $\Delta_k$,
 so if $T_0$ is fixed independently of $T$ and the problem difficulty, the regret is again growing linearly, \ie, $R_T = \Omega(T)$.
+%
+To prove a bound on $p$, we use the following lemma, well known as Hoeffding's inequality, from \cite{hoeffding1963probability}.
+
+\begin{lemma}[Hoeffding's inequality]\label{lem:2:HoeffdingInequality}
+    Let $Z_1,\dots,Z_n$ be $n$ \iid{} samples from a Bernoulli distribution of parameter $\mu$, of empirical mean $\widehat{Z_n} = \frac{1}{n} \sum\limits_{i=1}^n Z_i$, Hoeffding's inequality gives both
+    \begin{align}\label{eq:2:HoeffdingInequality}
+        \forall x < \mu, \;\;\; & \bP(\widehat{Z_n} < x) \leq \exp(-2 n (x-\mu)^2),
+        \\
+        \forall x > \mu, \;\;\; & \bP(\widehat{Z_n} > x) \leq \exp(-2 n (x-\mu)^2).
+    \end{align}
+\end{lemma}
 
 \begin{proof}
     We prove it for the case of two arms.
-    If the distributions are Bernoulli (or sub-Gaussian), we can use Hoeffding's inequality from \cite{hoeffding1963probability} to control this probability $p$.
-    %
-    Indeed if $Z_1,\dots,Z_n$ are \iid{} samples from a Bernoulli distribution of parameter $\mu$, of mean $\widehat{Z_n} = \frac{1}{n} \sum_{i=1}^n Z_i$, Hoeffding's inequality gives both
-    \begin{equation}
-        \forall x < \mu, \bP(\widehat{Z_n} < x) \leq \exp(-2 n (x-\mu)^2),
-        \;\;\;
-        \forall x > \mu, \bP(\widehat{Z_n} > x) \leq \exp(-2 n (x-\mu)^2).
-    \end{equation}
+    If the distributions are Bernoulli (or sub-Gaussian), we can use Hoeffding's inequality to control this probability $p$.
     %
     If $\mu_1 = \mu_2 + \Delta$, then
     $p = \bP(\widehat{\mu_1} < \widehat{\mu_2}) \leq \bP(\widehat{\mu_1} < \mu_1 - \Delta/2) + \bP(\widehat{\mu_2} > \mu_2 + \Delta/2)$, and both terms can be bounded by using Hoeffding's inequality with $n=T_0/2$ samples,
@@ -899,7 +903,7 @@ A large family of algorithms are index policies, that compute an index $U_k(t)$ 
 The indexes should represent the expected quality of each arm, thus index policies play the arm that maximizes their index, \ie, $A(t) = \argmax_k U_k(t)$.
 If more than one indexes maximize $(U_k(t))_k$, the arm is chosen among the set, usually in a uniformly random manner: $A(t) \sim \cU(\argmax_k U_k(t))$.
 %
-The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, that include well known and efficient algorithms such as $\UCB_1$, \klUCB{} and many others.
+The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, that includes well known and efficient algorithms such as $\UCB_1$, \klUCB{} and many others.
 
 % \begin{small} % XXX remove if needed
 \begin{figure}[h!]
@@ -926,8 +930,8 @@ The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, tha
 % \end{small} % XXX remove if needed
 
 
-\paragraph{The $\UCB_1$ index policy: using Hoeffding's inequality to build confidence intervals.}
-
+\textbf{The $\UCB_1$ index policy: using Hoeffding's inequality to build confidence intervals.}
+%
 Let us consider another approach for adaptive exploration, known as ``optimism under uncertainty'': assume each arm is as good as it can possibly be given the observations so far, and choose the best arm based on these optimistic estimate.
 %
 This intuition leads to the $\UCB_1$ algorithm, initially introduced in \cite{Auer02}.
@@ -946,22 +950,47 @@ $ii)$ and/or because the confidence radius $\xi_k(t)$ is large, in which case th
 Either reason makes this arm worth choosing.
 One can also observe that $\xi_k(t)\to\infty$ if $t\to\infty$ but $N_k(t)\ll\log(t)$, thus all arms must be explored at least $\mathcal{O}(\log(T))$ times.
 %
-Furthermore, these two terms $\widehat{\mu_k}(t)$ and $\xi_k(t)$ in the \UCB{}  respectively represent exploitation and exploration, and summing them up is a natural way of trading them off.
-The parameter $\alpha$ in $\xi_k(t)$ also controls this trade-off, and the theoretical analysis suggests to restrict to $\alpha\geq1/2$, and to choose $\alpha=1/2$ for optimal uniform performance.
+Furthermore, these two terms $\widehat{\mu_k}(t)$ and $\xi_k(t)$ in the \UCB{}  respectively represent \emph{exploitation} and \emph{exploration}, and summing them up is a natural way of dealing with the exploitation/exploration trade off.
+The constant parameter $\alpha$ in $\xi_k(t)$ also controls this trade-off, and the theoretical analysis suggests to restrict to $\alpha\geq1/2$, and to choose $\alpha=1/2$ for optimal uniform performance (\ie, on all problems).
 
-To analyze the algorithm $\UCB_1$, we denote again $k^*$ an optimal arm, and $A(t)$ is the arm chosen by the algorithm in round $t$.
-According to the algorithm, $\UCB_k(t) \geq \UCB_{k^*}(t)$.
+\begin{theorem}[Regret bound for $\UCB_1$]\label{thm:2:UCBregretBound}
+    For any instance $I$ with $K$ arms with bounded distributions in $[0,1]$,
+    of means $\mu_1,\dots,\mu_k$, and any horizon $T>10$,
+    the $\UCB_1$ algorithm verifies the following asymptotic regret bound
+    \begin{equation}\label{eq:2:UCBregretBound}
+        R_T^{\cA}(I) \leq \sum_{k: \Delta_k>0} \frac{8}{\Delta_k} \log(T) + \smallO{\log(T)}.
+    \end{equation}
+\end{theorem}
 %
-Under the clean event,μ(at) +rt(at)≥ ̄μt(at)andUCBt(a∗)≥μ(a∗). Therefore:
-XXX
-It follows that
-XXX
-\TODOL{Expliquer la fin}
+\begin{proof}
+    For simplicity, we focus on bounded distributions in $[0,1]$, for which Hoeffding's inequality gives \eqref{eq:2:HoeffdingInequality} as stated above in Lemma~\ref\label{lem:2:HoeffdingInequality}.
+    To analyze the algorithm $\UCB_1$, we restrict to $\alpha=2$ and we proceed as follows:
 
-More details on the proofs can be found for instance in Chapter~2 of \cite{Bubeck12}, or Section~1.3 of \cite{Slivkins2019}.
-The $\UCB_1$ algorithm achieves order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret.
+    $i)$ First, for any arm $k$, Hoeffding's inequality shows that $\Pr(\UCB_k(t) \leq \mu_k) \leq \bigO{1/t^{4}}$ independently of $N_k(t)$,
+    and so $\sum_{t=1}^T \Pr(\UCB_k(t) \leq \mu_k) = \smallO{\log(T)}$: the \UCB{} are almost always above the empirical means (\ie, they are true \emph{upper} confidence bounds).
 
-It has the advantage of not relying on any prior knowledge of the problem difficulty, of being anytime, and computationally simple, for both memory and time aspects.
+    $ii)$
+    Then, we denote again $k^*$ an optimal arm, and $A(t)$ is the arm chosen in round $t$.
+    According to the algorithm, the probability that $k$ is chosen is upper-bounded by $\Pr(\UCB_k(t) \leq \UCB_{k^*}(t))$.
+    This can happen if $\UCB_{k^*}(t) \leq \mu_{k^*}$, which from $i)$ is very unlikely, or if $\UCB_k(t) \leq \UCB_{k^*}(t) > \mu_{k^*}$.
+    By writing $\mu_k = \mu_{k^*} - \Delta_k$, and because $\UCB_k(t)$ are using $N_k(t)$ \iid{} samples from arm $k$, of mean $\mu_k$, Hoeffding's inequality also shows that $\Pr(\UCB_k(t) - \mu_k > \Delta_k) \leq 8/(\Delta_k^2 t)$ (the confidence radius $\xi_k(t)$ is actually built exactly to obtain this bound).
+    %
+    And thus\footnote{~We used the partial sum of the harmonic series: $\sum\limits_{t=1}^T \frac{1}{t} \underset{T\to\infty}{\sim} \log(T)$.} $\sum_{t=1}^T \Pr(\UCB_k(t) - \mu_k > \Delta_k) \leq 1/\Delta_k^2 \sum_{t=1}^T 8/t = 1/\Delta_k^2 8\log(T)$.
+
+    To sum up, we obtain the following bound on $N_k(T)$ for any sub-optimal arm $k$:
+    \begin{align*}
+        \E[N_k(T)] = \sum_{t=1}^T \Pr(\ind(A(t)=k)) &\leq \sum_{t=1}^T \Pr(\UCB_k(t) > \UCB_{k^*}(t)) \\
+        &\leq \sum_{t=1}^T \Pr(\UCB_{k^*}(t) < \mu_{k^*}) + \sum_{t=1}^T \Pr(\UCB_{k^*}(t) < \mu_{k^*}) \\
+        &\leq \smallO{\log(T)} + \frac{8}{\Delta_k^2} \log(T).
+    \end{align*}
+    %
+    By using the regret decomposition from Lemma~\ref{lem:2:RegretDecomposition}, this gives $R_T^{\UCB_1} \leq \sum_{k: \Delta_k>0} \frac{8}{\Delta_k} \log(T) + \smallO{\log(T)}$.
+    We preferred to use the $\smallO{\dots}$ Landau notation, instead of keeping the exact constants, for simplicity and clarity.
+    More details on the proofs can be found for instance in Chapter~2 of \cite{Bubeck12}, or Section~1.3 of \cite{Slivkins2019}.
+\end{proof}
+
+What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret.
+The $\UCB_1$ algorithm has the advantage of not relying on any prior knowledge of the problem difficulty, of being anytime, and computationally simple, for both memory and time aspects.
 The $\UCB_1$ algorithm requires a constant storage capacity for each arm (storing $X_k(t)$ and $N_k(t)$ require two integers or a \texttt{float} and an integer, \ie, $\bigO{1}$), giving a storage capacity of $\bigO{K}$, independently of the horizon $T$.
 It also needs to perform some mathematical operations, but a square-root and a logarithm are cheap, thus it costs a $\bigO{1}$ constant time for each arm and time step, thus a time $\bigO{K T}$ for the $T$ rounds.
 %
