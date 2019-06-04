@@ -30,14 +30,14 @@ Other measures of performance, such as best-arm identification, are not used lat
 %
 We explain the main theoretical result from previous works: a lower-bound on the regret of any algorithm, essentially showing that no algorithm can achieve sub-logarithmic regret on all problems, in this stochastic MAB model (\ie, $R_T^{\cA} = \Omega(\log(T))$).
 
-We give an overview of the main families of algorithms designed to tackle stochastic MAB problems, and we mainly focus on the \UCB, \klUCB{} and Thompson sampling algorithms, as they are used in the rest of the manuscript.
+We give an overview of the main families of algorithms designed to tackle stochastic MAB problems, and we mainly focus on the $\UCB_1$, \klUCB{} and Thompson sampling algorithms, as they are used in the rest of the manuscript.
 % We present SMPyBandits in the next Chapter~\ref{chapter:3}, a Python open-source library, designed to run numerical simulations of MAB problems, one of the main contributions of this thesis.
 % We use it to compare the empirical performances of the most famous and most efficient algorithms, in terms of regret and by evaluating them on different problems.
 % %
 % In the point-of-view of numerical simulations or real-world applications of bandits on embedded systems, one must also take care of two other measures of performance: time and memory complexities, which can vary greatly between different families of algorithms.
 % We also empirically compare different algorithms for these two measures in Section~\ref{sec:3:timeAndMemoryCosts}.
 %
-We then give regret upper-bounds of the two main algorithms used in this thesis, \UCB{} and \klUCB, to highlight the difference between their finite-time regret upper-bounds. They are order-optimal as they attain a logarithmic regret.
+We then give regret upper-bounds of the two main algorithms used in this thesis, $\UCB_1$ and \klUCB, to highlight the difference between their finite-time regret upper-bounds. They are order-optimal as they attain a logarithmic regret.
 % proving their order optimality.
 % (\ie, their regret upper-bound asymptotically matches the lower-bound up-to a constant factor).
 % Moreover, \klUCB{} is known to be optimal for a wide range of arms distributions.
@@ -177,7 +177,7 @@ In the first Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem}, the current s
 % Currently at time $t=24$ (out of $T=100$ total time steps),
 At this step, the player has collected a sum of rewards of $14$, by observing $X(t) = [6,2,2,2,2]$ rewards of value $1$ in the $K=5$ different arms. Arms were sampled $N(t) = [8,4,4,4,4]$ times, meaning that the value $0$ was seen respectively $[2,2,2,2,2]$ times, and currently arm $1$ appears to be the best one. The true means of the arms are $\bm{\mu}=[0.6, 0.2, 0.55, 0.7, 0.5]$, and (much) more samples are needed before the player can accurately identify arm $4$ as the best arm.
 %
-In the second Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem__step100} below, we display the result of an example of run, when the player was following the \UCB{} algorithm from \cite{Auer02}.
+In the second Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem__step100} below, we display the result of an example of run, when the player was following the $\UCB_1$ algorithm from \cite{Auer02}.
 After $T=100$ steps, the player obtained a cumulated reward of $56$, by playing mostly arms $4,3,5,1,0$ (in decreasing order of number of plays). The empirical means $\widehat{\mu_k}(T)$ correctly identify the best arm (arm $4$), but do not correctly rank the arms as arms $1$ and $3$ obtained means of $\widehat{\mu_1}(T) = 0.5 < \widehat{\mu_3}(T)=0.6$ but the true means are $\mu_3 = 0.55 < \mu_1 = 0.6$.
 
 \begin{figure}[h!]  % [htbp]
@@ -226,8 +226,8 @@ Continuous-valued distributions with finite support also included truncated vers
 % Just bounded, in $[a,b]$ but without loss of generality in $[0,1]$ etc.
 \paragraph{The normalization trick.}\label{par:2:normalizationTrick}
 %
-If the player knows that reward are bounded in an interval $[a,b]$, and if she knows $a$ and $b$ ($a<b$), then with no loss of generality we can restrict to the interval $[0,1]$, as if $r\in[a,b]$, the player can instead consider the normalized reward $r' = $ that lies in $[0,1]$.
-Note that this ``normalization trick'' is implemented for any policy in SMPyBandits, with the \texttt{lower} and \texttt{amplitude} optional arguments, respectively representing $a$ the lower-bound on rewards and $b-a$ the length of the interval of possible values of rewards.
+If the player knows that reward are bounded in an interval $[a,b]$, and if she knows $a$ and $b$ (for $a<b$), then with no loss of generality we can restrict to the interval $[0,1]$, as if $r\in[a,b]$, the player can instead consider the normalized reward $r' = $ that lies in $[0,1]$.
+Note that this ``normalization trick'' is implemented for any policy in our library SMPyBandits, with the \texttt{lower} and \texttt{amplitude} optional arguments, respectively representing $a$ the lower-bound on rewards and $b-a$ the length of the interval of possible values of rewards.
 
 % Bernoulli, Gaussian, sub-Bernoulli, sub-Gaussian, Exponential, sub-Exponential...
 
@@ -313,13 +313,15 @@ it is interesting to illustrate this definition and the notations with two impor
 \end{itemize}
 
 
-In the rest of this thesis, \emph{we only consider bounded rewards in the mathematical developments}, and we mostly focus on Bernoulli distributions, because they are usually the most relevant choice for the applications of choice.
+\textbf{Hypotheses in this thesis.}
+%
+In the rest of this thesis, \emph{we only consider bounded rewards in the mathematical developments}, and we mostly focus on Bernoulli distributions, because they are usually the most relevant choice for the considered applications.
 First, we restrict for simplicity to Bernoulli distributions for the simulations shown in Chapter~\ref{chapter:3}, even if our library does implement all the distributions commonly found in the literature (including unbounded one-dimensional exponential families and even Markov models).
 In Chapter~\ref{chapter:4}, we only study models with binary rewards.
 %
-Then, when we study multi-player bandits in Chapter~\ref{chapter:5}, for the model without sensing, we explain that restricting to the Bernoulli case is interesting and not restrictive, as it is actually the hardest case (since continuous distributions has a null mass on $r(t)=0$, they yield a much simpler problem as the sensing/no sensing distinction no longer makes sense).
+Then, when we study multi-player bandits in Chapter~\ref{chapter:5}, we explain that restricting to the Bernoulli case is interesting and not restrictive, as it is actually the hardest case (since continuous distributions has a null mass on $r(t)=0$, they yield a much simpler problem as the sensing/no sensing distinction no longer makes sense).
 %
-Finally, in Chapter~\ref{chapter:6} we analyze our proposed algorithm in the setting on bounded distributions, without restricting to Bernoulli distributions, but we use the fact that bounded distributions on $[0,1]$ are sub-Bernoulli, and we use the Bernoulli Kullback-Leibler divergence $\kl$ in our analysis.
+Finally, in Chapter~\ref{chapter:6} we analyze our proposed algorithm for bounded distributions, without restricting to Bernoulli distributions, but we use the fact that bounded distributions on $[0,1]$ are sub-Bernoulli, and we use the Bernoulli Kullback-Leibler divergence $\kl$ in our analysis.
 
 
 \paragraph{Other kind of hypothesis: sub-Gaussian and sub-Bernoulli distributions.}
@@ -357,7 +359,7 @@ This research field has been very active since the years 2010s, but it started a
 %
 MAB have been applied successfully to various decision making problems, like the following:
 
-Historically, MAB models were first applied to \textbf{clinical trials}, where an arm represents a treatment, and the distribution associated with such treatment can be a Bernoulli distribution: a reward of $0$ means the drug did not heal the disease, and a reward of $1$ indicates a success. The mean of an arm, in this application, represents the mean success rate of a treatment, and the goal of a doctor in a clinical trial is to identify the best treatment, \ie, the arm with highest mean, in a number of trials as short as possible.
+\textbf{Clinical trials} have been the first historical application of MAB models, where an arm represents a treatment, and the distribution associated with such treatment can be a Bernoulli distribution: a reward of $0$ means the drug did not heal the disease, and a reward of $1$ indicates a success. The mean of an arm, in this application, represents the mean success rate of a treatment, and the goal of a doctor in a clinical trial is to identify the best treatment, \ie, the arm with highest mean, in a number of trials as short as possible.
 %
 % After introducing formally the notations used in all this thesis, we review below possible applications of multi-armed bandits.
 
@@ -385,22 +387,9 @@ Historically, MAB models were first applied to \textbf{clinical trials}, where a
     Using bandit algorithms for \textbf{improved machine learning} models or algorithms has been an active research domain for the last ten years or so.
     As presented below in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}, a certain ``leader'' bandit algorithm can be used to select on the run the best bandit algorithm from a pool of ``followers'' algorithms.
     Other possible use cases include hyper-parameter optimization, or features selection.
-    Hyper-parameters include real-valued parameters, like $\alpha\in[0,\infty)$ for the \UCB{} or $\varepsilon$ for the $\varepsilon$-greedy bandit algorithms, a step size multiplier in a gradient method, or the width of a radial based function (RBF) kernel method.
+    Hyper-parameters include real-valued parameters, like $\alpha\in[0,\infty)$ for the $\UCB_1$ or $\varepsilon$ for the $\varepsilon$-greedy bandit algorithms, a step size multiplier in a gradient method, or the width of a radial based function (RBF) kernel method.
     Discrete-valued parameters are also common, like a choice in a fixed set of kernel functions or the depth of neural networks,
     and higher dimensional or more complex hyper-parameters can for instance be the entire architecture of a neural network.
-
-    % % FIXME this is copied pasted from \cite{bouneffouf2019survey}
-    % It is well known that performance of machine learning algorithms depends critically on identifying a good set of hyper-parameters.
-    % While recent approaches use Bayesian optimization to adaptively select optimal hyper-parameter configurations, they rather focus on speeding up random search through adaptive resource allocation and early-stopping.
-    % A different approach was initiated in \cite{LiJamieson2018}, by formulating hyper-parameter optimization as a pure-exploration non-stochastic infinite-armed bandit problem, where predefined resources, such as iterations, data samples, or features are allocated to randomly sampled configurations. This work introduced a novel algorithm, Hyperband, for this framework and analyzed its theoretical properties, providing several desirable guarantees.
-    % Furthermore, Hyperband was compared with popular Bayesian optimization methods on a suite of hyper-parameter optimization problems; it was observed that Hyperband can provide more than an order-of-magnitude speedup over its competitors on a variety of deep-learning and kernel-based learning problems.
-% \end{itemize}
-
-% - clinical trial
-% - A/B testing of websites
-% - online content recommandation
-% - wireless communication, lots of possibilities, one is frequency/channel selection in the OSA paradigm, detailed after
-% - hyper-parameters tuning of deep neural networks etc
 
 The different applications detailed above are still active research directions,
 and a curious reader can find other interesting applications of MAB models and algorithms in \cite{bouneffouf2019survey}.
@@ -449,9 +438,9 @@ or in other words, to quantify the speed of convergence of a MAB algorithm.
 \subsection{Measuring performance with the (mean) regret}
 
 Let us first introduce some notations.
-From now on, we consider a stochastic and stationary MAB problem, with $K$ arms of distributions $\nu_1,\dots,\nu_K=(\nu_k)_k$, that is, for any time $t$, $r_k(t)\sim \nu_k$.
+From now on, we consider a stochastic and stationary MAB problem, with $K$ arms of distributions $\nu_1,\dots,\nu_K=(\nu_k)_k$, that generates \iid{} rewards $r_k(t)\sim \nu_k$, for any time $t$.
 We focus on distributions fully characterized by their means, that can be Bernoulli or any one-dimensional exponential family.
-We denote $\mu_k$ the mean of the distribution of arm $k$ (it will be referred to as the \emph{mean of arm $k$} in the rest of the manuscript), that is $\mu_k = \E[r_k(t)] \in \R$.
+We denote $\mu_k = \E[r_k(t)] \in \R$ the mean of the distribution of arm $k$ (it will be referred to as the \emph{mean of arm $k$}).
 %
 % \paragraph{Defining the regret.}
 %
@@ -466,28 +455,34 @@ To define the regret, we first need to distinguish between \emph{optimal} and \e
 \end{defn}
 
 If the goal of the player is to maximize $\E\left[\sum_{t=1}^T r_{A(t)}(t)\right]$,
-the optimal strategy for this bandit problem is to always pull an optimal arm, but of course it is unrealistic as the player does not know the true means and cannot know which arm is optimal.
+the optimal strategy for this bandit problem is to always pull one of the optimal arms (it can be not unique), but it is unrealistic as the player does not know the true means, nor the optimal arms (as long as they are not all optimal, \ie, in non trivial problems).
 %
 Comparing the difference between the performance of a fixed baseline and that of the player is a common approach in machine learning research,
-and here we can compare with the oracle strategy that obtains an (expected) reward of $\mu^*$ at each time step.
+and here we can compare with the oracle strategy that always obtains an (expected) reward of $\mu^*$.
 %
 For a fixed horizon $T$, if $k^*$ denotes the index of any optimal arm,
 let us introduce the (mean) regret $R_T^{\cA}$ of an algorithm $\cA$ as
-\[ R_T^{\cA} = \E\left[ \sum_{t=1}^T r_{k^*}(t) - r_{A(t)}(t) \right]. \]
+$R_T^{\cA} = \E\left[ \sum_{t=1}^T (r_{k^*}(t) - r_{A(t)}(t)) \right]$.
 %
-We can rewrite this expression to obtain the following definition of the regret:
-$R_T^{\cA}$
-$= \E\left[ \sum_{t=1}^T r_{k^*}(t) \right] - \E\left[ \sum_{t=1}^T r_{A(t)}(t) \right]$
-$= T \times \E\left[ r_{k^*}(t=1) \right] - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right]$
-$= T \mu^* - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right]$.
+As the rewards from arm $k^*$ are \iid{} (as for all arms), and by linearity of the expectancy, we can rewrite this expression to obtain the following definition of the regret:
+\begin{align*}
+    R_T^{\cA}
+    & = \E\left[ \sum_{t=1}^T (r_{k^*}(t) - r_{A(t)}(t)) \right]
+    = \E\left[ \sum_{t=1}^T r_{k^*}(t) \right] - \E\left[ \sum_{t=1}^T r_{A(t)}(t) \right] \\
+    & = T \times \E\left[ r_{k^*}(t=1) \right] - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right]
+    = T \mu^* - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right].
+\end{align*}
 % This is the definition we give below.
 
 
 \begin{defn}[Regret]\label{def:2:regret}
-    For an algorithm $\cA$, a bandit problem of $K$ arms characterized by their means $\bm{\mu} = \mu_1,\dots,\mu_K$ and if $\mu^* = \max_k \mu_k$, then the (mean) regret at horizon $T$ is $R_T^{\cA}$ and it is defined as
+    For an algorithm $\cA$, a bandit problem of $K$ arms characterized by their means $\bm{\mu} = \mu_1,\dots,\mu_K$ and if $\mu^* = \max_k \mu_k$, then the \emph{(mean) regret} at horizon $T$ is $R_T^{\cA}$ and it is defined as
     %
     \begin{equation}
-        R_T^{\cA} = T \mu^* - \sum_{t=1}^T \E\left[ Y(t) \right] = T \mu^* - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right].
+        R_T^{\cA}
+        = \E\left[ \sum_{t=1}^T (r_{k^*}(t) - r_{A(t)}(t)) \right]
+        % = T \mu^* - \sum_{t=1}^T \E\left[ Y(t) \right]
+        = T \mu^* - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right].
     \end{equation}
 \end{defn}
 
@@ -503,7 +498,7 @@ and thus we can write the following decomposition on the regret.
 
 \begin{lemma}[Regret decomposition]\label{lem:2:RegretDecomposition}
     The (mean) regret $R_T^{\cA}$ can be decomposed as a sum of the number of selections of sub-optimal arms $k$,
-    weighted by their gap, like this:
+    weighted by their gaps, like this:
     \begin{equation}\label{eq:2:RegretDecomposition}
         R_T^{\cA} = \sum_{k=1}^K \Delta_k \; \E[ N_k(T) ]
         = \sum_{\substack{k=1,\dots,K\\\Delta_k > 0}} \Delta_k \; \E[ N_k(T) ].
@@ -511,35 +506,42 @@ and thus we can write the following decomposition on the regret.
 \end{lemma}
 %
 \begin{proof}\label{proof:2:RegretDecomposition}
-    We use the chain rule of expectation, and because the expectation is taken on the randomness of the (\iid) rewards $(r_k(t))_t$ and on the decisions of the player $(A(t))_t$ (which are measurable wrt to the past observations $\cO_t$),
-    we can rewrite the expected cumulated rewards:
+    We use the chain rule of expectation and a conditioning on $O_t$,
+    because the expectation is taken on the randomness of the (\iid) rewards $(r_k(t))_t$ and on the decisions of the player $(A(t))_t$, which are measurable wrt to the past observations $O_t = (U_0, Y_1, U_1, \dots, Y_{t-1}, U_{t-1})$.
+    Thus we can rewrite the expected cumulated rewards as follows:
+
+    % \vspace*{-20pt}
     \begin{align*}
         \E \left[ \sum_{t=1}^T r_{A(t)}(t) \right]
-        &= \E \left[ \sum_{k=1}^K \sum_{t=1}^T r_k(t) \mathbbm{1}(A(t) = k) \right] \\
-        &= \sum_{k=1}^K \E \left[ r_k(1) \sum_{t=1}^T \mathbbm{1}(A(t) = k) \right]
-        % \underbrace{XXX}_{= N_k(T)}
+        &= \E \left[ \sum_{t=1}^T \sum_{k=1}^K r_k(t) \mathbbm{1}(A(t) = k) \right]
+        = \sum_{k=1}^K \sum_{t=1}^T \E \left[ r_k(t) \mathbbm{1}(A(t) = k) \right] \\
+        &= \sum_{k=1}^K \sum_{t=1}^T \E \Bigl[ \E \left[ r_k(t) | O_t \right] \mathbbm{1}(A(t) = k) \Bigr]
+        = \sum_{k=1}^K \sum_{t=1}^T \E \Bigl[ \E \left[ r_k(1) \right] \mathbbm{1}(A(t) = k) \Bigr] \\
+        &= \sum_{k=1}^K \underbrace{\E \left[ r_k(1) \right]}_{\mu_k} \underbrace{\sum_{t=1}^T \E \left[ \mathbbm{1}(A(t) = k) \right]}_{= N_k(T)}
+        % = \sum_{k=1}^K \mu_k \E \left[ \sum_{t=1}^T \mathbbm{1}(A(t) = k) \right]\\
+        %  XXX 
         = \sum_{k=1}^K \mu_k \E \left[ N_k(T) \right].
     \end{align*}
-    % FIXME there is a conditionning to do here!
     %
-    Thus $R_T^{\cA} = \sum_{k=1}^K \Delta_k \E[ N_k(T) ]$.
+    Thus $R_T^{\cA} = T \mu^* - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right] = T \mu^* - \sum_{k=1}^K \mu_k \E[ N_k(T) ] = \sum_{k=1}^K (\mu^* - \mu_k) \E[ N_k(T) ]$,
+    as $\sum_{k=1}^K  \E[ N_k(T) ] = T$.
     The sum can then be simplified to only account for sub-optimal arms, \ie, arms $k$ such that $\Delta_k > 0$.
 \end{proof}
 
 
-\paragraph{Consequences.}
+\textbf{Consequences.}
 %
-Such decomposition of the regret is useful for at least two reasons.
+Such decomposition of the regret is useful for at least two reasons:
 
 \begin{itemize}
     \item
-On the one hand, from a numerical simulation point-of-view, when we run a finite number of repetitions of the same stochastic experiment, if one wants to compute and visualize the regret, she can either use the definition with the rewards, or the decomposition and simply sum the gaps $\Delta_k$ with the number of sub-optimal draws.
-Mathematically, both quantities are equal in expectation, but with only a finite number of trajectories and observations, the first estimate is more noisy than the second one, since the randomness on the rewards is (partially) removed in the decomposition \eqref{eq:2:RegretDecomposition}.
-In our library SMPyBandits, we implement both estimators, and all values of regret used in this thesis are based on the one using the decomposition of Lemma~\ref{lem:2:RegretDecomposition}, because it gives smoother curves and faster convergence to the limit behavior.
+On the one hand, from a numerical simulation point-of-view, when we run a finite number of repetitions of the same stochastic experiment, if we want to compute and visualize the regret, we can either use the definition with the rewards, or the decomposition and simply sum the gaps $\Delta_k$ with the number of sub-optimal draws.
+Both quantities are indeed equal \emph{in expectation}, but with only a finite number of trajectories and observations, the first estimate is more noisy than the second one, since the randomness on the rewards is (partially) removed in the decomposition \eqref{eq:2:RegretDecomposition} (thanks to the conditioning on $O_t$ done in the proof).
+In our library SMPyBandits, we implement both estimators, and all values of regret used in this thesis are based on the one using the decomposition of Lemma~\ref{lem:2:RegretDecomposition}, because it gives faster convergence, and also ``smoother'' plots.
 
     \item
-On the other hand, this decomposition is necessary as theoretical analyses of the regret of MAB algorithms are usually based on controlling the suboptimal draws $N_k(T)$ and not directly the regret $R_T^{\cA}$.
-For example, we extend this decomposition to the multi-player case in Chapter~\ref{chapter:3}, in Lemma~\ref{lem:5:DecompositionRegret}, and as it also uses the draws $N_k(T)$, it is the first quantity we prove to be bounded by $\bigO{\log(T)}$ when we prove the regret upper-bound of our proposal \MCTopM-\klUCB.
+On the other hand, this decomposition is necessary as theoretical analyses of the regret of (single-player) MAB algorithms are usually based on controlling the suboptimal draws $N_k(T)$ and not directly the regret $R_T^{\cA}$.
+Even if we prove that controlling $N_k(T)$ is no longer sufficient to obtain low regret for the multi-player case, we extend this decomposition in Chapter~\ref{chapter:3} (in Lemma~\ref{lem:5:DecompositionRegret}), and it is the first quantity we prove to be bounded by $\bigO{\log(T)}$ when we prove the regret upper-bound of our proposal \MCTopM-\klUCB.
 \end{itemize}
 
 
@@ -565,9 +567,6 @@ These lower-bounds are of highest interest to design efficient algorithms,
 and a significant part of the research literature on MAB algorithms has focussed on finding algorithms that matches the Lai and Robbins' lower-bound asymptotically.
 This means that an upper-bound is proven on the regret of algorithm $\cA$, that asymptotically match the lower-bound, with the same constant in the big-$\cO$ notation (in which case we say that the algorithm is \emph{optimal}), or with a larger constant (the algorithm is said to be \emph{order-optimal} in such case).
 
-Moreover, it is interesting to note that this lower-bound can be directly used to design efficient algorithms\footnote{~Tracking this quantity, by using empirical estimates of the means, is used for instance in the OSSB algorithm proposed in \cite{Combes17}, which is proved to attain the lower-bound for a wider range of problems (for problems called structured stochastic bandits).}, as thanks to the regret decomposition given in Lemma~\ref{lem:2:RegretDecomposition} above, the expression in \eqref{eq:2:forSecondLogTLowerBound2} essentially says that any efficient algorithm
-should sample each sub-optimal arm $k$ about $\log(T)/\KL(\mu_k,\mu^*)$ times in the total of $T$ time steps.
-
 
 \begin{theorem}\label{thm:2:firstLogTLowerBound}
     No algorithm $\cA$ can achieve a (mean) regret $R_T^{\cA}(I) = \smallO{c_I \log(T)}$ for all problem instances $I \in \cI$,
@@ -579,14 +578,12 @@ In particular, it is necessary to rule out algorithms that always pick the same 
 
 \begin{defn}\label{def:2:uniformlyEfficientAlgorithm}
     An algorithm $\cA$ is \emph{uniformly efficient} if its (mean) regret satisfies
-    \begin{equation}
-        R_T^{\cA}(I) = \smallO{C_{I,\alpha} T^{\alpha}}
-    \end{equation}
+    $R_T^{\cA}(I) = \smallO{C_{I,\alpha} T^{\alpha}}$,
     for any value $\alpha>0$ and any problem instance $I\in \cI$,
     where this notation means that the ``constant'' $C_{I,\alpha}$ can depend on the problem instance $I$ and on $\alpha$, but \emph{not} on the time horizon $T$.
 \end{defn}
 
-This family is non-empty as it contains for instance the \UCB{} algorithm, as its regret is proven to be logarithmic on any problem instance.
+This family is non-empty as it contains for instance the $\UCB_1$ algorithm, as its regret is proven to be logarithmic on any problem instance.
 Now we can state the second logarithmic lower-bound, for algorithms in this family:
 
 \begin{theorem}\label{thm:2:secondLogTLowerBound}
@@ -608,33 +605,36 @@ This third theorem specifies possible values of the constants $C_I$ for the two 
     \begin{itemize}
         \item
         The bound from Theorem~\ref{thm:2:secondLogTLowerBound} holds with,
-        \begin{equation}\label{eq:2:forSecondLogTLowerBound}
-            C_I = \mu^* (1 - \mu^*) \sum_{\substack{k=1,\dots,K\\\Delta_k > 0}} \frac{1}{\Delta_k}.
-        \end{equation}
+        % \begin{equation}\label{eq:2:forSecondLogTLowerBound}
+        $C_I = \mu^* (1 - \mu^*) \sum\limits_{\substack{k=1,\dots,K\\\Delta_k > 0}} \frac{1}{\Delta_k}$.
+        % \end{equation}
         \item
         For any $\varepsilon>0$, the bound from Theorem~\ref{thm:2:secondLogTLowerBound} also holds with,
-        \begin{equation}\label{eq:2:forSecondLogTLowerBound2}
-            C_I = \sum_{\substack{k=1,\dots,K\\\Delta_k > 0}} \frac{\Delta_k}{\KL(\mu_k, \mu^*)} - \varepsilon.
-        \end{equation}
+        % \begin{equation}\label{eq:2:forSecondLogTLowerBound2}
+        $C_I = \sum\limits_{\substack{k=1,\dots,K\\\Delta_k > 0}} \frac{\Delta_k}{\KL(\mu_k, \mu^*)} - \varepsilon$.
+        % \end{equation}
     \end{itemize}
 \end{theorem}
 
+Moreover, it is interesting to note that the second lower-bound of Theorem~\ref{thm:2:forSecondLogTLowerBound} can be directly used to design efficient algorithms\footnote{~Tracking this quantity, by using empirical estimates of the means, is used for instance in the OSSB algorithm proposed in \cite{Combes17}, which is proved to attain the lower-bound for a wider range of problems (for problems called structured stochastic bandits).}, as thanks to the regret decomposition given in Lemma~\ref{lem:2:RegretDecomposition} above, the expression of $C_I$ essentially says that any efficient algorithm
+should sample each sub-optimal arm $k$ about $\log(T)/\KL(\mu_k,\mu^*)$ times in the total of $T$ time steps.
+
 
 Many algorithms have been proved to achieve logarithmic regret in the stochastic case,
-and in particular it is the case of the algorithms used in this thesis, \UCB{} from \cite{Auer02}, Thompson sampling from \cite{Thompson33} and analyzed in \cite{AgrawalGoyal11,Kaufmann12Thompson}, and \klUCB{} from \cite{Garivier11KL,KLUCBJournal}.
+and in particular it is the case of the algorithms used in this thesis, $\UCB_1$ from \cite{Auer02}, Thompson sampling from \cite{Thompson33} and analyzed in \cite{AgrawalGoyal11,Kaufmann12Thompson}, and \klUCB{} from \cite{Garivier11KL,KLUCBJournal}.
 %
-Such bounds are valid in different settings, and in particular \UCB{} is order-optimal for bounded rewards or one-dimensional exponential families,
+Such bounds are valid in different settings, and in particular $\UCB_1$ is order-optimal for bounded rewards or one-dimensional exponential families,
 while Thompson sampling is optimal for bounded rewards, and \klUCB{} have been proven to be optimal for both cases.
 
 
 \paragraph{Worst-case lower-bound in $\Omega(\sqrt{T})$.}
-.
+%
 For a fixed horizon $T$, it is interesting to note that one can find instances $I$ that are so ``hard'' that a logarithmic regret (lower or upper) bound that uses a constant $C_I$ no longer bring any information.
 Indeed, we can naively bound the regret by $R_T^{\cA} \leq (\max_k \Delta_k) T$, and thus if $(\max_k \Delta_k)$ can be taken so small that $C_I \log(T) \gg (\max_k \Delta_k) T$, and thus a regret upper bound like $R_T^{\cA} \leq C_I \log(T)$ is useless.
 
 For an example, consider any large horizon $T>10$, and $K=2$ Bernoulli arms.
 Chose any small $\varepsilon$ such that $\varepsilon \ll \sqrt{4 \log(T) / T}$, then chose let $\mu_1 = 1/2$ and $\mu_2 = 1/2 - \varepsilon$.
-The constant $C_I$ from \eqref{eq:2:forSecondLogTLowerBound} is $C_I = 1 / (4 \varepsilon)$ and $\Delta=\varepsilon$ and it becomes so large that
+The constant $C_I$ from the first case of Theorem~\ref{thm:2:forSecondLogTLowerBound} is $C_I = 1 / (4 \varepsilon)$ and $\Delta=\varepsilon$ and it becomes so large that
 the logarithmic upper-bound is useless in such case, as
 $\varepsilon \ll \sqrt{\frac{4 \log(T)}{T}} \Longleftrightarrow \frac{1}{4\varepsilon} \log(T) \gg \Delta T$.
 
@@ -649,8 +649,6 @@ The following theorem is from \cite{Auer02NonStochastic}.
         R_T^{\cA}(I_T) \geq \Omega(\sqrt{K T}).
     \end{equation}
 \end{theorem}
-
-% \TODOL{FIXME explain why this is interesting for the rest of this manuscript!}
 
 Similarly to what is considered for the first lower-bound,
 a natural question is to know if there is an algorithm that achieve a regret upper-bound of the form $R_T^{\cA}(I) \leq \bigO{\sqrt{K T}}$ for any instance, independently on the problem difficulty.
@@ -699,7 +697,6 @@ In single-player models,
 it is easy to show that achieving logarithmic regret directly implies a logarithmic upper-bound on the switching cost, and conversely the lower-bound from \cite{LaiRobbins85} also gives an asymptotic logarithmic lower-bound.
 But even if $SC^{\cA}(T) = \Theta(\log T)$ for an efficient algorithm, it can be interesting to numerically evaluate this quantity, as a large value might indicate an algorithm that is alternating too much between the optimal arm and other arms.
 %
-% FIXME we give notations but I don't use them in Chapter5 
 It is more interesting to studying $SC_M^{\cA}(T)$, the sum of the switching costs of the $M$ players in a multi-player bandit game, as in this case, it is possible that the players follow an efficient centralized or decentralized algorithm (which gives a logarithmic centralized regret) while still suffering from a linear switching cost.
 It is very satisfying to obtain a logarithmic switching cost for our algorithm \MCTopM-\klUCB{} in Chapter~\ref{chapter:5}, even if minimizing the switching cost was not one of our objective, and the bound we obtain on $SC_M^{\cA}(T)$ is just a consequence of our proof of the control we give on the regret $R^{\cA}(T)$.
 % - Switching cost? \cite{modiDemo2016} \cite{Koren17}
@@ -707,8 +704,16 @@ On a more experimental note, it was showed in \cite{modiDemo2016} that the previ
 
 
 % - Fairness ?
-Finally, another interesting measure of performance is the \emph{fairness} between the $M$ players in a multi-player bandit models, as we explain in Chapter~\ref{chapter:5}.
-It was not studied much, and only a very recent article studies this measure of performance under a formal approach, \cite{Patil2019stochastic}.
+Finally, another interesting measure of performance is the \emph{fairness}.
+It was not studied much for single-player problems, and usually it means that each arm must be explored at least a given fraction of the total number of rounds $T$ (\ie, ``arm-wise fairness'').
+It was studied in a very recent article \cite{Patil2019stochastic},
+where a different notion of regret is introduced to account for the fairness constraint. The authors show that different algorithms, based on $\UCB_1$ or Thompson sampling, can achieve logarithmic regret while respecting the fairness constraints.
+%
+In this thesis, we only consider fairness in the multi-player bandit models,
+in Chapter~\ref{chapter:5}, where fairness refers to a different notion (\ie, ``cooperative fairness'').
+When $M<K$ players learn in a decentralized way, they will essentially converge to an orthogonal affectation of players to arms, so that each player uses a unique arm among the $M$ best arms (most of the times).
+The fairness constraint says that, in average, no user is arbitrarily going to converge more frequently on a better arm than another user, and it is for instance the case for permutation invariant decentralized algorithms.
+We refer to Section~\ref{sub:5:betterLowerBound} for more details.
 
 
 % ----------------------------------------------------------------------------
@@ -719,8 +724,8 @@ This Section starts by discussing two naive strategies which fail dramatically,
 %
 and then we present two simple strategies which performs efficiently, only if they are tuned using a prior knowledge of the problem difficulty, but are thus unusable for practical applications.
 %
-We focus then on index policies, with a first efficient policy, \UCB, that uses upper confidence bounds (UCB) on the means estimates, and is known to be order-optimal for bounded rewards.
-Two other well-known and optimal algorithms are exposed: \klUCB{} extends the idea of \UCB{} but use smaller confidence intervals and thus it typically obtains better theoretical results, and Thompson sampling which replaces the principle of ``optimism under uncertainty'' by a Bayesian point-of-view.
+We focus then on index policies, with a first efficient policy, $\UCB_1$, that uses upper confidence bounds (UCB) on the means estimates, and is known to be order-optimal for bounded rewards.
+Two other well-known and optimal algorithms are exposed: \klUCB{} extends the idea of $\UCB_1$ but use smaller confidence intervals and thus it typically obtains better theoretical results, and Thompson sampling which replaces the principle of ``optimism under uncertainty'' by a Bayesian point-of-view.
 %
 Finally, we conclude by briefly exposing other families of algorithms.
 
@@ -882,19 +887,19 @@ This time $\tau$ must be a \emph{stopping time} in the sense that it is a measur
 Choosing $\delta \propto 1/T$ and using a lower-bound $d$ on the gaps typically lead to an order-optimal algorithm as shown in \cite{GarivierETC2016}.
 
 
-For both cases, the strategy obtains sub-optimal regret if it is tuned independently of the problem at hand, but they can be tuned to be efficient (\ie, with logarithmic regret) if a lower-bound on the gaps $\Delta_k$ is known.
+For both cases, the strategy obtains sub-optimal regret if it is tuned independently of the problem at hand, but can be tuned to be efficient (\ie, with logarithmic regret) if a lower-bound on the gaps $\Delta_k$ is known.
 %  \ie, they require a prior knowledge on the problem difficulty.
-As such, this weakness make them unapplicable on an unknown problem, and so these first strategies are less interesting from a practical point-of-view.
+As such, this weakness makes the presented strategies unapplicable on an unknown problem, and so they are less interesting from a practical point-of-view.
 
 
 % ----------------------------------------------------------------------------
-\subsection{Index policies, \UCB, \klUCB{} and others}
+\subsection{Index policies, $\UCB_1$, \klUCB{} and others}
 
 A large family of algorithms are index policies, that compute an index $U_k(t)$ on each arm $k$ at time $t$.
 The indexes should represent the expected quality of each arm, thus index policies play the arm that maximizes their index, \ie, $A(t) = \argmax_k U_k(t)$.
-If more than one index maximizes $(U_k(t))_k$, the arm is chosen among the set, usually in a uniform random manner: $A(t) \sim \cU(\argmax_k U_k(t))$.
+If more than one indexes maximize $(U_k(t))_k$, the arm is chosen among the set, usually in a uniformly random manner: $A(t) \sim \cU(\argmax_k U_k(t))$.
 %
-The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, that include well known and efficient algorithms such as \UCB, \klUCB{} and many others.
+The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, that include well known and efficient algorithms such as $\UCB_1$, \klUCB{} and many others.
 
 % \begin{small} % XXX remove if needed
 \begin{figure}[h!]
@@ -912,7 +917,7 @@ The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, tha
             }
             Observe a reward $r_{A(t)}(t)$ and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$\;
 		}
-		\caption{A generic \textcolor{blue}{index} policy, using \textcolor{blue}{indexes $U_k(t)$} (\eg, \UCB, \klUCB{} etc).}
+		\caption{A generic \textcolor{blue}{index} policy, using \textcolor{blue}{indexes $U_k(t)$} (\eg, $\UCB_1$, \klUCB{} etc).}
 		\label{algo:2:indexPolicy}
 		% \end{small} % XXX remove if needed
 	\end{algorithm}
@@ -921,7 +926,7 @@ The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, tha
 % \end{small} % XXX remove if needed
 
 
-\paragraph{The \UCB{} index policy: using Hoeffding's inequality to build confidence intervals.}
+\paragraph{The $\UCB_1$ index policy: using Hoeffding's inequality to build confidence intervals.}
 
 Let us consider another approach for adaptive exploration, known as ``optimism under uncertainty'': assume each arm is as good as it can possibly be given the observations so far, and choose the best arm based on these optimistic estimate.
 %
@@ -983,7 +988,7 @@ The constant $c>0$ is usually chosen as $c=1$.
 \end{align}
 
 
-\paragraph{A note about the implementation of \klUCB{} algorithmes.}
+\paragraph{A note about the implementation of \klUCB{} algorithms.}
 %
 % \TODOL{Short note on how to implement such policy, using Newton's method ?}
 Implementing this kind of policy requires to implement two things.
@@ -1005,17 +1010,17 @@ in an optimized way (file \href{https://github.com/SMPyBandits/SMPyBandits/blob/
 For the supported families of distributions (including Bernoulli, Gaussian, exponential and Poisson), we wrote both a naive and an optimized version of $\KL(x,y)$ and the $\sup_q \KL(x,q) \leq z$ optimization problem, using Newton's method.
 
 
-\paragraph{Variants on \UCB}
-
-Many variants of the \UCB{} algorithms have been studied in the multi-armed bandits literature.
+\textbf{Variants on $\UCB_1$.}
+%
+Many variants of the $\UCB_1$ algorithms have been studied in the multi-armed bandits literature.
 For instance, \UCB-H replaces the $\log(t)$ by a $\log(T)$ (as well as \klUCB-H), and it actually corresponds to the first algorithm analyzed in \cite{Auer02}.
 Using an estimator for the variance of the arms' samples gives \UCB-V, which was for instance proven to be efficient against Gaussian distributions with unknown variance.
 Other variants include \UCB$^+$, $\UCB^{\dagger}$ from \cite{Lattimore2018refining}, {\UCB}oost, and many more.
 %
-All these variants are usually comparable to the original \UCB{} algorithm, in terms of time and memory complexity, and they achieve improved regret upper bounds in the same setting or some extensions of the initial setting.
+All these variants are usually comparable to the original $\UCB_1$ algorithm, in terms of time and memory complexity, and they achieve improved regret upper bounds in the same setting or some extensions of the initial setting.
 
 
-\paragraph{Other policies inspired by \UCB}
+\textbf{Other policies inspired by \UCB.}
 %
 The ``Successive Elimination'' policy also uses confidence bounds, and use both Upper and Lower Confidence Bounds (LCB).
 After playing each active arms once, it eliminates arm $a$ if it is statistically identified as sub-optimal, \ie, if there is another arm $a' \neq a$ such that $\UCB_a(t) < \mathrm{LCB}_{a'}(t)$.
@@ -1033,7 +1038,7 @@ Thompson sampling is the oldest known MAB algorithms, dating back from the first
 It became popular since its asymptotical and finite-time analyses in \cite{AgrawalGoyal11,Kaufmann12Thompson}.
 %
 Thompson sampling uses a Bayesian point of view:
-instead of building confidence intervals on the means of the arms like \UCB{} does,
+instead of building confidence intervals on the means of the arms like $\UCB_1$ does,
 it starts with a prior on the $K$ distributions (\eg, a flat uniform prior), and then after every observation $(k, r(t))$ it updates the posterior distribution of the arm $k$ with a new data $r(t)$.
 If $\pi_k(t)$ denotes this posterior distribution, Thompson sampling makes its decision at time $t$ by first sampling a random sample $s_k \sim \pi_k(t)$, and then playing according to the ``optimism under uncertainty'' philosophy if these samples represent the arms (expected) quality: $A(t) \in \argmax_k s_k$.
 
@@ -1069,7 +1074,7 @@ Thompson sampling was proven to achieve asymptotical optimal problem-dependent b
 
 
 Bayes-UCB from \cite{Kaufmann12BUCB} also uses the Bayesian point of view, updated like for Thompson sampling, but used in a different way.
-Instead of sampling from the posteriors and playing the arms with maximum sample, Bayes-UCB computes the $(1-1/t)$ quantile of each arm, at time $t$, and plays the arm with the largest quantile.
+Instead of sampling from the posteriors and playing the arms with maximum sample, Bayes-UCB computes the $(1-1/(t (\log(t))^5)$ quantile of each arm, at time $t$, and plays the arm with the largest quantile.
 It was also proved to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12BUCB}.
 %
 Bayes-UCB is comparable to Thompson sampling in terms of memory complexity, but it can be slower in terms of time complexity as computing a quantile is generally more costly than just sampling from a distribution.
@@ -1088,8 +1093,8 @@ We found that in practice it can achieve very good performance, as illustrated i
 Finally, we would like to mention that a recent work \cite{KimTewari2019} presented an approach that closes the gap between the principle of optimism under uncertainty and the Bayesian point-of-view.
 %  underlying the approaches based on UCB, might not be necessary at all.
 % With perturbation: maybe we don't need optimism in face of uncertainty, we just need uniform sampling!
-The authors of \cite{KimTewari2019} showed that their Randomized Confidence Bound (RCB) algorithm can achieve the same regret upper bounds as \UCB{} or Thompson sampling, with uniform perturbations.
-Their RCB algorithm ressembles \UCB, and builds the same confidence intervals $[ \mathrm{LCB}_k(t), \UCB_k(t) ]$ on arm $k$ at time $t$ (the lower confidence bound is $\mathrm{LCB}_k(t) = \widehat{\mu_k}(t) - \xi_k(t)$).
+The authors of \cite{KimTewari2019} showed that their Randomized Confidence Bound (RCB) algorithm can achieve the same regret upper bounds as $\UCB_1$ or Thompson sampling, with uniform perturbations.
+Their RCB algorithm ressembles $\UCB_1$, and builds the same confidence intervals $[ \mathrm{LCB}_k(t), \UCB_k(t) ]$ on arm $k$ at time $t$ (the lower confidence bound is $\mathrm{LCB}_k(t) = \widehat{\mu_k}(t) - \xi_k(t)$).
 But instead of playing the arm with maximum UCB, a random sample is taken on each interval, and the played arm is the one maximizing this sample.
 % https://smpybandits.github.io/docs/Policies.RandomizedIndexPolicy.html
 
@@ -1105,8 +1110,8 @@ We can briefly mention other families of policies.
 % - I especially love the BESA algorithm by [? and ? and Maillard].
 
 \textbf{BESA} (Best Empirical Sampled Average) was introduced in \cite{Baransi2014}, in order to fix a simple observation:
-for instance in \UCB, if arm $1$ has $100$ samples and arm $2$ has $50$ samples, it should make more sense to only use $50$ samples of arm $1$ to compute and compare any statistics for each arms (\eg, their empirical mean).
-The BESA algorithm for $K=2$ arms is then very simple: at each time step, if arms $1$ and $2$ have respectively $n_1$ and $n_2$ samples, and if $n_1>n_2$ (for instance), first it sub-samples $n_2$ observations from $n_1$, then it computes the mean of these observations, and play the arm maximizing this mean (now that there is the same number of observations for both arms, it makes more sense to compare these quantities).
+if arm $1$ has $100$ samples and arm $2$ has $50$ samples, it should make more sense to only use $50$ samples of arm $1$ to compute and compare their empirical means.
+Based on this idea, the BESA algorithm for $K=2$ arms is quite simple: at each time step, if arms $1$ and $2$ have respectively $n_1$ and $n_2$ samples, and if $n_1>n_2$ (for instance), first it sub-samples $n_2$ observations from $n_1$, then it computes the mean of these observations, and play the arm maximizing this mean (now that there is the same number of observations for both arms, it makes more sense to compare these quantities).
 It was analyzed partially, for the two-armed case it was proved to be asymptotically optimal for one-dimensional exponential families, and the authors illustrated that it can be very efficient empirically.
 Analyzing it in the generic case was found to be difficult, and it is still an open problem.
 % We implemented it using a binary tournament implement in a naive but efficient way (not using recursive functions, \ie, using the \texttt{BESA} class with \texttt{''non\_recursive''=True}).
@@ -1114,14 +1119,14 @@ Analyzing it in the generic case was found to be difficult, and it is still an o
 
 
 % ----------------------------------------------------------------------------
-\paragraph{Policies for adversarial bandits.}
-
+\textbf{Policies for adversarial bandits.}
+%
 Another important family of bandits algorithms are the algorithms proposed for the adversarial setting \cite{Auer02NonStochastic}.
 The first of them is the Exp3 policy, for ``\emph{Exp}onential weights for \emph{Exp}loitation and \emph{Exp}loiration'',
 which is an example of the well-known \emph{multiplicative weights update algorithm}\footnote{~For more details see
-on Wikipedia \href{https://en.wikipedia.org/wiki/Multiplicative_weight_update_method}{\texttt{en.wikipedia.org/wiki/Multiplicative\_weight\_update\_method}},
-or this blog post by Jeremy Kun \href{https://jeremykun.com/2017/02/27/the-reasonable-effectiveness-of-the-multiplicative-weights-update-algorithm/}{\texttt{JeremyKun.com/2017/02/27/the-reasonable-effectiveness-of-the-}}\\
-\href{https://jeremykun.com/2017/02/27/the-reasonable-effectiveness-of-the-multiplicative-weights-update-algorithm/}{\texttt{multiplicative-weights-update-algorithm}},
+% on Wikipedia \href{https://en.wikipedia.org/wiki/Multiplicative_weight_update_method}{\texttt{en.wikipedia.org/wiki/Multiplicative\_weight\_update\_method}},
+this blog post by Jeremy Kun, \href{https://jeremykun.com/2017/02/27/the-reasonable-effectiveness-of-the-multiplicative-weights-update-algorithm/}{\texttt{JeremyKun.com/2017/02/27/the-reasonable-}}\\
+\href{https://jeremykun.com/2017/02/27/the-reasonable-effectiveness-of-the-multiplicative-weights-update-algorithm/}{\texttt{effectiveness-of-the-multiplicative-weights-update-algorithm}},
 which comes with an interactive online demonstration to help understanding the behavior of the algorithm, hosted at \href{https://j2kun.github.io/mwua/index.html}{\texttt{j2kun.GitHub.io/mwua/}} (accessed the 24th of May 2019). More details can be found in the survey \cite{Arora2012multiplicative}.},
 a family of algorithms developed since the 1950s, and applied to a wide range of different domains.
 % https://smpybandits.github.io/docs/Policies.Exp3.html
@@ -1145,8 +1150,8 @@ It is anytime, and was proven to obtain good ``best of both world'' performances
 
 
 % ----------------------------------------------------------------------------
-\paragraph{Hybrid policies}
-
+\textbf{Hybrid policies.}
+%
 As explained before, in the last few years, the MAB research community has been interested in finding algorithms which achieves both a problem-dependent logarithmic and a minimax upper-bounds.
 The first example is MOSS from \cite{Audibert2009minimax}, or recently \KLUCBpp{} in \cite{Menard17}.
 They are both index-based (see Algorithm~\ref{algo:2:indexPolicy}), using the following indexes:
@@ -1193,7 +1198,7 @@ focussing on algorithms designed and analyzed for the single-player stationary a
 Except the naive and simple strategies given as introductory examples, most of the policies presented above are order-optimal for Bernoulli distributed problems or bounded rewards (or one-dimensional exponential families),
 and some of them are known to be optimal in different settings.
 %
-In the rest of this thesis, we mainly use the \UCB{} or Thompson sampling algorithms when simplicity is favored (\ie, Chapter~\ref{chapter:4}), and the \klUCB{} algorithm when optimality is important and where we give mathematical developments (\ie, Chapters~\ref{chapter:5} and \ref{chapter:6}).
+In the rest of this thesis, we mainly use the $\UCB_1$ or Thompson sampling algorithms when simplicity is favored (\ie, Chapter~\ref{chapter:4}), and the \klUCB{} algorithm when optimality is important and where we give mathematical developments (\ie, Chapters~\ref{chapter:5} and \ref{chapter:6}).
 
 % \newpage
 
@@ -1216,7 +1221,7 @@ This section is based on our article \cite{Besson2018WCNC}.
 \subsection{Motivation for online algorithm selection}\label{sub:25:introduction}
 
 Many different learning algorithms have been proposed by the machine learning community,
-and most of them depend on several parameters, for instance $\alpha$ for \UCB, the prior for Thompson sampling or BayesUCB,
+and most of them depend on several parameters, for instance $\alpha$ for $\UCB_1$, the prior for Thompson sampling or BayesUCB,
 the $\kl$ function for \klUCB{} etc.
 Every time a new MAB algorithm $\Alg$ is introduced, it is compared and benchmarked on some bandit instance, parameterized by $\boldsymbol{\mu} = (\mu_1,\dots,\mu_K)$, usually by focusing on its expected regret $R_T^{\Alg}$.
 %
@@ -1227,17 +1232,17 @@ ideally one would like to use an algorithm that can be applied identically again
 
 \paragraph{Naive approaches.}
 %
-On the one hand, a practitioner can decide to pick one algorithm, maybe because it seems efficient on other problems, or maybe because it is simple enough to be used in its application. It might be unrealistic to implement complicated algorithms on limited hardware such as embedded chips in a very low-cost IoT end-device, and for instance a practitioner could chose to only consider the \UCB{} algorithm (or other low-cost algorithms).
+On the one hand, a practitioner can decide to pick one algorithm, maybe because it seems efficient on other problems, or maybe because it is simple enough to be used in its application. It might be unrealistic to implement complicated algorithms on limited hardware such as embedded chips in a very low-cost IoT end-device, and for instance a practitioner could chose to only consider the $\UCB_1$ algorithm (or other low-cost algorithms).
 %
 On the other hand, if prior knowledge on the application at hand is available, one could implement some benchmarks, and compare a set of algorithms on different problems. If a leader appears clearly, it is then possible to choose it for the application.
 
 
 \paragraph{Illustrative example.}
 %
-For instance, if you know that the considered problem can either have $K$ arms with very close means, or one optimal arm far away from the other, two versions of a \UCB{} algorithms will perform quite differently in the two problems:
+For instance, if you know that the considered problem can either have $K$ arms with very close means, or one optimal arm far away from the other, two versions of a $\UCB_1$ algorithms will perform quite differently in the two problems:
 using a large $\alpha$, \ie, favoring exploration, will give low regret in the first case,
 while using a low $\alpha$, \ie, favoring exploitation, will give low regret in the second case.
-One approach can be to use an intermediate value, as $\alpha=1/2$ suggested by theory, but another approach could be to consider an aggregated vote of different versions of \UCB, each running with a different value of $\alpha$ (\eg, in a logarithmic grid), and let another learning algorithm decide which value of $\alpha$ is the best \emph{for the problem at hand}.
+One approach can be to use an intermediate value, as $\alpha=1/2$ suggested by theory, but another approach could be to consider an aggregated vote of different versions of $\UCB_1$, each running with a different value of $\alpha$ (\eg, in a logarithmic grid), and let another learning algorithm decide which value of $\alpha$ is the best \emph{for the problem at hand}.
 
 \paragraph{The online approach.}
 %
