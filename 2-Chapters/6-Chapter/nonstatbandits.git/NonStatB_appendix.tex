@@ -63,42 +63,6 @@ In other words, we illustrate in Figures~\ref{fig:6:meanRegretPb3} and \ref{fig:
 This Appendix gives some proofs omitted in the main text of this chapter.
 Missing proofs can be found in the article \cite{Besson2019GLRT}.
 
-% ----------------------------------------------------------------------------
-\subsubsection{Pinsker's inequality}\label{proof:6:Pinsker}
-
-Pinsker's inequality is proved below, using simple real analysis arguments\footnote{~The proof is inspired by Lemma~10.2 from \cite{LattimoreBanditAlgorithmsBook} (version $1699$ of January $2019$).}.
-
-\begin{lemma}[Pinsker's inequality]\label{lem:6:Pinsker}
-    Let $p,q\in[0,1]$, and $\kl(p,q) = p \ln\left(\frac{p}{q}\right) + (1-p)\ln\left(\frac{1-p}{1-q}\right)$.
-    Then $\kl(p,q) \geq 2 (p-q)^2$.
-\end{lemma}
-\begin{proof}
-    Fix $p$, and consider the function $g(x) := \kl(p, p+x) - 2 x^2$ ($x$ will be $q-p$), for $x\in(-p, 1-p)$.
-    We first observe that $g(0) = 0$, and we easily prove that $x=0$ is the unique minimizer of $g$ over its domain.
-    By definition, $\kl$ is of class $\cC^1$ on its two variables, on $(0,1)$, so $g$ is of class $\cC^1$ on the interior of its domain, $(-p, 1-p)$.
-    Let us compute its derivative, $g'(x) = (\frac{\partial \; \kl}{\partial 2})(p, p + x) - 4x$.
-    Simple calculations yield
-    \[ \left(\frac{\partial \; \kl}{\partial 2}\right) (p, p + x) = - \frac{p}{p+x} + \frac{1-p}{1-(p+x)} =  = -x \frac{(2(p + x) - 1)^2}{(p + x)(p + x - 1)}. \]
-    % https://www.wolframalpha.com/input/?i=diff(p+*+log(p%2F(p%2Bx))+%2B+(1-p)+*+log((1-p)%2F(1-(p%2Bx)))+-+2*x**2,+x)
-    We can verify that $g'(0) = -1 + 1 - 4 \times 0 = 0$, and it has the sign of $-x$ on its domain, as $p + x - 1 < 0$ because $x < 1 - p$, and $p + x > 0$.
-    So $g'$ is first positive then negative, so $g$ is increasing then decreasing on its domain, with a change in its monotony at $x=0$, and thus it indeed has a unique minimizer.
-    We conclude that $g(x) \geq g(0) = 0$ on $(-p, 1-p)$, and so $\kl(p,q) \geq 2 (p-q)^2$ if $x = q-p$.
-
-    The edge case is the ends of the interval, that is if $x=-p$ or $x=1-p$, that is if $q=0$ or $q=1$.
-    If $p\in(0,1)$, then computing the limit of $\kl(p,q)$ for $q\to0^+$ and $q\to1^-$ is obvious and gives $\kl(p,q) \to +\infty$, while the right-hand side of Pinsker's inequality stays finite (so the inequality is still true at the limit).
-    If $p=0$ or $p=1$, the same computation works, by the convention that $p \log(p) = 0$ if $p=0$.
-    %
-    % Bonus: one can verify our computation in Python with the SymPy module:
-    % \begin{verbatim}
-    %     $ (bash) python
-    %     >>> from sympy import *
-    %     >>> x, p = symbols('x p')
-    %     >>> g = p * log(p/(p+x)) + (1-p) * log((1-p)/(1-(p+x))) - 2*x**2
-    %     >>> print(diff(g, x))
-    %     -p/(p + x) - 4*x + (-p + 1)/(-p - x + 1)
-    % \end{verbatim}
-\end{proof}
-
 
 
 % % ----------------------------------------------------------------------------
@@ -481,7 +445,7 @@ Using this inequality twice in the right hand side of \eqref{eq:6:Preparation} c
 % \]
 % where we have also used that $\tilde{\mu}^{\ell-1}_{i,n_i(\overline{t})} = \frac{n_i(\tau_i^{(\ell)})\tilde{\mu}^{\ell-1}_{i,n_i(\tau_i^{(\ell)})} + \overline{r}\tilde{\mu}^{\ell-1}_{i,n_i(\tau_i^{(\ell)}) : n_i(\overline{t})}}{n_i(\tau_i^{(\ell)}) + \overline{r}}$.
 
-% Using Pinsker's inequality (Lemma~\ref{lem:6:Pinsker}) and introducing the gap $\Delta_i^{(\ell)} = \mu_i^{(\ell-1)} - {\mu}_i^{(\ell)}$, one can write
+% Using Pinsker's inequality (Lemma~\ref{lem:2:Pinsker}) and introducing the gap $\Delta_i^{(\ell)} = \mu_i^{(\ell-1)} - {\mu}_i^{(\ell)}$, one can write
 % \begin{align}
 %     (b) & \leq \bP\left(\exists s \in \cI_k : \frac{2s\overline{r}}{s+\overline{r}}\left(\widehat{\mu}_{a,s} - \widehat{\mu}_{b,\overline{r}} \right)^2  \leq \beta(s+\overline{r},\delta)\right)\nonumber\\
 %     & \leq \bP\left(\exists s \in \N : \frac{2sr}{s+r}\left(\widehat{\mu}_{a,s} - \widehat{\mu}_{b,s} - \Delta_i^{(\ell)}\right)^2  \geq \beta(s+r,\delta)\right) \nonumber\\

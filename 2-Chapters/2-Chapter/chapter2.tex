@@ -954,11 +954,15 @@ Furthermore, these two terms $\widehat{\mu_k}(t)$ and $\xi_k(t)$ in the \UCB{}  
 The constant parameter $\alpha$ in $\xi_k(t)$ also controls this trade-off, and the theoretical analysis suggests to restrict to $\alpha\geq1/2$, and to choose $\alpha=1/2$ for optimal uniform performance (\ie, on all problems).
 
 We present the regret bound, which was first stated in \cite{Auer02}, and to explain how Hoeffding's inequality is used we prove it below.
+Note that for the rest of the manuscript, we use the \klUCB{} algorithm (and more subtle concentration inequality) whenever we analyze the regret of a newly introduced algorithm (\ie, in Chapters~\ref{chapter:5} and \ref{chapter:6}),
+but we preferred to start with a simpler proof in the single-player stationary case.
+µ
+What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret (if $\Delta=\min\limits_{k: \Delta_k>0} \Delta$).
 
 \begin{theorem}[Regret bound for $\UCB_1$]\label{thm:2:UCBregretBound}
     For simplicity, we restrict to $\alpha=2$.
     For any instance $I$ with $K$ arms with bounded distributions in $[0,1]$,
-    of means $\mu_1,\dots,\mu_k$, and any horizon $T>10$,
+    of means $\mu_1,\dots,\mu_k$, and any horizon $T>K$,
     the $\UCB_1$ algorithm verifies the following finite-time regret bound
     \begin{equation}\label{eq:2:UCBregretBound}
         R_T^{\cA}(I) \leq \left(\sum_{k: \Delta_k>0} \frac{8}{\Delta_k}\right) \log(T) + \sum_{k: \Delta_k>0} \Delta_k \left(1 + \frac{\pi^2}{3}\right)
@@ -968,8 +972,9 @@ We present the regret bound, which was first stated in \cite{Auer02}, and to exp
 %
 \begin{proof}
     As we focus on bounded distributions in $[0,1]$, for which Hoeffding's inequality gives \eqref{eq:2:HoeffdingInequality}, as stated above in Lemma~\ref\label{lem:2:HoeffdingInequality}.
-    Thanks to the regret decomposition from Lemma~\ref{lem:2:RegretDecomposition}, we can focus on bounding $\E[N_k(T)]$ for any sub-optimal arm $k$.
-
+    Thanks to the regret decomposition from Lemma~\ref{lem:2:RegretDecomposition}, we can focus on bounding $\E[N_k(T)]$ for any sub-optimal arm $k$.\\
+    %
+    \indent
     The first trick consists in writing the following, which is true for any $n \geq 1$:
     \begin{equation}\label{eq:2:trickInUCBProof}
         N_k(T) = 1 + \sum_{t=K+1}^T \indic(A(t) = k)
@@ -981,84 +986,94 @@ We present the regret bound, which was first stated in \cite{Auer02}, and to exp
     arm $k$ is chosen if $\UCB_k(t) \geq \UCB_{k^*}(t)$.
     Both $\widehat{\mu_a}(t)$ and $\xi_a(t)$ use $N_k(t)$ samples of arm $a$,
     but as \eqref{eq:2:trickInUCBProof} above started to isolate $N_k(t)$, we want to add the freedom of considering different number of samples (using $n$), so we introduce the notation
-    $\widehat{\mu_{a,n}}(t)$ and $\xi_{a,n}(t)$ where $N_k(t)$ is replaced with $n$ if $n \leq N_k(t)$,
-    \ie, $\widehat{\mu_{a,n}}(t) = \frac{1}{n} \sum_{s=1}^{t-1} r_k(s) \indic(A(s)=k, N_k(s) \leq n)$ and $\xi_{a,n}(t) = \sqrt{2\log(t) / n}$.
+    $\hat{\mu}_{a,n}(t)$ and $\xi_{a,n}(t)$ where $N_k(t)$ is replaced with $n$ if $n \leq N_k(t)$,
+    \ie, $\hat{\mu}_{a,n(t)} = \frac{1}{n} \sum_{s=1}^{t-1} r_k(s) \indic(A(s)=k, N_k(s) \leq n)$ and $\xi_{a,n}(t) = \sqrt{2\log(t) / n}$.
     %
     Thus, we can continue from \eqref{eq:2:trickInUCBProof} and write
     \begin{align}\label{eq:2:decompositionInUCBProof}
         N_k(T) & \leq n + \sum_{t=n}^T \indic(A(t) = k, N_k(t) \geq n) \nonumber \\
-        & \leq n + \sum_{t=n}^T \indic(\widehat{\mu_{k^*,N_{k^*}(t)}}(t) + \xi_{k^*,N_{k^*}(t)}(t) < \widehat{\mu_{k,N_k(t)}}(t) + \xi_{k,N_k(t)}(t), N_k(t) \geq n)  \nonumber \\
-        & \leq n + \sum_{t=n}^T \indic(\min_{0 < n_{k^*} < t} \widehat{\mu_{k^*,n_{k^*}}}(t) + \xi_{k^*,n_{k^*}}(t) < \max_{n < n_k < t} \widehat{\mu_{k,n_k}}(t) + \xi_{k,n_k}(t)) \nonumber \\
-        \intertext{So two union bounds on $n_{k^*}$ and $n_k$ give}
-        & \leq n + \sum_{t=n}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n}^t  \indic( \widehat{\mu_{k^*,n_{k^*}}}(t) + \xi_{k^*,n_{k^*}}(t) < \widehat{\mu_{k,n_k}}(t) + \xi_{k,n_k}(t) )
+        & \leq n + \sum_{t=n}^T \indic(\hat{\mu}_{k^*,N_{k^*}(t)}(t) + \xi_{k^*,N_{k^*}(t)}(t) < \hat{\mu}_{k,N_k(t)}(t) + \xi_{k,N_k(t)}(t), N_k(t) \geq n)  \nonumber \\
+        & = n + \sum_{t=n}^T \indic\left(\min_{0 < n_{k^*} < t} \hat{\mu}_{k^*,n_{k^*}}(t) + \xi_{k^*,n_{k^*}}(t) < \max_{n < n_k < t} \hat{\mu}_{k,n_k}(t) + \xi_{k,n_k}(t) \right) \nonumber \\
+        \intertext{So two union bounds on $n_{k^*}$ for the $\min$ and on $n_k$ for the $\max$ give}
+        & \leq n + \sum_{t=n}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n}^t  \indic\left( \hat{\mu}_{k^*,n_{k^*}}(t) + \xi_{k^*,n_{k^*}}(t) < \hat{\mu}_{k,n_k}(t) + \xi_{k,n_k}(t) \right)
     \end{align}
 
-    Now, at time $t$, this event $\widehat{\mu_{k^*,n_{k^*}}}(t) + \xi_{k^*,n_{k^*}}(t) < \widehat{\mu_{k,n_k}}(t) + \xi_{k,n_k}(t)$
+    Now, at time $t$, this event $\hat{\mu}_{k^*,n_{k^*}}(t) + \xi_{k^*,n_{k^*}}(t) < \hat{\mu}_{k,n_k}(t) + \xi_{k,n_k}(t)$
     implies at least one of the following three events:
     \begin{align*}
-        I_1: & \widehat{\mu_{k^*,n_{k^*}}}(t) \leq \mu_{k^*} - \xi_{k^*,n_{k^*}}(t),
-        I_2: & \widehat{\mu_{k,n_k}}(t) \geq \mu_k + \xi_{k,n_k}(t),
-        I_3: & \mu_{k^*} < \mu_k + 2 \xi_{k,n_k}(t).
+        \begin{cases}
+        I_1 \;:\; & \hat{\mu}_{k^*,n_{k^*}}(t) \leq \mu_{k^*} - \xi_{k^*,n_{k^*}}(t), \\
+        I_2 \;:\; & \hat{\mu}_{k,n_k}(t) \geq \mu_k + \xi_{k,n_k}(t), \\
+        I_3 \;:\; & \mu_{k^*} < \mu_k + 2 \; \xi_{k,n_k}(t).
+        \end{cases}
     \end{align*}
 
-    For the first two events $I_1$ and $I_2$, we carefully fixed the number of samples so they are no longer random (they are respectively to $n_{k^*}$ and $n_k$), we can use Hoeffding's inequality to obtain $\Pr(I_j) \leq \frac{1}{t^{4}}$ for $j=1,2$.
+    \begin{itemize}
+        \item
+        For the first two events $I_1$ and $I_2$, we carefully fixed the number of samples so they are no longer random (they are respectively to $n_{k^*}$ and $n_k$), we can use Hoeffding's inequality to obtain $\Pr(I_j) \leq 1 / t^{4}$ (for $j=1,2$).
 
-    For the last event $I_3$,
-    observe that $\mu_{k^*} < \mu_k + 2 \xi_{k,n_k}(t)$ means $\Delta_k - 2 \sqrt{2\log(t) / n_k} < 0$, where we remind the notation of the gap $\Delta_k = \mu_{k^*} - \mu_k$.
-    Thus if $n_k \geq \lceil \frac{8 \log(T)}{\Delta_k^2} \rceil \geq \lceil \frac{8 \log(t)}{\Delta_k^2} \rceil$,
-    then this inequality actually cannot happen:
-    $\Pr(\Delta_k - 2 \sqrt{2\log(t) / n_k} < 0) = 0$,
-    so as soon as $n_k \geq \frac{8 \log(T)}{\Delta_k^2}$, $\Pr(I_3) = 0$.
-
-    Thus we can take the expectation of $N_k(T)$ from equation~\eqref{eq:2:decompositionInUCBProof}, and continue by setting
-    with $n = n_T = \lceil \frac{8 \log(T)}{\Delta_k^2} \rceil$:
-
+        \item
+        For the last event $I_3$,
+        observe that $\mu_{k^*} < \mu_k + 2 \xi_{k,n_k}(t)$ means $\Delta_k - 2 \sqrt{2\log(t) / n_k} < 0$, where we remind the notation of the gap $\Delta_k = \mu_{k^*} - \mu_k$.
+        Thus if $n_k \geq \left\lceil \frac{8 \log(T)}{\Delta_k^2} \right\rceil \geq \left\lceil \frac{8 \log(t)}{\Delta_k^2} \right\rceil$,
+        then this inequality actually cannot happen:
+        $\Pr(\Delta_k - 2 \sqrt{2\log(t) / n_k} < 0) = 0$,
+        so as soon as $n_k \geq \frac{8 \log(T)}{\Delta_k^2}$, $\Pr(I_3) = 0$.
+    \end{itemize}
+    %
+    Taking the expectation of $N_k(T)$ from \eqref{eq:2:decompositionInUCBProof},
+    and setting $n = n_T = \lceil \frac{8 \log(T)}{\Delta_k^2} \rceil$ thus gives
+    %
     \begin{align}\label{eq:2:decompositionInUCBProof2}
         \E[ N_k(T) ]
-        & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t  \Pr( \widehat{\mu_{k^*,n_{k^*}}}(t) + \xi_{k^*,n_{k^*}}(t) < \widehat{\mu_{k,n_k}}(t) + \xi_{k,n_k}(t) ) \nonumber \\
-        & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t  \Pr( I_1 ) + \Pr( I_2 ) + \Pr( I_3 ) \nonumber \\
+        & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t  \Pr( \hat{\mu}_{k^*,n_{k^*}}(t) + \xi_{k^*,n_{k^*}}(t) < \hat{\mu}_{k,n_k}(t) + \xi_{k,n_k}(t) ) \nonumber \\
+        & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t  \underbrace{\Pr(I_1)}_{=1/t^4} + \underbrace{\Pr(I_2)}_{=1/t^4} + \underbrace{\Pr(I_3)}_{=0} \nonumber \\
         & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t  2 \frac{1}{t^4} \nonumber \\
-        \intertext{We actually have that $\sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t  2 \frac{1}{t^4} \leq 2 \sum_{n_{k^*}=1}^t \sum_{n_{k}=1}^t \frac{1}{t^4} \leq 2 \sum_{n_{k^*}=1}^t \frac{1}{t^3} \leq 2 \frac{1}{t^2}$}
-        & \leq \frac{8 \log(T)}{\Delta_k^2} + 1 + 2 \sum_{t=1}^T \frac{1}{t^2} \nonumber \\
-        & \leq \frac{8 \log(T)}{\Delta_k^2} + 1 + 2 \sum_{t=1}^{\infty} \frac{1}{t^2} \nonumber \\
-        \E[ N_k(T) ]
-        & \leq \frac{8 \log(T)}{\Delta_k^2} + 1 + 2 \frac{\pi^2}{6}.
+        \intertext{We actually have that $\sum\limits_{n_{k^*}=1}^t \sum\limits_{n_{k}=n_T}^t  2 \frac{1}{t^4} \leq 2 \sum\limits_{n_{k^*}=1}^t \sum\limits_{n_{k}=1}^t \frac{1}{t^4} \leq 2 \sum\limits_{n_{k^*}=1}^t \frac{1}{t^3} \leq 2 \frac{1}{t^2}$}
+        & \leq \frac{8 \log(T)}{\Delta_k^2} + 1 + 2 \sum_{t=1}^T \frac{1}{t^2}
+        \leq \frac{8 \log(T)}{\Delta_k^2} + 1 + 2 \sum_{t=1}^{\infty} \frac{1}{t^2}
+        \leq \frac{8 \log(T)}{\Delta_k^2} + 1 + \frac{\pi^2}{3}.
     \end{align}
-
-    To sum up, we obtain the following finite-time bound on $N_k(T)$ for any sub-optimal arm $k$:
+    %
+    To sum up, we obtain the following finite-time bound on $N_k(T)$ for any sub-optimal arm $k$
     \begin{align*}
-        \E[N_k(T)] \leq \frac{8 \log(T)}{\Delta_k^2} + 1 + \frac{\pi^2}{3}.
+        \E[N_k(T)] \leq \frac{8 \log(T)}{\Delta_k^2} + (1 + \frac{\pi^2}{3}).
     \end{align*}
     %
     By using the regret decomposition from Lemma~\ref{lem:2:RegretDecomposition}, this gives
     \begin{align*}
-        R_T^{\UCB_1} &\leq \sum_{k: \Delta_k>0} \Delta_k \E[N_k(T)] \\
-        & \leq \frac{8}{\Delta_k} \log(T) + \sum_{k: \Delta_k>0} \Delta_k \left( 1 + \frac{\pi^2}{3} \right)
-        = \frac{8}{\Delta_k} \log(T) + \smallO{\log(T)}.
+        R_T^{\UCB_1} &= \sum_{k: \Delta_k>0} \Delta_k \E[N_k(T)] \\
+        & \leq \sum_{k: \Delta_k>0} \frac{8}{\Delta_k} \log(T) + \sum_{k: \Delta_k>0} \Delta_k \left( 1 + \frac{\pi^2}{3} \right)
+        = \sum_{k: \Delta_k>0} \frac{8}{\Delta_k} \log(T) + \smallO{\log(T)}.
     \end{align*}
 
     More details on this proof can be found for instance in Section~1.3 of \cite{Slivkins2019}, while for instance Chapter~2 of \cite{Bubeck12} Theorem~2.1) and Chapter~7 of \cite{LattimoreBanditAlgorithmsBook} (Theorem~7.2) both give more general proofs (\eg, for any $\alpha\geq\frac{1}{2}$).
 \end{proof}
 
-What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret (if $\Delta=\min\limits_{k: \Delta_k>0} \Delta$).
-The $\UCB_1$ algorithm has the advantage of not relying on any prior knowledge of the problem difficulty, of being anytime, and computationally simple, for both memory and time aspects.
-It requires a constant storage capacity for each arm (storing $X_k(t)$ and $N_k(t)$ require two integers or a \texttt{float} and an integer, \ie, $\bigO{1}$), giving a storage capacity of $\bigO{K}$, independently of the horizon $T$.
+Therefore, we see that the $\UCB_1$ algorithm has the advantage of not relying on any prior knowledge of the problem difficulty, of being anytime, and computationally simple, for both memory and time aspects, and it achieves an order-optimal problem-dependent regret upper bound in $\cO(K\log(T)/\Delta^2)$.
+%
+$\UCB_1$ requires a constant storage capacity for each arm (storing $X_k(t)$ and $N_k(t)$ require two integers or a \texttt{float} and an integer, \ie, $\bigO{1}$), giving a storage capacity of $\bigO{K}$, independently of the horizon $T$.
 It also needs to perform some mathematical operations, but a square-root and a logarithm are cheap, thus it costs a $\bigO{1}$ constant time for each arm and time step, thus a time $\bigO{K T}$ for the $T$ time steps.
 %
-We use it as the base building block for other policies in Chapter~\ref{chapter:4}, for these reasons.
+We use $\UCB_1$ as the base building block for other policies in Chapter~\ref{chapter:4}, for these reasons.
 Moreover, the $\UCB_1$ algorithm has the advantage of being easy to explain and understand, and its decisions can be interpreted clearly: by reading the values of $\widehat{\mu_k}(t)$ and $\UCB_k(t)$, anyone can see why an arm was chosen at anytime.
 This is why it is used in our demonstration presented in Section~\ref{sec:4:gnuradio}.
 
 
-\paragraph{The \klUCB{} index policy: using optimal confidence intervals.}
-
+\paragraph{The \klUCB{} index policy.}
+%
 \TODOL{Expliquer klUCB}
-\TODOL{Expliquer que les indices klUCB = des UCB sur les moyennes + principle of optimism in face of uncertainty}
 
-The \klUCB{} algorithm XXX
-Optimal upper confidence bounds based on Kullback-Leibler divergence and klUCB indexes
+The \klUCB{} algorithm follows the same spirit as the $\UCB_1$ algorithm presented above,
+it is an index policy (see Algorithm~\ref{algo:2:indexPolicy}),
+which also builds upper confidence bounds on the empirical samples.
+The KL-\UCB{} algorithm was first proposed in \cite{Garivier11KL} for bounded rewards,
+and then the \klUCB{} algorithm was introduced in \cite{KLUCBJournal}.
+In all this thesis, we either restrict to exponential families or to bounded rewards in $[0,1]$ and use the fact that they are sub-Bernoulli, thus we prefer to only present \klUCB.
 
-% If rewards lie in $[a,b]$, then t
+Instead of using a confidence radius $\xi_(t)$ based on Hoeffding's inequality,
+the \klUCB{} algorithm rather use a specific concentration inequality for the considered exponential family, such as Chernoff-Hoeffding for Gaussian (or sub-Gaussian) rewards.
+It yields improved upper confidence bounds (\ie, with smaller $\xi_(t)$) that are based on Kullback-Leibler divergence.
 The indexes are computed as follows, for an exploration function $f(t)$
 that is typically chosen as $f(t)=\log(t)+3\log(\log(t))$ for the theoretical analyses,
 and $f(t)=\log(t)$ in practice.
@@ -1067,10 +1082,15 @@ The constant $c>0$ is usually chosen as $c=1$.
     U_k^{\klUCB}(t) = \sup\limits_{q \in [0, 1]} \left\{ q : \KL\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{c f(t}{N_k(t)} \right\}.
 \end{align}
 
+For Bernoulli distributions,
+we can easily justify the previous claim that \klUCB{} builds smaller confidence intervals (\ie, more accurate) than $\UCB_1$,
+\ie, $U_k^{\klUCB}(t) < U_k^{\UCB}(t)$,
+because Pinkser's inequality gives $\kl(x,y) \geq 2(p-q)^2$ (see Lemma~\ref{lem:2:Pinsker} proved in appendix),
+and so XXX
+
 
 \paragraph{A note about the implementation of \klUCB{} algorithms.}
 %
-% \TODOL{Short note on how to implement such policy, using Newton's method ?}
 Implementing this kind of policy requires to implement two things.
 The first piece is usually easy: one has to implement a way to compute $\KL(x,y)$ the Kullback-Leibler divergence of the considered one-dimensional family,
 for instance $\kl$ for Bernoulli distributions has a closed form and is easy to compute.
@@ -1416,7 +1436,54 @@ to MAB models with either multidimensional rewards, like contextual bandits, or 
 
 
 % % ----------------------------------------------------------------------------
-% \section{Appendix}
-% \label{sec:2:appendix}
+\section{Appendix}
+\label{sec:2:appendix}
+
+
+% ----------------------------------------------------------------------------
+\subsubsection{Pinsker's inequality}\label{proof:2:Pinsker}
+
+Pinsker's inequality is proved below, using simple real analysis arguments\footnote{~The proof is inspired by Lemma~10.2 from \cite{LattimoreBanditAlgorithmsBook} (version $1699$ of January $2019$).}.
+%
+This Lemma is again used in Chapter~\ref{chapter:6}.
+
+
+\begin{lemma}[Pinsker's inequality]\label{lem:2:Pinsker}
+    Let $p,q\in[0,1]$, and remember that the \emph{relative binary entropy} is defined as
+    \begin{equation}\label{eq:2:Pinsker1}
+        \kl(p,q) = p \ln\left(\frac{p}{q}\right) + (1-p)\ln\left(\frac{1-p}{1-q}\right).
+    \end{equation}
+    Then for any $p,q\in[0,1]$, we have
+    \begin{equation}\label{eq:2:Pinsker2}
+        \kl(p,q) \geq 2 (p-q)^2.
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    Fix $p\in[0,1]$, and consider the function $g(x) := \kl(p, p+x) - 2 x^2$ ($x$ will be $q-p$), for $x\in(-p, 1-p)$.
+    We first observe that $g(0) = 0$, and we easily prove that $x=0$ is the unique minimizer of $g$ over its domain.
+    By definition, $\kl$ is of class $\cC^1$ on its two variables, on $(0,1)$, so $g$ is of class $\cC^1$ on the interior of its domain, $(-p, 1-p)$.
+    Let us compute its derivative, $g'(x) = (\frac{\partial \; \kl}{\partial 2})(p, p + x) - 4x$.
+    Simple calculations yield
+    \[ \left(\frac{\partial \; \kl}{\partial 2}\right) (p, p + x) = - \frac{p}{p+x} + \frac{1-p}{1-(p+x)} =  = -x \frac{(2(p + x) - 1)^2}{(p + x)(p + x - 1)}. \]
+    % https://www.wolframalpha.com/input/?i=diff(p+*+log(p%2F(p%2Bx))+%2B+(1-p)+*+log((1-p)%2F(1-(p%2Bx)))+-+2*x**2,+x)
+    We can verify that $g'(0) = -1 + 1 - 4 \times 0 = 0$, and it has the sign of $-x$ on its domain, as $p + x - 1 < 0$ because $x < 1 - p$, and $p + x > 0$.
+    So $g'$ is first positive then negative, so $g$ is increasing then decreasing on its domain, with a change in its monotony at $x=0$, and thus it indeed has a unique minimizer.
+    We conclude that $g(x) \geq g(0) = 0$ on $(-p, 1-p)$, and so $\kl(p,q) \geq 2 (p-q)^2$ if $x = q-p$.
+
+    The edge case is the ends of the interval, that is if $x=-p$ or $x=1-p$, that is if $q=0$ or $q=1$.
+    If $p\in(0,1)$, then computing the limit of $\kl(p,q)$ for $q\to0^+$ and $q\to1^-$ is obvious and gives $\kl(p,q) \to +\infty$, while the right-hand side of Pinsker's inequality stays finite (so the inequality is still true at the limit).
+    If $p=0$ or $p=1$, the same computation works, by the convention that $p \log(p) = 0$ if $p=0$.
+    %
+    % Bonus: one can verify our computation in Python with the SymPy module:
+    % \begin{verbatim}
+    %     $ (bash) python
+    %     >>> from sympy import *
+    %     >>> x, p = symbols('x p')
+    %     >>> g = p * log(p/(p+x)) + (1-p) * log((1-p)/(1-(p+x))) - 2*x**2
+    %     >>> print(diff(g, x))
+    %     -p/(p + x) - 4*x + (-p + 1)/(-p - x + 1)
+    % \end{verbatim}
+\end{proof}
 
 % \TODOL{Write this ?}
