@@ -61,8 +61,9 @@ Finally, we recommend \cite{bouneffouf2019survey} for a short but good survey on
 
 \paragraph{About notations.}
 %
-The notations used in this thesis are the usual notations in all the MAB literature, and we follow closely the formalism of \cite{Kaufmann12PhD}, as well as \cite{Slivkins2019,LattimoreBanditAlgorithmsBook,Bubeck12}.
-The Nomenclature includes a summary of the notations, see Page~\pageref{chapter:nomenclature}.
+We use in this thesis the usual notations from the MAB literature,
+% , and we follow closely the formalism of \cite{Kaufmann12PhD}, as well as \cite{Slivkins2019,LattimoreBanditAlgorithmsBook,Bubeck12}.
+and a summary is included in the Nomenclature, in Page~\pageref{chapter:nomenclature}.
 
 
 % \newpage
@@ -81,15 +82,15 @@ Their name refers to one-armed bandits found in casinos, as showed in Figure~\re
 
 
 A MAB is a model of a decision-making game, where a \emph{player} has to sequentially select one action in a (usually finite) set of actions, and only receives a (random) feedback about the selected action, also called a \emph{reward}.
-We consider $K\in\N, K\geq2$ arms, and discrete times $t\in\N^*$.
-When the player decides at time $t$ to play (or pull) the arm $A(t)\in\{1,\dots,K\}=[K]$, she receives a reward $r_{A(t)}(t)\in\R$, and so on for a finite number of steps $t$, from $t=1$ until $t=T$ for an horizon $T$.
+\textbf{We always consider $K\in\N, K\geq2$ arms, and discrete times $t\in\N^*$}.
+When the player decides at time $t$ to play (or pull) the arm $A(t)\in\{1,\dots,K\}=[K]$, she receives a reward $r_{A(t)}(t)\in\R$, and so on for a finite number of steps $t$, from $t=1$ until $t=T$ for an \emph{horizon} $T$.
 %
 A commonly studied goal for the player is to maximize its sum of received rewards, $\sum_{t=1}^T r_{A(t)}(t)$
-(or its mean in stochastic and stationary models).
+(or its \emph{mean} in stochastic and stationary models).
 
 
 The difficulty of this decision-making game comes from balancing the trade-off between \emph{exploration}, because the player has to observe as much as possible all the arms to get more knowledge about the distributions of their rewards, and \emph{exploitation}, because she also has to select as much as possible the best arm.
-The MAB model is a famous example of a reinforcement learning model, where the decision-making process has to adapt to an unknown environment using noisy observations and a discrete time, alternating between decisions and observations.
+The MAB model is a famous example of a \textbf{reinforcement learning} model, where the decision-making process has to adapt to an unknown environment using noisy observations and a discrete time, alternating between decisions and observations.
 We illustrate this cycle in Figure~\ref{fig:2:ReinforcementLearningCycleMABmodel} below.
 For more details on reinforcement learning, in particular about more generic models, we refer to the famous book by Sutton and Barto \cite{SuttonBarto2018}.
 
@@ -117,7 +118,7 @@ For more details on reinforcement learning, in particular about more generic mod
 
 This quantity $\sum_{t=1}^T r_{A(t)}(t)$ can indeed be random, and it usually depends on two aspects.
 First, the rewards may depend on the randomness of the environment, \ie, the unknown and unpredictable values $r_k(t)$.
-Then this quantity also depends on the player's decision-making policy, \ie, the choices $A(t)$, that are based on (all) the past observations, \ie, $A(1)$, $r_{A(1)}(1)$, $\dots$, $A(t-1)$, $r_{A(t-1)}(t-1)$, and possibly on an external source of randomness.
+Then this quantity also depends on the player's decision-making policy, \ie, the choices $A(t)$, that are based on (all) the \emph{past} observations, \ie, $A(1)$, $r_{A(1)}(1)$, $\dots$, $A(t-1)$, $r_{A(t-1)}(t-1)$, and possibly on an external source of randomness.
 %
 Without loss of generality, it can be given by a sequence $U_0,U_1,\dots$ of \iid{} random values, uniformly distributed on $[0,1]$, and that has to be independent from the rewards $r_k(t)$.
 External randomness is used in most MAB algorithms, \eg, to break ties uniformly in an index policy.
@@ -170,19 +171,21 @@ Your decisions have to be made sequentially: at time $t$, you pick one of the ar
 The UI of the demo also shows the current value of $t$ (``total plays'') and $\sum_{s=1}^t r_{A(s)}(s)$ the ``total reward''.
 For each arm, we show the sum of rewards obtained from that arm, \ie, $X_k(t) = \sum_{s=1}^t r_k(s) \mathbbm{1}(A(s) = k)$, in the ``Rewards'' line, and the number of pulls of that arm, \ie, $N_k(t) = \sum_{s=1}^t \mathbbm{1}(A(s) = k)$ in the ``Pulls'' line.
 %
-The demo also shows the estimated probability of each arm, that is $\widehat{\mu_k}(t) = X_k(t) / N_k(t)$ (when $N_k(t)>0$), in the ``Estimated probs'' line.
+The demo also shows the estimated probability of each arm, that is $\widehat{\mu_k}(t) = X_k(t) / N_k(t)$ (when $N_k(t)>0$), in the ``Estimated Probs'' line.
 
 In the first Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem}, the current state of the game is shown at time $t=24$.
 % Currently at time $t=24$ (out of $T=100$ total time steps),
 At this step, the player has collected a sum of rewards of $14$, by observing $X(t) = [6,2,2,2,2]$ rewards of value $1$ in the $K=5$ different arms. Arms were sampled $N(t) = [8,4,4,4,4]$ times, meaning that the value $0$ was seen respectively $[2,2,2,2,2]$ times, and currently arm $1$ appears to be the best one. The true means of the arms are $\bm{\mu}=[0.6, 0.2, 0.55, 0.7, 0.5]$, and (much) more samples are needed before the player can accurately identify arm $4$ as the best arm.
 %
-In the second Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem__step100} below, we display the result of an example of run, when the player was following the $\UCB_1$ algorithm from \cite{Auer02}.
+In the second Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem__step100} below, we display the result of an example of run, when the player was following the $\UCB_1$ algorithm from \cite{Auer02} (see Section~\ref{sub:2:IndexPolicies}).
 After $T=100$ steps, the player obtained a cumulated reward of $56$, by playing mostly arms $4,3,5,1,0$ (in decreasing order of number of plays). The empirical means $\widehat{\mu_k}(T)$ correctly identify the best arm (arm $4$), but do not correctly rank the arms as arms $1$ and $3$ obtained means of $\widehat{\mu_1}(T) = 0.5 < \widehat{\mu_3}(T)=0.6$ but the true means are $\mu_3 = 0.55 < \mu_1 = 0.6$.
+Other examples of such results, for different algorithms, and $T=100$ or $T=10000$, are given in Section~\ref{sub:2:shortNumericalExperiments}.
 
 \begin{figure}[h!]  % [htbp]
     \centering
     \includegraphics[width=0.85\linewidth]{2-Chapters/2-Chapter/Images/example_of_a_5_arm_bandit_problem__step100.png}
-    \caption{Screenshot of the demonstration, after the end of the game, after $t=T=100$ steps.  See \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}}
+    \caption{Screenshot of the demonstration, at the end of the game after $T=100$ steps, where the player suffers from an empirical regret of $R^{\UCB_1}_T = \mu^* T - 56 = 0.7 T - 56 = 14$ after following the $\UCB_1$ algorithm.
+        You can try it on \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}}
     \label{fig:2:example_of_a_5_arm_bandit_problem__step100}
 \end{figure}
 
@@ -191,26 +194,28 @@ After $T=100$ steps, the player obtained a cumulated reward of $56$, by playing 
 
 A \emph{bandit algorithm} $\cA$ is also referred to as a strategy or a policy, and sometimes it is denoted by $\pi$ or $\rho$ in the literature.
 The algorithm $\cA$ selects an arm $A(t)$ at time $t$, possibly by using the past observations and the past external randomness.
-As shown below, being oblivious to the past yields very poor performance (the pure exploration policy is discussed in Section~\ref{sub:2:naiveSimpleStrategies}), so efficient policies indeed depend on the environment feedback.
+As shown below, being oblivious to the past yields very poor performance (cf. the pure exploration policy in Section~\ref{sub:2:naiveSimpleStrategies}), so efficient policies indeed depend on the successive feedbacks.
 %
 More formally, an algorithm can be defined as a sequence of \emph{measurable} functions $(\cA_t)_{t\geq1}$,
 where $\cA_t$ maps the past observations $O_t = (U_0, Y_1, U_1, \dots, Y_{t-1}, U_{t-1})$
 to an arm $\cA_t(O_t) = A(t) \in[K]$,
 if we denote $Y_s = r_{A(s)}(s)$ the $s$-th reward.
-The initial information is reduced to $O_1 = (U_0)$, and the first decision is $A(1) = \cA_1(O_1)$. Usually, most algorithms starts by selecting $A(1)=1,\dots,A(K)=K$ (or a permutation of the $K$ arms) in the $K$ first steps, as illustrated for example in Algorithm~\ref{algo:2:indexPolicy} below.
+The initial information is reduced to $O_1 = (U_0)$, and the first decision is $A(1) = \cA_1(O_1)$. Usually, most algorithms starts by selecting $A(1)=1,\dots,A(K)=K$ (or a permutation of the $K$ arms) in the $K$ first steps (\eg, Algorithm~\ref{algo:2:indexPolicy}).
+% as illustrated for example in Algorithm~\ref{algo:2:indexPolicy} below.
 %
-An algorithm is said to be deterministic if it does not depend on the external randomness $U_0,U_1,\dots$, but in this thesis we only use non-deterministic algorithms.
+An algorithm is said to be \emph{deterministic} if it does not depend on the external randomness $U_0,U_1,\dots$, but in this thesis \textbf{we only use non-deterministic algorithms}
+(in particular, index policies need $U_t$ to break ties in the $\argmax$, see Algorithm~\ref{algo:2:indexPolicy} below).
 
 
 % ----------------------------------------------------------------------------
 \subsection{Hypotheses on rewards distributions}
 
 In the example above, we consider Bernoulli distributions, but other real-valued distributions have been studied in the literature.
-From now on and until the last chapter of this thesis, we only consider stochastic rewards. The piece-wise stationary model is studied in Chapter~\ref{chapter:6}.
+From now on and until the last chapter of this thesis, \textbf{we only consider stochastic rewards}. The piece-wise stationary model is studied in Chapter~\ref{chapter:6}.
 %
 % Everything is implemented and documented at
 % https://smpybandits.github.io/docs/Arms.html
-We also focus only on real-valued rewards, meaning that $r_k(t)\in\R$ for all arm $k$ and time $t$.
+\textbf{We also focus only on real-valued rewards}, meaning that $r_k(t)\in\R$ for all arm $k$ and time $t$.
 
 An important hypothesis is whether rewards are bounded or not,
 and whether the player knows if they are bounded or not before starting the bandit game.
@@ -236,9 +241,9 @@ Note that this ``normalization trick'' is implemented for any policy in our libr
 %
 % On one-dimensional exponential family...
 
-In all this thesis we restrict to distributions that have a certain form, and focus on real-valued distributions lying in an exponential families.
+In all this thesis we restrict to distributions that have a certain form, and \textbf{we focus either on real-valued distributions lying in an exponential families or bounded distributions}.
 One-dimensional exponential families include Bernoulli and Poisson distributions, as well as Gaussian distributions with a fixed variance.
-Our main interest is Bernoulli distributions, but we prefer to present the notations of exponential families in one dimension.
+Our main interest is Bernoulli distributions, but we prefer to present the more general notations of exponential families in one dimension.
 % We follow the notations from the course on statistical learning (Stat 260) taught in 2010 by Michael Jordan at the University of Berkeley \cite{JordanCourseStatBerkeley}, that are also the notations used for instance in Emilie Kaufmann's PhD in 2014 \cite{Kaufmann12PhD}.
 
 Given a measure $\lambda$, that is usually the natural Lebesgue measure on $\R$, an exponential family of probability distributions is defined as the distributions whose density (relative to $\lambda$) can be written as
@@ -246,8 +251,8 @@ Given a measure $\lambda$, that is usually the natural Lebesgue measure on $\R$,
 $ \Pr(x | \lambda) = h(x) \exp \left( \eta x - A(\eta) \right)$,
 % \end{equation}
 for a parameter vector $\eta$ (the canonical parameter), and a sufficient statistic that we restrict to be $T(x)=x$, and a function $h$.
-$A(\eta)$ is the cumulant function, and it is entirely determined by the $\eta$ and $h$:
-$A(\eta) = \log \left( \int h(x) \exp(\eta x) \lambda(\mathrm{d} x) \right)$.
+$A(\eta)$ is the cumulant function, and it is entirely determined by the $\eta$ and $h$,
+as $A(\eta) = \log \left( \int h(x) \exp(\eta x) \lambda(\mathrm{d} x) \right)$.
 %
 The natural parameter space is the set of values of $\eta$ such that this integral $A(\eta)$ is finite,
 and usually the literature focusses on regular and minimal exponential families (when the natural parameter space is an non-empty open set in $\R$).
@@ -267,7 +272,7 @@ We have to quote two important results on exponential families:
 \begin{defn}[Kullback-Leibler divergence]\label{def:2:KLDivergence}
     The KL divergence between two distributions $d_1$ and $d_2$ is defined as
     \begin{equation}\label{eq:2:Kullback-LeiblerDivergenceExpFamily1}
-        \KL\left(d_1, d_2\right) = \int d_1 \log\left(\frac{d_2}{d_1}\right) \lambda(\mathrm{d}x) = \E_{d_1} \left[ \log\left(\frac{d_2}{d_1}\right) \right].
+        \KL\left(d_1, d_2\right) = \int d_1 \log\left(\frac{d_2}{d_1}\right) \lambda(\mathrm{d}x) = \E_{d_1} \left[ \log\left(\frac{d_2}{d_1}\right) \right] \in \mathbb{R}\cup\{\pm\infty\}.
     \end{equation}
 \end{defn}
 
@@ -284,7 +289,7 @@ and $\mu_1 = \E_{\eta_1}[X]$ the mean of distribution $d_1$:
 Without diving more in the details of exponential families,
 it is interesting to illustrate this definition and the notations with two important examples:
 %
-\begin{itemize}
+\begin{itemize}\label{par:2:notationsExponentialFamiliesBernoulliGaussian}
     \item
     \textbf{Bernoulli distributions} can be seen as an exponential family with $h(x) = 1$,
     and for a Bernoulli distribution of mean $\mu\in[0,1]$, denoted $B(\mu)$,
@@ -294,6 +299,7 @@ it is interesting to illustrate this definition and the notations with two impor
     Moreover, the KL divergence between $B(x)$ and $B(y)$, of parameters $\eta$, $\eta'$ is given by
     $\kl(x,y) = \KL_{B}(\eta,\eta') = x \log(x/y) + (1-x) \log((1-x)/(1-y))$,
     and it is also called the \emph{relative binary entropy}.
+    It satisfies $\kl(x,y) \geq d_{1/4}(x,y)$, see Lemma~\ref{lem:2:Pinsker} in Appendix~\ref{proof:2:Pinsker}.
 
     \item
     \textbf{Gaussian distributions} of a fixed variance are a one-dimensional exponential family,
@@ -310,7 +316,7 @@ it is interesting to illustrate this definition and the notations with two impor
     % with a fixed variance $\sigma^2$ form indeed a one-dimensional exponential family.
 
     Moreover, the KL divergence between $\cN(x,\sigma^2)$ and $\cN(x,\sigma^2)$, of parameters $\eta$, $\eta'$ is given by
-    $d(x,y) = \KL_{\cN,\sigma^2}(\eta,\eta') = (x-y)^2 / (2\sigma^2)$.
+    $d_{\sigma^2}(x,y) = \KL_{\cN,\sigma^2}(\eta,\eta') = (x-y)^2 / (2\sigma^2)$.
 \end{itemize}
 
 
@@ -511,7 +517,7 @@ and thus we can write the following decomposition on the regret.
 \begin{proof}\label{proof:2:RegretDecomposition}
     We use the chain rule of expectation and a conditioning on $O_t$,
     because the expectation is taken on the randomness of the (\iid) rewards $(r_k(t))_t$ and on the decisions of the player $(A(t))_t$, which are measurable wrt to the past observations $O_t = (U_0, Y_1, U_1, \dots, Y_{t-1}, U_{t-1})$.
-    Thus we can rewrite the expected cumulated rewards as follows:
+    Thus we can rewrite the expected cumulated reward as follows:
     %
     % FIXME add a blank line or a negative space if it looks weird
     %
@@ -639,7 +645,7 @@ For more details, we refer to Chapter~16 of \cite{LattimoreBanditAlgorithmsBook}
 For a fixed horizon $T$, it is interesting to note that one can find instances $I$ that are so ``hard'' that a logarithmic regret (lower or upper) bound that uses a constant $C_I$ no longer brings any information.
 Indeed, we can naively bound the regret by $R_T^{\cA} \leq (\max_k \Delta_k) T$, and thus if $(\max_k \Delta_k)$ can be taken so small that $C_I \log(T) \gg (\max_k \Delta_k) T$, and thus a regret upper bound like $R_T^{\cA} \leq C_I \log(T)$ is useless.
 %
-\begin{proof}
+\begin{proof}\label{proof:2:worstCaseLowerBound}
     For an example, consider any large horizon $T>10$, and $K=2$ Bernoulli arms.
     Chose any small $\varepsilon$ such that $\varepsilon \ll \sqrt{4 \log(T) / T}$, then chose let $\mu_1 = 1/2$ and $\mu_2 = 1/2 - \varepsilon$.
     The constant $C_I$ from the first case of Theorem~\ref{thm:2:forSecondLogTLowerBound} is $C_I = 1 / (4 \varepsilon)$ and $\Delta=\varepsilon$ and it becomes so large that
@@ -877,7 +883,7 @@ and proves that the ``explore-then-exploit'' strategy can also obtain an order-o
 %
 We note that this strategy can also achieve $R_T = \bigO{T^{2/3} (K \log(T))^{1/3}}$ without prior knowledge on the problem, as shown in Section~1 of \cite{Slivkins2019}.
 %
-\begin{proof}
+\begin{proof}\label{proof:2:tuningExploreThenCommit}
     Let us prove the inequality $p \leq 2 K \exp(-T_0 d^2 / 4)$.\\
     \indent
     %
@@ -919,6 +925,7 @@ As such, this weakness makes the presented strategies unapplicable on an unknown
 
 % ----------------------------------------------------------------------------
 \subsection{Index policies: $\UCB_1$, \klUCB{} and others}
+\label{sub:2:IndexPolicies}
 
 A large family of algorithms are index based, as they compute an index $U_k(t)$ on each arm $k$ at time $t$.
 The indexes should represent the expected quality of each arm, thus index policies play the arm that maximizes their index, \ie, $A(t) = \argmax_k U_k(t)$.
@@ -958,10 +965,10 @@ Let us consider another approach for adaptive exploration, known as ``optimism u
 This intuition leads to the $\UCB_1$ algorithm, initially introduced in \cite{Auer02}.
 For a parameter $\alpha$, the \UCB{} indexes are computed as follows, as a sum of
 the \emph{average reward} $\widehat{\mu_k}(t)=\frac{X_k(t)}{N_k(t)}$
-and a \emph{confidence radius} $\xi_k(t) = \sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}\right)}$.
+and a \emph{confidence radius} $\xi_k(t) = \sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}$.
 %
 \begin{align}\label{eq:UCB_index}
-    U_k^{\UCB_1}(t) = \UCB_k(t) = \underbrace{\frac{X_k(t)}{N_k(t)}}_{\widehat{\mu_k}(t)} + \underbrace{\sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}\right)}}_{\xi_k(t)}.
+    U_k^{\UCB_1}(t) = \UCB_k(t) = \underbrace{\frac{X_k(t)}{N_k(t)}}_{\widehat{\mu_k}(t)} + \underbrace{\sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}}_{\xi_k(t)}.
 \end{align}
 
 This selection rule \eqref{eq:UCB_index} makes sense for the following reason:
@@ -991,9 +998,9 @@ What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal pr
     \end{equation}
 \end{theorem}
 %
-\begin{proof}
+\begin{proof}\label{proof:2:UCBregretBound}
     \TODOL{J'aimerai bien rajouter des couleurs sur $k$ et $k^*$ partout plus bas ?}
-    As we focus on bounded distributions in $[0,1]$, for which Hoeffding's inequality gives \eqref{eq:2:HoeffdingInequality}, as stated above in Lemma~\ref\label{lem:2:HoeffdingInequality}.
+    As we focus on bounded distributions in $[0,1]$, for which Hoeffding's inequality gives \eqref{eq:2:HoeffdingInequality}, as stated above in Lemma~\ref{lem:2:HoeffdingInequality}.
     Thanks to the regret decomposition from Lemma~\ref{lem:2:RegretDecomposition}, we can focus on bounding $\E[N_k(T)]$ for any sub-optimal arm $k$.\\
     %
     \indent
@@ -1105,8 +1112,8 @@ The constant $c>0$ is usually chosen as $c=1$.
 For Bernoulli distributions,
 we can easily justify the previous claim that \klUCB{} builds smaller confidence intervals (\ie, more accurate) than $\UCB_1$,
 \ie, $U_k^{\klUCB}(t) < U_k^{\UCB}(t)$,
-because Pinkser's inequality gives $\kl(x,y) \geq 2(p-q)^2$ (see Lemma~\ref{lem:2:Pinsker} proved in appendix),
-and so XXX
+because Pinkser's inequality gives $\kl(x,y) \geq 2(p-q)^2$ (see Lemma~\ref{lem:2:Pinsker} proved in appendix).
+% FIXME is this enough?
 
 
 \paragraph{A note about the implementation of \klUCB{} algorithms.}
@@ -1149,6 +1156,7 @@ It also achieves a $\bigO{\log(T)}$ problem-dependent regret upper bound, and a 
 
 % ----------------------------------------------------------------------------
 \subsection{Bayesian policies}
+\label{sub:2:BayesianPolicies}
 
 % Idea behind Thompson sampling and Bayesian philosophy.
 
@@ -1221,6 +1229,7 @@ But instead of playing the arm with maximum UCB, a random sample is taken on eac
 
 % ----------------------------------------------------------------------------
 \subsection{Other policies}
+\label{sub:2:OtherPolicies}
 
 We can briefly mention other families of policies.
 
@@ -1338,7 +1347,7 @@ $\UCB_1$ (with $\alpha=1$),
 and Thompson sampling (with Beta posteriors and flat uniform priors).
 %
 
-We first give in Table~\ref{table:2:oneShotResult} the cumulated rewards as well as the estimated regret\footnote{~First, the rewards are computed as $\frac{1}{N} \sum_{j=1}^N [ \sum_{t=1}^T r^{(j)}_{A(t)}(t) ]$, where $r^{(j)}_{k}(t)$ means the reward stream of the different runs $j=1,\dots,N$. Then the estimated regret is \emph{not} computed as $\frac{1}{N} \sum_{j=1}^N [ \sum_{t=1}^T r^{(j)}_{k^*}(t) - r^{(j)}_{A(t)}(t) ]$, as this first formula could give a negative regret and is more noisy, but as $\mu^* T - \frac{1}{N} \sum_{j=1}^N [ \sum_{k=1}^K \mu_k N^{(j)}_{k}(T) ]$, as this later formula gives a more robust estimator, as noted the proof of Lemma~\ref{lem:2:RegretDecomposition} (in page~\pageref{remark:2:moreAccurateCountofRegretForSimulations} above).}
+We first give in Table~\ref{table:2:oneShotResult} the cumulated rewards as well as the estimated regrets\footnote{~First, the rewards are computed as $\frac{1}{N} \sum_{j=1}^N \sum_{t=1}^T r^{(j)}_{A(t)}(t)$, where $r^{(j)}_{k}(t)$ means the reward stream of the different runs $j=1,\dots,N$. Then the estimated regret is \emph{not} computed as $\frac{1}{N} \sum_{j=1}^N \sum_{t=1}^T r^{(j)}_{k^*}(t) - r^{(j)}_{A(t)}(t)$, as this first formula could give a negative regret and is more noisy, but as $\mu^* T - \frac{1}{N} \sum_{j=1}^N \sum_{k=1}^K \mu_k N^{(j)}_{k}(T)$, as this later formula gives a more robust estimator, as noted the proof of Lemma~\ref{lem:2:RegretDecomposition} (in Page~\pageref{remark:2:moreAccurateCountofRegretForSimulations} above).}
 of the different algorithms, \emph{for one simulation}.
 %
 It shows that the performance can be \textcolor{red}{very random}, as on both cases the pure exploitation strategy was very lucky and obtains close-to-optimal performance, even though we proved that it suffers from a linear mean regret.
@@ -1418,9 +1427,9 @@ Then in Table~\ref{table:2:meanResults} we show the results of the average on $N
 %
 We also include in Figures
 % \ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT100N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT100N1000},
-\ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000} below the mean cumulated rewards and mean regret as functions of the current time step $t$, for $T=10000$ (and $N=1000$).
+\ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000} below the mean cumulated rewards and mean regrets as functions of the current time step $t$, for $T=10000$ (and $N=1000$).
 The reward of the best arm is also plotted in Figure~\ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, and it serves as an \emph{upper-bound} to illustrate convergence\footnote{~Conversely, we also add the Lai \& Robbins' logarithmic \emph{lower-bound} on regret ($C_I \log(t)$ from case 2 of Theorem~\ref{thm:2:forSecondLogTLowerBound}) on the regret plot in Figure~\ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}. It should not be surprising that the black line of the lower-bound is \emph{above} the values of the regret as the lower-bound is only asymptotic.}
-of the average cumulated reward (\ie, $\frac{1}{t} \sum\limits_{s=1}^t r_{A(s)}(s)$), which should converge to $\mu^*$ when $t\to\infty$ (or $t\toT$) for efficient algorithms.
+of the average rewards (\ie, $\frac{1}{t} \sum\limits_{s=1}^t r_{A(s)}(s)$), which should converge to $\mu^*$ when $t\to\infty$ for efficient algorithms.
 %
 We can clearly identify the behavior of the different strategies:
 the three efficient strategies indeed achieve a sub-linear regret, that looks logarithmic as supported by the theory,
@@ -1498,15 +1507,13 @@ both $\varepsilon$-greedy and Explore-then-Commit starts as pure exploration, re
     \end{small}  % WARNING
 \end{table}
 
-% % FIXME generate at the end of the simulation
 % \begin{figure}[h!]  % [htbp]
 % 	% \centering
 % 	\includegraphics[width=1.00\linewidth]{meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT100N1000.pdf}
 % 	\caption{Mean cumulated rewards as function of the current time step $t$ for horizon $T=100$ and $N=1000$ independent runs, for different algorithms }
 % 	\label{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT100N1000}
 % \end{figure}
-
-% % FIXME generate at the end of the simulation
+%
 % \begin{figure}[h!]  % [htbp]
 % 	% \centering
 % 	\includegraphics[width=1.00\linewidth]{meanRegretAsFunctionOfTimeForDifferentAlgorithmsT100N1000.pdf}
@@ -1515,24 +1522,20 @@ both $\varepsilon$-greedy and Explore-then-Commit starts as pure exploration, re
 % \end{figure}
 
 
-% FIXME generate at the end of the simulation
 \begin{figure}[h!]  % [htbp]
 	% \centering
-	\includegraphics[width=1.00\linewidth]{meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000.pdf}
-	\caption{Mean cumulated rewards as function of $t$ for $T=10000$ and $N=1000$.}
+    \includegraphics[width=1.20\linewidth]{SP__K5_T10000_N1000__7_algos/main_MeanRewards____env1-1_2506036032481767447.pdf}
+	\caption{Average of rewards, as function of $t$, for $T=10000$ and $N=1000$.}
 	\label{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}
 \end{figure}
 
-% FIXME generate at the end of the simulation
 \begin{figure}[h!]  % [htbp]
 	% \centering
-	\includegraphics[width=1.00\linewidth]{meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000.pdf}
+	\includegraphics[width=1.20\linewidth]{SP__K5_T10000_N1000__7_algos/main____env1-1_2506036032481767447.pdf}
 	\caption{Mean regret $R_t$ as function of $t$ for $T=10000$ and $N=1000$.}
 	\label{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}
 \end{figure}
 
-
-\TODOL{Décrire les résultats !}
 
 
 \paragraph{Summary.}
@@ -1691,16 +1694,17 @@ to MAB models with either multidimensional rewards, like contextual bandits, or 
 % ----------------------------------------------------------------------------
 \subsubsection{Pinsker's inequality}\label{proof:2:Pinsker}
 
-Pinsker's inequality is proven below, using simple real analysis arguments\footnote{~The proof is inspired by Lemma~10.2 from \cite{LattimoreBanditAlgorithmsBook} (version $1699$ of January $2019$).}.
+We prove it below using simple real analysis arguments\footnote{~The proof is inspired by Lemma~10.2 from \cite{LattimoreBanditAlgorithmsBook} (version $1699$ of January $2019$).},
 %
-This Lemma is again used in Chapter~\ref{chapter:6}.
+and for instance we use it again in Chapter~\ref{chapter:6}.
+%
+Moreover, using the notations of the exponential families for Bernoulli and fixed-variance Gaussian distributions (see above Section~\ref{par:2:notationsExponentialFamiliesBernoulliGaussian}), it can be written $\kl(x,y) \geq d_{1/4}(x,y)$.
+%
+As bounded distributions in $[0,1]$ are sub-Bernoulli as well as $1/4$-sub-Gaussian, one consequence of this inequality is that the confidence radius of \klUCB{} is \emph{smaller} than the one in $\UCB_1$, and different concentration inequalities can then be used to prove their finite-time logarithmic regret upper-bounds, and to prove that \klUCB{} is asymptotically optimal while $\UCB_1$ is only order-optimal for bounded rewards (see above in Section~\ref{proof:2:UCBregretBound} or \cite{Auer02} for $\UCB_1$, and \cite{KLUCBJournal} for \klUCB).
 
 
 \begin{lemma}[Pinsker's inequality]\label{lem:2:Pinsker}
-    Let $p,q\in[0,1]$, and remember that the \emph{relative binary entropy} is defined as
-    \begin{equation}\label{eq:2:Pinsker1}
-        \kl(p,q) = p \ln\left(\frac{p}{q}\right) + (1-p)\ln\left(\frac{1-p}{1-q}\right).
-    \end{equation}
+    Let $p,q\in[0,1]$, and remember that the \emph{relative binary entropy} is defined as $\kl(p,q) = p \ln\left(\frac{p}{q}\right) + (1-p)\ln\left(\frac{1-p}{1-q}\right)$.
     Then for any $p,q\in[0,1]$, we have
     \begin{equation}\label{eq:2:Pinsker2}
         \kl(p,q) \geq 2 (p-q)^2.
@@ -1708,12 +1712,12 @@ This Lemma is again used in Chapter~\ref{chapter:6}.
 \end{lemma}
 
 \begin{proof}
-    Fix $p\in[0,1]$, and consider the function $g(x) := \kl(p, p+x) - 2 x^2$ ($x$ will be $q-p$), for $x\in(-p, 1-p)$.
+    Fix $p\in[0,1]$, and consider the function $g(x) = \kl(p, p+x) - 2 x^2$ ($x$ will be $q-p$), for $x\in(-p, 1-p)$.
     We first observe that $g(0) = 0$, and we easily prove that $x=0$ is the unique minimizer of $g$ over its domain.
     By definition, $\kl$ is of class $\cC^1$ on its two variables, on $(0,1)$, so $g$ is of class $\cC^1$ on the interior of its domain, $(-p, 1-p)$.
     Let us compute its derivative, $g'(x) = (\frac{\partial \; \kl}{\partial 2})(p, p + x) - 4x$.
     Simple calculations yield
-    \[ \left(\frac{\partial \; \kl}{\partial 2}\right) (p, p + x) = - \frac{p}{p+x} + \frac{1-p}{1-(p+x)} =  = -x \frac{(2(p + x) - 1)^2}{(p + x)(p + x - 1)}. \]
+    \[ \left(\frac{\partial \; \kl}{\partial 2}\right) (p, p + x) = - \frac{p}{p+x} + \frac{1-p}{1-(p+x)} = -x \frac{(2(p + x) - 1)^2}{(p + x)(p + x - 1)}. \]
     % https://www.wolframalpha.com/input/?i=diff(p+*+log(p%2F(p%2Bx))+%2B+(1-p)+*+log((1-p)%2F(1-(p%2Bx)))+-+2*x**2,+x)
     We can verify that $g'(0) = -1 + 1 - 4 \times 0 = 0$, and it has the sign of $-x$ on its domain, as $p + x - 1 < 0$ because $x < 1 - p$, and $p + x > 0$.
     So $g'$ is first positive then negative, so $g$ is increasing then decreasing on its domain, with a change in its monotony at $x=0$, and thus it indeed has a unique minimizer.
