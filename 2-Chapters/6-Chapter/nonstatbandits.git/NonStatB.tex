@@ -400,10 +400,10 @@ As explained in in Section~\ref{par:2:normalizationTrick}, our work can be appli
 \subsection{Presentation of the test}\label{sub:6:presentationOfGLRTest}
 
 If the samples $(X_t)$ were all drawn from a Bernoulli distribution, this change-point detection problem introduced above would reduce to a parametric sequential test of
-\[\cH_0 : (\exists \mu_0: \forall i\in\N, X_i \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_0)),\]
+$\cH_0 : (\exists \mu_0: \forall i\in\N, X_i \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_0))$,
 against the alternative
-\[\cH_1 : (\exists \mu_0 \neq \mu_1, \tau \in \N^*: \ \  X_1, \ldots, X_\tau \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_0) \ \ \text{and} \ \ X_{\tau+1}, X_{\tau+2}, \ldots \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_1)).\]
-
+$\cH_1 : (\exists \mu_0 \neq \mu_1, \tau \in \N^*: \ \  X_1, \ldots, X_\tau \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_0) \ \ \text{and} \ \ X_{\tau+1}, X_{\tau+2}, \ldots \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_1))$.
+%
 The Generalized Likelihood Ratio statistic for this test is defined by
 \begin{equation}\label{eq:6:firstDefGLRT}
     \GLR(n) :=\frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_n ; \mu_0)},
@@ -412,11 +412,8 @@ The Generalized Likelihood Ratio statistic for this test is defined by
 where $\ell(X_1, \ldots, X_n ; \mu_0)$ and $\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)$ respectively denote the \emph{likelihoods} of the first $n$ observations under a model in $\cH_0$ and $\cH_1$.
 High values of this statistic tend to indicate rejection of $\cH_0$.
 %
-By using the form of the likelihood for Bernoulli distributions, this statistic can be written with the binary relative entropy $\kl$, defined for $x,y\in[0,1]$ (with the usual convention that $t \log(t) = 0$ if $t=0$).
-%
-\begin{equation}\label{eq:6:BernoulliDivergence}
-    \kl(x,y) := x \ln\left(\frac{x}{y}\right) + (1-x)\ln\left(\frac{1-x}{1-y}\right).
-\end{equation}
+By using the form of the likelihood for Bernoulli distributions, this statistic can be written with the binary relative entropy $\kl$, defined for $x,y\in[0,1]$ (with the usual convention that $t \log(t) = 0$ if $t=0$),
+$\kl(x,y) := x \ln\left(\frac{x}{y}\right) + (1-x)\ln\left(\frac{1-x}{1-y}\right)$
 %
 Indeed, we show below
 % in Appendix~\ref{app:6:GLR_with_kl}
@@ -425,7 +422,7 @@ that in any one-dimensional exponential family, we have
     \log \GLR(n) = \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right].
 \end{equation}
 %
-where for $k \leq k'$, $\widehat{\mu}_{k:k'} := \frac{1}{k - k' + 1} \sum_{l=k}^{k'} X_l$ denotes the average of the observations $X_l$ collected between the instants $k$ and $k'$.
+where for $k \leq k'$, $\widehat{\mu}_{k:k'} := \frac{1}{k - k' + 1} \sum\limits_{l=k}^{k'} X_l$ denotes the average of the observations $X_l$ collected between the instants $k$ and $k'$.
 
 
 \begin{proof}
@@ -455,6 +452,7 @@ where for $k \leq k'$, $\widehat{\mu}_{k:k'} := \frac{1}{k - k' + 1} \sum_{l=k}^
 
     Now let us consider the nominator of the $\GLR(n)$ expression.
     We can again work with log-likelihoods, and so we have
+
     \begin{align*}
         & \log\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau) \\
         &= \sum_{i=1}^{\tau} X_i \log(\mu_0) + (1-X_i) \log(1-\mu_0) + \sum_{i=\tau+1}^n X_i \log(\mu_1) + (1-X_i) \log(1-\mu_1) \\
@@ -575,7 +573,7 @@ Lemma~\ref{lem:6:FalseAlarm} is presented for bounded distributions and is actua
 \end{equation}
 where $\phi_\mu(\lambda)$ is the $\mathrm{log}$ moment generating of some one-dimensional exponential family. The Bernoulli divergence $\kl(x,y)$ would be replaced by the corresponding divergence in that exponential family (which is the Kullback-Leibler divergence between two distributions of means $x$ and $y$).
 
-Let us go back to the Bernoulli case with divergence given in \eqref{eq:6:BernoulliDivergence}.
+Let us go back to the Bernoulli case with divergence $\kl(x,y)$.
 We first observe that
 \[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right) = \inf_{\lambda \in [0,1]}\left[s \times \kl\left(\widehat{\mu}_{1:s},\lambda\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\lambda\right)\right].\]
 Hence the probability of a false alarm occurring is upper bounded as
@@ -1073,6 +1071,8 @@ Note that from Assumption~\ref{ass:6:LongPeriodsGlobal}, as the period between t
 
 We now turn our attention to upper bounding the two terms $(A)$ and $(B)$ in \eqref{eq:6:GeneRegretBound}.
 
+\TODOL{Fix spacing issue!}
+
 
 \paragraph{Upper bound on term $(A)$.}
 
@@ -1360,7 +1360,7 @@ On this problem, while \MklUCB{} detects the same changes as \GLRklUCB, with lar
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=0.90\linewidth]{2-Chapters/6-Chapter/Images/Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1.pdf}
+    \includegraphics[width=1.00\linewidth]{2-Chapters/6-Chapter/Images/Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1.pdf}
     \caption{Locations of the detected change-points for four algorithms on Problem 1.}
     \label{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1}
 \end{figure}
@@ -1410,7 +1410,7 @@ For instance, after the change on arm $1$ (in \textcolor{red}{red}), the \emph{l
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=0.90\linewidth]{2-Chapters/6-Chapter/Images/Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2.pdf}
+    \includegraphics[width=1.00\linewidth]{2-Chapters/6-Chapter/Images/Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2.pdf}
     \caption{Locations of the detected change-points for four algorithms on Problem 2.}
     \label{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2}
 \end{figure}
@@ -1436,7 +1436,7 @@ It is interesting to say that this problem is inspired from Figure~3 of \cite{Ca
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=0.80\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_5.pdf}
+    \includegraphics[width=0.90\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_5.pdf}
     \caption{\textbf{Problem $3$}: $K=6$, $T=20000$, $C=19$ changes occur on most arms at $\Upsilon=8$ break-points.}
     \label{fig:6:Problem_5}
 \end{figure}
@@ -1452,7 +1452,7 @@ We observe below in Table~\ref{table:6:totalResults2} that they can suffer highe
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=0.80\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_4.pdf}
+    \includegraphics[width=0.90\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_4.pdf}
     \caption{\textbf{Problem $4$}: $K=3$, $T=5000$, $C=12$ changes occur on all arms at $\Upsilon=4$ break-points.}
     % \caption{\textbf{Problem 4}: $K=3$ arms with $T=5000$, $\Upsilon=4$ changes occur on all arms at a time (\ie, $C=12$).}
     \label{fig:6:Problem_4}
@@ -1472,7 +1472,7 @@ as shown in Figure~\ref{fig:6:Problem_6}.
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=0.90\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_6.pdf}
+    \includegraphics[width=0.95\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_6.pdf}
     \caption{\textbf{Pb $5$}: $K=5$, $T=100000$, $C=179$ changes occur on some arms at $\Upsilon=81$ break-points.}
     % \caption{\textbf{Problem 5}: $K=5$, $T=100000$, $\Upsilon=81$ changes occurring on some arms at every time ($C=179$).}
     \label{fig:6:Problem_6}
@@ -1635,7 +1635,7 @@ This illustrates the conjecture that classical algorithms can suffer linear regr
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=1.20\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/SP__K3_T5000_N1000__9_algos_pb1/main____env1-1_1316297932259102962.pdf}
+    \includegraphics[width=1.15\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/SP__K3_T5000_N1000__9_algos_pb1/main____env1-1_1316297932259102962.pdf}
     \caption{Mean regret as a function of time, $R_t$ ($1 \leq t \leq T = 5000$) for problem 1.}
     \label{fig:6:meanRegretPb1}
 \end{figure}
