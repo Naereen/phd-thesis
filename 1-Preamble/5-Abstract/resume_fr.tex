@@ -1,46 +1,130 @@
 \begin{resume_fr}
 
-Résumé de la thèse en français.
+% Résumé de la thèse en français.
 
 % ----------------------------------------------------------------------------
-\section*{Partie 1}
-\subsection*{Chapitre 1}
-\subsection*{Chapitre 2}
-\subsection*{Chapitre 3}
 
-% ----------------------------------------------------------------------------
-\section*{Partie 2}
-\subsection*{Chapitre 4}
-\subsection*{Chapitre 5}
-\subsection*{Chapitre 6}
+% Chapitre 1
+Dans cette thèse de doctorat, nous étudions les réseaux sans fil et les appareils reconfigurables qui peuvent accéder à des réseaux de radio intelligente, dans des bandes non licenciées et sans supervision centrale.
+Plus spécifiquement, nous considérons des réseaux de l'Internet des Objets (IoT), avec l'objectif d'augmenter la durée de vie de la batterie des appareils, en les équipant d'algorithmes d'apprentissage machine peu coûteux mais efficaces, qui leur permettent d'améliorer automatiquement l'efficacité de leurs communications sans fil (Chapitre~\ref{chapter:1}).
+% Chapitre 4
+Nous proposons différents modèles de réseaux IoT, et nous montrons empiriquement, par des simulations numériques et une validation expérimentale réaliste, le gain que peuvent apporter nos méthodes, qui utilisent l'apprentissage par renforcement (Chapitre~\ref{chapter:4}).
+% Chapitre 2
+Les différents problèmes d'accès au réseau sont modélisés avec des Bandits Multi-Armés (MAB, Chapitre~\ref{chapter:2}), mais leur analyse est difficile à réaliser,
+% , Chapitre~\ref{chapter:2}
+car il est difficile de prouver la convergence de nombreux appareils jouant à un jeu collaboratif sans communication aucune coordination, lorsque les appareils suivent tous un modèle d'activation aléatoire.
+% En effet, même le nombre de périphériques actifs à chaque instant est hautement imprévisible, rendant l'environnement non pas stationnaire et évoluant rapidement.
+% Chapitres 5 et 6
+Le reste de ce manuscrit étudie donc deux modèles restreints, d'abord des bandits multi-joueurs dans des problèmes stationnaires (Chapitre~\ref{chapter:5}), puis des bandits simple-joueurs non stationnaires (Chapitre~\ref{chapter:6}).
+% Chapitre 3
+Nous détaillons également une autre contribution, la bibliothèque Python open-source SMPyBandits pour des simulations numériques de problèmes MAB, qui couvre tous les modèles étudiés et d'autres (Chapitre~\ref{chapter:3}).
 
 
 % ----------------------------------------------------------------------------
 \section*{Contributions}
 
-Cette thèse aborde tous les points susmentionnés et propose différentes solutions pour chaque scénario.
-Les contributions importantes sont résumées ci-dessous :
+% Cette thèse aborde tous les points susmentionnés et propose différentes solutions pour chaque scénario.
+Nous pouvons énumérer les points suivants pour résumer les principales contributions de cette thèse :
+
+\TODOL{Finir de traduire}
 \begin{itemize}
-\item Item 1
-\item Item 2
-\item Item 3
-\item Item 4
+    \item
+    Nous présentons les concepts et les notations du problème des bandits à armes multiples dans le chapitre~\ref{chapter:2}, d'un point de vue mathématique.
+    Mais nous suivons également une approche didactique puisque nous utilisons une démonstration interactive en ligne conçue pour permettre à n'importe qui de jouer contre un petit problème de bandit depuis son navigateur, dans Section~\ref{par:2:interactiveDemoDemoDiscoverMAB}.
+
+    \item
+    Nous donnons une brève revue de la littérature sur les algorithmes stochastiques de bandit dans Section~\ref{sec:2:famousMABalgorithms}.
+
+    \item
+    Nous présentons le problème du choix de l'algorithme qu'un praticien devrait utiliser, ou de la sélection d'algorithme parmi la riche collection de différents MAB disponibles, dans la section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}.
+    Nous présentons un algorithme appelé \Aggr{} pour l'agrégation d'algorithmes comme solution en ligne au problème de sélection d'algorithmes, et des simulations numériques pour illustrer qu'il atteint des performances empiriques de pointe.
+    \cite{Besson2018WCNC}.
+    avec \textbf{Aggregateur} (WCNC 2018)
+
+    \item
+    Nous avons écrit la bibliothèque de simulation open-source la plus complète pour les problèmes MAB, appelée SMPyBandits, qui est publiée en ligne sous une licence open-source \cite{SMPyBandits,SMPyBanditsJMLR}.
+    Nous présentons en détail son architecture et ses fonctionnalités dans le chapitre~\ref{chapter:3}, ainsi que différents exemples de son utilisation.
+    Une documentation complète est disponible en ligne, ainsi que des instructions exhaustives pour reproduire les expériences utilisées dans la suite de cette thèse.
+
+    \item
+    Nous proposons différents modèles pour les réseaux IdO, dans le chapitre~\ref{chapter:4}, où les terminaux dotés de capacités radio cognitives peuvent implémenter des algorithmes MAB de leur côté, pour augmenter automatiquement la durée de vie de leur batterie et permettre à davantage de périphériques d'utiliser le même réseau tout en maintenant une haute qualité de service
+    \cite{Bonnefoi17,Besson2019WCNC,Bonnefoi2019WCNC}.
+    (CROWNCOM 2017, ICT demo 2018, WCNC 2019 et MOTIoN 2019)
+
+    \item
+    Nous avons implémenté une preuve de concept du modèle susmentionné \cite{Besson2018ICT}, et nous la présentons en détail dans Section~\ref{sec:4:gnuradio}. Nous avons réalisé une vidéo présentant notre démonstration, hébergée sur \texttt{\href{https://youtu.be/HospLNQhcMk}{youtu.be/HospLNQhcMk}}.
+
+    \item
+    Le code source des deux contributions susmentionnées est publié en ligne, ainsi que des instructions claires pour la reproduction de nos travaux.
+
+    \item
+    Nous formalisons le modèle du bandit multijoueur, et nous avons introduit trois variantes, dans le chapitre~\ref{chapter:5}.
+    Pour le cas de l'information de détection, nous proposons deux nouveaux algorithmes, et nous donnons une analyse pour notre algorithme \MCTopM{} pour montrer qu'il est d'ordre-optimal,
+    ainsi que des expériences numériques approfondies pour démontrer sa bonne performance par rapport au reste de la littérature.
+    Notre travail \cite{Besson2018ALT} a également donné une nouvelle impulsion à la recherche sur les bandits multi-joueurs, car certains travaux de recherche récents se sont construits sur nos résultats.
+
+    \item
+    Nous donnons également une revue détaillée de la littérature sur les différentes extensions du modèle MAB multi-joueurs, qui, selon nous, n'a jamais été écrit auparavant.
+    (ALT 2018, et 4-8 travaux inspirés de notre article depuis lors). Etat de l'art avec notre algorithme MCTopM + klUCB pour les bandits multi-joueurs "avec détection", état de l'art empirique avec notre approche simple (mais erronée) "égoïste" en cas de "non détection".
+
+    \item
+    Nous présentons également le modèle MAB stationnaire pièce par pièce, dans le chapitre~\ref{chapter:6}, et une analyse documentaire détaillée de la recherche sur le MAB non stationnaire \cite{Besson2019GLRT,Besson2019Gretsi}.
+    Suite à deux travaux récents, nous proposons un nouvel algorithme activement adaptatif pour le problème de station stationnaire pièce par pièce, \GLRklUCB, qui atteint des performances de pointe.
+    Revue de littérature sur les modèles et algorithmes non stationnaires, état de l'art de la station stationnaire à la pièce avec notre algorithme, test GLR + klUCB
+
+    \item
+    La dernière contribution de cette thèse est une revue de la littérature sur les cas d'utilisation possibles de la technique du doublement pour les problèmes MAB,
+    et une analyse unifiée et plus générique de deux familles de doubles tours.
+    Ceci a conduit à l'article \cite{Besson2018DoublingTricks}, qui est rapidement présenté en Annexe~\ref{app:2:DoublingTricks}, mais pas dans le texte principal de la thèse.
 \end{itemize}
 
 % ----------------------------------------------------------------------------
 \section*{Organisation du manuscrit}
 
 Ce manuscrit est organisé comme suit.
-Nous rappelons dans le \textbf{Chapitre \ref{chapter:1}} blabla.
 
-Dans le \textbf{Chapitre \ref{chapter:2}}, blabla.
+\begin{figure}[h!]
+    \centering
+    \resizebox{0.95\textwidth}{!}{
+    \begin{tikzpicture}[>=latex',line join=bevel,scale=2.25]
+        %
+        \node[align=center] (introduction) at (0,3.25) [rectangle,draw] {Chapitre~\ref{chapter:1}\\Introduction};
+        \node[align=center] (chapter2) at (0,2.25) [rectangle,draw] {Chapitre~\ref{chapter:2}\\Modèle bandit à plusieurs bras\\stochastique et stationnaire};
+        \node[align=center] (chapter3) at (2.5,2.25) [rectangle,draw] {Chapitre~\ref{chapter:3}\\SMPyBandits : bibliothèque de\\simulation pour MAB};
+        \node[align=center] (chapter4) at (-2.5,1) [rectangle,draw] {Chapitre~\ref{chapter:4}\\Deux modèles MAB\\pour les réseaux IoT};
+        \node[align=center] (chapter5) at (0,1) [rectangle,draw] {Chapitre~\ref{chapter:5}\\Modèle MAB\\Multi-joueurs};
+        \node[align=center] (chapter6) at (2.5,1) [rectangle,draw] {Chapitre~\ref{chapter:6}\\Modèle MAB\\Non-stationnaire};
+        \node[align=center] (conclusion) at (0,-0.25) [rectangle,draw] {Chapitre~\ref{chapter:conclusion}\\Conclusion générale};
+        %
+        \draw [color=black,thick,->] (introduction) to (chapter2);
+        \draw [color=black,thick,<->] (chapter2) to (chapter3);
+        \draw [color=black,thick,->] (chapter2) to (chapter4);
+        \draw [color=black,thick,->] (chapter2) to (chapter5);
+        \draw [color=black,densely dotted,<->]   (chapter4) to (chapter5);
+        \draw [color=black,densely dotted,->] -| (chapter3) to (chapter6);
+        \draw [color=black,densely dotted,<->]   (chapter5) to (chapter6);
+        \draw [color=black,thick,->] (chapter2) to (chapter6);
+        \draw [color=black,thick,->] (chapter4) to (conclusion);
+        \draw [color=black,thick,->] (chapter5) to (conclusion);
+        \draw [color=black,thick,->] (chapter6) to (conclusion);
+        %
+    \end{tikzpicture}
+    }
+    \caption{Organisation de la thèse : une carte de lecture. Tout chemin contenant le Chapitre~\ref{chapter:1}, le Chapitre~\ref{chapter:2}, au moins un des trois Chapitres~\ref{chapter:4}, \ref{chapter:5} et \ref{chapter:6}, et la Conclusion est une façon valide de lire cette thèse.}
+    \label{fig:1:organization}
+\end{figure}
 
-Dans le \textbf{Chapitre \ref{chapter:3}}, blabla.
+\TODOL{Finir de traduire}
+L'ordre de lecture du manuscrit peut être n'importe quel chemin descendant entre l'introduction dans le chapitre actuel~\ref{chapter:1}, et la conclusion dans le dernier chapitre~\ref{chapter:conclusion}.
+Comme le montre le graphique de la Figure~\ref{fig:1:organisation},
+la thèse est organisée en deux parties :
 
-Dans le \textbf{Chapitre \ref{chapter:4}}, blabla.
+Dans la partie~\ref{part:Introduction}, nous commençons par le Chapitre~\ref{chapter:2} où nous présentons les modèles MAB, les concepts et les notations utilisés dans tout ce document, et il est nécessaire à la lecture du reste du manuscrit.
+Par contre le Chapitre~\ref{chapter:3} présente notre bibliothèque de simulation SMPyBandits, et même si les Chapitres~\ref{chapter:2}, \ref{chapter:5} et \ref{chapter:6} utilisent la bibliothèque pour leurs simulations numériques, lire ce chapitre n'est pas obligatoire pour comprendre la suite du document.
 
-Dans le \textbf{Chapitre \ref{chapter:5}}, blabla.
-
-Dans le \textbf{Chapitre \ref{chapter:6}} blabla.
+La deuxième partie~\ref{part:MABIOT} contient ensuite trois chapitres, qui sont inclus à la fois dans l'ordre logique et chronologique, mais peuvent être lus presque indépendamment.
+Le Chapitre~\ref{chapter:4} commence par présenter différents modèles de réseaux IdO où les algorithmes MAB ont été utilisés avec succès. Nos deux modèles sont intéressants et proches de la réalité, mais ils se sont révélés trop généraux pour proposer une analyse mathématique de la bonne performance empirique des solutions envisagées.
+Pour cette raison, nous affaiblissons les modèles pour le reste du document,
+et les deux Chapitres~\ref{chapter:5} et \ref{chapter:6} étudient un modèle intermédiaire, situé entre le modèle MAB stationnaire à un joueur du chapitre~\ref{chapter:2} et les modèles de réseaux IdO du chapitre~\ref{chapter:4}.
 
 \end{resume_fr}
