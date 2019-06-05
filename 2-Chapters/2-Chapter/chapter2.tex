@@ -4,7 +4,14 @@
 \chapter{Stochastic Multi-Armed Bandits Models}
 \label{chapter:2}
 
-\TODOL{Abstract ici et plus court, et petite introduction ?}
+
+\paragraph{Abstract.}
+%
+In this chapter, we present the common base of all the models studied in this thesis: the multi-armed bandit (MAB) model, restricting to the single-player and stationary stochastic case. We focus on decision-making models with a finite number of resources, called arms, and on stochastic models, where an arm is associated with a one-dimensional distribution.
+%
+We formalize this MAB model, then we quote some of its important applications.
+We define the notion of regret of an algorithm, and quote important results from the literature. A short review of the most important families of MAB algorithms is then given.
+We conclude this chapter by discussing the question of online algorithm selection.
 
 \minitoc
 % Write miniTOC just after the title
@@ -12,45 +19,54 @@
 
 \newpage
 
-\paragraph{Abstract.}
-%
-In this chapter, we present the common base of all the models studied in this thesis:
-the multi-armed bandit (MAB) model,
-restricting to the single-player and stationary stochastic case.
-We focus on decision-making models with a finite number of resources, called arms, and on stochastic models, where an arm is associated with a one-dimensional distribution.
-In all this thesis, we only consider one-dimensional exponential families, and in particular Bernoulli distributions.
-%
-We quickly review the possible applications of bandits, that range from recommender systems and information retrieval to healthcare and finance. In the rest of this thesis, we focus on cognitive radio, an important field of research where bandits has already been applied with success in the last ten years.
 
-We then explain the main measure of performance used in this thesis, defined as the regret and written $R_T^{\cA}$ for algorithm $\cA$ and for horizon $T$. The regret compares the performance of the decision-making player and the oracle who knows in advance the best arm and always selects it.
-Other measures of performance, such as best-arm identification, are not used later on in this document.
-% , but they are also shortly discussed.
-%
-We explain the main theoretical result from previous works: a lower-bound on the regret of any algorithm, essentially showing that no algorithm can achieve sub-logarithmic regret on all problems, in this stochastic MAB model (\ie, $R_T^{\cA} = \Omega(\log(T))$).
+% ----------------------------------------------------------------------------
+\section{Introduction}
+\label{sec:2:introduction}
 
-We give an overview of the main families of algorithms designed to tackle stochastic MAB problems, and we mainly focus on the $\UCB_1$, \klUCB{} and Thompson sampling algorithms, as they are used in the rest of the manuscript.
+Multi-Armed Bandits (MAB) models were introduced by Thompson as early as in 1933 \cite{Thompson33}, and later studied from the 1950s by Robbins \cite{Robbins52} and others.
+This family of models was first proposed for clinical trials, and later applied to a wide range of different problems.
+Their name refers to one-armed bandits found in casinos, as shown in Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem} below.
+% The seminal paper by Lai and Robbins \cite{LaiRobbins85} was the first to introduce the measure of performance widely used in the literature, the notion of \emph{regret}, and to analyze a lower-bound on the performance of any algorithm against a fixed problem.
+% Since then, many efficient algorithms were proposed, XXX
+%
+% In all this thesis, we only consider one-dimensional exponential families, and in particular Bernoulli distributions.
+We formally define the model and the main notations used in all this document in Section~\ref{sec:2:notations}.
+%
+Multi-armed bandits have been applied to various fields, from recommender systems and information retrieval to healthcare and finance. We discuss some applications in Section~\ref{sec:2:applicationsofStochasticMAB}.
+In the rest of this thesis, we focus on cognitive radio, an important field of research where bandits has already been applied with success in the last ten years.
+
+% We then explain the main measure of performance used in this thesis, defined as the regret and written $R_T^{\cA}$ for algorithm $\cA$ and for horizon $T$. The regret compares the performance of the decision-making player and the oracle who knows in advance the best arm and always selects it.
+% Other measures of performance, such as best-arm identification, are not used later on in this document.
+% % , but they are also shortly discussed.
+% %
+% We explain the main theoretical result from previous works: a lower-bound on the regret of any algorithm, essentially showing that no algorithm can achieve sub-logarithmic regret on all problems, in this stochastic MAB model (\ie, $R_T^{\cA} = \Omega(\log(T))$).
+
+A rich research literature has produced many different algorithms tackling the MAB problem, as suggested by the length of the reference book \cite{LattimoreBanditAlgorithmsBook}.
+We give in Section~\ref{sec:2:famousMABalgorithms} an overview of the main families of algorithms designed to tackle stochastic MAB problems, and we mainly focus on the $\UCB_1$, \klUCB{} and Thompson sampling algorithms, as they are used in the rest of the manuscript.
 % We present SMPyBandits in the next Chapter~\ref{chapter:3}, a Python open-source library, designed to run numerical simulations of MAB problems, one of the main contributions of this thesis.
 % We use it to compare the empirical performances of the most famous and most efficient algorithms, in terms of regret and by evaluating them on different problems.
 % %
 % In the point-of-view of numerical simulations or real-world applications of bandits on embedded systems, one must also take care of two other measures of performance: time and memory complexities, which can vary greatly between different families of algorithms.
 % We also empirically compare different algorithms for these two measures in Section~\ref{sec:3:timeAndMemoryCosts}.
 %
-We then give regret upper-bounds of the two main algorithms used in this thesis, $\UCB_1$ and \klUCB, to highlight the difference between their finite-time regret upper-bounds. They are order-optimal as they attain a logarithmic regret.
+% We then give regret upper-bounds of the two main algorithms used in this thesis, $\UCB_1$ and \klUCB, to highlight the difference between their finite-time regret upper-bounds. They are order-optimal as they attain a logarithmic regret.
 % proving their order optimality.
 % (\ie, their regret upper-bound asymptotically matches the lower-bound up-to a constant factor).
 % Moreover, \klUCB{} is known to be optimal for a wide range of arms distributions.
 % A sketch of the proof of both results is given in Appendix.
 
-Finally, we explore the problem of algorithm selection: as there are many different algorithms, all having different qualities and properties, how one can decide which algorithm to use for a particular application?
+Finally, we explore in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} the problem of algorithm selection: as there are many different algorithms, all having different qualities and properties, how one can decide which algorithm to use for a particular application?
 We present one of the first contributions made during my PhD \cite{Besson2018WCNC}, consisting of an efficient algorithm for aggregating algorithms,
 and we illustrate its performance empirically.
 % , but no satisfactory theoretical result is given, as the bound we had hoped for has been proved unachievable since then.
 
 
-\paragraph{Publication.}
+\paragraph{About notations.}
 %
-The first Sections~\ref{sec:2:notations}, \ref{sec:2:applicationsofStochasticMAB}, \ref{sec:2:lowerUpperBoundsRegret} and \ref{sec:2:famousMABalgorithms} of this chapter are based on existing works,
-and Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is based on our article \cite{Besson2018WCNC}.
+We use in this thesis the usual notations from the MAB literature,
+% , and we follow closely the formalism of \cite{Kaufmann12PhD}, as well as \cite{Slivkins2019,LattimoreBanditAlgorithmsBook,Bubeck12}.
+and a summary is included in the Nomenclature, in Page~\pageref{chapter:nomenclature}.
 
 
 \paragraph{Main references for the curious reader.}
@@ -59,11 +75,11 @@ For more details and a more formal introduction to multi-armed bandits, we sugge
 Another excellent but reasonably short survey is the book by Bubeck and Cesa-Bianchi \cite{Bubeck12}, while the more recent book by Lattimore and Szepesv{\'a}ri \cite{LattimoreBanditAlgorithmsBook} is the most complete resource about bandit algorithms.
 Finally, we recommend \cite{bouneffouf2019survey} for a short but good survey on applications of MAB.
 
-\paragraph{About notations.}
+
+\paragraph{Publication.}
 %
-We use in this thesis the usual notations from the MAB literature,
-% , and we follow closely the formalism of \cite{Kaufmann12PhD}, as well as \cite{Slivkins2019,LattimoreBanditAlgorithmsBook,Bubeck12}.
-and a summary is included in the Nomenclature, in Page~\pageref{chapter:nomenclature}.
+The first Sections~\ref{sec:2:notations}, \ref{sec:2:applicationsofStochasticMAB}, \ref{sec:2:lowerUpperBoundsRegret} and \ref{sec:2:famousMABalgorithms} of this chapter are based on existing works,
+and Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is based on our article \cite{Besson2018WCNC}.
 
 
 % \newpage
@@ -73,12 +89,6 @@ and a summary is included in the Nomenclature, in Page~\pageref{chapter:nomencla
 \section{The stochastic Multi-Armed Bandit models}
 \label{sec:2:notations}
 
-
-Multi-Armed Bandits (MAB) models were introduced by Thompson as early as in 1933 \cite{Thompson33}, and later studied from the 1950s by Robbins \cite{Robbins52} and others.
-This family of models was first proposed for clinical trials, and later applied to a wide range of different problems.
-Their name refers to one-armed bandits found in casinos, as showed in Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem} below.
-% The seminal paper by Lai and Robbins \cite{LaiRobbins85} was the first to introduce the measure of performance widely used in the literature, the notion of \emph{regret}, and to analyze a lower-bound on the performance of any algorithm against a fixed problem.
-% Since then, many efficient algorithms were proposed, XXX
 
 
 A MAB is a model of a decision-making game, where a \emph{player} has to sequentially select one action in a (usually finite) set of actions, and only receives a (random) feedback about the selected action, also called a \emph{reward}.
@@ -271,10 +281,12 @@ We have to quote two important results on exponential families:
 \end{enumerate}
 
 \begin{defn}[Kullback-Leibler divergence]\label{def:2:KLDivergence}
+\begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
     The KL divergence between two distributions $d_1$ and $d_2$ is defined as
     \begin{equation}\label{eq:2:Kullback-LeiblerDivergenceExpFamily1}
         \KL\left(d_1, d_2\right) = \int d_1 \log\left(\frac{d_2}{d_1}\right) \lambda(\mathrm{d}x) = \E_{d_1} \left[ \log\left(\frac{d_2}{d_1}\right) \right] \in \mathbb{R}\cup\{\pm\infty\}.
     \end{equation}
+\end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{defn}
 
 Following this Definition~\ref{def:2:KLDivergence} for two distributions
@@ -458,11 +470,13 @@ We denote $\mu_k = \E[r_k(t)] \in \R$ the mean of the distribution of arm $k$ (i
 To define the regret, we first need to distinguish between \emph{optimal} and \emph{sub-optimal} arms.
 
 \begin{defn}\label{def:2:optimalSubOptimalArms}
+\begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
     % [Optimal and sub-optimal arms]
     Consider a bandit problem of $K$ arms with distributions of means $\bm{\mu}=\mu_1,\dots,\mu_k$.
     Denote $\mu^* = \max_k \mu_k$ the largest mean.
     The best arm can be non unique, and any arm $k$ having $\mu_k = \mu^*$ is said to be \emph{optimal},
     while arms satisfying $\mu_k < \mu^*$ are called \emph{sub-optimal}.
+\end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{defn}
 
 If the goal of the player is to maximize $\E\left[\sum_{t=1}^T r_{A(t)}(t)\right]$,
@@ -487,6 +501,7 @@ As the rewards from arm $k^*$ are \iid{} (as for all arms), and by linearity of 
 
 
 \begin{defn}[Regret]\label{def:2:regret}
+\begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
     For an algorithm $\cA$, a bandit problem of $K$ arms characterized by their means $\bm{\mu} = \mu_1,\dots,\mu_K$ and if $\mu^* = \max_k \mu_k$, then the \emph{(mean) regret} at horizon $T$ is $R_T^{\cA}$ and it is defined as
     %
     \begin{equation}
@@ -495,6 +510,7 @@ As the rewards from arm $k^*$ are \iid{} (as for all arms), and by linearity of 
         % = T \mu^* - \sum_{t=1}^T \E\left[ Y(t) \right]
         = T \mu^* - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right].
     \end{equation}
+\end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{defn}
 
 
@@ -508,11 +524,13 @@ The \emph{gap} between any arm $k\in[K]$ and an optimal arm is defined as $\Delt
 and thus we can write the following decomposition on the regret.
 
 \begin{lemma}[Regret decomposition]\label{lem:2:RegretDecomposition}
+\begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
     The (mean) regret $R_T^{\cA}$ can be decomposed as a sum of the number of selections of sub-optimal arms $k$, weighted by their gaps:
     \begin{equation}\label{eq:2:RegretDecomposition}
         R_T^{\cA} = \sum_{k=1}^K \Delta_k \; \E[ N_k(T) ]
         = \sum_{\substack{k=1,\dots,K\\\Delta_k > 0}} \Delta_k \; \E[ N_k(T) ].
     \end{equation}
+\end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 %
 \begin{proof}\label{proof:2:RegretDecomposition}
@@ -581,24 +599,29 @@ This means that an upper-bound is proven on the regret of algorithm $\cA$, that 
 
 
 \begin{theorem}\label{thm:2:firstLogTLowerBound}
+\begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
     No algorithm $\cA$ can achieve a (mean) regret $R_T^{\cA}(I) = \smallO{c_I \log(T)}$ for all problem instances $I \in \cI$,
     where this notation means that the ``constant'' $c_I$ can depend on the problem instance $I$ (\eg, on the means and on $K$) but not on the time horizon $T$.
+\end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
 We consider uniformly efficient\footnote{This notion is then extended to ``\emph{strongly uniformly efficient} algorithms'', in the multi-player case with Definition~\ref{def:5:DecentralizedUniformEfficiency}, where we also include a notion of (expected) fairness.} algorithms, to rule out algorithms achieving low regret on some problem instances while achieving linear regret on other instances.
 In particular, it is necessary to rule out algorithms that always pick the same arm, as on some problem instances such fixed-arm algorithms can achieve zero regret.
 
 \begin{defn}\label{def:2:uniformlyEfficientAlgorithm}
+\begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
     An algorithm $\cA$ is \emph{uniformly efficient} if its (mean) regret satisfies
     $R_T^{\cA}(I) = \smallO{C_{I,\alpha} T^{\alpha}}$,
     for any value $\alpha>0$ and any problem instance $I\in \cI$,
     where this notation means that the ``constant'' $C_{I,\alpha}$ can depend on the problem instance $I$ and on $\alpha$, but \emph{not} on the time horizon $T$.
+\end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{defn}
 
 This family is non-empty as it contains for instance the $\UCB_1$ algorithm, as its regret is proven to be logarithmic on any problem instance with bounded rewards (in Theorem~\ref{thm:2:UCBregretBound} below).
 Now we can state the second logarithmic lower-bound, for algorithms in this family:
 
 \begin{theorem}\label{thm:2:secondLogTLowerBound}
+\begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
     Let $\cA$ denote a uniformly efficient algorithm,
     and $I$ an arbitrary problem instance.
     For this instance,
@@ -607,11 +630,13 @@ Now we can state the second logarithmic lower-bound, for algorithms in this fami
     \begin{equation}
         \forall T \geq T_0, \;\;\; R_T^{\cA}(I) \geq C_I \log(T).
     \end{equation}
+\end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
 This third theorem specifies possible values of the constants $C_I$ for the two previous results.
 
 \begin{theorem}\label{thm:2:forSecondLogTLowerBound}
+\begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
     Let $\cA$ denote a uniformly efficient algorithm,
     and $I$ an arbitrary problem instance.
     \begin{itemize}
@@ -626,6 +651,7 @@ This third theorem specifies possible values of the constants $C_I$ for the two 
         $C_I = \sum\limits_{k: \Delta_k > 0} \frac{\Delta_k}{\KL(\mu_k, \mu^*)} - \varepsilon$.
         % \end{equation}
     \end{itemize}
+\end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
 Moreover, it is interesting to note that the second lower-bound of Theorem~\ref{thm:2:forSecondLogTLowerBound} can be directly used to design efficient algorithms\footnote{~Tracking this quantity, by using empirical estimates of the means, is used for instance in the OSSB algorithm proposed in \cite{Combes17}, which is proven to attain the lower-bound for a wider range of problems (for problems called structured stochastic bandits).}, as thanks to the regret decomposition given in Lemma~\ref{lem:2:RegretDecomposition} above, the expression of $C_I$ essentially says that any efficient algorithm
@@ -661,11 +687,13 @@ The following theorem is from \cite{Auer02NonStochastic}.
 For more details, we refer to Chapter~15 of \cite{LattimoreBanditAlgorithmsBook}.
 
 \begin{theorem}\label{thm:2:worstCaseLowerBound}
+\begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
     Fix the number of arms $K$, and the algorithm $\cA$.
     Then for any horizon $T$, there exists a problem instance $I_T$ on which the algorithm suffers a regret $R_T^{\cA}(I_T)$ that verifies
     \begin{equation}
         R_T^{\cA}(I_T) \geq \Omega(\sqrt{K T}).
     \end{equation}
+\end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
 Similarly to what is considered for the first lower-bound,
@@ -718,7 +746,7 @@ It is more interesting to study $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, the sum of
 %
 It is very satisfying to obtain a logarithmic switching cost for our algorithm \MCTopM-\klUCB{} in Chapter~\ref{chapter:5}, even if minimizing the switching cost was not one of our objective, and the bound we obtain on $SC^{\cA_1,\dots,\cA_M}(T)$ is just a consequence of our proof of the control we give on the regret $R^{\cA}(T)$.
 % - Switching cost? \cite{modiDemo2016} \cite{Koren17}
-On a more experimental note, it was showed in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-player bandits, \rhoRand, could be tuned to run in batches\footnote{~The batch bandit setting implies that all players use the same decisions for instance for $50$ consecutive times, and update their decisions only once every $50$ time steps. For more details, see \cite{modiDemo2016} for experiments on the multi-player case, or \cite{perchet2016,gao2019batched,kolnogorov2019multi} for theoretical developments on the single-player case.}, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret. While such ideas can interest a practitioner, they does not change the asymptotic behavior of $SC^{\cA_1,\dots,\cA_M}(T)$, which is $\Theta(\log(T))$ for any efficient policy.
+On a more experimental note, it was shown in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-player bandits, \rhoRand, could be tuned to run in batches\footnote{~The batch bandit setting implies that all players use the same decisions for instance for $50$ consecutive times, and update their decisions only once every $50$ time steps. For more details, see \cite{modiDemo2016} for experiments on the multi-player case, or \cite{perchet2016,gao2019batched,kolnogorov2019multi} for theoretical developments on the single-player case.}, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret. While such ideas can interest a practitioner, they does not change the asymptotic behavior of $SC^{\cA_1,\dots,\cA_M}(T)$, which is $\Theta(\log(T))$ for any efficient policy.
 
 
 % - Fairness ?
@@ -903,6 +931,7 @@ We note that this strategy can also achieve $R_T = \bigO{T^{2/3} (K \log(T))^{1/
 \end{proof}
 
 \begin{lemma}[Hoeffding's inequality]\label{lem:2:HoeffdingInequality}
+\begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
     Let $Z_1,\dots,Z_n$ be $n$ \iid{} samples from a Bernoulli distribution of parameter $\mu$, of empirical mean $\widehat{Z_n} = \frac{1}{n} \sum\limits_{i=1}^n Z_i$, Hoeffding's inequality gives both
     \begin{align}\label{eq:2:HoeffdingInequality}
         \begin{cases}
@@ -911,6 +940,7 @@ We note that this strategy can also achieve $R_T = \bigO{T^{2/3} (K \log(T))^{1/
             \forall x > \mu, \;\;\; & \bP(\widehat{Z_n} > x) \leq \exp(-2 n (x-\mu)^2).
         \end{cases}
     \end{align}
+\end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
 An extension of this strategy is to consider not a fixed time $T_0$ but a random time $\tau$ at which exploration stops.
@@ -989,6 +1019,7 @@ but we preferred to start with a simpler proof in the single-player stationary c
 What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret (if $\Delta=\min\limits_{k: \Delta_k>0} \Delta$).
 
 \begin{theorem}[Regret bound for $\UCB_1$]\label{thm:2:UCBregretBound}
+\begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
     For simplicity, we restrict to $\alpha=2$.
     For any instance $I$ with $K$ arms with bounded distributions in $[0,1]$,
     of means $\mu_1,\dots,\mu_k$, and any horizon $T>K$,
@@ -997,6 +1028,7 @@ What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal pr
         R_T^{\cA}(I) \leq \left(\sum_{k: \Delta_k>0} \frac{8}{\Delta_k}\right) \log(T) + \sum_{k: \Delta_k>0} \Delta_k \left(1 + \frac{\pi^2}{3}\right)
         = \bigO{ \left(\sum_{k: \Delta_k>0} \frac{8}{\Delta_k}\right) \log(T)}.
     \end{equation}
+\end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 %
 \begin{proof}\label{proof:2:UCBregretBound}
@@ -1706,11 +1738,13 @@ As bounded distributions in $[0,1]$ are sub-Bernoulli as well as $1/4$-sub-Gauss
 
 
 \begin{lemma}[Pinsker's inequality]\label{lem:2:Pinsker}
+\begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
     Let $p,q\in[0,1]$, and remember that the \emph{relative binary entropy} is defined as $\kl(p,q) = p \ln\left(\frac{p}{q}\right) + (1-p)\ln\left(\frac{1-p}{1-q}\right)$.
     Then for any $p,q\in[0,1]$, we have
     \begin{equation}\label{eq:2:Pinsker2}
         \kl(p,q) \geq 2 (p-q)^2.
     \end{equation}
+\end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
 \begin{proof}
