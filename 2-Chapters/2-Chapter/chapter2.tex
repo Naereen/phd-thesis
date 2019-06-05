@@ -349,6 +349,7 @@ Restless models remove this hypothesis, making them harder to track and solve.
 %
 Such models were less studied than stationary or adversarial models, but some interesting works focussed on Markov models in the last 10 years\footnote{~
 For instance, \cite{Melian15} proposed a cognitive radio model mixing MAB and Hidden Markov Models (HMM), solved by a mixed policy called UCB-HMM.}.
+A curious reader about Markov chains could start to read Chapter~3 of \cite{LattimoreBanditAlgorithmsBook} (Section~3.2) and then refer to the famous book \cite{Norris98}.
 
 
 % ----------------------------------------------------------------------------
@@ -393,7 +394,7 @@ MAB have been applied successfully to various decision making problems, like the
     and higher dimensional or more complex hyper-parameters can for instance be the entire architecture of a neural network.
 
 The different applications detailed above are still active research directions,
-and a curious reader can find other interesting applications of MAB models and algorithms in \cite{bouneffouf2019survey}.
+and a curious reader can find other interesting applications of MAB models and algorithms in \cite{bouneffouf2019survey}, such as game tree search or network routing in Section~1.2 of \cite{LattimoreBanditAlgorithmsBook}.
 
 
 \paragraph{Applications for Opportunistic Spectrum Access.}
@@ -629,6 +630,8 @@ and in particular it is the case of the algorithms used in this thesis, $\UCB_1$
 %
 Such bounds are valid in different settings, and in particular $\UCB_1$ is order-optimal for bounded rewards or one-dimensional exponential families,
 while Thompson sampling is optimal for bounded rewards, and \klUCB{} have been proven to be optimal for both cases.
+%
+For more details, we refer to Chapter~16 of \cite{LattimoreBanditAlgorithmsBook}.
 
 
 \paragraph{Worst-case lower-bound in $\Omega(\sqrt{T})$.}
@@ -647,6 +650,8 @@ Indeed, we can naively bound the regret by $R_T^{\cA} \leq (\max_k \Delta_k) T$,
 For this reason, the research literature has also been interested by another family of regret bounds, that are not problem-dependent but worst-case, or also called minimax \cite{Audibert2009minimax,audibert2010minimax} or problem-independent.
 Hence it is interesting to quote another lower-bound on the regret, that can bring useful information in such settings.
 The following theorem is from \cite{Auer02NonStochastic}.
+%
+For more details, we refer to Chapter~15 of \cite{LattimoreBanditAlgorithmsBook}.
 
 \begin{theorem}\label{thm:2:worstCaseLowerBound}
     Fix the number of arms $K$, and the algorithm $\cA$.
@@ -902,7 +907,8 @@ We note that this strategy can also achieve $R_T = \bigO{T^{2/3} (K \log(T))^{1/
 \end{lemma}
 
 An extension of this strategy is to consider not a fixed time $T_0$ but a random time $\tau$ at which exploration stops.
-This time $\tau$ must be a \emph{stopping time} in the sense that it is a measurable random variable, dependent of the past observations, as introduced by \cite{Wald45}. The strategy is then referred to as ``explore-then-commit'' (ETC), and the idea is to use a statistical test at every time step $t$, and stop as soon as enough samples were collected to effectively identify the best arm with a certain confidence level $\delta$.
+This time $\tau$ must be a \emph{stopping time}\footnote{See Chapter~3 of \cite{LattimoreBanditAlgorithmsBook}, and we use this notion again in Section~\ref{sec:6:GLRklUCB_Algorithm}.},
+in the sense that it is a measurable random variable, dependent of the past observations. The strategy is then referred to as ``explore-then-commit'' (ETC), and the idea is to use a statistical test at every time step $t$, and stop as soon as enough samples were collected to effectively identify the best arm with a certain confidence level $\delta$.
 Choosing $\delta \propto 1/T$ and using a lower-bound $d$ on the gaps typically lead to an order-optimal algorithm as shown in \cite{GarivierETC2016}.
 
 
@@ -1254,21 +1260,18 @@ Like for the $\varepsilon$-greedy policy, the parameter $\gamma$ can be constant
 %
 It was proved in \cite{Auer02NonStochastic} that Exp3 with constant temperature parameter $\gamma$ achieves $R_T = \bigO{\sqrt{K T \log(T)}}$ problem-independent regret,
 while using a decreasing sequence, such as $\gamma_t = \sqrt{\log(K) / K} \log(t) / t$ gives an order-optimal problem-independent regret upper-bound of $\bigO{\sqrt{K T}}$.
-For a short proof of this results as well as more details on Exp3, see \cite{Bubeck12}.
+A short proof of this results and more details on Exp3 are given in \cite{Bubeck12}.
 %
-% https://smpybandits.github.io/docs/Policies.Exp3PlusPlus.html
-Finally, it is worth mentioning the Exp3$^{++}$ algorithm, as a recent variant of Exp3, proposed by \cite{Seldin17},
-that uses an adaptive tuning of its parameters.
-It is anytime, and was proven to obtain good ``best of both world'' performances, meaning that it achieves $\cO(K\log(T)/\Delta^2)$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
-
+Many other policies have been proposed for adversarial bandits, like Follow-the-Perturbed-Leader or Follow-the-Regularized-Leader for linear adversarial bandits, but we do not study them in this thesis, and we refer to Parts~III and VI of \cite{LattimoreBanditAlgorithmsBook} for more details.
 
 
 % ----------------------------------------------------------------------------
 \textbf{Hybrid policies.}
 %
 As explained before, in the last few years, the MAB research community has been interested in finding algorithms which achieves both a problem-dependent logarithmic and a minimax upper-bounds.
-The first example is MOSS from \cite{Audibert2009minimax}, or \KLUCBpp{} in \cite{Menard17}.
-They are both index-based (see Algorithm~\ref{algo:2:indexPolicy}), using the following indexes:
+We present here some solutions that are index-based (see Algorithm~\ref{algo:2:indexPolicy}).
+The first example is MOSS from \cite{Audibert2009minimax}, or \KLUCBpp{} in \cite{Menard17},
+and they use the following indexes:
 \begin{align}\label{eq:2:indexes_for_MOSS_klUCBpp}
     U^{\mathrm{MOSS}}_k(t) &= \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \frac{\log\left(\frac{t}{K N_k(t)}\right)}{N_k(t)} } \right). \\
     U^{\KLUCBpp}_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{g(N_k(t), T, K)}{N_k(t)} \right\}.
@@ -1288,7 +1291,7 @@ then \klUCB-switch use the index defined as follows:
 %
 \begin{align}\label{eq:2:indexes_for_klUCBswitch}
     U^{\mathrm{MOSS}+}_k(t) &= \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \frac{\log\left(\frac{T}{K N_k(t)}\right)}{N_k(t)}} \right). \\
-    U^{\KLUCB+}_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{\log(T / (K N_k(t)))}{N_k(t)} \right\} \\
+    U^{\KLUCB+}_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{\log(\frac{T}{K N_k(t)})}{N_k(t)} \right\} \\
     U^{\klUCB\text{-}\mathrm{switch}}_k(t) &= \begin{cases}
         U^{\KLUCB+}_k(t) & \text{if } N_k(t) \leq f(T, K), \\
         U^{\mathrm{MOSS}+}_k(t) & \text{if } N_k(t) > f(T, K).
@@ -1304,6 +1307,12 @@ then \klUCB-switch use the index defined as follows:
 % Talk about these?
 % https://smpybandits.github.io/docs/Policies.OCUCB.html
 % https://smpybandits.github.io/docs/Policies.OSSB.html
+
+% https://smpybandits.github.io/docs/Policies.Exp3PlusPlus.html
+Finally, it is worth mentioning the Exp3$^{++}$ algorithm, as a recent variant of Exp3, proposed by \cite{Seldin17},
+that uses an adaptive tuning of its parameters.
+It is anytime, and it was also proven to obtain good ``best-of-both-world'' performance.
+% meaning that it achieves $\cO(K\log(T)/\Delta^2)$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
 
 
 % \subsection{A first numerical experiment on the example Bernoulli problem}
@@ -1329,9 +1338,10 @@ $\UCB_1$ (with $\alpha=1$),
 and Thompson sampling (with Beta posteriors and flat uniform priors).
 %
 
-We first give in Table~\ref{table:2:oneShotResult} the cumulated rewards as well as the estimated regret\footnote{~First, the rewards are computed as $\frac{1}{N} \sum_{j=1}^N [ \sum_{t=1}^T r^{(j)}_{A(t)}(t) ]$, where $r^{(j)}_{k}(t)$ means the reward stream of the different runs $j=1,\dots,N$. Then the estimated regret is \emph{not} computed as $\frac{1}{N} \sum_{j=1}^N [ \sum_{t=1}^T r^{(j)}_{k^*}(t) - r^{(j)}_{A(t)}(t) ]$ (as it could be negative), but as $\mu^* T - \frac{1}{N} \sum_{j=1}^N [ \sum_{k=1}^K \mu_k N^{(j)}_{k}(T) ]$. We noted in a remark after the proof of Lemma~\ref{lem:2:RegretDecomposition} (in page~\pageref{remark:2:moreAccurateCountofRegretForSimulations}) that this later formula is a more accurate empirical estimate of the regret.}
+We first give in Table~\ref{table:2:oneShotResult} the cumulated rewards as well as the estimated regret\footnote{~First, the rewards are computed as $\frac{1}{N} \sum_{j=1}^N [ \sum_{t=1}^T r^{(j)}_{A(t)}(t) ]$, where $r^{(j)}_{k}(t)$ means the reward stream of the different runs $j=1,\dots,N$. Then the estimated regret is \emph{not} computed as $\frac{1}{N} \sum_{j=1}^N [ \sum_{t=1}^T r^{(j)}_{k^*}(t) - r^{(j)}_{A(t)}(t) ]$, as this first formula could give a negative regret and is more noisy, but as $\mu^* T - \frac{1}{N} \sum_{j=1}^N [ \sum_{k=1}^K \mu_k N^{(j)}_{k}(T) ]$, as this later formula gives a more robust estimator, as noted the proof of Lemma~\ref{lem:2:RegretDecomposition} (in page~\pageref{remark:2:moreAccurateCountofRegretForSimulations} above).}
 of the different algorithms, \emph{for one simulation}.
-Then in Table~\ref{table:2:meanResults} we show the results of the average on $N=1000$ independent runs.
+%
+It shows that the performance can be \textcolor{red}{very random}, as on both cases the pure exploitation strategy was very lucky and obtains close-to-optimal performance, even though we proved that it suffers from a linear mean regret.
 
 % Final ranking for this environment #0 : (using more accurate estimate of the regret)
 % - Policy 'Pure exploration'     was ranked      7 / 7 for this simulation
@@ -1398,10 +1408,26 @@ Then in Table~\ref{table:2:meanResults} we show the results of the average on $N
                 & $6949$ & $44.2$ \\
             \hline
         \end{tabular}
-        \caption{Cumulated rewards and regret, for horizons $T=100$ and $T=10000$, \emph{for only one run of the simulation}, for different algorithms. \textcolor{red}{It is very random}, see Table~\ref{table:2:meanResults} for average results on $N=1000$ runs, on both cases the pure exploitation was very lucky and obtains close-to-optimal performance.}
+        \caption{Cumulated rewards and regret, for horizons $T=100$ and $T=10000$, \emph{for only one run of the simulation}, for different algorithms.}
         \label{table:2:oneShotResult}
     \end{small}  % WARNING
 \end{table}
+
+Then in Table~\ref{table:2:meanResults} we show the results of the average on $N=1000$ independent runs.
+%
+%
+We also include in Figures
+% \ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT100N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT100N1000},
+\ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000} below the mean cumulated rewards and mean regret as functions of the current time step $t$, for $T=10000$ (and $N=1000$).
+The reward of the best arm is also plotted in Figure~\ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, and it serves as an \emph{upper-bound} to illustrate convergence\footnote{~Conversely, we also add the Lai \& Robbins' logarithmic \emph{lower-bound} on regret ($C_I \log(t)$ from case 2 of Theorem~\ref{thm:2:forSecondLogTLowerBound}) on the regret plot in Figure~\ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}. It should not be surprising that the black line of the lower-bound is \emph{above} the values of the regret as the lower-bound is only asymptotic.}
+of the average cumulated reward (\ie, $\frac{1}{t} \sum\limits_{s=1}^t r_{A(s)}(s)$), which should converge to $\mu^*$ when $t\to\infty$ (or $t\toT$) for efficient algorithms.
+%
+We can clearly identify the behavior of the different strategies:
+the three efficient strategies indeed achieve a sub-linear regret, that looks logarithmic as supported by the theory,
+while the naive strategies achieve linear regret.
+The two simple strategies also achieve sub-linear regret but are less efficient:
+both $\varepsilon$-greedy and Explore-then-Commit starts as pure exploration, respectively until $\varepsilon_0/t$ becomes smaller than $1$ and until $t > T_0$, then they usually identify correctly the best arm and start to catch up with the best policies.
+
 
 % Final ranking for this environment #0 : (using more accurate estimate of the regret)
 % - Policy 'Pure exploration'     was ranked      7 / 7 for this simulation
@@ -1505,18 +1531,6 @@ Then in Table~\ref{table:2:meanResults} we show the results of the average on $N
 	\label{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}
 \end{figure}
 
-We also include in Figures
-% \ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT100N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT100N1000},
-\ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000} below the mean cumulated rewards and mean regret as functions of the current time step $t$, for $T=10000$ for $N=1000$ independent runs.
-The reward of the best arm is also plotted in Figure~\ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, to illustrate convergence of the average reward $\frac{1}{t} \sum\limits_{s=1}^t r_{A(s)}(s)$, which should converge to $\mu^*$ when $t\to\infty$ (or $t\toT$) for efficient algorithms.
-Conversely, we also add the Lai \& Robbins' logarithmic lower-bound on regret ($C_I \log(t)$ from case 2 of Theorem~\ref{thm:2:forSecondLogTLowerBound}) on the regret plot in Figure~\ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}.
-%
-We can clearly identify the behavior of the different strategies:
-the three efficient strategies indeed achieve a sub-linear regret, that looks logarithmic as supported by the theory,
-while the naive strategies achieve linear regret.
-The two simple strategies also achieve sub-linear regret but are less efficient:
-both $\varepsilon$-greedy and Explore-then-Commit starts as pure exploration, respectively until $\varepsilon_0/t$ becomes smaller than $1$ and until $t > T_0$, then they almost always correctly identify the best arm and start to catch up with the best policies.
-
 
 \TODOL{Décrire les résultats !}
 
@@ -1528,7 +1542,11 @@ focussing on algorithms designed and analyzed for the single-player stationary a
 Except the naive and simple strategies given as introductory examples, most of the policies presented above are order-optimal for Bernoulli distributed problems or bounded rewards (or one-dimensional exponential families),
 and some of them are known to be optimal in different settings.
 %
+To clearly understand the different in their empirical behaviors, we illustrated the performance of two naive and two simple strategies against three efficient ones, on the example of Bernoulli-distributed problem used for the online demonstration from Section~\ref{sec:2:notations} (see Figures~\ref{fig:2:example_of_a_5_arm_bandit_problem} and \ref{fig:2:example_of_a_5_arm_bandit_problem__step100}).
+This also serves as a first example of numerical simulation performed with our library SMPyBandits, before the large-scale experiments of Section~\ref{sec:3:reviewSPAlgorithms} below.
+%
 In the rest of this thesis, we mainly use the $\UCB_1$ or Thompson sampling algorithms when simplicity is favored (\ie, Chapter~\ref{chapter:4}), and the \klUCB{} algorithm when optimality is important and where we give mathematical developments (\ie, Chapters~\ref{chapter:5} and \ref{chapter:6}).
+
 
 % \newpage
 
@@ -1622,7 +1640,7 @@ and use the aggregation of $\cA_1,\dots,\cA_N$ when facing the unknown problem.
 % Include here the discussion about expert aggregation and my \textbf{Aggregator} algorithm, see https://hal.inria.fr/hal-01705292
 
 
-\newpage  % FIXME
+\newpage  % WARNING ?
 
 % ----------------------------------------------------------------------------
 \section{Conclusion}
