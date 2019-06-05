@@ -230,7 +230,8 @@ while in the literature, the Bernoulli distribution is the most common case of f
 Continuous-valued distributions with finite support also included truncated versions of infinitely supported distributions, in particular \emph{truncated} Gaussian are used for numerical experiments in lots of research articles.
 
 % Just bounded, in $[a,b]$ but without loss of generality in $[0,1]$ etc.
-\paragraph{The normalization trick.}\label{par:2:normalizationTrick.}
+\paragraph{The normalization trick.}
+\label{par:2:normalizationTrick}
 %
 If the player knows that reward are bounded in an interval $[a,b]$, and if she knows $a$ and $b$ (for $a<b$), then with no loss of generality we can restrict to the interval $[0,1]$, as if $r\in[a,b]$, the player can instead consider the normalized reward $r' = $ that lies in $[0,1]$.
 Note that this ``normalization trick'' is implemented for any policy in our library SMPyBandits, with the \texttt{lower} and \texttt{amplitude} optional arguments, respectively representing $a$ the lower-bound on rewards and $b-a$ the length of the interval of possible values of rewards.
@@ -809,7 +810,7 @@ Indeed consider $K=2$ Bernoulli arms of means $\mu_1=1/2$ and $\mu_2=\varepsilon
 As illustrated by the two previous examples, an efficient strategy needs to solve the trade-off between exploration and exploitation.
 The two following solutions both consist in splitting the $T$ time steps into $T_0$ steps of exploration and $T-T_0$ steps of exploitation.
 %  either in an alternative way or in a fixed way (``explore then exploit'').
-They are detailed in Algorithm~\ref{algo:2:naiveStrategies}.
+They are detailed in Algorithm~\ref{algo:2:simpleStrategies}.
 
 % https://smpybandits.github.io/docs/Policies.EpsilonGreedy.html
 -- The \textcolor{deeppurple}{$\varepsilon$-greedy strategy} consists in alternating exploration and exploitation at a certain ratio \cite{SuttonBarto2018,Bubeck12,LattimoreBanditAlgorithmsBook}.
@@ -856,7 +857,7 @@ Here again, an average of $T_0 \leq \varepsilon_0 \log(T)$ steps are spent on ex
             Observe a reward $r_{A(t)}(t)$, and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$
 		}
 		\caption{Simple efficient strategies: \textcolor{deeppurple}{$\varepsilon$-greedy} and \textcolor{deepgold}{Explore-then-Exploit}.}
-		\label{algo:2:naiveStrategies}
+		\label{algo:2:simpleStrategies}
 		% \end{small} % XXX remove if needed
 	\end{algorithm}
 	\end{framed}
@@ -999,7 +1000,8 @@ What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal pr
 \end{theorem}
 %
 \begin{proof}\label{proof:2:UCBregretBound}
-    \TODOL{J'aimerai bien rajouter des couleurs sur $k$ et $k^*$ partout plus bas ?}
+    \TODOL{J'aimerai bien rajouter des couleurs sur $k$ et $k^*$ partout plus bas ? si c'est bien fait, ça peut aider la lecture, par exemple \textcolor{darkgreen}{$k$} et \textcolor{gold}{$k^*$}.}
+    %
     As we focus on bounded distributions in $[0,1]$, for which Hoeffding's inequality gives \eqref{eq:2:HoeffdingInequality}, as stated above in Lemma~\ref{lem:2:HoeffdingInequality}.
     Thanks to the regret decomposition from Lemma~\ref{lem:2:RegretDecomposition}, we can focus on bounding $\E[N_k(T)]$ for any sub-optimal arm $k$.\\
     %
