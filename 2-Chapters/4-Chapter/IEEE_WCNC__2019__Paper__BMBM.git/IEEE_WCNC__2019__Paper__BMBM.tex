@@ -362,8 +362,8 @@ We interpret this fact in two different situations.
 % \paragraph{First stage \UCB.}\label{sub:43:firstStageUCB}
 
 This first heuristic we propose is unaware of retransmission: the same channel is used for retransmissions.
-The \UCB{} algorithm is implemented independently by each device, and we present it in Algorithm~\ref{algo:43:UCB}.
-It is the same algorithm as the one presented in Chapter~\ref{chapter:2}, in Section~\ref{sub:2:IndexPolicies} in Algorithm~\ref{algo:2:indexPolicy} and \eqref{eq:UCB_index},
+The \UCB{} algorithm is implemented independently by each device, we denote it ``first-stage'' \UCB, and we present it in Algorithm~\ref{algo:43:UCB}.
+It is the same algorithm as the Algorithm~\ref{algo:2:indexPolicy} in Section~\ref{sub:2:IndexPolicies} (using the same \UCB{} indexes as we defined them in equation \eqref{eq:UCB_index}),
 but we write it again to make clear the difference with first transmission and retransmission of messages.
 %
 Note that a device using this first approach is only able to select a channel for the first transmission (using \UCB), and it uses the same channel for all the corresponding retransmissions of a packet (if retransmissions happen).
@@ -408,7 +408,7 @@ $A(t) = \arg\max_{1\leq k \leq K} U_k(t)$.
 % \end{small} % XXX remove if needed
 
 
-\paragraph{\textcolor{red}{Small warning about notations: local (device) time vs global (gateway) time}.}
+\textbf{\textcolor{red}{Small warning about notations: local (device) time vs global (gateway) time}:}
 %
 In all the algorithms and notations presented in this Section, the time steps $t$ do not refer to the global time steps (as seen from the gateway), but rather the current number of uplink transmissions (or retransmissions) that was carried out by the device.
 In other words, each device wakes up whenever it has to send some data, following its random emission process (here, we propose a Bernoulli process of small probability, \eg, $p=10^{-3}$), and when it woke up, it sends its packet, and will send again for at most $M$ times (\eg, $M=10$) until it receives an \Ack.

@@ -20,7 +20,7 @@ and appears as a robust approach to select on the run the best algorithm for any
 % ----------------------------------------------------------------------
 % \subsection{Aggregating bandit algorithms}\label{sub:25:aggregation}
 \textbf{Notations:}\label{sub:25:aggregation}
-
+%
 We assume to have $N \geq 2$ MAB algorithms, $\Alg_1, \dots, \Alg_N$,
 and let $\Alg_{\mathrm{aggr}}$ be an aggregation algorithm,
 which runs the $N$ algorithms in parallel (with the same slotted time), and use them to choose its channels based on a voting from their $N$ decisions.
@@ -107,6 +107,7 @@ Our proposed \Aggr{} is detailed in Algorithm~\ref{algo:25:Aggr}.
 	\end{figure}
 \end{small}
 
+\TODOL{Utiliser des rewards et pas des loss... Aucun autre moment dans la thèse ne parle de loss, c'est un peu louche d'en parler juste là, ça fait vraiment copié/collé de l'article...}
 
 At every time step, after having observed a loss $\ell_{A(t+1)}(t+1)$ for its chosen action $A(t+1)$,
 the algorithm updates the trust probabilities from $\pi^t$ to $\pi^{t+1}$ by
@@ -114,11 +115,11 @@ a multiplicative exponential factor (using the learning rate and the \emph{unbia
 %
 Only the algorithms $\Alg_a$ who advised the last decision get their trust updated, in order to trust more the ``reliable'' algorithms.
 
-The loss estimate is unbiased in the following sense. If one had access to the rewards $r_k(t+1)$ (or the losses $\ell_k(t+1)$) for all arms $k$, the loss incurred by algorithm $a$ at time $t+1$ would be $\widetilde{\ell_{a,t+1}} = \ell_{A_a(t+1)}(t+1)$. This quantity can only be observed for those algorithms for which $A_{a}^{t+1}=A(t+1)$. However, by dividing by the probability of observing this recommendation, one obtains an unbiased estimate of $\widetilde{\ell_{a,t}}$. More precisely, if we define the estimate by
+The loss estimate is unbiased in the following sense. If one had access to the rewards $r_k(t+1)$ (or the losses $\ell_k(t+1)$) for all arms $k$, the loss incurred by algorithm $a$ at time $t+1$ would be $\widetilde{\ell}_{a,t+1} = \ell_{A_a(t+1)}(t+1)$. This quantity can only be observed for those algorithms for which $A_{a}^{t+1}=A(t+1)$. However, by dividing by the probability of observing this recommendation, one obtains an unbiased estimate of $\widetilde{\ell_{a,t}}$. More precisely, if we define the estimate by
 \begin{equation}
-	\widehat{\ell_{a,t+1}} = \frac{\ell_{A_a(t+1)}(t+1)}{p_{A_a(t+1)}^{t+1}} \mathbbm{1}(A_a(t+1) = A(t+1))
+	\widehat{\ell}_{a,t+1} = \frac{\ell_{A_a(t+1)}(t+1)}{p_{A_a(t+1)}^{t+1}} \mathbbm{1}(A_a(t+1) = A(t+1))
 \end{equation}
-satisfies $\mathbb{E}[\widehat{\ell_{a,t+1}} | \mathcal{H}_t] = \widetilde{\ell_{a,t+1}}$, for all $a$, where the expectation is taken conditionally to the history of observations up to round $t$, $\mathcal{H}_{t}$. Observe that $\widetilde{\ell_{a,t+1}}=\ell^{t+1}$ for all algorithms $a$ such that $A_a(t+1)=A(t+1)$, and $\widetilde{\ell_{a,t+1}}=0$ otherwise.
+satisfies $\mathbb{E}[\widehat{\ell}_{a,t+1} | \mathcal{H}_t] = \widetilde{\ell}_{a,t+1}$, for all $a$, where the expectation is taken conditionally to the history of observations up to round $t$, $\mathcal{H}_{t}$. Observe that $\widetilde{\ell}_{a,t+1}=\ell^{t+1}$ for all algorithms $a$ such that $A_a(t+1)=A(t+1)$, and $\widetilde{\ell}_{a,t+1}=0$ otherwise.
 
 
 % - Precise some tricky points
@@ -137,7 +138,7 @@ It would not be so different, as there is a final renormalization step, and empi
 
 % ----------------------------------------------------------------------
 \textbf{Comparison with \ExpQ{}:}\label{sub:25:Exp4}
-
+%
 % - explain, but don't give pseudo-code ?
 The \ExpQ{} algorithm (see, e.g. \cite[Section 4.2]{Bubeck12})
 is similar to \Aggr{}, presented in Algorithm \ref{algo:25:Aggr},

@@ -44,6 +44,11 @@ We include numerical simulations to compare their proposals, and we present in d
 Finally, we review other extensions of the models, and give a overview of the current state-of-the-art.
 For some extensions, we discuss how to adapt our proposals and illustrate the empirical performances of such modification of \MCTopM-\klUCB{}, leaving theoretical analyses as future works.
 
+
+\paragraph{Publications.}
+%
+This chapter is mainly based on our article \cite{Besson2018ALT}.
+
 \paragraph{Outline.}
 %
 This chapter is organized as follows.
@@ -969,7 +974,9 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
   &= \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\;\; \exists m \in[M]:\; g_{m^*}^j(t) < g_k^j(t) \right).
   %
   \end{align*}
+
   Considering the relative position of the upper-confidence bound $g_{m^*}^j(t)$ and the corresponding mean $\mu_m^* = \mu_{m^*}$, one can write the decomposition
+
   \begin{align}
     \E_{\mu}[T_k^j(T)] &\leq
     \sum_{t=1}^T\Pr_{\bm{\mu}} \left( \exists m_1 \in [M]: \; g_{m_1^*}(t) < \mu_m^* \right) + \notag \\
@@ -1069,6 +1076,7 @@ happen a logarithmic number of times. The proof of this result is given below.
   The first term in the right hand side is $o(\log(T))$ by Lemma~\ref{lem:5:Fact1KLUCB}. To control the second term, we apply the same trick that led to the proof of Lemma~\ref{lem:5:Fact2KLUCB} in \cite{KLUCBJournal}.
   Letting $\kl^+(x, y) := \kl(x, y) \indic(x \geq y)$,
   and $\widehat{\mu}^j_{k,s}$ be the empirical mean of the $s$ first observations from arm $k$ by player $j$, one has
+
   \begin{align}
     \sum_{t=1}^T & \Pr\left(A^j(t) = k, g_{k}^j(t-1) \geq \mu_{k'}\right) \nonumber\\
     & =  \bE \left[ \sum_{t=1}^T\sum_{s=1}^{t-1} \indic{\left(A^j(t) = k , N^j_k(t-1) = s\right)}\indic{\left( s  \times \kl^+\left(\widehat{\mu}_{k,s}^j , \mu_k\right) \leq f(t)\right)} \right]\nonumber\\
@@ -1430,14 +1438,6 @@ Note that here and as in all this section we consider different algorithms that 
 %
 Performance is measured with the \emph{expected} regret up to horizon $T=10000$, estimated based on $1000$ repetitions on the same bandit instance.
 
-We report in Table~\ref{table:5:comparisonUCB_klUCB} below the results in terms of mean regret, plus or minus one standard deviation.
-The conclusions are three fold: first we observe for any of the compared algorithms, using \klUCB{} is always (much) better than using \UCB.
-Second we observe that our proposal \MCTopM{} is outperforming the state-of-the-art \RhoRand{} policy, and performs closely to the centralized (unrealistic) approach.
-Third we observe in the last column, when $M=K=9$, that \MCTopM{} is achieving constant regret, as we proved (the regret upper-bound of Theorem~\ref{thm:5:LogarithmicRegret_MCTopMklUCB} is $\cO(1)$ if there is no arms in \Mworst{} !), and it shows that the orthogonalization scheme proposed for \MCTopM{} is very efficient, especially in comparison to previous (state-of-the-art) approaches using ranks.
-%
-Additional experiments and illustrations are given below.
-We illustrate below the (empirical mean) regret $R_t$ as a function of time and not only results in terms of empirical mean regret $R_T$ at the end of the bandit game.
-
 % for N in 4 100; do for M in 3 6 9; do DEBUG=True SAVEALL=False NOPLOTS=True M=$M K=30 N_JOBS=-1 N=$N T=10000 make moremultiplayers; echo "Done for N=$N and M=$M"; read; done; echo "Done for N=$N"; read; done
 %
 \begin{table}[ht]
@@ -1471,6 +1471,14 @@ We illustrate below the (empirical mean) regret $R_t$ as a function of time and 
       \label{table:5:comparisonUCB_klUCB}
   \end{small}  % XXX
   \end{table}
+
+We report in Table~\ref{table:5:comparisonUCB_klUCB} above the results in terms of mean regret, plus or minus one standard deviation.
+The conclusions are three fold: first we observe for any of the compared algorithms, using \klUCB{} is always (much) better than using \UCB.
+Second we observe that our proposal \MCTopM{} is outperforming the state-of-the-art \RhoRand{} policy, and performs closely to the centralized (unrealistic) approach.
+Third we observe in the last column, when $M=K=9$, that \MCTopM{} is achieving constant regret, as we proved (the regret upper-bound of Theorem~\ref{thm:5:LogarithmicRegret_MCTopMklUCB} is $\cO(1)$ if there is no arms in \Mworst{} !), and it shows that the orthogonalization scheme proposed for \MCTopM{} is very efficient, especially in comparison to previous (state-of-the-art) approaches using ranks.
+%
+Additional experiments and illustrations are given below.
+We illustrate below the (empirical mean) regret $R_t$ as a function of time and not only results in terms of empirical mean regret $R_T$ at the end of the bandit game.
 
 
 The purpose of this work is not to optimize on the index policy, but rather propose new ways of using indices in a decentralized setting,

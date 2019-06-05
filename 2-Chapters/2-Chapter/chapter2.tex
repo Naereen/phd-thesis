@@ -5,7 +5,7 @@
 \label{chapter:2}
 
 
-\paragraph{Abstract.}
+\textbf{Abstract.}
 %
 In this chapter, we present the common base of all the models studied in this thesis: the multi-armed bandit (MAB) model, restricting to the single-player and stationary stochastic case. We focus on decision-making models with a finite number of resources, called arms, and on stochastic models, where an arm is associated with a one-dimensional distribution.
 %
@@ -1736,7 +1736,8 @@ to MAB models with either multidimensional rewards, like contextual bandits, or 
 % ----------------------------------------------------------------------------
 \subsubsection{Pinsker's inequality}\label{proof:2:Pinsker}
 
-We prove it below using simple real analysis arguments\footnote{~The proof is inspired by Lemma~10.2 from \cite{LattimoreBanditAlgorithmsBook} (version $1699$ of January $2019$).},
+We prove it below using simple real analysis arguments,
+% \footnote{~The proof is inspired by Lemma~10.2 from \cite{LattimoreBanditAlgorithmsBook} (version $1699$ of January $2019$).},
 %
 and for instance we use it again in Chapter~\ref{chapter:6}.
 %
@@ -1748,11 +1749,8 @@ As bounded distributions in $[0,1]$ are sub-Bernoulli as well as $1/4$-sub-Gauss
 \begin{lemma}[Pinsker's inequality]\label{lem:2:Pinsker}
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
     Let $p,q\in[0,1]$, and remember that the \emph{relative binary entropy} is defined as $\kl(p,q) = p \ln\left(\frac{p}{q}\right) + (1-p)\ln\left(\frac{1-p}{1-q}\right)$.
-    Then for any $p,q\in[0,1]$, we have
-    \begin{equation}\label{eq:2:Pinsker2}
-        \kl(p,q) \geq 2 (p-q)^2.
-    \end{equation}
-    \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
+
+    Then for any $p,q\in[0,1]$, $\kl$ verifies $\kl(p,q) \geq 2 (p-q)^2$.
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
@@ -1761,7 +1759,7 @@ As bounded distributions in $[0,1]$ are sub-Bernoulli as well as $1/4$-sub-Gauss
     We first observe that $g(0) = 0$, and we easily prove that $x=0$ is the unique minimizer of $g$ over its domain.
     By definition, $\kl$ is of class $\cC^1$ on its two variables, on $(0,1)$, so $g$ is of class $\cC^1$ on the interior of its domain, $(-p, 1-p)$.
     Let us compute its derivative, $g'(x) = (\frac{\partial \; \kl}{\partial 2})(p, p + x) - 4x$.
-    Simple calculations yield
+    Simple calculus yield
     \[ \left(\frac{\partial \; \kl}{\partial 2}\right) (p, p + x) = - \frac{p}{p+x} + \frac{1-p}{1-(p+x)} = -x \frac{(2(p + x) - 1)^2}{(p + x)(p + x - 1)}. \]
     % https://www.wolframalpha.com/input/?i=diff(p+*+log(p%2F(p%2Bx))+%2B+(1-p)+*+log((1-p)%2F(1-(p%2Bx)))+-+2*x**2,+x)
     We can verify that $g'(0) = -1 + 1 - 4 \times 0 = 0$, and it has the sign of $-x$ on its domain, as $p + x - 1 < 0$ because $x < 1 - p$, and $p + x > 0$.
