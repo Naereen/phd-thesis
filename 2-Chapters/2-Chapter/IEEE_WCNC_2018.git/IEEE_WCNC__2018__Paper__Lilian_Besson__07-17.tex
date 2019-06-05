@@ -19,7 +19,7 @@ and appears as a robust approach to select on the run the best algorithm for any
 
 % ----------------------------------------------------------------------
 % \subsection{Aggregating bandit algorithms}\label{sub:25:aggregation}
-\paragraph{Notations.}\label{sub:25:aggregation}
+\textbf{Notations:}\label{sub:25:aggregation}
 
 We assume to have $N \geq 2$ MAB algorithms, $\Alg_1, \dots, \Alg_N$,
 and let $\Alg_{\mathrm{aggr}}$ be an aggregation algorithm,
@@ -136,7 +136,7 @@ It would not be so different, as there is a final renormalization step, and empi
 
 
 % ----------------------------------------------------------------------
-\paragraph{Explanations of \Aggr{} versus \ExpQ{} .}\label{sub:25:Exp4}
+\textbf{Comparison with \ExpQ{}:}\label{sub:25:Exp4}
 
 % - explain, but don't give pseudo-code ?
 The \ExpQ{} algorithm (see, e.g. \cite[Section 4.2]{Bubeck12})
@@ -157,7 +157,7 @@ of updating $\pi^{t}$ multiplicatively as we do for our proposal, \ExpQ{} recomp
 $\exp(- \eta_t \widetilde{L}_a(t))$.
 
 
-\paragraph{How to choose the learning rates $(\eta_t)$?}
+\textbf{How to choose the learning rates $(\eta_t)$:}
 %
 The sequence of non-negative learning rates $(\eta_t)_{t \geq 1}$ used by \ExpQ{} can be arbitrary.
 It can be constant but should be non-increasing \cite[Theorem 4.2]{Bubeck12}.
@@ -191,12 +191,9 @@ The second one is divided in three groups:
 2 very bad arms ($\mu = 0.01, 0.02$), 5 average arms ($\mu = 0.3$ to $0.6$) and 3 very good arms ($\mu = 0.78, 0.8, 0.82$), and it is considered as a ``harder'' problem.
 The horizon is set to $T = 20000$ (but its value is unknown to all algorithms), and simulations are repeated $1000$ times, to estimate the expected regret.
 %
-This empirical estimation of the expected regret $R_T$ is plotted below, as a function of $T$, comparing some algorithms $\Alg_1,\dots,\Alg_N$ (for $N=6$), and their aggregation with \Aggr{} (displayed in orange bold),
+This empirical estimation of the expected regret $R_T$ is plotted below\footnote{~The Lai \& Robbins' logarithmic lower-bound \cite{LaiRobbins85} is also plotted. It corresponds to the second case in Theorem~\ref{thm:2:secondLogTLowerBound}. It is crucial to note that the lower-bound is only asymptotic, and as such one should not be surprised to see regret curves smaller than the lower-bound (\eg, for the easier Bernoulli problem in Figure~\ref{fig:25:EasyBernoulli}).},
+as a function of $T$, comparing some algorithms $\Alg_1,\dots,\Alg_N$ (for $N=6$), and their aggregation with \Aggr{} (displayed in orange bold),
 using the parameter-free learning rate sequence, $\eta_t = \log{N} / (t K)$.
-
-The Lai \& Robbins' logarithmic lower-bound \cite{LaiRobbins85} is also plotted.
-It corresponds to the second case in Theorem~\ref{thm:2:secondLogTLowerBound}.
-It is crucial to note that the lower-bound is only asymptotic, and as such one should not be surprised to see regret curves smaller than the lower-bound (\eg, for the easier Bernoulli problem in Figure~\ref{fig:25:EasyBernoulli}).
 
 Note that for each of the $1000$ simulations, we choose to generate all the rewards beforehand, \ie, one full matrix $(r_k(t))_{1\leq k \leq K, 1 \leq t \leq T}$ for every repetition, in order to compare the algorithms on the same realizations%
 \footnote{Similar plots and similar results are obtained if this choice is not made, but it makes more sense to compare them against the same randomization. Note that this choice is the default in SMPyBandits, but the other possibility is implemented as well, by changing \texttt{cache\_rewards} to \texttt{true} or \texttt{false} in the \texttt{configuration} dictionary. See Section~\ref{sub:3:miniConfigurationFileSMPyBandits} for explanations on this \texttt{configuration.py} file, or the online documentation.}
@@ -288,7 +285,7 @@ Regret bounds in several different settings are proved for the \CORRAL{} algorit
 %
 However, \Aggr{} always seems to have a (finite-horizon) logarithmic regret in all the experiments we performed,
 for both Bernoulli and non-Bernoulli problems (\eg, Gaussian, exponential and Poisson distributions).
-Further theoretical developments were left as future work.
+% Further theoretical developments were left as future work.
 
 \TODOL{Expliquer qu'en fait on NE PEUT PAS obtenir la borne qu'on espérait...}
 

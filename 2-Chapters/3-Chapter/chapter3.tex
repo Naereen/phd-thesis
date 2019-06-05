@@ -2,15 +2,38 @@
 
 \chapter{SMPyBandits: a state-of-the-art Python library to simulate MAB problems}
 \label{chapter:3}
-\minitoc
 
-
-\TODOL{Abstract ici et plus court, et petite introduction !}
-\TODOL{Analyser les expériences les plus récentes et décrire mieux en 3.2, et refaire toutes les courbes pour 3.2 et 3.3}
-
-\newpage
 \paragraph{Abstract.}
 %
+SMPyBandits is a Python package I have developed since the beginning of my PhD.
+It is designed to allow easy and fast numerical simulations on single-player and multi-players Multi-Armed Bandits (MAB) algorithms.
+%  and SMPyBandits is written in Python.
+This library is by far the most complete open-source implementation of state-of-the-art algorithms and different kinds of MAB models.
+%
+This chapter details the organization of the library, what it implements in terms of arm distributions, models, algorithms and visualizations.
+Then we use it to perform a numerical comparisons of the main state-of-the-art single-player MAB algorithms, as well as a study to compare time and memory costs of the main algorithms.
+
+\minitoc
+
+\newpage
+
+% \newpage
+% Write miniTOC just after the title
+\graphicspath{{2-Chapters/3-Chapter/Images/}}
+\graphicspath{{2-Chapters/3-Chapter/SMPyBandits_paper.git/plots/}}
+
+
+% ----------------------------------------------------------------------------
+\section{Introduction}
+\label{sec:3:Introduction}
+
+\TODOL{Analyser les expériences les plus récentes et décrire mieux en 3.2, et refaire toutes les courbes pour 3.2 et 3.3}
+
+% This chapter is intended as a long version of the paper presenting SMPyBandits that I wrote in Summer 2018, see https://hal.inria.fr/hal-01840022
+
+% SMPyBandits is the most complete open-source implementation of state-of-the-art algorithms and models of Multi-Armed Bandits.
+% It aims at being extensive, simple to use and maintain, with a clean and perfectly documented codebase. But most of all it allows fast prototyping of simulations and experiments, with an easy configuration system and command-line options to customize experiments while starting them (see below for an example).
+
 SMPyBandits is a Python package I have developed since the beginning of my PhD.
 It is designed to allow easy and fast numerical simulations on single-player and multi-players Multi-Armed Bandits (MAB) algorithms.
 %  and SMPyBandits is written in Python.
@@ -20,22 +43,7 @@ It allows fast prototyping of simulations, with an easy configuration system and
 Experiment results are saved in an optimized binary format (HDF5) as well as high quality plots of many useful visualizations.
 %
 More than two years of active development have shown how easy it can be to add new algorithms, new arm distributions, and new bandit models (\eg, Markov or non-stationary).
-It is hosted on GitHub, and uses the most recent technologies, by using two online services of continuous integration to run automated tests and build the documentation.
-
-This chapter details the organization of the library, what it implements in terms of arm distributions, models, algorithms and visualizations.
-Then we use it to perform a numerical comparisons of the main state-of-the-art single-player MAB algorithms, as well as a study to compare time and memory costs of the main algorithms.
-% \TODOL{Do we really have time/space to talk about Markov models?}
-% Finally, we introduce rested or restless Markov models and use the library to simulate and illustrate the performance of the classical \UCB{} algorithm.
-
-% \newpage
-% Write miniTOC just after the title
-\graphicspath{{2-Chapters/3-Chapter/Images/}}
-\graphicspath{{2-Chapters/3-Chapter/SMPyBandits_paper.git/plots/}}
-
-% This chapter is intended as a long version of the paper presenting SMPyBandits that I wrote in Summer 2018, see https://hal.inria.fr/hal-01840022
-
-% SMPyBandits is the most complete open-source implementation of state-of-the-art algorithms and models of Multi-Armed Bandits.
-% It aims at being extensive, simple to use and maintain, with a clean and perfectly documented codebase. But most of all it allows fast prototyping of simulations and experiments, with an easy configuration system and command-line options to customize experiments while starting them (see below for an example).
+It is hosted on GitHub, and uses the state-of-the-art development technologies, by using two online services of continuous integration to run automated tests and to build its online documentation.
 
 SMPyBandits stands for \emph{S}ingle and \emph{M}ulti \emph{P}layer \emph{Bandits} in P\emph{y}thon.
 The library does not aim at being blazing fast or optimized in terms of memory usage, as it comes with a pure Python implementation \cite{python}, and uses only standard open-source Python packages (\ie, no hard to install dependencies).
@@ -229,11 +237,12 @@ Making new simulations is very easy, one only needs to write a configuration scr
 A complete documentation, for each algorithm and the entire codebase, is available online at
 % even including the constants in the different configuration files:
 \texttt{\href{https://SMPyBandits.GitHub.io}{SMPyBandits.GitHub.io}}.
-It uses the Sphinx software \cite{sphinx}, and the content is directly written in the Python files as docstring, to allow users to have access to the documentation from within their IDE or the Python console.
-The most interesting component of the library is the many algorithms being implemented: for each of them, the documentation gives at least a reference to a research paper (\eg, \cite{Kaufmann12BUCB} for \texttt{BayesUCB}), as well as a bird-eye view of its behavior.
-For most algorithms, in particular for index policies, the internal variables of the implementation are carefully linked with the notations of each paper, and formulas explaining the way the algorithm selects its arm are usually given.
-Whenever it is appropriate, the documentation also includes warning or information about the empirical performance of costly algorithms.
-The documentation also contains extensive examples of any intermediate numerical functions, that are also used as tests (using \texttt{doctest.testmod} from the standard library).
+It uses the Sphinx software \cite{sphinx}, and the content is directly written in the Python files as docstrings, so users have access to the documentation from within their IDE or the Python console.
+The most interesting component of the library is the many MAB algorithms being implemented: for each of them, the documentation gives a reference to a research paper (\eg, \cite{Kaufmann12BUCB} for \texttt{BayesUCB}), as well as a bird-eye view of its behavior.
+For most algorithms, especially for index policies, the internal variables of the implementation are carefully linked to the notations of each paper, and formulas explaining the way the algorithm selects its arm are usually given.
+Whenever it is needed, we also included warnings or information about the empirical performance of the more costly algorithms.
+
+The documentation also contains extensive examples of all intermediate numerical functions, that are also used as tests (using \texttt{doctest.testmod} from the standard library).
 For example, Figures~\ref{fig:3:twoScreenshotsOfTheDocumentation} and \ref{fig:3:twoMoreScreenshotsOfTheDocumentation} below show four screenshots from the documentation.
 We show the main page, the list of algorithms in the \texttt{Policies} module, an example of the documentation of one algorithm (for the \klUCB-Switch algorithm from \cite{Garivier18}), and a page detailing the API and organization of the library as well as instructions to follow if someone wants to implement a new model or a new algorithm.
 
@@ -441,15 +450,13 @@ Algorithms that are ``not anytime'' use the exact value of the horizon $T$, and 
 For reproducibility, we also give in ``\texttt{typewriter font}'' the name of the corresponding class in the \texttt{Policies} module in SMPyBandits
 (\eg, $\UCB_1$ is \texttt{Policies.UCBalpha}).
 
-\TODOL{Si j'en parle plus dans le chapitre 2, je peux aller très vite sur cette partie !}
-
 \begin{itemize}
     \item Algorithm 1 is
-    an $\varepsilon$-greedy algorithm, as described in \cite{Bubeck12}, using $\varepsilon_t = \varepsilon_0 / t$, and $\varepsilon_0 = 0.1$ (chosen arbitrarily) (\texttt{EpsilonDecreasing}).
+    $\varepsilon$-greedy \cite{Bubeck12}, using $\varepsilon_t = \varepsilon_0 / t$, and $\varepsilon_0 = 0.1$ (chosen arbitrarily) (\texttt{EpsilonDecreasing}).
     It has a very small cost in terms of time and memory, but it usually achieves linear regret.
 
     \item Algorithm 2 is
-    an Explore-then-Commit algorithm from \cite{GarivierETC2016}, that knows the horizon, and a lower-bound on the gap between arms (chosen arbitrarily as $\delta=0.01$, valid for all problems) (\texttt{ETC\_KnownGap}).
+    Explore-then-Commit \cite{GarivierETC2016}, that knows the horizon, and a lower-bound on the gap between arms (chosen arbitrarily as $\delta=0.01$, valid for all problems) (\texttt{ETC\_KnownGap}).
     Similarly to $\varepsilon$-greedy, it has a very small footprint in terms of time and memory, but only obtain large (linear) regret.
 
     \item Algorithm 3 is
@@ -466,7 +473,7 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
     It is computationally more costly that \UCB, as at each time step $t$ and for each arm $k$, a convex optimization problem must be solved approximately, in order to compute the $K$ indexes.
     In practice, a few steps of a simple Newton method are enough to obtain a good numerical precision, and empirically we found that even in the worst cases \klUCB{} is no more than an order of magnitude slower than \UCB.
     % of more than 10 digits
-    \TODOL{Si on en pas parlé avant, ou après dans une annexe, je peux dire un mot ici à propos de l'implémentation en Cython ou en C des fonctions kl et indices kl-UCB !}
+    % \TODOL{Si on en pas parlé avant, ou après dans une annexe, je peux dire un mot ici à propos de l'implémentation en Cython ou en C des fonctions kl et indices kl-UCB !}
 
     \item Algorithm 6 is
     Thompson sampling from \cite{Kaufmann12Thompson}, using a Beta prior and posterior, initially uniform (\ie, $\mathrm{Beta}(1,1)$) (\texttt{Thompson}).
@@ -494,7 +501,7 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
     % Analyzing it in the generic case was found to be difficult, and is still an open problem.
     which is implemented using a binary tournament, written in a naive but efficient way
     (\ie, not using recursive functions, by using the \texttt{BESA} class with \texttt{''non\_recursive''=True}).
-    By using such binary tournament, the extension $K>2$ arms is costly in terms of both time and memory, as illustrated below, and suffers from an exponential blow-up when $K$ increases.
+    Despite this technic, the extension to $K>2$ arms is still costly in terms of both time and memory, as illustrated below, and blows-up exponentially  when $K$ increases.
 \end{itemize}
 
 We focussed here on the most well known algorithms, and two others that are efficient but less known (AdBandits and BESA),
@@ -1647,7 +1654,7 @@ On the other hand, when we plot a quantity ($R_T$, $\cT_T$, $\cM_T$) as a functi
 
 
 
-\newpage  % WARNING
+% \newpage  % WARNING
 % ----------------------------------------------------------------------------
 \section{Conclusion}
 \label{sec:3:conclusion}
