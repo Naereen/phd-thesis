@@ -620,14 +620,31 @@ supported!}
 % Moved below other usepackage definitions to fix PDFLaTeX footnote warning
 % Based on the suggestion by John Plaice
 
-\ifsetDVI
-  \special{papersize=\the\paperwidth,\the\paperheight}
-  \RequirePackage[unicode=true]{hyperref}  % extra option dvips
-\else
-  \RequirePackage[unicode=true]{hyperref}
+% \ifsetDVI
+%   \special{papersize=\the\paperwidth,\the\paperheight}
+%   \RequirePackage[unicode=true]{hyperref}  % extra option dvips
+% \else
+  % \RequirePackage[unicode=true]{hyperref}
+  % FIXME
+  \usepackage[
+    unicode=true,
+    plainpages=false,
+    pdfcenterwindow=true,
+    pdftoolbar=false,
+    pdfmenubar=false,
+    % pdftitle={Apprentissage statistique séquentiel multi-joueurs pour la radio intelligente},
+    % pdftitle={Applications d'algorithmes de bandits multi-bras (MAB) simple- et multi-joueurs pour les réseaux de l'Internet des Objets (IoT)},
+    % pdftitle={Multi-players sequential statistical learning for cognitive radio},
+    pdftitle={Applications of single- and multi-players multi-armed bandits algorithms for Internet of Things networks},
+    pdfauthor={Lilian Besson (CentraleSupélec campus de Rennes & Inria Lille)},
+    % linkcolor=black,
+    % citecolor=black,
+    % filecolor=black,
+    % urlcolor=black
+  ]{hyperref}
   \pdfpagewidth=\the\paperwidth
   \pdfpageheight=\the\paperheight
-\fi
+% \fi
 
 \if@print
   % For Print version

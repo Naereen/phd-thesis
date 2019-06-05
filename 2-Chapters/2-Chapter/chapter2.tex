@@ -159,7 +159,7 @@ The demo is hosted on my website, at \href{https://perso.crans.org/besson/phd/MA
 \begin{figure}[h!]  % [htbp]
     \centering
     \includegraphics[width=0.85\linewidth]{2-Chapters/2-Chapter/Images/example_of_a_5_arm_bandit_problem.png}
-    \caption{Screenshot of the demonstration available online on my website, for a current step of $t=24$.}
+    \caption[Screenshot of the demonstration for a current step of $t=24$.]{Screenshot of the demonstration available online on my website, for a current step of $t=24$.}
     \label{fig:2:example_of_a_5_arm_bandit_problem}
 \end{figure}
 
@@ -184,7 +184,7 @@ Other examples of such results, for different algorithms, and $T=100$ or $T=1000
 \begin{figure}[h!]  % [htbp]
     \centering
     \includegraphics[width=0.85\linewidth]{2-Chapters/2-Chapter/Images/example_of_a_5_arm_bandit_problem__step100.png}
-    \caption{Screenshot of the demonstration, at the end of the game after $T=100$ steps, where the player suffers from an empirical regret of $R^{\UCB_1}_T = \mu^* T - 56 = 0.7 T - 56 = 14$ after following the $\UCB_1$ algorithm.
+    \caption[Screenshot of the demonstration, at the end of the game after $T=100$ steps]{Screenshot of the demonstration, at the end of the game after $T=100$ steps, where the player suffers from an empirical regret of $R^{\UCB_1}_T = \mu^* T - 56 = 0.7 T - 56 = 14$ after following the $\UCB_1$ algorithm.
         You can try it on \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}}
     \label{fig:2:example_of_a_5_arm_bandit_problem__step100}
 \end{figure}
@@ -230,7 +230,7 @@ while in the literature, the Bernoulli distribution is the most common case of f
 Continuous-valued distributions with finite support also included truncated versions of infinitely supported distributions, in particular \emph{truncated} Gaussian are used for numerical experiments in lots of research articles.
 
 % Just bounded, in $[a,b]$ but without loss of generality in $[0,1]$ etc.
-\paragraph{The normalization trick.}\label{par:2:normalizationTrick}
+\paragraph{The normalization trick.}\label{par:2:normalizationTrick.}
 %
 If the player knows that reward are bounded in an interval $[a,b]$, and if she knows $a$ and $b$ (for $a<b$), then with no loss of generality we can restrict to the interval $[0,1]$, as if $r\in[a,b]$, the player can instead consider the normalized reward $r' = $ that lies in $[0,1]$.
 Note that this ``normalization trick'' is implemented for any policy in our library SMPyBandits, with the \texttt{lower} and \texttt{amplitude} optional arguments, respectively representing $a$ the lower-bound on rewards and $b-a$ the length of the interval of possible values of rewards.
@@ -241,7 +241,7 @@ Note that this ``normalization trick'' is implemented for any policy in our libr
 %
 % On one-dimensional exponential family...
 
-In all this thesis we restrict to distributions that have a certain form, and \textbf{we focus either on real-valued distributions lying in an exponential families or bounded distributions}.
+In all this thesis we restrict to distributions that have a certain form, and we focus either on real-valued distributions lying in an exponential families or bounded distributions.
 One-dimensional exponential families include Bernoulli and Poisson distributions, as well as Gaussian distributions with a fixed variance.
 Our main interest is Bernoulli distributions, but we prefer to present the more general notations of exponential families in one dimension.
 % We follow the notations from the course on statistical learning (Stat 260) taught in 2010 by Michael Jordan at the University of Berkeley \cite{JordanCourseStatBerkeley}, that are also the notations used for instance in Emilie Kaufmann's PhD in 2014 \cite{Kaufmann12PhD}.
@@ -322,7 +322,7 @@ it is interesting to illustrate this definition and the notations with two impor
 
 \paragraph{Hypotheses in this thesis.}
 %
-In the rest of this thesis, \emph{we only consider bounded rewards in the mathematical developments}, and we mostly focus on Bernoulli distributions, because they are usually the most relevant choice for the considered applications.
+In the rest of this thesis, \textbf{we only consider bounded rewards in the mathematical developments}, and we mostly focus on Bernoulli distributions, because they are usually the most relevant choice for the considered applications.
 First, we restrict for simplicity to Bernoulli distributions for the simulations shown in Chapter~\ref{chapter:3}, even if our library does implement all the distributions commonly found in the literature (including unbounded one-dimensional exponential families and even Markov models).
 In Chapter~\ref{chapter:4}, we only study models with binary rewards.
 %
@@ -417,7 +417,7 @@ This model was first introduced by Wassim Jouini during his PhD thesis,
 in \cite{Jouini09} and later studied in both \cite{Jouini10,Jouini12}.
 Proof-of-concepts using real-world radio hardware was first propsed in \cite{MoyWSR2014,RobertSDR2014}.
 
-\TODOL{Je sais pas à quel point je veux parler de la thèse de Navik? Peut-être que j'en aurai dit assez au Chapitre 1, et que là ça suffira...}
+\TODOL{Je sais pas à quel point je veux parler de la thèse de Navik? Peut-être que j'en aurai dit assez au Chapitre 1, et que là ça suffira..}
 In a second PhD thesis supervised by Christophe Moy, Navikkumar Modi studied the impact
 of using MAB algorithms to optimize channel selection
 on the battery life of a wireless device.
@@ -478,7 +478,7 @@ As the rewards from arm $k^*$ are \iid{} (as for all arms), and by linearity of 
 \begin{align*}
     R_T^{\cA}
     & = \E\left[ \sum_{t=1}^T (r_{k^*}(t) - r_{A(t)}(t)) \right]
-    = \E\left[ \sum_{t=1}^T r_{k^*}(t) \right] - \E\left[ \sum_{t=1}^T r_{A(t)}(t) \right] \\
+    = \E\left[ \sum_{t=1}^T \underbrace{r_{k^*}(t)}_{\text{\iid{} from $\nu_{k^*}$}} \right] - \E\left[ \sum_{t=1}^T r_{A(t)}(t) \right] \\
     & = T \times \E\left[ r_{k^*}(t=1) \right] - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right]
     = T \mu^* - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right].
 \end{align*}
@@ -759,7 +759,7 @@ A complete list of the implemented policies can be found on the following web pa
 \label{sub:2:naiveSimpleStrategies}
 
 
-\paragraph{Naive strategies: pure exploitation or pure exploration}
+\paragraph{Naive strategies: pure exploitation or pure exploration.}
 
 Let us first describe two naive strategies, that both fail dramatically.
 They are detailed in Algorithm~\ref{algo:2:naiveStrategies} below.
@@ -804,7 +804,7 @@ Indeed consider $K=2$ Bernoulli arms of means $\mu_1=1/2$ and $\mu_2=\varepsilon
 
 
 % ---------------------------------------------------
-\paragraph{Simple efficient strategies: $\varepsilon$-greedy and Explore-then-Exploit}
+\paragraph{Simple efficient strategies: $\varepsilon$-greedy and Explore-then-Exploit.}
 
 As illustrated by the two previous examples, an efficient strategy needs to solve the trade-off between exploration and exploitation.
 The two following solutions both consist in splitting the $T$ time steps into $T_0$ steps of exploration and $T-T_0$ steps of exploitation.
@@ -1612,7 +1612,7 @@ and use the aggregation of $\cA_1,\dots,\cA_N$ when facing the unknown problem.
 
 % We present a simple adaptive solution, that aggregates several learning algorithms in parallel and adaptively chooses which one to trust the most.
 
-% \paragraph{Outline}
+% \paragraph{Outline.}
 % This section is organized as follows.
 % First, we explain in Section~\ref{sub:25:aggregation} how to combine such algorithms for aggregation.
 % Then we present our proposed algorithm, called \Aggr, in Section~\ref{sub:25:Aggr},
