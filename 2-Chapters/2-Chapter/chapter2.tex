@@ -1305,6 +1305,109 @@ then \klUCB-switch use the index defined as follows:
 % https://smpybandits.github.io/docs/Policies.OCUCB.html
 % https://smpybandits.github.io/docs/Policies.OSSB.html
 
+
+\subsection{A first numerical experiment on the example Bernoulli problem}
+\label{sub:2:shortNumericalExperiments}
+
+We finish this Section~\ref{sec:2:famousMABalgorithms} by illustrating the performance of different algorithms, on the small MAB problem used in the online demonstration shown above (see Figures~\ref{fig:2:example_of_a_5_arm_bandit_problem} and \ref{fig:2:example_of_a_5_arm_bandit_problem__step100}).
+We consider $K=5$ arms following Bernoulli distributions, of means $\mu_1=0.6,\mu_2=0.2,\mu_3=0.55,\mu_4=0.7,\mu_5=0.5$ (unknown to the algorithms), and first an horizon $T=100$ (like in the online demo) then a large value of $T=10000$.
+The best arm is $\mu_4$ and the smallest gap is $\Delta = 0.1$, thus a lower-bound on the gaps is taken as $d=\Delta$.
+% (used to tune the two algorithms from Section~\ref{sub:2:naiveSimpleStrategies}).
+
+The different algorithms being compared are the following, in the order they were presented above:
+%
+first we include the pure-exploration and
+pure-exploitation algorithms,
+then the $\varepsilon$-greedy (with $\varepsilon_t=\varepsilon_0/t$ and $\varepsilon_0=6K/d^2=3000$) and
+Explore-then-Commit (with $T_0=K4/d^2 \log(d^2T/4)=2000\log(T/400)$) algorithms
+from Section~\ref{sub:2:naiveSimpleStrategies}, which both uses a tuning based on a prior knowledge of $\Delta$ (that gives large values of $\varepsilon_0$ and $T_0$ yielding linear regret for small horizon).
+%
+We then include efficient algorithms, that do not need prior knowledge of the $T$ (they are anytime) nor $\Delta$ (their are robust and efficient on unknown problems):
+$\UCB_1$ (with $\alpha=1$),
+\klUCB{} (with Bernoulli $\kl = \KL_{B}$),
+and Thompson sampling (with Beta posteriors and flat uniform priors).
+%
+
+We first give in Table~\ref{table:2:oneShotResult} the cumulated rewards as well as the regret of the different algorithms, \emph{for one simulation}.
+Then in Table~\ref{table:2:meanResults} we show the results of the average on $N=1000$ independent runs.
+
+\begin{table}[ht]
+    \begin{small}  % WARNING
+        \centering
+        \begin{tabular}{c|cc|cc}
+        \textbf{Algorithms} $\;$ \textbackslash $\;$ Horizon & Reward & Regret $T=100$ & Reward & Regret $T=10000$ \\
+            \hline
+            Pure exploration
+                & $XXX$ & $XXX$
+                & $XXX$ & $XXX$ \\
+            Pure exploitation
+                & $XXX$ & $XXX$
+                & $XXX$ & $XXX$ \\
+            \hline
+            $\varepsilon$-greedy
+                & $XXX$ & $XXX$
+                & $XXX$ & $XXX$ \\
+            Explore-then-Commit
+                & $XXX$ & $XXX$
+                & $XXX$ & $XXX$ \\
+            \hline
+            $\UCB_1$
+                & $XXX$ & $XXX$
+                & $XXX$ & $XXX$ \\
+            \klUCB{}
+                & $XXX$ & $XXX$
+                & $XXX$ & $XXX$ \\
+            Thompson sampling
+                & $XXX$ & $XXX$
+                & $XXX$ & $XXX$ \\
+            \hline
+        \end{tabular}
+        \caption{Cumulated rewards and regret, for horizons $T=100$ and $T=10000$, \emph{for only one run of the simulation}, for different algorithms.}
+        \label{table:2:oneShotResult}
+    \end{small}  % WARNING
+\end{table}
+
+\TODOL{Lancer les simulations !}
+
+\begin{table}[ht]
+    \begin{small}  % WARNING
+        \centering
+        \begin{tabular}{c|cc|cc}
+        \textbf{Algorithms} $\;$ \textbackslash $\;$ Horizon & Reward & Regret $T=100$ & Reward & Regret $T=10000$ \\
+            \hline
+            Pure exploration
+                & $XXX$ & $XXX$
+                & $XXX$ & $XXX$ \\
+            Pure exploitation
+                & $XXX$ & $XXX$
+                & $XXX$ & $XXX$ \\
+            \hline
+            $\varepsilon$-greedy
+                & $XXX$ & $XXX$
+                & $XXX$ & $XXX$ \\
+            Explore-then-Commit
+                & $XXX$ & $XXX$
+                & $XXX$ & $XXX$ \\
+            \hline
+            $\UCB_1$
+                & $XXX$ & $XXX$
+                & $XXX$ & $XXX$ \\
+            \klUCB{}
+                & $XXX$ & $XXX$
+                & $XXX$ & $XXX$ \\
+            Thompson sampling
+                & $XXX$ & $XXX$
+                & $XXX$ & $XXX$ \\
+            \hline
+        \end{tabular}
+        \caption{Cumulated rewards and regret, for horizons $T=100$ and $T=10000$, \emph{averaged over $N=1000$ independent simulations}, for different algorithms.}
+        \label{table:2:meanResults}
+    \end{small}  % WARNING
+\end{table}
+
+\TODOL{Décrire les résultats !}
+
+
 \paragraph{Summary.}
 %
 We gave an overview of the most well known families of algorithms for multi-armed bandits,
