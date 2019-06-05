@@ -1419,58 +1419,74 @@ Then in Table~\ref{table:2:meanResults} we show the results of the average on $N
 % - Policy 'Thompson sampling'    was ranked      3 / 7 for this simulation
 %         (last regret = 9.6005,  total regret = 9.6005,  total reward = 60.355,  total weighted selection = 60.399).
 
+% Final ranking for this environment #0 : (using more accurate estimate of the regret)
+% - Policy 'Pure exploration'     was ranked      7 / 7 for this simulation
+%         (last regret = 1891.1,  total regret = 1900.5,  total reward = 5099,    total weighted selection = 5099.5).
+% - Policy 'Pure exploitation'    was ranked      5 / 7 for this simulation
+%         (last regret = 649.98,  total regret = 653.2,   total reward = 6348.6,  total weighted selection = 6346.8).
+% - Policy '$\varepsilon$-greedy' was ranked      4 / 7 for this simulation
+%         (last regret = 540.54,  total regret = 541.9,   total reward = 6460.7,  total weighted selection = 6458.1).
+% - Policy 'Explore-then-Exploit' was ranked      6 / 7 for this simulation
+%         (last regret = 1207.1,  total regret = 1207.1,  total reward = 5794.9,  total weighted selection = 5792.9).
+% - Policy 'UCB($\alpha=1$)'      was ranked      3 / 7 for this simulation
+%         (last regret = 79.435,  total regret = 79.513,  total reward = 6920.9,  total weighted selection = 6920.5).
+% - Policy 'Bernoulli kl-UCB'     was ranked      2 / 7 for this simulation
+%         (last regret = 72.274,  total regret = 72.368,  total reward = 6927.5,  total weighted selection = 6927.6).
+% - Policy 'Thompson sampling'    was ranked      1 / 7 for this simulation
+%         (last regret = 49.366,  total regret = 49.402,  total reward = 6951.4,  total weighted selection = 6950.6).
+
 \begin{table}[ht]
     \begin{small}  % WARNING
         \centering
         \begin{tabular}{c|cc|cc}
-        \textbf{Algorithms} & $\frac{1}{N} \sum\limits_{j=1}^N [ \sum\limits_{t=1}^{T=100} r^{(j)}_{A(t)}(t) ]$ & $\frac{1}{N} \sum\limits_{j=1}^N [ R^{\cA,(j)}_{T=100} ]$ & $\frac{1}{N} \sum\limits_{j=1}^N [ \sum\limits_{t=1}^{T=10000} r^{(j)}_{A(t)}(t) ]$ & $\frac{1}{N} \sum\limits_{j=1}^N [ R^{\cA,(j)}_{T=10000} ]$ \\
+        \textbf{Algorithms} & $\frac{1}{N} \sum\limits_{j=1}^N \sum\limits_{t=1}^{T=100} r^{(j)}_{A(t)}(t)$ & $\frac{1}{N} \sum\limits_{j=1}^N R^{\cA,(j)}_{T=100}$ & $\frac{1}{N} \sum\limits_{j=1}^N \sum\limits_{t=1}^{T=10000} r^{(j)}_{A(t)}(t)$ & $\frac{1}{N} \sum\limits_{j=1}^N R^{\cA,(j)}_{T=10000}$ \\
             \hline
             Pure exploration
                 & $51$ & $19$
-                & $XXX$ & $XXX$ \\
+                & $5099$ & $1900$ \\
             Pure exploitation
                 & $62$ & $8.3$
-                & $XXX$ & $XXX$ \\
+                & $6349$ & $653$ \\
             \hline
             $\varepsilon$-greedy
                 & $51$ & $18.7$
-                & $XXX$ & $XXX$ \\
+                & $6460$ & $542$ \\
             Explore-then-Commit
                 & $57$ & $12.9$
-                & $XXX$ & $XXX$ \\
+                & $5795$ & $1207$ \\
             \hline
             $\UCB_1$
                 & $\mathbf{60}$ & $\mathbf{9.8}$
-                & $XXX$ & $XXX$ \\
+                & $6921$ & $79$ \\
             \klUCB{}
                 & $61$ & $9.3$
-                & $XXX$ & $XXX$ \\
+                & $6927$ & $72$ \\
             \hline
             Thompson sampling
                 & $\mathbf{60}$ & $\mathbf{9.6}$
-                & $XXX$ & $XXX$ \\
+                & $\mathbf{6951}$ & $\mathbf{49}$ \\
             \hline
         \end{tabular}
-        \caption{Cumulated rewards and regret, for horizons $T=100$ and $T=10000$, \emph{averaged over $N=1000$ independent simulations}, for different algorithms.}
+        \caption{Cumulated rewards and regret, for horizons $T=100$ and $T=10000$, \emph{averaged over $N=1000$ independent simulations} ($j=1,\dots,N$), for different algorithms.}
         \label{table:2:meanResults}
     \end{small}  % WARNING
 \end{table}
 
-% FIXME generate at the end of the simulation
-\begin{figure}[h!]  % [htbp]
-	% \centering
-	\includegraphics[width=1.00\linewidth]{meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT100N1000.pdf}
-	\caption{Mean cumulated rewards as function of the current time step $t$ for horizon $T=100$ and $N=1000$ independent runs, for different algorithms }
-	\label{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT100N1000}
-\end{figure}
+% % FIXME generate at the end of the simulation
+% \begin{figure}[h!]  % [htbp]
+% 	% \centering
+% 	\includegraphics[width=1.00\linewidth]{meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT100N1000.pdf}
+% 	\caption{Mean cumulated rewards as function of the current time step $t$ for horizon $T=100$ and $N=1000$ independent runs, for different algorithms }
+% 	\label{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT100N1000}
+% \end{figure}
 
-% FIXME generate at the end of the simulation
-\begin{figure}[h!]  % [htbp]
-	% \centering
-	\includegraphics[width=1.00\linewidth]{meanRegretAsFunctionOfTimeForDifferentAlgorithmsT100N1000.pdf}
-	\caption{Mean regret $R_t$ as function of $t$ for $T=100$ and $N=1000$.}
-	\label{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT100N1000}
-\end{figure}
+% % FIXME generate at the end of the simulation
+% \begin{figure}[h!]  % [htbp]
+% 	% \centering
+% 	\includegraphics[width=1.00\linewidth]{meanRegretAsFunctionOfTimeForDifferentAlgorithmsT100N1000.pdf}
+% 	\caption{Mean regret $R_t$ as function of $t$ for $T=100$ and $N=1000$.}
+% 	\label{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT100N1000}
+% \end{figure}
 
 
 % FIXME generate at the end of the simulation
@@ -1489,7 +1505,17 @@ Then in Table~\ref{table:2:meanResults} we show the results of the average on $N
 	\label{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}
 \end{figure}
 
-We also include in Figures~\ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT100N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT100N1000}, \ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000} below the mean cumulated rewards and mean regret as functions of the current time step $t$, for $T=100$ then $T=10000$ for $N=1000$ independent runs.
+We also include in Figures
+% \ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT100N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT100N1000},
+\ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000} below the mean cumulated rewards and mean regret as functions of the current time step $t$, for $T=10000$ for $N=1000$ independent runs.
+The reward of the best arm is also plotted in Figure~\ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, to illustrate convergence of the average reward $\frac{1}{t} \sum\limits_{s=1}^t r_{A(s)}(s)$, which should converge to $\mu^*$ when $t\to\infty$ (or $t\toT$) for efficient algorithms.
+Conversely, we also add the Lai \& Robbins' logarithmic lower-bound on regret ($C_I \log(t)$ from case 2 of Theorem~\ref{thm:2:forSecondLogTLowerBound}) on the regret plot in Figure~\ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}.
+%
+We can clearly identify the behavior of the different strategies:
+the three efficient strategies indeed achieve a sub-linear regret, that looks logarithmic as supported by the theory,
+while the naive strategies achieve linear regret.
+The two simple strategies also achieve sub-linear regret but are less efficient:
+both $\varepsilon$-greedy and Explore-then-Commit starts as pure exploration, respectively until $\varepsilon_0/t$ becomes smaller than $1$ and until $t > T_0$, then they almost always correctly identify the best arm and start to catch up with the best policies.
 
 
 \TODOL{Décrire les résultats !}
