@@ -523,7 +523,6 @@ and thus we can write the following decomposition on the regret.
         = \sum_{k=1}^K \sum_{t=1}^T \E \Bigl[ \E \left[ r_k(1) \right] \mathbbm{1}(A(t) = k) \Bigr] \\
         &= \sum_{k=1}^K \underbrace{\E \left[ r_k(1) \right]}_{\mu_k} \underbrace{\sum_{t=1}^T \E \left[ \mathbbm{1}(A(t) = k) \right]}_{= N_k(T)}
         % = \sum_{k=1}^K \mu_k \E \left[ \sum_{t=1}^T \mathbbm{1}(A(t) = k) \right]\\
-        %  XXX 
         = \sum_{k=1}^K \mu_k \E \left[ N_k(T) \right].
     \end{align*}
     %
@@ -533,15 +532,16 @@ and thus we can write the following decomposition on the regret.
 \end{proof}
 
 
-\textbf{Consequences of Lemma~\ref{lem:2:RegretDecomposition}.}
+\textbf{Consequences.}
 %
-Such decomposition of the regret is useful for at least two reasons:
+Such decomposition of the regret can be useful for at least two reasons:
 
 \begin{itemize}
     \item
 On the one hand, from a numerical simulation point-of-view, when we run a finite number of repetitions of the same stochastic experiment, if we want to compute and visualize the regret, we can either use the definition with the rewards, or the decomposition and simply sum the gaps $\Delta_k$ with the number of sub-optimal draws.
 Both quantities are indeed equal \emph{in expectation}, but with only a finite number of trajectories and observations, the first estimate is more noisy than the second one, since the randomness on the rewards is (partially) removed in the decomposition \eqref{eq:2:RegretDecomposition} (thanks to the conditioning on $O_t$ done in the proof).
 In our library SMPyBandits, we implement both estimators, and all values of regret used in this thesis are based on the one using the decomposition of Lemma~\ref{lem:2:RegretDecomposition}, because it gives faster convergence, and also ``smoother'' plots.
+\label{remark:2:moreAccurateCountofRegretForSimulations}
 
     \item
 On the other hand, this decomposition is necessary as theoretical analyses of the regret of (single-player) MAB algorithms are usually based on controlling the suboptimal draws $N_k(T)$ and not directly the regret $R_T^{\cA}$.
@@ -1306,7 +1306,8 @@ then \klUCB-switch use the index defined as follows:
 % https://smpybandits.github.io/docs/Policies.OSSB.html
 
 
-\subsection{A first numerical experiment on the example Bernoulli problem}
+% \subsection{A first numerical experiment on the example Bernoulli problem}
+\subsection{Comparison of the main algorithms on the Bernoulli problem of the online demonstration}
 \label{sub:2:shortNumericalExperiments}
 
 We finish this Section~\ref{sec:2:famousMABalgorithms} by illustrating the performance of different algorithms, on the small MAB problem used in the online demonstration shown above (see Figures~\ref{fig:2:example_of_a_5_arm_bandit_problem} and \ref{fig:2:example_of_a_5_arm_bandit_problem__step100}).
@@ -1328,75 +1329,125 @@ $\UCB_1$ (with $\alpha=1$),
 and Thompson sampling (with Beta posteriors and flat uniform priors).
 %
 
-We first give in Table~\ref{table:2:oneShotResult} the cumulated rewards as well as the regret of the different algorithms, \emph{for one simulation}.
+We first give in Table~\ref{table:2:oneShotResult} the cumulated rewards as well as the estimated regret\footnote{~First, the rewards are computed as $\frac{1}{N} \sum_{j=1}^N [ \sum_{t=1}^T r^{(j)}_{A(t)}(t) ]$, where $r^{(j)}_{k}(t)$ means the reward stream of the different runs $j=1,\dots,N$. Then the estimated regret is \emph{not} computed as $\frac{1}{N} \sum_{j=1}^N [ \sum_{t=1}^T r^{(j)}_{k^*}(t) - r^{(j)}_{A(t)}(t) ]$ (as it could be negative), but as $\mu^* T - \frac{1}{N} \sum_{j=1}^N [ \sum_{k=1}^K \mu_k N^{(j)}_{k}(T) ]$. We noted in a remark after the proof of Lemma~\ref{lem:2:RegretDecomposition} (in page~\pageref{remark:2:moreAccurateCountofRegretForSimulations}) that this later formula is a more accurate empirical estimate of the regret.}
+of the different algorithms, \emph{for one simulation}.
 Then in Table~\ref{table:2:meanResults} we show the results of the average on $N=1000$ independent runs.
+
+% Final ranking for this environment #0 : (using more accurate estimate of the regret)
+% - Policy 'Pure exploration'     was ranked      7 / 7 for this simulation
+%         (last regret = 20.9,    total regret = 20.9,    total reward = 46,      total weighted selection = 49.1).
+% - Policy 'Pure exploitation'    was ranked      1 / 7 for this simulation
+%         (last regret = 1.15,    total regret = 1.15,    total reward = 65,      total weighted selection = 68.85).
+% - Policy '$\varepsilon$-greedy' was ranked      6 / 7 for this simulation
+%         (last regret = 20.85,   total regret = 20.85,   total reward = 50,      total weighted selection = 49.15).
+% - Policy 'Explore-then-Exploit' was ranked      5 / 7 for this simulation
+%         (last regret = 15,      total regret = 15 ,      total reward = 49,      total weighted selection = 55).
+% - Policy 'UCB($\alpha=1$)'      was ranked      2 / 7 for this simulation
+%         (last regret = 10.3,    total regret = 10.3,    total reward = 63,      total weighted selection = 59.7).
+% - Policy 'Bernoulli kl-UCB'     was ranked      4 / 7 for this simulation
+%         (last regret = 12.4,    total regret = 12.4,    total reward = 56,      total weighted selection = 57.6).
+% - Policy 'Thompson sampling'    was ranked      3 / 7 for this simulation
+%         (last regret = 12.2,    total regret = 12.2,    total reward = 51,      total weighted selection = 57.8).
+
+
+% Final ranking for this environment #0 : (using more accurate estimate of the regret)
+% - Policy 'Pure exploration'     was ranked      7 / 7 for this simulation
+%         (last regret = 1877.6,  total regret = 1886.4,  total reward = 5171,    total weighted selection = 5113.6).
+% - Policy 'Pure exploitation'    was ranked      1 / 7 for this simulation
+%         (last regret = 0.95,    total regret = 0.95,    total reward = 6997,    total weighted selection = 6999).
+% - Policy '$\varepsilon$-greedy' was ranked      5 / 7 for this simulation
+%         (last regret = 380.44,  total regret = 382.25,  total reward = 6657,    total weighted selection = 6617.8).
+% - Policy 'Explore-then-Exploit' was ranked      6 / 7 for this simulation
+%         (last regret = 1199.8,  total regret = 1199.8,  total reward = 5766,    total weighted selection = 5800.2).
+% - Policy 'UCB($\alpha=1$)'      was ranked      4 / 7 for this simulation
+%         (last regret = 78.45,   total regret = 78.45,   total reward = 6920,    total weighted selection = 6921.5).
+% - Policy 'Bernoulli kl-UCB'     was ranked      3 / 7 for this simulation
+%         (last regret = 70.174,  total regret = 70.25,   total reward = 6922,    total weighted selection = 6929.7).
+% - Policy 'Thompson sampling'    was ranked      2 / 7 for this simulation
+%         (last regret = 44.054,  total regret = 44.2,    total reward = 6949,    total weighted selection = 6955.8).
 
 \begin{table}[ht]
     \begin{small}  % WARNING
         \centering
         \begin{tabular}{c|cc|cc}
-        \textbf{Algorithms} $\;$ \textbackslash $\;$ Horizon & Reward & Regret $T=100$ & Reward & Regret $T=10000$ \\
+        \textbf{Algorithms} & $\sum\limits_{t=1}^{T=100} r_{A(t)}(t)$ & $R_{T=100}^{\cA}$ & $\sum\limits_{t=1}^{T=10000} r_{A(t)}(t)$ & $R_{T=10000}^{\cA}$ \\
             \hline
             Pure exploration
-                & $XXX$ & $XXX$
-                & $XXX$ & $XXX$ \\
-            Pure exploitation
-                & $XXX$ & $XXX$
-                & $XXX$ & $XXX$ \\
+                & $46$ & $20.9$
+                & $5171$ & $1886.4$ \\
+            \textbf{Pure exploitation}
+                & $\mathbf{65}$ & $\mathbf{1.15}$
+                & $\mathbf{6997}$ & $\mathbf{0.95}$ \\
             \hline
             $\varepsilon$-greedy
-                & $XXX$ & $XXX$
-                & $XXX$ & $XXX$ \\
+                & $50$ & $20.9$
+                & $6657$ & $382.2$ \\
             Explore-then-Commit
-                & $XXX$ & $XXX$
-                & $XXX$ & $XXX$ \\
+                & $49$ & $15$
+                & $5766$ & $1199.8$ \\
             \hline
             $\UCB_1$
-                & $XXX$ & $XXX$
-                & $XXX$ & $XXX$ \\
+                & $63$ & $10.3$
+                & $6920$ & $78.4$ \\
             \klUCB{}
-                & $XXX$ & $XXX$
-                & $XXX$ & $XXX$ \\
+                & $56$ & $12.4$
+                & $6922$ & $70.2$ \\
+            \hline
             Thompson sampling
-                & $XXX$ & $XXX$
-                & $XXX$ & $XXX$ \\
+                & $51$ & $12.2$
+                & $6949$ & $44.2$ \\
             \hline
         \end{tabular}
-        \caption{Cumulated rewards and regret, for horizons $T=100$ and $T=10000$, \emph{for only one run of the simulation}, for different algorithms.}
+        \caption{Cumulated rewards and regret, for horizons $T=100$ and $T=10000$, \emph{for only one run of the simulation}, for different algorithms. \textcolor{red}{It is very random}, see Table~\ref{table:2:meanResults} for average results on $N=1000$ runs, on both cases the pure exploitation was very lucky and obtains close-to-optimal performance.}
         \label{table:2:oneShotResult}
     \end{small}  % WARNING
 \end{table}
 
-\TODOL{Lancer les simulations !}
+% Final ranking for this environment #0 : (using more accurate estimate of the regret)
+% - Policy 'Pure exploration'     was ranked      7 / 7 for this simulation
+%         (last regret = 19.04,   total regret = 19.04,   total reward = 50.914,  total weighted selection = 50.96).
+% - Policy 'Pure exploitation'    was ranked      1 / 7 for this simulation
+%         (last regret = 8.3496,  total regret = 8.3496,  total reward = 61.692,  total weighted selection = 61.65).
+% - Policy '$\varepsilon$-greedy' was ranked      6 / 7 for this simulation
+%         (last regret = 18.729,  total regret = 18.729,  total reward = 51.274,  total weighted selection = 51.271).
+% - Policy 'Explore-then-Exploit' was ranked      5 / 7 for this simulation
+%         (last regret = 12.859,  total regret = 12.859,  total reward = 57.193,  total weighted selection = 57.141).
+% - Policy 'UCB($\alpha=1$)'      was ranked      4 / 7 for this simulation
+%         (last regret = 9.8451,  total regret = 9.8451,  total reward = 60.031,  total weighted selection = 60.155).
+% - Policy 'Bernoulli kl-UCB'     was ranked      2 / 7 for this simulation
+%         (last regret = 9.3534,  total regret = 9.3534,  total reward = 60.526,  total weighted selection = 60.647).
+% - Policy 'Thompson sampling'    was ranked      3 / 7 for this simulation
+%         (last regret = 9.6005,  total regret = 9.6005,  total reward = 60.355,  total weighted selection = 60.399).
 
 \begin{table}[ht]
     \begin{small}  % WARNING
         \centering
         \begin{tabular}{c|cc|cc}
-        \textbf{Algorithms} $\;$ \textbackslash $\;$ Horizon & Reward & Regret $T=100$ & Reward & Regret $T=10000$ \\
+        \textbf{Algorithms} & $\frac{1}{N} \sum\limits_{j=1}^N [ \sum\limits_{t=1}^{T=100} r^{(j)}_{A(t)}(t) ]$ & $\frac{1}{N} \sum\limits_{j=1}^N [ R^{\cA,(j)}_{T=100} ]$ & $\frac{1}{N} \sum\limits_{j=1}^N [ \sum\limits_{t=1}^{T=10000} r^{(j)}_{A(t)}(t) ]$ & $\frac{1}{N} \sum\limits_{j=1}^N [ R^{\cA,(j)}_{T=10000} ]$ \\
             \hline
             Pure exploration
-                & $XXX$ & $XXX$
+                & $51$ & $19$
                 & $XXX$ & $XXX$ \\
             Pure exploitation
-                & $XXX$ & $XXX$
+                & $62$ & $8.3$
                 & $XXX$ & $XXX$ \\
             \hline
             $\varepsilon$-greedy
-                & $XXX$ & $XXX$
+                & $51$ & $18.7$
                 & $XXX$ & $XXX$ \\
             Explore-then-Commit
-                & $XXX$ & $XXX$
+                & $57$ & $12.9$
                 & $XXX$ & $XXX$ \\
             \hline
             $\UCB_1$
-                & $XXX$ & $XXX$
+                & $\mathbf{60}$ & $\mathbf{9.8}$
                 & $XXX$ & $XXX$ \\
             \klUCB{}
-                & $XXX$ & $XXX$
+                & $61$ & $9.3$
                 & $XXX$ & $XXX$ \\
+            \hline
             Thompson sampling
-                & $XXX$ & $XXX$
+                & $\mathbf{60}$ & $\mathbf{9.6}$
                 & $XXX$ & $XXX$ \\
             \hline
         \end{tabular}
@@ -1404,6 +1455,42 @@ Then in Table~\ref{table:2:meanResults} we show the results of the average on $N
         \label{table:2:meanResults}
     \end{small}  % WARNING
 \end{table}
+
+% FIXME generate at the end of the simulation
+\begin{figure}[h!]  % [htbp]
+	% \centering
+	\includegraphics[width=1.00\linewidth]{meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT100N1000.pdf}
+	\caption{Mean cumulated rewards as function of the current time step $t$ for horizon $T=100$ and $N=1000$ independent runs, for different algorithms }
+	\label{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT100N1000}
+\end{figure}
+
+% FIXME generate at the end of the simulation
+\begin{figure}[h!]  % [htbp]
+	% \centering
+	\includegraphics[width=1.00\linewidth]{meanRegretAsFunctionOfTimeForDifferentAlgorithmsT100N1000.pdf}
+	\caption{Mean regret $R_t$ as function of $t$ for $T=100$ and $N=1000$.}
+	\label{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT100N1000}
+\end{figure}
+
+
+% FIXME generate at the end of the simulation
+\begin{figure}[h!]  % [htbp]
+	% \centering
+	\includegraphics[width=1.00\linewidth]{meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000.pdf}
+	\caption{Mean cumulated rewards as function of $t$ for $T=10000$ and $N=1000$.}
+	\label{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}
+\end{figure}
+
+% FIXME generate at the end of the simulation
+\begin{figure}[h!]  % [htbp]
+	% \centering
+	\includegraphics[width=1.00\linewidth]{meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000.pdf}
+	\caption{Mean regret $R_t$ as function of $t$ for $T=10000$ and $N=1000$.}
+	\label{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}
+\end{figure}
+
+We also include in Figures~\ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT100N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT100N1000}, \ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000} below the mean cumulated rewards and mean regret as functions of the current time step $t$, for $T=100$ then $T=10000$ for $N=1000$ independent runs.
+
 
 \TODOL{Décrire les résultats !}
 
