@@ -643,7 +643,7 @@ Following this approach, we introduce two new algorithms, \RandTopM{} and \MCTop
 \subsection{The \Selfish{} heuristic, with or without ``sensing''}
 \label{sub:5:Selfish}
 
-Under observation model \modeltrois{} no sensing information is available and the previous algorithms cannot be used, as the sum of sensing information $S_k^j(t)$ and thus the empirical mean $\widehat{\mu}_k^j(t)$ cannot be computed, hence neither the indices $g_k^j(t)$. However, one can still define a notion of \emph{empirical reward} received from arm $k$ by player $j$, by introducing
+Under observation model \modeltrois{} no sensing information is available and the previous algorithms cannot be used, as the sum of sensing information $S_k^j(t)$ and thus the empirical mean $\widehat{\mu}_k^j(t)$ cannot be computed, hence neither the indices $U_k^j(t)$. However, one can still define a notion of \emph{empirical reward} received from arm $k$ by player $j$, by introducing
 %
 % \vspace*{-5pt}
 \begin{equation}
@@ -654,7 +654,7 @@ Under observation model \modeltrois{} no sensing information is available and th
 Note that $\widetilde{\mu_k}^j(t)$ is no longer meant to be an unbiased estimate of $\mu_k$ as it also takes into account the collision information, that is present in the reward. Based on this empirical reward, one can similarly defined modified indices as
 %
 \begin{equation}\label{eq:5:indexTilde}
-  \widetilde{g_k}^j(t) = \begin{cases}
+  \widetilde{U_k}^j(t) = \begin{cases}
       \widetilde{\mu_k}^j(t)  + \sqrt{  f(t) / (2T_k^j(t))}
       &\text{for } \UCB, \\
       \sup\left\{ q \in [0, 1]: T_k^j(t)\times \kl(\widetilde{\mu_k}^j(t), q) \leq f(t) \right\}
@@ -665,15 +665,15 @@ Note that $\widetilde{\mu_k}^j(t)$ is no longer meant to be an unbiased estimate
 Given any of these two index policies (\UCB{} or \klUCB), the \Selfish{} algorithm is defined by,
 %
 \begin{equation}
-  A^j(t) = \argmax_{ k \in [K]} \ \widetilde{g_k}^j(t-1).\label{algo:5:Selfish}
+  A^j(t) = \argmax_{ k \in [K]} \ \widetilde{U_k}^j(t-1).\label{algo:5:Selfish}
 \end{equation}
 The name comes from the fact that each player is targeting, in a ``selfish'' way, the arm that has the highest index, instead of accepting to target only one of the $M$ best.
-The reason that this may work precisely comes from the fact that $\widetilde{g_k}^j(t)$ is no longer an upper-confidence on $\mu_k$,
+The reason that this may work precisely comes from the fact that $\widetilde{U_k}^j(t)$ is no longer an upper-confidence on $\mu_k$,
 but some hybrid index that simultaneously increases when a transmission occurs and decreases when a collision occurs.
 
 This behavior is easier to be understood for the case of \Selfish-\UCB{} in which, letting $N_k^{j,C}(t) = \sum_{s=1}^t \indic(C^j(t))$ be the number of collisions on arm $k$, one can show that the hybrid \Selfish{} index induces a penalty proportional to the fraction of collision on this arm and the quality of the arm itself:
 \begin{equation}
-  \widetilde{g_k}^j(t) = g_k^j(t) -
+  \widetilde{U_k}^j(t) = U_k^j(t) -
   \underbrace{\left(\frac{N_k^{j,C}(t)}{N_k^j(t)}\right)}_{\text{fraction of collisions}}
   \underbrace{\left(\frac{1}{N_k^{j,C}(t)}\sum_{t=1}^{T}Y_{A^j(t),t} \indic(C^j(t)) \indic(A^j(t) = k)\right)}_{\text{estimate of } \mu_k }.
 \end{equation}
@@ -717,14 +717,14 @@ and \klUCB{} indices \citep{KLUCBJournal}, that can be defined for each player $
 Letting $S_k^j(t) := \sum_{s=1}^t Y_{k,s} \indic(A^j(t) = k)$ the current sum of rewards obtained by player $j$ for arm $k$,
 then $\widehat{\mu}_k^j(t) = S_k^j(t)/T_k^j(t)$ (if $T_k^j(t)\neq 0$) is the empirical mean of arm $k$ for player $j$, and thus one can define the index
 \begin{equation}\label{eq:5:indexFor_UCB_klUCB}
-  g_k^j(t) := \begin{cases}
+  U_k^j(t) := \begin{cases}
       \widehat{\mu}_k^j(t)  + \sqrt{  f(t) / (2T_k^j(t))}
       &\text{for } \UCB, \\
       \sup\left\{ q \in [0, 1]: T_k^j(t)\times \kl(\widehat{\mu}_k^j(t), q) \leq f(t) \right\}
       &\text{for } \klUCB,
   \end{cases}
 \end{equation}
-where $f(t)$ is some \emph{exploration function}. $f(t)$ is usually taken to be $\log(t)$ in practice, and slightly larger in theory, which ensures that  $\Pr(g_k^j(t) \geq \mu_k) \gtrsim 1 - 1/t$ (see \cite{KLUCBJournal}).
+where $f(t)$ is some \emph{exploration function}. $f(t)$ is usually taken to be $\log(t)$ in practice, and slightly larger in theory, which ensures that  $\Pr(U_k^j(t) \geq \mu_k) \gtrsim 1 - 1/t$ (see \cite{KLUCBJournal}).
 A classical (single-player) UCB algorithm aims at the arm with largest index. However, if each of the $M$ players selects the arm with largest UCB, all the players will end up colliding most of the time on the best arm.
 To circumvent this problem, several coordination mechanisms have emerged, that rely on \emph{ordering} the indices and targeting \emph{one of} the $M$-best indices.
 
@@ -786,8 +786,8 @@ We precisely state our first proposal below in Algorithm~\ref{algo:5:RandTopM}.
                     \eIf(\tcp*[f]{collision}){$C^j(t)$}{
                       $A^j(t+1) \sim \cU \left(\TopM(t)\right)$
                       \tcp*[f]{randomly switch}
-                      }(\tcp*[f]{randomly switch on an arm that had smaller UCB at $t-1$}){
-                        $A^j(t+1) \sim \cU \left(\TopM(t) \cap \left\{k : g_k^j(t-1) \leq U^j_{A^j(t)}(t-1)\right\}\right)$
+                      }(\tcp*[f]{randomly switch on an arm that had smaller UCB}){
+                        $A^j(t+1) \sim \cU \left(\TopM(t) \cap \left\{k : U_k^j(t-1) \leq U^j_{A^j(t)}(t-1)\right\}\right)$
                       }
                     }{
                       $A^j(t+1) = A^j(t)$
@@ -849,9 +849,9 @@ When a collision occurs for a player implementing the \RandTopM{} algorithm, tha
                    \uIf(\tcp*[f]{transition $(3)$ or $(5)$}){
                       $A^j(t) \notin \TopM(t)$}
                     {
-                      $A^j(t+1) \sim \cU \left(\TopM(t) \cap \left\{k : g_k^j(t-1) \leq U^j_{A^j(t)}(t-1)\right\}\right)$
+                      $A^j(t+1) \sim \cU \left(\TopM(t) \cap \left\{k : U_k^j(t-1) \leq U^j_{A^j(t)}(t-1)\right\}\right)$
                       \tcp*[f]{not empty} \\
-                      % \tcp*[f]{randomly switch on an arm that had smaller UCB at $t-1$}
+                      % \tcp*[f]{randomly switch on an arm that had smaller UCB}
                       $s^j(t+1) = \mathrm{False}$
                       \tcp*[f]{aim at an arm with a smaller UCB at $t-1$}
                     }
@@ -977,12 +977,12 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
 
 \begin{smallproof}
   %
-  %     Recall $g_k^j(t) \in \mathbb{R}$ denote the index of arm $k$ for user $j$ at time $t$.
+  %     Recall $U_k^j(t) \in \mathbb{R}$ denote the index of arm $k$ for user $j$ at time $t$.
   %     As only user $j$ is considered here, the superscript $j$ is dropped.
   %
   Fix $k\in\Mworst$ and a player $j \in [M]$.
   The key observation is that for \MCTopM, \RandTopM{} as well as the \rhoRand{} algorithm, it holds that
-  \begin{equation}\left(A^j(t) = k\right) = \left(A^j(t) = k , \exists m \in \Mbest : g_m^j(t) < g_k^j(t) \right).\label{eq:5:KeyInclusion}\end{equation}
+  \begin{equation}\left(A^j(t) = k\right) = \left(A^j(t) = k , \exists m \in \Mbest : U_m^j(t) < U_k^j(t) \right).\label{eq:5:KeyInclusion}\end{equation}
   Indeed, for the three algorithms, an arm selected at time $t+1$ belongs to the set $\TopM(t)$ of arms with $M$ largest indices.
   If the sub-optimal arm $k$ is selected at time $t$, it implies that $k \in \TopM(t)$, and, because there are $M$ arms in both \Mbest{} and $\TopM(t)$, one of the arms in \Mbest{} must be excluded from $\TopM(t)$.
   In particular, the index of arm $k$ must be larger than the index of this particular arm $m$.
@@ -992,8 +992,8 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
   \E_{\mu}[T_k^j(T)]
   &= \E_{\mu}\left[ \sum_{t=1}^T \mathbbm{1}\left( A^j(t) = k \right) \right]
   = \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k \right).\\
-  %&= \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\;\; \exists m \in\Mbest,\; g_m(t) < g_k(t) \right) \\
-  &= \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\;\; \exists m \in[M]:\; U_{m^*}^j(t) < g_k^j(t) \right).
+  %&= \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\;\; \exists m \in\Mbest,\; U_m(t) < U_k(t) \right) \\
+  &= \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\;\; \exists m \in[M]:\; U_{m^*}^j(t) < U_k^j(t) \right).
   %
   \end{align*}
 
@@ -1003,11 +1003,11 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
     \E_{\mu}[T_k^j(T)] &\leq
     \sum_{t=1}^T\Pr_{\bm{\mu}} \left( \exists m_1 \in [M]: \; U_{m_1^*}(t) < \mu_m^* \right) + \notag \\
     \;\;\;\;
-    \sum_{t=1}^T\Pr_{\bm{\mu}} & \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; U_{m_2^*}(t) \leq g_k(t) , \forall {m_3} \in [M]: \;  U_{{m_3}^*}(t) \geq \mu_{m_3}^* \right) \notag \\
-    &\leq \sum_{m_1=1}^M\sum_{t=1}^T\Pr_{\bm{\mu}} \left(U_{m_1^*}(t) < \mu_{m_1}^* \right) + \sum_{t=1}^T\Pr_{\bm{\mu}} \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; \mu_{m_2}^* \leq g_k(t)\right) \notag \\
+    \sum_{t=1}^T\Pr_{\bm{\mu}} & \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; U_{m_2^*}(t) \leq U_k(t) , \forall {m_3} \in [M]: \;  U_{{m_3}^*}(t) \geq \mu_{m_3}^* \right) \notag \\
+    &\leq \sum_{m_1=1}^M\sum_{t=1}^T\Pr_{\bm{\mu}} \left(U_{m_1^*}(t) < \mu_{m_1}^* \right) + \sum_{t=1}^T\Pr_{\bm{\mu}} \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; \mu_{m_2}^* \leq U_k(t)\right) \notag \\
     %
     & \leq \sum_{m_1=1}^M \sum_{t=1}^T \Pr_{\bm{\mu}} \left( U_{m_1^*}(t) < \mu_{m_1}^* \right)
-    + \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\; \mu_{M^*} \leq g_k(t) \right)
+    + \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\; \mu_{M^*} \leq U_k(t) \right)
     \label{eq:5:sumOfProbaForTkj}
   \end{align}
   where the last inequality (for the first term) comes from the fact that $\mu_{M^*}$ is the smallest of the $\mu_{m^*}$ for $m \in [M]$.
@@ -1017,9 +1017,9 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
 
   \begin{lemma}\label{lem:5:Fact1KLUCB}
   \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
-      For any arm $k$, if $g_k^{j}(t)$ is the \klUCB{} index with exploration function $f(t)=\log(t)+3\log\log(t)$,
+      For any arm $k$, if $U_k^{j}(t)$ is the \klUCB{} index with exploration function $f(t)=\log(t)+3\log\log(t)$,
       \begin{equation}
-        \sum_{t=1}^T \Pr_{\bm{\mu}} \left(g_k^{j}(t) < \mu_k\right) \leq 3 + 4e \log\log(T).
+        \sum_{t=1}^T \Pr_{\bm{\mu}} \left(U_k^{j}(t) < \mu_k\right) \leq 3 + 4e \log\log(T).
       \end{equation}
   \end{leftbar}  % XXX leftbar lemmabar, comment if needed
   \end{lemma}
@@ -1029,10 +1029,10 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
 
   \begin{lemma}\label{lem:5:Fact2KLUCB}
   \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
-    For any arms $k$ and $k'$ such that $\mu_{k'} > \mu_{k}$, if $g_k^{j}(t)$ is the kl-UCB index with exploration function $f(t)$,
+    For any arms $k$ and $k'$ such that $\mu_{k'} > \mu_{k}$, if $U_k^{j}(t)$ is the kl-UCB index with exploration function $f(t)$,
     \begin{small} % XXX
       \begin{align*}
-        &\sum_{t=1}^T\Pr_{\bm{\mu}} \left( A^j(t) = k, \mu_{k'} \leq g_k^{j}(t) \right) & \leq  \frac{f(T)}{\kl(\mu_k,\mu_{k'})}
+        &\sum_{t=1}^T\Pr_{\bm{\mu}} \left( A^j(t) = k, \mu_{k'} \leq U_k^{j}(t) \right) & \leq  \frac{f(T)}{\kl(\mu_k,\mu_{k'})}
         + \sqrt{2\pi} \sqrt{\frac{\kl'(\mu_k,\mu_{k'})^2}{\kl(\mu_k,\mu_{k'})^3}}\sqrt{f(T)} + 2\left(\frac{\kl'(\mu_k,\mu_{k'})}{\kl(\mu_k,\mu_{k'})}\right)^2 + 1.
       \end{align*}
     \end{small} % XXX
@@ -1095,7 +1095,7 @@ happen a logarithmic number of times. The proof of this result is given below.
   We analyze the case when the current arm leaves the set $\TopM$ (Line 4):
 
   \begin{align*}
-    & \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t)\right)  \\ & \leq \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t), A^j(t+1) \in \TopM(t) \cap \{k': U_{k'}^j(t-1) \leq g_k^j(t-1)\}\right) \\
+    & \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t)\right)  \\ & \leq \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t), A^j(t+1) \in \TopM(t) \cap \{k': U_{k'}^j(t-1) \leq U_k^j(t-1)\}\right) \\
     & \leq   \sum_{t=1}^T \sum_{k' \neq k}\Pr\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right) \\
     & = \sum_{k' \neq k} \underbrace{\sum_{t=1}^T \Pr\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right)}_{:= T_{k'}}
   \end{align*}
@@ -1204,7 +1204,7 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
   or she stays in state $\overline{s^j(t)}$,
   with two cases.
   Either she sampled $A^j(t+1)$ uniformly
-  from $\TopM(t) \cap \{ m : g_m^j(t) \leq g_k^j(t) \}$
+  from $\TopM(t) \cap \{ m : U_m^j(t) \leq U_k^j(t) \}$
   with transition $(3)$,
   in case of collision and if $A^j(t+1) \in \TopM(t)$,
   or she sampled $A^j(t+1)$ uniformly

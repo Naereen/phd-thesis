@@ -236,12 +236,12 @@
 % \label{proof:5:SubOptimalSelections}
 
 % %
-% %     Recall $g_k^j(t) \in \mathbb{R}$ denote the index of arm $k$ for user $j$ at time $t$.
+% %     Recall $U_k^j(t) \in \mathbb{R}$ denote the index of arm $k$ for user $j$ at time $t$.
 % %     As only user $j$ is considered here, the superscript $j$ is dropped.
 % %
 % Fix $k\in\Mworst$ and a player $j \in [M]$.
 % The key observation is that for \MCTopM, \RandTopM{} as well as the \rhoRand{} algorithm, it holds that
-% \begin{equation}\left(A^j(t) = k\right) = \left(A^j(t) = k , \exists m \in \Mbest : g_m^j(t) < g_k^j(t) \right).\label{eq:5:KeyInclusion}\end{equation}
+% \begin{equation}\left(A^j(t) = k\right) = \left(A^j(t) = k , \exists m \in \Mbest : U_m^j(t) < U_k^j(t) \right).\label{eq:5:KeyInclusion}\end{equation}
 % Indeed, for the three algorithms, an arm selected at time $t+1$ belongs to the set $\TopM(t)$ of arms with $M$ largest indices.
 % If the sub-optimal arm $k$ is selected at time $t$, it implies that $k \in \TopM(t)$, and, because there are $M$ arms in both \Mbest{} and $\TopM(t)$, one of the arms in \Mbest{} must be excluded from $\TopM(t)$.
 % In particular, the index of arm $k$ must be larger than the index of this particular arm $m$.
@@ -252,17 +252,17 @@
 % \E_{\mu}[T_k^j(T)]
 % &= \E_{\mu}\left[ \sum_{t=1}^T \mathbbm{1}\left( A^j(t) = k \right) \right]
 % = \sum_{t=1}^T \Pr\left( A^j(t) = k \right).\\
-% %&= \sum_{t=1}^T \Pr\left( A^j(t) = k,\;\; \exists m \in\Mbest,\; g_m(t) < g_k(t) \right) \\
-% &= \sum_{t=1}^T \Pr\left( A^j(t) = k,\;\; \exists m \in[M]:\; U_{m^*}^j(t) < g_k^j(t) \right).
+% %&= \sum_{t=1}^T \Pr\left( A^j(t) = k,\;\; \exists m \in\Mbest,\; U_m(t) < U_k(t) \right) \\
+% &= \sum_{t=1}^T \Pr\left( A^j(t) = k,\;\; \exists m \in[M]:\; U_{m^*}^j(t) < U_k^j(t) \right).
 % %
 % \intertext{Considering the relative position of the upper-confidence bound $U_{m^*}^j(t)$ and the corresponding mean $\mu_m^* = \mu_{m^*}$, one can write the decomposition}
-% \E_{\mu}[T_k^j(T)] &\leq \sum_{t=1}^T\Pr\left(A^j(t) = k,\;\; \exists m \in[M]:\; U_{m^*}(t) \leq g_k(t) , \forall m \in [M]: \;  U_{m^*}(t) \geq \mu_m^* \right)\\
+% \E_{\mu}[T_k^j(T)] &\leq \sum_{t=1}^T\Pr\left(A^j(t) = k,\;\; \exists m \in[M]:\; U_{m^*}(t) \leq U_k(t) , \forall m \in [M]: \;  U_{m^*}(t) \geq \mu_m^* \right)\\
 % &\;\;\;\;\;\;\;\; + \sum_{t=1}^T\Pr\left( \exists m \in[M]: \; U_{m^*}(t) < \mu_m^* \right) \\
-% &\leq \sum_{t=1}^T\Pr\left(A^j(t) = k,\;\; \exists m \in[M]:\; \mu_{m}^* \leq g_k(t)\right)+ \sum_{m=1}^M\sum_{t=1}^T\Pr\left(U_{m^*}(t) < \mu_m^* \right) \\
+% &\leq \sum_{t=1}^T\Pr\left(A^j(t) = k,\;\; \exists m \in[M]:\; \mu_{m}^* \leq U_k(t)\right)+ \sum_{m=1}^M\sum_{t=1}^T\Pr\left(U_{m^*}(t) < \mu_m^* \right) \\
 % %
 % &\leq
 % \sum_{t=1}^T
-%   \Pr\left( A^j(t) = k,\; \mu_{M^*} \leq g_k(t) \right)
+%   \Pr\left( A^j(t) = k,\; \mu_{M^*} \leq U_k(t) \right)
 % +
 % \sum_{m=1}^M
 %   \sum_{t=1}^T \Pr\left( U_{m^*}(t) < \mu_m^* \right),
@@ -275,17 +275,17 @@
 
 
 % \begin{lemma}\label{lem:5:Fact1KLUCB}
-%     For any arm $k$, if $g_k^{j}(t)$ is the \klUCB{} index with exploration function $f(t)=\log(t)+3\log\log(t)$,
+%     For any arm $k$, if $U_k^{j}(t)$ is the \klUCB{} index with exploration function $f(t)=\log(t)+3\log\log(t)$,
 %     \begin{equation}
-%       \sum_{t=1}^T \Pr\left(g_k^{j}(t) < \mu_k\right) \leq 3 + 4e \log\log(T).
+%       \sum_{t=1}^T \Pr\left(U_k^{j}(t) < \mu_k\right) \leq 3 + 4e \log\log(T).
 %     \end{equation}
 % \end{lemma}
 
 % Denote $\kl'(x,y)$ the derivative of the function $x \mapsto \kl(x,y)$ (for any fixed $y\neq 0, 1$).
 
-% \begin{lemma}\label{lem:5:Fact2KLUCB} For any arms $k$ and $k'$ such that $\mu_{k'} > \mu_{k}$, if $g_k^{j}(t)$ is the kl-UCB index with exploration function $f(t)$,
+% \begin{lemma}\label{lem:5:Fact2KLUCB} For any arms $k$ and $k'$ such that $\mu_{k'} > \mu_{k}$, if $U_k^{j}(t)$ is the kl-UCB index with exploration function $f(t)$,
 % \begin{align*}
-%   &\sum_{t=1}^T\Pr\left( A^j(t) = k, \mu_{k'} \leq g_k^{j}(t) \right) & \leq  \frac{f(T)}{\kl(\mu_k,\mu_{k'})}
+%   &\sum_{t=1}^T\Pr\left( A^j(t) = k, \mu_{k'} \leq U_k^{j}(t) \right) & \leq  \frac{f(T)}{\kl(\mu_k,\mu_{k'})}
 %   + \sqrt{2\pi} \sqrt{\frac{\kl'(\mu_k,\mu_{k'})^2}{\kl(\mu_k,\mu_{k'})^3}}\sqrt{f(T)} + 2\left(\frac{\kl'(\mu_k,\mu_{k'})}{\kl(\mu_k,\mu_{k'})}\right)^2 + 1.\end{align*}
 % \end{lemma}
 
@@ -305,7 +305,7 @@
 
 % Using the behavior of the algorithm when the current arm leaves the set $\TopM$ (Line 4), one has
 % \begin{align*}
-%   & \sum_{t=1}^T \bP\left(A^j(t) = k, k \notin \hat{M}^j(t)\right)  \\ & \leq \sum_{t=1}^T \bP\left(A^j(t) = k, k \notin \hat{M}^j(t), A^j(t+1) \in \TopM(t) \cap \{k': U_{k'}^j(t-1) \leq g_k^j(t-1)\}\right) \\
+%   & \sum_{t=1}^T \bP\left(A^j(t) = k, k \notin \hat{M}^j(t)\right)  \\ & \leq \sum_{t=1}^T \bP\left(A^j(t) = k, k \notin \hat{M}^j(t), A^j(t+1) \in \TopM(t) \cap \{k': U_{k'}^j(t-1) \leq U_k^j(t-1)\}\right) \\
 %   & \leq   \sum_{t=1}^T \sum_{k' \neq k}\bP\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right) \\
 %   & = \sum_{k' \neq k} \underbrace{\sum_{t=1}^T \bP\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right)}_{:= T_{k'}}
 % \end{align*}
@@ -341,7 +341,7 @@
 %     A^j(t-1) = k \in \TopM(t-1),
 %     k \notin \TopM(t),
 %     C^j(t),
-%     A^j(t) = k' \in \TopM(t) \cap \{ m : g_m^j(t-2) \leq g_k^j(t-2) \}
+%     A^j(t) = k' \in \TopM(t) \cap \{ m : U_m^j(t-2) \leq U_k^j(t-2) \}
 %   %
 %   \right).
 % \end{equation*}
@@ -361,36 +361,36 @@
 % and assume that both arms are sampled enough.
 % %
 % This event $\phi_{k,k'}^j(t)$ we focus on implies both
-% $U_{k'}^j(t-1) \leq g_k^j(t-1), A^j(t-1)=k$
+% $U_{k'}^j(t-1) \leq U_k^j(t-1), A^j(t-1)=k$
 % and
-% $g_k^j(t) \leq U_{k'}^j(t), A^j(t)=k'$.
+% $U_k^j(t) \leq U_{k'}^j(t), A^j(t)=k'$.
 % %
 % In particular,
 % if $\mu_k \geq \mu_{k'}$,
-% $\phi_{k,k'}^j(t)$ implies $g_k^j(t) \leq U_{k'}^j(t)$,
+% $\phi_{k,k'}^j(t)$ implies $U_k^j(t) \leq U_{k'}^j(t)$,
 % and
 % if $\mu_k < \mu_{k'}$, then
-% $\phi_{k,k'}^j(t)$ implies $U_{k'}^j(t-1) \leq g_k^j(t-1)$,
+% $\phi_{k,k'}^j(t)$ implies $U_{k'}^j(t-1) \leq U_k^j(t-1)$,
 % both with $A^j(t-1)=k, A^j(t)=k'$.
 % Both cases are dealt with exactly the same arguments,
 % so let focus on the first one.
 %
 % Assume $\mu_k \geq \mu_{k'}$.
-% Then, essentially $g_k^j(t) \leq U_{k'}^j(t)$
+% Then, essentially $U_k^j(t) \leq U_{k'}^j(t)$
 % is unlikely (\ie, the sum of probabilities is $\bigO{\log T}$)
-% as the indices $g_m^j(t)$ tends to $\mu_m$ if arm $m$ is sampled enough (\ie, $\E_{\mu}[T_m^j(T)] \to \infty$).
+% as the indices $U_m^j(t)$ tends to $\mu_m$ if arm $m$ is sampled enough (\ie, $\E_{\mu}[T_m^j(T)] \to \infty$).
 % \begin{align}
 %     \sum_{t=1}^{T} \Pr(\phi_{k,k'}^j(t))
 %     &\leq
-%     \sum_{t=1}^{T} \Pr\left(g_k^j(t) \leq U_{k'}^j(t), A^j(t-1)=k, A^j(t)=k'\right)
+%     \sum_{t=1}^{T} \Pr\left(U_k^j(t) \leq U_{k'}^j(t), A^j(t-1)=k, A^j(t)=k'\right)
 %     \intertext{Either $U_{k'}^j(t) > \mu_k$ or $U_{k'}^j(t) \leq \mu_k$, and by introducing the two cases,}
 %     &\leq
-%     \sum_{t=1}^{T} \Pr\left(g_k^j(t) \leq U_{k'}^j(t) \leq \mu_k, A^j(t-1)=k, A^j(t)=k'\right) \notag \\
-%     &\;\;+ \sum_{t=1}^{T} \Pr\left(g_k^j(t) \leq U_{k'}^j(t), U_{k'}^j(t) > \mu_k, A^j(t-1)=k, A^j(t)=k'\right) \notag
-%     \intertext{For the first term, $g_k^j(t) \leq \mu_k$ is highly unlikely (\ie, the sum of probabilities is $\smallO{\log T}$) as the indices ${(g_k^j)}_k$ are Upper Confidence Bounds (if arm $k$ is sampled enough). For the second term, $U_{k'}^j(t) > \mu_k$ is unlikely if arm $k'$ is sampled enough. More formally,}
+%     \sum_{t=1}^{T} \Pr\left(U_k^j(t) \leq U_{k'}^j(t) \leq \mu_k, A^j(t-1)=k, A^j(t)=k'\right) \notag \\
+%     &\;\;+ \sum_{t=1}^{T} \Pr\left(U_k^j(t) \leq U_{k'}^j(t), U_{k'}^j(t) > \mu_k, A^j(t-1)=k, A^j(t)=k'\right) \notag
+%     \intertext{For the first term, $U_k^j(t) \leq \mu_k$ is highly unlikely (\ie, the sum of probabilities is $\smallO{\log T}$) as the indices ${(U_k^j)}_k$ are Upper Confidence Bounds (if arm $k$ is sampled enough). For the second term, $U_{k'}^j(t) > \mu_k$ is unlikely if arm $k'$ is sampled enough. More formally,}
 %     \sum_{t=1}^{T} \Pr(\phi_{k,k'}^j(t))
 %     &\leq
-%     \underbrace{\sum_{t=1}^{T} \Pr\left( g_k^j(t) \leq \mu_k \right)}_{(i)}
+%     \underbrace{\sum_{t=1}^{T} \Pr\left( U_k^j(t) \leq \mu_k \right)}_{(i)}
 %     + \underbrace{\sum_{t=1}^{T} \Pr\left( U_{k'}^j(t) > \mu_k, A^j(t)=k' \right)}_{(ii)}.
 % \end{align}
 % But then as both arms are sampled enough, we can use both Lemma~\ref{lem:5:Fact1KLUCB} to directly obtain that the first term $(i)$ is a $\smallO{\log T}$,
@@ -398,8 +398,8 @@
 %
 %
 % Exactly the same arguments work for the other case $\mu_k < \mu_{k'}$, by considering
-% whether $g_k^j(t-1) > \mu_{k'}$ (which is also ulikely),
-% or whether $g_k^j(t-1) \leq \mu_k$ which implies $U_{k'}^j(t-1) \leq \mu_{k'}$ (and which is also highly unlikely), and with Lemmas~\ref{lem:5:Fact1KLUCB}, \ref{lem:5:Fact2KLUCB},
+% whether $U_k^j(t-1) > \mu_{k'}$ (which is also ulikely),
+% or whether $U_k^j(t-1) \leq \mu_k$ which implies $U_{k'}^j(t-1) \leq \mu_{k'}$ (and which is also highly unlikely), and with Lemmas~\ref{lem:5:Fact1KLUCB}, \ref{lem:5:Fact2KLUCB},
 % we obtain that
 % $\sum_{t=1}^{T} \Pr(\phi_{k,k'}^j(t)) = \bigO{\log T}$ when $T \to \infty$
 % similarly.
@@ -463,7 +463,7 @@
 % or she stays in state $\overline{s^j(t)}$,
 % with two cases.
 % Either she sampled $A^j(t+1)$ uniformly
-% from $\TopM(t) \cap \{ m : g_m^j(t) \leq g_k^j(t) \}$
+% from $\TopM(t) \cap \{ m : U_m^j(t) \leq U_k^j(t) \}$
 % with transition $(3)$,
 % in case of collision and if $A^j(t+1) \in \TopM(t)$,
 % or she sampled $A^j(t+1)$ uniformly
@@ -729,7 +729,7 @@
 %     % \includegraphics[width=0.70\textwidth]{Tree_exploration_K=2_M=2_depth=3__Selfish_UCB__absorbing__leafs.pdf}
 %     % \includegraphics[width=0.70\textwidth]{Tree_exploration_K=2_M=2_depth=3__Selfish_KLUCB__absorbing.pdf}
 %     % \includegraphics[width=0.70\textwidth]{Tree_exploration_K=2_M=2_depth=3__Selfish_KLUCB__absorbing__leafs.pdf}
-%     \caption[Trajectories of $M=2$ players using \Selfish-\UCB{} for $K=2$ arms.]{For $K=2$ arms and $M=2$ players using \Selfish-\UCB, for depth$=3$: $2$ \textbf{\textcolor{red}{absorbing configurations}}. Each rectangle represents a configuration, as the matrix $[[\widetilde{S_k}^j(t) / T_k^j(t) ]_j]_k$. Absorbing configurations from depth $2$ are case of equality of the two vectors and the \Selfish{} indices $\widetilde{g_k}^j(t)$. Transitions are labeled with their probabilities.}
+%     \caption[Trajectories of $M=2$ players using \Selfish-\UCB{} for $K=2$ arms.]{For $K=2$ arms and $M=2$ players using \Selfish-\UCB, for depth$=3$: $2$ \textbf{\textcolor{red}{absorbing configurations}}. Each rectangle represents a configuration, as the matrix $[[\widetilde{S_k}^j(t) / T_k^j(t) ]_j]_k$. Absorbing configurations from depth $2$ are case of equality of the two vectors and the \Selfish{} indices $\widetilde{U_k}^j(t)$. Transitions are labeled with their probabilities.}
 %     \label{fig:5:oneGameTree_SelfishKLUCB}
 % \end{figure}
 

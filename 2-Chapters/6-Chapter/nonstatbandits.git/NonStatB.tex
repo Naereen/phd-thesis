@@ -899,8 +899,14 @@ This last term does not mean the whole inequality is only valid for $T\to\infty$
     For ``easy'' problems satisfying the corresponding Assumption~\ref{ass:6:LongPeriodsGlobal},
     let $\Delta^{\text{opt}}$ denote the smallest value of a sub-optimality gap on one of the stationary segments, and $\Delta^{\text{change}}$ be the smallest magnitude of any change point on any arm.
     \begin{enumerate}
-        \item Choosing $\alpha = \sqrt{\frac{\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{T}}$ gives $R_T = \bigO{\frac{K}{\left(\Delta^{\text{change}}\right)^2} \Upsilon_T\sqrt{T\ln(T)} + \frac{(K-1)}{\Delta^{\text{opt}}} \Upsilon_T\ln(T)}$,
-        \item Choosing $\alpha = \sqrt{\frac{\Upsilon_T\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{\Upsilon_T T}}$ gives $R_T = \bigO{\frac{K}{\left(\Delta^{\text{change}}\right)^2}\sqrt{\Upsilon_T T \ln(T)} + \frac{(K-1)}{\Delta^{\text{opt}}} \Upsilon_T\ln(T)}$.
+        \item Choosing $\alpha = \sqrt{\ln(T)/T}$, $\delta = 1/\sqrt{T}$ gives
+        \begin{equation}
+            R_T = \bigO{\frac{K}{\left(\Delta^{\text{change}}\right)^2} \Upsilon_T\sqrt{T\ln(T)} + \frac{(K-1)}{\Delta^{\text{opt}}} \Upsilon_T\ln(T)},
+        \end{equation}
+        \item Choosing $\alpha = \sqrt{\Upsilon_T\ln(T) / T}$, $\delta = 1 / \sqrt{\Upsilon_T T}$ gives
+        \begin{equation}
+            R_T = \bigO{\frac{K}{\left(\Delta^{\text{change}}\right)^2}\sqrt{\Upsilon_T T \ln(T)} + \frac{(K-1)}{\Delta^{\text{opt}}} \Upsilon_T\ln(T)}.
+        \end{equation}
     \end{enumerate}
 \end{leftbar}  % XXX leftbar corollarybar, comment if needed
 \end{corollary}
@@ -955,10 +961,22 @@ We prefer to state the four cases, to highlight the modularity of the result giv
     For ``easy'' problems satisfying the corresponding Assumption~\ref{ass:6:LongPeriods},
     with $\Delta^{\text{opt}}$ and ${\Delta}^{\text{change}}$ defined as in Corollary~\ref{cor:6:Global}, the following holds.
     \begin{enumerate}
-        \item Choosing $\alpha = \sqrt{\frac{\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{T}}$ gives $R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2} \EffChange\sqrt{T\ln(T)} + \frac{1}{\left(\Delta^{\text{opt}}\right)^2} \EffChange\ln(T)}$,
-        \item Choosing $\alpha = \sqrt{\frac{\Upsilon_T\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{\Upsilon_T T}}$ gives $R_T = \bigO{\frac{K^2}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\Upsilon_T T\ln(T)} + \frac{K\Upsilon_T}{\left(\Delta^{\text{opt}}\right)^2}\ln(T)}$,
-        \item Choosing $\alpha = \sqrt{\frac{\EffChange\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{\EffChange T}}$ gives $R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\EffChange T\ln(T)} + \frac{\EffChange}{\left(\Delta^{\text{opt}}\right)^2}\ln(T)}$,
-        \item Choosing $\alpha = \sqrt{\frac{K\Upsilon_T\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{K\Upsilon_T T}}$ gives $R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\EffChange T\ln(T)} + \frac{1}{\left(\Delta^{\text{opt}}\right)^2} \EffChange\ln(T)}$.
+        \item Choosing $\alpha = \sqrt{\ln(T) / T}$, $\delta = 1 / \sqrt{T}$ gives
+        \begin{equation}
+            R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2} \EffChange\sqrt{T\ln(T)} + 1 / \left(\Delta^{\text{opt}}\right)^2} \EffChange\ln(T)},
+        \end{equation}
+        \item Choosing $\alpha = \sqrt{\Upsilon_T\ln(T) / T}$, $\delta = 1 / \sqrt{\Upsilon_T T}$ gives
+        \begin{equation}
+            R_T = \bigO{\frac{K^2}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\Upsilon_T T\ln(T)} + \frac{K\Upsilon_T}{\left(\Delta^{\text{opt}}\right)^2}\ln(T)},
+        \end{equation}
+        \item Choosing $\alpha = \sqrt{\EffChange\ln(T) / T}$, $\delta = 1 / \sqrt{\EffChange T}$ gives
+        \begin{equation}
+            R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\EffChange T\ln(T)} + \frac{\EffChange}{\left(\Delta^{\text{opt}}\right)^2}\ln(T)},
+        \end{equation}
+        \item Choosing $\alpha = \sqrt{K\Upsilon_T\ln(T) / T}$, $\delta = 1 / \sqrt{K\Upsilon_T T}$ gives
+        \begin{equation}
+            R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\EffChange T\ln(T)} + \frac{1}{\left(\Delta^{\text{opt}}\right)^2} \EffChange\ln(T)}.
+        \end{equation}
     \end{enumerate}
 \end{leftbar}  % XXX leftbar corollarybar, comment if needed
 \end{corollary}
@@ -1088,18 +1106,21 @@ As explained before, our analysis relies on the general regret decomposition~\eq
 \begin{equation}\cE_T(\delta) = \left( \forall k \in \{1, \ldots, \Upsilon_T\}, \hat{\tau}^{(k)} \in \left[\tau^{(k)} + 1, \tau^{(k)} + d^{(k)}\right] \right).\label{def:6:GoodEvenGlobal}\end{equation}
 Under the good event, all the change points are detected within a delay at most $d^(k)$.
 %
-Note that from Assumption~\ref{ass:6:LongPeriodsGlobal}, as the period between two changes are long enough, if $\cE_T(\delta)$ holds, then for all change $k$, one has $\tau^{(k)} \leq \hat{\tau}^{(k)} \leq \tau^{(k+1)}$. Using Assumption~\ref{ass:6:LongPeriods}, one can prove the following.
+From Assumption~\ref{ass:6:LongPeriodsGlobal}, as the period between two changes are long enough, if $\cE_T(\delta)$ holds, then for all change $k$, we have $\tau^{(k)} \leq \hat{\tau}^{(k)} \leq \tau^{(k+1)}$.
+So we can prove the following.
 
 \begin{lemma}\label{lem:6:GoodEventGlobal}
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
     With $\cE_T(\delta)$ defined as in \eqref{def:6:GoodEvenGlobal}, the ``bad event'' is unlikely:
-    $\bP(\cE_T^c(\delta)) \leq \delta(K+1)\Upsilon_T$.
+    \begin{equation}
+        \bP(\cE_T^c(\delta)) \leq \delta(K+1)\Upsilon_T.
+    \end{equation}
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
 We now turn our attention to upper bounding the two terms $(A)$ and $(B)$ in \eqref{eq:6:GeneRegretBound}.
 
-\TODOL{Fix spacing issue!}
+% \TODOL{Fix spacing issue!}
 
 
 \paragraph{Upper bound on term $(A)$.}
