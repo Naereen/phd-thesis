@@ -48,8 +48,6 @@ The considered aggregation algorithms are special cases of the well-known \emph{
 % ----------------------------------------------------------------------
 \subsection{Our contribution: the \Aggr{} algorithm}\label{sub:25:Aggr}
 
-Our proposed \Aggr{} is detailed in Algorithm~\ref{algo:25:Aggr}.
-%
 \begin{small}
 	\begin{figure}[h!]
 		\centering
@@ -71,28 +69,28 @@ Our proposed \Aggr{} is detailed in Algorithm~\ref{algo:25:Aggr}.
 				% \tcp{First, run each algorithm $\Alg_a$}
 				\For(\tcp*[f]{Can be parallel}){$a = 1, \dots, N$}{
 					$\Alg_a$ updates its internal state (e.g., \UCB{} indexes)\;
-					It chooses $A_a(t+1) \in [K]$.
+					It chooses $A_a(t) \in [K]$.
 				}
 				%
 				% \tcp{The more algorithms have chosen arm $j$, the more probable it is to be chosen.}
-				Let $p^{t+1}_j := \sum\limits_{a = 1}^{N} \pi^{t}_a \times \indic(\{A_a(t+1) = j\}), \;\forall 1\leq j \leq K$\;
+				Let $p^{t}_j := \sum\limits_{a = 1}^{N} \pi^{t}_a \times \indic(\{A_a(t) = j\}), \;\forall 1\leq j \leq K$\;
 				% \tcp*{Sum trusts}
-				Then $\Alg_{\mathrm{aggr}}$ chooses arm $A(t+1) \sim p^{t+1}$\;
-				% $\P(A(t+1)_{\mathrm{aggr}} = j) = p^{t+1}_j$
+				Then $\Alg_{\mathrm{aggr}}$ chooses arm $A(t) \sim p^{t}$\;
+				% $\P(A(t)_{\mathrm{aggr}} = j) = p^{t}_j$
 				% \tcp*{Sample once}
 				%
-				Give \emph{original} reward $(A(t+1), r(t+1))$ to \emph{each} $\Alg_a$ (maybe \emph{not} on its chosen arm)\;
-				Compute an \emph{unbiased} estimate of the reward of the trusted algorithms,$$ \widehat{r}(t+1) = r(t+1) / p^{t+1}_{A(t+1)}\;. $$
+				Give \emph{original} reward $(A(t), r(t))$ to \emph{each} $\Alg_a$ (maybe \emph{not} on its chosen arm)\;
+				Compute an \emph{unbiased} estimate of the reward of the trusted algorithms,$$ \widehat{r}(t) = r(t) / p^{t}_{A(t)}\;. $$
 				% \tcp{Use bandit feedback to update $\pi^{t}$}
-				% \tcp{Finally, use the instantaneous bandit feedback (reward $\ell_{A(t+1),t}$) to update $\pi^{t}$}
+				% \tcp{Finally, use the instantaneous bandit feedback (reward $\ell_{A(t),t}$) to update $\pi^{t}$}
 				% \For(\tcp*[f]{Can be parallel}){$a = 1, \dots, N$}{
 				\For{$a = 1, \dots, N$}{
-					% \eIf{$\Alg_a$ was trusted, \ie, $A_a(t+1) = A(t+1)$}{
-					\eIf{$\Alg_a$ was trusted, \ie, $A_a(t+1) = A(t+1)$}{
-						$ \pi^{t+1}_{a} = \exp(\eta_t r(t+1) \times \pi^{t}_{a} $
+					% \eIf{$\Alg_a$ was trusted, \ie, $A_a(t) = A(t)$}{
+					\eIf{$\Alg_a$ was trusted, \ie, $A_a(t) = A(t)$}{
+						$ \pi^{t+1}_{a} = \exp(\eta_t r(t) \times \pi^{t}_{a} $
 						\tcp*{Trusted more}
 						}{
-						% $ \pi^{t+1}_{a} = \exp(- \eta_t r(t+1) \times \pi^{t}_{a} $
+						% $ \pi^{t+1}_{a} = \exp(- \eta_t r(t) \times \pi^{t}_{a} $
 						$ \pi^{t+1}_{a} = \pi^{t}_{a} $
 						\tcp*{Do not update the trust now}
 					}
@@ -107,28 +105,29 @@ Our proposed \Aggr{} is detailed in Algorithm~\ref{algo:25:Aggr}.
 	\end{figure}
 \end{small}
 
-\TODOL{Etre sur des notations entre $t$ et $t+1$ pour faire comme le reste du chapitre et de la thèse !}
 
-At every time step, after having observed a reward $r(t+1)=Y_{A(t+1),t+1}$ for its chosen action $A(t+1)$,
+Our proposed \Aggr{} is detailed in Algorithm~\ref{algo:25:Aggr}.
+%
+At every time step, after having observed a reward $r(t)=Y_{A(t),t}$ for its chosen action $A(t)$,
 the algorithm updates the trust probabilities from $\pi^t$ to $\pi^{t+1}$ by
 a multiplicative exponential factor (using the learning rate and the \emph{unbiased} reward).
 %
 Only the algorithms $\Alg_a$ who advised the last decision get their trust updated, in order to trust more the ``reliable'' algorithms.
 
-The reward estimate is unbiased in the following sense. If one had access to the samples $Y_{k,t+1}$ for all arms $k$, the reward incurred by algorithm $a$ at time $t+1$ would be $r^a(t+1) = Y_{A_a(t+1),t+1}$.
-But we are not in the full information setting (see \cite{CesaLugosi06}), but in the bandit setting, so only one of the samples $Y_{k,t+1}$ can be observed, $r(t)=Y_{A(t+1),t+1}$.
-This quantity can only be observed for those algorithms $a$ for which $A_{a}^{t+1}=A(t+1)$.
-However, by dividing by the probability of observing this recommendation, one obtains an unbiased estimate of $r^a(t+1)$. More precisely, if we define the estimate by
+The reward estimate is unbiased in the following sense. If one had access to the samples $Y_{k,t}$ for all arms $k$, the reward incurred by algorithm $a$ at time $t$ would be $r^a(t) = Y_{A_a(t),t}$.
+But we are not in the full information setting (see \cite{CesaLugosi06}), but in the bandit setting, so only one of the samples $Y_{k,t}$ can be observed, $r(t)=Y_{A(t),t}$.
+This quantity can only be observed for those algorithms $a$ for which $A_{a}^{t}=A(t)$.
+However, by dividing by the probability of observing this recommendation, one obtains an unbiased estimate of $r^a(t)$. More precisely, if we define the estimate by
 \begin{equation}
-	\widehat{r^a}(t+1) = \frac{Y_{A_a(t+1),t+1}}{p_{A_a(t+1)}^{t+1}} \indic(A_a(t+1) = A(t+1))
+	\widehat{r^a}(t) = \frac{Y_{A_a(t),t}}{p_{A_a(t)}^{t}} \indic(A_a(t) = A(t))
 \end{equation}
-satisfies $\E_{O_t}[\widehat{r^a}(t+1) | O_t] = Y_{A_a(t+1),t+1}$, for all $a$, where the expectation is taken conditionally to the history of observations up to round $t$, $O_t$.
+satisfies $\E_{O_t}[\widehat{r^a}(t) | O_t] = Y_{A_a(t),t}$, for all $a$, where the expectation is taken conditionally to the history of observations up to round $t$, $O_t$.
 %
-Observe that $\widehat{r^a}(t+1) = 0$ for all algorithms $a$ such that $A_a(t+1) \neq A(t+1)$.
+Observe that $\widehat{r^a}(t) = 0$ for all algorithms $a$ such that $A_a(t) \neq A(t)$.
 
 
 % - Precise some tricky points
-An important feature of \Aggr{} is the feedback provided to each underlying bandit algorithm, upon the observation of arm $A(t+1)$. Rather than updating only the trusted algorithms (that is the algorithms which would have drawn arm $A(t+1)$) with the observed reward $r(t+1)$, we found that updating each algorithm with the (original) reward observed for arm $A(t+1)$ improves the performance drastically.
+An important feature of \Aggr{} is the feedback provided to each underlying bandit algorithm, upon the observation of arm $A(t)$. Rather than updating only the trusted algorithms (that is the algorithms which would have drawn arm $A(t)$) with the observed reward $r(t)$, we found that updating each algorithm with the (original) reward observed for arm $A(t)$ improves the performance drastically.
 %
 As expected, the more feedback they get, the faster the underlying algorithms learn, and the better the aggregation algorithm is.
 This intuition is backed up by theory explained in \cite{Maillard11}.
@@ -136,7 +135,7 @@ This intuition is backed up by theory explained in \cite{Maillard11}.
 
 Regarding the update of $\pi^t$, one can note that the trust probabilities are not all updated before the normalization step,
 and an alternative would be to
-increase $\pi_{a}$ if $A_a(t+1) = A(t+1)$ and to decrease it otherwise.
+increase $\pi_{a}$ if $A_a(t) = A(t)$ and to decrease it otherwise.
 It would not be so different, as there is a final renormalization step, and empirically this variation has little impact on the performance of \Aggr{}.
 
 
@@ -150,12 +149,12 @@ It is similar to \Aggr{}, presented in Algorithm~\ref{algo:25:Aggr},
 but differs in the two following points.
 %
 The first difference is that $a\sim\pi^t$ is sampled first and the arm chosen by $\Alg_a$ is trusted, whereas \Aggr{}
-needs to listen to the $N$ decisions to perform the updates on $\pi^{t+1}$.
+needs to listen to the $N$ decisions to perform the updates on $\pi^{t}$.
 Then, \ExpQ{} gives back an observation (arm, reward) only to the last trusted algorithm
 whereas \Aggr{} gives it to all algorithms.
 %
-The second difference is that after having computed the reward estimate $\widehat{r^a}(t+1)$, \ExpQ{} updates the estimated cumulative reward for each algorithm,
-$\widetilde{R}_a(t) = \sum_{s=1}^{t} \widehat{r^a}(t+1) \times \indic(A^{s}_{a} = A^{s}_{\mathrm{aggr}})$.
+The second difference is that after having computed the reward estimate $\widehat{r^a}(t)$, \ExpQ{} updates the estimated cumulative reward for each algorithm,
+$\widetilde{R}_a(t) = \sum_{s=1}^{t} \widehat{r^a}(t) \times \indic(A^{s}_{a} = A^{s}_{\mathrm{aggr}})$.
 %
 Instead
 \footnote{~It is the same for constant learning rates, and does not differ much for decreasing learning rates.}
@@ -204,7 +203,7 @@ as a function of $T$, comparing some algorithms $\Alg_1,\dots,\Alg_N$ (for $N=6$
 using the parameter-free learning rate sequence, $\eta_t = \log{N} / (t K)$.
 
 Note that for each of the $1000$ simulations, we choose to generate all the rewards beforehand, \ie, one full matrix $(r_k(t))_{1\leq k \leq K, 1 \leq t \leq T}$ for every repetition, in order to compare the algorithms on the same realizations%
-\footnote{Similar plots and similar results are obtained if this choice is not made, but it makes more sense to compare them against the same randomization. Note that this choice is the default in SMPyBandits, but the other possibility is implemented as well, by changing \texttt{cache\_rewards} to \texttt{true} or \texttt{false} in the \texttt{configuration} dictionary. See Section~\ref{sub:3:miniConfigurationFileSMPyBandits} for explanations on this \texttt{configuration.py} file, or the online documentation.}
+\footnote{~Similar plots and similar results are obtained if this choice is not made, but it makes more sense to compare them against the same randomization. Note that this choice is the default in SMPyBandits, but the other possibility is implemented as well, by changing \texttt{cache\_rewards} to \texttt{true} or \texttt{false} in the \texttt{configuration} dictionary. See Section~\ref{sub:3:miniConfigurationFileSMPyBandits} for explanations on this \texttt{configuration.py} file, or the online documentation.}
 of the MAB problem.
 
 We compare our \Aggr{} algorithm,
@@ -273,7 +272,7 @@ The \Aggr{} does not have satisfying theoretical guarantees in terms of regret $
 Another notion, the \emph{adversarial regret}, denoted by $\overline{R_T}$,
 measures the difference in terms of rewards,
 between the aggregation algorithm $\Alg_{\mathrm{aggr}}$ and the best aggregated algorithm $\Alg_a$. This is in contrast with the (classical) regret, which measure the difference with the best fixed-arm strategy (Definition~\ref{def:2:regret}).
-Thus, even if the aggregated algorithms have logarithmic (classical) regret, having an adversarial regret scaling as $\sqrt{T}$ does not permit to exhibit a logarithmic (classical) regret for the aggregation algorithm.
+Thus, even if the aggregated algorithms have logarithmic (classical) regret, having an adversarial regret scaling as $\sqrt{T}$ does not permit to obtain a logarithmic (classical) regret for the aggregation algorithm.
 %
 %
 Under some additional hypotheses,
@@ -281,12 +280,10 @@ Under some additional hypotheses,
 \ExpQ{} satisfies a bound on adversarial regret, % $\overline{R_T}$
 $\overline{R_T} \leq 2 \sqrt{T N \log(K)}$,
 with the good choice of the learning rate sequence $(\eta_t)_{t \geq 1}$.
+
 Our proposed algorithm follows quite closely the architecture of \ExpQ,
 and a similar bound for \Aggr{} is expected to hold.
-% this is left as a future work.
-% For sake of conciseness, we cannot present a proof here.
 %
-
 This would be a first theoretical guarantee, but not satisfactory as we saw above that simple algorithms (like \UCB) have regrets scaling as $\log(T)$ \cite{Auer02,Bubeck12}, not $\sqrt{T}$.
 %
 Regret bounds in several different settings are proved for the \CORRAL{} algorithm \cite{Agarwal16}, but no logarithmic upper-bound can be obtained from their technique, even in the simplest setting of stochastic bandits.
@@ -294,8 +291,6 @@ Regret bounds in several different settings are proved for the \CORRAL{} algorit
 However, \Aggr{} always seems to have a (finite-horizon) logarithmic regret in all the experiments we performed,
 for both Bernoulli and non-Bernoulli problems (\eg, Gaussian, exponential and Poisson distributions).
 % Further theoretical developments were left as future work.
-
-\TODOL{Expliquer qu'en fait on NE PEUT PAS obtenir la borne qu'on espérait...}
 
 
 % ----------------------------------------------------------------------
@@ -324,8 +319,9 @@ It usually succeeds to be close to the best of the aggregated algorithms, both i
 As expected, the \Aggr{} is never able to outperform any of the aggregated algorithms, but this was an over-optimistic goal.
 %
 What matters the most is that, empirically, \Aggr{} is able to quickly discover \emph{on the fly} the best algorithms to trust, and then performs almost as well as if it was following it from the beginning.
-
-Our \Aggr{} algorithm could probably be rewritten as an Online Mirror Descent \cite{Hazan2016introduction,Zimmert2018}, as it is the case for both \ExpQ{} and \CORRAL.
+%
+%
+Our \Aggr{} algorithm could probably be rewritten as an Online Mirror Descent (for more details, see for instance \cite{Hazan2016introduction,Zimmert2018}), as it is the case for both \ExpQ{} and \CORRAL.
 But this direction does not appear very useful, as in the case of \CORRAL{}  the analysis cannot bring a logarithmic regret bound, even by aggregating asymptotically optimal algorithms.
 % We will continue investigating regret bounds for \Aggr,
 % and other directions include possible applications to the non-stochastic case (\eg, rested or restless Markovian problems, like it was very recently studied in \cite{Luo18}).

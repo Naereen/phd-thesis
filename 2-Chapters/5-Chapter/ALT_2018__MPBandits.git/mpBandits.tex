@@ -45,11 +45,7 @@ Finally, we review other extensions of the models, and give a overview of the cu
 For some extensions, we discuss how to adapt our proposals and illustrate the empirical performances of such modification of \MCTopM-\klUCB{}, leaving theoretical analyses as future works.
 
 
-\paragraph{Publications.}
-%
-This chapter is mainly based on our article \cite{Besson2018ALT}.
-
-\paragraph{Outline.}
+\textbf{Outline.}
 %
 This chapter is organized as follows.
 First we motivate the model of multi-player multi-armed bandits in Section~\ref{sec:5:motivation}
@@ -59,6 +55,11 @@ for which we present our theoretical analysis in Section~\ref{sec:5:upperbounds}
 The result of our experimental study reported in Section~\ref{sec:5:experiments}.
 Finally, we present in Section~\ref{sec:5:literatureReviewOtherModels} a review of the recent literature which studies variants of the model presented in this Chapter.
 % and finally Section~\ref{sec:5:conclusion} concludes.
+
+
+\textbf{Publication.}
+%
+This chapter is mainly based on our article \cite{Besson2018ALT}.
 
 
 % -----------------------------------------------------------------
@@ -758,6 +759,8 @@ We now propose two alternatives to this strategy, that do not rely on ranks and 
 %
 We precisely state our first proposal below in Algorithm~\ref{algo:5:RandTopM}.
 
+\TODOL{Est-ce qu'on devrait utiliser $t=1,\dots,T$ et pas $t=0,\dots,T-1$ et utiliser $A(t)$ et pas $A(t+1)$ pour être consistant avec les autres chapitres ?}
+
 % \vspace*{-5pt}  % XXX remove if problem
 % \begin{small}  % XXX remove if problem
   \begin{figure}[h!]
@@ -793,7 +796,7 @@ We precisely state our first proposal below in Algorithm~\ref{algo:5:RandTopM}.
                   Play arm $A^j(t+1)$, get new observations (sensing and collision), \\
                   Compute the indices $g^j_k(t+1)$ and set $\TopM(t+1)$ for next step.
               }
-              \caption[The \RandTopM{} decentralized learning policy]{The \RandTopM{} decentralized learning policy (for a fixed underlying index policy $g^j$).}
+              \caption[The \RandTopM{} decentralized learning policy]{The \RandTopM{} decentralized learning policy (for an index policy $g^j$).}
           \label{algo:5:RandTopM}
       \end{algorithm}
       % \end{small}  % XXX remove if problem
@@ -866,7 +869,7 @@ When a collision occurs for a player implementing the \RandTopM{} algorithm, tha
                   Play arm $A^j(t+1)$, get new observations (sensing and collision), \\
                   Compute the indices $g^j_k(t+1)$ and set $\TopM(t+1)$ for next step.
               }
-              \caption[The \MCTopM{} decentralized learning policy]{The \MCTopM{} decentralized learning policy (for a fixed underlying index policy $g^j$).}
+              \caption[The \MCTopM{} decentralized learning policy]{The \MCTopM{} decentralized learning policy (for an index policy $g^j$).}
           \label{algo:5:MCTopM}
       \end{algorithm}
       % \end{small}  % XXX remove if problem
@@ -1090,6 +1093,7 @@ happen a logarithmic number of times. The proof of this result is given below.
 
 \begin{smallproof}
   We analyze the case when the current arm leaves the set $\TopM$ (Line 4):
+
   \begin{align*}
     & \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t)\right)  \\ & \leq \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t), A^j(t+1) \in \TopM(t) \cap \{k': g_{k'}^j(t-1) \leq g_k^j(t-1)\}\right) \\
     & \leq   \sum_{t=1}^T \sum_{k' \neq k}\Pr\left(A^j(t) = k,A^j(t+1) = k', g_{k'}^j(t) \geq g_{k}^j(t), g_{k'}^j(t-1) \leq g_{k}^j(t-1)  \right) \\
@@ -1139,7 +1143,7 @@ that we can then bound by the number of changes of arms.
   % (Proved in Appendix~\ref{proof:5:collisionsMCTopM})
   \begin{equation}
     \E_{\mu}\left[\sum_{k=1}^K \cC_k(T)\right]
-    \leq M^2\left(2 M + 1\right) \left(\sum_{a,b=1,\dots,K,\;\mu_a < \mu_b} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T}.
+    \leq M^2\left(2 M + 1\right) \left(\sum_{\substack{a,b=1,\dots,K\\\mu_a < \mu_b}} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T}.
   \end{equation}
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
@@ -1342,20 +1346,20 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
   \end{align}%
   \begin{align}
     &\leq M^2 (1+\E_{\mu}[N_3^1(T)] + \E_{\mu}[N_5^1(T)]) M + M^2 \E_{\mu}[N_3^1(T)] \notag \\
-    &\leq 2 M^3 \E_{\mu}[N_3^1(T)] + \smallO{\log T} + M^2 \left(\sum_{a,b=1,\dots,K,\;\mu_a < \mu_b} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T} \notag  \\
-    &\leq \left(2 M^3 + M^2\right) \left(\sum_{a,b=1,\dots,K,\;\mu_a < \mu_b} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T}.
+    &\leq 2 M^3 \E_{\mu}[N_3^1(T)] + \smallO{\log T} + M^2 \left(\sum_{\substack{a,b=1,\dots,K\\\mu_a < \mu_b}} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T} \notag  \\
+    &\leq \left(2 M^3 + M^2\right) \left(\sum_{\substack{a,b=1,\dots,K\\\mu_a < \mu_b}} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T}.
   \end{align}
 
   Thus we prove the desired inequality, with explicit constants depending only on $\boldsymbol{\mu}$ and $M$.
   %
   \begin{align}
     \sum_{k=1}^K \E_{\mu}[\cC^k(T)] & = \E_{\mu}[\cC(T)] \nonumber\\
-    & \leq M^2\left(2 M + 1\right) \left(\sum_{a,b=1,\dots,K,\;\mu_a < \mu_b} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T}.
+    & \leq M^2\left(2 M + 1\right) \left(\sum_{\substack{a,b=1,\dots,K\\\mu_a < \mu_b}} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T}.
   \end{align}
 \end{smallproof}
 
 
-\paragraph{Logarithmic ``switching costs'' for \MCTopM.}\label{app:5:NumberSwitches}
+\paragraph{Logarithmic switching cost for \MCTopM.}\label{app:5:NumberSwitches}
 %
 Additionally to bounding the collisions in Lemma~\ref{lem:5:collisionsMCTopM},
 an interesting consequence of the proof of this result is that
@@ -1409,7 +1413,7 @@ it follows from our regret decomposition (Lemma~\ref{lem:5:DecompositionRegret})
 
 \paragraph{Strong uniform efficiency.}\label{app:5:JustifyingDefinition5}
 %
-As soon as $R_T = \bigO{\log T}$ for all problem, \MCTopM{} is clearly proven
+As soon as $R_T = \bigO{\log T}$ for all problems, \MCTopM{} is clearly proven
 to be uniformly efficient, as $\log T$ is $\smallO{T^{\alpha}}$ for any $\alpha\in(0,1)$.
 %
 And as justified after Definition~\ref{def:5:DecentralizedUniformEfficiency} (page~\pageref{def:5:DecentralizedUniformEfficiency}), uniform efficiency and invariance under permutations of the users implies strong uniform efficiency, and so \MCTopM{} satisfies Definition~\ref{def:5:DecentralizedUniformEfficiency}.
@@ -1494,7 +1498,7 @@ Performance is measured with the \emph{expected} regret up to horizon $T=10000$,
           \multirow{2}{*}{\MCTopM}
           & \UCB{} & $980 \pm 76$ & $1466 \pm 132$ & $43 \pm 13$ \\
           & \klUCB{} & $\mathbf{248 \pm 40}$ & $\mathbf{410 \pm 54}$ & $\mathbf{42 \pm 10}$ \\
-          \hline
+          % \hline
       \end{tabular}
       \caption{No matter the orthogonalization policy, using \klUCB{} is much more efficient than using \UCB{}, for multi-player bandit (here in a simple problem with $K=9$ arms).}
       \label{table:5:comparisonUCB_klUCB}

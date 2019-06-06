@@ -4,6 +4,8 @@
 \chapter{Multi-Player Multi-Armed Bandits}
 \label{chapter:5}
 
+\graphicspath{{2-Chapters/5-Chapter/Images/}}
+\graphicspath{{2-Chapters/5-Chapter/ALT_2018__MPBandits.git/figures/}}
 
 \paragraph{Abstract.}
 %
@@ -17,12 +19,10 @@ as illustrated by numerical simulations.
 We conclude by reviewing different extensions of the multi-player models.
 
 \minitoc
+% ----------------------------------------------------------------------
 
 
 \newpage
-% Write miniTOC just after the title
-\graphicspath{{2-Chapters/5-Chapter/Images/}}
-\graphicspath{{2-Chapters/5-Chapter/ALT_2018__MPBandits.git/figures/}}
 
 % ----------------------------------------------------------------------------
 \input{2-Chapters/5-Chapter/ALT_2018__MPBandits.git/mpBandits.tex}
@@ -290,12 +290,15 @@ They prove that it is unlikely to encounter any of these ``tie breaking points''
 \paragraph{Additionnal numerical simulations.}
 
 To illustrate the difficulty of the ``no sensing'' case, we illustrate here the performances of different algorithms designed specifically for this setting.
-As above, we consider a bandit problem with $K=9$ arms, of means $0.1,\dots,0.9$, and three different cases of $M=3,6,9$ players, for $100$ independent repetitions and an horizon of $T=10000$.
+As above, we consider a bandit problem with $K=9$ arms, of means $0.1,\dots,0.9$, and three different cases of $M=3,6,9$ players, for $N=100$ independent repetitions, and horizon $T=10000$.
 We include the \Selfish-\klUCB{} algorithm as an heuristic, as well as the Improved \MusicalChair{} algorithm from \cite{LugosiMehrabian18} and \textsc{Sic-MMAB} from \cite{BoursierPerchet18}.
-The centralized multiple-play \klUCB{} is included as an unrealistic efficient baseline, but it is interesting to also add it here, as it does not use the sensing information but only the joint information (the reward) $r^j(t)$, as it directly affects the player in an orthogonal configuration and thus never encounters any collision (thus $r^j(t)=Y_{t,A^j(t)}$ for each $j,t$).
+It is also interesting to add the centralized multiple-play \klUCB{} is included as an unrealistic efficient baseline, as it does not use the sensing information but only the joint information (the reward) $r^j(t)$, because it directly affects the player in an orthogonal configuration and thus never encounters any collision (thus $r^j(t)=Y_{t,A^j(t)}$ for each $j,t$).
 %
-For the two other algorithms, we use the parameters advised in all papers: for \textsc{Sic-MMAB}, we used $T_0 = \lceil K \log(T) \rceil$ as advised by the authors.
-For Improved-MC, we used $c=1$ which gives $g=235$, whereas in the paper the authors use $c=128$ for their analysis. We found empirically no difference when using different values of the constant $c$ or $g$, and unfortunately the regret of Improved-MC was always found to be linear\footnote{For instance Improved-MC obtained a mean regret $12150$ for $T=10000$, for $M=3,K=9$, but seeing one value for one horizon does not mean anything, however we also experimented with larger values of $T$ and found a same linear behavior.}.
+For the two other algorithms, we use the advised tuning of their parameters:
+for \textsc{Sic-MMAB}, we used $T_0 = \lceil K \log(T) \rceil$,
+% as advised by the authors.
+for Improved-MC, we used $c=1$ which gives $g=235$, whereas in the paper the authors use $c=128$ for their analysis.
+We found empirically no difference when using different values of the constant $c$ or $g$, and unfortunately the regret of Improved-MC was always found to be linear\footnote{For instance Improved-MC obtained a mean regret $12150$ for $T=10000$, for $M=3,K=9$, but seeing one value for one horizon does not mean anything, however we also experimented with larger values of $T$ and found a same linear behavior.}.
 
 % for T in 10000; do for K in 9; do for N in 4 100; do for M in 3 6 9; do DEBUG=False N_JOBS=4 N=$N K=$K M=$M T=$T make --noFreeSMS moremulti && cp logs/main_multiplayers_more_py3_log.txt logs/main_multiplayers_more_py3_log__K${K}_N${N}_M${M}_T${T}_$(date +"%d-%m-%Y_%H-%M-%S").txt && FreeSMS.py "Done for simulations for $K arms, $M players, T=$T N=$N and lots algorithms for experiments for Chapter 5 of my PhD. Love from Rennes."; done; done; done; done
 
@@ -315,11 +318,11 @@ Further empirical evaluation would be needed to fully understand the situation, 
         \Selfish-\klUCB{} & $249 \pm 35$ & $728 \pm 94$ & $2953 \pm 501$ \\
         \hline
         \textsc{Sic-MMAB} & $1705 \pm 340$ & $3915 \pm 300$ & $1713 \pm 52$ \\
-        Improved \MusicalChair{} & $\textcolor{red}{12149 \pm 60}$ & $\textcolor{red}{22341 \pm 77}$ & $\textcolor{red}{27462 \pm 85}$ \\
+        \textcolor{red}{Improved \MusicalChair{}} & $\textcolor{red}{12149 \pm 60}$ & $\textcolor{red}{22341 \pm 77}$ & $\textcolor{red}{27462 \pm 85}$ \\
         \hline
     \end{tabular}
     % \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on the same problem with $M=3,6,9$, for the ``no sensing'' case.}
-    \caption{Comparison for different algorithms on the same problem with $M=3,6,9$ players, for the ``no sensing'' case. We give the mean regret $\pm$ $1$ std-dev, and more work is needed on our implementation on Improved \MusicalChair. The results on \textsc{Sic-MMAB} appear to confirm the numerical experiments of \cite{BoursierPerchet18}.}
+    \caption{Comparison of the mean regret $\pm$ $1$ std-dev, for different algorithms, on the same problem with $M=3,6,9$ players, for the ``no sensing'' case. More work is needed on our implementation on Improved \MusicalChair. The results on \textsc{Sic-MMAB} appear to confirm the numerical experiments of \cite{BoursierPerchet18}.}
     \label{table:5:meanRegretSimulationsNoSensing}
 % \end{footnotesize}
 \end{table}
@@ -634,20 +637,7 @@ Despite being more complicated than other approaches, their algorithm ``\texttt{
 % \TODOL{Je peux faire des expériences pour cette approche, est-ce que j'en fais ? Ici, ou à la fin du chapitre 6 ? Ou en conclusion ?}
 
 
-% ----------------------------------------------------------------------------
-\subsection{Some future work on SMPyBandits}
-
-The experiments in this chapter use SMPyBandits,
-and we refer to the following page for details on how to reproduce them,
-\href{https://SMPyBandits.GitHub.io/MultiPlayers.html}{\texttt{SMPyBandits.GitHub.io/MultiPlayers.html}}
-
-Additionally, we have implemented in SMPyBandits \cite{SMPyBandits} the following extensions: evaluating $M$ on the fly (Section~\ref{sub:5:unknownNumberOfPlayers}), and piece-wise stationary multi-player bandits (Section~\ref{sub:5:towardsNonStationaryModels}).
-We have not yet implemented the other extensions, but we are interested to do it, and it is one of the major future work left on our library.
-For more details, see the issue tickets at \href{https://github.com/SMPyBandits/SMPyBandits/issues/}{\texttt{GitHub.com/SMPyBandits/SMPyBandits/issues/}}, for tickets number \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}.
-
-
-
-% \newpage  % FIXME
+\newpage  % FIXME
 % ----------------------------------------------------------------------------
 \section{Conclusion}
 \label{sec:5:conclusion}
@@ -668,6 +658,18 @@ Similarly to what was done very recently in \cite{wang2019distributed} for commu
 % Second, it remains an open question to know if a simple decentralized algorithm can be as efficient as \MCTopM{} without knowing $M$ in advance, or in dynamic settings (when $M$ can change in time). One could start by proposing variants of our algorithm that are inspired by the \rhoRandEst{} variant of \rhoRand{} proposed by \cite{Anandkumar11}.
 % Finally, one could want to strengthen the guarantees obtained in the absence of sensing, that is to know whether logarithmic regret is achievable.
 
+
+Additionally, we have implemented in SMPyBandits \cite{SMPyBandits} the following extensions: evaluating $M$ on the fly (Section~\ref{sub:5:unknownNumberOfPlayers}), and piece-wise stationary multi-player bandits (Section~\ref{sub:5:towardsNonStationaryModels}).
+We have not yet implemented the other extensions, but we are interested to do it, and it is one of the major future work left on our library.
+For more details, see the issue tickets at \href{https://github.com/SMPyBandits/SMPyBandits/issues/}{\texttt{GitHub.com/SMPyBandits/SMPyBandits/issues/}}, for tickets number \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}.
+
+% ----------------------------------------------------------------------------
+% \subsection{Some future work on SMPyBandits}
+\paragraph{Reproducility of the experiments.}
+
+The experiments in this chapter use SMPyBandits,
+and we refer to the following page for details on how to reproduce them,\\
+\href{https://SMPyBandits.GitHub.io/MultiPlayers.html}{\texttt{SMPyBandits.GitHub.io/MultiPlayers.html}}
 
 % -----------------------------------------------------------------
 

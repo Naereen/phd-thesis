@@ -1,11 +1,12 @@
 %!TEX root = ../PhD_thesis__Lilian_Besson
 
-% First chapter begins here
 \chapter{Stochastic Multi-Armed Bandits Models}
 \label{chapter:2}
 
+\graphicspath{{2-Chapters/2-Chapter/Images/}}
 
-\textbf{Abstract.}
+
+\paragraph{Abstract.}
 %
 In this chapter, we present the common base of all the models studied in this thesis: the multi-armed bandit (MAB) model, restricting to the single-player and stationary stochastic case. We focus on decision-making models with a finite number of resources, called arms, and on stochastic models, where an arm is associated with a one-dimensional distribution.
 %
@@ -14,11 +15,9 @@ We define the notion of regret of an algorithm, and quote important results from
 We conclude this chapter by discussing the question of online algorithm selection.
 
 \minitoc
-% Write miniTOC just after the title
-\graphicspath{{2-Chapters/2-Chapter/Images/}}
+% ----------------------------------------------------------------------
 
 \newpage
-
 
 % ----------------------------------------------------------------------------
 \section{Introduction}
@@ -1395,7 +1394,7 @@ and Thompson sampling (with Beta posteriors and flat uniform priors).
 We first give in Table~\ref{table:2:oneShotResult} the cumulated rewards as well as the estimated regrets\footnote{~First, the rewards are computed as $\frac{1}{N} \sum_{j=1}^N \sum_{t=1}^T r^{(j)}_{A(t)}(t)$, where $r^{(j)}_{k}(t)$ means the reward stream of the different runs $j=1,\dots,N$. Then the estimated regret is \emph{not} computed as $\frac{1}{N} \sum_{j=1}^N \sum_{t=1}^T r^{(j)}_{k^*}(t) - r^{(j)}_{A(t)}(t)$, as this first formula could give a negative regret and is more noisy, but as $\mu^* T - \frac{1}{N} \sum_{j=1}^N \sum_{k=1}^K \mu_k N^{(j)}_{k}(T)$, as this later formula gives a more robust estimator, as noted the proof of Lemma~\ref{lem:2:RegretDecomposition} (in Page~\pageref{remark:2:moreAccurateCountofRegretForSimulations} above).}
 of the different algorithms, \emph{for one simulation}.
 %
-It shows that the performance can be \textcolor{red}{very random}, as on both cases the pure exploitation strategy was very lucky and obtains close-to-optimal performance, even though we proved that it suffers from a linear mean regret.
+It shows that the performance can \textcolor{red}{fluctuate a lot}, as on both cases the pure exploitation strategy was very lucky and obtains close-to-optimal performance, even though we proved that it suffers from a linear mean regret.
 
 % Final ranking for this environment #0 : (using more accurate estimate of the regret)
 % - Policy 'Pure exploration'     was ranked      7 / 7 for this simulation
@@ -1460,7 +1459,6 @@ It shows that the performance can be \textcolor{red}{very random}, as on both ca
             Thompson sampling
                 & $51$ & $12.2$
                 & $6949$ & $44.2$ \\
-            \hline
         \end{tabular}
         \caption{Cumulated rewards and regret, for horizons $T=100$ and $T=10000$, \emph{for only one run of the simulation}, for different algorithms.}
         \label{table:2:oneShotResult}
@@ -1545,7 +1543,6 @@ both $\varepsilon$-greedy and Explore-then-Commit starts as pure exploration, re
             Thompson sampling
                 & $\mathbf{60}$ & $\mathbf{9.6}$
                 & $\mathbf{6951}$ & $\mathbf{49}$ \\
-            \hline
         \end{tabular}
         \caption{Cumulated rewards and regret, for horizons $T=100$ and $T=10000$, \emph{averaged over $N=1000$ independent simulations} ($j=1,\dots,N$), for different algorithms.}
         \label{table:2:meanResults}
@@ -1570,7 +1567,7 @@ both $\varepsilon$-greedy and Explore-then-Commit starts as pure exploration, re
 \begin{figure}[h!]  % [htbp]
 	% \centering
     \includegraphics[width=1.15\linewidth]{SP__K5_T10000_N1000__7_algos/main_MeanRewards____env1-1_2506036032481767447.pdf}
-	\caption{Average of rewards, as function of $t$, for $T=10000$ and $N=1000$.}
+	\caption{Average of the cumulated rewards, as function of $t$, for $T=10000$ and $N=1000$.}
 	\label{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}
 \end{figure}
 
