@@ -98,6 +98,14 @@
 % \newcommand{\thetaU}{\underline{\theta}}
 % ----------------------------------------------------------------------
 
+% FIXME decide what notation to use for defining new notations in maths :=, .= or = ?
+\newcommand{\eqdef}{\overset{.}{=}}
+% \newcommand{\eqdef}{:=}
+% % \newcommand{\eqdef}{=}
+\newcommand{\reqdef}{\overset{.}{=}}
+% \newcommand{\reqdef}{=:}
+% % \newcommand{\reqdef}{=}
+
 % Statistical Shorthands
 \newcommand{\K}{\mathrm{K}}
 \newcommand{\Kb}{\mathrm{K}}
@@ -117,33 +125,48 @@
 \definecolor{lightgray}{rgb}{0.94,0.94,0.94}  % Define a new color rgb(239, 239, 239)
 \definecolor{lightlightgray}{rgb}{0.97,0.97,0.97}  % Define a new color rgb(247, 247, 247)
 % use it inside a theorem/lemma/... with thereombar/lemmabar/... color
+% FIXME mettre la barre à gauche pour les pages paires et à droites pour les pages impaires ?
 \renewenvironment{leftbar}[1][black]{%
-    \def\FrameCommand
-    {%
-        {\color{#1}\vrule width 0.5pt}%
+    \def\FrameCommand{%
+        {\color{#1}\vrule width 0.75pt}%
         \hspace{0pt}%must no space.
         \fboxsep=\FrameSep\colorbox{lightgray}%
     }%
-    \vspace*{-11pt}%  % XXX Experimental ! It works fine like this, I like it!
+    \vspace*{-10pt}%  % XXX Experimental ! It works fine like this, I like it!
     \MakeFramed{\hsize\hsize\advance\hsize-\width\FrameRestore}%
-    \vspace*{-3pt}%  % XXX Experimental ! It works fine like this, I like it!
+    % \vspace*{-3pt}%  % XXX Experimental ! It works fine like this, I like it!
 }{%
-    \vspace*{-4pt}%  % XXX Experimental ! It works fine like this, I like it!
+    \vspace*{-30pt}%  % XXX Experimental ! It works fine like this, I like it!
     \endMakeFramed%
+    % \vspace*{-20pt}%  % XXX Experimental ! It works fine like this, I like it!
 }
 \newenvironment{lightleftbar}[1][black]{%
-    \def\FrameCommand
-    {%
-        {\color{#1}\vrule width 0.5pt}%
+    \def\FrameCommand{%
+        {\color{#1}\vrule width 0.75pt}%
         \hspace{0pt}%must no space.
         \fboxsep=\FrameSep\colorbox{lightlightgray}%
     }%
-    \vspace*{-11pt}%  % XXX Experimental ! It works fine like this, I like it!
+    \vspace*{-10pt}%  % XXX Experimental ! It works fine like this, I like it!
     \MakeFramed{\hsize\hsize\advance\hsize-\width\FrameRestore}%
-    \vspace*{-3pt}%  % XXX Experimental ! It works fine like this, I like it!
+    % \vspace*{-3pt}%  % XXX Experimental ! It works fine like this, I like it!
 }{%
-    \vspace*{-4pt}%  % XXX Experimental ! It works fine like this, I like it!
+    \vspace*{-30pt}%  % XXX Experimental ! It works fine like this, I like it!
     \endMakeFramed%
+    % \vspace*{-20pt}%  % XXX Experimental ! It works fine like this, I like it!
+}
+\newenvironment{whiteleftbar}[1][black]{%
+    \def\FrameCommand{%
+        {\color{#1}\vrule width 0.75pt}%
+        \hspace{0pt}%must no space.
+        \fboxsep=\FrameSep\colorbox{white}%
+    }%
+    \vspace*{-10pt}%  % XXX Experimental ! It works fine like this, I like it!
+    \MakeFramed{\hsize\hsize\advance\hsize-\width\FrameRestore}%
+    % \vspace*{-3pt}%  % XXX Experimental ! It works fine like this, I like it!
+}{%
+    \vspace*{-30pt}%  % XXX Experimental ! It works fine like this, I like it!
+    \endMakeFramed%
+    % \vspace*{-20pt}%  % XXX Experimental ! It works fine like this, I like it!
 }
 
 % Define colors for the theorem/defb/prop/.. left bar
@@ -154,10 +177,19 @@
 \definecolor{lemmabar}{rgb}{1.00,0.00,0.78}        % Define a new color rgb(255,0,198)
 \definecolor{warningbar}{rgb}{0.90,0.00,0.00}      % Define a new color rgb(229,0,0)
 \definecolor{propertybar}{rgb}{1.00,1.00,0.00}  % Define a new color rgb(255,255,0)
+\definecolor{assumptionbar}{rgb}{235,200,0}  % Define a new color rgb(235,200,0)
 % \definecolor{examplebar}{rgb}{0.00,0.00,0.00}      % Define a new color rgb(0,0,0)
+\definecolor{proofbar}{rgb}{0,70,0}      % Define a new color rgb(0,70,0)
 \definecolor{remarkbar}{rgb}{1.00,0.53,0.00}       % Define a new color rgb(255,135,0)
 \definecolor{tablebar}{rgb}{0.58,0.00,1.00}  % Define a new color rgb(147,0,255)
 % ----------------------------------------------------------------------
+
+% FIXME just remove the small...small if I want normalsize proofs
+\newenvironment{smallproof}{%
+    \begin{small}\begin{proof}
+}{%
+    \end{proof}\end{small}
+}
 
 % ----------------------------------------------------------------------
 % Chapter 2 on MAB algorithms

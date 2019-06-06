@@ -646,12 +646,6 @@ supported!}
     urlcolor=black,
     citecolor=black,
     anchorcolor=black,
-    % FIXME
-    % pdftitle={Apprentissage statistique séquentiel multi-joueurs pour la radio intelligente},
-    % pdftitle={Applications d'algorithmes de bandits multi-bras (MAB) simple- et multi-joueurs pour les réseaux de l'Internet des Objets (IoT)},
-    % pdftitle={Multi-players sequential statistical learning for cognitive radio},
-    pdftitle={Applications of single- and multi-players multi-armed bandits algorithms for Internet of Things networks},
-    pdfauthor={Lilian Besson (CentraleSupélec campus de Rennes & Inria Lille)},
   }
   \ifsetCustomMargin
   % Margin to be define in preamble using geometry package
@@ -740,13 +734,20 @@ supported!}
 \ifpdf
 \AtBeginDocument{
   \hypersetup{
-    pdftitle = {\@title},
-    pdfauthor = {\@author},
+    pdftitle={\@title},
+    pdfauthor={\@author},
     pdfsubject={\@subject},
     pdfkeywords={\@keywords}
   }
 }
 \fi
+
+% FIXME
+% % pdftitle={Apprentissage statistique séquentiel multi-joueurs pour la radio intelligente},
+% % pdftitle={Applications d'algorithmes de bandits multi-bras (MAB) simple- et multi-joueurs pour les réseaux de l'Internet des Objets (IoT)},
+% % pdftitle={Multi-players sequential statistical learning for cognitive radio},
+% pdftitle={Applications of single- and multi-players multi-armed bandits algorithms for Internet of Things networks},
+% pdfauthor={Lilian Besson (CentraleSupélec campus de Rennes & Inria Lille)},
 
 % ******************************** Line Spacing ********************************
 % Set spacing as 1.5 line spacing for the PhD Thesis

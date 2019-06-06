@@ -347,7 +347,7 @@ be the set of bandit instances such that there is a strict gap between the $M$ b
 
 In this decomposition, term \ref{eq:5:term1} counts the lost rewards due to \emph{sub-optimal arms} selections ($k \in \Mworst$), term \ref{eq:5:term2} counts the number of times the \emph{best arms} were \emph{not} selected ($k \in \Mbest$), and term \ref{eq:5:term3} counts the weighted number of collisions, on \emph{all arms}.
 
-\begin{proof}
+\begin{smallproof}
   Using the definition of regret $R_T$ from \eqref{eq:5:regret}, and this collision indicator $\eta^j(t):=\indic(\overline{C^j(t)})$,
   \begin{align*}
     R(T)
@@ -400,7 +400,7 @@ In this decomposition, term \ref{eq:5:term1} counts the lost rewards due to \emp
       + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
   \end{align*}
   Which is exactly the decomposition we wanted to prove.
-\end{proof}
+\end{smallproof}
 
 
 The regret decomposition in Lemma~\ref{lem:5:DecompositionRegret} is valid for both centralized and decentralized algorithms.
@@ -417,7 +417,7 @@ The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized___
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
-\begin{proof}
+\begin{smallproof}
   Note that term \ref{eq:5:term3} is clearly lower bounded by $0$
   but it is not obvious for \ref{eq:5:term2} as there is no reason for $T_k(T)$ to be upper bounded by $T$.
   %
@@ -445,7 +445,7 @@ The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized___
   \end{align*}
   And now both terms are non-negative, as $T_k^!(T) \leq T$, $\min(\mu_M^*, \mu_k)\geq 0$, and $C_k(T) \geq 0$, so $\ref{eq:5:term2} + \ref{eq:5:term3} \geq 0$
   which proves that $R_T(\boldsymbol{\mu}, M, \cA) \geq \ref{eq:5:term1}$, as wanted.
-\end{proof}
+\end{smallproof}
 
 
 % -----------------------------------------------------------------
@@ -592,7 +592,7 @@ The following result shows that term \ref{eq:5:term2} can be related to the numb
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
-\begin{proof}
+\begin{smallproof}
   Recall that we want to upper bound
   $ \ref{eq:5:term2} : = \sum_{k \in \Mbest} (\mu_k - \mu_{M*}) \left(T - \E_{\mu}[T_k(T)]\right)$.
   First, we observe that, for all $k\in \Mbest$,
@@ -610,7 +610,7 @@ The following result shows that term \ref{eq:5:term2} can be related to the numb
   which yields
   \[\E_{\mu}\left[ \sum_{t = 1}^T \sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t)\right] \leq \sum_{k \in \Mbest}\E_{\mu}\left[\cC_k(T)\right] + \sum_{k \in \Mworst} \E_{\mu}\left[T_k(T)\right]\]
   and Lemma~\ref{lem:5:1stUpperBound} follows.
-\end{proof}
+\end{smallproof}
 
 
 This result can also be used to recover Proposition~1 from \cite{Anandkumar11}, giving an upper bound on the regret that only depends on
@@ -972,7 +972,7 @@ Explicit expressions for $C_{\boldsymbol{\mu}}$, $D_{\boldsymbol{\mu}}$ can be f
 It is important to notice that the leading constant in front of $\log(T)$ is the same as in the constant featured in Equation~\eqref{eq:5:LBDraws} of Theorem~\ref{thm:5:BetterLowerBound}. This result proves that the lower bound on sub-optimal selections is asymptotically matched for the three considered algorithms. This is a strong improvement in comparison to the previous state-of-the-art results
 \citep{Zhao10,Anandkumar11}.
 
-\begin{proof}
+\begin{smallproof}
   %
   %     Recall $g_k^j(t) \in \mathbb{R}$ denote the index of arm $k$ for user $j$ at time $t$.
   %     As only user $j$ is considered here, the superscript $j$ is dropped.
@@ -1044,7 +1044,7 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
   \end{align}
   which yields Lemma~\ref{lem:5:SubOptimalSelections},
   with explicit constants $C_{\boldsymbol{\mu}}$ and $D_{\boldsymbol{\mu}}$.
-\end{proof}
+\end{smallproof}
 
 
 % -----------------------------------------------------------------
@@ -1088,7 +1088,7 @@ happen a logarithmic number of times. The proof of this result is given below.
 \end{lemma}
 
 
-\begin{proof}
+\begin{smallproof}
   We analyze the case when the current arm leaves the set $\TopM$ (Line 4):
   \begin{align*}
     & \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t)\right)  \\ & \leq \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t), A^j(t+1) \in \TopM(t) \cap \{k': g_{k'}^j(t-1) \leq g_k^j(t-1)\}\right) \\
@@ -1117,7 +1117,7 @@ happen a logarithmic number of times. The proof of this result is given below.
   and similarly Lemma~\ref{lem:5:Fact1KLUCB} and a slight variant of Lemma~\ref{lem:5:Fact2KLUCB} to deal with the modified time indices yields
   \[T_{k'} = \frac{\log(T)}{\kl(\mu_{k'},\mu_{k})} + o(\log(T)).\]
   Summing over $k'$ yields the result.
-\end{proof}
+\end{smallproof}
 
 
 % -----------------------------------------------------------------
@@ -1150,7 +1150,7 @@ However, unlike \MusicalChair, our algorithm does not need any prior knowledge o
 It is indeed not very satisfying, from an applicative point of view, to require a prior knowledge
 of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
 
-\begin{proof}
+\begin{smallproof}
   A key feature of both the \RandTopM{} and \MCTopM{} algorithms is Lemma~\ref{lem:5:elementaryLemma_RandTopM_MCTopM}, that states that the probability of switching from some arm because this arm leaves $\TopM(t)$ is small. Its proof is postponed to the end of this section.
 
 
@@ -1352,7 +1352,7 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
     \sum_{k=1}^K \E_{\mu}[\cC^k(T)] & = \E_{\mu}[\cC(T)] \nonumber\\
     & \leq M^2\left(2 M + 1\right) \left(\sum_{a,b=1,\dots,K,\;\mu_a < \mu_b} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T}.
   \end{align}
-\end{proof}
+\end{smallproof}
 
 
 \paragraph{Logarithmic ``switching costs'' for \MCTopM.}\label{app:5:NumberSwitches}

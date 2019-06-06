@@ -151,7 +151,7 @@ The expectancy is taken on the rewards $(Y_{k,t})_{k,t}$, and the extern random 
 %
 Other commonly studied objectives include best-arm identification (BAI) \cite{audibert2010best}.
 
-% \TODOL{Je dois unifier les notations, et utiliser $Y_{k,t}$ pour les flux qui sont iid et $r(t)$ pour les récompenses effectivement observées (comme dans les chapitres 5 et 6)}
+% DONE Je dois unifier les notations, et utiliser $Y_{k,t}$ pour les flux qui sont iid et $r(t)$ pour les récompenses effectivement observées (comme dans les chapitres 5 et 6)
 
 \paragraph{An interactive demo to discover the MAB problem (for the novice).}
 \label{par:2:interactiveDemoDiscoverMAB}
@@ -287,7 +287,7 @@ We have to quote two important results on exponential families:
     \begin{align}\label{eq:2:Kullback-LeiblerDivergenceExpFamily1}
         \KL\left(d_1, d_2\right) = \int d_1 \log\left(\frac{d_2}{d_1}\right) \lambda(\mathrm{d}x) = \E_{d_1} \left[ \log\left(\frac{d_2}{d_1}\right) \right] \in \mathbb{R}\cup\{\pm\infty\}.
     \end{align}
-\vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
+% \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
 
@@ -305,36 +305,37 @@ Without diving more in the details of exponential families,
 it is interesting to illustrate this definition and the notations with two important examples:
 
 \label{par:2:notationsExponentialFamiliesBernoulliGaussian}
-% \begin{itemize}
-    % \item
-    $\bullet$
+\begin{itemize}
+    \item
+    % $\bullet$
     \textbf{Bernoulli distributions} can be seen as an exponential family with $h(x) = 1$,
     and for a Bernoulli distribution of mean $\mu\in[0,1]$, denoted $B(\mu)$,
     the parameter is $\eta = \mu / (1 - \mu)$, giving $A(\eta) = \log(1 + \mathrm{e}^{\eta})$
     (with the limit behavior $\eta=+\infty$ if $\mu=0$).
-    %
-    Moreover, the KL divergence between $B(x)$ and $B(y)$, of parameters $\eta$, $\eta'$ is given by
+
+    The KL divergence between $B(x)$ and $B(y)$, of parameters $\eta$, $\eta'$ is given by
     $\kl(x,y) = \KL_{B}(\eta,\eta') = x \log(x/y) + (1-x) \log((1-x)/(1-y))$,
     and it is also called the \emph{relative binary entropy}.
     It satisfies $\kl(x,y) \geq d_{1/4}(x,y)$, see Lemma~\ref{lem:2:Pinsker} in Appendix~\ref{proof:2:Pinsker}.
 
-    $\bullet$
+    \item
+    % $\bullet$
     \textbf{Gaussian distributions} of a fixed variance are a one-dimensional exponential family,
     and in this thesis we do not consider Gaussian with an unknown variance.
     For a variance of $\sigma^2$, the family uses
     % $T(x) = [x ; x^2]^T$ and
     $h(x) = 1/\sqrt{2\pi\sigma^2} \exp(-x^2/(2\sigma^2))$,
     and for a Gaussian distribution with mean $\mu\in\R$, denoted $\cN(\mu,\sigma^2)$,
-    the parameter is $\eta = \mu/\sigma^2$, giving $A(\eta) = \mu^2/(2\sigma^2)$
-    (see Chapter~8 of \cite{JordanCourseStatBerkeley}).
+    the parameter is $\eta = \mu/\sigma^2$, giving $A(\eta) = \mu^2/(2\sigma^2)$.
     % % For a generic variance,
     % This shows that the Gaussian distributions
     % % are a two-dimensional exponential families,
     % with a fixed variance $\sigma^2$ form indeed a one-dimensional exponential family.
-    %
-    Moreover, the KL divergence between $\cN(x,\sigma^2)$ and $\cN(x,\sigma^2)$, of parameters $\eta$, $\eta'$ is given by
-    $d_{\sigma^2}(x,y) = \KL_{\cN,\sigma^2}(\eta,\eta') = (x-y)^2 / (2\sigma^2)$.
-% \end{itemize}
+
+    The KL divergence between $\cN(x,\sigma^2)$ and $\cN(x,\sigma^2)$, of parameters $\eta$, $\eta'$ is given by
+    $d_{\sigma^2}(x,y) = \KL_{\cN,\sigma^2}(\eta,\eta') = (x-y)^2 / (2\sigma^2)$
+    (see Chapter~8 of \cite{JordanCourseStatBerkeley}).
+\end{itemize}
 
 
 \paragraph{Hypotheses in this thesis.}
@@ -515,7 +516,7 @@ As the rewards from arm $k^*$ are \iid{} (as for all arms), and by linearity of 
         % = T \mu^* - \sum_{t=1}^T \E\left[ Y(t) \right]
         = T \mu^* - \sum_{t=1}^T \E\left[ r(t) \right].
     \end{align}
-    \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
+% \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
 
@@ -535,11 +536,11 @@ and thus we can write the following decomposition on the regret.
         R_T^{\cA} = \sum_{k=1}^K \Delta_k \; \E[ N_k(T) ]
         = \sum_{\substack{k=1,\dots,K\\\Delta_k > 0}} \Delta_k \; \E[ N_k(T) ].
     \end{align}
-    \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
+    % \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 %
-\begin{proof}\label{proof:2:RegretDecomposition}
+\begin{smallproof}\label{proof:2:RegretDecomposition}
     We use the chain rule of expectation and a conditioning on $O_t$,
     because the expectation is taken on the randomness of the (\iid) samples $(Y_{k,t})_t$ and on the decisions of the player $(A(t))_t$, which are measurable wrt to the past observations $O_t = (U_0, Y_{A(1),1}, U_1, \dots, Y_{A(t-1),t-1}, U_{t-1})$.
     Thus we can rewrite the expected cumulated reward as follows:
@@ -561,10 +562,10 @@ and thus we can write the following decomposition on the regret.
     Thus $R_T^{\cA} = T \mu^* - \sum_{t=1}^T \E\left[ r(t) \right] = T \mu^* - \sum_{k=1}^K \mu_k \E[ N_k(T) ] = \sum_{k=1}^K (\mu^* - \mu_k) \E[ N_k(T) ]$,
     as $\sum_{k=1}^K  \E[ N_k(T) ] = T$.
     The sum can then be simplified to only account for sub-optimal arms, \ie, arms $k$ such that $\Delta_k > 0$.
-\end{proof}
+\end{smallproof}
 
 
-\textbf{Consequences.}
+\paragraph{Consequences.}
 %
 Such decomposition of the regret can be useful for at least two reasons:
 
@@ -635,7 +636,7 @@ Now we can state the second logarithmic lower-bound, for algorithms in this fami
     \begin{equation}
         \forall T \geq T_0, \;\;\; R_T^{\cA}(I) \geq C_I \log(T).
     \end{equation}
-    \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
+    % \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
@@ -678,13 +679,13 @@ For more details, we refer to Chapter~16 of \cite{LattimoreBanditAlgorithmsBook}
 For a fixed horizon $T$, it is interesting to note that one can find instances $I$ that are so ``hard'' that a logarithmic regret (lower or upper) bound that uses a constant $C_I$ no longer brings any information.
 Indeed, we can naively bound the regret by $R_T^{\cA} \leq (\max_k \Delta_k) T$, and thus if $(\max_k \Delta_k)$ can be taken so small that $C_I \log(T) \gg (\max_k \Delta_k) T$, and thus a regret upper bound like $R_T^{\cA} \leq C_I \log(T)$ is useless.
 %
-\begin{proof}\label{proof:2:worstCaseLowerBound}
+\begin{smallproof}\label{proof:2:worstCaseLowerBound}
     For an example, consider any large horizon $T>10$, and $K=2$ Bernoulli arms.
     Chose any small $\varepsilon$ such that $\varepsilon \ll \sqrt{4 \log(T) / T}$, then chose let $\mu_1 = 1/2$ and $\mu_2 = 1/2 - \varepsilon$.
     The constant $C_I$ from the first case of Theorem~\ref{thm:2:forSecondLogTLowerBound} is $C_I = 1 / (4 \varepsilon)$ and $\Delta=\varepsilon$ and it becomes so large that
     the logarithmic upper-bound is useless in such case, as
     $\varepsilon \ll \sqrt{\frac{4 \log(T)}{T}} \Longleftrightarrow \frac{1}{4\varepsilon} \log(T) \gg \Delta T$.
-\end{proof}
+\end{smallproof}
 
 For this reason, the research literature has also been interested by another family of regret bounds, that are not problem-dependent but worst-case, or also called minimax \cite{Audibert2009minimax,audibert2010minimax} or problem-independent.
 Hence it is interesting to quote another lower-bound on the regret, that can bring useful information in such settings.
@@ -915,7 +916,7 @@ and proves that the ``explore-then-exploit'' strategy can also obtain an order-o
 %
 We note that this strategy can also achieve $R_T = \bigO{T^{2/3} (K \log(T))^{1/3}}$ without prior knowledge on the problem, as shown in Section~1 of \cite{Slivkins2019}.
 %
-\begin{proof}\label{proof:2:tuningExploreThenCommit}
+\begin{smallproof}\label{proof:2:tuningExploreThenCommit}
     Let us prove the inequality $p \leq 2 K \exp(-T_0 d^2 / 4)$.\\
     \indent
     %
@@ -931,7 +932,7 @@ We note that this strategy can also achieve $R_T = \bigO{T^{2/3} (K \log(T))^{1/
     $p \leq 2 K \exp(-T_0 d^2 / 4)$, if $d$ is a lower-bound on the positive gaps $\Delta_k$.
     %
     In all cases, we showed that $p$ is controlled by $T_0$.
-\end{proof}
+\end{smallproof}
 
 \begin{lemma}[Hoeffding's inequality]\label{lem:2:HoeffdingInequality}
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
@@ -943,7 +944,7 @@ We note that this strategy can also achieve $R_T = \bigO{T^{2/3} (K \log(T))^{1/
             \forall x > \mu, \;\;\; & \bP(\widehat{Z_n} > x) \leq \exp(-2 n (x-\mu)^2).
         \end{cases}
     \end{align}
-    \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
+    % \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
@@ -1032,11 +1033,11 @@ What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal pr
         R_T^{\cA}(I) \leq \left(\sum_{k: \Delta_k>0} \frac{8}{\Delta_k}\right) \log(T) + \sum_{k: \Delta_k>0} \Delta_k \left(1 + \frac{\pi^2}{3}\right)
         = \bigO{ \left(\sum_{k: \Delta_k>0} \frac{8}{\Delta_k}\right) \log(T)}.
     \end{equation}
-    \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
+    % \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 %
-\begin{proof}\label{proof:2:UCBregretBound}
+\begin{smallproof}\label{proof:2:UCBregretBound}
     As we focus on bounded distributions in $[0,1]$, for which Hoeffding's inequality gives \eqref{eq:2:HoeffdingInequality}, as stated above in Lemma~\ref{lem:2:HoeffdingInequality}.
     Thanks to the regret decomposition from Lemma~\ref{lem:2:RegretDecomposition}, we can focus on bounding $\E[N_k(T)]$ for any sub-optimal arm $k$.\\
     %
@@ -1121,7 +1122,7 @@ What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal pr
     \end{align*}
 
     More details on this proof can be found for instance in Section~1.3 of \cite{Slivkins2019}, while for instance Chapter~2 of \cite{Bubeck12} Theorem~2.1) and Chapter~7 of \cite{LattimoreBanditAlgorithmsBook} (Theorem~7.2) both give more general proofs, in particular for any value of $\alpha\geq\frac{1}{2}$.
-\end{proof}
+\end{smallproof}
 
 Therefore, we see that the $\UCB_1$ algorithm has the advantage of not relying on any prior knowledge of the problem difficulty, of being anytime, and computationally simple, for both memory and time aspects, and it achieves an order-optimal problem-dependent regret upper bound in $\cO(K\log(T)/\Delta^2)$.
 %
@@ -1756,7 +1757,7 @@ As bounded distributions in $[0,1]$ are sub-Bernoulli as well as $1/4$-sub-Gauss
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
-\begin{proof}
+\begin{smallproof}
     Fix $p\in[0,1]$, and consider the function $g(x) = \kl(p, p+x) - 2 x^2$ ($x$ will be $q-p$), for $x\in(-p, 1-p)$.
     We first observe that $g(0) = 0$, and we easily prove that $x=0$ is the unique minimizer of $g$ over its domain.
     By definition, $\kl$ is of class $\cC^1$ on its two variables, on $(0,1)$, so $g$ is of class $\cC^1$ on the interior of its domain, $(-p, 1-p)$.
@@ -1781,6 +1782,4 @@ As bounded distributions in $[0,1]$ are sub-Bernoulli as well as $1/4$-sub-Gauss
     %     >>> print(diff(g, x))
     %     -p/(p + x) - 4*x + (-p + 1)/(-p - x + 1)
     % \end{verbatim}
-\end{proof}
-
-% \TODOL{Write this ?}
+\end{smallproof}
