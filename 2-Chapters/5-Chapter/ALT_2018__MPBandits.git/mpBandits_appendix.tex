@@ -253,19 +253,19 @@
 % &= \E_{\mu}\left[ \sum_{t=1}^T \mathbbm{1}\left( A^j(t) = k \right) \right]
 % = \sum_{t=1}^T \Pr\left( A^j(t) = k \right).\\
 % %&= \sum_{t=1}^T \Pr\left( A^j(t) = k,\;\; \exists m \in\Mbest,\; g_m(t) < g_k(t) \right) \\
-% &= \sum_{t=1}^T \Pr\left( A^j(t) = k,\;\; \exists m \in[M]:\; g_{m^*}^j(t) < g_k^j(t) \right).
+% &= \sum_{t=1}^T \Pr\left( A^j(t) = k,\;\; \exists m \in[M]:\; U_{m^*}^j(t) < g_k^j(t) \right).
 % %
-% \intertext{Considering the relative position of the upper-confidence bound $g_{m^*}^j(t)$ and the corresponding mean $\mu_m^* = \mu_{m^*}$, one can write the decomposition}
-% \E_{\mu}[T_k^j(T)] &\leq \sum_{t=1}^T\Pr\left(A^j(t) = k,\;\; \exists m \in[M]:\; g_{m^*}(t) \leq g_k(t) , \forall m \in [M]: \;  g_{m^*}(t) \geq \mu_m^* \right)\\
-% &\;\;\;\;\;\;\;\; + \sum_{t=1}^T\Pr\left( \exists m \in[M]: \; g_{m^*}(t) < \mu_m^* \right) \\
-% &\leq \sum_{t=1}^T\Pr\left(A^j(t) = k,\;\; \exists m \in[M]:\; \mu_{m}^* \leq g_k(t)\right)+ \sum_{m=1}^M\sum_{t=1}^T\Pr\left(g_{m^*}(t) < \mu_m^* \right) \\
+% \intertext{Considering the relative position of the upper-confidence bound $U_{m^*}^j(t)$ and the corresponding mean $\mu_m^* = \mu_{m^*}$, one can write the decomposition}
+% \E_{\mu}[T_k^j(T)] &\leq \sum_{t=1}^T\Pr\left(A^j(t) = k,\;\; \exists m \in[M]:\; U_{m^*}(t) \leq g_k(t) , \forall m \in [M]: \;  U_{m^*}(t) \geq \mu_m^* \right)\\
+% &\;\;\;\;\;\;\;\; + \sum_{t=1}^T\Pr\left( \exists m \in[M]: \; U_{m^*}(t) < \mu_m^* \right) \\
+% &\leq \sum_{t=1}^T\Pr\left(A^j(t) = k,\;\; \exists m \in[M]:\; \mu_{m}^* \leq g_k(t)\right)+ \sum_{m=1}^M\sum_{t=1}^T\Pr\left(U_{m^*}(t) < \mu_m^* \right) \\
 % %
 % &\leq
 % \sum_{t=1}^T
 %   \Pr\left( A^j(t) = k,\; \mu_{M^*} \leq g_k(t) \right)
 % +
 % \sum_{m=1}^M
-%   \sum_{t=1}^T \Pr\left( g_{m^*}(t) < \mu_m^* \right),
+%   \sum_{t=1}^T \Pr\left( U_{m^*}(t) < \mu_m^* \right),
 % \end{align*}
 % where the last inequality (for the first term) comes from the fact that $\mu_{M^*}$ is the smallest of the $\mu_{m^*}$ for $m \in [M]$.
 
@@ -305,18 +305,18 @@
 
 % Using the behavior of the algorithm when the current arm leaves the set $\TopM$ (Line 4), one has
 % \begin{align*}
-%   & \sum_{t=1}^T \bP\left(A^j(t) = k, k \notin \hat{M}^j(t)\right)  \\ & \leq \sum_{t=1}^T \bP\left(A^j(t) = k, k \notin \hat{M}^j(t), A^j(t+1) \in \TopM(t) \cap \{k': g_{k'}^j(t-1) \leq g_k^j(t-1)\}\right) \\
-%   & \leq   \sum_{t=1}^T \sum_{k' \neq k}\bP\left(A^j(t) = k,A^j(t+1) = k', g_{k'}^j(t) \geq g_{k}^j(t), g_{k'}^j(t-1) \leq g_{k}^j(t-1)  \right) \\
-%   & = \sum_{k' \neq k} \underbrace{\sum_{t=1}^T \bP\left(A^j(t) = k,A^j(t+1) = k', g_{k'}^j(t) \geq g_{k}^j(t), g_{k'}^j(t-1) \leq g_{k}^j(t-1)  \right)}_{:= T_{k'}}
+%   & \sum_{t=1}^T \bP\left(A^j(t) = k, k \notin \hat{M}^j(t)\right)  \\ & \leq \sum_{t=1}^T \bP\left(A^j(t) = k, k \notin \hat{M}^j(t), A^j(t+1) \in \TopM(t) \cap \{k': U_{k'}^j(t-1) \leq g_k^j(t-1)\}\right) \\
+%   & \leq   \sum_{t=1}^T \sum_{k' \neq k}\bP\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right) \\
+%   & = \sum_{k' \neq k} \underbrace{\sum_{t=1}^T \bP\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right)}_{:= T_{k'}}
 % \end{align*}
 
 % Now, to control $T_{k'}$, we distinguish two cases. If $\mu_k < \mu_{k'}$, one can write
-% \[T_{k'} \leq \sum_{t=1}^T \bP\left(g_{k'}^j(t) \leq \mu_{k'}\right) + \sum_{t=1}^T \bP\left(A^j(t) = k, g_{k}^j(t-1) \geq \mu_{k'}\right)\]
+% \[T_{k'} \leq \sum_{t=1}^T \bP\left(U_{k'}^j(t) \leq \mu_{k'}\right) + \sum_{t=1}^T \bP\left(A^j(t) = k, U_{k}^j(t-1) \geq \mu_{k'}\right)\]
 % The first term in the right hand side is $o(\log(T))$ by Lemma~\ref{lem:5:Fact1KLUCB}. To control the second term, we apply the same trick that led to the proof of Lemma~\ref{lem:5:Fact2KLUCB} in \cite{KLUCBJournal}.
 % Letting $\kl^+(x, y) := \kl(x, y) \indic(x \geq y)$,
 % and $\widehat{\mu}^j_{k,s}$ be the empirical mean of the $s$ first observations from arm $k$ by player $j$, one has
 % \begin{align}
-%   & \sum_{t=1}^T \bP\left(A^j(t) = k, g_{k}^j(t-1) \geq \mu_{k'}\right)
+%   & \sum_{t=1}^T \bP\left(A^j(t) = k, U_{k}^j(t-1) \geq \mu_{k'}\right)
 %   =  \bE \left[ \sum_{t=1}^T\sum_{s=1}^{t-1} \indic{\left(A^j(t) = k , N^j_k(t-1) = s\right)}\indic{\left( s  \times \kl^+\left(\widehat{\mu}_{k,s}^j , \mu_k\right) \leq f(t)\right)} \right]\nonumber\\
 %   & \hspace{1cm} \leq \bE \left[ \sum_{s=1}^{T}\indic{\left( s \times \kl^+\left(\widehat{\mu}_{k,s}^j , \mu_k\right) \leq f(T)\right)}\sum_{t=s-1}^T \indic{\left(A^j(t) = k , N^j_k(t-1) = s\right)} \right] \nonumber \\
 %   & \hspace{1cm}  \leq \sum_{s=1}^T \bP\left( s \times \kl^+\left(\widehat{\mu}_{k,s}^j , \mu_k\right) \leq f(T)\right),\label{eq:5:FromHere}
@@ -326,7 +326,7 @@
 % \[T_{k'} = \frac{\log(T)}{\kl(\mu_k,\mu_{k'})} + o(\log(T)).\]
 
 % If $\mu_k > \mu_{k'}$, we rather use that
-% \[T_{k'} \leq \sum_{t=1}^T \bP\left(g_{k}^j(t) \leq \mu_{k}\right) + \sum_{t=1}^T \bP\left(A^j(t+1) = k', g_{k'}^j(t) \geq \mu_{k}\right)\]
+% \[T_{k'} \leq \sum_{t=1}^T \bP\left(U_{k}^j(t) \leq \mu_{k}\right) + \sum_{t=1}^T \bP\left(A^j(t+1) = k', U_{k'}^j(t) \geq \mu_{k}\right)\]
 % and similarly Lemma~\ref{lem:5:Fact1KLUCB} and a slight variant of Lemma~\ref{lem:5:Fact2KLUCB} to deal with the modified time indices yields
 % \[T_{k'} = \frac{\log(T)}{\kl(\mu_{k'},\mu_{k})} + o(\log(T)).\]
 % Summing over $k'$ yields the result.
@@ -361,37 +361,37 @@
 % and assume that both arms are sampled enough.
 % %
 % This event $\phi_{k,k'}^j(t)$ we focus on implies both
-% $g_{k'}^j(t-1) \leq g_k^j(t-1), A^j(t-1)=k$
+% $U_{k'}^j(t-1) \leq g_k^j(t-1), A^j(t-1)=k$
 % and
-% $g_k^j(t) \leq g_{k'}^j(t), A^j(t)=k'$.
+% $g_k^j(t) \leq U_{k'}^j(t), A^j(t)=k'$.
 % %
 % In particular,
 % if $\mu_k \geq \mu_{k'}$,
-% $\phi_{k,k'}^j(t)$ implies $g_k^j(t) \leq g_{k'}^j(t)$,
+% $\phi_{k,k'}^j(t)$ implies $g_k^j(t) \leq U_{k'}^j(t)$,
 % and
 % if $\mu_k < \mu_{k'}$, then
-% $\phi_{k,k'}^j(t)$ implies $g_{k'}^j(t-1) \leq g_k^j(t-1)$,
+% $\phi_{k,k'}^j(t)$ implies $U_{k'}^j(t-1) \leq g_k^j(t-1)$,
 % both with $A^j(t-1)=k, A^j(t)=k'$.
 % Both cases are dealt with exactly the same arguments,
 % so let focus on the first one.
 %
 % Assume $\mu_k \geq \mu_{k'}$.
-% Then, essentially $g_k^j(t) \leq g_{k'}^j(t)$
+% Then, essentially $g_k^j(t) \leq U_{k'}^j(t)$
 % is unlikely (\ie, the sum of probabilities is $\bigO{\log T}$)
 % as the indices $g_m^j(t)$ tends to $\mu_m$ if arm $m$ is sampled enough (\ie, $\E_{\mu}[T_m^j(T)] \to \infty$).
 % \begin{align}
 %     \sum_{t=1}^{T} \Pr(\phi_{k,k'}^j(t))
 %     &\leq
-%     \sum_{t=1}^{T} \Pr\left(g_k^j(t) \leq g_{k'}^j(t), A^j(t-1)=k, A^j(t)=k'\right)
-%     \intertext{Either $g_{k'}^j(t) > \mu_k$ or $g_{k'}^j(t) \leq \mu_k$, and by introducing the two cases,}
+%     \sum_{t=1}^{T} \Pr\left(g_k^j(t) \leq U_{k'}^j(t), A^j(t-1)=k, A^j(t)=k'\right)
+%     \intertext{Either $U_{k'}^j(t) > \mu_k$ or $U_{k'}^j(t) \leq \mu_k$, and by introducing the two cases,}
 %     &\leq
-%     \sum_{t=1}^{T} \Pr\left(g_k^j(t) \leq g_{k'}^j(t) \leq \mu_k, A^j(t-1)=k, A^j(t)=k'\right) \notag \\
-%     &\;\;+ \sum_{t=1}^{T} \Pr\left(g_k^j(t) \leq g_{k'}^j(t), g_{k'}^j(t) > \mu_k, A^j(t-1)=k, A^j(t)=k'\right) \notag
-%     \intertext{For the first term, $g_k^j(t) \leq \mu_k$ is highly unlikely (\ie, the sum of probabilities is $\smallO{\log T}$) as the indices ${(g_k^j)}_k$ are Upper Confidence Bounds (if arm $k$ is sampled enough). For the second term, $g_{k'}^j(t) > \mu_k$ is unlikely if arm $k'$ is sampled enough. More formally,}
+%     \sum_{t=1}^{T} \Pr\left(g_k^j(t) \leq U_{k'}^j(t) \leq \mu_k, A^j(t-1)=k, A^j(t)=k'\right) \notag \\
+%     &\;\;+ \sum_{t=1}^{T} \Pr\left(g_k^j(t) \leq U_{k'}^j(t), U_{k'}^j(t) > \mu_k, A^j(t-1)=k, A^j(t)=k'\right) \notag
+%     \intertext{For the first term, $g_k^j(t) \leq \mu_k$ is highly unlikely (\ie, the sum of probabilities is $\smallO{\log T}$) as the indices ${(g_k^j)}_k$ are Upper Confidence Bounds (if arm $k$ is sampled enough). For the second term, $U_{k'}^j(t) > \mu_k$ is unlikely if arm $k'$ is sampled enough. More formally,}
 %     \sum_{t=1}^{T} \Pr(\phi_{k,k'}^j(t))
 %     &\leq
 %     \underbrace{\sum_{t=1}^{T} \Pr\left( g_k^j(t) \leq \mu_k \right)}_{(i)}
-%     + \underbrace{\sum_{t=1}^{T} \Pr\left( g_{k'}^j(t) > \mu_k, A^j(t)=k' \right)}_{(ii)}.
+%     + \underbrace{\sum_{t=1}^{T} \Pr\left( U_{k'}^j(t) > \mu_k, A^j(t)=k' \right)}_{(ii)}.
 % \end{align}
 % But then as both arms are sampled enough, we can use both Lemma~\ref{lem:5:Fact1KLUCB} to directly obtain that the first term $(i)$ is a $\smallO{\log T}$,
 % and Lemma~\ref{lem:5:Fact2KLUCB} to obtain that the second  $(ii)$ is a $\bigO{\log T}$.
@@ -399,7 +399,7 @@
 %
 % Exactly the same arguments work for the other case $\mu_k < \mu_{k'}$, by considering
 % whether $g_k^j(t-1) > \mu_{k'}$ (which is also ulikely),
-% or whether $g_k^j(t-1) \leq \mu_k$ which implies $g_{k'}^j(t-1) \leq \mu_{k'}$ (and which is also highly unlikely), and with Lemmas~\ref{lem:5:Fact1KLUCB}, \ref{lem:5:Fact2KLUCB},
+% or whether $g_k^j(t-1) \leq \mu_k$ which implies $U_{k'}^j(t-1) \leq \mu_{k'}$ (and which is also highly unlikely), and with Lemmas~\ref{lem:5:Fact1KLUCB}, \ref{lem:5:Fact2KLUCB},
 % we obtain that
 % $\sum_{t=1}^{T} \Pr(\phi_{k,k'}^j(t)) = \bigO{\log T}$ when $T \to \infty$
 % similarly.

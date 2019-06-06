@@ -742,7 +742,7 @@ More formally, letting $\pi(k,\mathbf{g})$ be the index of the $k$-th largest en
 in \rhoRand{} each player maintains at time $t$ an internal rank $R^j(t)\in[M]$
 and selects at time $t$,
 \begin{equation}
-  A^j(t) := \pi\left(R^j(t), [g^j_\ell(t)]_{\ell=1,\dots,K}\right).
+  A^j(t) := \pi\left(R^j(t), [U^j_\ell(t)]_{\ell=1,\dots,K}\right).
 \end{equation}
 If a collision occurs, a new rank is drawn uniformly at random, $R^j(t+1) \sim \cU([M])$.
 
@@ -751,7 +751,7 @@ If a collision occurs, a new rank is drawn uniformly at random, $R^j(t+1) \sim \
 \paragraph{Our two proposals.}
 We now propose two alternatives to this strategy, that do not rely on ranks and rather randomly fix themselves on one \emph{arm} in $\TopM(t)$, that is defined as the set of arms that have the $M$ largest indices (at the current time $t$ and for player $j$),
 \begin{equation}
-  \TopM(t) := \left\{ \pi\left(k, \{g^j_\ell(t)\}_{\ell=1,\dots,K}\right), k=1,\dots,M\right\}.
+  \TopM(t) := \left\{ \pi\left(k, \{U^j_\ell(t)\}_{\ell=1,\dots,K}\right), k=1,\dots,M\right\}.
 \end{equation}
 
 
@@ -787,16 +787,16 @@ We precisely state our first proposal below in Algorithm~\ref{algo:5:RandTopM}.
                       $A^j(t+1) \sim \cU \left(\TopM(t)\right)$
                       \tcp*[f]{randomly switch}
                       }(\tcp*[f]{randomly switch on an arm that had smaller UCB at $t-1$}){
-                        $A^j(t+1) \sim \cU \left(\TopM(t) \cap \left\{k : g_k^j(t-1) \leq g^j_{A^j(t)}(t-1)\right\}\right)$
+                        $A^j(t+1) \sim \cU \left(\TopM(t) \cap \left\{k : g_k^j(t-1) \leq U^j_{A^j(t)}(t-1)\right\}\right)$
                       }
                     }{
                       $A^j(t+1) = A^j(t)$
                       \tcp*[f]{stays on the same arm}
                     }
                   Play arm $A^j(t+1)$, get new observations (sensing and collision), \\
-                  Compute the indices $g^j_k(t+1)$ and set $\TopM(t+1)$ for next step.
+                  Compute the indices $U^j_k(t+1)$ and set $\TopM(t+1)$ for next step.
               }
-              \caption[The \RandTopM{} decentralized learning policy]{The \RandTopM{} decentralized learning policy (for an index policy $g^j$).}
+              \caption[The \RandTopM{} decentralized learning policy]{The \RandTopM{} decentralized learning policy (for an index policy $U^j$).}
           \label{algo:5:RandTopM}
       \end{algorithm}
       % \end{small}  % XXX remove if problem
@@ -849,7 +849,7 @@ When a collision occurs for a player implementing the \RandTopM{} algorithm, tha
                    \uIf(\tcp*[f]{transition $(3)$ or $(5)$}){
                       $A^j(t) \notin \TopM(t)$}
                     {
-                      $A^j(t+1) \sim \cU \left(\TopM(t) \cap \left\{k : g_k^j(t-1) \leq g^j_{A^j(t)}(t-1)\right\}\right)$
+                      $A^j(t+1) \sim \cU \left(\TopM(t) \cap \left\{k : g_k^j(t-1) \leq U^j_{A^j(t)}(t-1)\right\}\right)$
                       \tcp*[f]{not empty} \\
                       % \tcp*[f]{randomly switch on an arm that had smaller UCB at $t-1$}
                       $s^j(t+1) = \mathrm{False}$
@@ -867,9 +867,9 @@ When a collision occurs for a player implementing the \RandTopM{} algorithm, tha
                       $s^j(t+1) = \mathrm{True}$ \tcp*[f]{become or stay fixed on a ``chair''}
                     }
                   Play arm $A^j(t+1)$, get new observations (sensing and collision), \\
-                  Compute the indices $g^j_k(t+1)$ and set $\TopM(t+1)$ for next step.
+                  Compute the indices $U^j_k(t+1)$ and set $\TopM(t+1)$ for next step.
               }
-              \caption[The \MCTopM{} decentralized learning policy]{The \MCTopM{} decentralized learning policy (for an index policy $g^j$).}
+              \caption[The \MCTopM{} decentralized learning policy]{The \MCTopM{} decentralized learning policy (for an index policy $U^j$).}
           \label{algo:5:MCTopM}
       \end{algorithm}
       % \end{small}  % XXX remove if problem
@@ -887,10 +887,10 @@ and will keep using it even if collisions happen in the future (Lines~$9$-$11$).
 %
 As soon as this ``chair'' $k$ is no longer in $\widehat{M_j}(t)$,
 a new arm is sampled uniformly from a subset of $\TopM(t)$,
-defined with the previous indices $g^j(t-1)$ (Lines~$3$-$5$).
+defined with the previous indices $U^j(t-1)$ (Lines~$3$-$5$).
 %
 The subset enforces a certain inequality on indices,
-$g_{k'}^j(t-1) \leq g^j_{k}(t-1)$ and $g_{k'}^j(t) \geq g^j_{k}(t)$,
+$U_{k'}^j(t-1) \leq U^j_{k}(t-1)$ and $U_{k'}^j(t) \geq U^j_{k}(t)$,
 when switching from $k=A^j(t)$ to $k'=A^j(t+1)$.
 This helps to control the number of such changes of arm,
 as shown in Lemma~\ref{lem:5:elementaryLemma_RandTopM_MCTopM}.
@@ -993,20 +993,20 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
   &= \E_{\mu}\left[ \sum_{t=1}^T \mathbbm{1}\left( A^j(t) = k \right) \right]
   = \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k \right).\\
   %&= \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\;\; \exists m \in\Mbest,\; g_m(t) < g_k(t) \right) \\
-  &= \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\;\; \exists m \in[M]:\; g_{m^*}^j(t) < g_k^j(t) \right).
+  &= \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\;\; \exists m \in[M]:\; U_{m^*}^j(t) < g_k^j(t) \right).
   %
   \end{align*}
 
-  Considering the relative position of the upper-confidence bound $g_{m^*}^j(t)$ and the corresponding mean $\mu_m^* = \mu_{m^*}$, one can write the decomposition
+  Considering the relative position of the upper-confidence bound $U_{m^*}^j(t)$ and the corresponding mean $\mu_m^* = \mu_{m^*}$, one can write the decomposition
 
   \begin{align}
     \E_{\mu}[T_k^j(T)] &\leq
-    \sum_{t=1}^T\Pr_{\bm{\mu}} \left( \exists m_1 \in [M]: \; g_{m_1^*}(t) < \mu_m^* \right) + \notag \\
+    \sum_{t=1}^T\Pr_{\bm{\mu}} \left( \exists m_1 \in [M]: \; U_{m_1^*}(t) < \mu_m^* \right) + \notag \\
     \;\;\;\;
-    \sum_{t=1}^T\Pr_{\bm{\mu}} & \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; g_{m_2^*}(t) \leq g_k(t) , \forall {m_3} \in [M]: \;  g_{{m_3}^*}(t) \geq \mu_{m_3}^* \right) \notag \\
-    &\leq \sum_{m_1=1}^M\sum_{t=1}^T\Pr_{\bm{\mu}} \left(g_{m_1^*}(t) < \mu_{m_1}^* \right) + \sum_{t=1}^T\Pr_{\bm{\mu}} \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; \mu_{m_2}^* \leq g_k(t)\right) \notag \\
+    \sum_{t=1}^T\Pr_{\bm{\mu}} & \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; U_{m_2^*}(t) \leq g_k(t) , \forall {m_3} \in [M]: \;  U_{{m_3}^*}(t) \geq \mu_{m_3}^* \right) \notag \\
+    &\leq \sum_{m_1=1}^M\sum_{t=1}^T\Pr_{\bm{\mu}} \left(U_{m_1^*}(t) < \mu_{m_1}^* \right) + \sum_{t=1}^T\Pr_{\bm{\mu}} \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; \mu_{m_2}^* \leq g_k(t)\right) \notag \\
     %
-    & \leq \sum_{m_1=1}^M \sum_{t=1}^T \Pr_{\bm{\mu}} \left( g_{m_1^*}(t) < \mu_{m_1}^* \right)
+    & \leq \sum_{m_1=1}^M \sum_{t=1}^T \Pr_{\bm{\mu}} \left( U_{m_1^*}(t) < \mu_{m_1}^* \right)
     + \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\; \mu_{M^*} \leq g_k(t) \right)
     \label{eq:5:sumOfProbaForTkj}
   \end{align}
@@ -1095,19 +1095,19 @@ happen a logarithmic number of times. The proof of this result is given below.
   We analyze the case when the current arm leaves the set $\TopM$ (Line 4):
 
   \begin{align*}
-    & \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t)\right)  \\ & \leq \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t), A^j(t+1) \in \TopM(t) \cap \{k': g_{k'}^j(t-1) \leq g_k^j(t-1)\}\right) \\
-    & \leq   \sum_{t=1}^T \sum_{k' \neq k}\Pr\left(A^j(t) = k,A^j(t+1) = k', g_{k'}^j(t) \geq g_{k}^j(t), g_{k'}^j(t-1) \leq g_{k}^j(t-1)  \right) \\
-    & = \sum_{k' \neq k} \underbrace{\sum_{t=1}^T \Pr\left(A^j(t) = k,A^j(t+1) = k', g_{k'}^j(t) \geq g_{k}^j(t), g_{k'}^j(t-1) \leq g_{k}^j(t-1)  \right)}_{:= T_{k'}}
+    & \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t)\right)  \\ & \leq \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t), A^j(t+1) \in \TopM(t) \cap \{k': U_{k'}^j(t-1) \leq g_k^j(t-1)\}\right) \\
+    & \leq   \sum_{t=1}^T \sum_{k' \neq k}\Pr\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right) \\
+    & = \sum_{k' \neq k} \underbrace{\sum_{t=1}^T \Pr\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right)}_{:= T_{k'}}
   \end{align*}
 
   Now, to control $T_{k'}$, we distinguish two cases. If $\mu_k < \mu_{k'}$, one can write
-  \[T_{k'} \leq \sum_{t=1}^T \Pr\left(g_{k'}^j(t) \leq \mu_{k'}\right) + \sum_{t=1}^T \Pr\left(A^j(t) = k, g_{k}^j(t-1) \geq \mu_{k'}\right)\]
+  \[T_{k'} \leq \sum_{t=1}^T \Pr\left(U_{k'}^j(t) \leq \mu_{k'}\right) + \sum_{t=1}^T \Pr\left(A^j(t) = k, U_{k}^j(t-1) \geq \mu_{k'}\right)\]
   The first term in the right hand side is $o(\log(T))$ by Lemma~\ref{lem:5:Fact1KLUCB}. To control the second term, we apply the same trick that led to the proof of Lemma~\ref{lem:5:Fact2KLUCB} in \cite{KLUCBJournal}.
   Letting $\kl^+(x, y) := \kl(x, y) \indic(x \geq y)$,
   and $\widehat{\mu}^j_{k,s}$ be the empirical mean of the $s$ first observations from arm $k$ by player $j$, one has
 
   \begin{align}
-    \sum_{t=1}^T & \Pr\left(A^j(t) = k, g_{k}^j(t-1) \geq \mu_{k'}\right) \nonumber\\
+    \sum_{t=1}^T & \Pr\left(A^j(t) = k, U_{k}^j(t-1) \geq \mu_{k'}\right) \nonumber\\
     & =  \bE \left[ \sum_{t=1}^T\sum_{s=1}^{t-1} \indic{\left(A^j(t) = k , N^j_k(t-1) = s\right)}\indic{\left( s  \times \kl^+\left(\widehat{\mu}_{k,s}^j , \mu_k\right) \leq f(t)\right)} \right]\nonumber\\
     & \leq \bE \left[ \sum_{s=1}^{T}\indic{\left( s \times \kl^+\left(\widehat{\mu}_{k,s}^j , \mu_k\right) \leq f(T)\right)}\sum_{t=s-1}^T \indic{\left(A^j(t) = k , N^j_k(t-1) = s\right)} \right] \nonumber \\
     & \leq \sum_{s=1}^T \Pr\left( s \times \kl^+\left(\widehat{\mu}_{k,s}^j , \mu_k\right) \leq f(T)\right),\label{eq:5:FromHere}
@@ -1117,7 +1117,7 @@ happen a logarithmic number of times. The proof of this result is given below.
   \[T_{k'} = \frac{\log(T)}{\kl(\mu_k,\mu_{k'})} + o(\log(T)).\]
 
   If $\mu_k > \mu_{k'}$, we rather use that
-  \[T_{k'} \leq \sum_{t=1}^T \Pr\left(g_{k}^j(t) \leq \mu_{k}\right) + \sum_{t=1}^T \Pr\left(A^j(t+1) = k', g_{k'}^j(t) \geq \mu_{k}\right)\]
+  \[T_{k'} \leq \sum_{t=1}^T \Pr\left(U_{k}^j(t) \leq \mu_{k}\right) + \sum_{t=1}^T \Pr\left(A^j(t+1) = k', U_{k'}^j(t) \geq \mu_{k}\right)\]
   and similarly Lemma~\ref{lem:5:Fact1KLUCB} and a slight variant of Lemma~\ref{lem:5:Fact2KLUCB} to deal with the modified time indices yields
   \[T_{k'} = \frac{\log(T)}{\kl(\mu_{k'},\mu_{k})} + o(\log(T)).\]
   Summing over $k'$ yields the result.
