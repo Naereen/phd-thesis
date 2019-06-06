@@ -91,9 +91,9 @@ The same problem is simulated for $N$ independent repetitions (\eg, $N=100$) in 
 
 For the classical single-player stochastic MAB model, as defined in Chapter~\ref{chapter:2},
 a stochastic MAB problem is defined by $K>1$ distributions $\nu_k$ (also called arms),
-used to sample \iid{} rewards $r_k(t) \sim \nu_k, \forall t$.
-An agent chooses arm $A(t)\in[K]$ at time $t$ and observes the reward $r_{A(t)}(t)$ without knowing the other (hidden) rewards.
-Her goal is to maximize $\sum_{t=1}^T r_{A(t)}(t)$ by sequentially exploring the $K$ arms, and she essentially has to find and exploit the best one as fast as possible.
+used to generate the \iid{} samples $Y_{k,t} \sim \nu_k, \forall t$.
+An agent chooses arm $A(t)\in[K]$ at time $t$ and observes the reward $r(t) = Y_{A(t),t}$ without knowing the other (hidden) rewards.
+Her goal is to maximize $\sum_{t=1}^T r(t)$ by sequentially exploring the $K$ arms, and she essentially has to find and exploit the best one as fast as possible.
 
 \paragraph{Simulation loop.}
 %
@@ -106,7 +106,7 @@ reward distributions, MAB algorithm, and a simulation loop that essentially look
 \end{itemize}
 %
 Note that the second step is repeated a large number of times (\eg, $N=100$), in order to study \emph{mean} regret and not only the regret in one single trajectory.
-If one wants to compare algorithms on a same problem, it is possible to sample all the rewards $(r_k(t))_{k\in[K], t\in[T]}$ before-hand, and store them so that for each repetition of the simulation, the randomness from the environment (\ie, the rewards) has the same impact on all the algorithms.
+If one wants to compare algorithms on a same problem, it is possible to sample all the rewards $(Y_{k,t})_{k\in[K], t\in[T]}$ before-hand, and store them so that for each repetition of the simulation, the randomness from the environment (\ie, the rewards) has the same impact on all the algorithms.
 
 
 \paragraph{Simulation loop for multi-player bandit.}
@@ -144,7 +144,7 @@ a simulation loop that essentially looks like this:
 \begin{itemize}
     \item First, initialize the MAB problem with $M$ players, and one or more cohorts of $M$ players (one player is one algorithm, usually $M$ times the same one),
     \item Then, for $t=1$ to $t=T$ (known before hand), repeat the following block (for each algorithm). Ask each player $\cA^{(j)}$ her chosen arm $A^{(j)}(t)$, then query the collision model\footnote{~The default collision model is the most widely studied in the literature, where a player encounters a collision (\ie, received a zero reward $Y^{(j)}(t)=0$) if she is not the only one to have chosen an arm $k=A^{(j)}(t)$, otherwise $Y^{(j)}(t)=r_{A^{(j)}(t)}(t)$ if she is the only one playing this arm.} to know which player will get a zero reward (for a collision) and which player will get a random reward from the environment. The
-    sample (random) feedback $Y_k(t)$ (\iid) from distributions $\nu_{k}$, and compute the rewards $r^{(j)}(t)$ from the random feedback and the collision model. Finally feeds the observation $(A^{(j)}(t), Y_{A^{(j)}(t)}(t), r^{(j)}(t))$ to player $j$, for all the $M$ players,
+    sample (random) feedback $Y_{k,t}$ (\iid) from distributions $\nu_{k}$, and compute the rewards $r^{(j)}(t)$ from the random feedback and the collision model. Finally feeds the observation $(A^{(j)}(t), Y_{A^{(j)}(t)}(t), r^{(j)}(t))$ to player $j$, for all the $M$ players,
     \item At the end, compute the accumulated reward, the regret, plot visualizations etc.
 \end{itemize}
 

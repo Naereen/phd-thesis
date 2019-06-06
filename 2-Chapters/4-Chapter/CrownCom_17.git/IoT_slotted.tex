@@ -148,9 +148,9 @@ it has to choose one channel (at each transmission $t \geq 1, t \in \mathbb{N}$)
 Then, the dynamic device waits in this channel $A(t)$ for an acknowledgement sent by the gateway, during a certain period (\eg, $5$ seconds for the example considered above).
 Before sending another message (\ie, at time $t+1$), the dynamic device knows if it received or not this \Ack{} message.
 %
-For this reason, selecting channel (or arm) $k$ at time $t$ yields a (random) feedback, called a (binary) \emph{reward}, $r_k(t) \in \{0,1\}$, being $0$ if no \Ack{} was received before the next message, or $1$ if \Ack{} was successfully received.
+For this reason, selecting channel (or arm) $k$ at time $t$ yields a (random) feedback, called a (binary) \emph{reward}, $r(t)=Y_{k,t} \in \{0,1\}$, being $0$ if no \Ack{} was received before the next message, or $1$ if \Ack{} was successfully received.
 The goal of the dynamic device is to minimize its packet loss ratio, or equivalently, to maximize its number of successful transmissions, or its cumulative reward,
-$r_{1 \dots T} := \sum_{t = 1}^T r_{A(t)}(t),$
+$\sum_{t = 1}^T r(t),$
 which is a usual objective in MAB problems.
 
 
@@ -161,7 +161,7 @@ This problem is a special case of the stochastic MAB with
 Bernoulli distributions.
 % , in which $r_k(t) \sim \mathrm{Bern}(\mu_k)$, that is, $r_k(t) \in \{0,1\}$ and $\mathbb{P}(r_k(t) = 1) = \mu_k \in [0,1]$.
 Contrary to many previous work done in the CR field \cite{Jouini10,Jouini12} (\eg, Opportunistic Spectrum Access),
-the reward $r_k(t)$ does \emph{not} come from a sensing phase before sending the $t$-th message, as it would do for any ``listen-before-talk'' model.
+the reward $r(t)=Y_{k,t}$ does \emph{not} come from a sensing phase before sending the $t$-th message, as it would do for any ``listen-before-talk'' model.
 In our model, rewards rather come from receiving or not an acknowledgement from the gateway, between the $t$-th and $t+1$-th messages. A reward of one indicates that the acknowledgement was received on time, and a reward of zero indicates the opposite.
 
 The problem parameters
@@ -236,6 +236,7 @@ Consequently, an optimal allocation vector $(D_1,\dots,D_{K})$ is a solution of 
 \end{subequations}
 
 \begin{proposition}\label{prop:41:Lagrangian}
+\begin{leftbar}[propositionbar]  % XXX leftbar propositionbar, comment if needed
     The \emph{Lagrange multipliers} method \cite{BoydVanderberghe04} can be used to solve the constraint real-valued maximization problem introduced in equation \eqref{eq:41:prob}.
 
     It gives a closed form expression for the (unique) optimal solution $D_k^*(\lambda)$, depending on the system parameters, and the unknown Lagrange multiplier $\lambda \in \mathbb{R}$.
@@ -243,6 +244,7 @@ Consequently, an optimal allocation vector $(D_1,\dots,D_{K})$ is a solution of 
     \begin{equation}\label{eq:41:Dilambda}
         D_k^*(\lambda) = \left(\frac{1}{\log(1-p)}\left[ \mathcal{W}\left(\frac{\lambda e}{(1-p)^{S_k-1}} \right)-1 \right]\right)^{+} .
     \end{equation}
+\end{leftbar}  % XXX leftbar propositionbar, comment if needed
 \end{proposition}
 
 \begin{proof}

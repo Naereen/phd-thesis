@@ -25,7 +25,10 @@
 % More recently, MAB models have been proved useful for different applications, like cognitive radio, where arms can model the vacancy of radio channels, as presented in Chapter~\ref{chapter:4}, or parameters of a dynamically configurable radio hardware \cite{Maghsudi16,Bonnefoi17,KerkoucheAlami18}.
 % Another application is the design of recommender systems, where arms model the popularity of different items (\eg, news recommendation, \cite{Li10}).
 %
-For both cognitive radio and recommender systems, the assumption that the arms distribution \emph{do not change over time} may be a big limitation. Indeed, in cognitive radio new devices can enter or leave the network, which impacts the availability of the radio channel they use to communicate; whereas in online recommendation, the popularity of items is also subject to trends. Hence, there has been some interest on how to take those \emph{non-stationary} aspects into account within a multi-armed bandit model.
+For cognitive radio applications, as well as other applications such as recommender systems, the assumption that the arms distribution \emph{do not change over time} may be a big limitation.
+Indeed, in cognitive radio, new devices can enter or leave the network, which impacts the availability of the radio channel they use to communicate.
+And for instance in online recommendation, the popularity of items is also subject to trends.
+Hence, there has been some interest on how to take those \emph{non-stationary} aspects into account within a multi-armed bandit model.
 
 A first possibility to cope with non-stationary is to model the decision making problem as an \emph{adversarial bandit problem} \cite{Auer02NonStochastic}. Under this model, rewards are completely arbitrary and are not assumed to follow any probability distribution.
 For adversarial environments, the pseudo-regret, which compares the accumulated reward of a given strategy with that of the best fixed-arm policy, is often studied. The pseudo regret of the EXP3 algorithm has been shown to be $\cO(\sqrt{KT})$, which matches the lower bound given by \cite{Auer02NonStochastic}.
@@ -35,7 +38,7 @@ They propose a simple extension of the EXP3 policy, referred to as Exp3.S, that 
 It was shown that Exp3.S attains a regret of $\cO(\sqrt{K T S \log(K T)})$, when comparing with an arbitrary sequence of comparators that does not switch for more than $S-1$ times.
 Running their algorithm over the non-stationary problem, and picking their comparators sequence as the best arm in each stationary interval, one can already get $\sqrt(\Upsilon_T T \log(T))$ regret, and the only prior knowledge needed to run the Exp3.S algorithm is $T$ and $\Upsilon_T$. Moreover, Exp3.S is efficient both in term of storage and computation time, and simple to implement.
 
-It could seem that the problem is considered as solved by this simple Exp3.S algorithm, but it was actively studied since the seminal paper \cite{Auer02NonStochastic}.
+It could seem that the problem is considered as solved by the Exp3.S algorithm, but it was actively studied since the seminal paper \cite{Auer02NonStochastic}.
 Two main reasons explain the dynamic research on this problem:
 first, it is well known that despite their qualities, exponential-weights algorithms like Exp3 can usually be greatly outperformed by UCB-based algorithms, for stochastic problems, and so it is expected that Exp3.S can be outperformed by other algorithms, thus any practical application might benefit from algorithms more efficient than Exp3.S.
 %
@@ -55,7 +58,7 @@ In this model, described in full details in Section~\ref{sec:6:BanditSetting}, t
 % Our numerical simulations reveal that using local restart leads to better empirical performance, and show that our approach often outperforms existing competitors.
 
 
-\paragraph{Outline.}
+\textbf{Outline.}
 %
 % This chapter is structured as follows.
 We introduce the model and review related works in Section~\ref{sec:6:BanditSetting}. In Section~\ref{sec:6:ChangePointDetector}, we study the Generalized Likelihood Ratio test for sub-Bernoulli distributions (B-GLRT) as a Change-Point Detector (CPD) algorithm.
@@ -66,6 +69,13 @@ Numerical experiments are presented in Section~\ref{sec:6:NumericalExperiments},
 % \TODOL{Rename GLR, GLRT and GLR Bernoulli to B-GLRT like what we did in our GRETSI 2019 paper \cite{Besson2019Gretsi}.}
 
 
+% \vfill{}
+
+\textbf{Publications.}
+%
+This chapter is based on our articles \cite{Besson2019GLRT,Besson2019Gretsi}.
+
+
 % -----------------------------------------------------------------
 \section{The piece-wise stationary bandit model}
 \label{sec:6:BanditSetting}
@@ -73,19 +83,18 @@ Numerical experiments are presented in Section~\ref{sec:6:NumericalExperiments},
 A \emph{piece-wise stationary bandit model} is characterized by a set of $K$ arms.
 A (random) stream of rewards $(X_{i,t})_{t\in\N^*}$ is associated to each arm $i \in [K]$. We assume that the rewards are bounded, and without loss of generality we assume that $X_{i,t} \in [0,1]$. We denote by $\mu_{i}(t) :=  \bE[X_{i,t}]$ the mean reward of arm $i$ at round $t$. At each round $t$, a decision maker has to select an arm $I_t\in[K]$, based on past observation and receives the corresponding reward $r(t) = X_{I_t,t}$. At time $t$, we denote by $i_t^*$ an arm with maximal expected reward, \ie, $\mu_{i_t^*}(t) = \max_i \mu_i(t)$, called an optimal arm (possibly not unique).
 
-A policy $\pi$ chooses the next arm to play based on the sequence of past plays and obtained rewards.
-The performance of $\pi$ is measured by its (piece-wise stationary) \emph{regret}, the difference between the expected reward obtained by an oracle policy playing an optimal arm $i^*_t$ at time $t$, and that of the policy $\pi$,
+A policy $\cA$ chooses the next arm to play based on the sequence of past plays and obtained rewards.
+Like for stationary problems (see Definition~\ref{def:2:regret}), the performance of $\cA$ is measured by its (piece-wise stationary) \emph{regret}, the difference between the expected reward obtained by an oracle policy playing an optimal arm $i^*_t$ at time $t$, and that of the policy $\cA$
+We use the same notation as the regret for stationary problem without ambiguity, as in this chapter we only consider the following definition.
 %
 \begin{equation}\label{def:6:nti}
-    R_T^{\pi} = \E\left[\sum_{t=1}^T \left(\mu_{i^*_t}(t) - \mu_{I_t}(t)\right)\right].
+    R_T^{\cA} = \E\left[\sum_{t=1}^T \left(\mu_{i^*_t}(t) - \mu_{I_t}(t)\right)\right].
 \end{equation}
 
 
 In the piece-wise \iid{} model, we furthermore assume that there is a (relatively small) number of \emph{breakpoints}, denoted by $\Upsilon_T:=\sum_{t=1}^{T-1} \indic\left(\exists i\in[K]: \mu_t(i) \neq \mu_{t+1}(i)\right)$.
 If we denote $\tau^{(0)} = 0$, we define the $k$-th breakpoint recursively by
-\begin{equation}
-    \tau^{(k)} = \inf\{t > \tau^{(k-1)} : \exists i : \mu_i(t) \neq \mu_{i}(t+1)\}.
-\end{equation}
+$\tau^{(k)} = \inf\{t > \tau^{(k-1)} : \exists i : \mu_i(t) \neq \mu_{i}(t+1)\}$.
 %
 Hence for $t\in[\tau^{(k)} + 1,\tau^{(k+1)}]$, that is on any stationary segments, the rewards $(X_{i,t})$ associated to each arm are \iid{} (hence the name of \emph{piece-wise stationary} problems).
 
@@ -389,8 +398,10 @@ Exploiting the fact that bounded distribution are $(1/4)$-sub Gaussian (\ie, the
 We propose instead to exploit the fact that bounded distributions are also dominated by Bernoulli distributions.
 
 \begin{definition}[Sub-Bernoulli distributions]\label{def:6:subBernoulliDistributions}
+\begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
     We call a \emph{sub-Bernoulli distribution} any distribution $\nu$ that satisfies
     $\ln \bE_{X\sim\nu}\left[e^{\lambda X}\right] \leq \phi_{\mu}(\lambda)$ with $\mu=\bE_{X\sim \nu}[X]$ and $\phi_{\mu}(\lambda) = \ln(1-\mu + \mu e^\lambda)$ is the log moment generating function of a Bernoulli distribution with mean $\mu$, for any $\mu\in[0,1]$.
+\end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
 
 Lemma~1 of \cite{KLUCBJournal} establishes that any bounded distribution supported in $[0,1]$ is a sub-Bernoulli distribution.
@@ -511,11 +522,13 @@ This motivates the following definition of the Bernoulli GLRT change point detec
 % Note that the $\exp$ appearing in the \eqref{eq:6:secondDefGLRT} is absorbed as a $\log$ in the threshold function $\beta$.
 
 \begin{definition}\label{def:6:GLRDef}
+\begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
     The Bernoulli GLRT (B-GLRT) change point detector with threshold function $\beta(n,\delta)$ is the stopping time $\widehat{\tau}_{\delta}$ defined by
     %
     \begin{equation}\label{def:6:GLR}
         \widehat{\tau}_{\delta} := \inf \left\{ n \in \N^* : \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right] \geq \beta(n,\delta)\right\}.
     \end{equation}
+\end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
 
 Asymptotic properties of the GLRT for change-point detection have been studied by \cite{LaiXing10} for Bernoulli distributions and more generally for one-parameter exponential families, for which the GLR test is defined as in~\eqref{def:6:GLR}, but with $\kl(x,y)$ replaced by the Kullback-Leibler divergence $d(x,y)$ between two elements in that exponential family that have mean $x$ and $y$.
@@ -556,6 +569,7 @@ The use of $\cT$ for the construction of concentration inequalities that are uni
 $\cT (x) \simeq x + 4 \ln\big(1 + x + \sqrt{2x}\big)$ for $x\geq 5$ and $\cT(x) \sim x$ when $x$ is large.
 
 \begin{lemma}\label{lem:6:FalseAlarm}
+\begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
     Let be $\bP_{\mu_0}$ a probabilistic model under which $X_t \in [0,1]$, and $X_t$ has an average of $\mu_0$ for all $t$.
     % Assume that there exists $\mu_0 \in [0,1]$ such that $\bE[X_t] = \mu_0$ and that $X_i \in [0,1]$ for all $i$.
     Then the B-GLRT test given in Definition~\ref{def:6:GLRDef} satisfies
@@ -564,6 +578,7 @@ $\cT (x) \simeq x + 4 \ln\big(1 + x + \sqrt{2x}\big)$ for $x\geq 5$ and $\cT(x) 
     \begin{equation}\label{def:6:beta}
         \beta(n,\delta) = 2\cT\left(\frac{\ln(3n\sqrt{n}/\delta)}{2}\right) + 6\ln(1+\ln(n)).
     \end{equation}
+\end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
 \begin{proof}
@@ -601,6 +616,7 @@ And so we have $\bP_{\mu_0}\left(T_{\delta} < \infty\right) \leq \sum_{s =1}^{\i
 \end{proof}
 
 \begin{lemma}\label{lem:6:ConcFirst}
+\begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
     $(X_i)_{i \in \N^*}$ and $(Y_i)_{i \in \N^*}$ two independent \iid{} processes with respective means $\mu$ and $\mu'$ such that
     $\bE[e^{\lambda X_1}] \leq e^{\phi_{\mu}(\lambda)}$ and $\bE[e^{\lambda Y_1}] \leq e^{\phi_{\mu'}(\lambda)}$,
     where $\phi_\mu(\lambda) = \bE_{X \sim \nu^{\mu}}[e^{\lambda X}]$ is the moment generating function of the distribution $\nu^\mu$, which is the unique distribution in an exponential family that has mean $\mu$.
@@ -608,6 +624,7 @@ And so we have $\bP_{\mu_0}\left(T_{\delta} < \infty\right) \leq \sum_{s =1}^{\i
     Let $\kl(\mu,\mu') = \KL(\nu^\mu,\nu^{\mu'})$ be the divergence function associated to that exponential family. Introducing the notation $\widehat{\mu}_s = \frac{1}{s}\sum\limits_{i=1}^s X_i$ and $\widehat{\mu}'_r = \frac{1}{r}\sum\limits_{i=1}^r Y_i$, it holds that for every $s,r \in \N^*$,
     \[\bP\left(\exists r \in \N^* : s \, \kl\left(\widehat{\mu}_{s},\mu\right) + r \, \kl\left(\widehat{\mu}_r',\mu'\right) > 3\ln(1+\ln(s)) + 3\ln(1+\ln(r)) + 2\cT\left(\frac{x}{2}\right)\right)\leq e^{-x},\]
     where $\cT$ is the function defined in \eqref{def:6:function_T}.
+\end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 \begin{proof}
     This Lemma~\ref{lem:6:ConcFirst} is proved in Appendix~\ref{app:6:proofConcFirst}.
@@ -621,12 +638,14 @@ Another key feature of a change-point detector is its \emph{detection delay} und
 In the bandit analysis to follow, the detection delay will be crucially used to control the probability of the good event (in Lemma~\ref{lem:6:GoodEventGlobal} and the corresponding Lemma not included here, but given in Appendix of \cite{Besson2019GLRT}).
 
 \begin{lemma}\label{lem:6:Delay}
+\begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
     Let be $\bP_{\mu_0,\mu_1,\tau}$ a probabilistic model under which $X_t \in [0,1]$, and $X_t$ has an average of $\mu_0$ for all $t \leq \tau$, and $\mu_1$ for all $t > \tau$, with $\mu_0 \neq \mu_1$,
     and let $\Delta = |\mu_0 - \mu_1|$.
     Then the B-GLRT test given in Definition~\ref{def:6:GLRDef} satisfies
     \begin{equation}
         \bP_{\mu_0,\mu_1,\tau} (\widehat{\tau}_{\delta} \geq \tau + u) \leq \exp\left( -\frac{2\tau u}{\tau + u}\left(\max\left[ 0, \Delta - \sqrt{\frac{\tau + u}{2\tau u} \beta(\tau + u,\delta)} \right]\right)^2 \right).
     \end{equation}
+\end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 %
 \begin{proof}
@@ -796,10 +815,12 @@ Both solutions ensure that all arms are sampled enough on each stationary sequen
 A consequence of this forced exploration is given in Proposition~\ref{prop:6:EnoughSamples} below.
 
 \begin{proposition}\label{prop:6:EnoughSamples}
+\begin{leftbar}[propositionbar]  % XXX leftbar propositionbar, comment if needed
     For every pair of instants $s \leq t\in\N^*$ between two restarts on arm $i$ (\ie, for a $k\in\{1,\dots,\NCi\}$, one has $\tau_i^{(k)} = \tau_i(t) < s \leq t < \tau_i^{(k+1)}$) it holds that
     \begin{equation}
         n_i(t) - n_i(s) \geq \left\lfloor \frac{\alpha}{K} (t-s) \right\rfloor.
     \end{equation}
+\end{leftbar}  % XXX leftbar propositionbar, comment if needed
 \end{proposition}
 
 \begin{proof}
@@ -846,8 +867,8 @@ Recall that $\tau^{(k)}$ denotes the position of the $k$-th break-point and let 
 $\forall t \in \{ \tau^{(k-1)}+1, \dots, \tau^{(k)} \}, \mu_{i}(t) = \mu_i^{(k)}$. We also introduce $k^* = \arg\max_i \mu_i^{(k)} $ and the largest gap at break-point $k$ as $\Delta^{(k)} := \max_{i=1,\dots,K} |\mu_i^{(k)} - \mu_i^{(k-1)}| >0$.
 
 
-\begin{assumption}[Enough samples between two global change-points]
-    \label{ass:6:LongPeriodsGlobal}
+\begin{assumption}[Enough samples between two global change-points]\label{ass:6:LongPeriodsGlobal}
+\begin{leftbar}[assumptionbar]  % XXX leftbar assumptionbar, comment if needed
     Define
     \begin{equation}\label{def:6:DelayGlobal}
         d^{(k)} = d^{(k)}(\alpha,\delta) = \Bigl\lceil \frac{4K}{\alpha\left(\Delta^{(k)}\right)^2}\beta(T,\delta) + \frac{K}{\alpha} \Bigr\rceil.
@@ -855,6 +876,7 @@ $\forall t \in \{ \tau^{(k-1)}+1, \dots, \tau^{(k)} \}, \mu_{i}(t) = \mu_i^{(k)}
     %
     Then \emph{we assume} that for all change $k \in \{1,\dots,\Upsilon_T\}$,
     $\tau^{(k)} - \tau^{(k-1)} \geq 2\max (d^{(k)},d^{(k-1)})$.
+\end{leftbar}  % XXX leftbar assumptionbar, comment if needed
 \end{assumption}
 
 Assumption~\ref{ass:6:LongPeriodsGlobal} is easy to interpret and standard in non-stationary bandits.
@@ -865,23 +887,27 @@ the KL-divergence terms $\kl(\mu_{i}^{(k)},\mu_{k^*}^{(k)})$ expressing the hard
 and the $\Delta^{(k)}$ terms expressing the hardness of the change-point detection problem.
 
 \begin{theorem}\label{thm:6:mainRegretBoundGlobal}
+\begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
     For $\alpha$ and $\delta$ for which Assumption~\ref{ass:6:LongPeriodsGlobal} is satisfied, the regret of \GLRklUCB{} with parameters $\alpha$ and $\delta$ based on \textbf{Global} Restart satisfies
     \begin{align}
         R_T \;\; \leq \;\; & 2\sum_{k=1}^{\Upsilon_T} \frac{4K}{\alpha \left(\Delta^{(k)}\right)^2}\beta(T,\delta) +\alpha T + \delta (K+1)\Upsilon_T \\
         & + \sum_{k=1}^{\Upsilon_T}\sum_{i : \mu_i^{(k)} \neq \mu_{k^*}^{(k)}} \frac{\left( \mu_{k^*}^{(k)}-\mu_i^{(k)}\right)}{\kl\left(\mu_i^{(k)},\mu_{k^*}^{(k)}\right)}\ln(T) + \bigO{\sqrt{\ln(T)}}. \nonumber
     \end{align}
+\end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
 We highlight that \emph{this result is finite-time} and not asymptotic, even if it uses the notation $\bigO{\sqrt{\ln(T)}}$.
 This last term does not mean the whole inequality is only valid for $T\to\infty$, but it rather means that at finite time, the inequality is valid with the last term being a function $g(T)$, which is upper-bounded by a constant times $\sqrt{\ln(T)}$ from a certain time $T_0$.
 
 \begin{corollary}\label{cor:6:Global}
+\begin{leftbar}[corollarybar]  % XXX leftbar corollarybar, comment if needed
     For ``easy'' problems satisfying the corresponding Assumption~\ref{ass:6:LongPeriodsGlobal},
     let $\Delta^{\text{opt}}$ denote the smallest value of a sub-optimality gap on one of the stationary segments, and $\Delta^{\text{change}}$ be the smallest magnitude of any change point on any arm.
     \begin{enumerate}
         \item Choosing $\alpha = \sqrt{\frac{\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{T}}$ gives $R_T = \bigO{\frac{K}{\left(\Delta^{\text{change}}\right)^2} \Upsilon_T\sqrt{T\ln(T)} + \frac{(K-1)}{\Delta^{\text{opt}}} \Upsilon_T\ln(T)}$,
         \item Choosing $\alpha = \sqrt{\frac{\Upsilon_T\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{\Upsilon_T T}}$ gives $R_T = \bigO{\frac{K}{\left(\Delta^{\text{change}}\right)^2}\sqrt{\Upsilon_T T \ln(T)} + \frac{(K-1)}{\Delta^{\text{opt}}} \Upsilon_T\ln(T)}$.
     \end{enumerate}
+\end{leftbar}  % XXX leftbar corollarybar, comment if needed
 \end{corollary}
 
 
@@ -894,14 +920,15 @@ We let $\tau_i^{(\ell)}$ denote the position of the $\ell$-th change point \emph
 with the convention $\tau_i^{(0)}=0$, and let $\overline{\mu}_i^{(\ell)}$ be the $\ell$-th value for the mean of arm $i$, such that $\forall t \in [\tau_i^{(\ell-1)}+1, \tau_i^{(\ell)}], \ \ \mu_i(t) = \overline{\mu}_i^{(\ell)}$.
 We also introduce the gap $\Delta_i^{(\ell)} = \overline{\mu}_i^{\ell} - \overline{\mu}_i^{\ell-1} > 0$.
 
-\begin{assumption}[Enough samples between two local change-points]
-    \label{ass:6:LongPeriods}
+\begin{assumption}[Enough samples between two local change-points]\label{ass:6:LongPeriods}
+\begin{leftbar}[assumptionbar]  % XXX leftbar assumptionbar, comment if needed
     Define
     \begin{equation}\label{def:6:DelayLocal}
         d_i^{(\ell)} = d_i^{(\ell)}(\alpha,\delta) = \Bigl\lceil \frac{4K}{\alpha\left(\Delta_i^{(\ell)}\right)^2}\beta(T,\delta) + \frac{K}{\alpha} \Bigr\rceil.
     \end{equation}
     %
     Then \emph{we assume} that for all arm $i$ and all change-point of that arm $\ell \in \{1,\dots,\NCi\}$, $\tau_i^{(\ell)} - \tau_i^{(\ell-1)} \geq 2\max (d_i^{(\ell)},d_i^{(\ell-1)})$.
+\end{leftbar}  % XXX leftbar assumptionbar, comment if needed
 \end{assumption}
 
 Assumption~\ref{ass:6:LongPeriods} is again easy to interpret, like Assumption~\ref{ass:6:LongPeriodsGlobal}, but it is non standard in non-stationary bandits, and to the best of the authors knowledge,our analysis is the first one to be given for such assumption on the problem difficulty.
@@ -909,6 +936,7 @@ Assumption~\ref{ass:6:LongPeriods} is again easy to interpret, like Assumption~\
 It requires that any two consecutive change-points \emph{on a given arm} are sufficiently spaced (relatively to the magnitude of those two change-points). Under that assumption, Theorem~\ref{thm:6:mainRegretBound} provides a regret upper bound that scales with similar quantities as that of Theorem~\ref{thm:6:mainRegretBoundGlobal}, except that the number of breakpoints $\Upsilon_T$ is replaced with the \emph{total} number of change points $\EffChange = \sum_{i=1}^K \NCi \leq K \Upsilon_T$.
 
 \begin{theorem}\label{thm:6:mainRegretBound}
+\begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
     For $\alpha$ and $\delta$ for which Assumption~\ref{ass:6:LongPeriods} is satisfied, the regret of \GLRklUCB{} with parameters $\alpha$ and $\delta$ based on Local Restart satisfies
     %
     \begin{equation}
@@ -918,6 +946,7 @@ It requires that any two consecutive change-points \emph{on a given arm} are suf
     \begin{equation}
         {\mu}^*_{i,\ell} = \inf \left\{ \mu_{i_t^*}(t) : \mu_{i_t^*}(t) \neq \overline{\mu}_i^{(\ell)}, t \in [\tau_i^{(\ell)}+1, \tau_i^{(\ell+1)}]\right\}.
     \end{equation}
+\end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
 Like for the first Theorem~\ref{thm:6:mainRegretBoundGlobal},
@@ -927,6 +956,7 @@ We can directly obtain different regret upper-bounds for different choices of th
 We prefer to state the four cases, to highlight the modularity of the result given by Theorem~\ref{thm:6:mainRegretBound}.
 
 \begin{corollary}\label{cor:6:Local}
+\begin{leftbar}[corollarybar]  % XXX leftbar corollarybar, comment if needed
     For ``easy'' problems satisfying the corresponding Assumption~\ref{ass:6:LongPeriods},
     with $\Delta^{\text{opt}}$ and ${\Delta}^{\text{change}}$ defined as in Corollary~\ref{cor:6:Global}, the following holds.
     \begin{enumerate}
@@ -935,6 +965,7 @@ We prefer to state the four cases, to highlight the modularity of the result giv
         \item Choosing $\alpha = \sqrt{\frac{\EffChange\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{\EffChange T}}$ gives $R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\EffChange T\ln(T)} + \frac{\EffChange}{\left(\Delta^{\text{opt}}\right)^2}\ln(T)}$,
         \item Choosing $\alpha = \sqrt{\frac{K\Upsilon_T\ln(T)}{T}}$, $\delta = \frac{1}{\sqrt{K\Upsilon_T T}}$ gives $R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\EffChange T\ln(T)} + \frac{1}{\left(\Delta^{\text{opt}}\right)^2} \EffChange\ln(T)}$.
     \end{enumerate}
+\end{leftbar}  % XXX leftbar corollarybar, comment if needed
 \end{corollary}
 
 The proof of \GLRklUCB{} with Local Changes is not included, but it can be found in the Appendix of \cite{Besson2019GLRT}, as it is quite similar to the proof for Global changes given above. The main difficulty relies in defining the ``good event'' $\cE_T$, and proving that it happens with high probability (by showing that the complementary event $\cE_T^c$ is highly unlikely).
@@ -1065,8 +1096,10 @@ Under the good event, all the change points are detected within a delay at most 
 Note that from Assumption~\ref{ass:6:LongPeriodsGlobal}, as the period between two changes are long enough, if $\cE_T(\delta)$ holds, then for all change $k$, one has $\tau^{(k)} \leq \hat{\tau}^{(k)} \leq \tau^{(k+1)}$. Using Assumption~\ref{ass:6:LongPeriods}, one can prove the following.
 
 \begin{lemma}\label{lem:6:GoodEventGlobal}
+\begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
     With $\cE_T(\delta)$ defined as in \eqref{def:6:GoodEvenGlobal}, the ``bad event'' is unlikely:
     $\bP(\cE_T^c(\delta)) \leq \delta(K+1)\Upsilon_T$.
+\end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
 We now turn our attention to upper bounding the two terms $(A)$ and $(B)$ in \eqref{eq:6:GeneRegretBound}.

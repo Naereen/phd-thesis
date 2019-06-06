@@ -188,6 +188,7 @@ that have to make decisions at some pre-specified time instants.
 At time step $t \in\mathbb{N},t\geq1$, player $j$ selects an arm $A^j(t)$, independently from the other players' selections.
 
 \begin{definition}
+\begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
   A \emph{collision} occurs at time $t$ if at least two players choose the same arm.
   We introduce the two events, for $j\in[M]$ and $k\in[K]$,
   \begin{equation}
@@ -195,6 +196,7 @@ At time step $t \in\mathbb{N},t\geq1$, player $j$ selects an arm $A^j(t)$, indep
     \ \ \ \text{and} \ \ \ C_k(t) :=  \left\{ \# \{ j : A^j(t) = k\} > 1 \right\},
   \end{equation}
   that respectively indicate that a collision occurs at time $t$ for player $j$ and that a collision occurs at time $t$ on arm $k$.
+\end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
 
 Each player $j$ then receives (and observes) the \emph{binary rewards}
@@ -211,8 +213,8 @@ To stay consistent and for simplicity, with the model presented in the previous 
 we preferred to focus on full reward occlusion in this chapter.
 
 
-A multi-player MAB strategy is formally defined as a tuple $\rho = (\rho^1,\dots,\rho^M)$ of arm selection strategies for of each of the $M$ players, and the goal is to propose a strategy that maximizes the total reward of the system, under some constraints.
-First, each player $j$ should adopt a \emph{sequential} strategy $\rho^j$, that decides which arm to select at time $t$ based on \emph{previous observations}.
+A multi-player MAB strategy is formally defined as a tuple $\cA = (\cA_1,\dots,\cA_M)$ of arm selection strategies for of each of the $M$ players, and the goal is to propose a strategy that maximizes the total reward of the system, under some constraints.
+First, each player $j$ should adopt a \emph{sequential} strategy $\cA_j$, that decides which arm to select at time $t$ based on \emph{previous observations}.
 Previous observations for player $j$ at time $t$ always include the previously chosen arms $A^j(s)$ and received rewards $r^j(s)$ for $s<t$, but may also include the \emph{sensing information} $Y_{A^j(t),t}$ or the \emph{collision information} $C^j(t)$.
 More precisely, depending on the application, one may consider the following three observation models, \modelun, \modeldeux{} and \modeltrois.
 
@@ -245,6 +247,7 @@ More formally, $A^j(t)$ is assumed to be $\cF^j_{t-1}$-measurable.
 
 % [Index sets \Mworst, \Mbest]
 \begin{definition}\label{def:5:MbestMworst}
+\begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
   We denote by $\mu_1^*$ the best mean, $\mu_2^*$ the second best etc, and
   by \Mbest{} the (non-sorted) set of the indices of the $M$ arms with largest mean (\emph{best arms}): if $\mu_1^* = \mu_{k_1}, \dots, \mu_M^* = \mu_{k_M}$
   then $\Mbest = \{k_1, \dots, k_M\}$.
@@ -253,17 +256,20 @@ More formally, $A^j(t)$ is assumed to be $\cF^j_{t-1}$-measurable.
   $[K] \setminus \Mbest$.
 
   Note that they are both uniquely defined if $\mu_M^* > \mu_{M+1}^*$.
+\end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
 
 Following a natural approach in the bandit literature, we evaluate the performance of a multi-player strategy using the \emph{expected regret} (later simply referred to as regret), that measures the performance gap with respect to the best possible strategy.
-The regret of the strategy $\rho$ at horizon $T$ is the difference between the cumulated reward of an oracle strategy, assigning in this case the $M$ players to \Mbest,
-and the cumulated reward of strategy $\rho$:
+The regret of the strategy $\cA$ at horizon $T$ is the difference between the cumulated reward of an oracle strategy, assigning in this case the $M$ players to \Mbest,
+and the cumulated reward of strategy $\cA$:
 
 \begin{definition}
+\begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
   The excepted centralized multi-player regret is defined by
   \begin{equation}\label{eq:5:regret}
-    R_T(\boldsymbol{\mu}, M, \rho) := \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M r^j(t)\right].
+    R_T(\boldsymbol{\mu}, M, \cA) := \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M r^j(t)\right].
   \end{equation}
+\end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
 
 With this definition, maximizing the expected sum of global reward of the system is indeed equivalent to minimizing the regret, and we investigate the best possible \emph{regret rate} of a decentralized multi-player algorithm in the next section.
@@ -299,6 +305,7 @@ In this section, we provide a useful decomposition of the regret (Lemma~\ref{lem
 We introduce additional notations in the following definition.
 
 \begin{definition}
+\begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
   % [$T_k(T)$ and $\cC_k(T)$]
   \label{def:5:nbSelections_nbCollisions}
   % \label{def:5:nbSelections}
@@ -314,6 +321,7 @@ We introduce additional notations in the following definition.
     \cC_k(T) :=
     \sum_{t=1}^{T} \sum_{j=1}^{M} \indic(C^j(t)) \indic(A^j(t) = k).
   \end{equation}
+\end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
 
 Note that when $n$ players choose arm $k$ at time $t$, this counts as $n$ collisions, not just one. So $\cC_k(T)$ counts the total \emph{number of colliding players} rather than the number of collision events. Hence there is small abuse of notation when calling it a number of collisions.
@@ -322,17 +330,19 @@ Letting $\cP_M = \left\{ \boldsymbol{\mu} \in [0,1]^K : \mu_M^* > \mu_{M+1}^*\ri
 be the set of bandit instances such that there is a strict gap between the $M$ best arms and the other arms, we now provide a regret decomposition for any $\boldsymbol{\mu} \in \cP_M$.
 
 \begin{lemma}\label{lem:5:DecompositionRegret}
+\begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
   For any bandit instance $\boldsymbol{\mu}\in\cP_M$ such that $\mu_M^* > \mu_{M+1}^*$, it holds that
   % \vspace*{-5pt}  % XXX
   % \begin{small}
     \begin{align}\label{eq:5:termeundeuxtermetrois}
-      R_T(\boldsymbol{\mu}, M, \rho) &=
+      R_T(\boldsymbol{\mu}, M, \cA) &=
       \underbrace{\sum_{k \in \Mworst} (\mu_M^* -  \mu_k) \E_{\mu}[T_k(T)]}_{\emph{\mytag{(a)}{eq:5:term1}}} \\
       & \;\;\;\;\;\;
       + \;\; \underbrace{\sum_{k \in \Mbest} (\mu_k -  \mu_M^*) (T - \E_{\mu}[T_k(T)])}_{\emph{\mytag{(b)}{eq:5:term2}}}
       + \;\; \underbrace{\sum_{k=1}^{K} \mu_k \E_{\mu}[\cC_k(T)]}_{\emph{\mytag{(c)}{eq:5:term3}}}. \nonumber
     \end{align}
   % \end{small}
+\end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
 In this decomposition, term \ref{eq:5:term1} counts the lost rewards due to \emph{sub-optimal arms} selections ($k \in \Mworst$), term \ref{eq:5:term2} counts the number of times the \emph{best arms} were \emph{not} selected ($k \in \Mbest$), and term \ref{eq:5:term3} counts the weighted number of collisions, on \emph{all arms}.
@@ -399,10 +409,12 @@ However, a careful manipulation of this decomposition shows that the regret is a
 The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized____env6} in Appendix illustrate two cases of $M<K$ and $M=K$ and the different impact of the three terms (\ref{eq:5:term1}, \ref{eq:5:term2} and \ref{eq:5:term3}) on the regret.
 
 \begin{lemma}\label{lem:5:1stLowerBound}
-    For any strategy $\rho$ and $\boldsymbol{\mu}\in\cP_M$, it holds that
+\begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
+    For any strategy $\cA$ and $\boldsymbol{\mu}\in\cP_M$, it holds that
     \begin{align*}
-        R_T(\boldsymbol{\mu}, M, \rho)    \geq \sum\limits_{k \in \Mworst} (\mu_M^*- \mu_k) \E_{\mu}[T_k(T)].
+        R_T(\boldsymbol{\mu}, M, \cA)    \geq \sum\limits_{k \in \Mworst} (\mu_M^*- \mu_k) \E_{\mu}[T_k(T)].
     \end{align*}
+\end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
 \begin{proof}
@@ -416,7 +428,7 @@ The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized___
     T_k(T) = \sum_{t=1}^{T} \indic(\exists! j, A^j(t) = k) + \sum_{t=1}^{T} \sum_{j=1}^{M} c_{k,t} \indic(A^j(t) = k)
     = T_k^{!}(T) + C_k(T).
   \end{equation*}
-  By focusing on the two terms $\ref{eq:5:term2} + \ref{eq:5:term3}$ from the decomposition of $R_T(\boldsymbol{\mu}, M, \rho)$ from Lemma~\ref{lem:5:DecompositionRegret}, we have
+  By focusing on the two terms $\ref{eq:5:term2} + \ref{eq:5:term3}$ from the decomposition of $R_T(\boldsymbol{\mu}, M, \cA)$ from Lemma~\ref{lem:5:DecompositionRegret}, we have
   \begin{align*}
     \ref{eq:5:term2} + \ref{eq:5:term3} &=
     \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[T_k^!(T)])
@@ -432,7 +444,7 @@ The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized___
     + \sum_{k=1}^{M} \min(\mu_M^*, \mu_k) \E_{\mu}[C_k(T)].
   \end{align*}
   And now both terms are non-negative, as $T_k^!(T) \leq T$, $\min(\mu_M^*, \mu_k)\geq 0$, and $C_k(T) \geq 0$, so $\ref{eq:5:term2} + \ref{eq:5:term3} \geq 0$
-  which proves that $R_T(\boldsymbol{\mu}, M, \rho) \geq \ref{eq:5:term1}$, as wanted.
+  which proves that $R_T(\boldsymbol{\mu}, M, \cA) \geq \ref{eq:5:term1}$, as wanted.
 \end{proof}
 
 
@@ -450,10 +462,11 @@ a classical assumption made by \cite{LaiRobbins85} in single-player bandit model
 % This class contains our proposals, \RandTopM{} and \MCTopM, but rules out the \textsc{Sic-MMAB} algorithm of \cite{BoursierPerchet18}.
 
 \begin{definition}\label{def:5:DecentralizedUniformEfficiency}
-  A strategy $\rho$  is \emph{\textbf{strongly uniformly efficient}} if for all $\boldsymbol{\mu} \in \cP_M$ and for all $\alpha \in (0,1)$,
+\begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
+  An algorithm $\cA$  is \emph{\textbf{strongly uniformly efficient}} if for all $\boldsymbol{\mu} \in \cP_M$ and for all $\alpha \in (0,1)$,
   % \vspace*{-5pt}  % XXX
   \begin{align}
-    & R_T(\boldsymbol{\mu},M,\rho) \mathop{=}\limits_{T \to +\infty} o(T^\alpha) \\
+    & R_T(\boldsymbol{\mu},M,\cA) \mathop{=}\limits_{T \to +\infty} o(T^\alpha) \\
     \text{and} & \;
     \forall j \in [M], k \in \Mbest, \;\;
     % a_{j,k}
@@ -461,6 +474,7 @@ a classical assumption made by \cite{LaiRobbins85} in single-player bandit model
     - \E_{\mu}[T^j_k(T)] \mathop{=}\limits_{T \to +\infty} o(T^{\alpha}).
     \label{eq:5:SUE}
   \end{align}
+\end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
 
 
@@ -468,7 +482,7 @@ Having a small regret on every problem instance, \ie, being uniformly efficient,
 is a natural assumption for algorithms,
 that rules out algorithms tuned to perform well on specific instances only.
 %
-From this assumption $\left(R_T(\boldsymbol{\mu},M,\rho)=o(T^\alpha)\right)$ and the decomposition of Lemma~\ref{lem:5:DecompositionRegret} one can see\footnote{With some arguments used in the proof of Lemma~\ref{lem:5:1stLowerBound} to circumvent the fact that \ref{eq:5:term2} may be negative.} that for every $k \in \Mbest$,
+From this assumption $\left(R_T(\boldsymbol{\mu},M,\cA)=o(T^\alpha)\right)$ and the decomposition of Lemma~\ref{lem:5:DecompositionRegret} one can see\footnote{With some arguments used in the proof of Lemma~\ref{lem:5:1stLowerBound} to circumvent the fact that \ref{eq:5:term2} may be negative.} that for every $k \in \Mbest$,
 ${T}- \E_{\mu}[T_k(T)] {=} o(T^{\alpha})$, and so
 \begin{equation}\label{eq:5:intermediate}
   % \vspace*{-5pt}  % XXX
@@ -476,20 +490,19 @@ ${T}- \E_{\mu}[T_k(T)] {=} o(T^{\alpha})$, and so
   % \vspace*{-5pt}  % XXX
 \end{equation}
 
-The additional assumption in \eqref{eq:5:SUE} further implies some notion of \emph{fairness}, as it suggests that each of the $M$ players spends on average the same amount of time on each of the $M$ best arms. Note that this assumption is satisfied by any strategy that is invariant under every permutation of the players, \ie, for which the distribution of the observations under $\rho^{\sigma} = (\rho^{\sigma(1)},\dots,\rho^{\sigma(M)})$ is independent from the choice of permutation $\sigma \in \Sigma_M$. In that case, it holds that  $\E_{\mu}[T_k^j(T)]=\E_{\mu}[T_k^{j'}(T)]$ for every arm $k$ and $(j,j') \in [M]$, hence \eqref{eq:5:SUE} and \eqref{eq:5:intermediate} are equivalent, and strong uniform efficiency is equivalent to standard uniform efficiency. Note that all our proposed algorithms are permutation invariant and \MCTopM{} is thus an example of strongly uniformly efficient algorithm, as we prove in Section~\ref{sec:5:upperbounds} that its regret is logarithmic on every instance $\mu \in \cP_M$.
+The additional assumption in \eqref{eq:5:SUE} further implies some notion of \emph{fairness}, as it suggests that each of the $M$ players spends on average the same amount of time on each of the $M$ best arms. Note that this assumption is satisfied by any strategy that is invariant under every permutation of the players, \ie, for which the distribution of the observations under $\cA_{\sigma} = (\cA_{\sigma(1)},\dots,\cA_{\sigma(M)})$ is independent from the choice of permutation $\sigma \in \Sigma_M$. In that case, it holds that  $\E_{\mu}[T_k^j(T)]=\E_{\mu}[T_k^{j'}(T)]$ for every arm $k$ and $(j,j') \in [M]$, hence \eqref{eq:5:SUE} and \eqref{eq:5:intermediate} are equivalent, and strong uniform efficiency is equivalent to standard uniform efficiency. Note that all our proposed algorithms are permutation invariant and \MCTopM{} is thus an example of strongly uniformly efficient algorithm, as we prove in Section~\ref{sec:5:upperbounds} that its regret is logarithmic on every instance $\mu \in \cP_M$.
 
 As we state it here, the constraint on fairness is new, and it was not studied as such in previous works.
 In the proofs of the regret bounds for \rhoRand{} in \cite{Anandkumar11}, the authors briefly mention that their policy is invariant under permutation and that this yields a certain fairness guarantee, but without formalizing it more.
 We note that the notion of fairness we defined above can be interpreted as a ``cooperative fairness'', opposed to the notion of ``arm fairness'' that has been studied in a few papers on single-player stochastic MAB.
 For instance, \cite{Patil2019stochastic} requires that each arm must be sampled at least a given fraction of the total time steps, \ie, $\forall k, \E[N_k(T)] \geq r_k T$, where the constraint vector $[r_1,\dots,r_K]$ is given and known to the algorithm.
 
-% As it was discovered in \cite{BoursierPerchet18} and further explained in Appendix~E of \cite{KaufmannAbbas19}, our lower-bound was not true for any algorithm, as we wrongly claimed in \cite{Besson2018ALT} that the ``collision information term'' is zero for any algorithm $\rho$.
-% However, we wanted to be still able to present the derivations of our lower-bound, mainly because its proof and its form give important insights on how to design an asymptotically optimal algorithm $\rho$.
+% As it was discovered in \cite{BoursierPerchet18} and further explained in Appendix~E of \cite{KaufmannAbbas19}, our lower-bound was not true for any algorithm, as we wrongly claimed in \cite{Besson2018ALT} that the ``collision information term'' is zero for any algorithm $\cA$.
+% However, we wanted to be still able to present the derivations of our lower-bound, mainly because its proof and its form give important insights on how to design an asymptotically optimal algorithm $\cA$.
 % % and because it still applies to algorithms of the \RhoRand{} family as well as our proposals \RandTopM{} and \MCTopM.
 
-% FIXME
 The following notations and the hypothesis on the collision information term \eqref{eq:5:collisionInformationTerm} come from Appendix~E of \cite{KaufmannAbbas19}.
-Fix a player $j\in[M]$, and we consider the observations $O_t$ gathered by this player after $t$ rounds of its algorithm $\rho^j$:
+Fix a player $j\in[M]$, and we consider the observations $O_t$ gathered by this player after $t$ rounds of its algorithm $\cA_j$:
 \[ O_t := \left( U^j(1), Y_{A^j(1),1}, C^j(1), \ldots, U^j(t), Y_{A^j(t),t}, C^j(t) \right),\]
 where $U^j(t)$ denotes some external source of randomness useful to select $A^j(t+1)$ (\eg, for an algorithm based on ranks and \UCB{} indexes, like \RhoRand, when two arms have the same maximum index, the decision is an $\argmax$ that is usually a uniform random selection among the arms with maximum index).
 
@@ -497,22 +510,23 @@ Fix a problem $\bm{\mu}$,
 % and as we do in Appendix~\ref{proof:5:BetterLowerBound},
 then introduce an alternative model parametrized by $\bm{\lambda}$, with a small difference between $\bm{\mu}$.
 Fix a sub-optimal arm $k$ and $\varepsilon>0$, and $\lambda_k = \mu^*_M + \varepsilon$ and $\lambda_{\ell} = \mu_{\ell}$ for any $\ell\neq k$.
-We denote $\Pr_{\bm{\mu}}^{O_t}$ the distribution of the vector $O_t$ under the model $\bm{\mu}$ when using algorithm $\rho$.
+We denote $\Pr_{\bm{\mu}}^{O_t}$ the distribution of the vector $O_t$ under the model $\bm{\mu}$ when using algorithm $\cA$.
 Then we introduce the \emph{collision information term} as:
 \begin{equation}\label{eq:5:collisionInformationTerm}
-  \cI_{\bm{\mu},\bm{\lambda}}(\rho,T) := \sum_{t=1}^{T} \mathrm{KL}(\Pr_{\bm{\mu}}^{C_t | O_{t-1}}, \Pr_{\bm{\lambda}}^{C_t | O_{t-1}}).
+  \cI_{\bm{\mu},\bm{\lambda}}(\cA,T) := \sum_{t=1}^{T} \mathrm{KL}(\Pr_{\bm{\mu}}^{C_t | O_{t-1}}, \Pr_{\bm{\lambda}}^{C_t | O_{t-1}}).
 \end{equation}
 
-For a \emph{decentralized strategy} $\rho$ that has access to the sensing information (\ie, ruling out model \modeltrois), and satisfies $\cI_{\bm{\mu},\bm{\lambda}}(\rho,T) = \smallO{\log(T)}$,
+For a \emph{decentralized strategy} $\cA$ that has access to the sensing information (\ie, ruling out model \modeltrois), and satisfies $\cI_{\bm{\mu},\bm{\lambda}}(\cA,T) = \smallO{\log(T)}$,
 we now state a problem-dependent asymptotic lower bound on the number of sub-optimal arms selections.
-The additional hypothesis on $\cI_{\bm{\mu},\bm{\lambda}}(\rho,T)$ essentially says that ``the collisions do not bring too much information on the arm means'', as stated in \cite{KaufmannAbbas19}.
+The additional hypothesis on $\cI_{\bm{\mu},\bm{\lambda}}(\cA,T)$ essentially says that ``the collisions do not bring too much information on the arm means'', as stated in \cite{KaufmannAbbas19}.
 The theorem stated below is proven in the Appendix of \cite{Besson2018ALT},
 % \ref{proof:5:BetterLowerBound},
 and it also yields an asymptotic logarithmic lower bound on the regret.
 
 \begin{theorem}\label{thm:5:BetterLowerBound}
-  Under observation models $\modelun$ and $\modeldeux$, for any strongly uniformly efficient \emph{decentralized} policy $\rho$ and $\boldsymbol{\mu}\in\cP_M$.
-  Furthermore, if $\rho$ satisfies $\cI_{\bm{\mu},\bm{\lambda}}(\cA,T) = \smallO{\log(T)}$, then
+\begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
+  Under observation models $\modelun$ and $\modeldeux$, for any strongly uniformly efficient \emph{decentralized} policy $\cA$ and $\boldsymbol{\mu}\in\cP_M$.
+  Furthermore, if $\cA$ satisfies $\cI_{\bm{\mu},\bm{\lambda}}(\cA,T) = \smallO{\log(T)}$, then
   % \vspace*{-10pt}  % XXX
   \begin{equation}\label{eq:5:LBDraws}
     \forall j \in [M], \ \forall k \in \Mworst, \ \ \ \liminf_{T\to \infty} \frac{\E_{\mu}[T_k^j(T)]}{\log(T)} \geq \frac{1}{\kl(\mu_k, \mu_M^*)}.
@@ -522,22 +536,23 @@ and it also yields an asymptotic logarithmic lower bound on the regret.
   \noindent From Lemma~\ref{lem:5:1stLowerBound}, it follows that
   % \vspace*{-5pt}  % XXX
   \begin{equation}\label{eq:5:ourLowerBound}
-    \mathop{\lim\inf}\limits_{T \to +\infty} \frac{R_T(\boldsymbol{\mu}, M, \rho)}{\log(T)}
+    \mathop{\lim\inf}\limits_{T \to +\infty} \frac{R_T(\boldsymbol{\mu}, M, \cA)}{\log(T)}
     \geq M \times \left( \sum_{k \in \Mworst} \frac{(\mu_M^* -  \mu_k)}{\kl(\mu_k, \mu_M^*)} \right) .
   \end{equation}
+\end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
 
 Observe that the regret lower bound \eqref{eq:5:ourLowerBound} is tighter than the state-of-the-art lower bound in this setup
 given by \cite{Zhao10}, that states that
 \begin{equation}\label{eq:5:Zhao10LowerBound}
-  \mathop{\lim\inf}\limits_{T \to +\infty} \frac{R_T(\boldsymbol{\mu}, M, \rho)}{\log(T)}
+  \mathop{\lim\inf}\limits_{T \to +\infty} \frac{R_T(\boldsymbol{\mu}, M, \cA)}{\log(T)}
   \geq \sum_{k \in \Mworst} \left( \sum_{j=1}^{M} \frac{(\mu_M^* -  \mu_k)}{\kl(\mu_k, \mu_{j}^*)} \right),
 \end{equation}
 as for every $k \in \Mworst$ and $j \in [M]$, $\kl(\mu_k, \mu_j^*) \geq \kl(\mu_k, \mu_M^*)$
 (see Figure~\ref{fig:5:CompLowerBounds} in Appendix~\ref{app:5:illustrationLowerBound}).
 %
-It is worth mentioning that \cite{Zhao10} proved a lower bound under the more general assumption for $\rho$ that there exists some numbers $(a_{k}^j)$ such that $a_{k}^j T - \E_{\mu}[T_k^j(T)] = o(T^\alpha)$ whereas in Definition~\ref{def:5:DecentralizedUniformEfficiency} we make the choice $a_{k}^j = 1/M$.
+It is worth mentioning that \cite{Zhao10} proved a lower bound under the more general assumption for $\cA$ that there exists some numbers $(a_{k}^j)$ such that $a_{k}^j T - \E_{\mu}[T_k^j(T)] = o(T^\alpha)$ whereas in Definition~\ref{def:5:DecentralizedUniformEfficiency} we make the choice $a_{k}^j = 1/M$.
 Our result could be extended to this case but we chose to keep the notation simple and focus on \emph{fair allocation} of the optimal arms between players.
 
 
@@ -563,6 +578,7 @@ The following result shows that term \ref{eq:5:term2} can be related to the numb
 
 % \vspace*{-15pt}  % XXX remove if problem
 \begin{lemma}\label{lem:5:1stUpperBound}
+\begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
   The term \ref{eq:5:term2} in Lemma~\ref{lem:5:DecompositionRegret} is upper bounded as
   % \hfill{}
   % (Proved in Appendix~\ref{proof:5:1stUpperBound})
@@ -573,6 +589,7 @@ The following result shows that term \ref{eq:5:term2} can be related to the numb
     \Bigr).
   \end{equation}
   % \vspace*{-5pt}  % XXX
+\end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
 \begin{proof}
@@ -936,6 +953,7 @@ Our improved analysis also applies to \rhoRand{}.
 Explicit expressions for $C_{\boldsymbol{\mu}}$, $D_{\boldsymbol{\mu}}$ can be found in the proof given below.
 
 \begin{lemma}\label{lem:5:SubOptimalSelections}
+\begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
   For any $\boldsymbol{\mu}\in\cP_M$,
   let player $j\in[M]$ use the \RandTopM-, \MCTopM- or \rhoRand-\klUCB{}
   decentralized policy with exploration function $f(t) = \log(t) + 3 \log\log(t)$.
@@ -948,6 +966,7 @@ Explicit expressions for $C_{\boldsymbol{\mu}}$, $D_{\boldsymbol{\mu}}$ can be f
       \frac{\log(T)}{\kl(\mu_k,\mu_{M}^*)}
       + \underbrace{C_{\boldsymbol{\mu}} \sqrt{\log(T)} + D_{\boldsymbol{\mu}}\log\log(T) + 3M + 1}_{= \smallO{\log(T)}}.
   \end{equation}
+\end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
 It is important to notice that the leading constant in front of $\log(T)$ is the same as in the constant featured in Equation~\eqref{eq:5:LBDraws} of Theorem~\ref{thm:5:BetterLowerBound}. This result proves that the lower bound on sub-optimal selections is asymptotically matched for the three considered algorithms. This is a strong improvement in comparison to the previous state-of-the-art results
@@ -994,16 +1013,19 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
   The leftmost term in \eqref{eq:5:sumOfProbaForTkj} can be controlled using Lemma~\ref{lem:5:Fact1KLUCB} below that relies on a self-normalized deviation inequality, whose proof exactly follows from the proof of Fact~1 in Appendix~A of \cite{KLUCBJournal}.
 
   \begin{lemma}\label{lem:5:Fact1KLUCB}
+  \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
       For any arm $k$, if $g_k^{j}(t)$ is the \klUCB{} index with exploration function $f(t)=\log(t)+3\log\log(t)$,
       \begin{equation}
         \sum_{t=1}^T \Pr_{\bm{\mu}} \left(g_k^{j}(t) < \mu_k\right) \leq 3 + 4e \log\log(T).
       \end{equation}
+  \end{leftbar}  % XXX leftbar lemmabar, comment if needed
   \end{lemma}
 
   The rightmost term in \eqref{eq:5:sumOfProbaForTkj} can be controlled using Lemma~\ref{lem:5:Fact2KLUCB}, that is a direct consequence of the proof of Fact~2 in Appendix~A of \cite{KLUCBJournal}.
   Denote $\kl'(x,y)$ the derivative of the function $x \mapsto \kl(x,y)$ (for any fixed $y\neq 0, 1$).
 
   \begin{lemma}\label{lem:5:Fact2KLUCB}
+  \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
     For any arms $k$ and $k'$ such that $\mu_{k'} > \mu_{k}$, if $g_k^{j}(t)$ is the kl-UCB index with exploration function $f(t)$,
     \begin{small} % XXX
       \begin{align*}
@@ -1011,6 +1033,7 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
         + \sqrt{2\pi} \sqrt{\frac{\kl'(\mu_k,\mu_{k'})^2}{\kl(\mu_k,\mu_{k'})^3}}\sqrt{f(T)} + 2\left(\frac{\kl'(\mu_k,\mu_{k'})}{\kl(\mu_k,\mu_{k'})}\right)^2 + 1.
       \end{align*}
     \end{small} % XXX
+\end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
   Putting things together, one obtains the non-asymptotic upper bound
@@ -1050,6 +1073,7 @@ happen a logarithmic number of times. The proof of this result is given below.
 % in Appendix~\ref{proof:5:elementaryLemma_RandTopM_MCTopM}.
 
 \begin{lemma}\label{lem:5:elementaryLemma_RandTopM_MCTopM}
+\begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
   For any $\boldsymbol{\mu}\in\cP_M$,
   any player $j \in [M]$ using
   \RandTopM- or \MCTopM-\klUCB,
@@ -1060,6 +1084,7 @@ happen a logarithmic number of times. The proof of this result is given below.
     \Pr\left(A^j(t)=k, k\notin \TopM(t)\right)
     = \left(\sum_{k', \mu_{k'} < \mu_k}\frac{1}{\kl(\mu_k,\mu_{k'})} + \sum_{k', \mu_{k'} > \mu_k}\frac{1}{\kl(\mu_{k'},\mu_{k})}\right) \log(T) + o(\log(T)).
   \end{equation*}
+\end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
 
@@ -1103,6 +1128,7 @@ First, we can bound the number of collisions by the number of collisions for pla
 that we can then bound by the number of changes of arms.
 
 \begin{lemma}\label{lem:5:collisionsMCTopM}
+\begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
   For any $\boldsymbol{\mu}\in\cP_M$,
   if all players use the
   \MCTopM-\klUCB{} decentralized policy,
@@ -1115,6 +1141,7 @@ that we can then bound by the number of changes of arms.
     \E_{\mu}\left[\sum_{k=1}^K \cC_k(T)\right]
     \leq M^2\left(2 M + 1\right) \left(\sum_{a,b=1,\dots,K,\;\mu_a < \mu_b} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T}.
   \end{equation}
+\end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
 Note that this bound is in $\bigO{M^3}$,
@@ -1358,15 +1385,17 @@ are both proven to be at most logarithmic in Lemmas~\ref{lem:5:SubOptimalSelecti
 it follows from our regret decomposition (Lemma~\ref{lem:5:DecompositionRegret}) together with Lemma~\ref{lem:5:1stUpperBound} that the regret of \MCTopM-\klUCB{} is logarithmic. More precisely, one obtains a finite-time problem-depend upper bound on the regret of this algorithm.
 
 \begin{theorem}\label{thm:5:LogarithmicRegret_MCTopMklUCB}
+\begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
   If all $M$ players use
   \MCTopM-\klUCB, and $M \leq K$,
   then for any problem $\boldsymbol{\mu} \in \cP_M$,
   there exists a problem dependent constant $G_{M,\boldsymbol{\mu}}$, such that
   the regret satisfies:
   \begin{equation}\label{eq:5:LogarithmicRegret_MCTopMklUCB}
-    R_T(\boldsymbol{\mu}, M, \rho) \leq G_{M,\boldsymbol{\mu}} \log(T) + \smallO{\log T}.
+    R_T(\boldsymbol{\mu}, M, \cA) \leq G_{M,\boldsymbol{\mu}} \log(T) + \smallO{\log T}.
   \end{equation}
   Moreover, the dependency of the constant regarding the number of players is $G_{M,\boldsymbol{\mu}} = \bigO{M^3}$.
+\end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
 

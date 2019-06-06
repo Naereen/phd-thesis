@@ -372,8 +372,8 @@ More formally, for one device, let $N_k(t)$ be the number of times the channel $
 for any $t\in\mathbb{N}$,
 $N_k(t) = \sum_{\tau=0}^{t-1} \mathbbm{1}(A(\tau) = k)$.
 The empirical mean estimator $\widehat{\mu_k}(t)$ of channel $k$ is defined as the mean reward obtained up-to time $t-1$,
-$\widehat{\mu_k}(t) = \frac{1}{N_k(t)} \sum_{\tau=0}^{t-1} r_k(\tau) \mathbbm{1}(A(\tau) = k)$,
-where $r_{k}(t)$ is the reward obtained after transmission in channel $k$ at time $t$.
+$\widehat{\mu_k}(t) = \frac{1}{N_k(t)} \sum_{\tau=0}^{t-1} r(\tau) \mathbbm{1}(A(\tau) = k)$,
+where $r(t)=Y_{k,t}$ is the reward obtained after transmission in channel $k$ at time $t$.
 The upper confidence bound in each channel $k$ is defined as
 $U_k(t) = \widehat{\mu_k}(t) + \sqrt{\alpha \log(t) / N_k(t)}$.
 Finally, the transmission channel at time step $t$
@@ -392,7 +392,7 @@ $A(t) = \arg\max_{1\leq k \leq K} U_k(t)$.
 			\uIf{First packet transmission}{
 				Compute $\forall k, U_k(t) = \widehat{\mu_k}(t) + \sqrt{\alpha \log(t) / N_k(t)}$\;
 				Transmit in channel $A(t) = \arg\max_{1\leq k \leq K} U_k(t)$\;
-				Reward $r_{A(t)}(t) = 1$, if \emph{Ack} is received, else $0$\;
+				Reward $r(t) = 1$, if \emph{Ack} is received, else $0$\;
 			}
 			\Else(\tcp*[f]{Retransmit in same channel}){
 				j $\leftarrow$ last channel selected by first-stage \UCB\;
@@ -472,7 +472,7 @@ In other words, we expect that this algorithm is able to learn the best channel 
 It is described in Algorithm~\ref{algo:43:TwoUCB}, and it is still a practical approach, since the storage requirements and time complexity remains linear w.r.t. the number of channels $K$ (\ie, $\mathcal{O}(K)$).
 %
 Note that, we use the subscript $({}^r)$ to denote the variables
-$\widehat{\mu^r_k}(t)$, $B^r_k(t)$ and $U^r_k(t)$,
+$\widehat{\mu^r}(t)$, $B^r_k(t)$ and $U^r_k(t)$,
 related to the \UCB{} algorithm employed for the retransmission.
 
 % \vspace*{-3pt}
@@ -489,7 +489,7 @@ related to the \UCB{} algorithm employed for the retransmission.
 			\Else(\tcp*[f]{Packet retransmission with $\mathrm{UCB}^r$}){
 				Compute $\forall k, U^r_k(t) = \widehat{\mu^r_k}(t) + \sqrt{\alpha \log(t) / N_k^r(t)}$\;
 				Transmit in channel $C^r(t) = \arg\max_{1\leq k \leq K} U^r_k(t)$\;
-				Reward $r^r_{C^r(t)}(t) = 1$, if \emph{Ack} is received, else $0$\;
+				Reward $r^r(t) = 1$, if \emph{Ack} is received, else $0$\;
 			}
 		}
 		\caption{\UCB{} for retransmission.}    % A naive

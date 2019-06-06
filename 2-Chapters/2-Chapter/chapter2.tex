@@ -29,7 +29,7 @@ This family of models was first proposed for clinical trials, and later applied 
 Their name refers to one-armed bandits found in casinos, as shown in Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem} below.
 % The seminal paper by Lai and Robbins \cite{LaiRobbins85} was the first to introduce the measure of performance widely used in the literature, the notion of \emph{regret}, and to analyze a lower-bound on the performance of any algorithm against a fixed problem.
 % Since then, many efficient algorithms were proposed, XXX
-%
+
 % In all this thesis, we only consider one-dimensional exponential families, and in particular Bernoulli distributions.
 We formally define the model and the main notations used in all this document in Section~\ref{sec:2:notations}.
 %
@@ -62,14 +62,14 @@ and we illustrate its performance empirically.
 % , but no satisfactory theoretical result is given, as the bound we had hoped for has been proved unachievable since then.
 
 
-\paragraph{About notations.}
+\textbf{About notations.}
 %
 We use in this thesis the usual notations from the MAB literature,
 % , and we follow closely the formalism of \cite{Kaufmann12PhD}, as well as \cite{Slivkins2019,LattimoreBanditAlgorithmsBook,Bubeck12}.
 and a summary is included in the Nomenclature, in Page~\pageref{chapter:nomenclature}.
 
 
-\paragraph{Main references for the curious reader.}
+\textbf{Main references for the curious reader.}
 %
 For more details and a more formal introduction to multi-armed bandits, we suggest to the interested reader to work on a very recent text-book by Slivkins \cite{Slivkins2019}.
 Another excellent but reasonably short survey is the book by Bubeck and Cesa-Bianchi \cite{Bubeck12}, while the more recent book by Lattimore and Szepesv{\'a}ri \cite{LattimoreBanditAlgorithmsBook} is the most complete resource about bandit algorithms.
@@ -93,9 +93,9 @@ and Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is ba
 
 A MAB is a model of a decision-making game, where a \emph{player} has to sequentially select one action in a (usually finite) set of actions, and only receives a (random) feedback about the selected action, also called a \emph{reward}.
 \textbf{We always consider $K\in\N, K\geq2$ arms, and discrete times $t\in\N^*$}.
-When the player decides at time $t$ to play (or pull) the arm $A(t)\in\{1,\dots,K\}=[K]$, she receives a reward $r_{A(t)}(t)\in\R$, and so on for a finite number of steps $t$, from $t=1$ until $t=T$ for an \emph{horizon} $T$.
+When the player decides at time $t$ to play (or pull) the arm $A(t)\in\{1,\dots,K\}=[K]$, she receives a reward $r(t) = Y_{A(t),t}\in\R$, and so on for a finite number of steps $t$, from $t=1$ until $t=T$ for an \emph{horizon} $T$.
 %
-A commonly studied goal for the player is to maximize its sum of received rewards, $\sum_{t=1}^T r_{A(t)}(t)$
+A commonly studied goal for the player is to maximize its sum of received rewards, $\sum_{t=1}^T r(t)$
 (or its \emph{mean} in stochastic and stationary models).
 
 
@@ -117,7 +117,7 @@ For more details on reinforcement learning, in particular about more generic mod
             \node [block] (environment) at (4,0) {MAB problem};
             % Once the nodes are placed, connecting them is easy.
             \draw [->] (player) to[bend left=90] node[pos=0.5] {Chooses a \textbf{discrete} action $k=A(t) \in\{1,\dots,K\}$} (environment);
-            \draw [->] (environment) to[bend left=90] node[pos=0.5] {Observes a \textbf{real-valued} reward $r_k(t) \in \R$} (player);
+            \draw [->] (environment) to[bend left=90] node[pos=0.5] {Observes a \textbf{real-valued} reward $r(t)=Y_{k,t} \in \R$} (player);
             %
         \end{tikzpicture}
     }
@@ -126,11 +126,11 @@ For more details on reinforcement learning, in particular about more generic mod
 \end{figure}
 
 
-This quantity $\sum_{t=1}^T r_{A(t)}(t)$ can indeed be random, and it usually depends on two aspects.
-First, the rewards may depend on the randomness of the environment, \ie, the unknown and unpredictable values $r_k(t)$.
-Then this quantity also depends on the player's decision-making policy, \ie, the choices $A(t)$, that are based on (all) the \emph{past} observations, \ie, $A(1)$, $r_{A(1)}(1)$, $\dots$, $A(t-1)$, $r_{A(t-1)}(t-1)$, and possibly on an external source of randomness.
+This quantity $\sum_{t=1}^T r(t)$ can indeed be random, and it usually depends on two aspects.
+First, the rewards may depend on the randomness of the environment, \ie, the unknown and unpredictable values $r(t)=Y_{k,t}$.
+Then this quantity also depends on the player's decision-making policy, \ie, the choices $A(t)$, that are based on (all) the \emph{past} observations, \ie, $A(1)$, $Y_{A(1),1}$, $\dots$, $A(t-1)$, $Y_{A(t-1),t-1}$, and possibly on an external source of randomness.
 %
-Without loss of generality, it can be given by a sequence $U_0,U_1,\dots$ of \iid{} random values, uniformly distributed on $[0,1]$, and that has to be independent from the rewards $r_k(t)$.
+Without loss of generality, it can be given by a sequence $U_0,U_1,\dots$ of \iid{} random values, uniformly distributed on $[0,1]$, and that has to be independent from the samples $Y_{k,t}$.
 External randomness is used in most MAB algorithms, \eg, to break ties uniformly in an index policy.
 
 
@@ -138,19 +138,20 @@ External randomness is used in most MAB algorithms, \eg, to break ties uniformly
 \subsection{Finite arms and stochastic rewards}
 
 
-In all this thesis, we focus on the model with finite arms, and binary or real-valued stochastic rewards, that is $A(t)\in\{1,\dots,K\}$ for a fixed and known number of arms $K\in\N,K\geq2$, and $r_{A(t)}(t)\in\R$.
+In all this thesis, we focus on the model with finite arms, and binary or real-valued stochastic rewards, that is $A(t)\in\{1,\dots,K\}$ for a fixed and known number of arms $K\in\N,K\geq2$, and $Y_{A(t),t}\in\R$.
 %
 % Restricting to models with a finite number of arms
 % rules out an entire domain of the recent research on MAB, in particular we do not consider linear nor contextual bandits (for more details, see Parts V and VI of \cite{LattimoreBanditAlgorithmsBook}).
 %
 We also restrict to \emph{stochastic} rewards, that is we associate a real-valued distribution to each arm, denoted $\nu_k$ for arm $k\in\{1,\dots,\}=[K]$.
-Rewards are stationary, meaning that $(r_k(t))_{t\in\N^*}$ is independent and identically distributed (\iid), $r_k(t) \sim \nu_k$ for any $t\geq1$.
+Rewards are stationary, meaning that $(Y_{k,t})_{t\in\N^*}$ is independent and identically distributed (\iid), $Y_{k,t} \sim \nu_k$ for any $t\geq1$.
 
-The most common objective for the player is to maximize its expected rewards $\E[\sum_{t=1}^T Y_t] = \sum_{t=1}^T \E[r_{A(t)}(t)]$.
-The expectancy is taken on the rewards $(r_k(t))_{k,t}$, and the extern random variables $(U_s)_s$ (\ie, on the algorithm's decisions).
+The most common objective for the player is to maximize its expected rewards $\E[\sum_{t=1}^T r(t)] = \sum_{t=1}^T \E[Y_{A(t),t}]$.
+The expectancy is taken on the rewards $(Y_{k,t})_{k,t}$, and the extern random variables $(U_s)_s$ (\ie, on the algorithm's decisions).
 %
 Other commonly studied objectives include best-arm identification (BAI) \cite{audibert2010best}.
 
+% \TODOL{Je dois unifier les notations, et utiliser $Y_{k,t}$ pour les flux qui sont iid et $r(t)$ pour les récompenses effectivement observées (comme dans les chapitres 5 et 6)}
 
 \paragraph{An interactive demo to discover the MAB problem (for the novice).}
 \label{par:2:interactiveDemoDiscoverMAB}
@@ -175,11 +176,11 @@ The demo is hosted on my website, at \href{https://perso.crans.org/besson/phd/MA
 
 
 The webpage looks like Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem} below.
-The arms follow Bernoulli distributions, \ie, $\nu_k = \mathcal{B}(\mu_k)$, of unknown means $\mu_k\in[0,1]$, and your goal in this interactive demonstration is to obtain the highest possible cumulated reward in $100$ steps, $\sum_{t=1}^{100} r_{A(t)}(t)$.
-Your decisions have to be made sequentially: at time $t$, you pick one of the arms, $A(t) \in\{1,2,3,4,5\}$, then the demo shows the random reward obtained from this (virtual) casino machine (in \textcolor{gold}{yellow}), \ie, the binary value $r_{A(t)}(t)\in\{0,1\}$, that is sampled \iid{} from $\nu_k$.
+The arms follow Bernoulli distributions, \ie, $\nu_k = \mathcal{B}(\mu_k)$, of unknown means $\mu_k\in[0,1]$, and your goal in this interactive demonstration is to obtain the highest possible cumulated reward in $100$ steps, $\sum_{t=1}^{100} r(t)$.
+Your decisions have to be made sequentially: at time $t$, you pick one of the arms, $A(t) \in\{1,2,3,4,5\}$, then the demo shows the random reward obtained from this (virtual) casino machine (in \textcolor{gold}{yellow}), \ie, the binary value $r(t)\in\{0,1\}$, that is sampled \iid{} from $\nu_k$.
 %
-The UI of the demo also shows the current value of $t$ (``total plays'') and $\sum_{s=1}^t r_{A(s)}(s)$ the ``total reward''.
-For each arm, we show the sum of rewards obtained from that arm, \ie, $X_k(t) = \sum_{s=1}^t r_k(s) \mathbbm{1}(A(s) = k)$, in the ``Rewards'' line, and the number of pulls of that arm, \ie, $N_k(t) = \sum_{s=1}^t \mathbbm{1}(A(s) = k)$ in the ``Pulls'' line.
+The UI of the demo also shows the current value of $t$ (``total plays'') and $\sum_{s=1}^t r(s)$ the ``total reward''.
+For each arm, we show the sum of rewards obtained from that arm, \ie, $X_k(t) = \sum_{s=1}^t r(s) \mathbbm{1}(A(s) = k)$, in the ``Rewards'' line, and the number of pulls of that arm, \ie, $N_k(t) = \sum_{s=1}^t \mathbbm{1}(A(s) = k)$ in the ``Pulls'' line.
 %
 The demo also shows the estimated probability of each arm, that is $\widehat{\mu_k}(t) = X_k(t) / N_k(t)$ (when $N_k(t)>0$), in the ``Estimated Probs'' line.
 
@@ -207,9 +208,9 @@ The algorithm $\cA$ selects an arm $A(t)$ at time $t$, possibly by using the pas
 As shown below, being oblivious to the past yields very poor performance (cf. the pure exploration policy in Section~\ref{sub:2:naiveSimpleStrategies}), so efficient policies indeed depend on the successive feedbacks.
 %
 More formally, an algorithm can be defined as a sequence of \emph{measurable} functions $(\cA_t)_{t\geq1}$,
-where $\cA_t$ maps the past observations $O_t = (U_0, Y_1, U_1, \dots, Y_{t-1}, U_{t-1})$
-to an arm $\cA_t(O_t) = A(t) \in[K]$,
-if we denote $Y_s = r_{A(s)}(s)$ the $s$-th reward.
+where $\cA_t$ maps the past observations $O_t = (U_0, Y_{A(1),1}, U_1, \dots, Y_{A(t-1),t-1}, U_{t-1})$
+to an arm $\cA_t(O_t) = A(t) \in[K]$
+(we remind that we denote $r(s) = Y_{A(s),s}$ the $s$-th reward).
 The initial information is reduced to $O_1 = (U_0)$, and the first decision is $A(1) = \cA_1(O_1)$. Usually, most algorithms starts by selecting $A(1)=1,\dots,A(K)=K$ (or a permutation of the $K$ arms) in the $K$ first steps (\eg, Algorithm~\ref{algo:2:indexPolicy}).
 % as illustrated for example in Algorithm~\ref{algo:2:indexPolicy} below.
 %
@@ -225,7 +226,7 @@ From now on and until the last chapter of this thesis, \textbf{we only consider 
 %
 % Everything is implemented and documented at
 % https://smpybandits.github.io/docs/Arms.html
-\textbf{We also focus only on real-valued rewards}, meaning that $r_k(t)\in\R$ for all arm $k$ and time $t$.
+\textbf{We also focus only on real-valued rewards}, meaning that $Y_{k,t}\in\R$ for all arm $k$ and time $t$.
 
 An important hypothesis is whether rewards are bounded or not,
 and whether the player knows if they are bounded or not before starting the bandit game.
@@ -280,7 +281,7 @@ We have to quote two important results on exponential families:
     The KL divergence is also called the relative entropy is a measure of how one probability distribution is different from a second, reference probability distribution.
 \end{enumerate}
 
-\begin{defn}[Kullback-Leibler divergence]\label{def:2:KLDivergence}
+\begin{definition}[Kullback-Leibler divergence]\label{def:2:KLDivergence}
 \begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
     The KL divergence between two distributions $d_1$ and $d_2$ is defined as
     \begin{align}\label{eq:2:Kullback-LeiblerDivergenceExpFamily1}
@@ -288,7 +289,7 @@ We have to quote two important results on exponential families:
     \end{align}
 \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
-\end{defn}
+\end{definition}
 
 Following this Definition~\ref{def:2:KLDivergence} for two distributions
 $d_1=\Pr(x|\eta_1)$ and $d_2=\Pr(x|\eta_2)$,
@@ -426,8 +427,8 @@ The focus of this work is on cognitive radio and IoT networks, where arms can re
 
 Previous works of our SCEE team showed that MAB can be used to model the problem of spectrum access for a secondary user accessing a licensed spectrum.
 In this model, arms represent a finite set of orthogonal channels, \ie, different frequency bands in a licensed spectrum.
-In the model with sensing, the rewards $r_k(t)$ represents the feedback obtained by the CR-equipped device after sensing the channel $k$ at time $t$.
-A reward of $r_k(t) = 1$ indicates that no Primary User was sensed, while a reward of $r_k(t)=0$ indicates that the channel $k$ is busy at time $t$ and no uplink message can be sent.
+In the model with sensing, the samples $Y_{k,t}$ represents the feedback obtained by the CR-equipped device after sensing the channel $k$ at time $t$.
+A reward of $r(t) = 1$ indicates that no Primary User was sensed, while a reward of $r(t)=0$ indicates that the channel $k$ is busy at time $t$ and no uplink message can be sent.
 %
 This model was first introduced by Wassim Jouini during his PhD thesis,
 in \cite{Jouini09} and later studied in both \cite{Jouini10,Jouini12}.
@@ -464,15 +465,16 @@ or in other words, to quantify the speed of convergence of a MAB algorithm.
 \subsection{Measuring performance with the (mean) regret}
 
 Let us first introduce some notations.
-From now on, we consider a stochastic and stationary MAB problem, with $K$ arms of distributions $\nu_1,\dots,\nu_K=(\nu_k)_k$, that generates \iid{} rewards $r_k(t)\sim \nu_k$, for any time $t$.
+From now on, we consider a stochastic and stationary MAB problem, with $K$ arms of distributions $\nu_1,\dots,\nu_K=(\nu_k)_k$, that generates \iid{} samples $Y_{k,t} \sim \nu_k$, for any time $t$.
+% with $r(t)=Y_{A(t),t}$).
 We focus on distributions fully characterized by their means, that can be Bernoulli or any one-dimensional exponential family.
-We denote $\mu_k = \E[r_k(t)] \in \R$ the mean of the distribution of arm $k$ (it will be referred to as the \emph{mean of arm $k$}).
+We denote $\mu_k = \E[Y_{k,t}] \in \R$ the mean of the distribution of arm $k$ (it will be referred to as the \emph{mean of arm $k$}).
 %
 % \paragraph{Defining the regret.}
 %
 To define the regret, we first need to distinguish between \emph{optimal} and \emph{sub-optimal} arms.
 
-\begin{defn}\label{def:2:optimalSubOptimalArms}
+\begin{definition}\label{def:2:optimalSubOptimalArms}
 \begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
     % [Optimal and sub-optimal arms]
     Consider a bandit problem of $K$ arms with distributions of means $\bm{\mu}=\mu_1,\dots,\mu_k$.
@@ -480,9 +482,9 @@ To define the regret, we first need to distinguish between \emph{optimal} and \e
     The best arm can be non unique, and any arm $k$ having $\mu_k = \mu^*$ is said to be \emph{optimal},
     while arms satisfying $\mu_k < \mu^*$ are called \emph{sub-optimal}.
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
-\end{defn}
+\end{definition}
 
-If the goal of the player is to maximize $\E\left[\sum_{t=1}^T r_{A(t)}(t)\right]$,
+If the goal of the player is to maximize $\E\left[\sum_{t=1}^T r(t)\right]$,
 the optimal strategy for this bandit problem is to always pull one of the optimal arms (it can be not unique), but it is unrealistic as the player does not know the true means, nor the optimal arms (as long as they are not all optimal, \ie, in non trivial problems).
 %
 Comparing the difference between the performance of a fixed baseline and that of the player is a common approach in machine learning research,
@@ -490,38 +492,38 @@ and here we can compare with the oracle strategy that always obtains an (expecte
 %
 For a fixed horizon $T$, if $k^*$ denotes the index of any optimal arm,
 let us introduce the (mean) regret $R_T^{\cA}$ of an algorithm $\cA$ as
-$R_T^{\cA} = \E\left[ \sum_{t=1}^T (r_{k^*}(t) - r_{A(t)}(t)) \right]$.
+$R_T^{\cA} = \E\left[ \sum_{t=1}^T (Y_{k^*,t} - r(t)) \right]$.
 %
 As the rewards from arm $k^*$ are \iid{} (as for all arms), and by linearity of the expectancy, we can rewrite this expression to obtain the following definition of the regret:
 \begin{align*}
     R_T^{\cA}
-    & = \E\left[ \sum_{t=1}^T (r_{k^*}(t) - r_{A(t)}(t)) \right]
-    = \E\left[ \sum_{t=1}^T \underbrace{r_{k^*}(t)}_{\text{\iid{} from $\nu_{k^*}$}} \right] - \E\left[ \sum_{t=1}^T r_{A(t)}(t) \right] \\
-    & = T \times \E\left[ r_{k^*}(t=1) \right] - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right]
-    = T \mu^* - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right].
+    & = \E\left[ \sum_{t=1}^T (Y_{k^*,t} - r(t)) \right]
+    = \E\left[ \sum_{t=1}^T \underbrace{Y_{k^*,t}}_{\text{\iid{} from $\nu_{k^*}$}} \right] - \E\left[ \sum_{t=1}^T r(t) \right] \\
+    & = T \times \E\left[ Y_{k^*,1} \right] - \sum_{t=1}^T \E\left[ r(t) \right]
+    = T \mu^* - \sum_{t=1}^T \E\left[ r(t) \right].
 \end{align*}
 % This is the definition we give below.
 
 
-\begin{defn}[Regret]\label{def:2:regret}
+\begin{definition}[Regret]\label{def:2:regret}
 \begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
     For an algorithm $\cA$, a bandit problem of $K$ arms characterized by their means $\bm{\mu} = \mu_1,\dots,\mu_K$, with $\mu^* = \max_k \mu_k$, then its \emph{(mean) regret} at horizon $T$ is $R_T^{\cA}$ defined as
     %
     \begin{align}\label{eq:2:regret}
         R_T^{\cA}
-        = \E\left[ \sum_{t=1}^T (r_{k^*}(t) - r_{A(t)}(t)) \right]
+        = \E\left[ \sum_{t=1}^T (Y_{k^*,t} - r(t)) \right]
         % = T \mu^* - \sum_{t=1}^T \E\left[ Y(t) \right]
-        = T \mu^* - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right].
+        = T \mu^* - \sum_{t=1}^T \E\left[ r(t) \right].
     \end{align}
     \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
-\end{defn}
+\end{definition}
 
 \paragraph{A useful decomposition of the regret.}
 %
 Remember that $N_k(t) = \sum_{s=1}^t \mathbbm{1}(A(s) = k)$ denotes the number of times arm $k$ was selected between times $1$ and $t$,
 %
-and that the rewards $r_k(t)$ are all \iid{} of mean $\mu_k$.
+and that the samples $Y_{k,t}$ are all \iid{} of mean $\mu_k$.
 The \emph{gap} between any arm $k\in[K]$ and an optimal arm is defined as $\Delta_k = \mu^* - \mu_k$
 (an arm $k$ is thus sub-optimal if and only if $\Delta_k > 0$),
 and thus we can write the following decomposition on the regret.
@@ -539,24 +541,24 @@ and thus we can write the following decomposition on the regret.
 %
 \begin{proof}\label{proof:2:RegretDecomposition}
     We use the chain rule of expectation and a conditioning on $O_t$,
-    because the expectation is taken on the randomness of the (\iid) rewards $(r_k(t))_t$ and on the decisions of the player $(A(t))_t$, which are measurable wrt to the past observations $O_t = (U_0, Y_1, U_1, \dots, Y_{t-1}, U_{t-1})$.
+    because the expectation is taken on the randomness of the (\iid) samples $(Y_{k,t})_t$ and on the decisions of the player $(A(t))_t$, which are measurable wrt to the past observations $O_t = (U_0, Y_{A(1),1}, U_1, \dots, Y_{A(t-1),t-1}, U_{t-1})$.
     Thus we can rewrite the expected cumulated reward as follows:
     %
     % FIXME add a blank line or a negative space if it looks weird
     %
     % \vspace*{-20pt}
     \begin{align*}
-        \E \left[ \sum_{t=1}^T r_{A(t)}(t) \right]
-        &= \E \left[ \sum_{t=1}^T \sum_{k=1}^K r_k(t) \mathbbm{1}(A(t) = k) \right]
-        = \sum_{k=1}^K \sum_{t=1}^T \E \left[ r_k(t) \mathbbm{1}(A(t) = k) \right] \\
-        &= \sum_{k=1}^K \sum_{t=1}^T \E \Bigl[ \E \left[ r_k(t) | O_t \right] \mathbbm{1}(A(t) = k) \Bigr]
-        = \sum_{k=1}^K \sum_{t=1}^T \E \Bigl[ \E \left[ r_k(1) \right] \mathbbm{1}(A(t) = k) \Bigr] \\
-        &= \sum_{k=1}^K \underbrace{\E \left[ r_k(1) \right]}_{\mu_k} \underbrace{\sum_{t=1}^T \E \left[ \mathbbm{1}(A(t) = k) \right]}_{= N_k(T)}
+        \E \left[ \sum_{t=1}^T r(t) \right]
+        &= \E \left[ \sum_{t=1}^T \sum_{k=1}^K Y_{k,t} \mathbbm{1}(A(t) = k) \right]
+        = \sum_{k=1}^K \sum_{t=1}^T \E \left[ Y_{k,t} \mathbbm{1}(A(t) = k) \right] \\
+        &= \sum_{k=1}^K \sum_{t=1}^T \E \Bigl[ \E \left[ Y_{k,t} | O_t \right] \mathbbm{1}(A(t) = k) \Bigr]
+        = \sum_{k=1}^K \sum_{t=1}^T \E \Bigl[ \E \left[ Y_{k,1} \right] \mathbbm{1}(A(t) = k) \Bigr] \\
+        &= \sum_{k=1}^K \underbrace{\E \left[ Y_{k,1} \right]}_{\mu_k} \underbrace{\sum_{t=1}^T \E \left[ \mathbbm{1}(A(t) = k) \right]}_{= N_k(T)}
         % = \sum_{k=1}^K \mu_k \E \left[ \sum_{t=1}^T \mathbbm{1}(A(t) = k) \right]\\
         = \sum_{k=1}^K \mu_k \E \left[ N_k(T) \right].
     \end{align*}
     %
-    Thus $R_T^{\cA} = T \mu^* - \sum_{t=1}^T \E\left[ r_{A(t)}(t) \right] = T \mu^* - \sum_{k=1}^K \mu_k \E[ N_k(T) ] = \sum_{k=1}^K (\mu^* - \mu_k) \E[ N_k(T) ]$,
+    Thus $R_T^{\cA} = T \mu^* - \sum_{t=1}^T \E\left[ r(t) \right] = T \mu^* - \sum_{k=1}^K \mu_k \E[ N_k(T) ] = \sum_{k=1}^K (\mu^* - \mu_k) \E[ N_k(T) ]$,
     as $\sum_{k=1}^K  \E[ N_k(T) ] = T$.
     The sum can then be simplified to only account for sub-optimal arms, \ie, arms $k$ such that $\Delta_k > 0$.
 \end{proof}
@@ -612,14 +614,14 @@ This means that an upper-bound is proven on the regret of algorithm $\cA$, that 
 We consider uniformly efficient\footnote{This notion is then extended to ``\emph{strongly uniformly efficient} algorithms'', in the multi-player case with Definition~\ref{def:5:DecentralizedUniformEfficiency}, where we also include a notion of (expected) fairness.} algorithms, to rule out algorithms achieving low regret on some problem instances while achieving linear regret on other instances.
 In particular, it is necessary to rule out algorithms that always pick the same arm, as on some problem instances such fixed-arm algorithms can achieve zero regret.
 
-\begin{defn}\label{def:2:uniformlyEfficientAlgorithm}
+\begin{definition}\label{def:2:uniformlyEfficientAlgorithm}
 \begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
     An algorithm $\cA$ is \emph{uniformly efficient} if its (mean) regret satisfies
     $R_T^{\cA}(I) = \smallO{C_{I,\alpha} T^{\alpha}}$,
     for any value $\alpha>0$ and any problem instance $I\in \cI$,
     where this notation means that the ``constant'' $C_{I,\alpha}$ can depend on the problem instance $I$ and on $\alpha$, but \emph{not} on the time horizon $T$.
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
-\end{defn}
+\end{definition}
 
 This family is non-empty as it contains for instance the $\UCB_1$ algorithm, as its regret is proven to be logarithmic on any problem instance with bounded rewards (in Theorem~\ref{thm:2:UCBregretBound} below).
 Now we can state the second logarithmic lower-bound, for algorithms in this family:
@@ -793,7 +795,7 @@ A complete list of the implemented policies can be found on the following web pa
 
 Let us first describe two naive strategies, that both fail dramatically.
 They are detailed in Algorithm~\ref{algo:2:naiveStrategies} below.
-We recall the notations introduced above in Section~\ref{par:2:interactiveDemoDiscoverMAB}, the sums of rewards are $X_k(t) = \sum_{s=1}^t r_k(s) \mathbbm{1}(A(s) = k)$, and the numbers of samples are $N_k(t) = \sum_{s=1}^t \mathbbm{1}(A(s) = k)$.
+We recall the notations introduced above in Section~\ref{par:2:interactiveDemoDiscoverMAB}, the sums of rewards are $X_k(t) = \sum_{s=1}^t r(s) \mathbbm{1}(A(s) = k)$, and the numbers of samples are $N_k(t) = \sum_{s=1}^t \mathbbm{1}(A(s) = k)$.
 %
 The estimated means, or empirical averages, are $\widehat{\mu_k}(t) = X_k(t) / N_k(t)$ (when $N_k(t)>0$).
 
@@ -821,7 +823,7 @@ Indeed consider $K=2$ Bernoulli arms of means $\mu_1=1/2$ and $\mu_2=\varepsilon
             \uIf{\textcolor{blue}{pure exploitation}}{
                 Play uniformly among the arms of maximal empirical mean: \textcolor{blue}{$A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} \widehat{\mu_k}(t))$}
                 \tcp*[f]{Exploit}\\
-                Observe a reward $r_{A(t)}(t)$, and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$
+                Observe a reward $r(t)$, and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$
             }
 		}
 		\caption{Naive strategies: \textcolor{darkgreen}{pure exploitation} or \textcolor{blue}{pure exploration}.}
@@ -883,7 +885,7 @@ Here again, an average of $T_0 \leq \varepsilon_0 \log(T)$ steps are spent on ex
                     Play the same arm $A(t) = A(\textcolor{deepgold}{T_0})$
                 }
             }
-            Observe a reward $r_{A(t)}(t)$, and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$
+            Observe a reward $r(t)$, and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$
 		}
 		\caption{Simple efficient strategies: \textcolor{deeppurple}{$\varepsilon$-greedy} and \textcolor{deepgold}{Explore-then-Exploit}.}
 		\label{algo:2:simpleStrategies}
@@ -980,7 +982,7 @@ The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, tha
                 For each arm, compute the \textcolor{blue}{index $U_k(t)$}\;
                 Play arm $A(t)$ uniformly among the arms of maximal index: \textcolor{blue}{$A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} U_k(t))$}\;
             }
-            Observe a reward $r_{A(t)}(t)$ and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$\;
+            Observe a reward $r(t)$ and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$\;
 		}
 		\caption{A generic \textcolor{blue}{index} policy, using \textcolor{blue}{indexes $U_k(t)$} (\eg, $\UCB_1$, \klUCB{} etc).}
 		\label{algo:2:indexPolicy}
@@ -1053,7 +1055,7 @@ What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal pr
     Both $\widehat{\mu_a}(t)$ and $\xi_a(t)$ use $N_k(t)$ samples of arm $a$,
     but as \eqref{eq:2:trickInUCBProof} above started to isolate $N_k(t)$, we want to add the freedom of considering different number of samples (using $n$), so we introduce the notation
     $\hat{\mu}_{a,n}(t)$ and $\xi_{a,n}(t)$ where $N_k(t)$ is replaced with $n$ if $n \leq N_k(t)$,
-    \ie, $\hat{\mu}_{a,n(t)} = \frac{1}{n} \sum_{s=1}^{t-1} r_k(s) \indic(A(s)=k, N_k(s) \leq n)$ and $\xi_{a,n}(t) = \sqrt{2\log(t) / n}$.
+    \ie, $\hat{\mu}_{a,n(t)} = \frac{1}{n} \sum_{s=1}^{t-1} r(s) \indic(A(s)=k, N_k(s) \leq n)$ and $\xi_{a,n}(t) = \sqrt{2\log(t) / n}$.
     %
     Thus, we can continue from \eqref{eq:2:trickInUCBProof} and write
     %
@@ -1064,7 +1066,7 @@ What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal pr
         & = n + \sum_{t=n}^T \indic\left(\min_{0 < n_{k^*} < t} \hat{\mu}_{k^*,n_{k^*}}(t) + \xi_{k^*,n_{k^*}}(t) < \max_{n < n_k < t} \hat{\mu}_{k,n_k}(t) + \xi_{k,n_k}(t) \right)
     \end{align}
     So two union bounds on $n_{k^*}$ for the $\min$ and on $n_k$ for the $\max$ give
-    \begin{align}\label{eq:2:decompositionInUCBProof}
+    \begin{align}\label{eq:2:decompositionInUCBProof2}
         N_k(T)
         & \leq n + \sum_{t=n}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n}^t  \indic\left( \hat{\mu}_{k^*,n_{k^*}}(t) + \xi_{k^*,n_{k^*}}(t) < \hat{\mu}_{k,n_k}(t) + \xi_{k,n_k}(t) \right)
     \end{align}
@@ -1095,7 +1097,7 @@ What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal pr
     Taking the expectation of $N_k(T)$ from \eqref{eq:2:decompositionInUCBProof},
     and setting $n = n_T = \lceil \frac{8 \log(T)}{\Delta_k^2} \rceil$ thus gives
     %
-    \begin{align}\label{eq:2:decompositionInUCBProof2}
+    \begin{align}\label{eq:2:decompositionInUCBProof3}
         \E[ N_k(T) ]
         & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t  \Pr( \hat{\mu}_{k^*,n_{k^*}}(t) + \xi_{k^*,n_{k^*}}(t) < \hat{\mu}_{k,n_k}(t) + \xi_{k,n_k}(t) ) \nonumber \\
         & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t  \underbrace{\Pr(I_1)}_{=1/t^4} + \underbrace{\Pr(I_2)}_{=1/t^4} + \underbrace{\Pr(I_3)}_{=0} \nonumber \\
@@ -1232,7 +1234,7 @@ Thompson sampling was proven to achieve asymptotical optimal problem-dependent b
 		\For(){$t = 1, 2, \dots, T$}{
             For each arm, sample $s_k(t) \sim \pi_k(t-1)$ from the posterior of arm $k$, $\pi_k(t-1)=\mathrm{Beta}(X_k(t-1)+1,N_k(t-1)-X_k(t-1)+1)$\;
             Play arm $A(t)$ uniformly among the arms of maximal random sample: $A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} U_k(t))$\;
-            Observe a reward $r_{A(t)}(t)$ and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$\;
+            Observe a reward $r(t)$ and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$\;
 		}
 		\caption{Thompson Sampling for Beta prior and posteriors, on Bernoulli rewards.}
 		\label{algo:2:ThompsonSampling}
@@ -1304,8 +1306,8 @@ a family of algorithms developed since the 1950s, and applied to a wide range of
 %
 The Exp3 policy maintains weights $w_k(t)$ on the $K$ arms, and at time $t$ it samples an arm from the distribution which is a mixture of $\bm{w}(t)=[w_1(t),\dots,w_K(t)]$ and the uniform distribution:
 $\Pr(A(t)=k) = (1-\gamma) w_k(t) + \gamma \frac{1}{K}$.
-The weights are initially uniform, \ie, $w_k(0)=\frac{1}{K}$, and then at each time after observing a reward $r_k(t)$ from arm $k$, Exp3 updates the weight of the chosen arm multiplicatively, using $w_k(t+1) = w_k(t) \times \exp(\widehat{r_k}(t) / (\gamma N_k(t)))$. The weights are then renormalized, the have a sum $\sum_k w_k(t+1) = 1$.
-This notation $\widehat{r_k}(t)$ means an unbiased estimator of the reward $r_k(t)$, that is, $\widehat{r_k}(t) = \Pr(A(t)=k)$.
+The weights are initially uniform, \ie, $w_k(0)=\frac{1}{K}$, and then at each time after observing a reward $Y_{k,t}$ from arm $k$, Exp3 updates the weight of the chosen arm multiplicatively, using $w_k(t+1) = w_k(t) \times \exp(\widehat{r_k}(t) / (\gamma N_k(t)))$. The weights are then renormalized, the have a sum $\sum_k w_k(t+1) = 1$.
+This notation $\widehat{r_k}(t)$ means an unbiased estimator of the reward $r(t)=Y_{k,t}$, that is, $\widehat{r_k}(t) = \Pr(A(t)=k)$.
 %
 Like for the $\varepsilon$-greedy policy, the parameter $\gamma$ can be constant, or can be a decreasing sequence $(\gamma_t)_t$.
 %
@@ -1431,7 +1433,7 @@ It shows that the performance can be \textcolor{red}{very random}, as on both ca
     \begin{small}  % WARNING
         \centering
         \begin{tabular}{c|cc|cc}
-        \textbf{Algorithms} & $\sum\limits_{t=1}^{T=100} r_{A(t)}(t)$ & $R_{T=100}^{\cA}$ & $\sum\limits_{t=1}^{T=10000} r_{A(t)}(t)$ & $R_{T=10000}^{\cA}$ \\
+        \textbf{Algorithms} & $\sum\limits_{t=1}^{T=100} r(t)$ & $R_{T=100}^{\cA}$ & $\sum\limits_{t=1}^{T=10000} r(t)$ & $R_{T=10000}^{\cA}$ \\
             \hline
             Pure exploration
                 & $46$ & $20.9$
@@ -1471,7 +1473,7 @@ We also include in Figures
 % \ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT100N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT100N1000},
 \ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000} below the mean cumulated rewards and mean regrets as functions of the current time step $t$, for $T=10000$ (and $N=1000$).
 The reward of the best arm is also plotted in Figure~\ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, and it serves as an \emph{upper-bound} to illustrate convergence\footnote{~Conversely, we also add the Lai \& Robbins' logarithmic \emph{lower-bound} on regret ($C_I \log(t)$ from case 2 of Theorem~\ref{thm:2:forSecondLogTLowerBound}) on the regret plot in Figure~\ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}. It should not be surprising that the black line of the lower-bound is \emph{above} the values of the regret as the lower-bound is only asymptotic.}
-of the average rewards (\ie, $\frac{1}{t} \sum\limits_{s=1}^t r_{A(s)}(s)$), which should converge to $\mu^*$ when $t\to\infty$ for efficient algorithms.
+of the average rewards (\ie, $\frac{1}{t} \sum\limits_{s=1}^t r(s)$), which should converge to $\mu^*$ when $t\to\infty$ for efficient algorithms.
 %
 We can clearly identify the behavior of the different strategies:
 the three efficient strategies indeed achieve a sub-linear regret, that looks logarithmic as supported by the theory,
