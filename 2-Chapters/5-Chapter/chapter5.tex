@@ -100,7 +100,7 @@ If $T_0$ is large enough, all players have built the same estimate of the rankin
 The mean regret of such approach is easily bounded by $R_T \leq M T_0 + (1 - \delta) (T - T_0)$, so by using $\delta = 1-1/T$, $R_T = \bigO{T_0}$.
 By calibrating $T_0$ based on $\delta$ (which needs prior knowledge of $T$) and the minimal gap $\Delta$ between \Mbest{} and \Mworst, one can show, using similar arguments as used by \cite{Rosenski16} for the Musical Chair policy, that with large probability a constant regret is obtained. A logarithmic regret can be obtained from the same bound, proving the order-optimality of this simple approach, if we assume that user $j$ knows it is user number $j$.
 %
-Without giving more details, we let the interested refer to what is is explained for the algorithms presented in \cite{DarakHanawal18,JoshiKumar2018,KumarDarak2019}.
+Without giving more details, we let the interested refer to what is explained for the algorithms presented in \cite{DarakHanawal18,JoshiKumar2018,KumarDarak2019}.
 %
 These works assume a prior knowledge of $\Delta$, or other measures of the difficulty of the problem, and as such we do not find them comparable with the approach chosen here.
 
@@ -201,15 +201,15 @@ If the arrival or departures of players is not random, but determined in advance
 \end{equation}
 
 In \cite{Rosenski16}, the authors explain that if the model allows arrival or departures of players at \emph{any time step}, then the game is much harder, and sub-linear regret is most likely un-achievable, if we consider the natural extension of the definition of regret as in our model presented in Section~\ref{sec:5:model} above.
-However, this negative results depends on how arrival of players are modeled:
+But this negative results depends on how arrival of players are modeled:
 if an arriving player has no prior memory of the previous observations, \ie, if it model a new device, then if there is no restriction on the number or frequency of arrival or departures, we can most likely prove that sub-linear regret is not achievable in general.
 A simple but extreme example shows that regret has to be linear for any bandit strategy (in the observation model with sensing).
 Consider $K=2$ Bernoulli-distributed arms of means $\mu_1=\mu_2=1/2$, and one player is always active and play any bandit strategy (\eg, \MCTopM-\klUCB).
-Every time step, another player is either arriving, without any knowledge of the problem (\eg, it is a fresh and new IoT device). Then no matter the strategy of these new players, even if they all play \MCTopM-\klUCB{} for instance, if they play a uniformly-efficient strategy there is a non-zero probability that player $1$ suffers from a collision at each time step, thus resulting in linear centralized system regret.
+Every time step, another player is either arriving, without any knowledge of the problem (\eg, it is a fresh and new IoT device). Then no matter the strategy of these new players, even if they all play \MCTopM-\klUCB{} for instance, if they play a uniformly efficient strategy there is a non-zero probability that player $1$ suffers from a collision at each time step, thus resulting in linear centralized system regret.
 
 In \cite{Rosenski16}, it is assumed that the players all know a lower-bound $L$ on the length of all the intervals during which arrival or departures of players are allowed.
 A naive idea, if $L$ is large enough, is simply to restart the underlying algorithm every $L$ time steps, in order to directly benefit from the theoretical guarantees of the ``static setting'' (where $M$ stays constant).
-However, this idea yields a large regret if the length of ``static'' intervals $L$ is too small.
+Unfortunately this idea yields a large regret if the length of ``static'' intervals $L$ is too small.
 Applied to the \MusicalChair{} algorithm, the authors in \cite{Rosenski16} call this basic extension Dynamic \MusicalChair
 Under the simple hypothesis that the overall number of players entering and leaving the game is sub-linear in $T$ (\ie, a $\smallO{T}$), they analyze the regret of Dynamic \MusicalChair{} and prove it is also sub-linear (see Theorem~2 in Section~3.4).
 %
@@ -287,7 +287,7 @@ We did not implement it, and it would be interesting to run some numerical simul
 %
 It is also proved in Appendix~A of \cite{BoursierPerchet18} that \Selfish-\UCB{} has a linear regret, in the theoretical case, with a very neat argument from number theory (using Lindemann-Weierstrass theorem). As we conjectured, there is a gap between the theoretical result and its practical consequence, as the Theorem~4 they gave is only valid for real-valued number, and not for hardware-represented floating point number.
 Their proof is supporting what we illustrated in Figure~4 in \cite{Besson2018ALT}.
-Their argument is essentially to prove that for \Selfish-powered players using the simple \UCB-indexes, with a probability $p$ at time $t$ (both independent from $T$), two players might have the same number of pulls and the same observed rewards for each arm. In that case, the two players would pull the exact same arms and thus collide for a long time, until they reach a ``tie breaking point'' where they could choose different arms thanks to a random tie breaking rule (\eg, if two values of their \UCB{} indexes are the same, the $\argmax$ is a uniform random choice among the two arms).
+Their argument is essentially to prove that for \Selfish-powered players using the simple \UCB-indexes, with a probability $p$ at time $t$ (both independent from $T$), two players might have the same number of pulls and the same observed rewards for each arm. In that case, the two players would pull the same arms and thus collide for a long time, until they reach a ``tie breaking point'' where they could choose different arms thanks to a random tie breaking rule (\eg, if two values of their \UCB{} indexes are the same, the $\argmax$ is a uniform random choice among the two arms).
 They prove that it is unlikely to encounter any of these ``tie breaking points'', in theory if the \UCB{} indexes are real-valued number (that can be rational or irrational).
 
 
@@ -302,7 +302,7 @@ For the two other algorithms, we use the advised tuning of their parameters:
 for \textsc{Sic-MMAB}, we used $T_0 = \lceil K \log(T) \rceil$,
 % as advised by the authors.
 for Improved-MC, we used $c=1$ which gives $g=235$, whereas in the paper the authors use $c=128$ for their analysis.
-We found empirically no difference when using different values of the constant $c$ or $g$, and unfortunately the regret of Improved-MC was always found to be linear\footnote{For instance Improved-MC obtained a mean regret $12150$ for $T=10000$, for $M=3,K=9$, but seeing one value for one horizon does not mean anything, however we also experimented with larger values of $T$ and found a same linear behavior.}.
+We found empirically no difference when using different values of the constant $c$ or $g$, and unfortunately the regret of Improved-MC was always found to be linear\footnote{For instance Improved-MC obtained a mean regret $12150$ for $T=10000$, for $M=3,K=9$, but seeing one value for one horizon does not mean anything, and we also experimented with larger values of $T$ and found a similar linear behavior.}.
 
 % for T in 10000; do for K in 9; do for N in 4 100; do for M in 3 6 9; do DEBUG=False N_JOBS=4 N=$N K=$K M=$M T=$T make --noFreeSMS moremulti && cp logs/main_multiplayers_more_py3_log.txt logs/main_multiplayers_more_py3_log__K${K}_N${N}_M${M}_T${T}_$(date +"%d-%m-%Y_%H-%M-%S").txt && FreeSMS.py "Done for simulations for $K arms, $M players, T=$T N=$N and lots algorithms for experiments for Chapter 5 of my PhD. Love from Rennes."; done; done; done; done
 
@@ -618,8 +618,8 @@ Their key algorithmic technique is to imitate the idealized case where there is 
 %
 \indent
 Their proposal is using the Exp3 algorithm from \cite{Auer02NonStochastic} on a combinatorial problem: they consider ``meta'' arms that are affectations of the $M$ players to $M$ distinct arms among the $K$ arms.
-As soon as the ``coordinator'' can effectively use one algorithm to decide the arms played by all the $M$ players, they show that the regret will grow as $R_T = \bigO{M^{4/3} K^{2/3} (\log(K))^{1/3} T^{2/3}}$ as showed in Theorem~4.1
-(their notation uses $K$ for $M$ the number of players and $N$ for $K$ the number of arms).
+As soon as the ``coordinator'' can effectively use one algorithm to decide the arms played by all the $M$ players, they show that the regret will grow as $R_T = \bigO{M^{4/3} K^{2/3} (\log(K))^{1/3} T^{2/3}}$ as shown in Theorem~4.1
+(they used $K$ for $M$ the number of players, and $N$ for $K$ the number of arms).
 This bound is much worse than the one obtained for the first article \cite{WeiSrivastava18Distributed}, but is more general, and it is much worse than the bound of $\bigO{\sqrt{K T \log(K)}}$ obtained for Exp3 for the single-player adversarial setting in \cite{Auer02NonStochastic}.
 Note that this bound in $T^{2/3}$ is of the same order as the one given in \cite{Avner15}, for the \MEGA{} algorithm.
 However, we note that the dependency in $M$ is surprisingly better for their result than for the regret upper-bound for \MCTopM-\klUCB, as its regret scales in $M^3$ in Theorem~\ref{thm:5:LogarithmicRegret_MCTopMklUCB}.\\
@@ -656,8 +656,8 @@ For example, it assumes to know the number of players $M$ before-hand, but we il
 Further works would be required to adapt the theoretical analysis to these various extensions.
 
 This chapter suggests several interesting further research directions.
-First, one could want to investigate the notion of \emph{optimal algorithms} in the decentralized multi-player model with sensing information. So far we provided the first matching upper and lower bound on the expected number of sub-optimal arms selections, which suggests some form of (asymptotic) optimality. However, sub-optimal draws turn out not be the dominant terms in the regret, both in our upper bounds and in practice, thus an interesting future work is to identify some notion of \emph{minimal number of collisions}.
-Similarly to what was done very recently in \cite{wang2019distributed} for communication between players who collaborate with each other, it would be interesting to characterize the number of collisions needed to achieve logarithmic regret.
+First, one could want to investigate the notion of \emph{optimal algorithms} in the decentralized multi-player model with sensing information. So far we provided the first matching upper and lower bound on the expected number of sub-optimal arms selections, which suggests some form of (asymptotic) optimality. However, sub-optimal draws turn out to not be the dominant term in the regret, both in our upper bound and in practice, thus an interesting future work is to identify some notion of \emph{minimal number of collisions}.
+Similarly to what was done very recently in \cite{wang2019distributed}, for communications between players who collaborate with each other, it would be interesting to characterize the (minimal) number of collisions needed to achieve logarithmic regret.
 
 % Second, it remains an open question to know if a simple decentralized algorithm can be as efficient as \MCTopM{} without knowing $M$ in advance, or in dynamic settings (when $M$ can change in time). One could start by proposing variants of our algorithm that are inspired by the \rhoRandEst{} variant of \rhoRand{} proposed by \cite{Anandkumar11}.
 % Finally, one could want to strengthen the guarantees obtained in the absence of sensing, that is to know whether logarithmic regret is achievable.
