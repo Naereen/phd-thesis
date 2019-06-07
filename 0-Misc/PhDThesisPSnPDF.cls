@@ -179,7 +179,7 @@ by Krishna Kumar (v\fileversion)]
 % *************************** Pre-defined Options ******************************
 
 % Font Size
-\newcommand\PHD@ptsize{11pt} %Set Default Size as 12
+\newcommand\PHD@ptsize{11pt} %Set Default Size as 11
 
 \DeclareOption{10pt}{
   \ClassWarning{PhDThesisPSnPDF}{The University of Cambridge PhD thesis guidelines
@@ -274,6 +274,7 @@ supported!}
 % ************************* Conditional Statements *****************************
 \RequirePackage{ifthen}   % Conditional statements
 \RequirePackage{ifpdf}    % Check for pdfLaTeX
+\RequirePackage{ifluatex} % LuaTeX
 \RequirePackage{ifxetex}  % XeLaTeX
 
 % *********************** Table of Contents & Appendices ***********************
@@ -575,20 +576,25 @@ supported!}
   % XeLaTeX
   \usepackage{amsmath}
   \usepackage{fontspec}
-  \usepackage[]{unicode-math}
-  \setmainfont[
-    Extension = .otf,
-    UprightFont = *-regular,
-    BoldFont = *-bold,
-    ItalicFont = *-italic,
-    BoldItalicFont = *-bolditalic,
-  ]{xits}
+  % \usepackage[]{unicode-math}
+  % \setmainfont[
+  %   Extension = .otf,
+  %   UprightFont = *-regular,
+  %   BoldFont = *-bold,
+  %   ItalicFont = *-italic,
+  %   BoldItalicFont = *-bolditalic,
+  % ]{xits}
+  % \setmathfont[
+  %   Extension = .otf,
+  %   BoldFont = *bold,
+  % ]{xits-math}
 
-  \setmathfont[
-    Extension = .otf,
-    BoldFont = *bold,
-  ]{xits-math}
-
+  \defaultfontfeatures{Ligatures=TeX, Scale=MatchLowercase}
+  \setmainfont[Ligatures=Historic]{TeX Gyre Pagella}
+  \setmathfont{TeX Gyre Pagella Math}
+  \newfontfamily\FiraCode{Fira Code}
+  \setmonofont[Contextuals={Alternate}]{Fira Code}
+  \newfontfamily\Fontify[Path = .]{Fontify-Regular}
 \else
   % default: pdfLaTeX
   \RequirePackage[utf8]{inputenc}
@@ -608,6 +614,8 @@ supported!}
   \RequirePackage{amsfonts}
   \RequirePackage{amsmath}
   \RequirePackage{amssymb}
+
+  \newcommand{\Fontify}{}
 \fi
 
 % Don't break enumeration (etc.) across pages in an ugly manner
@@ -741,13 +749,6 @@ supported!}
   }
 }
 \fi
-
-% FIXME
-% % pdftitle={Apprentissage statistique séquentiel multi-joueurs pour la radio intelligente},
-% % pdftitle={Applications d'algorithmes de bandits multi-bras (MAB) simple- et multi-joueurs pour les réseaux de l'Internet des Objets (IoT)},
-% % pdftitle={Multi-players sequential statistical learning for cognitive radio},
-% pdftitle={Applications of single- and multi-players multi-armed bandits algorithms for Internet of Things networks},
-% pdfauthor={Lilian Besson (CentraleSupélec campus de Rennes & Inria Lille)},
 
 % ******************************** Line Spacing ********************************
 % Set spacing as 1.5 line spacing for the PhD Thesis
@@ -1059,7 +1060,7 @@ wish to left align your text}
 \newenvironment{declaration}{
 \cleardoublepage
 \setsinglecolumn
-\chapter*{\centering \Large Déclaration}
+\chapter*{\centering \Large Declaration}
 \thispagestyle{empty}
 }
 
