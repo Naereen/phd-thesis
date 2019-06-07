@@ -80,16 +80,16 @@ The considered aggregation algorithms are special cases of the well-known \emph{
 				% \tcp*{Sample once}
 				%
 				Give \emph{original} reward $(A(t), r(t))$ to \emph{each} $\Alg_a$ (maybe \emph{not} on its chosen arm)\;
-				Compute an \emph{unbiased} estimate of the reward of the trusted algorithms,$$ \widehat{r}(t) = r(t) / p^{t}_{A(t)}\;. $$
+				Compute an \emph{unbiased} estimate of the reward, $\widehat{r}(t) = r(t) / p^{t}_{A(t)}$\;
 				% \tcp{Use bandit feedback to update $\pi^{t}$}
 				% \tcp{Finally, use the instantaneous bandit feedback (reward $\ell_{A(t),t}$) to update $\pi^{t}$}
 				% \For(\tcp*[f]{Can be parallel}){$a = 1, \dots, N$}{
 				\For{$a = 1, \dots, N$}{
 					% \eIf{$\Alg_a$ was trusted, \ie, $A_a(t) = A(t)$}{
 					\eIf{$\Alg_a$ was trusted, \ie, $A_a(t) = A(t)$}{
-						$ \pi^{t+1}_{a} = \exp(\eta_t r(t) \times \pi^{t}_{a} $
+						$ \pi^{t+1}_{a} = \exp(\eta_t r(t)) \times \pi^{t}_{a} $
 						\tcp*{Trusted more}
-						}{
+					}{
 						% $ \pi^{t+1}_{a} = \exp(- \eta_t r(t) \times \pi^{t}_{a} $
 						$ \pi^{t+1}_{a} = \pi^{t}_{a} $
 						\tcp*{Do not update the trust now}
@@ -121,7 +121,7 @@ However, by dividing by the probability of observing this recommendation, one ob
 \begin{equation}
 	\widehat{r^a}(t) = \frac{Y_{A_a(t),t}}{p_{A_a(t)}^{t}} \indic(A_a(t) = A(t))
 \end{equation}
-satisfies $\E_{O_t}[\widehat{r^a}(t) | O_t] = Y_{A_a(t),t}$, for all $a$, where the expectation is taken conditionally to the history of observations up to round $t$, $O_t$.
+then it satisfies $\E_{O_t}[\widehat{r^a}(t) | O_t] = Y_{A_a(t),t}$, for all $a$, where the expectation is taken conditionally to the history of observations up to round $t$, $O_t$.
 %
 Observe that $\widehat{r^a}(t) = 0$ for all algorithms $a$ such that $A_a(t) \neq A(t)$.
 
@@ -135,7 +135,7 @@ This intuition is backed up by theory explained in \cite{Maillard11}.
 
 Regarding the update of $\pi^t$, one can note that the trust probabilities are not all updated before the normalization step,
 and an alternative would be to
-increase $\pi_{a}$ if $A_a(t) = A(t)$ and to decrease it otherwise.
+increase $\pi_{a}$ if $A_a(t) = A(t)$ and to \emph{decrease it otherwise}.
 It would not be so different, as there is a final renormalization step, and empirically this variation has little impact on the performance of \Aggr{}.
 
 
