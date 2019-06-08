@@ -4,18 +4,18 @@
 % -----------------------------------------------------------------
 
 We give here plots showing the mean regret $R_t$ as a function of time, and histograms of the distributions of the final regret $R_T$, for the different problems of our benchmark.
-
-Figures~\ref{fig:6:meanRegretPb1} above and \ref{fig:6:histogramRegretPb1} below show that our two proposals are efficient against problem 1.
+%
+Figures~\ref{fig:6:meanRegretPb1} and \ref{fig:6:histogramRegretPb1} above show that our two proposals are efficient against problem 1.
 Then we show similar results for problem 2 in Figure~\ref{fig:6:meanRegretPb2}
 and for problem 4 in Figure~\ref{fig:6:meanRegretPb4}.
 
-% -----------------------------------------------------------------
-\begin{figure}[h!]  % [htbp]
-    \centering
-    \includegraphics[width=1.09\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/SP__K3_T5000_N1000__9_algos_pb1/main_HistogramsRegret_shareX____env1-1_1316297932259102962.pdf}
-    \caption{Histograms of the distributions of regret $R_T$ ($T=5000$) for problem 1.}
-    \label{fig:6:histogramRegretPb1}
-\end{figure}
+% % -----------------------------------------------------------------
+% \begin{figure}[h!]  % [htbp]
+%     \centering
+%     \includegraphics[width=1.09\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/SP__K3_T5000_N1000__9_algos_pb1/main_HistogramsRegret_shareX____env1-1_1316297932259102962.pdf}
+%     \caption{Histograms of the distributions of regret $R_T$ ($T=5000$) for problem 1.}
+%     \label{fig:6:histogramRegretPb1}
+% \end{figure}
 
 % -----------------------------------------------------------------
 \begin{figure}[h!]  % [htbp]
@@ -488,19 +488,19 @@ If we denote $d_{\max}$ the longest duration of a stationary sequence, the worst
 We begin by reviewing the costs of the algorithms designed for stationary problems and then of other approaches.
 
 
-\paragraph{Classical algorithms.}
+\textbf{Classical algorithms.}
 %
 For a stationary bandit problem, almost all \emph{classical algorithms} (\ie, designed for stationary problems) need and use a storage proportional to the number of arms, \ie, $\bigO{K}$, as most of them only need to store a number of pulls and the empirical mean of rewards for each arm.
 They also have a time complexity $\bigO{K}$ at every time step $t\in[T]$, hence an optimal total time complexity of $\bigO{KT}$.
 In particular, this case includes \UCB, Thompson sampling and \klUCB.
 
-\paragraph{Oracle algorithms.}
+\textbf{Oracle algorithms.}
 %
 Most algorithms designed for abruptly changing environments are more costly, both in terms of storage and computation time, as they need more storage and time to test for changes.
 The \emph{oracle algorithm} presented in Section~\ref{sec:6:NumericalExperiments}, combined with any efficient index policy, needs a storage at most $\bigO{K \Upsilon_T}$ as it stores the change-points, and have an optimal time complexity of $\bigO{K T}$
 too\footnote{Note that if implemented naively, that is if testing is $t$ is a change-points takes a time $\bigO{\Upsilon_T}$, its performance is sub-optimal, as it is of the order of $\bigO{K T \Upsilon_T}$. However, if the change-points are stored in a \emph{dynamic linked list}, and the head is removed when it is found to be equal to the current time step, then the test at a time $t$ costs only a constant time $\bigO{1}$, hence the total time complexity is bounded by $\bigO{K T}$ and the oracle algorithm is indeed optimal in terms of time complexity.}.
 
-\paragraph{Passively adaptive algorithms.}
+\textbf{Passively adaptive algorithms.}
 %
 Passively adaptive algorithms should intuitively be more efficient, but as they use a non-constant storage, they are actually as costly as the oracle.
 For instance SW-UCB uses a storage of $\bigO{K \tau}$, increasing as $T$ increases, and similarly for other passively adaptive algorithms.
@@ -509,7 +509,7 @@ Note that the discounting scheme in Discounted-\UCB{} (D-UCB) from \cite{Kocsis0
 Therefore, D-UCB costs $\bigO{K T}$ in memory and $\bigO{K T^2}$ in time.
 
 
-\paragraph{Actively adaptive algorithms.}
+\textbf{Actively adaptive algorithms.}
 %
 Limited memory actively adaptive algorithms, like \MUCB, are even more costly.
 For instance, \MUCB{} would have the same cost of $\bigO{K T d_{\max}}$, except that \cite{CaoZhenKvetonXie18} introduces a window-size $w$ and run their CPD algorithm only using the last $w$ observations of each arm. If $w$ is constant w.r.t. the horizon $T$, their algorithm has a storage cost bounded by $\bigO{K w}$ and a running time of $\bigO{K T w}$, being comparable to the cost $\bigO{K T}$ of the oracle approach.
@@ -728,7 +728,7 @@ The same observations can be made for other variants of our algorithm, for insta
 \begin{table}[ht]
     % \begin{small} %XXX WARNING
     \centering
-    \begin{tabular}{c|cccccc}
+    \begin{tabular}{l|cccccc}
         \textbf{Choice of} $\alpha_0$ $\;$ \textbackslash $\;$ \textbf{Problems} & Problem $1$ & Problem $2$ & Problem $4$ \\
         \hline
         $\alpha_0=1$     & $51 \pm 29$ & $79 \pm 35$ & $82 \pm 45$ \\
@@ -765,7 +765,7 @@ The same observations can be made for other variants of our algorithm, for insta
 \begin{table}[ht]
     % \begin{small} %XXX WARNING
     \centering
-    \begin{tabular}{c|cccccc}
+    \begin{tabular}{l|cccccc}
         \textbf{Choice of} $\delta_0$ $\;$ \textbackslash $\;$ \textbf{Problems} & Problem $1$ & Problem $2$ & Problem $4$ \\
         \hline
         $\delta_0=1000$       & $\mathbf{65 \pm 31}$ & $106 \pm 35$ & $\mathbf{93 \pm 34}$ \\

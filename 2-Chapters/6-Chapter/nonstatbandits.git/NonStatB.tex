@@ -268,7 +268,7 @@ Another of research on actively adaptive algorithms uses a Bayesian point of vie
 A Bayesian CD algorithm is combined with Thompson Sampling in \cite{MellorShapiro13},
 and more recently \cite{Alami17} introduced the Memory Bandit algorithm.
 It is presented as efficient empirically, but no theoretical guarantee are given for these two works, and due to its complexity, we do not include it in our experiments.
-The idea behind Memory Bandit is to use an expert aggregation algorithm, like EXP4 from \cite{Auer02}, modified to efficiently aggregate an growing number of experts from techniques presented in \cite{Mourtada17}.
+The idea behind Memory Bandit is to use an expert aggregation algorithm, like Exp4 from \cite{Auer02} or our \Aggr{} algorithm from Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} \cite{Besson2018WCNC}, modified to efficiently aggregate an growing number of experts from techniques presented in \cite{Mourtada17}.
 At each time step, a new expert is introduced, and experts corresponds to different Thompson sampling algorithms, each using a different history of pulls and rewards. Intuitively, after a change-point the newest experts will soon become the most efficient, as they are learning by using rewards drawn from the new distribution(s).
 %
 Note that the regret bound for these methods are still open-problems,
@@ -359,7 +359,7 @@ Thus we do not believe to be able to design a policy that could be uniformly bet
 Surprisingly, numerical experiments show that the \emph{local} variant of \GLRklUCB{} actually outperforms the \emph{glocal} variant for both problem $1$ and $2$, as shown below in Table~\ref{table:6:totalResults1}, and in other problems as shown in Table~\ref{table:6:totalResults2}.
 %
 Understanding this difference in terms of numerical performance of the two variants is left as future work.
-
+%
 Finally, on the practical side, while we can note that the proposed B-GLRT test is more complex to implement than the test used by \MUCB, we propose two heuristics to speed it up while not losing much in terms of regret, in Appendix~\ref{sub:6:IdeasOptimizations}.
 
 
@@ -776,7 +776,7 @@ the index is defined using the binary relative entropy $\kl$ as
 
 
 %-----------------------------------------------------------------------------
-\paragraph{Two options for restarts.}
+\textbf{Two options for restarts.}
 %
 For this algorithm, we simultaneously investigate two possible behavior: \emph{global restart} (reset the history of all arms once a change was detected on one of them, line $11$), and \emph{local restart} (reset only the history of the arm on which a change was detected, line $13$), which are the two different options in Algorithm~\ref{algo:6:GLRklUCB}.
 %
@@ -787,8 +787,8 @@ $f(t-\tau_i(t))$ is replaced by $f(n_t)$ with $n_t = \sum_{i=1}^K n_i(t)$.
 
 
 %-----------------------------------------------------------------------------
-\paragraph{Threshold function $\beta$.}
-
+\textbf{Threshold function $\beta$.}
+%
 We present in Appendix~\ref{sec:6:exploringDifferentThresholdFunctions} numerical simulations that compare different choices of threshold functions $\beta$.
 We compare the non-explicit function used in Lemma~\ref{lem:6:FalseAlarm} (that make use of a numerical approximation of the function $\cT$),
 with the simpler value $\beta(n,\delta) = \ln(3n\sqrt{n}/\delta)$, as well as two other choices.
@@ -799,8 +799,8 @@ To sum-up these simulations, they validate the use of a simpler and more explici
 
 
 %-----------------------------------------------------------------------------
-\paragraph{Forced exploration.}
-
+\textbf{Forced exploration.}
+%
 The forced exploration scheme used in \GLRklUCB{} (lines $3$-$5$) generalizes the deterministic exploration scheme proposed for \MUCB{} by \cite{CaoZhenKvetonXie18}, whereas \CUSUMUCB{} performs a uniform random exploration.
 Both approaches are parameterized by $\alpha\in(0,1)$.
 More precisely, \CUSUMUCB{} samples arm $i$ with probability $\alpha/K$ at each time step,
@@ -943,10 +943,7 @@ It requires that any two consecutive change-points \emph{on a given arm} are suf
     \begin{equation}
         R_T \leq 2\sum_{i=1}^K\sum_{\ell=1}^{\NCi} \frac{4K}{\alpha \left(\Delta_i^{(\ell)}\right)^2}\beta(T,\delta) +\alpha T + 2 \delta \EffChange  + \sum_{i=1}^K\sum_{\ell=1}^{\NCi} \frac{\ln(T)}{\kl(\overline{\mu}_i^{(\ell)},{\mu}^*_{i,\ell})} +\bigO{\sqrt{\ln(T)}},
     \end{equation}
-    where
-    \begin{equation}
-        {\mu}^*_{i,\ell} = \inf \left\{ \mu_{i_t^*}(t) : \mu_{i_t^*}(t) \neq \overline{\mu}_i^{(\ell)}, t \in [\tau_i^{(\ell)}+1, \tau_i^{(\ell+1)}]\right\}.
-    \end{equation}
+    where ${\mu}^*_{i,\ell} = \inf \left\{ \mu_{i_t^*}(t) : \mu_{i_t^*}(t) \neq \overline{\mu}_i^{(\ell)}, t \in [\tau_i^{(\ell)}+1, \tau_i^{(\ell+1)}]\right\}$.
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
@@ -999,13 +996,13 @@ Indeed, while the regret guarantees obtained are similar, those obtained for loc
 Besides those specific instances, our results are essentially worse for local than global changes. However, we only obtain regret upper bounds -- thus providing a theoretical safety net for both variants of our algorithm, and the practical story is different, as discussed in Section~\ref{sec:6:NumericalExperiments}.
 We find that \GLRklUCB{} performs better with local restarts, uniformly on all problems.
 
-One can note that with the tuning of $\alpha$ and $\delta$ prescribed by Corollaries~\ref{cor:6:Global} and \ref{cor:6:Local}, the regret bounds of \GLRklUCB{} hold for problem instances for which two consecutive breakpoints (or change-points on an arm) are separated by more than (about) $\sqrt{T\log(T)}/(\Delta^{\text{change}})^2$ time steps.
-Hence those guarantees are valid on ``easy'' problem instances only, with few changes of a large magnitude, and in particular they do not hold for the harder problems $3$ or $5$ presented in Section~\ref{sec:6:NumericalExperiments}.
+One can note that with the tuning of $\alpha$ and $\delta$ prescribed by Corollaries~\ref{cor:6:Global} and \ref{cor:6:Local}, the regret bounds of \GLRklUCB{} hold for problem instances for which two consecutive breakpoints (or change-points on an arm) are separated by more than (about) $\sqrt{T\log(T)}/(\Delta^{\text{change}})^2$ rounds.
+Hence those guarantees are valid on ``easy'' problems only, with few changes of large magnitudes, in particular they do not hold for the harder problems $3$ or $5$ presented in Section~\ref{sec:6:NumericalExperiments}.
 %
-However, this does not prevent our algorithms from performing well on more realistic instances, and numerical experiments support this claim,
-as illustrated for instance with problem $3$ presented in the next Section~\ref{sec:6:NumericalExperiments}).
+However, this does not prevent our algorithms from performing well on more realistic instances, as shown by the numerical experiments,
+for instance with problem $3$ presented in the next Section~\ref{sec:6:NumericalExperiments}).
 %
-Note that \MUCB{} \cite{CaoZhenKvetonXie18} is also analyzed for the same type of unrealistic assumptions, while its practical performance is illustrated beyond those.
+And \MUCB{} \cite{CaoZhenKvetonXie18} is also analyzed for the same type of unrealistic assumptions, while its practical performance is illustrated beyond those.
 
 
 % ----------------------------------------------------------------------------
@@ -1111,10 +1108,10 @@ So we can prove the following.
 
 \begin{lemma}\label{lem:6:GoodEventGlobal}
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
-    With $\cE_T(\delta)$ defined as in \eqref{def:6:GoodEvenGlobal}, the ``bad event'' is unlikely:
-    \begin{equation}
-        \bP(\cE_T^c(\delta)) \leq \delta(K+1)\Upsilon_T.
-    \end{equation}
+    With $\cE_T(\delta)$ defined as in \eqref{def:6:GoodEvenGlobal}, the ``bad event'' is unlikely
+    % \begin{equation}
+        $\bP(\cE_T^c(\delta)) \leq \delta(K+1)\Upsilon_T$.
+    % \end{equation}
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
@@ -1367,7 +1364,15 @@ The four algorithms are presented in the order of decreasing performance (\ie, t
 \textbf{Problem $\bm{1}$} has only local changes, and important changes, that denote here changes on the current optimal arm, happen only at $t=2000$ when arm $2$ becomes sub-optimal ($\mu_2$ goes from $0.9$ to $0.1$) and arm $0$ becomes optimal, and at $t=3000$ when arm $0$ stays optimal but sees its mean change from $0.3$ to $0.7$.
 Other changes concern arm $1$ at $t=1000$ and $t=4000$.
 
-Figure~\ref{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1} below displays the locations of the successively detected change-points by four algorithms,
+
+\begin{figure}[h!]  % [htbp]
+    \centering
+    \includegraphics[width=1.00\linewidth]{2-Chapters/6-Chapter/Images/Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1.pdf}
+    \caption{Locations of the detected change-points for four algorithms on Problem 1.}
+    \label{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1}
+\end{figure}
+
+Figure~\ref{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1} above displays the locations of the successively detected change-points by four algorithms,
 $1)$ \MklUCB,
 $2)$ \CUSUMklUCB,
 $3)$ \GLRklUCB{} with \emph{local restart},
@@ -1407,17 +1412,16 @@ On this problem, while \MklUCB{} detects the same changes as \GLRklUCB, with lar
 % \end{itemize}
 
 
-\begin{figure}[h!]  % [htbp]
-    \centering
-    \includegraphics[width=1.00\linewidth]{2-Chapters/6-Chapter/Images/Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1.pdf}
-    \caption{Locations of the detected change-points for four algorithms on Problem 1.}
-    \label{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1}
-\end{figure}
-
-
 \textbf{Problem $\bm{2}$} has only global changes, and important changes happen only at $t=1000$ when arm $2$ sees its mean change from $0.9$ to $0.7$, then at $t=2000$ when it becomes sub-optimal ($\mu_2$ goes from $0.7$ to $0.5$) and arm $0$ becomes optimal, and at $t=3000$ and $t=4000$ when arm $0$ stays optimal but sees its mean change from $0.6$ to $0.7$ and then from $0.7$ to $0.8$.
 
-Like for the first problem, we illustrate the behavior of the same four algorithms in Figure~\ref{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2} below.
+\begin{figure}[h!]  % [htbp]
+    \centering
+    \includegraphics[width=1.00\linewidth]{2-Chapters/6-Chapter/Images/Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2.pdf}
+    \caption{Locations of the detected change-points for four algorithms on Problem 2.}
+    \label{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2}
+\end{figure}
+
+Like for the first problem, we illustrate the behavior of the same four algorithms in Figure~\ref{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2} above.
 In this other problem, the difference between \MklUCB{} and \CUSUMklUCB{} is clear:
 the first algorithm fails to detect any change, leading to a large regret,
 while the second one detects the changes that happen on the currently optimal arm and some other changes.
@@ -1456,13 +1460,6 @@ For instance, after the change on arm $1$ (in \textcolor{red}{red}), the \emph{l
 %     \item
 %     \MklUCB{} did not detect any change, thus it obtains bad performance in terms of regret, with $R_T = 570$ (on this run).
 % \end{itemize}
-
-\begin{figure}[h!]  % [htbp]
-    \centering
-    \includegraphics[width=1.00\linewidth]{2-Chapters/6-Chapter/Images/Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2.pdf}
-    \caption{Locations of the detected change-points for four algorithms on Problem 2.}
-    \label{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2}
-\end{figure}
 
 In these two examples, we compare the two variants of our proposal with the two state-of-the-art policies \CUSUMklUCB{} and \MklUCB,
 that are all based on combining \klUCB{} with a change-point detection algorithm.
@@ -1699,6 +1696,14 @@ We note that, sadly, all actively adaptive policies fail to outperform stationar
 We can also verify that the two options, \textbf{Local} and \textbf{Global} restart, for \GLRklUCB, give close results, and that the \textbf{Local} option is always better.
 
 We also show the empirical distribution of the regret $R_T$, on Figure~\ref{fig:6:histogramRegretPb1}. It shows that all algorithms have a rather small variance on their regret, except Thompson Sampling which has a large tail due to its large mean regret on this (easy) non-stationary problems.
+
+% -----------------------------------------------------------------
+\begin{figure}[h!]  % [htbp]
+    \centering
+    \includegraphics[width=1.09\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/SP__K3_T5000_N1000__9_algos_pb1/main_HistogramsRegret_shareX____env1-1_1316297932259102962.pdf}
+    \caption{Histograms of the distributions of regret $R_T$ ($T=5000$) for problem 1.}
+    \label{fig:6:histogramRegretPb1}
+\end{figure}
 
 
 \newpage

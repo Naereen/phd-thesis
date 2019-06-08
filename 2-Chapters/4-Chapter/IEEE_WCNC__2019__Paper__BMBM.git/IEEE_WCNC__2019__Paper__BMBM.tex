@@ -29,7 +29,6 @@ Low-cost algorithms following two well-known approaches, such as the Upper-Confi
 When considering the application of MAB algorithms for slotted wireless protocols in a decentralized manner,
 other recent directions of research first include theoretical analysis, like what we present in the next Chapter~\ref{chapter:5},
 then realistic empirical simulations like in \cite{kumar2016two,kumar2017channel} or the previous Section~\ref{sec:4:gnuradio},
-,
 and finally applications to multi-hoping networks \cite{Mitton16,Toldov16} or other kinds of networks \cite{Wilhelmi19collaborative,Wilhelmi19potential}.
 %
 None of the mentioned works discuss in detail the impact of retransmissions on the performance of MAB learning algorithms as we do now.
@@ -52,8 +51,8 @@ The contributions of this section are summarized as follows:
 \end{itemize}
 
 
-\paragraph{Outline.}
-
+\textbf{Outline.}
+%
 The rest of the section is organized as follows.
 First the system model is introduced in Section~\ref{sub:43:model},
 and our motivations are exposed in Section~\ref{sub:43:motivations}.
@@ -137,7 +136,7 @@ To do so, we study the collision probabilities considering the Markov process de
 It is well known \cite{Abramson1970,Roberts75}
 that having a collision during an access time can be overcome by a retransmission procedure (this can take several retransmission attempts).
 Our goal here is to obtain a mathematical approximation of the collision probability at the second transmission slot $p_{c1}$, as a function of the first collision probability $p_{c}$.
-
+%
 We make two approximations $\mathcal{H}_{1}$ and $\mathcal{H}_{2}$ defined as (they are hypotheses on which the rest of this section is built),
 \begin{itemize}
 	\item $\mathcal{H}_{1}$:
@@ -168,12 +167,8 @@ Therefore, the probability that this device has a collision at the first transmi
 	p_c = 1-\left(1-x\right)^{N-1} \iff x = 1-\left(1-p_c\right)^{\frac{1}{N-1}}.
 \end{equation}
 
-Moreover, from \eqref{eq:43:1} we define the probability $p_{cp}(n)$ that involves the collision of $n$ packets sent by each IoT device (for any $1\leq n \leq N-1$), during the first transmission slot, and is defined by the following equation
+Moreover, from \eqref{eq:43:1} we define the probability $p_{cp}(n)$ that involves the collision of $n$ packets sent by each IoT device (for any $1\leq n \leq N-1$), during the first transmission slot, and is defined by $p_{cp}(n) = {N-1 \choose n} \; x^n \left(1-x\right)^{N-1-n}$.
 %
-\begin{equation*}\label{eq:43:2}
-	p_{cp}(n) = {N-1 \choose n} \; x^n \left(1-x\right)^{N-1-n}.
-\end{equation*}
-
 As explained above, if an IoT device experiences a collision at the first transmission, it proceeds for the retransmission of its packet after a random back-off interval.
 We denote $p_{ca}$ the probability to have a collision with a packet involved in the previous collision.
 Under the $\mathcal{H}_{1}$ assumption, the number of packets involved in the same previous collision remains very small in comparison to the total number of devices that may transmit during this time. In other words, this collision probability does not depend on previous retransmissions and is equal to $p_c$.
@@ -215,13 +210,8 @@ Therefore, the expression of $p_{ca}$ is
 	& = 1- \frac{1}{p_c}\sum_{n=1}^{N-1}{N-1 \choose n} x^n \left(1-x\right)^{N-1-n}\left( 1-\frac{1}{m}\right)^n.
 \end{align}
 
-Once again under $\mathcal{H}_{1}$, assuming that the number of devices involved in the first collision is small compared to $N-1$, the first $N_0 \ll N-1$ terms of the sum in \eqref{eq:43:sumpc2} are predominant. We derive,
+Once again under $\mathcal{H}_{1}$, assuming that the number of devices involved in the first collision is small compared to $N-1$, the first $N_0 \ll N-1$ terms of the sum in \eqref{eq:43:sumpc2} are predominant. We derive $p_{ca} \simeq  1- \frac{1}{p_c}\sum_{n=1}^{N_0}{N-1 \choose n} x^n\left(1-x\right)^{N-1-n} \left( 1-\frac{1}{m}\right)^n$.
 %
-\begin{equation}\label{eq:43:sumpca2}
-	p_{ca} \simeq  1- \frac{1}{p_c}\sum_{n=1}^{N_0}{N-1 \choose n} x^n\left(1-x\right)^{N-1-n} \left( 1-\frac{1}{m}\right)^n.
-\end{equation}
-
-
 Moreover, for these terms, $n$ is small compared to $N-1$, and so $N-1-n$ can be approximated to $N-1$. Thus it gives,
 %
 \begin{equation}\label{eq:43:sumpca3}
@@ -281,7 +271,7 @@ that the gap decreases when $p_c$ increases (for fixed $N$ and $m$).
 This backups mathematically the observation we made from Figure~\ref{fig:43:Approximation_m10}:
 the smaller the $p_c$, the larger is the gap between $p_c$ and $p_{c1}$.
 
-We interpret this fact in two different situations.
+We interpret this fact in two different situations:
 \begin{itemize}
 	\item
 	On the one hand, in a congested network, when devices suffer from a large probability of collision on their first transmission (\ie, $p_c$ is not so small), then $p_{c1}\simeq p_c$ and so devices cannot really hope to reduce their collision probabilities even if the use a different channel for retransmission.
@@ -407,13 +397,14 @@ $A(t) = \arg\max_{1\leq k \leq K} U_k(t)$.
 \end{figure}
 % \end{small} % XXX remove if needed
 
-
-\textbf{\textcolor{red}{Small warning about notations: local (device) time vs global (gateway) time}:}
-%
-In all the algorithms and notations presented in this Section, the time steps $t$ do not refer to the global time steps (as seen from the gateway), but rather the current number of uplink transmissions (or retransmissions) that was carried out by the device.
-In other words, each device wakes up whenever it has to send some data, following its random emission process (here, we propose a Bernoulli process of small probability, \eg, $p=10^{-3}$), and when it woke up, it sends its packet, and will send again for at most $M$ times (\eg, $M=10$) until it receives an \Ack.
-
-To be clear, once again, we repeat that the time steps $t$ in the following algorithms denote the number of time the device sent an uplink packet, and these uplink (re)transmissions can happen at different (real-world) times, more or less spread out in time, it does not matter to the learning part of this model and work.
+\begin{leftbar}[warningbar]  % XXX leftbar warningbar, comment if needed
+	\textbf{\textcolor{red}{Small warning about notations: local (device) time vs global (gateway) time}:}
+	%
+	In all the algorithms and notations presented in this Section, the time steps $t$ do not refer to the global time steps (as seen from the gateway), but rather the current number of uplink transmissions (or retransmissions) that was carried out by the device.
+	Each device wakes up whenever it has to send some data, following its random emission process (here, we propose a Bernoulli process of small probability, \eg, $p=10^{-3}$), and when it woke up, it sends its packet, and will send again for at most $M$ times (\eg, $M=10$) until it receives an \Ack.
+	%
+	In other words, the time steps $t$ in the following algorithms denote the number of time the device sent an uplink packet, and these uplink (re)transmissions can happen at different (real-world) times, more or less spread out in time, it does not matter to the learning part of this model and work.
+\end{leftbar}  % XXX leftbar warningbar, comment if needed
 
 
 % ----------------------------------------------------------------------

@@ -31,7 +31,7 @@ Then, these three reference scenarios allow to evaluate the performance of bandi
 We show that these algorithms have near-optimal performance, even when the proportion of end-devices increases and the interfering traffic from other devices becomes less and less stochastic.
 
 
-\paragraph{Outline.}
+\textbf{Outline.}
 %
 The rest of this section is organized as follows. The system model is introduced in Section~\ref{sub:41:systemModel}. The reference policies are described in \ref{sub:41:threeReferencePolicies}, and our proposed sequential learning policies are introduced in \ref{sub:41:sequentialPolicies}.
 Numerical results are presented in \ref{sub:41:numericalResults}.
@@ -171,9 +171,9 @@ and they are unknown to each dynamic device, so to maximize their cumulated rewa
 %
 The goal is thus to propose a simple sequential algorithm to be applied identically and independently by each dynamic device, in a fully distributed setting (each device runs its own algorithm, from its observations), in order to minimize collisions and maximize the fraction of successful transmissions of all the dynamic devices.
 %
-This requires to tackle the so-called \emph{exploration-exploitation dilemma}: a device has to try all arms a sufficient number of times to get a robust estimate of their qualities, while not selecting the worst arms too many times.
-
-Before modeling this goal with a \emph{multi-armed bandit problem}, we present some natural baseline (reference) policies.
+This requires to tackle the so-called \emph{exploration-exploitation dilemma}: a device has to try all channels a sufficient number of times to get a robust estimate of their qualities, while not selecting the worst channels too many times.
+%
+Before presenting \emph{multi-armed bandit algorithms}, we present some natural baseline (reference) policies.
 
 
 % ------------------------------------------------------------------------
@@ -191,7 +191,8 @@ We derive here the probability of having a successful transmission, for a dynami
 This reflects a naive policy that could be implemented by all the dynamic devices, and it provides a reference scenario to compare against.
 
 In this case, for one dynamic device, a successful transmission happens if it is the only device to choose channel $k$, at that time slot.
-The probability of successful transmission is computed as follows, because the $S_k$ static devices in each channel $k$ are assumed to be independent, and static and dynamic devices are assumed to \emph{not} transmit at each time $t$ with a fixed probability $1-p$:
+the $S_k$ static devices in each channel $k$ are assumed to be independent, and static and dynamic devices are assumed to \emph{not} transmit at each time $t$ with a fixed probability $1-p$,
+so probability of successful transmission is computed as follows
 \begin{equation}
     \Pr(\text{success}|\text{sent}) = \sum_{k=1}^{K} \underbrace{\Pr(\text{success}|\text{sent in channel}\;k)}_{\text{No one else sent in channel}\; k} \; \underbrace{\Pr(\text{sent in channel}\,k)}_{= 1/K, \text{ by uniform choice}}
 \end{equation}
@@ -212,7 +213,7 @@ This expression \eqref{eq:41:strategynaive} is constant (in time), and easy to c
 
 \paragraph{$2^{\text{nd}}$ - (Unachievable) Optimal oracle policy}
 
-We investigate here the optimal policy that can be achieved if the dynamic devices have a perfect knowledge of $(S_k)_k$ the repartition of static devices, and a fully centralized decision making\footnote{~This optimal policy needs an \emph{oracle} seeing the entire system, and affecting all the dynamic devices, once and for all, for a fixed stationary scenario, in order to avoid any signaling overhead. This is not possible in IoT contexts as several completely independent networks may operate in a single place.} is possible.
+We investigate here the optimal policy that can be achieved if the dynamic devices have a perfect knowledge of the repartition of static devices $(S_k)_k$, and a fully centralized decision making\footnote{~This optimal policy needs an \emph{oracle} seeing the entire system, and affecting all the dynamic devices, once and for all, for a fixed stationary scenario, in order to avoid any signaling overhead. This is not possible in IoT contexts as several completely independent networks may operate in a single place.} is possible.
 We want to find the stationary repartition of devices into channels that maximizes the probability of having a successful transmission.
 
 If the oracle chooses a fixed configuration of dynamic devices, with $D_k$ devices affected to channel $k$ is fixed (in time, \ie, stationary),
@@ -254,13 +255,13 @@ Consequently, an optimal allocation vector $(D_1,\dots,D_{K})$ is a solution of 
     \footnote{~It is worth noting that $f$ is neither concave nor quasi-concave on $[0,\infty)^{K}$ \cite{Luenberger68,Yaari77}.}.
     \item
     The Lagrange multipliers method can be applied to the optimization problem \eqref{eq:41:optPb}, with a concave objective function $f$, linear equality constraints \eqref{eq:41:eqCstr} and linear inequality constraints \eqref{eq:41:ineqCstr}. The strong duality condition is satisfied in this case \cite{BoydVanderberghe04}, so finding the saddle points will be enough to find the maximizers.
-    \item
-    More details are given in Section~\ref{sec:4:proofLagrangian} in the Appendix of this Chapter.
+    % \item
     % \hfill{}$\square$
     \end{itemize}
+    More details are given in Section~\ref{sec:4:proofLagrangian} in the Appendix of this Chapter.
 \end{smallproof}
 
-Where in the equation~\eqref{eq:41:Dilambda}, $(a)^{+} = \max(a,0)$, and $\mathcal{W}$ denotes the $\mathcal{W}$-Lambert function which is the reciprocal bijection of $x \mapsto x e^x$ on $\mathbb{R^+} = [0, +\infty)$ (it can be computed numerically in an efficient manner) \cite{Corless96}.
+Where in the equation~\eqref{eq:41:Dilambda}, $(a)^{+} = \max(a,0)$, and $\mathcal{W}$ denotes the $\mathcal{W}$-Lambert function which is the reciprocal bijection of $x \mapsto x e^x$ on $\mathbb{R^+} = [0, +\infty)$ (which can be computed numerically in an efficient manner, \cite{Corless96}).
 Moreover, condition \eqref{eq:41:eqCstr} implies that the Lagrange multiplier $\lambda$ is the solution of the constraint
 \begin{equation}\label{eq:41:constraintLambda}
     \sum_{k=1}^{K} D_k^*(\lambda) = D.
@@ -311,11 +312,12 @@ The two algorithms, \UCB{} and Thompson sampling (TS), were presented in Section
 The \UCB{} algorithm uses a parameter $\alpha > 0$, set to $\alpha = 1/2$ in our experiments.
 % originally $\alpha$ was set to $2$ \cite{Auer02}, but empirically $\alpha = 1/2$ is known to work better (uniformly across problems), and $\alpha > 1/2$ is advised by the theory \cite{Bubeck12}.
 %
-In our model, every dynamic device implements its own \UCB{} algorithm, \emph{independently}.
+In our model, every dynamic device implements its own algorithm, \emph{independently}.
 For one dynamic device, the time $t$ is the total number of sent messages from the beginning, as rewards are only obtained after a transmission.
 %
-The TS algorithm, although being simple and easy to implement, is known to perform well for stochastic problems, for which it was proven to be asymptotically optimal \cite{AgrawalGoyal11,Kaufmann12Thompson}.
-It is known to be empirically efficient, and for these reasons it has been used successfully in various applications, including problems from Cognitive Radio \cite{Toldov16,Mitton16}, and also in previous work on decentralized IoT-like networks \cite{Darak16}.
+The TS algorithm
+% although being simple and easy to implement, is known to perform well for stochastic problems, for which it was proven to be asymptotically optimal \cite{AgrawalGoyal11,Kaufmann12Thompson}.
+is known to be empirically efficient, and for these reasons it has been used successfully in various applications, including problems from Cognitive Radio \cite{Toldov16,Mitton16}, and also in previous work on decentralized IoT-like networks \cite{Darak16}.
 
 
 \paragraph{\emph{Adversarial} bandit algorithms?.}
@@ -331,7 +333,7 @@ However, contrarily to the two stochastic algorithms, the use of $\mathrm{Exp}3$
 % %\footnote{~We preferred not to talk about \emph{regret} in this study, but in a few words: it is a measure of how \emph{bad} the algorithm performed in terms of its accumulated rewards, in comparison to the best possible policy, and should be as small as possible. For stochastic algorithms, being ``efficient'' means having a regret bounded as $R_T = \mathcal{O}(\log T)$, but for adversarial algorithms, it means having $R_T = \mathcal{O}(\sqrt{K T})$.}
 % worse than the one for stochastic ones.
 % (in their respective case of application).
-Further research on this aspect could lead to interesting future works.
+% Further research on this aspect could lead to interesting future works.
 
 
 
@@ -417,17 +419,19 @@ Note that when this proportion increases, the assumptions of a stochastic MAB mo
 Hence, it is surprising to have near optimal performance with stochastic MAB algorithms applied to partly or fully dynamic scenarios.
 
 
-\paragraph{A safety check.}
-
+\textbf{A safety check.}
+%
 We include another simulation in Figure~\ref{fig:41:figure4appendix}, with a uniform repartition of static devices (\ie, $\forall k, S_k = S/K$), to check that learning approach (here, only \UCB)
 also gives interesting gain of performance, and achieve a close-to optimal successful transmission rate.
 Except for the limit case of $100\%$ of dynamic devices, which corresponds to Figures~\ref{fig:41:100intelligent} and \ref{fig:41:ch2_100}, where the uniform access performs as well as the optimal oracle solution, the MAB-based approach almost instantly outperforms the baseline.
 
 
 
-\paragraph{Note on the simulation code.}
-
+% \paragraph{Note on the simulation code.}
+\textbf{Reproducibility.}
+%
 The simulation code used for the experiments in Section~\ref{sub:41:numericalResults} is for MATLAB or GNU Octave,
-and is open-sourced under the MIT License, at\\
+and it was written in collaboration with Rémi Bonnefoi, in April and May $2017$.
+Instructions to reproduce our experiments are given, and
+the code is open-sourced under the MIT License, at
 \href{https://Bitbucket.org/scee_ietr/rl_slotted_iot_networks}{\texttt{Bitbucket.org/scee\_ietr/rl\_slotted\_iot\_networks}}.
-It was written in collaboration with Rémi Bonnefoi, in April and May $2017$.

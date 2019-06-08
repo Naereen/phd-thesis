@@ -17,7 +17,6 @@ Similarly to the previous section, network access is modelled as a discrete sequ
 This solution could be added in a straightforward and costless manner in most IoT networks, such as LoRaWAN networks, just by adding this feature at the higher level of the MAC layer, in all or only some of the devices, without any modification on the network side, and no signalling overhead for the devices.
 
 \paragraph{Related works.}
-% FIXME?
 % \TODOL{Est-ce que je fais ça ici ou à la fin du chapitre 5 ? Ou peut-être en chapitre 1, ça ferait du contenu au chapitre 1...}
 %
 We evoke quickly here some previous works that similarly implemented proof-of-concepts to show that reinforcement learning algorithms can be used within real-world wireless communications.
@@ -86,6 +85,9 @@ For example, this index can be a simple QPSK symbol ($\pm1\pm1j$), or a longer s
 With $\ell$ QPSK symbols, we can indeed fit at most $4^{\ell}/2 = 2^{2\ell-1}$ devices, and not $4^{\ell}$ due to the use of a conjugate index to send back acknowledgements from the gateway
 Once the gateway receives an uplink packet, it detects this index and transmits an acknowledgement which has the same frame structure, but where the index is the conjugate of the index of the uplink packet ($z \mapsto \overline{z}$, \emph{e.g.}, $1+j \mapsto 1-j$).
 Thanks to this index, we can have several devices communicating with the same gateway.
+%
+In turn, the end-device that receives the acknowledgement demodulates it, and checks if the index is the conjugate of its own index.
+In this case, the \emph{Ack} was sent for him, and it knows that its packet has been received and decoded correctly by the gateway.
 
 \begin{figure}[!b]
     \centering
@@ -93,9 +95,6 @@ Thanks to this index, we can have several devices communicating with the same ga
     \caption{Schematic of our implementation that presents the role of each USRP platform.}
     \label{fig:42:our_demo}
 \end{figure}
-
-In turn, the end-device that receives the acknowledgement demodulates it, and checks if the index is the conjugate of its own index.
-In this case, the \emph{Ack} was sent for him, and it knows that its packet has been received and decoded correctly by the gateway.
 
 
 \paragraph{Equipment.}
@@ -124,12 +123,12 @@ To ease the synchronization implementation in both time and frequency between th
 and coaxial cables connecting every platform to the Octoclock for time (PPS) and frequency synchronization, but this is not mandatory.
 
 
-\paragraph{Implementation.}
+\paragraph{Details about our implementation.}
 
 We used the GNU Radio Companion software (GRC, version $3.7$ in $2017$),
 and a laptop runs a GRC design to configure and control each USRP platform.
 As such, one laptop can run in parallel the control program of any number of boards\footnote{~Even if in practice, maximum efficiency is kept as long as there is not more than one GRC design by CPU core.}.
-
+%
 The GNU Radio software provides the framework and tools to build and run software radio or just general signal-processing applications.
 GNU Radio applications are flow-graphs: a series of signal processing blocks connected together to describe a data flow.
 For maximum efficiency, we wrote all of our blocks in \texttt{C++}.
@@ -229,7 +228,7 @@ Such results are very encouraging, and illustrate well the various strong possib
 %
 The source code of our demonstration is fully available online, open-sourced under GPLv3 license, at
 \href{https://bitbucket.org/scee_ietr/malin-multi-arm-bandit-learning-for-iot-networks-with-grc}{\texttt{bitbucket.org/scee\_ietr/\\malin-multi-arm-bandit-learning-for-iot-networks-with-grc/}}.
-
+%
 It contains both the GNU Radio Companion flowcharts and blocks, with ready-to-use \texttt{Makefiles} to easily compile, install and launch the demonstration.
 The demonstration only requires a laptop and free tools,
 as the laptop should run a GNU/Linux distribution (like Ubuntu or Debian),
@@ -247,7 +246,7 @@ in addition to USRP platforms from Ettus Research.
 
 \paragraph{Video.}
 %
-As depicted in Figure~\ref{fig:42:screenshotDemoYouTube},
+As depicted in Figure~\ref{fig:42:screenshotDemoYouTube} above,
 we realized a $6$-minute \textbf{video} to sum-up our demonstration and advertise our work online, and it is available on the YouTube hosting platform, at \texttt{\href{https://youtu.be/HospLNQhcMk}{youtu.be/HospLNQhcMk}}.
 The video shows examples of $3$ dynamic devices learning simultaneously, confirming the results of Figure~\ref{fig:42:plot_datafile_append_Uniform_vs_UCB_vs_TS} for overlapping channels.
 It also shows the connections between the USRP boards, the Octoclock, the master laptop etc, completing the presentation of the SCEE testbed already shown in Figure~\ref{fig:42:photosSCEETestBed}.
