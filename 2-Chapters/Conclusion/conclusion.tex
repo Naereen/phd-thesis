@@ -54,7 +54,7 @@ Finally, in Chapter~\ref{chapter:6}, we remove the stationary hypothesis on the 
 For the last two chapters, our proposed algorithms attain state-of-the-art performances both on numerical simulations and on the regret bounds obtained in our theoretical analyses.
 % \end{itemize}
 
-A more precise summary of each chapters is included below.
+A more precise summary of each chapter is included below.
 
 
 % % ----------------------------------------------------------------------------
@@ -66,10 +66,10 @@ A more precise summary of each chapters is included below.
 
 We started to present the multi-armed bandit model, with a finite number of arms and real-valued rewards.
 Our main focus is on one-dimensional exponential families of distributions, and on stochastic and stationary problems.
-The notations used in the manuscript were introduced by showcasing an interactive demonstration made available online\footnote{See \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}}.
+The notations used in the manuscript were introduced by showcasing an interactive demonstration published online\footnote{See \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}}.
 
 The first contribution of this manuscript \cite{Besson2018WCNC} concluded this chapter, in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}. We tackle the question of how to select a particular bandit algorithm when a practitioner is facing a particular (unknown) bandit problem.
-Instead of always choosing a fixed algorithm, or running costly benchmarks before real-world deployment of the chosen algorithm, a third solution can be to select a few candidate algorithms, where at least one is expected to be very efficient for the given problem, and use online algorithm selection to automatically and dynamically decide the best candidate.
+Instead of always choosing her favorite algorithm, or running costly benchmarks before real-world deployment of the chosen algorithm, a third solution for the practitioner can be to select a few candidate algorithms, where at least one is expected to be very efficient for the given problem, and use online algorithm selection to automatically and dynamically decide the best candidate.
 We proposed an extension of the Exp4 algorithm for this problem, \Aggr, and illustrate its performance on some bandit problems.
 
 
@@ -83,12 +83,13 @@ SMPyBandits allows any researcher to easily implement numerical simulations of s
 SMPyBandits is distributed on GitHub and Pypi freely, under an open-source license, and it is extensively documented (at \href{https://SMPyBandits.GitHub.io}{\texttt{SMPyBandits.GitHub.io}}).
 % Our library allows any researcher to easily run numerical simulations of different kinds of multi-armed bandit problems, requiring only a small knowledge of Python thanks to its documentation, its well-designed API, and many examples of simulation scripts and configuration files included.
 
-We detailed how SMPyBandits is implementing arms, problems, algorithms, and use these components to implement a simulation loop, with various visualizations being performed after the simulation.
-As far as now, SMPyBandits is restricted to the finite-arm cases, but it supports a wide range of arms distributions.
+We detailed how SMPyBandits is implementing arms, problems, algorithms, and how the library uses these components to implement a simulation loop, with various visualizations being performed after a simulation.
+Even if SMPyBandits is still restricted to the finite-arm case, it supports a wide range of arm distributions.
 Different kinds of models are implemented, from stationary single-player to piece-wise stationary multi-player with different collision models.
-One of the main quality of the library is that it is quite exhaustive, as all the main families of algorithms covering these different models have been implemented, even very recent algorithms from the literature, I we tried to follow actively the state-of-the-art research, since December $2016$ to June $2019$.
+One of the main qualities of the library is that it is quite exhaustive, as all the main families of algorithms covering these different models have been implemented, even very recent algorithms from the literature.
+% We indeed followed actively the state-of-the-art research, since December $2016$ to June $2019$.
 More than $65$ algorithms (or variants) are implemented for the single-player case, $5$ for the experts aggregation problem, about $15$ for the multi-player case, and about $20$ for the piece-wise stationary case.
-The entire codebase is fully documented, and the library is using continuous integration to run automated tests on the code after every modifications.
+The entire codebase is fully documented, and the library is using continuous integration to run automated tests on the code after every modification.
 %
 When comparing algorithms on a problem, the main performance measure is the regret, but the library also computes, stores and visualizes other measures, such as best-arm selection rate or mean cumulated reward, as well as real time and memory costs.
 %
@@ -104,10 +105,10 @@ First in Section~\ref{sec:4:firstModel}, we proposed an evaluation of the perfor
 with a focus on the convergence of algorithms, in terms of successful transmission rates, when the proportion of intelligent dynamic devices changes.
 Concretely, increasing this probability allows to insert more devices in the same network, while maintaining a good Quality of Service.
 Similarly, if the number of devices remain constant, increasing the successful transmission rate directly extends the IoT devices battery life, as they suffer less from failed transmissions.
-We show that \UCB{} and TS have near-optimal performance, even when their underlying \iid{} assumption (see Chapter~\ref{chapter:2}) is violated by the presence of many ``intelligent'' end-devices which follow a random activation process.
+We show that both \UCB{} and Thompson sampling algorithms have near-optimal performance, even when their underlying \iid{} assumption (see Chapter~\ref{chapter:2}) is violated by the presence of many ``intelligent'' end-devices which follow a random activation process.
 %
 This is both surprising and encouraging, it shows that applying bandit algorithms tailored for a stochastic model is still useful in broader settings.
-The fully \emph{decentralized} application of classic stochastic MAB algorithms are almost as efficient as the best possible centralized policy in this setting, after a short learning period, even though the dynamic devices \emph{cannot} communicate with each others, and \emph{do not} know the system parameters.
+The fully \emph{decentralized} application of classic stochastic MAB algorithms are almost as efficient as the best possible centralized policy in this setting, after a short learning period, even though the dynamic devices \emph{cannot} communicate with each other, and \emph{do not} know the system parameters.
 
 
 We presented in Section~\ref{sec:4:gnuradio} a proof-of-concept, demonstrated in $2018$ at the ICT conference \cite{Besson2018ICT}, and further detailed in the companion paper \cite{Besson2019WCNC}.
@@ -120,12 +121,12 @@ By using such low-cost algorithms, we demonstrated empirically that a dynamicall
 Finally in Section~\ref{sec:4:retransmissions}, we presented an extension of our model of LPWA networks based on an ALOHA protocol, slotted both in time and frequency.
 % , in which dynamic IoT devices can again use machine learning algorithms, to improve their Packet Loss Ratio (PLR) when accessing the network.
 If the priority is the Quality of Service (QoS), for instance with renewable energy capabilities, this second model is more appropriate.
-The main novelty of this model is to address the packet retransmissions upon radio collision, by using a Multi-Armed Bandit framework.
-We presented and evaluated several heuristics that try to learn how to transmit and retransmit in a smarter way, by using the \UCB{} algorithm for channel selection for first transmission, and different proposals based on \UCB{} for the retransmissions upon collisions.
+We presented and evaluated several heuristics that try to learn how to transmit and retransmit in a smarter way, by using the \UCB{} algorithm for channel selection for first transmission (first-stage), and different proposals based on \UCB{} for the retransmissions upon collisions (second-stage).
+The main novelty of this model is to also learn the most efficient way to retransmit packets upon radio collision, by also using a multi-armed bandit algorithm for this second-stage optimization problem.
 %
 We showed that incorporating learning for the transmission is needed to achieve optimal performance, with significant gain in terms of successful transmission rate in networks with a large number of devices (up-to $30\%$ in the example network).
 Our empirical simulations show that each of our proposed heuristic outperforms a naive random access scheme.
-Surprisingly, the main take-away message is that a simple \UCB{} learning approach, that retransmit in the same channel, turns out to perform as well as more complicated heuristics.
+Surprisingly, the main take-away message is that a simple \UCB{} learning approach (that simply retransmits in the same channel), turns out to perform as well as more complicated heuristics.
 
 
 % ----------------------------------------------------------------------------
@@ -146,9 +147,11 @@ For example, it assumes to know the number of players $M$ before-hand, but we il
 % ----------------------------------------------------------------------------
 \paragraph{Conclusion about \textbf{Chapter~\ref{chapter:6}}.}
 
-In the last chapter, we studied and presented the piece-wise stationary bandit model.
+In the last chapter, we were interested in relaxing the stationary hypothesis made in Chapter~\ref{chapter:2}.
 %
-We proposed a new algorithm for this problem, \GLRklUCB, which combines the \klUCB{} algorithm with the Bernoulli GLR change-point detector.
+We first describe the break-point detection problem, that we solve by analyzing at finite-time the properties of the Bernoulli GLR change-point detector. This sequential break-point detection test can be applied for bounded rewards, and we bound its false alarm probability as well as its detection delay.
+For the piece-wise stationary bandit model,
+we proposed a new efficient algorithm, \GLRklUCB, which combines the \klUCB{} algorithm with the Bernoulli GLR change-point detector.
 This actively adaptive method attains state-of-the-art regret upper-bounds when tuned with a prior knowledge of the number of changes $\Upsilon_T$, but without any other prior knowledge on the problem, unlike \CUSUMUCB{} and \MUCB{} that require to know a lower bound on the smallest magnitude of a change.
 We also gave numerical evidence of the efficiency of our proposal, which performs usually much better than all the passively adaptive approaches as well as better or comparably to the previous actively adaptive ones.
 
@@ -158,7 +161,7 @@ We also gave numerical evidence of the efficiency of our proposal, which perform
 % ----------------------------------------------------------------------------
 \section{Perspectives}
 
-As discussed at the end of each chapters,
+As discussed at the end of each chapter,
 our works suggest possible directions of future studies.
 
 
@@ -175,7 +178,7 @@ our works suggest possible directions of future studies.
 % \paragraph{Perspectives about }.}
 
 As detailed in Chapter~\ref{chapter:2}, we focussed in this thesis on finite-arms and one-dimensional bandit problems,
-and thus two possible directions of future works could be to extend our works
+and thus two possible directions of future research could be to extend our works
 to MAB models with either multidimensional rewards, like contextual bandits, or infinite arms, like Lipschitz bandits.
 The hypotheses we made were motivated by the target applications, but these other models have also started to be used for cognitive radio applications.
 
@@ -183,11 +186,16 @@ The hypotheses we made were motivated by the target applications, but these othe
 % ----------------------------------------------------------------------------
 % \paragraph{Perspectives about \textbf{Chapter~\ref{chapter:3}}.}
 
-A first future work left on our library SMPyBandits could be to implement new variants of the single-player stochastic models, as well as variants for the multi-player or the non-stationary cases.
+A few tasks are left on our library SMPyBandits, a first one could be to implement new variants of the single-player stochastic models, as well as variants for the multi-player or the non-stationary cases.
 For more details, see the issue tickets at \href{https://github.com/SMPyBandits/SMPyBandits/issues/}{\texttt{GitHub.com/SMPyBandits /SMPyBandits/issues/}}.
 %
-It would be interesting to extend the library for problems with non-finite arms, \eg, linear or contextual bandit (\href{https://github.com/SMPyBandits/SMPyBandits/issues/117}{ticket 117}),
+A second interesting task could be to extend the library for problems with non-finite arms, \eg, linear or contextual bandit (\href{https://github.com/SMPyBandits/SMPyBandits/issues/117}{ticket 117}),
 or to add support for the ``dynamic case'' of multi-player bandits to allow arrivals or departures of players (\href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{ticket 124}).
+%
+A third task that I would have liked to complete is to interface the library with a web-based interactive demonstration, in order to allow anyone to launch simulations without any knowledge of programming.
+It is already possible to easily reproduce some of the experiments presented in this thesis, by using the Jupyter notebooks \cite{jupyter}, hosted on \href{https://perso.crans.org/besson/PhD/notebooks/}{\texttt{perso.crans.org/besson/PhD/notebooks/}}, which can be used locally if one installs or downloads the library, but can also be used on cloud platforms, such as
+Binder\footnote{~You can try on \href{https://mybinder.org/v2/gh/SMPyBandits/SMPyBandits/master}{\texttt{mybinder.org/v2/gh/SMPyBandits/SMPyBandits/master}} for free.},
+or Google Colab\footnote{~See \href{https://colab.research.google.com/github/SMPyBandits/SMPyBandits/tree/master/notebooks/}{\texttt{colab.research.google.com/github/SMPyBandits/SMPyBandits/tree/master/notebooks/}}.}.
 
 
 
@@ -232,9 +240,9 @@ It could be exciting to study the possible application of \emph{contextual} MAB 
 % or more recently GLR-\UCB{} \cite{Besson2019GLRT} which is presented in Chapter~\ref{chapter:6},
 % that nevertheless have not been explored for the targeted problem.
 
-In order to validate our results in a realistic experimental setting and not only with simulations, future works include a hardware implementation of the analyzed models to complete our demonstration \cite{Besson2018ICT,Besson2019WCNC}.
+In order to validate our results in a realistic experimental setting and not only with simulations, future works should include a hardware implementation of the analyzed models, in order to complete our demonstration presented in Section~\ref{sec:4:gnuradio} \cite{Besson2018ICT,Besson2019WCNC}.
 %
-A hardware demonstrator could be also benefit to study other settings by removing some hypotheses, for instance by studying a similar model in non-slotted time.
+A hardware demonstrator could be also benefit to study other settings by relaxing some hypotheses, for instance by studying a similar model in non-slotted time.
 
 
 % ----------------------------------------------------------------------------
@@ -265,18 +273,27 @@ We could also build on the proof technique used in \cite{WeiSrivastava18Abruptly
 A promising direction is to directly try to join our contributions from Chapter~\ref{chapter:5} and~\ref{chapter:6}, and propose an efficient algorithm using three parts:
 \klUCB{} indexes for arm selection,
 \MCTopM{} for orthogonalization (\ie, dealing with collisions),
-and \GLRklUCB{} for non-stationarity (\ie, dealing with abrupt changes).
+and the Bernoulli GLR break-point detector for non-stationarity (\ie, dealing with abrupt changes).
+The three parts should be connected, the same way we built \GLRklUCB{} by connecting both components.
+We propose the idea of incorporating the detected change-points by B-\GLR{} test in the orthogonalization procedure: after any change-point is detected, the player is not sitting anymore.
+Analyzing this strategy is left as a future work.
 
+% \TODOL{Explain that we think the following approach can work very efficiently:
 
-\TODOL{Explain that we think the following approach can work very efficiently:
-
-    - Combine \MCTopM{} with \GLRklUCB{} instead of \klUCB,
-    - and incorporate also the detected change-points by B-\GLR{} test in the orthogonalization procedure: after any change-point, the player is not sitting anymore.
-    - Modification: only a change-point on the arm on which player is sitting can make him move? It's already the case: the \GLR{} test can only detect change-point on an arm that was played, and the \MCTopM{} orthogonalization procedure forces to play the same arm as long as the player is sitting.
-}
+%     - Combine \MCTopM{} with \GLRklUCB{} instead of \klUCB,
+%     - and incorporate also the detected change-points by B-\GLR{} test in the orthogonalization procedure: after any change-point, the player is not sitting anymore.
+%     - Modification: only a change-point on the arm on which player is sitting can make him move? It's already the case: the \GLR{} test can only detect change-point on an arm that was played, and the \MCTopM{} orthogonalization procedure forces to play the same arm as long as the player is sitting.
+% }
 
 % ----------------------------------------------------------------------------
 \paragraph{Other directions of future works.}
+
+Another very interesting direction of research is to propose a unique ``unified'' algorithm that can be used in all the different settings studied in this thesis, and automatically adapt to the setting at hand.
+For instance, even if \GLRklUCB{} is very efficient for piece-wise stationary problems, its forced exploration makes it sub-optimal for stationary problems.
+Another example is for multi-players bandits, where \MCTopM-\klUCB{} performs sub-optimally on piece-wise stationary problems.
+% if we consider the proposed extension of \MCTopM-\klUCB{} that estimates the number $M$ of players, i
+One approach to obtain a unified ``master'' algorithm could be to use expert aggregation on the different state-of-the-art algorithms presented in this thesis, and as each one is efficient in a different setting, the resulting aggregated algorithm could also be efficient in each of the different settings.
+But as we illustrated in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}, this approach does not seem theoretically promising.
 
 \TODOL{On doit encore en écrire un peu ?}
 
