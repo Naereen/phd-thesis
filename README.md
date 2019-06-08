@@ -1,13 +1,17 @@
 # "My PhD thesis"
-This repository contains the LaTeX code of my PhD thesis, written by [Lilian Besson](https://perso.crans.org/besson/), entitled "TODO".
+## « Applications of single- and multi-players multi-armed bandits algorithms for Internet of Things networks »
+This repository contains the LaTeX code of my PhD thesis, written by [Lilian Besson](https://perso.crans.org/besson/), entitled "Applications of single- and multi-players multi-armed bandits algorithms for Internet of Things networks".
 
-I started to think about the outline in January 2019, I started to play with the template end of January, and to seriously write middle of February 2019.
-I expect to finish in May 2019.
+## Calendar
+- I started to think about the outline in January 2019, I started to play with the template end of January, and to seriously write middle of February 2019.
+- I expect to finish in July 2019.
 
-Thanks to my advisors [Emilie Kaufmann](http://chercheurs.lille.inria.fr/ekaufman/research.html) and [Christophe Moy](https://moychristophe.wordpress.com/).
-Thanks to the reviewers [? ?]() and [? ?]().
+## Advisors, reviewers, jury
+- Thanks to my advisors: [Christophe Moy](https://moychristophe.wordpress.com/) and [Émilie Kaufmann](http://chercheurs.lille.inria.fr/ekaufman/research.html).
+- Thanks to the reviewers: [? ?]() and [? ?]().
+- Thanks to the dear member of my jury reviewers: [? ?](), [? ?]() and [? ?]().
 
-## Documents
+## Links
 TODO
 
 - PDF : [PhD_thesis__Lilian_Besson.pdf](https://perso.crans.org/besson/phd/articles/PhD_thesis__Lilian_Besson.pdf)
@@ -34,8 +38,14 @@ $ cd phd-thesis/
 ```bash
 $ make pdf
 ```
-- It should produce the file [`PhD_thesis__Lilian_Besson.pdf`](https://perso.crans.org/besson/phd/articles/PhD_thesis__Lilian_Besson.pdf).
+- It should produce the file [`PhD_thesis__Lilian_Besson.pdf`](https://perso.crans.org/besson/phd/articles/PhD_thesis__Lilian_Besson.pdf) (PDF/X for online version).
 - It was only tested on a GNU/Linux machine, under XUbuntu 18.04.
+
+### How to compile to get a printable version?
+- In `PhD_thesis__Lilian_Besson.tex`, add the `print` option to the `\documentclass{0-Misc/PhDThesisPSnPDF}` line.
+
+### How to compile to get an archivable version?
+- FIXME
 
 ----
 

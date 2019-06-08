@@ -307,10 +307,10 @@ We introduce additional notations in the following definition.
 %
 \begin{definition}\label{def:5:nbSelections_nbCollisions}
 \begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
-  % [$T_k(T)$ and $\cC_k(T)$]
+  % [$N_k(T)$ and $\cC_k(T)$]
   % \label{def:5:nbSelections}
-  Let $T^j_k(T) \eqdef \sum_{t=1}^T \indic(A^j(t) = k)$,
-  and denote $T_k(T) \eqdef \sum_{j=1}^M T^j_k(T)$ the \emph{number of selections} of arm $k\in[K]$ by any player $j\in[M]$, up to time $T$.
+  Let $N_k^j(T) \eqdef \sum_{t=1}^T \indic(A^j(t) = k)$,
+  and denote $N_k(T) \eqdef \sum_{j=1}^M N_k^j(T)$ the \emph{number of selections} of arm $k\in[K]$ by any player $j\in[M]$, up to time $T$.
   % and $\cC_k(T)$ be the number of collisions on arm $k$ up-to time $T$.
 % \end{definition}
 
@@ -336,9 +336,9 @@ be the set of bandit instances such that there is a strict gap between the $M$ b
   % \begin{small}
     \begin{align}\label{eq:5:termeundeuxtermetrois}
       R_T(\boldsymbol{\mu}, M, \cA) &=
-      \underbrace{\sum_{k \in \Mworst} (\mu_M^* -  \mu_k) \E_{\mu}[T_k(T)]}_{\emph{\mytag{(a)}{eq:5:term1}}} \\
+      \underbrace{\sum_{k \in \Mworst} (\mu_M^* -  \mu_k) \E_{\mu}[N_k(T)]}_{\emph{\mytag{(a)}{eq:5:term1}}} \\
       & \;\;\;\;\;\;
-      + \;\; \underbrace{\sum_{k \in \Mbest} (\mu_k -  \mu_M^*) (T - \E_{\mu}[T_k(T)])}_{\emph{\mytag{(b)}{eq:5:term2}}}
+      + \;\; \underbrace{\sum_{k \in \Mbest} (\mu_k -  \mu_M^*) (T - \E_{\mu}[N_k(T)])}_{\emph{\mytag{(b)}{eq:5:term2}}}
       + \;\; \underbrace{\sum_{k=1}^{K} \mu_k \E_{\mu}[\cC_k(T)]}_{\emph{\mytag{(c)}{eq:5:term3}}}. \nonumber
     \end{align}
   % \end{small}
@@ -348,37 +348,37 @@ be the set of bandit instances such that there is a strict gap between the $M$ b
 In this decomposition, term \ref{eq:5:term1} counts the lost rewards due to \emph{sub-optimal arms} selections ($k \in \Mworst$), term \ref{eq:5:term2} counts the number of times the \emph{best arms} were \emph{not} selected ($k \in \Mbest$), and term \ref{eq:5:term3} counts the weighted number of collisions, on \emph{all arms}.
 
 \begin{smallproof}
-  Using the definition of regret $R_T$ from \eqref{eq:5:regret}, and this collision indicator $\eta^j(t) \eqdef \indic(\overline{C^j(t)})$,
+  Using the definition of regret $R_T(\boldsymbol{\mu}, M, \cA)$ from \eqref{eq:5:regret}, denoted here $R_T$, and this collision indicator $\eta^j(t) \eqdef \indic(\overline{C^j(t)})$,
   \begin{align*}
-    R(T)
+    R_T
     &= \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M Y_{A^j(t),t} \eta^j(t) \right]
      = \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M \mu_{A^j(t)} \eta^j(t)\right]
     \intertext{The last equality comes from the linearity of expectations, and the fact that $\E_{\mu}[Y_{k,t}] = \mu_k$ (for all $t$, from the \iid{} hypothesis), and the independence from $A^j(t)$, $\eta^j(t)$ and $Y_{k,t}$ (observed \emph{after} playing $A^j(t)$). So $\E_{\mu}[Y_{A^j(t),t} \eta^j(t)] = \sum_{k} \E_{\mu}[\mu_k \indic(A^j(t),t) \eta^j(t)] = \E_{\mu}[\mu_{A^j(t)} \eta^j(t)]$. And so}
-    R(T)
+    R_T
     &= \E_{\mu}\left[ \sum_{t=1}^{T}\sum_{j \in \Mbest} \mu_j
       - \sum_{t=1}^{T} \sum_{j=1}^{M} \mu_{A^j(t)} \eta^j(t) \right] \\
       % &= \underbrace{\left( \frac{1}{M} \sum_{j \in \Mbest} \mu_j \right)}_{ \eqdef \overline{\mu}^*} (T M)
     &= \left( \frac{1}{M} \sum_{j \in \Mbest} \mu_j \right)
-      - \sum_{k=1}^{K} \sum_{j=1}^{M} \mu_k \E_{\mu}\left[ T^j_k(T) \right]
+      - \sum_{k=1}^{K} \sum_{j=1}^{M} \mu_k \E_{\mu}\left[ N_k^j(T) \right]
       + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
     %
-    \intertext{For the first term, we have $T M = \sum\limits_{k=1}^{K} \sum\limits_{j=1}^{M} \E_{\mu}\left[ T^j_k(T)\right]$, and if we denote $\overline{\mu}^* \eqdef \frac{1}{M} \sum\limits_{j \in \Mbest} \mu_j$ the average mean of the $M$-best arms, then,}
+    \intertext{For the first term, we have $T M = \sum\limits_{k=1}^{K} \sum\limits_{j=1}^{M} \E_{\mu}\left[ N_k^j(T)\right]$, and if we denote $\overline{\mu}^* \eqdef \frac{1}{M} \sum\limits_{j \in \Mbest} \mu_j$ the average mean of the $M$-best arms, then,}
     %
-    &= \sum_{k=1}^{K} \sum_{j=1}^{M} (\overline{\mu}^* - \mu_k) \E_{\mu}\left[ T^j_k(T) \right]
+    &= \sum_{k=1}^{K} \sum_{j=1}^{M} (\overline{\mu}^* - \mu_k) \E_{\mu}\left[ N_k^j(T) \right]
       + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
     %
     \intertext{Let $\overline{\Delta_k} \eqdef \overline{\mu}^* - \mu_k$ be the gap between the mean of the arm $k$ and the $M$-best average mean, and if $M^*$ denotes the index of the worst of the $M$-best arms (\ie, $M^* = \arg\min_{k\in\Mbest}(\mu_k)$), then by splitting $[K]$ into three disjoint sets $\Mbest \cupdot \Mworst = (\Mbest\setminus\{M^*\}) \cupdot \{M^*\} \cupdot \Mworst$, we get}
     %
-    &= \sum_{k \in \Mbest\setminus\{M\}} \overline{\Delta_k} \E_{\mu}\left[ T_k(T) \right]
-      + \overline{\Delta_{M^*}} \E_{\mu}\left[ T_{M^*}(T) \right] \\
-      &\;\;\;\;\;\;\;\; + \sum_{k \in \Mworst} \overline{\Delta_k} \E_{\mu}\left[ T_k(T) \right]
+    &= \sum_{k \in \Mbest\setminus\{M\}} \overline{\Delta_k} \E_{\mu}\left[ N_k(T) \right]
+      + \overline{\Delta_{M^*}} \E_{\mu}\left[ N_{M^*}(T) \right] \\
+      &\;\;\;\;\;\;\;\; + \sum_{k \in \Mworst} \overline{\Delta_k} \E_{\mu}\left[ N_k(T) \right]
       + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
     %
-    \intertext{But for $k = M^*$, $T_{M^*}(T) = T M^* - \sum\limits_{k \in \Mbest\setminus\{M\}} \E_{\mu}\left[ T_k(T) \right] - \sum\limits_{k \in \Mworst} \E_{\mu}\left[ T_k(T) \right]$, so by recombining the terms, we obtain,}
+    \intertext{But for $k = M^*$, $N_{M^*}(T) = T M^* - \sum\limits_{k \in \Mbest\setminus\{M\}} \E_{\mu}\left[ N_k(T) \right] - \sum\limits_{k \in \Mworst} \E_{\mu}\left[ N_k(T) \right]$, so by recombining the terms, we obtain,}
     %
-    &= \sum_{k \in \Mbest\setminus\{M\}} (\overline{\Delta_k} - \overline{\Delta_{M^*}}) \E_{\mu}\left[ T_k(T) \right]
+    &= \sum_{k \in \Mbest\setminus\{M\}} (\overline{\Delta_k} - \overline{\Delta_{M^*}}) \E_{\mu}\left[ N_k(T) \right]
       + \overline{\Delta_{M^*}} T M^* \\
-      &\;\;\;\;\;\;\;\; + \sum_{k \in \Mworst} (\overline{\Delta_k} - \overline{\Delta_{M^*}}) \E_{\mu}\left[ T_k(T) \right]
+      &\;\;\;\;\;\;\;\; + \sum_{k \in \Mworst} (\overline{\Delta_k} - \overline{\Delta_{M^*}}) \E_{\mu}\left[ N_k(T) \right]
       + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
   \end{align*}
   %
@@ -386,17 +386,17 @@ In this decomposition, term \ref{eq:5:term1} counts the lost rewards due to \emp
   %
   % \vspace*{5pt}
   \begin{align*}
-    R(T)
-    &= \sum_{k \in \Mbest} (\mu_{M^*} - \mu_k) \E_{\mu}\left[ T_k(T) \right]
+    R_T
+    &= \sum_{k \in \Mbest} (\mu_{M^*} - \mu_k) \E_{\mu}\left[ N_k(T) \right]
       + \sum_{k \in \Mbest} (\mu_k - \mu_{M^*}) T \\
-      &\;\;\;\;\;\;\;\; + \sum_{k \in \Mworst} (\mu_{M^*} - \mu_k) \E_{\mu}\left[ T_k(T) \right]
+      &\;\;\;\;\;\;\;\; + \sum_{k \in \Mworst} (\mu_{M^*} - \mu_k) \E_{\mu}\left[ N_k(T) \right]
       + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right]
   \end{align*}
   And so we obtain the decomposition with three terms \ref{eq:5:term1}, \ref{eq:5:term2} and \ref{eq:5:term3}.
   \begin{align*}
-  R(T)
-    & = \sum_{k \in \Mbest} (\mu_k - \mu_{M^*}) \left(T - \E_{\mu}\left[ T_k(T) \right]\right) \\
-      & \;\; + \sum_{k \in \Mworst} (\mu_{M^*} - \mu_k) \E_{\mu}\left[ T_k(T) \right]
+  R_T
+    & = \sum_{k \in \Mbest} (\mu_k - \mu_{M^*}) \left(T - \E_{\mu}\left[ N_k(T) \right]\right) \\
+      & \;\; + \sum_{k \in \Mworst} (\mu_{M^*} - \mu_k) \E_{\mu}\left[ N_k(T) \right]
       + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
   \end{align*}
   Which is exactly the decomposition we wanted to prove.
@@ -404,7 +404,7 @@ In this decomposition, term \ref{eq:5:term1} counts the lost rewards due to \emp
 
 
 The regret decomposition in Lemma~\ref{lem:5:DecompositionRegret} is valid for both centralized and decentralized algorithms.
-For centralized algorithms, due to the absence of collisions, \ref{eq:5:term3} is obviously zero, and \ref{eq:5:term2} is non-negative, as $T_k(T) \leq T$. For decentralized algorithms, \ref{eq:5:term3} may be significantly large, and term \ref{eq:5:term2} may be negative, as many collisions on arm $k$ may lead to $T_k(T) > T$ (which is counter intuitive with such notations).
+For centralized algorithms, due to the absence of collisions, \ref{eq:5:term3} is obviously zero, and \ref{eq:5:term2} is non-negative, as $N_k(T) \leq T$. For decentralized algorithms, \ref{eq:5:term3} may be significantly large, and term \ref{eq:5:term2} may be negative, as many collisions on arm $k$ may lead to $N_k(T) > T$ (which is counter intuitive with such notations).
 However, a careful manipulation of this decomposition shows that the regret is always lower bounded by term \ref{eq:5:term1}.
 The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized____env6} in Appendix illustrate two cases of $M<K$ and $M=K$ and the different impact of the three terms (\ref{eq:5:term1}, \ref{eq:5:term2} and \ref{eq:5:term3}) on the regret.
 
@@ -412,38 +412,38 @@ The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized___
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
     For any strategy $\cA$ and $\boldsymbol{\mu}\in\cP_M$, it holds that
     \begin{align*}
-        R_T(\boldsymbol{\mu}, M, \cA)    \geq \sum\limits_{k \in \Mworst} (\mu_M^*- \mu_k) \E_{\mu}[T_k(T)].
+        R_T(\boldsymbol{\mu}, M, \cA)    \geq \sum\limits_{k \in \Mworst} (\mu_M^*- \mu_k) \E_{\mu}[N_k(T)].
     \end{align*}
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
 \begin{smallproof}
   Note that term \ref{eq:5:term3} is clearly lower bounded by $0$
-  but it is not obvious for \ref{eq:5:term2} as there is no reason for $T_k(T)$ to be upper bounded by $T$.
+  but it is not obvious for \ref{eq:5:term2} as there is no reason for $N_k(T)$ to be upper bounded by $T$.
   %
-  Let $T_k^{!}(T) \eqdef \sum_{t=1}^{T} \indic(\exists! j, A^j(t)=k)$,
+  Let $N_k^{!}(T) \eqdef \sum_{t=1}^{T} \indic(\exists! j, A^j(t)=k)$,
   where the notation $\exists!$ stands for ``there exists a unique''.
-  Then $T_k(T) = \sum_{t=1}^{T} \sum_{j=1}^{M} \indic(A^j(t) = k)$ can be decomposed as
+  Then $N_k(T) = \sum_{t=1}^{T} \sum_{j=1}^{M} \indic(A^j(t) = k)$ can be decomposed as
   \begin{equation*}
-    T_k(T) = \sum_{t=1}^{T} \indic(\exists! j, A^j(t) = k) + \sum_{t=1}^{T} \sum_{j=1}^{M} c_{k,t} \indic(A^j(t) = k)
-    = T_k^{!}(T) + C_k(T).
+    N_k(T) = \sum_{t=1}^{T} \indic(\exists! j, A^j(t) = k) + \sum_{t=1}^{T} \sum_{j=1}^{M} c_{k,t} \indic(A^j(t) = k)
+    = N_k^{!}(T) + C_k(T).
   \end{equation*}
   By focusing on the two terms $\ref{eq:5:term2} + \ref{eq:5:term3}$ from the decomposition of $R_T(\boldsymbol{\mu}, M, \cA)$ from Lemma~\ref{lem:5:DecompositionRegret}, we have
   \begin{align*}
     \ref{eq:5:term2} + \ref{eq:5:term3} &=
-    \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[T_k^!(T)])
+    \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[N_k^!(T)])
     + \sum_{k \in \Mbest} \mu_M^* \E_{\mu}[C_k(T)] \\
     & \;\;\;\;\;\; + \sum_{k=1}^{M} \mu_k \E_{\mu}[C_k(T)]
     - \sum_{k \in \Mbest} \mu_k \E_{\mu}[C_k(T)] \\
     &=
-    \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[T_k^!(T)])
+    \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[N_k^!(T)])
     + \sum_{k \in \Mbest} \mu_M^* \E_{\mu}[C_k(T)]
     + \sum_{k \in \Mworst} \mu_k \E_{\mu}[C_k(T)] \\
     &=
-    \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[T_k^!(T)])
+    \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[N_k^!(T)])
     + \sum_{k=1}^{M} \min(\mu_M^*, \mu_k) \E_{\mu}[C_k(T)].
   \end{align*}
-  And now both terms are non-negative, as $T_k^!(T) \leq T$, $\min(\mu_M^*, \mu_k)\geq 0$, and $C_k(T) \geq 0$, so $\ref{eq:5:term2} + \ref{eq:5:term3} \geq 0$
+  And now both terms are non-negative, as $N_k^!(T) \leq T$, $\min(\mu_M^*, \mu_k)\geq 0$, and $C_k(T) \geq 0$, so $\ref{eq:5:term2} + \ref{eq:5:term3} \geq 0$
   which proves that $R_T(\boldsymbol{\mu}, M, \cA) \geq \ref{eq:5:term1}$, as wanted.
 \end{smallproof}
 
@@ -471,7 +471,7 @@ a classical assumption made by \cite{LaiRobbins85} in single-player bandit model
     \forall j \in [M], k \in \Mbest, \;\;
     % a_{j,k}
     \frac{T}{M}
-    - \E_{\mu}[T^j_k(T)] \mathop{=}\limits_{T \to +\infty} o(T^{\alpha}).
+    - \E_{\mu}[N_k^j(T)] \mathop{=}\limits_{T \to +\infty} o(T^{\alpha}).
     \label{eq:5:SUE}
   \end{align}
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
@@ -483,15 +483,15 @@ is a natural assumption,
 that rules out algorithms tuned to perform well on specific instances only (\eg, fixed-armed algorithms).
 %
 From this assumption $\left(R_T(\boldsymbol{\mu},M,\cA)=o(T^\alpha)\right)$ and the decomposition of Lemma~\ref{lem:5:DecompositionRegret} one can see\footnote{With some arguments used in the proof of Lemma~\ref{lem:5:1stLowerBound} to circumvent the fact that \ref{eq:5:term2} may be negative.} that for every $k \in \Mbest$,
-${T}- \E_{\mu}[T_k(T)] {=} o(T^{\alpha})$, and so
+${T}- \E_{\mu}[N_k(T)] {=} o(T^{\alpha})$, and so
 \begin{equation}\label{eq:5:intermediate}
   % \vspace*{-5pt}  % XXX
-  \sum_{j =1}^M\left(\frac{T}{M} - \E_{\mu}[T^j_k(T)]\right) = o(T^{\alpha}).
+  \sum_{j =1}^M\left(\frac{T}{M} - \E_{\mu}[N_k^j(T)]\right) = o(T^{\alpha}).
   % \vspace*{-5pt}  % XXX
 \end{equation}
 
 The additional assumption in \eqref{eq:5:SUE} further implies some notion of \emph{fairness}, as it suggests that each of the $M$ players spends on average the same amount of time on each of the $M$ best arms. Note that this assumption is satisfied by any strategy that is invariant under every permutation of the players, \ie, for which the distribution of the observations under $\cA_{\sigma} = (\cA_{\sigma(1)},\dots,\cA_{\sigma(M)})$ is independent from the choice of permutation $\sigma \in \Sigma_M$ of the set $\{1,\dots,M\}$.
-In that case, it holds that  $\E_{\mu}[T_k^j(T)]=\E_{\mu}[T_k^{j'}(T)]$ for every arm $k$ and $(j,j') \in [M]$, hence \eqref{eq:5:SUE} and \eqref{eq:5:intermediate} are equivalent, and strong uniform efficiency is equivalent to standard uniform efficiency.
+In that case, it holds that  $\E_{\mu}[N_k^j(T)]=\E_{\mu}[N_k^{j'}(T)]$ for every arm $k$ and $(j,j') \in [M]$, hence \eqref{eq:5:SUE} and \eqref{eq:5:intermediate} are equivalent, and strong uniform efficiency is equivalent to standard uniform efficiency.
 Note that the algorithms studied in Section~\ref{sec:5:algorithms} are permutation invariant, and \MCTopM-\klUCB{} is thus an example of strongly uniformly efficient algorithm, as we prove in Section~\ref{sec:5:upperbounds} that its regret is logarithmic on every instance $\mu \in \cP_M$.
 
 % As we state it here, the constraint on fairness is new, and it was not studied as such in previous works.
@@ -532,7 +532,7 @@ and it also yields an asymptotic logarithmic lower bound on the regret.
   Furthermore, if $\cA_j$ satisfies $\cI_{\bm{\mu},\bm{\lambda}}(\cA_j,T) = \smallO{\log(T)}$, then
   % \vspace*{-10pt}  % XXX
   \begin{equation}\label{eq:5:LBDraws}
-    \forall j \in [M], \ \forall k \in \Mworst, \ \ \ \liminf_{T\to \infty} \frac{\E_{\mu}[T_k^j(T)]}{\log(T)} \geq \frac{1}{\kl(\mu_k, \mu_M^*)}.
+    \forall j \in [M], \ \forall k \in \Mworst, \ \ \ \liminf_{T\to \infty} \frac{\E_{\mu}[N_k^j(T)]}{\log(T)} \geq \frac{1}{\kl(\mu_k, \mu_M^*)}.
   \end{equation}
 
   % \vspace{-0.3cm}  % XXX
@@ -555,7 +555,7 @@ given by \cite{Zhao10}, that states that
 as for every $k \in \Mworst$ and $j \in [M]$, $\kl(\mu_k, \mu_j^*) \geq \kl(\mu_k, \mu_M^*)$
 (see Figure~\ref{fig:5:CompLowerBounds} in Appendix~\ref{app:5:illustrationLowerBound}).
 %
-It is worth mentioning that \cite{Zhao10} considered the more general assumption for $\cA$ that there exists some numbers $(a_{k}^j)$ such that $a_{k}^j T - \E_{\mu}[T_k^j(T)] = o(T^\alpha)$ whereas in Definition~\ref{def:5:DecentralizedUniformEfficiency} we make the choice $a_{k}^j = 1/M$.
+It is worth mentioning that \cite{Zhao10} considered the more general assumption for $\cA$ that there exists some numbers $(a_{k}^j)$ such that $a_{k}^j T - \E_{\mu}[N_k^j(T)] = o(T^\alpha)$ whereas in Definition~\ref{def:5:DecentralizedUniformEfficiency} we make the choice $a_{k}^j = 1/M$.
 Our result could be extended to this case, but we chose to keep the notation simple and focus on \emph{fair allocation} of the optimal arms between players.
 
 
@@ -587,7 +587,7 @@ The following result shows that term \ref{eq:5:term2} can be related to the numb
   % (Proved in Appendix~\ref{proof:5:1stUpperBound})
   %
   \begin{equation}\label{eq:5:1stUpperBound}
-    \ref{eq:5:term2} \leq (\mu_1^* - \mu_M^*) \Bigl(    \sum_{k \in \Mworst} \E_{\mu}[T_k(T)]
+    \ref{eq:5:term2} \leq (\mu_1^* - \mu_M^*) \Bigl(    \sum_{k \in \Mworst} \E_{\mu}[N_k(T)]
     + \sum_{k \in \Mbest} \E_{\mu}[C_{k}(T)]
     \Bigr).
   \end{equation}
@@ -597,28 +597,28 @@ The following result shows that term \ref{eq:5:term2} can be related to the numb
 
 \begin{smallproof}
   Recall that we want to upper bound
-  $ \ref{eq:5:term2} : = \sum_{k \in \Mbest} (\mu_k - \mu_{M*}) \left(T - \E_{\mu}[T_k(T)]\right)$.
+  $ \ref{eq:5:term2} : = \sum_{k \in \Mbest} (\mu_k - \mu_{M*}) \left(T - \E_{\mu}[N_k(T)]\right)$.
   First, we observe that, for all $k\in \Mbest$,
   \begin{eqnarray*}
-    T - \E_{\mu}[T_k(T)] & \leq T - \E_{\mu}\left[\sum_{t=1}^T \indic(\exists j : A^j(t) = k)\right] \\
+    T - \E_{\mu}[N_k(T)] & \leq T - \E_{\mu}\left[\sum_{t=1}^T \indic(\exists j : A^j(t) = k)\right] \\
     & = \E_{\mu}\left[\sum_{t=1}^T \indic(\forall j, A_j(t) \neq k)\right] = \E_{\mu}\left[\sum_{t=1}^T \indic(k \notin \widehat{S}_t)\right],
   \end{eqnarray*}
   where we denote by $\widehat{S}_t = \{A^j(t), j \in [M]\}$ the set of selected arms at time $t$ (with no repetition). With this notation one can write
   \begin{eqnarray*}
-  \ref{eq:5:term2} & \leq & (\mu_1 - \mu_{M^*})  \sum_{k \in \Mbest} \left(T - \E_{\mu}[T_k(T)]\right) \leq  (\mu_1 - \mu_{M^*})  \E_{\mu}\left[\sum_{k \in \Mbest} \sum_{t = 1}^T \indic(k \notin \widehat{S}_t)\right] \\
+  \ref{eq:5:term2} & \leq & (\mu_1 - \mu_{M^*})  \sum_{k \in \Mbest} \left(T - \E_{\mu}[N_k(T)]\right) \leq  (\mu_1 - \mu_{M^*})  \E_{\mu}\left[\sum_{k \in \Mbest} \sum_{t = 1}^T \indic(k \notin \widehat{S}_t)\right] \\
   & = &  (\mu_1 - \mu_{M^*})  \E_{\mu}\left[ \sum_{t = 1}^T \sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t)\right].
   \end{eqnarray*}
   The quantity $\sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t)$ counts the number of optimal arms that have not been selected at time $t$. For each mis-selection of an optimal arm, there either exists a sub-optimal arm that has been selected, or an arm in $\Mbest$ on which a collision occurs. Hence
   \[\sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t) = \sum_{k \in \Mbest}\indic(C_k(t)) + \sum_{k \in \Mworst} \indic(\exists j : A^j(t) = k),\]
   which yields
-  \[\E_{\mu}\left[ \sum_{t = 1}^T \sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t)\right] \leq \sum_{k \in \Mbest}\E_{\mu}\left[\cC_k(T)\right] + \sum_{k \in \Mworst} \E_{\mu}\left[T_k(T)\right]\]
+  \[\E_{\mu}\left[ \sum_{t = 1}^T \sum_{k \in \Mbest}\indic(k \notin \widehat{S}_t)\right] \leq \sum_{k \in \Mbest}\E_{\mu}\left[\cC_k(T)\right] + \sum_{k \in \Mworst} \E_{\mu}\left[N_k(T)\right]\]
   and Lemma~\ref{lem:5:1stUpperBound} follows.
 \end{smallproof}
 
 
 This result can also be used to recover Proposition~1 from \cite{Anandkumar11}, giving an upper bound on the regret that only depends on
-the \emph{expected number of sub-optimal selections} -- $\E_{\mu}[T_k(T)]$ for $k \in \Mworst$ --
-and the \emph{expected number of colliding players on the optimal arms} -- $\E_{\mu}[\cC_k(T)]$ for $k \in \Mbest$. Note that, in term (c) the number of colliding players on the sub-optimal arm $k$ may be upper bounded as $\E_{\mu}[\cC_k(T)] \leq M \E_{\mu}[T_k(T)]$.
+the \emph{expected number of sub-optimal selections} -- $\E_{\mu}[N_k(T)]$ for $k \in \Mworst$ --
+and the \emph{expected number of colliding players on the optimal arms} -- $\E_{\mu}[\cC_k(T)]$ for $k \in \Mbest$. Note that, in term (c) the number of colliding players on the sub-optimal arm $k$ may be upper bounded as $\E_{\mu}[\cC_k(T)] \leq M \E_{\mu}[N_k(T)]$.
 %
 
 In the next section, we present an algorithm that has a logarithmic regret,
@@ -650,16 +650,16 @@ Under observation model \modeltrois{} no sensing information is available and th
 % \vspace*{-5pt}
 \begin{equation}
   \widetilde{S_k}^j(t) \eqdef \sum_{t=1}^T r^j(t) \indic(A^j(t) = k)
-  \ \ \ \text{and letting} \ \ \ \widetilde{\mu_k}^j(t) \eqdef \widetilde{S_k}^j(t) \;/\; T_k^j(t).
+  \ \ \ \text{and letting} \ \ \ \widetilde{\mu_k}^j(t) \eqdef \widetilde{S_k}^j(t) \;/\; N_k^j(t).
 \end{equation}
 
 Note that $\widetilde{\mu_k}^j(t)$ is no longer meant to be an unbiased estimate of $\mu_k$ as it also takes into account the collision information, that is present in the reward. Based on this empirical reward, one can similarly defined modified indices as
 %
 \begin{equation}\label{eq:5:indexTilde}
   \widetilde{U_k}^j(t) \eqdef \begin{cases}
-      \widetilde{\mu_k}^j(t)  + \sqrt{  f(t) / (2T_k^j(t))}
+      \widetilde{\mu_k}^j(t)  + \sqrt{  f(t) / (2N_k^j(t))}
       &\text{for } \UCB, \\
-      \sup\left\{ q \in [0, 1]: T_k^j(t)\times \kl(\widetilde{\mu_k}^j(t), q) \leq f(t) \right\}
+      \sup\left\{ q \in [0, 1]: N_k^j(t)\times \kl(\widetilde{\mu_k}^j(t), q) \leq f(t) \right\}
       &\text{for } \klUCB.
   \end{cases}
 \end{equation}
@@ -719,12 +719,12 @@ and \klUCB{} \citep{KLUCBJournal}.
 For player $j\in[M]$
 %
 denote $S_k^j(t) \eqdef \sum_{s=1}^t Y_{k,s} \indic(A^j(t) = k)$ the current sum of rewards obtained for arm $k$,
-then $\widehat{\mu}_k^j(t) \eqdef S_k^j(t)/T_k^j(t)$ (if $T_k^j(t)\neq 0$) is the empirical mean of arm $k$, and thus one can define the index
+then $\widehat{\mu}_k^j(t) \eqdef S_k^j(t)/N_k^j(t)$ (if $N_k^j(t)\neq 0$) is the empirical mean of arm $k$, and thus one can define the index
 \begin{equation}\label{eq:5:indexFor_UCB_klUCB}
   U_k^j(t) \eqdef \begin{cases}
-      \widehat{\mu}_k^j(t)  + \sqrt{  f(t) / (2T_k^j(t))}
+      \widehat{\mu}_k^j(t)  + \sqrt{  f(t) / (2N_k^j(t))}
       &\text{for } \UCB, \\
-      \sup\left\{ q \in [0, 1]: T_k^j(t)\times \kl(\widehat{\mu}_k^j(t), q) \leq f(t) \right\}
+      \sup\left\{ q \in [0, 1]: N_k^j(t)\times \kl(\widehat{\mu}_k^j(t), q) \leq f(t) \right\}
       &\text{for } \klUCB,
   \end{cases}
 \end{equation}
@@ -971,7 +971,7 @@ Explicit expressions for $C_{\boldsymbol{\mu}}$, $D_{\boldsymbol{\mu}}$ can be f
   % \hfill{}
   % (Proved in Appendix~\ref{proof:5:SubOptimalSelections})
   \begin{equation}\label{eq:5:SubOptimalSelections}
-      \E_{\mu}[T_k^j(T)] \leq
+      \E_{\mu}[N_k^j(T)] \leq
       \frac{\log(T)}{\kl(\mu_k,\mu_{M}^*)}
       + \underbrace{C_{\boldsymbol{\mu}} \sqrt{\log(T)} + D_{\boldsymbol{\mu}}\log(\log(T)) + 3M + 1}_{= \smallO{\log(T)}}.
   \end{equation}
@@ -995,7 +995,7 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
 
   Thanks to \eqref{eq:5:KeyInclusion} and if $\Pr_{\bm{\mu}} $ denote here the probability under model $\bm{\mu}$, it is easy to decompose the number of selections of arm $k$ by user $j$ up to round $T$ as
   \begin{align*}
-  \E_{\mu}[T_k^j(T)]
+  \E_{\mu}[N_k^j(T)]
   &= \E_{\mu}\left[ \sum_{t=1}^T \mathbbm{1}\left( A^j(t) = k \right) \right]
   = \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k \right).\\
   %&= \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\;\; \exists m \in\Mbest,\; U_m(t) < U_k(t) \right) \\
@@ -1005,13 +1005,13 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
 
   Considering the relative position of the upper-confidence bound $U_{m^*}^j(t)$ and the corresponding mean $\mu_m^* = \mu_{m^*}$, one can write the decomposition
   \begin{align*}
-    \E_{\mu}[T_k^j(T)] &\leq
+    \E_{\mu}[N_k^j(T)] &\leq
     \sum_{t=1}^T\Pr_{\bm{\mu}} \left( \exists m_1 \in [M]: \; U_{m_1^*}(t) < \mu_m^* \right) + \\
     \;\;\;\;
     \sum_{t=1}^T\Pr_{\bm{\mu}} & \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; U_{m_2^*}(t) \leq U_k(t) , \forall {m_3} \in [M]: \;  U_{{m_3}^*}(t) \geq \mu_{m_3}^* \right)
   \end{align*}
   \begin{align}
-    \E_{\mu}[T_k^j(T)] &\leq \sum_{m_1=1}^M\sum_{t=1}^T\Pr_{\bm{\mu}} \left(U_{m_1^*}(t) < \mu_{m_1}^* \right) + \sum_{t=1}^T\Pr_{\bm{\mu}} \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; \mu_{m_2}^* \leq U_k(t)\right) \notag \\
+    \E_{\mu}[N_k^j(T)] &\leq \sum_{m_1=1}^M\sum_{t=1}^T\Pr_{\bm{\mu}} \left(U_{m_1^*}(t) < \mu_{m_1}^* \right) + \sum_{t=1}^T\Pr_{\bm{\mu}} \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; \mu_{m_2}^* \leq U_k(t)\right) \notag \\
     %
     & \leq \sum_{m_1=1}^M \sum_{t=1}^T \Pr_{\bm{\mu}} \left( U_{m_1^*}(t) < \mu_{m_1}^* \right)
     + \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\; \mu_{M^*} \leq U_k(t) \right)
@@ -1048,7 +1048,7 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
 
   Putting things together, one obtains the non-asymptotic upper bound
   \begin{align}\label{eq:5:UBprecise}
-    \E_{\mu}\left[T_k^j(T)\right]
+    \E_{\mu}\left[N_k^j(T)\right]
     & \leq \frac{\log(T) + 3 \log(\log(T))}{\kl(\mu_k,\mu_{M^*})} + \sqrt{2\pi} \sqrt{\frac{\kl'(\mu_k,\mu_{M^*})^2}{\kl(\mu_k,\mu_{M*})^3}}\sqrt{\log(T) + 3\log(\log(T))}  \nonumber\\
     & \;\;\;\;\;\;+ 2\left(\frac{\kl'(\mu_k,\mu_{M^*})}{\kl(\mu_k,\mu_{M^*})}\right)^2 + 4Me \log(\log(T)) + 3M+1,
   \end{align}
@@ -1104,11 +1104,11 @@ happen a logarithmic number of times. The proof of this result is given below.
   \begin{align*}
     & \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t)\right)  \\ & \leq \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t), A^j(t+1) \in \TopM(t) \cap \{k': U_{k'}^j(t-1) \leq U_k^j(t-1)\}\right) \\
     & \leq   \sum_{t=1}^T \sum_{k' \neq k}\Pr\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right) \\
-    & = \sum_{k' \neq k} \underbrace{\sum_{t=1}^T \Pr\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right)}_{ \eqdef T_{k'}}
+    & = \sum_{k' \neq k} \underbrace{\sum_{t=1}^T \Pr\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right)}_{ \eqdef N_{k'}}
   \end{align*}
 
-  Now, to control $T_{k'}$, we distinguish two cases. If $\mu_k < \mu_{k'}$, one can write
-  \[T_{k'} \leq \sum_{t=1}^T \Pr\left(U_{k'}^j(t) \leq \mu_{k'}\right) + \sum_{t=1}^T \Pr\left(A^j(t) = k, U_{k}^j(t-1) \geq \mu_{k'}\right)\]
+  Now, to control $N_{k'}$, we distinguish two cases. If $\mu_k < \mu_{k'}$, one can write
+  \[N_{k'} \leq \sum_{t=1}^T \Pr\left(U_{k'}^j(t) \leq \mu_{k'}\right) + \sum_{t=1}^T \Pr\left(A^j(t) = k, U_{k}^j(t-1) \geq \mu_{k'}\right)\]
   The first sum is $o(\log(T))$ by Lemma~\ref{lem:5:Fact1KLUCB}.
   To control the second sum, we apply the same trick that led to the proof of Lemma~\ref{lem:5:Fact2KLUCB} in \cite{KLUCBJournal}.
   Letting $\kl^+(x, y) \eqdef \kl(x, y) \indic(x \geq y)$,
@@ -1124,12 +1124,12 @@ happen a logarithmic number of times. The proof of this result is given below.
   \end{align}
   where the last inequality uses that for all $s$, \[\sum_{t=s-1}^T \indic{\left(A^j(t) = k , N^j_k(t-1) = s\right)} = \sum_{t=s-1}^T \indic{\left(A^j(t) = k , N^j_k(t) = s + 1\right)} \leq 1.\]
   From \eqref{eq:5:FromHere}, the same upper bound as that of Lemma~\ref{lem:5:Fact2KLUCB} can be obtained using the tools from \cite{KLUCBJournal}, which proves that for $T\to\infty$,
-  \[T_{k'} = \frac{\log(T)}{\kl(\mu_k,\mu_{k'})} + o(\log(T)).\]
+  \[N_{k'} = \frac{\log(T)}{\kl(\mu_k,\mu_{k'})} + o(\log(T)).\]
 
   If $\mu_k > \mu_{k'}$, we rather use that
-  $T_{k'} \leq \sum\limits_{t=1}^T \Pr\left(U_{k}^j(t) \leq \mu_{k}\right) + \sum\limits_{t=1}^T \Pr\left(A^j(t+1) = k', U_{k'}^j(t) \geq \mu_{k}\right)$,
+  $N_{k'} \leq \sum\limits_{t=1}^T \Pr\left(U_{k}^j(t) \leq \mu_{k}\right) + \sum\limits_{t=1}^T \Pr\left(A^j(t+1) = k', U_{k'}^j(t) \geq \mu_{k}\right)$,
   and similarly Lemma~\ref{lem:5:Fact1KLUCB} and a slight variant of Lemma~\ref{lem:5:Fact2KLUCB} to deal with the modified time indices yields
-  $T_{k'} = \frac{\log(T)}{\kl(\mu_{k'},\mu_{k})} + o(\log(T))$.
+  $N_{k'} = \frac{\log(T)}{\kl(\mu_{k'},\mu_{k})} + o(\log(T))$.
   Summing over $k'$ yields the result.
 \end{smallproof}
 

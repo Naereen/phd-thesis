@@ -650,10 +650,11 @@ supported!}
     breaklinks=true,
     linktocpage,
     colorlinks=true,
-    linkcolor=black,
-    urlcolor=black,
-    citecolor=black,
+    linkcolor=blue,
+    urlcolor=blue,
+    citecolor=blue,
     anchorcolor=black,
+    % backref=page,%https://github.com/Wookai/paper-tips-and-tricks#back-references
   }
   \ifsetCustomMargin
   % Margin to be define in preamble using geometry package
@@ -661,10 +662,10 @@ supported!}
     \ifsetDVI
       % Odd and Even side Margin for binding and set viewmode for PDF
       \RequirePackage[dvips,paper=\PHD@papersize,hmarginratio=1:1,
-        vmarginratio=1:1,scale=0.75,bindingoffset=5mm]{geometry}
+        vmarginratio=1:1,scale=0.76,bindingoffset=5mm]{geometry}
     \else
       \RequirePackage[pdftex,paper=\PHD@papersize,hmarginratio=1:1,
-        vmarginratio=1:1,scale=0.75,bindingoffset=5mm]{geometry}
+        vmarginratio=1:1,scale=0.76,bindingoffset=5mm]{geometry}
     \fi
   \fi
 
@@ -690,7 +691,8 @@ supported!}
     linkcolor=blue,
     urlcolor=blue,
     citecolor=blue,
-    anchorcolor=green
+    anchorcolor=green,
+    % backref=page,%https://github.com/Wookai/paper-tips-and-tricks#back-references
   }
 
   \ifsetCustomMargin
