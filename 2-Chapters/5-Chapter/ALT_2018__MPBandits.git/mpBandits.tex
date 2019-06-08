@@ -91,7 +91,7 @@ This chapter is mainly based on our article \cite{Besson2018ALT}.
 
 % the need for multiple players in cognitive radio
 
-We consider $M \leq K$ identical dynamic IoT devices, communicating with a unique gateway, in $K$ orthogonal channels and in a acknowledgment-based wireless protocol slotted in time.
+We consider $M$ identical dynamic IoT devices, communicating with a unique gateway, in $K$ orthogonal channels and in a acknowledgment-based wireless protocol slotted in time.
 A perfect time and frequency synchronization is assumed,
 and some \iid{} background traffic is assumed to be non-uniformly in the $K$ channels.
 As before, if two or more devices decide to use the same channel at the same time, a \emph{collision} arises and none of sent uplink packet can be received by the gateway.
@@ -325,8 +325,8 @@ We introduce additional notations in the following definition.
 \end{definition}
 
 Note that when $n$ players choose arm $k$ at time $t$, this counts as $n$ collisions, not just one. So $\cC_k(T)$ counts the total \emph{number of colliding players} rather than the number of collision events. Hence there is small abuse of notation when calling it a number of collisions.
-
-Letting $\cP_M = \left\{ \boldsymbol{\mu} \in [0,1]^K : \mu_M^* > \mu_{M+1}^*\right\}$
+%
+Letting $\cP_M := \left\{ \boldsymbol{\mu} \in [0,1]^K : \mu_M^* > \mu_{M+1}^*\right\}$
 be the set of bandit instances such that there is a strict gap between the $M$ best arms and the other arms, we now provide a regret decomposition for any $\boldsymbol{\mu} \in \cP_M$.
 
 \begin{lemma}\label{lem:5:DecompositionRegret}
@@ -454,7 +454,7 @@ The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized___
 
 Similarly to what we present above in Section~\ref{sec:2:lowerUpperBoundsRegret},
 we use the Kullback-Leibler divergence to express our lower bound.
-Let $\kl(x,y) := x\log(x/y) + (1-x)\log((1-x)/(1-y))$ be KL divergence between the Bernoulli distribution of mean $x$ and that of mean $y$.
+We remind that $\kl(x,y) := x\log(x/y) + (1-x)\log((1-x)/(1-y))$ is the KL divergence between the Bernoulli distributions of means $x$ and $y$.
 %
 We first introduce the assumption under which we derive a regret lower bound, that generalizes the assumption of uniform efficiency given in Definition~\ref{def:2:uniformlyEfficientAlgorithm},
 a classical assumption made by \cite{LaiRobbins85} in single-player bandit models.
@@ -479,8 +479,8 @@ a classical assumption made by \cite{LaiRobbins85} in single-player bandit model
 
 
 Having a small regret on every problem instance, \ie, being uniformly efficient,
-is a natural assumption for algorithms,
-that rules out algorithms tuned to perform well on specific instances only.
+is a natural assumption,
+that rules out algorithms tuned to perform well on specific instances only (\eg, fixed-armed algorithms).
 %
 From this assumption $\left(R_T(\boldsymbol{\mu},M,\cA)=o(T^\alpha)\right)$ and the decomposition of Lemma~\ref{lem:5:DecompositionRegret} one can see\footnote{With some arguments used in the proof of Lemma~\ref{lem:5:1stLowerBound} to circumvent the fact that \ref{eq:5:term2} may be negative.} that for every $k \in \Mbest$,
 ${T}- \E_{\mu}[T_k(T)] {=} o(T^{\alpha})$, and so
@@ -490,11 +490,13 @@ ${T}- \E_{\mu}[T_k(T)] {=} o(T^{\alpha})$, and so
   % \vspace*{-5pt}  % XXX
 \end{equation}
 
-The additional assumption in \eqref{eq:5:SUE} further implies some notion of \emph{fairness}, as it suggests that each of the $M$ players spends on average the same amount of time on each of the $M$ best arms. Note that this assumption is satisfied by any strategy that is invariant under every permutation of the players, \ie, for which the distribution of the observations under $\cA_{\sigma} = (\cA_{\sigma(1)},\dots,\cA_{\sigma(M)})$ is independent from the choice of permutation $\sigma \in \Sigma_M$. In that case, it holds that  $\E_{\mu}[T_k^j(T)]=\E_{\mu}[T_k^{j'}(T)]$ for every arm $k$ and $(j,j') \in [M]$, hence \eqref{eq:5:SUE} and \eqref{eq:5:intermediate} are equivalent, and strong uniform efficiency is equivalent to standard uniform efficiency. Note that all our proposed algorithms are permutation invariant and \MCTopM{} is thus an example of strongly uniformly efficient algorithm, as we prove in Section~\ref{sec:5:upperbounds} that its regret is logarithmic on every instance $\mu \in \cP_M$.
+The additional assumption in \eqref{eq:5:SUE} further implies some notion of \emph{fairness}, as it suggests that each of the $M$ players spends on average the same amount of time on each of the $M$ best arms. Note that this assumption is satisfied by any strategy that is invariant under every permutation of the players, \ie, for which the distribution of the observations under $\cA_{\sigma} = (\cA_{\sigma(1)},\dots,\cA_{\sigma(M)})$ is independent from the choice of permutation $\sigma \in \Sigma_M$ of the set $\{1,\dots,M\}$.
+In that case, it holds that  $\E_{\mu}[T_k^j(T)]=\E_{\mu}[T_k^{j'}(T)]$ for every arm $k$ and $(j,j') \in [M]$, hence \eqref{eq:5:SUE} and \eqref{eq:5:intermediate} are equivalent, and strong uniform efficiency is equivalent to standard uniform efficiency.
+Note that the algorithms studied in Section~\ref{sec:5:algorithms} are permutation invariant, and \MCTopM-\klUCB{} is thus an example of strongly uniformly efficient algorithm, as we prove in Section~\ref{sec:5:upperbounds} that its regret is logarithmic on every instance $\mu \in \cP_M$.
 
-As we state it here, the constraint on fairness is new, and it was not studied as such in previous works.
+% As we state it here, the constraint on fairness is new, and it was not studied as such in previous works.
 In the proofs of the regret bounds for \rhoRand{} in \cite{Anandkumar11}, the authors briefly mention that their policy is invariant under permutation and that this yields a certain fairness guarantee, but without formalizing it more.
-We note that the notion of fairness we defined above can be interpreted as a ``cooperative fairness'', opposed to the notion of ``arm fairness'' that has been studied in a few papers on single-player stochastic MAB.
+The notion of fairness defined above can be interpreted as a ``cooperative fairness'', opposed to the notion of ``arm fairness'' that has been studied in a few papers on single-player stochastic MAB.
 For instance, \cite{Patil2019stochastic} requires that each arm must be sampled at least a given fraction of the total time steps, \ie, $\forall k, \E[N_k(T)] \geq r_k T$, where the constraint vector $[r_1,\dots,r_K]$ is given and known to the algorithm.
 
 % As it was discovered in \cite{BoursierPerchet18} and further explained in Appendix~E of \cite{KaufmannAbbas19}, our lower-bound was not true for any algorithm, as we wrongly claimed in \cite{Besson2018ALT} that the ``collision information term'' is zero for any algorithm $\cA$.
@@ -502,21 +504,22 @@ For instance, \cite{Patil2019stochastic} requires that each arm must be sampled 
 % % and because it still applies to algorithms of the \RhoRand{} family as well as our proposals \RandTopM{} and \MCTopM.
 
 The following notations and the hypothesis on the collision information term \eqref{eq:5:collisionInformationTerm} come from Appendix~E of \cite{KaufmannAbbas19}.
-Fix a player $j\in[M]$, and we consider the observations $O_t$ gathered by this player after $t$ rounds of its algorithm $\cA_j$:
-\[ O_t := \left( U^j(1), Y_{A^j(1),1}, C^j(1), \ldots, U^j(t), Y_{A^j(t),t}, C^j(t) \right),\]
+Similarly to what we did in Section~\ref{sec:2:notations},
+consider the observations $O_t^j$ that she gathered after $t$ rounds of its algorithm $\cA_j$ for a fixed player $j\in[M]$,
+defined as $O_t^j := \left( U^j(1), Y_{A^j(1),1}, C^j(1), \ldots, U^j(t), Y_{A^j(t),t}, C^j(t) \right)$,
 where $U^j(t)$ denotes some external source of randomness useful to select $A^j(t+1)$ (\eg, for an algorithm based on ranks and \UCB{} indexes, like \RhoRand, when two arms have the same maximum index, the decision is an $\argmax$ that is usually a uniform random selection among the arms with maximum index).
 
 Fix a problem $\bm{\mu}$,
 % and as we do in Appendix~\ref{proof:5:BetterLowerBound},
 then introduce an alternative model parametrized by $\bm{\lambda}$, with a small difference between $\bm{\mu}$.
 Fix a sub-optimal arm $k$ and $\varepsilon>0$, and $\lambda_k = \mu^*_M + \varepsilon$ and $\lambda_{\ell} = \mu_{\ell}$ for any $\ell\neq k$.
-We denote $\Pr_{\bm{\mu}}^{O_t}$ the distribution of the vector $O_t$ under the model $\bm{\mu}$ when using algorithm $\cA$.
+We denote $\Pr_{\bm{\mu}}^{O_t^j}$ the distribution of the vector $O_t$ under the model $\bm{\mu}$ when using algorithm $\cA_j$.
 Then we introduce the \emph{collision information term} as:
 \begin{equation}\label{eq:5:collisionInformationTerm}
-  \cI_{\bm{\mu},\bm{\lambda}}(\cA,T) := \sum_{t=1}^{T} \mathrm{KL}(\Pr_{\bm{\mu}}^{C_t | O_{t-1}}, \Pr_{\bm{\lambda}}^{C_t | O_{t-1}}).
+  \cI_{\bm{\mu},\bm{\lambda}}(\cA_j,T) := \sum_{t=1}^{T} \mathrm{KL}(\Pr_{\bm{\mu}}^{C_t | O_{t-1}}, \Pr_{\bm{\lambda}}^{C_t | O_{t-1}^j}).
 \end{equation}
 
-For a \emph{decentralized strategy} $\cA$ that has access to the sensing information (\ie, ruling out model \modeltrois), and satisfies $\cI_{\bm{\mu},\bm{\lambda}}(\cA,T) = \smallO{\log(T)}$,
+For a \emph{decentralized strategy} $\cA$ that has access to the sensing information (\ie, ruling out model \modeltrois), and satisfies $\cI_{\bm{\mu},\bm{\lambda}}(\cA_j,T) = \smallO{\log(T)}$,
 we now state a problem-dependent asymptotic lower bound on the number of sub-optimal arms selections.
 The additional hypothesis on $\cI_{\bm{\mu},\bm{\lambda}}(\cA,T)$ essentially says that ``the collisions do not bring too much information on the arm means'', as stated in \cite{KaufmannAbbas19}.
 The theorem stated below is proven in the Appendix of \cite{Besson2018ALT},
@@ -525,15 +528,15 @@ and it also yields an asymptotic logarithmic lower bound on the regret.
 
 \begin{theorem}\label{thm:5:BetterLowerBound}
 \begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
-  Under observation models $\modelun$ and $\modeldeux$, for any strongly uniformly efficient \emph{decentralized} policy $\cA$ and $\boldsymbol{\mu}\in\cP_M$.
-  Furthermore, if $\cA$ satisfies $\cI_{\bm{\mu},\bm{\lambda}}(\cA,T) = \smallO{\log(T)}$, then
+  Under observation models $\modelun$ and $\modeldeux$, consider a strongly uniformly efficient \emph{decentralized} policy $\cA=(\cA_1,\dots,\cA_M)$ and a problem $\boldsymbol{\mu}\in\cP_M$.
+  Furthermore, if $\cA_j$ satisfies $\cI_{\bm{\mu},\bm{\lambda}}(\cA_j,T) = \smallO{\log(T)}$, then
   % \vspace*{-10pt}  % XXX
   \begin{equation}\label{eq:5:LBDraws}
     \forall j \in [M], \ \forall k \in \Mworst, \ \ \ \liminf_{T\to \infty} \frac{\E_{\mu}[T_k^j(T)]}{\log(T)} \geq \frac{1}{\kl(\mu_k, \mu_M^*)}.
   \end{equation}
 
   % \vspace{-0.3cm}  % XXX
-  \noindent From Lemma~\ref{lem:5:1stLowerBound}, it follows that
+  \noindent And so if $\cA_1,\dots,\cA_M$ all satisfy this hypothesis, from Lemma~\ref{lem:5:1stLowerBound}, it follows that
   % \vspace*{-5pt}  % XXX
   \begin{equation}\label{eq:5:ourLowerBound}
     \mathop{\lim\inf}\limits_{T \to +\infty} \frac{R_T(\boldsymbol{\mu}, M, \cA)}{\log(T)}
@@ -552,8 +555,8 @@ given by \cite{Zhao10}, that states that
 as for every $k \in \Mworst$ and $j \in [M]$, $\kl(\mu_k, \mu_j^*) \geq \kl(\mu_k, \mu_M^*)$
 (see Figure~\ref{fig:5:CompLowerBounds} in Appendix~\ref{app:5:illustrationLowerBound}).
 %
-It is worth mentioning that \cite{Zhao10} proved a lower bound under the more general assumption for $\cA$ that there exists some numbers $(a_{k}^j)$ such that $a_{k}^j T - \E_{\mu}[T_k^j(T)] = o(T^\alpha)$ whereas in Definition~\ref{def:5:DecentralizedUniformEfficiency} we make the choice $a_{k}^j = 1/M$.
-Our result could be extended to this case but we chose to keep the notation simple and focus on \emph{fair allocation} of the optimal arms between players.
+It is worth mentioning that \cite{Zhao10} considered the more general assumption for $\cA$ that there exists some numbers $(a_{k}^j)$ such that $a_{k}^j T - \E_{\mu}[T_k^j(T)] = o(T^\alpha)$ whereas in Definition~\ref{def:5:DecentralizedUniformEfficiency} we make the choice $a_{k}^j = 1/M$.
+Our result could be extended to this case, but we chose to keep the notation simple and focus on \emph{fair allocation} of the optimal arms between players.
 
 
 \paragraph{Price of decentralized learning.}
@@ -646,14 +649,14 @@ Under observation model \modeltrois{} no sensing information is available and th
 %
 % \vspace*{-5pt}
 \begin{equation}
-  \widetilde{S_k}^j(t) = \sum_{t=1}^T r^j(t) \indic(A^j(t) = k)
+  \widetilde{S_k}^j(t) := \sum_{t=1}^T r^j(t) \indic(A^j(t) = k)
   \ \ \ \text{and letting} \ \ \ \widetilde{\mu_k}^j(t) := \widetilde{S_k}^j(t) \;/\; T_k^j(t).
 \end{equation}
 
 Note that $\widetilde{\mu_k}^j(t)$ is no longer meant to be an unbiased estimate of $\mu_k$ as it also takes into account the collision information, that is present in the reward. Based on this empirical reward, one can similarly defined modified indices as
 %
 \begin{equation}\label{eq:5:indexTilde}
-  \widetilde{U_k}^j(t) = \begin{cases}
+  \widetilde{U_k}^j(t) := \begin{cases}
       \widetilde{\mu_k}^j(t)  + \sqrt{  f(t) / (2T_k^j(t))}
       &\text{for } \UCB, \\
       \sup\left\{ q \in [0, 1]: T_k^j(t)\times \kl(\widetilde{\mu_k}^j(t), q) \leq f(t) \right\}
@@ -661,15 +664,14 @@ Note that $\widetilde{\mu_k}^j(t)$ is no longer meant to be an unbiased estimate
   \end{cases}
 \end{equation}
 
-Given any of these two index policies (\UCB{} or \klUCB), the \Selfish{} algorithm is defined by,
-%
-\begin{equation}
-  A^j(t) = \argmax_{ k \in [K]} \ \widetilde{U_k}^j(t-1).\label{algo:5:Selfish}
-\end{equation}
-The name comes from the fact that each player is targeting, in a ``selfish'' way, the arm that has the highest index, instead of accepting to target only one of the $M$ best.
+Given any of these two index policies (\UCB{} or \klUCB), the \Selfish{} algorithm is then playing like a single-player index policy (see Algorithm~\ref{algo:2:indexPolicy})
+% \begin{equation}\label{algo:5:Selfish}
+$A^j(t) \in \cU(\argmax_{ k \in [K]} \ \widetilde{U_k}^j(t-1))$.
+% \end{equation}
+The name ``selfish'' comes from the fact that each player is targeting, in a ``selfish'' way, the arm that has the highest index, instead of accepting to target only one of the $M$ best.
 The reason that this may work precisely comes from the fact that $\widetilde{U_k}^j(t)$ is no longer an upper-confidence on $\mu_k$,
 but some hybrid index that simultaneously increases when a transmission occurs and decreases when a collision occurs.
-
+%
 This behavior is easier to be understood for the case of \Selfish-\UCB{} in which, letting $N_k^{j,C}(t) = \sum_{s=1}^t \indic(C^j(t))$ be the number of collisions on arm $k$, one can show that the hybrid \Selfish{} index induces a penalty proportional to the fraction of collision on this arm and the quality of the arm itself:
 \begin{equation}
   \widetilde{U_k}^j(t) = U_k^j(t) -
@@ -691,6 +693,8 @@ and usually outperforms \rhoRand,
 even if it neither exploits the sensing information, nor the knowledge of the number of players $M$.
 %
 Practitioners may still be interested by the algorithm, especially for Cognitive Radio applications in which sensing is hard or cannot be considered.
+In fact, we used the \Selfish{} heuristic in Chapter~\ref{chapter:4}, in the different models, using \UCB{} or Thompson sampling as the underlying policy.
+%
 Thus we propose next our main contribution, the \MCTopM{} algorithm, proved to be asymptotically optimal for the identification of suboptimal arms (when using \klUCB), attaining order-optimal logarithmic regret, and outperforming all the other algorithms for the ``sensing case''.
 
 % -----------------------------------------------------------------
@@ -703,18 +707,19 @@ Thus we propose next our main contribution, the \MCTopM{} algorithm, proved to b
 
 % first, what is an index policy
 
-In a single-player setting, \emph{index policies} are popular bandit algorithms: at each round one index is computed for each arm, that only depends on the history of plays of this arm and (possibly) some exogenous randomness. Then, the arm with highest index is selected. This class of algorithms includes the UCB family, in which the index of each arm is an Upper Confidence Bound for its mean, but also some Bayesian algorithms like Bayes-UCB \citep{Kaufmann12BUCB} or the randomized Thompson Sampling algorithm \citep{Thompson33,AgrawalGoyal11,Kaufmann12Thompson}.
+% In a single-player setting, \emph{index policies} are popular bandit algorithms: at each round one index is computed for each arm, that only depends on the history of plays of this arm and (possibly) some exogenous randomness. Then, the arm with highest index is selected. This class of algorithms includes the UCB family, in which the index of each arm is an Upper Confidence Bound for its mean, but also some Bayesian algorithms like Bayes-UCB \citep{Kaufmann12BUCB} or the randomized Thompson Sampling algorithm \citep{Thompson33,AgrawalGoyal11,Kaufmann12Thompson}.
 
-% concrete examples and how their are used within MPB
+% % concrete examples and how their are used within MPB
 
-\paragraph{Index policies.}
+% \textbf{Index policies.}
+% %
+The approache we now describe for multi-player bandits can be used in combination with any index policy (see Algorithm~\ref{algo:2:indexPolicy}), but we restrict our presentation to UCB algorithms, for which strong theoretical guarantees can be obtained. In particular, we focus on two types of indices:
+\UCB{} \citep{Auer02}
+and \klUCB{} \citep{KLUCBJournal}.
+For player $j\in[M]$
 %
-The approaches we now describe for multi-player bandits can be used in combination with any index policy, but we restrict our presentation to UCB algorithms, for which strong theoretical guarantees can be obtained. In particular, we focus on two types of indices:
-\UCB{} indices \citep{Auer02}
-and \klUCB{} indices \citep{KLUCBJournal}, that can be defined for each player $j$ in the following way.
-%
-Letting $S_k^j(t) := \sum_{s=1}^t Y_{k,s} \indic(A^j(t) = k)$ the current sum of rewards obtained by player $j$ for arm $k$,
-then $\widehat{\mu}_k^j(t) = S_k^j(t)/T_k^j(t)$ (if $T_k^j(t)\neq 0$) is the empirical mean of arm $k$ for player $j$, and thus one can define the index
+denote $S_k^j(t) := \sum_{s=1}^t Y_{k,s} \indic(A^j(t) = k)$ the current sum of rewards obtained for arm $k$,
+then $\widehat{\mu}_k^j(t) := S_k^j(t)/T_k^j(t)$ (if $T_k^j(t)\neq 0$) is the empirical mean of arm $k$, and thus one can define the index
 \begin{equation}\label{eq:5:indexFor_UCB_klUCB}
   U_k^j(t) := \begin{cases}
       \widehat{\mu}_k^j(t)  + \sqrt{  f(t) / (2T_k^j(t))}
@@ -723,8 +728,9 @@ then $\widehat{\mu}_k^j(t) = S_k^j(t)/T_k^j(t)$ (if $T_k^j(t)\neq 0$) is the emp
       &\text{for } \klUCB,
   \end{cases}
 \end{equation}
-where $f(t)$ is some \emph{exploration function}. $f(t)$ is usually taken to be $\log(t)$ in practice, and slightly larger in theory, which ensures that  $\Pr(U_k^j(t) \geq \mu_k) \gtrsim 1 - 1/t$ (see \cite{KLUCBJournal}).
-A classical (single-player) UCB algorithm aims at the arm with largest index. However, if each of the $M$ players selects the arm with largest UCB, all the players will end up colliding most of the time on the best arm.
+where $f(t)$ is some \emph{exploration function}, usually taken to be $\log(t)$ in practice, and slightly larger in theory, which ensures that  $\Pr(U_k^j(t) \geq \mu_k) \gtrsim 1 - 1/t$ (see \cite{KLUCBJournal}).
+A classical (single-player) UCB algorithm aims at the arm with largest index, as presented above in Section~\ref{sub:2:IndexPolicies}.
+However, if each of the $M$ players selects the arm with largest UCB, all the players will end up colliding most of the time on the best arm.
 To circumvent this problem, several coordination mechanisms have emerged, that rely on \emph{ordering} the indices and targeting \emph{one of} the $M$-best indices.
 
 
@@ -740,9 +746,9 @@ More formally, letting $\pi(k,\mathbf{g})$ be the index of the $k$-th largest en
 % (for $k\in[K]$),
 in \rhoRand{} each player maintains at time $t$ an internal rank $R^j(t)\in[M]$
 and selects at time $t$,
-\begin{equation}
-  A^j(t) := \pi\left(R^j(t), [U^j_\ell(t)]_{\ell=1,\dots,K}\right).
-\end{equation}
+% \begin{equation}
+$A^j(t) := \pi\left(R^j(t), [U^j_\ell(t)]_{\ell=1,\dots,K}\right)$.
+% \end{equation}
 If a collision occurs, a new rank is drawn uniformly at random, $R^j(t+1) \sim \cU([M])$.
 
 
@@ -753,8 +759,7 @@ We now propose two alternatives to this strategy, that do not rely on ranks and 
   \TopM(t) := \left\{ \pi\left(k, \{U^j_\ell(t)\}_{\ell=1,\dots,K}\right), k=1,\dots,M\right\}.
 \end{equation}
 
-
-\paragraph{The \RandTopM{} algorithm.}
+\textbf{The \RandTopM{} algorithm.}
 %
 We precisely state our first proposal below in Algorithm~\ref{algo:5:RandTopM}.
 
@@ -823,6 +828,8 @@ From there on, we focus on \MCTopM{} as it is easier to analyze and performs bet
 Both algorithms ensure that player $j$ always
 selects at time $t+1$ an arm from $\TopM(t)$.
 When a collision occurs for a player implementing the \RandTopM{} algorithm, that player randomly switches arm within $\TopM$, while \MCTopM{} uses a more sophisticated mechanism, that is reminiscent of ``Musical Chair'' (MC) and inspired by the work of \cite{Rosenski16}: players tend to fix themselves on arms (``chairs'') and ignore future collision when this happens.
+
+\TODOL{Est-ce qu'on devrait utiliser $t=1,\dots,T$ et pas $t=0,\dots,T-1$ et utiliser $A(t)$ et pas $A(t+1)$ pour être consistant avec les autres chapitres ?}
 
 
 % \vspace*{-5pt}  % XXX remove if problem
@@ -908,8 +915,8 @@ as well as the number of switches of arm.
 The five different transitions $(1)$, $(2)$, $(3)$, $(4)$, $(5)$ refer to the notations used in the analysis of \MCTopM, and they are illustrated in Figure~\ref{fig:5:StateMachineAlgorithm_MCTopM} below.
 
 \begin{figure}[h!]
-  \resizebox{1.00\textwidth}{!}{
-  \begin{tikzpicture}[>=latex',line join=bevel,scale=5.8]
+  \resizebox{1.10\textwidth}{!}{
+  \begin{tikzpicture}[>=latex',line join=bevel,scale=5.0]
       %
       \node (start) at (1.5,0.30) {$(0)$ Start $t=0$};
       \node (notfixed) at (1,0) [draw,rectangle,thick] {Not fixed, $\overline{s^j(t)}$};
@@ -917,9 +924,9 @@ The five different transitions $(1)$, $(2)$, $(3)$, $(4)$, $(5)$ refer to the no
       %
       \draw [black,->] (start) -> (notfixed.20);
       \draw [color=cyan,thick,->] (notfixed) to[bend right] node[midway,above,text width=5cm,text centered,black] {\small $(1)$ $\overline{C^j(t)}, A^j(t) \in \TopM(t)$} (fixed);
-      \path [color=blue,thick,->] (notfixed) edge[loop right] node[right,text width=4cm,text badly centered,black] {\small $(2)$  $C^j(t), A^j(t) \in \TopM(t)$} (1);
+      \path [color=blue,thick,->] (notfixed) edge[loop right] node[below,text width=4cm,text badly centered,black] {\small $(2)$  $C^j(t)$,\\$A^j(t) \in \TopM(t)$} (1);
       \path [color=red,thick,->] (notfixed) edge[loop below] node[below,text centered,black] {\small $(3)$  $A^j(t) \notin \TopM(t)$} (1);
-      \path [color=darkgreen,thick,->] (fixed) edge[loop left] node[left,text width=2.9cm,text badly centered,black] {\small $(4)$ $A^j(t) \in \TopM(t)$} (fixed);
+      \path [color=darkgreen,thick,->] (fixed) edge[loop left] node[below,text width=2.9cm,text badly centered,black] {\small $(4)$ $A^j(t) \in \TopM(t)$} (fixed);
       \draw [color=red,thick,->] (fixed) to[bend right] node[midway,below,text centered,black] {\small $(5)$  $A^j(t) \notin \TopM(t)$} (notfixed);
       %
   \end{tikzpicture}
