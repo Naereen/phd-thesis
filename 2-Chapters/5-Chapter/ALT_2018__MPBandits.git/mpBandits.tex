@@ -965,15 +965,15 @@ Explicit expressions for $C_{\boldsymbol{\mu}}$, $D_{\boldsymbol{\mu}}$ can be f
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
   For any $\boldsymbol{\mu}\in\cP_M$,
   let player $j\in[M]$ use the \RandTopM-, \MCTopM- or \rhoRand-\klUCB{}
-  decentralized policy with exploration function $f(t) = \log(t) + 3 \log\log(t)$.
-  Then for any sub-optimal arm $k \in \Mworst$, there exists two problem-dependent positive constants $C_{\boldsymbol{\mu}}, D_{\boldsymbol{\mu}} > 0$ such that
+  decentralized policy with exploration function $f(t) = \log(t) + 3 \log(\log(t))$.
+  Then for any sub-optimal arm $k \in \Mworst$ there exists problem-dependent constants $C_{\boldsymbol{\mu}}, D_{\boldsymbol{\mu}} > 0$ such that
   % %
   % \hfill{}
   % (Proved in Appendix~\ref{proof:5:SubOptimalSelections})
   \begin{equation}\label{eq:5:SubOptimalSelections}
       \E_{\mu}[T_k^j(T)] \leq
       \frac{\log(T)}{\kl(\mu_k,\mu_{M}^*)}
-      + \underbrace{C_{\boldsymbol{\mu}} \sqrt{\log(T)} + D_{\boldsymbol{\mu}}\log\log(T) + 3M + 1}_{= \smallO{\log(T)}}.
+      + \underbrace{C_{\boldsymbol{\mu}} \sqrt{\log(T)} + D_{\boldsymbol{\mu}}\log(\log(T)) + 3M + 1}_{= \smallO{\log(T)}}.
   \end{equation}
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
@@ -1004,13 +1004,14 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
   \end{align*}
 
   Considering the relative position of the upper-confidence bound $U_{m^*}^j(t)$ and the corresponding mean $\mu_m^* = \mu_{m^*}$, one can write the decomposition
-
-  \begin{align}
+  \begin{align*}
     \E_{\mu}[T_k^j(T)] &\leq
-    \sum_{t=1}^T\Pr_{\bm{\mu}} \left( \exists m_1 \in [M]: \; U_{m_1^*}(t) < \mu_m^* \right) + \notag \\
+    \sum_{t=1}^T\Pr_{\bm{\mu}} \left( \exists m_1 \in [M]: \; U_{m_1^*}(t) < \mu_m^* \right) + \\
     \;\;\;\;
-    \sum_{t=1}^T\Pr_{\bm{\mu}} & \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; U_{m_2^*}(t) \leq U_k(t) , \forall {m_3} \in [M]: \;  U_{{m_3}^*}(t) \geq \mu_{m_3}^* \right) \notag \\
-    &\leq \sum_{m_1=1}^M\sum_{t=1}^T\Pr_{\bm{\mu}} \left(U_{m_1^*}(t) < \mu_{m_1}^* \right) + \sum_{t=1}^T\Pr_{\bm{\mu}} \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; \mu_{m_2}^* \leq U_k(t)\right) \notag \\
+    \sum_{t=1}^T\Pr_{\bm{\mu}} & \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; U_{m_2^*}(t) \leq U_k(t) , \forall {m_3} \in [M]: \;  U_{{m_3}^*}(t) \geq \mu_{m_3}^* \right)
+  \end{align*}
+  \begin{align}
+    \E_{\mu}[T_k^j(T)] &\leq \sum_{m_1=1}^M\sum_{t=1}^T\Pr_{\bm{\mu}} \left(U_{m_1^*}(t) < \mu_{m_1}^* \right) + \sum_{t=1}^T\Pr_{\bm{\mu}} \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; \mu_{m_2}^* \leq U_k(t)\right) \notag \\
     %
     & \leq \sum_{m_1=1}^M \sum_{t=1}^T \Pr_{\bm{\mu}} \left( U_{m_1^*}(t) < \mu_{m_1}^* \right)
     + \sum_{t=1}^T \Pr_{\bm{\mu}} \left( A^j(t) = k,\; \mu_{M^*} \leq U_k(t) \right)
@@ -1023,9 +1024,9 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
 
   \begin{lemma}\label{lem:5:Fact1KLUCB}
   \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
-      For any arm $k$, if $U_k^{j}(t)$ is the \klUCB{} index with exploration function $f(t)=\log(t)+3\log\log(t)$,
+      For any arm $k$, if $U_k^{j}(t)$ is the \klUCB{} index with exploration function $f(t)=\log(t)+3\log(\log(t))$,
       \begin{equation}
-        \sum_{t=1}^T \Pr_{\bm{\mu}} \left(U_k^{j}(t) < \mu_k\right) \leq 3 + 4e \log\log(T).
+        \sum_{t=1}^T \Pr_{\bm{\mu}} \left(U_k^{j}(t) < \mu_k\right) \leq 3 + 4e \log(\log(T)).
       \end{equation}
   \end{leftbar}  % XXX leftbar lemmabar, comment if needed
   \end{lemma}
@@ -1048,8 +1049,8 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
   Putting things together, one obtains the non-asymptotic upper bound
   \begin{align}\label{eq:5:UBprecise}
     \E_{\mu}\left[T_k^j(T)\right]
-    & \leq \frac{\log(T) + 3 \log\log(T)}{\kl(\mu_k,\mu_{M^*})} + \sqrt{2\pi} \sqrt{\frac{\kl'(\mu_k,\mu_{M^*})^2}{\kl(\mu_k,\mu_{M*})^3}}\sqrt{\log(T) + 3\log\log(T)}  \nonumber\\
-    & \;\;\;\;\;\;+ 2\left(\frac{\kl'(\mu_k,\mu_{M^*})}{\kl(\mu_k,\mu_{M^*})}\right)^2 + 4Me \log\log(T) + 3M+1,
+    & \leq \frac{\log(T) + 3 \log(\log(T))}{\kl(\mu_k,\mu_{M^*})} + \sqrt{2\pi} \sqrt{\frac{\kl'(\mu_k,\mu_{M^*})^2}{\kl(\mu_k,\mu_{M*})^3}}\sqrt{\log(T) + 3\log(\log(T))}  \nonumber\\
+    & \;\;\;\;\;\;+ 2\left(\frac{\kl'(\mu_k,\mu_{M^*})}{\kl(\mu_k,\mu_{M^*})}\right)^2 + 4Me \log(\log(T)) + 3M+1,
   \end{align}
   which yields Lemma~\ref{lem:5:SubOptimalSelections},
   with explicit constants $C_{\boldsymbol{\mu}}$ and $D_{\boldsymbol{\mu}}$.
@@ -1099,7 +1100,7 @@ happen a logarithmic number of times. The proof of this result is given below.
 
 \begin{smallproof}
   We analyze the case when the current arm leaves the set $\TopM$ (Line 4):
-
+  %
   \begin{align*}
     & \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t)\right)  \\ & \leq \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t), A^j(t+1) \in \TopM(t) \cap \{k': U_{k'}^j(t-1) \leq U_k^j(t-1)\}\right) \\
     & \leq   \sum_{t=1}^T \sum_{k' \neq k}\Pr\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right) \\
@@ -1108,13 +1109,16 @@ happen a logarithmic number of times. The proof of this result is given below.
 
   Now, to control $T_{k'}$, we distinguish two cases. If $\mu_k < \mu_{k'}$, one can write
   \[T_{k'} \leq \sum_{t=1}^T \Pr\left(U_{k'}^j(t) \leq \mu_{k'}\right) + \sum_{t=1}^T \Pr\left(A^j(t) = k, U_{k}^j(t-1) \geq \mu_{k'}\right)\]
-  The first term in the right hand side is $o(\log(T))$ by Lemma~\ref{lem:5:Fact1KLUCB}. To control the second term, we apply the same trick that led to the proof of Lemma~\ref{lem:5:Fact2KLUCB} in \cite{KLUCBJournal}.
+  The first sum is $o(\log(T))$ by Lemma~\ref{lem:5:Fact1KLUCB}.
+  To control the second sum, we apply the same trick that led to the proof of Lemma~\ref{lem:5:Fact2KLUCB} in \cite{KLUCBJournal}.
   Letting $\kl^+(x, y) := \kl(x, y) \indic(x \geq y)$,
   and $\widehat{\mu}^j_{k,s}$ be the empirical mean of the $s$ first observations from arm $k$ by player $j$, one has
-
+  %
+  \begin{align*}
+    \sum_{t=1}^T & \Pr\left(A^j(t) = k, U_{k}^j(t-1) \geq \mu_{k'}\right) \\
+    & =  \bE \left[ \sum_{t=1}^T\sum_{s=1}^{t-1} \indic{\left(A^j(t) = k , N^j_k(t-1) = s\right)}\indic{\left( s  \times \kl^+\left(\widehat{\mu}_{k,s}^j , \mu_k\right) \leq f(t)\right)} \right]
+  \end{align*}
   \begin{align}
-    \sum_{t=1}^T & \Pr\left(A^j(t) = k, U_{k}^j(t-1) \geq \mu_{k'}\right) \nonumber\\
-    & =  \bE \left[ \sum_{t=1}^T\sum_{s=1}^{t-1} \indic{\left(A^j(t) = k , N^j_k(t-1) = s\right)}\indic{\left( s  \times \kl^+\left(\widehat{\mu}_{k,s}^j , \mu_k\right) \leq f(t)\right)} \right]\nonumber\\
     & \leq \bE \left[ \sum_{s=1}^{T}\indic{\left( s \times \kl^+\left(\widehat{\mu}_{k,s}^j , \mu_k\right) \leq f(T)\right)}\sum_{t=s-1}^T \indic{\left(A^j(t) = k , N^j_k(t-1) = s\right)} \right] \nonumber \\
     & \leq \sum_{s=1}^T \Pr\left( s \times \kl^+\left(\widehat{\mu}_{k,s}^j , \mu_k\right) \leq f(T)\right),\label{eq:5:FromHere}
   \end{align}
@@ -1123,9 +1127,9 @@ happen a logarithmic number of times. The proof of this result is given below.
   \[T_{k'} = \frac{\log(T)}{\kl(\mu_k,\mu_{k'})} + o(\log(T)).\]
 
   If $\mu_k > \mu_{k'}$, we rather use that
-  \[T_{k'} \leq \sum_{t=1}^T \Pr\left(U_{k}^j(t) \leq \mu_{k}\right) + \sum_{t=1}^T \Pr\left(A^j(t+1) = k', U_{k'}^j(t) \geq \mu_{k}\right)\]
+  $T_{k'} \leq \sum\limits_{t=1}^T \Pr\left(U_{k}^j(t) \leq \mu_{k}\right) + \sum\limits_{t=1}^T \Pr\left(A^j(t+1) = k', U_{k'}^j(t) \geq \mu_{k}\right)$,
   and similarly Lemma~\ref{lem:5:Fact1KLUCB} and a slight variant of Lemma~\ref{lem:5:Fact2KLUCB} to deal with the modified time indices yields
-  \[T_{k'} = \frac{\log(T)}{\kl(\mu_{k'},\mu_{k})} + o(\log(T)).\]
+  $T_{k'} = \frac{\log(T)}{\kl(\mu_{k'},\mu_{k})} + o(\log(T))$.
   Summing over $k'$ yields the result.
 \end{smallproof}
 
@@ -1239,10 +1243,9 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
   \end{align*}
   %
   Then, we introduce $\widetilde{C^j}(t)$ as the event that a collision occurs for player $j$ at round $t$ if she is not yet fixed on her arm, that is
-  \begin{equation}
-      \widetilde{C^j}(t) := \left(C^j(t), \overline{s^j(t)}\right).
-  \end{equation}
-
+  % \begin{equation}
+  $\widetilde{C^j}(t) := \left(C^j(t), \overline{s^j(t)}\right)$.
+  % \end{equation}
 
   A key observation is that $C^j(t)$ implies $\bigcup_{j'=1}^M \widetilde{C^{j'}}(t)$, as a collision necessarily involves at least one player not yet fixed on her arm ($\overline{s^{j'(t)}}$).
   Otherwise, if they are all fixed, \ie, for all $j$, $s^j(t)$, then by definition of $s^j(t)$, none of the player changed their arm from $t-1$ to $t$, and none experienced any collision at time $t-1$ so by induction there is no collision at time $t$.
@@ -1299,10 +1302,9 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
   \]
   Both $n(T)$ and $\tau_i - \theta_i \geq 0$ have finite averages for any $i$ (as $\tau_i - \theta_i \leq T$), and $n(T)$ is a \emph{stopping time} with respect to the past events (that is, $\cF^j_T$),
   thus we can use Wald's Lemma \citep{Wald45},
-  to obtain a decomposition with two terms $(\alpha)$ and $(\beta)$:
-  \[
-    \E_{\mu}[N_2^j(t)] \leq \underbrace{\E_{\mu}\left[ n(T) \right]}_{(\alpha)} \times \underbrace{\max_{i\in\N} \E_{\mu}\left[ \tau_i - \theta_i \right]}_{(\beta)}.
-  \]
+  to obtain a decomposition with two terms $(\alpha)$ and $(\beta)$,
+  $\E_{\mu}[N_2^j(t)] \leq \E_{\mu}\left[ n(T) \right] \times \max_{i\in\N} \E_{\mu}\left[ \tau_i - \theta_i \right]$.
+  % $\E_{\mu}[N_2^j(t)] \leq \underbrace{\E_{\mu}\left[ n(T) \right]}_{(\alpha)} \times \underbrace{\max_{i\in\N} \E_{\mu}\left[ \tau_i - \theta_i \right]}_{(\beta)}$.
 
   $(\alpha)$ To control $\E_{\mu}[n(T)]$, we can observe that
   the number of sequences $n(T)$ is smaller than $1$ plus the number of times when \emph{a sequence begins} ($1$ plus because maybe the game starts in a sequence).
@@ -1367,9 +1369,9 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
 
 \paragraph{Logarithmic switching cost for \MCTopM.}\label{app:5:NumberSwitches}
 %
-Additionally to bounding the collisions in Lemma~\ref{lem:5:collisionsMCTopM},
-another consequence of our proof of this result is that
-it also bounds the (expected) number of \emph{switches of arms}, $SC^{\cA}(T) = \sum_{t=1}^T \Pr(A^j(t+1) \neq A^j(t))$.
+While Lemma~\ref{lem:5:collisionsMCTopM} bounds the number of collisions,
+another consequence of our proof is that we have also bounded
+the (expected) number of \emph{switches of arms}, $SC^{\cA}(T) = \sum_{t=1}^T \Pr(A^j(t+1) \neq A^j(t))$.
 %
 We controlled the total number of transitions $(2)$, $(3)$ and $(5)$,
 which are the only transitions when a player can switch from arm $k$ to arm $k'\neq k$.
@@ -1527,19 +1529,19 @@ from now on we only report results for \klUCB.
 %, as the theoretical guarantees for single player suggested,
 
 
-\paragraph{Other experiments.}
+\textbf{Other experiments.}
 %
 We now present more results for two bandit instances.
-\begin{itemize}
-  \item
+% \begin{itemize}
+%   \item
   The first instance is a small problem one with $K=3$ arms and means
   $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$, for the case of $M=2$ players.
   It is used to illustrate that in some unlucky runs, \Selfish{} can suffer a linear regret, as illustrated in Figure~\ref{fig:5:selfish_fail1}.
-  \item
+  % \item
   The second instance considers $K=9$ arms with means $\boldsymbol{\mu} = [0.1, 0.2, \dots, 0.9]$,
   three cases are presented: $M=6$ in Figure~\ref{fig:5:MP__K9_M6_T10000_N1000__4_algos},
   and for the two limit cases $M=2$ and $M=9=K$ in Figure~\ref{fig:5:MP__K9_M2-6-9_T10000_N200__4_algos}.
-\end{itemize}
+% \end{itemize}
 %
 We also include histograms showing the \emph{distribution} of the final regret $R_T$,
 as this allows to check if the regret is indeed small for \emph{each} run of the simulation.
@@ -1738,7 +1740,7 @@ can be considered out of the scope of \emph{online} sequential learning.
 \MusicalChair{} consists of a random exploration phase of length $T_0$ after which the players quickly converge to orthogonal strategies targeting the $M$ best arms. With probability $1-\delta$, its regret is proven to be ``constant'' (of order $\log(1/\delta)$). The theoretical minimal value for $T_0$ depends on $\delta$, on the horizon $T$ and on a lower bound $\epsilon$ on the gap $\Delta = \mu^*_M - \mu^*_{M+1}$, and the practical tuning is hard too. %% which are both unavailable in our setting.
 
 
-\paragraph{Uniformly sampled problems.}
+\textbf{Uniformly sampled problems.}
 %
 Experiments with a different problem for each repetition,
 that is uniformly sampled $\boldsymbol{\mu} \sim \cU([0,1]^K)$,
