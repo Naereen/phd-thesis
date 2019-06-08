@@ -96,7 +96,7 @@ and Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is ba
 
 A MAB is a model of a decision-making game, where a \emph{player} has to sequentially select one action in a (usually finite) set of actions, and only receives a (random) feedback about the selected action, also called a \emph{reward}.
 \textbf{We always consider $K\in\N, K\geq2$ arms, and discrete times $t\in\N^*$}.
-When the player decides at time $t$ to play (or pull) the arm $A(t)\in\{1,\dots,K\}=[K]$, she receives a reward $r(t) = Y_{A(t),t}\in\R$, and so on for a finite number of steps $t$ (or rounds), from $t=1$ until $t=T$ for an \emph{horizon} $T$.
+When the player decides at time $t$ to play (or pull) the arm $A(t)\in\{1,\dots,K\}=[K]$, she receives a reward $r(t) := Y_{A(t),t}\in\R$, and so on for a finite number of steps $t$ (or rounds), from $t=1$ until $t=T$ for an \emph{horizon} $T$.
 %
 A commonly studied goal for the player is to maximize its sum of received rewards, $\sum_{t=1}^T r(t)$
 (or its \emph{mean} in stochastic and stationary models).
@@ -130,7 +130,7 @@ For more details on reinforcement learning, in particular about more generic mod
 
 
 This quantity $\sum_{t=1}^T r(t)$ can indeed be random, and it usually depends on two aspects.
-First, the rewards may depend on the randomness of the environment, \ie, the unknown and unpredictable values $r(t)=Y_{k,t}$.
+First, the rewards may depend on the randomness of the environment, \ie, the unknown and unpredictable values $r(t)=Y_{A(t),t}$.
 Then this quantity also depends on the player's decision-making policy, \ie, the choices $A(t)$, that are based on (all) the \emph{past} observations, \ie, $A(1)$, $Y_{A(1),1}$, $\dots$, $A(t-1)$, $Y_{A(t-1),t-1}$, and possibly on an external source of randomness.
 %
 Without loss of generality, it can be given by a sequence $U_0,U_1,\dots$ of \iid{} random values, uniformly distributed on $[0,1]$, and that has to be independent from the samples $Y_{k,t}$.
@@ -183,9 +183,9 @@ The arms follow Bernoulli distributions, \ie, $\nu_k = \mathcal{B}(\mu_k)$, of u
 Your decisions are made sequentially: at time $t$, you pick one of the arms, $A(t) \in\{1,2,3,4,5\}$, then the demo shows the random reward obtained from this (virtual) casino machine (in \textcolor{gold}{yellow}), \ie, the binary value $r(t)\in\{0,1\}$, that is sampled \iid{} from $\nu_k$.
 %
 The UI of the demo also shows the current value of $t$ (``total plays'') and $\sum_{s=1}^t r(s)$ the ``total reward''.
-For each arm, we show the sum of rewards obtained from that arm, \ie, $X_k(t) = \sum_{s=1}^t r(s) \mathbbm{1}(A(s) = k)$, in the ``Rewards'' line, and the number of pulls of that arm, \ie, $N_k(t) = \sum_{s=1}^t \mathbbm{1}(A(s) = k)$ in the ``Pulls'' line.
+For each arm, we show the sum of rewards obtained from that arm, \ie, $X_k(t) := \sum_{s=1}^t r(s) \mathbbm{1}(A(s) = k)$, in the ``Rewards'' line, and the number of pulls of that arm, \ie, $N_k(t) := \sum_{s=1}^t \mathbbm{1}(A(s) = k)$ in the ``Pulls'' line.
 %
-The demo also shows the estimated probability of each arm, that is $\widehat{\mu_k}(t) = X_k(t) / N_k(t)$ (when $N_k(t)>0$), in the ``Estimated Probs'' line.
+The demo also shows the estimated probability of each arm, that is $\widehat{\mu_k}(t) := X_k(t) / N_k(t)$ (when $N_k(t)>0$), in the ``Estimated Probs'' line.
 
 In the first Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem}, the current state of the game is shown at time $t=24$.
 % Currently at time $t=24$ (out of $T=100$ total time steps),
@@ -212,10 +212,10 @@ The algorithm $\cA$ selects an arm $A(t)$ at time $t$, possibly by using the pas
 As shown below, being oblivious to the past yields very poor performance (cf. the pure exploration policy in Section~\ref{sub:2:naiveSimpleStrategies}), so efficient policies indeed depend on the successive feedbacks.
 %
 More formally, an algorithm can be defined as a sequence of \emph{measurable} functions $(\cA_t)_{t\geq1}$,
-where $\cA_t$ maps the past observations $O_t = (U_0, Y_{A(1),1}, U_1, \dots, Y_{A(t-1),t-1}, U_{t-1})$
-to an arm $\cA_t(O_t) = A(t) \in[K]$
+where $\cA_t$ maps the past observations $O_t := (U_0, Y_{A(1),1}, U_1, \dots, Y_{A(t-1),t-1}, U_{t-1})$
+to an arm $\cA_t(O_t) := A(t) \in[K]$
 (we remind that we denote $r(s) = Y_{A(s),s}$ the $s$-th reward).
-The initial information is reduced to $O_1 = (U_0)$, and the first decision is $A(1) = \cA_1(O_1)$. Usually, most algorithms starts by selecting $A(1)=1,\dots,A(K)=K$ (or a permutation of the $K$ arms) in the $K$ first steps (\eg, Algorithm~\ref{algo:2:indexPolicy}).
+The initial information is reduced to $O_1 = (U_0)$, and the first decision is $A(1) = \cA_1(O_1)$. Usually, most algorithms starts by selecting $A(1)=1,\dots,A(K)=K$ (or a permutation of the $K$ arms) in the $K$ first steps $t=1,\dots,K$ (\eg, Algorithm~\ref{algo:2:indexPolicy}).
 % as illustrated for example in Algorithm~\ref{algo:2:indexPolicy} below.
 %
 An algorithm is said to be \emph{deterministic} if it does not depend on the external randomness $U_0,U_1,\dots$, but in this thesis \textbf{we only use non-deterministic algorithms}
@@ -248,7 +248,7 @@ Continuous-valued distributions with finite support also included truncated vers
 \paragraph{The normalization trick.}
 \label{par:2:normalizationTrick}
 %
-If the player knows that reward are bounded in an interval $[a,b]$, and if she knows $a$ and $b$ (for $a<b$), then with no loss of generality we can restrict to the interval $[0,1]$, as if $r\in[a,b]$, the player can instead consider the normalized reward $r' = $ that lies in $[0,1]$.
+If the player knows that reward are bounded in an interval $[a,b]$, and if she knows $a$ and $b$ (for $a<b$), then with no loss of generality we can restrict to the interval $[0,1]$, as if $r\in[a,b]$, the player can instead consider the normalized reward $r' = \frac{r-a}{b-a}$ that lies in $[0,1]$.
 Note that this ``normalization trick'' is implemented for any policy in our library SMPyBandits, with the \texttt{lower} and \texttt{amplitude} optional arguments, respectively representing $a$ the lower-bound on rewards and $b-a$ the length of the interval of possible values of rewards.
 
 % Bernoulli, Gaussian, sub-Bernoulli, sub-Gaussian, Exponential, sub-Exponential...
@@ -267,7 +267,7 @@ Given a measure $\lambda$, that is usually the natural Lebesgue measure on $\R$,
 $ \Pr(x | \lambda) = h(x) \exp \left( \eta x - A(\eta) \right)$,
 % \end{equation}
 for a parameter vector $\eta$ (the canonical parameter), and a sufficient statistic that we restrict to be $T(x)=x$, and a function $h$.
-$A(\eta)$ is the cumulant function, and it is entirely determined by the $\eta$ and $h$,
+The cumulant function $A(\eta)$ is entirely determined by the $\eta$ and $h$,
 as $A(\eta) = \log \left( \int h(x) \exp(\eta x) \lambda(\mathrm{d} x) \right)$.
 %
 The natural parameter space is the set of values of $\eta$ such that this integral $A(\eta)$ is finite,
@@ -289,7 +289,7 @@ We have to quote two important results on exponential families:
 \begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
     The \emph{Kullback-Leibler divergence} between distributions $d_1$ and $d_2$ is defined as
     \begin{align}\label{eq:2:Kullback-LeiblerDivergenceExpFamily1}
-        \KL\left(d_1, d_2\right) = \int d_1 \log\left(\frac{d_2}{d_1}\right) \lambda(\mathrm{d}x) = \E_{d_1} \left[ \log\left(\frac{d_2}{d_1}\right) \right] \in \mathbb{R}\cup\{\pm\infty\}.
+        \KL\left(d_1, d_2\right) := \int d_1 \log\left(\frac{d_2}{d_1}\right) \lambda(\mathrm{d}x) = \E_{d_1} \left[ \log\left(\frac{d_2}{d_1}\right) \right] \in \mathbb{R}\cup\{\pm\infty\}.
     \end{align}
 % \vspace*{-5cm}  % FIXME vspace negative to compensate the \end{leftbar}
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
@@ -297,7 +297,7 @@ We have to quote two important results on exponential families:
 
 Following this Definition~\ref{def:2:KLDivergence} for two distributions
 $d_1=\Pr(x|\eta_1)$ and $d_2=\Pr(x|\eta_2)$,
-we can write $\KL( \eta_1, \eta_2 ) = \KL(\Pr(x|\eta_1), \Pr(x|\eta_2))$, which can be simplified to use only the two parameters $\eta_1$ and $\eta_2$ of $d_1$ and $d_2$,
+we can use a shorter notation and write $\KL( \eta_1, \eta_2 ) := \KL(\Pr(x|\eta_1), \Pr(x|\eta_2))$, which can be simplified to use only the two parameters $\eta_1$ and $\eta_2$ of $d_1$ and $d_2$,
 and $\mu_1 = \E_{\eta_1}[X]$ the mean of distribution $d_1$,
 %
 % \begin{equation}\label{eq:2:Kullback-LeiblerDivergenceExpFamily2}
@@ -317,7 +317,7 @@ it is interesting to illustrate this definition and the notations with two impor
     (with the limit behavior $\eta=+\infty$ if $\mu=0$).
 
     The KL divergence between $B(x)$ and $B(y)$, of parameters $\eta$, $\eta'$ is given by
-    $\kl(x,y) = \KL_{B}(\eta,\eta') = x \log(x/y) + (1-x) \log((1-x)/(1-y))$,
+    $\kl(x,y) := \KL_{B}(\eta,\eta') = x \log(x/y) + (1-x) \log((1-x)/(1-y))$,
     and it is also called the \emph{relative binary entropy}.
     It satisfies $\kl(x,y) \geq d_{1/4}(x,y)$, see Lemma~\ref{lem:2:Pinsker} in Appendix~\ref{proof:2:Pinsker}.
 
@@ -336,7 +336,7 @@ it is interesting to illustrate this definition and the notations with two impor
     % with a fixed variance $\sigma^2$ form indeed a one-dimensional exponential family.
 
     The KL divergence between $\cN(x,\sigma^2)$ and $\cN(x,\sigma^2)$, of parameters $\eta$, $\eta'$ is given by
-    $d_{\sigma^2}(x,y) = \KL_{\cN,\sigma^2}(\eta,\eta') = (x-y)^2 / (2\sigma^2)$
+    $d_{\sigma^2}(x,y) := \KL_{\cN,\sigma^2}(\eta,\eta') = (x-y)^2 / (2\sigma^2)$
     (see Chapter~8 of \cite{JordanCourseStatBerkeley}).
 \end{itemize}
 
@@ -347,7 +347,7 @@ In the rest of this thesis, \textbf{we only consider bounded rewards in the math
 First, we restrict for simplicity to Bernoulli distributions for the simulations shown in Chapter~\ref{chapter:3}, even if our library does implement all the distributions commonly found in the literature (including unbounded one-dimensional exponential families and even Markov models).
 In Chapter~\ref{chapter:4}, we only study models with binary rewards.
 %
-Then, when we study multi-player bandits in Chapter~\ref{chapter:5}, we explain that restricting to the Bernoulli case is interesting and not restrictive, as it is actually the hardest case (since continuous distributions has a null mass on $r(t)=0$, they yield a much simpler problem as the sensing/no sensing distinction no longer makes sense).
+Then, when we study multi-player bandits in Chapter~\ref{chapter:5}, we explain that restricting to the Bernoulli case is interesting and not restrictive, as it is actually the hardest case (since continuous distributions has a null mass on $Y_{k,t}=0$, they yield a much simpler problem as the sensing/no sensing distinction no longer makes sense).
 %
 Finally, in Chapter~\ref{chapter:6} we analyze our proposed algorithm for bounded distributions, without restricting to Bernoulli distributions, but we use the fact that bounded distributions on $[0,1]$ are sub-Bernoulli, and we use the Bernoulli Kullback-Leibler divergence $\kl$ in our analysis.
 
@@ -416,7 +416,7 @@ MAB have been applied successfully to various decision making problems, like the
     Using bandit algorithms for \textbf{improved machine learning} models or algorithms has been an active research domain for the last ten years or so.
     As presented below in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}, a certain ``leader'' bandit algorithm can be used to select on the run the best bandit algorithm from a pool of ``followers'' algorithms.
     Other possible use cases include hyper-parameter optimization, or features selection.
-    Hyper-parameters include real-valued parameters, like $\alpha\in[0,\infty)$ for the $\UCB_1$ or $\varepsilon$ for the $\varepsilon$-greedy bandit algorithms, a step size multiplier in a gradient method, or the width of a radial based function (RBF) kernel method.
+    Hyper-parameters include real-valued parameters, like $\alpha\in[\frac{1}{2},\infty)$ for the $\UCB_1$ or $\varepsilon\in(0,1)$ for the $\varepsilon$-greedy bandit algorithms, a step size multiplier in a gradient method, or the width of a radial based function (RBF) kernel method.
     Discrete-valued parameters are also common, like a choice in a fixed set of kernel functions or the depth of neural networks,
     and higher dimensional or more complex hyper-parameters can for instance be the entire architecture of a neural network.
 
@@ -469,10 +469,10 @@ or in other words, to quantify the speed of convergence of a MAB algorithm.
 \subsection{Measuring performance with the (mean) regret}
 
 Let us first introduce some notations.
-From now on, we consider a stochastic and stationary MAB problem, with $K$ arms of distributions $\nu_1,\dots,\nu_K=(\nu_k)_k$, that generates \iid{} samples $Y_{k,t} \sim \nu_k$, for any time $t$.
+We consider a stochastic and stationary MAB problem, with $K$ arms of distributions $\nu_1,\dots,\nu_K=(\nu_k)_k$, that generates \iid{} samples $Y_{k,t} \sim \nu_k$, for any time $t$.
 % with $r(t)=Y_{A(t),t}$).
 We focus on distributions fully characterized by their means, that can be Bernoulli or any one-dimensional exponential family.
-We denote $\mu_k = \E[Y_{k,t}] \in \R$ the mean of the distribution of arm $k$ (it will be referred to as the \emph{mean of arm $k$}).
+We denote $\mu_k := \E[Y_{k,t}] \in \R$ the mean of the distribution of arm $k$ (it will be referred to as the \emph{mean of arm $k$}).
 %
 % \paragraph{Defining the regret.}
 %
@@ -482,7 +482,7 @@ To define the regret, we first need to distinguish between \emph{optimal} and \e
 \begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
     % [Optimal and sub-optimal arms]
     Consider a bandit problem of $K$ arms with distributions of means $\bm{\mu}=\mu_1,\dots,\mu_k$.
-    Denote $\mu^* = \max_k \mu_k$ the largest mean.
+    Denote $\mu^* := \max_k \mu_k$ the largest mean.
     The best arm can be non unique, and any arm $k$ having $\mu_k = \mu^*$ is said to be \emph{optimal},
     while arms satisfying $\mu_k < \mu^*$ are called \emph{sub-optimal}.
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
@@ -496,7 +496,7 @@ and here we can compare with the oracle strategy that always obtains an (expecte
 %
 For a fixed horizon $T$, if $k^*$ denotes the index of any optimal arm,
 let us introduce the (mean) regret $R_T^{\cA}$ of an algorithm $\cA$ as
-$R_T^{\cA} = \E\left[ \sum_{t=1}^T (Y_{k^*,t} - r(t)) \right]$.
+$R_T^{\cA} := \E\left[ \sum_{t=1}^T (Y_{k^*,t} - r(t)) \right]$.
 %
 As the rewards from arm $k^*$ are \iid{} (as for all arms), and by linearity of the expectancy, we can rewrite this expression to obtain the following definition of the regret:
 \begin{align*}
@@ -511,11 +511,11 @@ As the rewards from arm $k^*$ are \iid{} (as for all arms), and by linearity of 
 
 \begin{definition}[Regret]\label{def:2:regret}
 \begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
-    For an algorithm $\cA$, a bandit problem of $K$ arms characterized by their means $\bm{\mu} = \mu_1,\dots,\mu_K$, with $\mu^* = \max_k \mu_k$, then its \emph{(mean) regret} at horizon $T$ is $R_T^{\cA}$ defined as
+    For an algorithm $\cA$, a bandit problem of $K$ arms characterized by their means $\mu_1,\dots,\mu_K$, with $\mu^* := \max_k \mu_k$, then its \emph{(mean) regret} at horizon $T$ is $R_T^{\cA}$ defined as
     %
     \begin{align}\label{eq:2:regret}
         R_T^{\cA}
-        = \E\left[ \sum_{t=1}^T (Y_{k^*,t} - r(t)) \right]
+        := \E\left[ \sum_{t=1}^T (Y_{k^*,t} - r(t)) \right]
         % = T \mu^* - \sum_{t=1}^T \E\left[ Y(t) \right]
         = T \mu^* - \sum_{t=1}^T \E\left[ r(t) \right].
     \end{align}
@@ -523,12 +523,15 @@ As the rewards from arm $k^*$ are \iid{} (as for all arms), and by linearity of 
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
 
+One first need to observe that $R_T^{\cA} \geq 0$ for any $T$ and $\cA$, and that $R_T^{\cA} \leq \mu^* T$ (if rewards lie in $[0,1]$).
+Thus any algorithm has $R_T^{\cA} = \bigO{T}$, which justifies why we are interested in efficient algorithms that achieve at least a sub-linear regret, \ie, $R_T^{\cA} = \smallO{T}$.
+
 \paragraph{A useful decomposition of the regret.}
 %
-Remember that $N_k(t) = \sum_{s=1}^t \mathbbm{1}(A(s) = k)$ denotes the number of times arm $k$ was selected between times $1$ and $t$,
+Remember that $N_k(t) := \sum_{s=1}^t \mathbbm{1}(A(s) = k)$ denotes the number of times arm $k$ was selected between times $1$ and $t$,
 %
 and that the samples $Y_{k,t}$ are all \iid{} of mean $\mu_k$.
-The \emph{gap} between any arm $k\in[K]$ and an optimal arm is defined as $\Delta_k = \mu^* - \mu_k$
+The \emph{gap} between any arm $k\in[K]$ and an optimal arm is defined as $\Delta_k := \mu^* - \mu_k$
 (an arm $k$ is thus sub-optimal if and only if $\Delta_k > 0$),
 and thus we can write the following decomposition on the regret.
 
@@ -605,7 +608,7 @@ To specify the dependency on an instance $I$, we denote the regret of $\cA$ on i
 The following two theorems were proven in \cite{LaiRobbins85}.
 These lower-bounds are of highest interest to design efficient algorithms,
 and a significant part of the research literature on MAB algorithms has focussed on finding algorithms that matches the Lai and Robbins' lower-bound asymptotically.
-This means that an upper-bound is proven on the regret of algorithm $\cA$, that asymptotically match the lower-bound, with the same constant in the big-$\cO$ notation (in which case we say that the algorithm is \emph{optimal}), or with a larger constant (the algorithm is said to be \emph{order-optimal} in such case).
+This means that an upper-bound is proven on the regret of algorithm $\cA$, that asymptotically matches the lower-bound, with the same constant in the big-$\cO$ notation (in which case we say that the algorithm is \emph{optimal}), or with a larger constant (the algorithm is said to be \emph{order-optimal} in such case).
 
 
 \begin{theorem}\label{thm:2:firstLogTLowerBound}
@@ -635,11 +638,7 @@ Now we can state the second logarithmic lower-bound, for algorithms in this fami
     If $\cA$ is uniformly efficient,
     then for any arbitrary problem instance $I$,
     there exists a constant $C_I$ depending only on $I$,
-    and a time $T_0$ such that
-    \begin{equation}
-        \forall T \geq T_0, \;\;\; R_T^{\cA}(I) \geq C_I \log(T).
-    \end{equation}
-    % \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
+    and a time $T_0$ such that $\forall T \geq T_0, \;\;\; R_T^{\cA}(I) \geq C_I \log(T)$.
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
@@ -743,13 +742,13 @@ By visualizing the entire \emph{distribution} (as an histogram), or the variance
 % Both quantities are computed and stored in all numerical simulations using SMPyBandits, but visualizations for both have not been included in this thesis.
 
 % - Worst case regret (max $R_T^{r}$ for $r$ index of Monte-Carlo simulation?)
-The \textbf{switching cost} $\mathrm{SC}^{\cA}(T)$ counts how many times the player's decision has changed from one time step to the next one, \ie, $\mathrm{SC}^{\cA}(T) = \sum_{t=1}^{T-1} \indic(A(t) \neq A(t+1))$.
+The \textbf{switching cost} $\mathrm{SC}^{\cA}(T)$ counts how many times the player's decision has changed from one time step to the next one, \ie, $\mathrm{SC}^{\cA}(T) := \sum_{t=1}^{T-1} \indic(A(t) \neq A(t+1))$.
 It has recently gained interest in the literature, for instance the authors of \cite{Koren17} proposed an algorithm that adaptatively tries to balance the trade-off between minimizing the regret and minimizing the switching cost.
 %
 Indeed, in single-player models it is easy to show that achieving logarithmic regret directly implies a logarithmic upper-bound on the switching cost, and conversely the lower-bound from \cite{LaiRobbins85} also gives an asymptotic logarithmic lower-bound.
-But even if $\mathrm{SC}^{\cA}(T) = \Theta(\log T)$ for an efficient algorithm, it can be interesting to numerically evaluate this quantity, as a large value might indicate an algorithm that is alternating too much between the optimal arm and other arms.
+But even if $\mathrm{SC}^{\cA}(T) = \Theta(\log T)$ for an efficient algorithm, it can be interesting to numerically evaluate this quantity, as a large value might indicate an algorithm that is alternating too much between the optimal arm and other arms.\\
 %
-It is more interesting to study $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, the sum of the switching costs of the $M$ players in a multi-player bandit game (if player $j$ uses algorithm $\cA_j$ for $j=1,\dots,M$). Indeed in this case it is possible that the players attain a logarithmic centralized regret, by following an efficient centralized or decentralized algorithm, while still suffering from a linear switching cost.
+We find more interesting to study $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, the sum of the switching costs of the $M$ players in a multi-player bandit game (if player $j$ uses algorithm $\cA_j$ for $j=1,\dots,M$). Indeed in this case it is possible that the players attain a logarithmic centralized regret, by following an efficient centralized or decentralized algorithm, while still suffering from a linear switching cost.
 %
 It is very satisfying to obtain a logarithmic switching cost for our algorithm \MCTopM-\klUCB{} in Chapter~\ref{chapter:5}, even if minimizing the switching cost was not one of our objective, and the bound we obtain on $SC^{\cA_1,\dots,\cA_M}(T)$ is just a consequence of our proof of the control we give on the regret $R^{\cA}(T)$.
 % - Switching cost? \cite{modiDemo2016} \cite{Koren17}
@@ -783,7 +782,7 @@ Two other well-known and optimal algorithms are exposed: \klUCB{} extends the id
 Finally, we conclude by briefly exposing other families of algorithms.
 
 
-\paragraph{Implementation.}
+\textbf{Implementation.}
 %
 We describe our library SMPyBandits in more details in Chapter~\ref{chapter:3}, but all the algorithms described in this chapter are implemented in SMPyBandits, in the \texttt{Policies} module, alongside with many more algorithms (there are about 65 for single-player stochastic problems).
 A complete list of the implemented policies can be found on the following web page on the documentation,
@@ -799,9 +798,9 @@ A complete list of the implemented policies can be found on the following web pa
 
 Let us first describe two naive strategies, that both fail dramatically.
 They are detailed in Algorithm~\ref{algo:2:naiveStrategies} below.
-We recall the notations introduced above in Section~\ref{par:2:interactiveDemoDiscoverMAB}, the sums of rewards are $X_k(t) = \sum_{s=1}^t r(s) \mathbbm{1}(A(s) = k)$, and the numbers of samples are $N_k(t) = \sum_{s=1}^t \mathbbm{1}(A(s) = k)$.
+We recall the notations introduced above in Section~\ref{par:2:interactiveDemoDiscoverMAB}, the sums of rewards are $X_k(t) := \sum_{s=1}^t r(s) \mathbbm{1}(A(s) = k)$, and the numbers of samples are $N_k(t) := \sum_{s=1}^t \mathbbm{1}(A(s) = k)$.
 %
-The estimated means, or empirical averages, are $\widehat{\mu_k}(t) = X_k(t) / N_k(t)$ (when $N_k(t)>0$).
+The estimated means, or empirical averages, are $\widehat{\mu_k}(t) := X_k(t) / N_k(t)$ (when $N_k(t)>0$).
 
 -- The uniform strategy always plays the $K$ arms uniformly at random.
 The player \textcolor{darkgreen}{\emph{only explores}} without using the collected information, and this strategy fails dramatically for any non trivial problem (\ie, linear regret).
@@ -854,7 +853,7 @@ On the one hand, if $\varepsilon$ is constant, then the (mean) regret still grow
 In average, $T_0 = \varepsilon T$ steps are spent on exploration.
 %
 On the other hand, if a lower-bound $d$ on the positive gaps is known beforehand,
-we can consider $\varepsilon_t$ decreasing with time $t$, for instance $\varepsilon_t = \varepsilon_0 / t$ with $\varepsilon_0 = 6 K / d^2$, for a constant $0 < d < \min_{k: \Delta_k > 0} \Delta_k$.
+we can consider a sequence $(\varepsilon_t)_{t\in\N^*}$ decreasing with time $t$, for instance $\varepsilon_t = \varepsilon_0 / t$ with $\varepsilon_0 = 6 K / d^2$, for a constant $0 < d < \min_{k: \Delta_k > 0} \Delta_k$.
 Then it was shown in \cite{Auer02} that the regret of $\varepsilon$-greedy is of the order of $K \log(T) / d + \smallO{T}$, which leads to an order-optimal regret of $\bigO{K \log(T)}$.
 Here again, an average of $T_0 \leq \varepsilon_0 \log(T)$ steps are spent on exploration.
 
@@ -937,9 +936,10 @@ We note that this strategy can also achieve $R_T = \bigO{T^{2/3} (K \log(T))^{1/
     In all cases, we showed that $p$ is controlled by $T_0$.
 \end{smallproof}
 
-\begin{lemma}[Hoeffding's inequality]\label{lem:2:HoeffdingInequality}
+\begin{lemma}\label{lem:2:HoeffdingInequality}
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
-    Let $Z_1,\dots,Z_n$ be $n$ \iid{} samples from a Bernoulli distribution of parameter $\mu$, of empirical mean $\widehat{Z_n} = \frac{1}{n} \sum\limits_{i=1}^n Z_i$, Hoeffding's inequality gives both
+    Let $Z_1,\dots,Z_n$ be $n$ \iid{} samples from a Bernoulli distribution of parameter $\mu$ (where $n$ is fixed),
+    of empirical mean $\widehat{Z_n} := \frac{1}{n} \sum\limits_{i=1}^n Z_i$, \emph{Hoeffding's inequality} gives both
     \begin{align}\label{eq:2:HoeffdingInequality}
         \begin{cases}
             \forall x < \mu, \;\;\; & \bP(\widehat{Z_n} < x) \leq \exp(-2 n (x-\mu)^2),
@@ -1003,11 +1003,11 @@ Let us consider another approach for adaptive exploration, known as ``optimism u
 %
 This intuition leads to the $\UCB_1$ algorithm, initially introduced in \cite{Auer02}.
 For a parameter $\alpha$, the \UCB{} indexes are computed as follows, as a sum of
-the \emph{average reward} $\widehat{\mu_k}(t)=\frac{X_k(t)}{N_k(t)}$
-and a \emph{confidence radius} $\xi_k(t) = \sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}$.
+the \emph{average reward} $\widehat{\mu_k}(t) := \frac{X_k(t)}{N_k(t)}$
+and a \emph{confidence radius} $\xi_k(t) := \sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}$.
 %
 \begin{align}\label{eq:UCB_index}
-    U_k^{\UCB_1}(t) = \UCB_k(t) = \underbrace{\frac{X_k(t)}{N_k(t)}}_{\widehat{\mu_k}(t)} + \underbrace{\sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}}_{\xi_k(t)}.
+    U_k^{\UCB_1}(t) = \UCB_k(t) := \underbrace{\frac{X_k(t)}{N_k(t)}}_{\text{Exploitation} \widehat{\mu_k}(t)} + \underbrace{\sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}}_{\text{Exploration} \xi_k(t)}.
 \end{align}
 
 This selection rule \eqref{eq:UCB_index} makes sense for the following reason:
@@ -1023,15 +1023,14 @@ The constant parameter $\alpha$ in $\xi_k(t)$ also controls this trade-off, and 
 We present the regret bound, which was first stated in \cite{Auer02}, and to explain how Hoeffding's inequality is used we prove it below.
 Note that for the rest of the manuscript, we use the \klUCB{} algorithm (and more subtle concentration inequality) whenever we analyze the regret of a newly introduced algorithm (\ie, in Chapters~\ref{chapter:5} and \ref{chapter:6}),
 but we preferred to start with a simpler proof in the single-player stationary case.
-µ
-What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal problem-dependent bounds with a $\cO(K\log(T)/\Delta^2)$ regret (if $\Delta=\min\limits_{k: \Delta_k>0} \Delta$).
+%
+This theorem shows that $\UCB_1$ achieves a order-optimal problem-dependent regret, bounded by $\cO(K\log(T)/\Delta^2)$ (if $\Delta := \min\limits_{k: \Delta_k>0} \Delta$).
 
 \begin{theorem}[Regret bound for $\UCB_1$]\label{thm:2:UCBregretBound}
 \begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
-    For simplicity, we restrict to $\alpha=2$.
     For any instance $I$ with $K$ arms with bounded distributions in $[0,1]$,
     of means $\mu_1,\dots,\mu_k$, and any horizon $T>K$,
-    the $\UCB_1$ algorithm verifies the following finite-time regret bound
+    the $\UCB_1$ algorithm with its parameter\footnotemark{} $\alpha=2$ verifies the following finite-time regret bound
     \begin{equation}\label{eq:2:UCBregretBound}
         R_T^{\cA}(I) \leq \left(\sum_{k: \Delta_k>0} \frac{8}{\Delta_k}\right) \log(T) + \sum_{k: \Delta_k>0} \Delta_k \left(1 + \frac{\pi^2}{3}\right)
         = \bigO{ \left(\sum_{k: \Delta_k>0} \frac{8}{\Delta_k}\right) \log(T)}.
@@ -1040,6 +1039,9 @@ What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal pr
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 %
+\footnotetext{~For simplicity we present the theorem and its prove in the restricted case of $\alpha=2$. More details on this proof can be found for instance in Section~1.3 of \cite{Slivkins2019}, while for instance Chapter~2 of \cite{Bubeck12} Theorem~2.1) and Chapter~7 of \cite{LattimoreBanditAlgorithmsBook} (Theorem~7.2) both give more general proofs, in particular for any value of $\alpha\geq\frac{1}{2}$.}%
+%
+\vspace*{-10pt}  % FIXME vspace negative
 \begin{smallproof}\label{proof:2:UCBregretBound}
     As we focus on bounded distributions in $[0,1]$, for which Hoeffding's inequality gives \eqref{eq:2:HoeffdingInequality}, as stated above in Lemma~\ref{lem:2:HoeffdingInequality}.
     Thanks to the regret decomposition from Lemma~\ref{lem:2:RegretDecomposition}, we can focus on bounding $\E[N_k(T)]$ for any sub-optimal arm $k$.\\
@@ -1048,40 +1050,40 @@ What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal pr
     The first trick consists in writing the following, which is true for any $n \geq 1$:
     \begin{equation}\label{eq:2:trickInUCBProof}
         N_k(T) = 1 + \sum_{t=K+1}^T \indic(A(t) = k)
-        \leq n + \sum_{t=n}^T \indic(A(t) = k, N_k(t) \geq n).
+        \leq 1 + n + \sum_{t=n}^T \indic(A(t) = k, N_k(t) \geq n).
     \end{equation}
 
     \TODOL{J'aimerai bien rajouter des couleurs sur $k$ et $k^*$ partout plus bas ? si c'est bien fait, ça peut aider la lecture, par exemple \textcolor{darkgreen}{$k$} et \textcolor{gold}{$k^*$}.}
 
     Remember that $\UCB_a(t) = \widehat{\mu_a}(t) + \xi_a(t)$ for any arm $a$.
-    According to the algorithm (see Algorithm~\ref{algo:2:indexPolicy} at line~6),
-    arm $k$ is chosen if $\UCB_k(t) \geq \UCB_{k^*}(t)$.
-    Both $\widehat{\mu_a}(t)$ and $\xi_a(t)$ use $N_k(t)$ samples of arm $a$,
-    but as \eqref{eq:2:trickInUCBProof} above started to isolate $N_k(t)$, we want to add the freedom of considering different number of samples (using $n$), so we introduce the notation
-    $\hat{\mu}_{a,n}(t)$ and $\xi_{a,n}(t)$ where $N_k(t)$ is replaced with $n$ if $n \leq N_k(t)$,
-    \ie, $\hat{\mu}_{a,n(t)} = \frac{1}{n} \sum_{s=1}^{t-1} r(s) \indic(A(s)=k, N_k(s) \leq n)$ and $\xi_{a,n}(t) = \sqrt{2\log(t) / n}$.
+    According to the Algorithm~\ref{algo:2:indexPolicy} (see line~6),
+    a suboptimal arm $k$ can be chosen only if $\UCB_k(t) \geq \UCB_{k^*}(t)$.
+    Both $\widehat{\mu_a}(t)$ and $\xi_a(t)$ use $n=N_k(t)$ samples of arm $a$,
+    but as \eqref{eq:2:trickInUCBProof} above started to isolate $N_k(t)$, we add the freedom of considering different number of samples (using $n$), so we introduce the notation
+    $\widehat{\mu}_{a,n}(t)$ and $\xi_{a,n}(t)$ where $N_k(t)$ is replaced with $n$ if $n \leq N_k(t)$,
+    \ie, $\widehat{\mu}_{a,n(t)} = \frac{1}{n} \sum_{s=1}^{t-1} r(s) \indic(A(s)=k, N_k(s) \leq n)$ and $\xi_{a,n}(t) = \sqrt{2\log(t) / n}$.
     %
     Thus, we can continue from \eqref{eq:2:trickInUCBProof} and write
     %
     \begin{align}\label{eq:2:decompositionInUCBProof}
         N_k(T)
-        & \leq n + \sum_{t=n}^T \indic(A(t) = k, N_k(t) \geq n) \nonumber \\
-        & \leq n + \sum_{t=n}^T \indic(\hat{\mu}_{k^*,N_{k^*}(t)}(t) + \xi_{k^*,N_{k^*}(t)}(t) < \hat{\mu}_{k,N_k(t)}(t) + \xi_{k,N_k(t)}(t), N_k(t) \geq n)  \nonumber \\
-        & = n + \sum_{t=n}^T \indic\left(\min_{0 < n_{k^*} < t} \hat{\mu}_{k^*,n_{k^*}}(t) + \xi_{k^*,n_{k^*}}(t) < \max_{n < n_k < t} \hat{\mu}_{k,n_k}(t) + \xi_{k,n_k}(t) \right)
+        & \leq 1 + n + \sum_{t=n}^T \indic(A(t) = k, N_k(t) \geq n) \nonumber \\
+        & \leq 1 + n + \sum_{t=n}^T \indic(\widehat{\mu}_{k^*,N_{k^*}(t)}(t) + \xi_{k^*,N_{k^*}(t)}(t) < \widehat{\mu}_{k,N_k(t)}(t) + \xi_{k,N_k(t)}(t), N_k(t) \geq n)  \nonumber \\
+        & = 1 + n + \sum_{t=n}^T \indic\left(\min_{0 < n_{k^*} \leq t} \widehat{\mu}_{k^*,n_{k^*}}(t) + \xi_{k^*,n_{k^*}}(t) < \max_{n < n_k \leq t} \widehat{\mu}_{k,n_k}(t) + \xi_{k,n_k}(t) \right)
     \end{align}
-    So two union bounds on $n_{k^*}$ for the $\min$ and on $n_k$ for the $\max$ give
+    So two union bounds on $n_{k^*}$ for the $\min$ and on $n_k$ for the $\max$ give two sums
     \begin{align}\label{eq:2:decompositionInUCBProof2}
         N_k(T)
-        & \leq n + \sum_{t=n}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n}^t  \indic\left( \hat{\mu}_{k^*,n_{k^*}}(t) + \xi_{k^*,n_{k^*}}(t) < \hat{\mu}_{k,n_k}(t) + \xi_{k,n_k}(t) \right)
+        & \leq 1 + n + \sum_{t=n}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n}^t  \indic\left( \widehat{\mu}_{k^*,n_{k^*}}(t) + \xi_{k^*,n_{k^*}}(t) < \widehat{\mu}_{k,n_k}(t) + \xi_{k,n_k}(t) \right)
     \end{align}
 
-    Now, at time $t$, this event $\hat{\mu}_{k^*,n_{k^*}}(t) + \xi_{k^*,n_{k^*}}(t) < \hat{\mu}_{k,n_k}(t) + \xi_{k,n_k}(t)$
+    Now, at time $t$, this event $\widehat{\mu}_{k^*,n_{k^*}}(t) + \xi_{k^*,n_{k^*}}(t) < \widehat{\mu}_{k,n_k}(t) + \xi_{k,n_k}(t)$
     implies at least one of the following three events:
     \begin{align*}
         \begin{cases}
-        I_1 \;:\; & \hat{\mu}_{k^*,n_{k^*}}(t) \leq \mu_{k^*} - \xi_{k^*,n_{k^*}}(t), \\
-        I_2 \;:\; & \hat{\mu}_{k,n_k}(t) \geq \mu_k + \xi_{k,n_k}(t), \\
-        I_3 \;:\; & \mu_{k^*} < \mu_k + 2 \; \xi_{k,n_k}(t).
+        I_1 \;:=\; & ( \widehat{\mu}_{k^*,n_{k^*}}(t) \leq \mu_{k^*} - \xi_{k^*,n_{k^*}}(t) ), \\
+        I_2 \;:=\; & ( \widehat{\mu}_{k,n_k}(t) \geq \mu_k + \xi_{k,n_k}(t) ), \\
+        I_3 \;:=\; & ( \mu_{k^*} < \mu_k + 2 \; \xi_{k,n_k} (t) ).
         \end{cases}
     \end{align*}
 
@@ -1091,7 +1093,7 @@ What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal pr
 
         \item
         For the last event $I_3$,
-        observe that $\mu_{k^*} < \mu_k + 2 \xi_{k,n_k}(t)$ means $\Delta_k - 2 \sqrt{2\log(t) / n_k} < 0$, where we remind the notation of the gap $\Delta_k = \mu_{k^*} - \mu_k$.
+        observe that $\mu_{k^*} < \mu_k + 2 \xi_{k,n_k}(t)$ means $\Delta_k - 2 \sqrt{2\log(t) / n_k} < 0$, where we remind the notation of the gap $\Delta_k := \mu_{k^*} - \mu_k$.
         Thus if $n_k \geq \left\lceil \frac{8 \log(T)}{\Delta_k^2} \right\rceil \geq \left\lceil \frac{8 \log(t)}{\Delta_k^2} \right\rceil$,
         then this inequality actually cannot happen:
         $\Pr(\Delta_k - 2 \sqrt{2\log(t) / n_k} < 0) = 0$,
@@ -1099,12 +1101,12 @@ What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal pr
     \end{itemize}
     %
     Taking the expectation of $N_k(T)$ from \eqref{eq:2:decompositionInUCBProof},
-    and setting $n = n_T = \lceil \frac{8 \log(T)}{\Delta_k^2} \rceil$ thus gives
+    and setting $n = n_T := \lceil \frac{8 \log(T)}{\Delta_k^2} \rceil$ thus gives
     %
     \begin{align}\label{eq:2:decompositionInUCBProof3}
         \E[ N_k(T) ]
-        & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t  \Pr( \hat{\mu}_{k^*,n_{k^*}}(t) + \xi_{k^*,n_{k^*}}(t) < \hat{\mu}_{k,n_k}(t) + \xi_{k,n_k}(t) ) \nonumber \\
-        & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t  \underbrace{\Pr(I_1)}_{=1/t^4} + \underbrace{\Pr(I_2)}_{=1/t^4} + \underbrace{\Pr(I_3)}_{=0} \nonumber \\
+        & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t  \Pr\left( \widehat{\mu}_{k^*,n_{k^*}}(t) + \xi_{k^*,n_{k^*}}(t) < \widehat{\mu}_{k,n_k}(t) + \xi_{k,n_k}(t) \right) \nonumber \\
+        & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t \bigl[ \underbrace{\Pr(I_1)}_{=1/t^4} + \underbrace{\Pr(I_2)}_{=1/t^4} + \underbrace{\Pr(I_3)}_{=0} \bigr] \nonumber \\
         & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t  2 \frac{1}{t^4} \nonumber \\
         \intertext{We actually have that $\sum\limits_{n_{k^*}=1}^t \sum\limits_{n_{k}=n_T}^t  2 \frac{1}{t^4} \leq 2 \sum\limits_{n_{k^*}=1}^t \frac{1}{t^3} \leq 2 \frac{1}{t^2}$, whose sum for $t=1$ to $\infty$ is $2\frac{\pi^2}{6}$.}
         & \leq \frac{8 \log(T)}{\Delta_k^2} + 1 + 2 \sum_{t=1}^T \frac{1}{t^2}
@@ -1114,7 +1116,7 @@ What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal pr
     %
     To sum up, we obtain the following finite-time bound on $N_k(T)$ for any sub-optimal arm $k$
     \begin{align*}
-        \E[N_k(T)] \leq \frac{8 \log(T)}{\Delta_k^2} + (1 + \frac{\pi^2}{3}).
+        \E[N_k(T)] \leq \frac{8 \log(T)}{\Delta_k^2} + \left(1 + \frac{\pi^2}{3}\right).
     \end{align*}
     %
     By using the regret decomposition from Lemma~\ref{lem:2:RegretDecomposition}, this gives
@@ -1123,8 +1125,6 @@ What this theorem shows is that the $\UCB_1$ algorithm achieves order-optimal pr
         & \leq \sum_{k: \Delta_k>0} \frac{8}{\Delta_k} \log(T) + \sum_{k: \Delta_k>0} \Delta_k \left( 1 + \frac{\pi^2}{3} \right)
         = \sum_{k: \Delta_k>0} \frac{8}{\Delta_k} \log(T) + \smallO{\log(T)}.
     \end{align*}
-
-    More details on this proof can be found for instance in Section~1.3 of \cite{Slivkins2019}, while for instance Chapter~2 of \cite{Bubeck12} Theorem~2.1) and Chapter~7 of \cite{LattimoreBanditAlgorithmsBook} (Theorem~7.2) both give more general proofs, in particular for any value of $\alpha\geq\frac{1}{2}$.
 \end{smallproof}
 
 Therefore, we see that the $\UCB_1$ algorithm has the advantage of not relying on any prior knowledge of the problem difficulty, of being anytime, and computationally simple, for both memory and time aspects, and it achieves an order-optimal problem-dependent regret upper bound in $\cO(K\log(T)/\Delta^2)$.
@@ -1150,18 +1150,15 @@ Instead of using a confidence radius $\xi_(t)$ based on Hoeffding's inequality,
 the \klUCB{} algorithm rather use a specific concentration inequality for the considered exponential family, such as Chernoff-Hoeffding for Gaussian (or sub-Gaussian) rewards.
 It yields improved upper confidence bounds (\ie, with smaller $\xi_(t)$) that are based on Kullback-Leibler divergence.
 The indexes are computed as follows, for an exploration function $f(t)$
-that is typically chosen as $f(t)=\log(t)+3\log(\log(t))$ for the theoretical analyses,
-and $f(t)=\log(t)$ in practice.
-The constant $c>0$ is usually chosen as $c=1$.
+that is typically chosen as $f(t) := \log(t)+3\log(\log(t))$ for the theoretical analyses,
+and $f(t) := \log(t)$ in practice.
+The constant $c>0$ is usually chosen as $c = 1$.
 \begin{align}\label{eq:klUCB_index}
-    U_k^{\klUCB}(t) = \sup\limits_{q \in [0, 1]} \left\{ q : \KL\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{c f(t}{N_k(t)} \right\}.
+    U_k^{\klUCB}(t) := \sup\limits_{q \in [0, 1]} \left\{ q : \KL\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{c f(t}{N_k(t)} \right\}.
 \end{align}
 
-For Bernoulli distributions,
-we can easily justify the previous claim that \klUCB{} builds smaller confidence intervals (\ie, more accurate) than $\UCB_1$,
-\ie, $U_k^{\klUCB}(t) < U_k^{\UCB}(t)$,
-because Pinkser's inequality gives $\kl(x,y) \geq 2(p-q)^2$ (see Lemma~\ref{lem:2:Pinsker} proved in appendix).
-% FIXME is this enough?
+For Bernoulli distributions, the previous claim that \klUCB{} builds smaller confidence intervals (\ie, more accurate) than $\UCB_1$, \ie, $U_k^{\klUCB}(t) < U_k^{\UCB}(t)$,
+is justified by Pinkser's inequality gives $\kl(x,y) \geq 2(p-q)^2$ (see Lemma~\ref{lem:2:Pinsker} proved in appendix).
 
 
 \paragraph{A note about the implementation of \klUCB{} algorithms.}
@@ -1171,12 +1168,12 @@ The first piece is usually easy: one has to implement a way to compute $\KL(x,y)
 for instance $\kl$ for Bernoulli distributions has a closed form and is easy to compute.
 The second piece is less obvious: one has to solve the optimisation problem defining the $\sup$ in \eqref{eq:klUCB_index}.
 Any iterative algorithm for numerical optimization of one-dimensional functions can be used (\eg, see \cite{BoydVanderberghe04} for a survey), but as the $\KL(x,\bullet)$ function is usually convex (for any $x$), one practical and mathematically correct solution is to use Newton's method.
-The search space for $q$ can be restricted to $[\frac{X_k(t)}{N_k(t)}, 1]$ instead of $[0,1]$, and Newton's method guarantees that a small number of steps yield a given precision level $\varepsilon$.
+The search space for $q$ can be restricted to $[ X_k(t) / N_k(t), 1 ]$ instead of $[0,1]$, and Newton's method guarantees that a small number of steps yield a given precision level $\varepsilon$.
 For instance, $\varepsilon=10^{-8}$ is enough for numerical simulations, and typically Newton's method terminates in between $8$ to $12$ steps.
 
-If we perform numerical simulations with \klUCB{} algorithms, we are interested in having efficient implementations, and ideally \klUCB{} should not be significantly slower than \UCB. The bottleneck of the performance is the computations of the $\KL(x,y)$ functions and the optimization problem,
+If we perform numerical simulations with \klUCB{} algorithms, we are interested in having efficient implementations, and ideally \klUCB{} should not be significantly slower than \UCB. The bottleneck of the performance is the computations of the $\KL$ functions and the optimization problem,
 and we note that our library SMPyBandits implements both parts in both a naive Python implementation (file \href{https://github.com/SMPyBandits/SMPyBandits/blob/master/SMPyBandits/Policies/kullback.py}{\texttt{kullback.py}}) and in a Python module written in a
-C file\footnote{~We also note that we wrote an intermediate implementation that uses Cython \cite{cython}, to have a file with a syntax closer to Python, while gaining from almost the same performance speed-up as with the optimized C version, see file \href{https://github.com/SMPyBandits/SMPyBandits/blob/master/SMPyBandits/Policies/kullback_cython.pyx}{\texttt{kullback\_cython.pyx}}.
+C file\footnote{~Note that we also wrote an intermediate implementation that uses Cython \cite{cython}, to have a file with a syntax closer to Python, while gaining from almost the same performance speed-up as with the optimized C version, see file \href{https://github.com/SMPyBandits/SMPyBandits/blob/master/SMPyBandits/Policies/kullback_cython.pyx}{\texttt{kullback\_cython.pyx}}.
     These implementations of $\KL(x,y)$ and \klUCB{} indexes are also published as an independent Python package, hosted on \href{https://github.com/Naereen/Kullback-Leibler-divergences-and-kl-UCB-indexes}{\texttt{GitHub.com/Naereen/Kullback-Leibler-divergences-and-kl-UCB-indexes}} and installable from Pypi.
     A Julia version of the same package is also available at \href{https://github.com/Naereen/KullbackLeibler.jl}{\texttt{GitHub.com/Naereen/KullbackLeibler.jl}},
     and installable with \texttt{Pkg.add("KullbackLeibler")}.
@@ -1215,12 +1212,12 @@ It became popular since its asymptotical and finite-time analyses in \cite{Agraw
 %
 Thompson sampling uses a Bayesian point of view:
 instead of building confidence intervals on the means of the arms like $\UCB_1$ does,
-it starts with a prior on the $K$ distributions (\eg, a flat uniform prior), and then after every observation $(k, r(t))$ it updates the posterior distribution of the arm $k$ with a new data $r(t)$.
-If $\pi_k(t)$ denotes this posterior distribution, Thompson sampling makes its decision at time $t$ by first sampling a random sample $s_k \sim \pi_k(t)$, and then playing according to the ``optimism under uncertainty'' philosophy if these samples represent the arms (expected) quality: $A(t) \in \argmax_k s_k$.
+it starts with a prior $\pi_k(0)$ on the $K$ distributions (\eg, a flat uniform prior), and then after every observation $(k, r(t))$ it updates the posterior distribution of the arm $k$ with a new data $r(t)$, from $\pi_k(t)$ to $\pi_k(t+1)$.
+Thompson sampling makes its decision at time $t$ by first sampling a random sample $s_k \sim \pi_k(t)$, and then playing according to the ``optimism under uncertainty'' philosophy if these samples represent the arms (expected) quality, \ie, $A(t) \in \argmax_k s_k$.
 
 For problems with Bernoulli distributions on the $K$ arms,
-the best choice of prior is a Beta distribution, that starts as an initially uniform prior (\ie, $\mathrm{Beta}(1,1)$),
-and maintain a distribution $\mathrm{Beta}(X_k(t)+1,N_k(t)-X_k(t)+1)$,
+the best choice of prior is a Beta distribution, that starts as an initially uniform prior (\ie, $\forall k, \pi_k(0) := \mathrm{Beta}(1,1)$),
+and maintain a distribution $\pi_k(t) := \mathrm{Beta}(X_k(t)+1,N_k(t)-X_k(t)+1)$,
 as $X_k(t)$ counts the number of successes observed on arm $k$, and $N_k(t)-X_k(t)$ counts the number of failures.
 %
 We detail the Thompson sampling algorithm in this case, below in Algorithm~\ref{algo:2:ThompsonSampling}, as it corresponds to the case used in Chapter~\ref{chapter:4} in Section~\ref{sub:41:numericalResults}.
@@ -1238,7 +1235,8 @@ Thompson sampling was proven to achieve asymptotical optimal problem-dependent b
 		\For(){$t = 1, 2, \dots, T$}{
             For each arm, sample $s_k(t) \sim \pi_k(t-1)$ from the posterior of arm $k$, $\pi_k(t-1)=\mathrm{Beta}(X_k(t-1)+1,N_k(t-1)-X_k(t-1)+1)$\;
             Play arm $A(t)$ uniformly among the arms of maximal random sample: $A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} U_k(t))$\;
-            Observe a reward $r(t)$ and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$\;
+            Observe a reward $r(t)$ and update $X_k(t)$ and $N_k(t)$\;
+            %  and $\widehat{\mu_k}(t)$
 		}
 		\caption{Thompson Sampling for Beta prior and posteriors, on Bernoulli rewards.}
 		\label{algo:2:ThompsonSampling}
@@ -1266,12 +1264,13 @@ We found that in practice it can achieve very good performance, as illustrated i
 %  and it did not gain popularity since then.
 % In practice, AdBandits is usually (slighly) more efficient than both Thompson sampling and Bayes-UCB in terms of regret, it is comparable in terms of computation times, but costs more memory.
 
-Finally, we would like to mention that a recent work \cite{KimTewari2019} presented an approach that closes the gap between the principle of optimism under uncertainty and the Bayesian point-of-view.
+Finally, we would like to mention that a recent work \cite{KimTewari2019} presented an approach that closes the gap between the two aforementioned point-of-views.
+%  the principle of optimism under uncertainty and the Bayesian point-of-view.
 %  underlying the approaches based on UCB, might not be necessary at all.
 % With perturbation: maybe we don't need optimism in face of uncertainty, we just need uniform sampling!
-The authors of \cite{KimTewari2019} showed that their Randomized Confidence Bound (RCB) algorithm can achieve the same regret upper bounds as $\UCB_1$ or Thompson sampling, with uniform perturbations.
-Their RCB algorithm ressembles $\UCB_1$, and builds the same confidence intervals $[ \mathrm{LCB}_k(t), \UCB_k(t) ]$ on arm $k$ at time $t$ (the lower confidence bound is $\mathrm{LCB}_k(t) = \widehat{\mu_k}(t) - \xi_k(t)$),
-but instead of playing the arm with maximum UCB, a random sample is taken on each interval, and the played arm is the one maximizing this sample.
+The authors of \cite{KimTewari2019} showed that their Randomized Confidence Bound (RCB) algorithm can achieve the same regret upper bounds as $\UCB_1$ or Thompson sampling, with uniformly distributed perturbations.
+Their RCB algorithm ressembles $\UCB_1$, and builds the same confidence interval $\left[ \mathrm{LCB}_k(t), \UCB_k(t) \right]$ on arm $k$ at time $t$ (the lower confidence bound is $\mathrm{LCB}_k(t) := \widehat{\mu_k}(t) - \xi_k(t)$),
+but instead of maximizing the UCB, a random sample is taken on each interval $s_k \sim \cU(\left[ \mathrm{LCB}_k(t), \UCB_k(t) \right])$, and the played arm is the one maximizing this sample, \ie, $A(t) \in \argmax_k s_k$.
 % https://smpybandits.github.io/docs/Policies.RandomizedIndexPolicy.html
 
 
@@ -1308,12 +1307,12 @@ which comes with an interactive online demonstration to help understanding the b
 a family of algorithms developed since the 1950s, and applied to a wide range of different domains.
 % https://smpybandits.github.io/docs/Policies.Exp3.html
 %
-The Exp3 policy maintains weights $w_k(t)$ on the $K$ arms, and at time $t$ it samples an arm from the distribution which is a mixture of $\bm{w}(t)=[w_1(t),\dots,w_K(t)]$ and the uniform distribution:
-$\Pr(A(t)=k) = (1-\gamma) w_k(t) + \gamma \frac{1}{K}$.
-The weights are initially uniform, \ie, $w_k(0)=\frac{1}{K}$, and then at each time after observing a reward $Y_{k,t}$ from arm $k$, Exp3 updates the weight of the chosen arm multiplicatively, using $w_k(t+1) = w_k(t) \times \exp(\widehat{r_k}(t) / (\gamma N_k(t)))$. The weights are then renormalized, to have a sum $\sum_k w_k(t+1) = 1$.
-This notation $\widehat{r_k}(t)$ means an unbiased estimator of the reward $r(t)=Y_{k,t}$, that is, $\widehat{r_k}(t) = \Pr(A(t)=k)$.
+The Exp3 policy maintains weights $w_k(t)$ on the $K$ arms, and at time $t$ it samples an arm from the distribution which is a mixture of $\bm{w}(t)=[w_1(t),\dots,w_K(t)]$ and the uniform distribution, \ie,
+$\Pr(A(t)=k) := (1-\gamma) w_k(t) + \gamma \frac{1}{K}$.
+The weights are initially uniform, \ie, $w_k(0)=1/K$, and then at each time after observing a reward $Y_{k,t}$ from arm $k$, Exp3 updates the weight of the chosen arm multiplicatively, using $w_k(t+1) = w_k(t) \times \exp(\widehat{r_k}(t) / (\gamma N_k(t)))$. The weights are then renormalized, to have a sum $\sum_k w_k(t+1) = 1$.
+This notation $\widehat{r_k}(t)$ means an unbiased estimator of the reward $r(t)=Y_{k,t}$, that is, $\widehat{r_k}(t) = r(t) / \Pr(A(t)=k)$.
 %
-Like for the $\varepsilon$-greedy policy, the parameter $\gamma$ can be constant, or can be a non-increasing sequence $(\gamma_t)_t$.
+Like for the $\varepsilon$-greedy policy, the parameter $\gamma$ can be constant, or can be a non-increasing sequence $(\gamma_t)_{t\in\N^*}$.
 %
 It was proved in \cite{Auer02NonStochastic} that Exp3 with constant parameter $\gamma$ achieves $R_T = \bigO{\sqrt{K T \log(T)}}$ problem-independent regret,
 while using a decreasing sequence, such as $\gamma_t = \sqrt{\log(K) / K} \log(t) / t$ gives an order-optimal problem-independent regret upper-bound of $\bigO{\sqrt{K T}}$.
@@ -1332,8 +1331,8 @@ We present here some solutions that are index-based (see Algorithm~\ref{algo:2:i
 The first example is MOSS from \cite{Audibert2009minimax}, or \KLUCBpp{} in \cite{Menard17},
 and they use the following indexes:
 \begin{align}\label{eq:2:indexes_for_MOSS_klUCBpp}
-    U^{\mathrm{MOSS}}_k(t) &= \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \frac{\log\left(\frac{t}{K N_k(t)}\right)}{N_k(t)} } \right). \\
-    U^{\KLUCBpp}_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{g(N_k(t), T, K)}{N_k(t)} \right\}.
+    U^{\mathrm{MOSS}}_k(t) & := \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \frac{\log\left(\frac{t}{K N_k(t)}\right)}{N_k(t)} } \right). \\
+    U^{\KLUCBpp}_k(t) & := \sup\limits_{q \in [a, b]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{g(N_k(t), T, K)}{N_k(t)} \right\}.
 \end{align}
 %
 If we denote $g(t, T, K) = \log^+(y(t) (1 + \log^+(y(t))^2))$, and $y(t) = \frac{T}{K t}$, with $\log^+(x) = \max(0, \log(x))$.
@@ -1349,9 +1348,9 @@ To detail this, first let $f(T, K) = \lfloor (T/K)^{\gamma}\rfloor$ for $\gamma=
 then \klUCB-switch use the index defined as follows:
 %
 \begin{align}\label{eq:2:indexes_for_klUCBswitch}
-    U^{\mathrm{MOSS}+}_k(t) &= \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \frac{\log\left(\frac{T}{K N_k(t)}\right)}{N_k(t)}} \right). \\
-    U^{\KLUCB+}_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{\log(\frac{T}{K N_k(t)})}{N_k(t)} \right\} \\
-    U^{\klUCB\text{-}\mathrm{switch}}_k(t) &= \begin{cases}
+    U^{\mathrm{MOSS}+}_k(t) & := \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \frac{\log\left(\frac{T}{K N_k(t)}\right)}{N_k(t)}} \right). \\
+    U^{\KLUCB+}_k(t) & := \sup\limits_{q \in [a, b]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{\log(\frac{T}{K N_k(t)})}{N_k(t)} \right\} \\
+    U^{\klUCB\text{-}\mathrm{switch}}_k(t) & := \begin{cases}
         U^{\KLUCB+}_k(t) & \text{if } N_k(t) \leq f(T, K), \\
         U^{\mathrm{MOSS}+}_k(t) & \text{if } N_k(t) > f(T, K).
     \end{cases}.
@@ -1375,7 +1374,7 @@ It is anytime, and it was also proven to obtain good ``best-of-both-world'' perf
 
 
 % \subsection{A first numerical experiment on the example Bernoulli problem}
-\subsection{Comparison of the main algorithms on the Bernoulli problem of the online demonstration}
+\subsection{Comparison of the main algorithms on the example Bernoulli problem from the online interactive demonstration}
 \label{sub:2:shortNumericalExperiments}
 
 We finish this Section~\ref{sec:2:famousMABalgorithms} by illustrating the performance of different algorithms, on the small MAB problem used in the online demonstration shown above (see Figures~\ref{fig:2:example_of_a_5_arm_bandit_problem} and \ref{fig:2:example_of_a_5_arm_bandit_problem__step100}).
@@ -1622,7 +1621,7 @@ This section is based on our article \cite{Besson2018WCNC}.
 Many different learning algorithms have been proposed by the machine learning community,
 and most of them depend on several parameters, for instance $\alpha$ for $\UCB_1$, the prior for Thompson sampling or BayesUCB,
 the $\kl$ function for \klUCB{} etc.
-Every time a new MAB algorithm $\Alg$ is introduced, it is compared and benchmarked on some bandit instance, parameterized by $\boldsymbol{\mu} = (\mu_1,\dots,\mu_K)$, usually by focusing on its expected regret $R_T^{\Alg}$.
+Every time a new MAB algorithm $\Alg$ is introduced, it is compared and benchmarked on some bandit instances, parameterized by $\boldsymbol{\mu} = (\mu_1,\dots,\mu_K)$, usually by focusing on its expected regret $R_T^{\Alg}$.
 %
 For a known and specific instance, simulations help to select the best algorithm in a pool of algorithms,
 but when one wants to tackle an \emph{unknown} real-world problem, one expects to be efficient against \emph{any} problem, of any size and complexity in a certain family:
@@ -1754,16 +1753,16 @@ As bounded distributions in $[0,1]$ are sub-Bernoulli as well as $1/4$-sub-Gauss
 
 \begin{lemma}[Pinsker's inequality]\label{lem:2:Pinsker}
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
-    Let $p,q\in[0,1]$, and remember that the \emph{relative binary entropy} is defined as $\kl(p,q) = p \ln\left(\frac{p}{q}\right) + (1-p)\ln\left(\frac{1-p}{1-q}\right)$.
+    Let $p,q\in[0,1]$, and remember that the \emph{relative binary entropy} is defined as $\kl(p,q) := p \ln\left(\frac{p}{q}\right) + (1-p)\ln\left(\frac{1-p}{1-q}\right)$.
 
     Then for any $p,q\in[0,1]$, $\kl$ verifies $\kl(p,q) \geq 2 (p-q)^2$.
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
 \begin{smallproof}
-    Fix $p\in[0,1]$, and consider the function $g(x) = \kl(p, p+x) - 2 x^2$ ($x$ will be $q-p$), for $x\in(-p, 1-p)$.
+    Fix $p\in[0,1]$, and consider the function $g(x) := \kl(p, p+x) - 2 x^2$ ($x$ will be $q-p$), for $x\in(-p, 1-p)$.
     We first observe that $g(0) = 0$, and we easily prove that $x=0$ is the unique minimizer of $g$ over its domain.
-    By definition, $\kl$ is of class $\cC^1$ on its two variables, on $(0,1)$, so $g$ is of class $\cC^1$ on the interior of its domain, $(-p, 1-p)$.
+    By definition, $\kl$ is of class $\cC^1$ on its two variables, on the open interval $(0,1)$, so $g$ is of class $\cC^1$ on the interior of its domain, $(-p, 1-p)$.
     Let us compute its derivative, $g'(x) = (\frac{\partial \; \kl}{\partial 2})(p, p + x) - 4x$.
     Simple calculus yield
     \[ \left(\frac{\partial \; \kl}{\partial 2}\right) (p, p + x) = - \frac{p}{p+x} + \frac{1-p}{1-(p+x)} = -x \frac{(2(p + x) - 1)^2}{(p + x)(p + x - 1)}. \]

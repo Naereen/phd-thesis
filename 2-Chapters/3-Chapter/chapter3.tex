@@ -17,7 +17,7 @@ This chapter details the organization of the library, what it implements in term
 Then we use it to perform a numerical comparisons of the main state-of-the-art single-player MAB algorithms, and a study to compare time and memory costs of the main algorithms.
 
 
-\TODOL{C'est bizarre ce problème d'espacement vertical ici... je ne sais pas comment le corriger !}
+% \TODOL{C'est bizarre ce problème d'espacement vertical ici... je ne sais pas comment le corriger !}
 
 
 \minitoc
@@ -82,7 +82,8 @@ and reward distributions.
 %
 We then detail how it implements MAB algorithms (\eg, \UCB),
 and what kind of information is displayed, saved and plotted after a batch of simulations of bandit problems.
-
+%
+%
 The main goal of the library is to be easily able to simulate MAB algorithms (\eg, three algorithms like \UCB, \klUCB{} and Thompson sampling) on one or more bandit models (single- or multi-player) defined by the number of arms $K$ and the distributions $\nu_k$, for some time from $t=1$ to the horizon $T$.
 After the simulation, the library then displays statistical summary of the (mean) rewards accumulated by each algorithm, as well as regret and other visualizations.
 The same problem is simulated for $N$ independent repetitions (\eg, $N=100$) in order to show mean results with a low variance.
@@ -96,7 +97,7 @@ used to generate the \iid{} samples $Y_{k,t} \sim \nu_k, \forall t$.
 An agent chooses arm $A(t)\in[K]$ at time $t$ and observes the reward $r(t) = Y_{A(t),t}$ without knowing the other (hidden) rewards.
 Her goal is to maximize $\sum_{t=1}^T r(t)$ by sequentially exploring the $K$ arms, and she essentially has to find and exploit the best one as fast as possible.
 
-\paragraph{Simulation loop.}
+\textbf{Simulation loop.}
 %
 Any simulation library targeting single-player bandit problems must implement at least three components:
 reward distributions, MAB algorithm, and a simulation loop that essentially looks like this.
@@ -113,7 +114,7 @@ Note that the second step is repeated a large number of times (\eg, $N=100$), in
 If one wants to compare algorithms on a same problem, it is possible to sample all the rewards $(Y_{k,t})_{k\in[K], t\in[T]}$ before-hand, and store them so that for each repetition of the simulation, the randomness from the environment (\ie, the rewards) has the same impact on all the algorithms.
 
 
-\paragraph{Simulation loop for multi-player bandit.}
+\textbf{Simulation loop for multi-player bandit.}
 
 For Cognitive Radio dealing with OSA problems and other applications, a well-studied extension is to consider $M\geq2$ players, interacting on the same $K$ arms.
 Whenever two or more players select the same arm at the same time (\eg, for OSA, the same frequency channel), they all suffer from a radio collision.
@@ -204,15 +205,13 @@ gaussian_problem.plotHistogram()  # display the histogram shown below
 \end{figure}
 
 For more details, an interested reader can refer to the following Jupyter notebook \cite{jupyter}:
-\begin{small}
-    \href{https://smpybandits.github.io/notebooks/Easily_creating_MAB_problems.html}{\texttt{SMPyBandits.GitHub.io/notebooks/Easily\_creating\_MAB\_problems.html}}
-\end{small}
-
+\href{https://smpybandits.github.io/notebooks/Easily_creating_MAB_problems.html}{\texttt{SMPyBandits.GitHub.io/notebooks/Easily\_creating\_MAB\_problems.html}}.\\
+%
 We have not yet tried to add support for higher dimensional distributions of rewards, \eg, linear bandit, but it would be an interesting extension of SMPyBandits.
 %
 However, note that our library does support finite-state real-valued Markov MAB models, where arms do not correspond to distributions but to Markov chains, in the two variants of \emph{rested} or \emph{restless} Markov chains, as introduced by \cite{Anantharam87b}.
 
-\subsection{MAB algorithms}
+\subsection{Multi-Armed Bandits algorithms}
 
 SMPyBandits is a complete open-source implementation of single-player (classical) bandit algorithms,
 containing over 65 algorithms (in the module \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.html}{Policies}}).
@@ -293,9 +292,9 @@ $ pip install -r requirements.txt
     \end{listing}
 \end{small}
 
-Launching simulations is easy, for instance this snippet shows how to start $N=1000$ repetitions of a simple non-Bayesian Bernoulli-distributed problem, for $K=9$ arms, an horizon of $T=10000$ and on $4$ CPUs.
-It takes about $20$ minutes, on a standard $4$-cores $64$ bits GNU/Linux laptop.
-Using environment variables (\texttt{N=1000} etc) in the command line is not required, but it is convenient:
+Simulations are easily executed, \eg, this snippet shows how to start $N=1000$ repetitions of a simple non-Bayesian Bernoulli-distributed problem, for $K=9$ arms, an horizon of $T=10000$ and on $4$ CPUs.
+It takes about $20$ min, on a $4$-core $64$-bit GNU/Linux laptop.
+Environment variables (\texttt{N=1000} etc) in the command line are not required, but they are convenient.
 
 % https://tex.stackexchange.com/a/12430/
 \begin{small}
