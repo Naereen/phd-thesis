@@ -16,10 +16,10 @@ Similarly to the previous section, network access is modelled as a discrete sequ
 %
 This solution could be added in a straightforward and costless manner in most IoT networks, such as LoRaWAN networks, just by adding this feature at the higher level of the MAC layer, in all or only some of the devices, without any modification on the network side, and no signalling overhead for the devices.
 
-\paragraph{Related works.}
+\textbf{Related works.}
 % \TODOL{Est-ce que je fais ça ici ou à la fin du chapitre 5 ? Ou peut-être en chapitre 1, ça ferait du contenu au chapitre 1...}
 %
-We evoke quickly here some previous works that similarly implemented proof-of-concepts to show that reinforcement learning algorithms can be used within real-world wireless communications.
+We evoke here some previous works that similarly implemented proof-of-concepts to show that reinforcement learning algorithms can be used within real-world wireless communications.
 Starting from $2010$, the works of Wassim Jouini \cite{Jouini09,Jouini10,Jouini12} were the first ones to propose to use Reinforcement Learning for Cognitive Radio, especially MAB and the \UCB{} algorithm, and from $2014$, proof-of-concepts were developed by Christophe Moy and his student Clément Robert \cite{RobertSDR2014,MoyWSR2014}.
 In $2015$ and $2016$, Christophe Moy continued to work on this direction, with a PhD student (Navikkumar Modi) and post-doc (Sumit J. Darak) in our team SCEE, for the following publications
 \cite{darak2016bayesian,Darak16,modiDemo2016,kumar2016two}.
@@ -73,8 +73,8 @@ In this section, we present our implementation of MAB algorithms in the model of
 We first describe the simplified physical layer of this demo, then we present our GNU Radio implementation.
 
 
-\paragraph{Physical layer and protocol.}
-
+\textbf{Physical layer and protocol.}
+%
 We implement a simple PHY/MAC layers solution, in order to demonstrate the possibility of improvement of the performance of IoT communications in unlicensed bands. We could have used any physical layer and any ALOHA-based protocol.
 We choose to implement our own physical layer and protocol, for both clarity and conciseness, and because developing a complete IoT network protocol stack is no more a research work and would have fall outside of the scope of this thesis.
 
@@ -118,7 +118,7 @@ The gateway, a USRP which emulates the interfering traffic, and at least one dyn
 The boards have their own power supply, and are all connected to a local Ethernet switch, itself connected to a single laptop, running GNU/Linux and Ubuntu.
 The pictures in Figure~\ref{fig:42:photosSCEETestBed} shows the testbed used for these experiments.
 % Octoclock
-To ease the synchronization implementation in both time and frequency between the boards representing the dynamic devices and the gateway, we use an Octoclock \cite{OctoclockProduct}, also a product of Ettus Research,
+To ease the synchronization in both time and frequency between the boards representing the dynamic devices and the gateway, we use an Octoclock \cite{OctoclockProduct}, also a product of Ettus Research,
 % https://www.ettus.com/product/details/OctoClock-G
 and coaxial cables connecting every platform to the Octoclock for time (PPS) and frequency synchronization, but this is not mandatory.
 
@@ -227,13 +227,21 @@ Such results are very encouraging, and illustrate well the various strong possib
 \paragraph{Availability of data and materials.}
 %
 The source code of our demonstration is fully available online, open-sourced under GPLv3 license, at
-\href{https://bitbucket.org/scee_ietr/malin-multi-arm-bandit-learning-for-iot-networks-with-grc}{\texttt{bitbucket.org/scee\_ietr/\\malin-multi-arm-bandit-learning-for-iot-networks-with-grc/}}.
+\href{https://bitbucket.org/scee_ietr/malin-multi-arm-bandit-learning-for-iot-networks-with-grc}{\texttt{bitbucket.org/scee\_ietr/malin-multi-arm\\-bandit-learning-for-iot-networks-with-grc/}}.
 %
 It contains both the GNU Radio Companion flowcharts and blocks, with ready-to-use \texttt{Makefiles} to easily compile, install and launch the demonstration.
-The demonstration only requires a laptop and free tools,
+The demonstration only requires a laptop and open-source free softwares,
 as the laptop should run a GNU/Linux distribution (like Ubuntu or Debian),
 in addition to USRP platforms from Ettus Research.
 
+
+\paragraph{Video.}
+%
+As depicted in Figure~\ref{fig:42:screenshotDemoYouTube} below,
+we realized a $6$-minute \textbf{video} to sum-up our demonstration and advertise our work online, and it is available on the YouTube hosting platform, at \texttt{\href{https://youtu.be/HospLNQhcMk}{youtu.be/HospLNQhcMk}}.
+The video shows examples of $3$ dynamic devices learning simultaneously, confirming the results of Figure~\ref{fig:42:plot_datafile_append_Uniform_vs_UCB_vs_TS} for overlapping channels.
+It also shows the connections between the USRP boards, the Octoclock, the master laptop etc, completing the presentation of the SCEE testbed already shown in Figure~\ref{fig:42:photosSCEETestBed}.
+% \textcolor{white}{Of course, the video was not seen much, because our work is useless! Yay!}
 
 \begin{figure}[!h]
 	\centering
@@ -242,15 +250,6 @@ in addition to USRP platforms from Ettus Research.
     \caption{Screenshot of the \textbf{video} of our demonstration, \texttt{\href{https://youtu.be/HospLNQhcMk}{youtu.be/HospLNQhcMk}}.}
     \label{fig:42:screenshotDemoYouTube}
 \end{figure}
-
-
-\paragraph{Video.}
-%
-As depicted in Figure~\ref{fig:42:screenshotDemoYouTube} above,
-we realized a $6$-minute \textbf{video} to sum-up our demonstration and advertise our work online, and it is available on the YouTube hosting platform, at \texttt{\href{https://youtu.be/HospLNQhcMk}{youtu.be/HospLNQhcMk}}.
-The video shows examples of $3$ dynamic devices learning simultaneously, confirming the results of Figure~\ref{fig:42:plot_datafile_append_Uniform_vs_UCB_vs_TS} for overlapping channels.
-It also shows the connections between the USRP boards, the Octoclock, the master laptop etc, completing the presentation of the SCEE testbed already shown in Figure~\ref{fig:42:photosSCEETestBed}.
-% \textcolor{white}{Of course, the video was not seen much, because our work is useless! Yay!}
 
 % \paragraph{Special acknowledgment.}
 % %

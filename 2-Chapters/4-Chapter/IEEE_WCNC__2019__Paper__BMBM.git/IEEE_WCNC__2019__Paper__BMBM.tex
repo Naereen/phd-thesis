@@ -3,7 +3,7 @@
 \graphicspath{{2-Chapters/4-Chapter/IEEE_WCNC__2019__Paper__BMBM.git/}}
 
 In this section, we extend the model presented before, to take into account the possibility for retransmissions of a message after a collision.
-This extension is of major importance: most protocols for real-world IoT networks can use retransmissions, it is for instance the case of the LoRa standard.
+This extension is of major importance: most protocols for real-world IoT networks can use retransmissions, it is for instance the case of the LoRaWAN standard.
 As before, we propose and evaluate different learning strategies based on MAB algorithms.
 However, the price to be paid is a shorter battery lifetime for IoT devices. So this approach would be used only for devices with strong delivery constraints (\eg, for health-care applications), or that can refuel their energy over time (\eg, for robotic applications).
 
@@ -38,17 +38,18 @@ For this reason, several decision making strategies are applied after a first re
 The proposed approach employs contextual information provided by the number of retransmissions, and is again implemented independently by each device, so that no coordination among them is needed.
 Moreover, our \UCB{}-based heuristics show low complexity making them suitable for being embedded in LPWA devices.
 
-The contributions of this section are summarized as follows:
-\begin{itemize}
-	\item
+The contributions of this section are summarized as follows.
+% \begin{itemize}
+	% \item
 	Firstly, we provide a close form approximation of the radio collision probability after a first retransmission.
 	By doing this, we highlight the need to develop a learning approach for channel selection upon collision.
-
-	\item
+%
+	% \item
 	Secondly, different heuristics are proposed to cope with retransmissions.
-
-	\item Lastly, we conduct simulations in order to compare the performance of the proposed heuristics with a naive uniform random approach, and a \UCB{} strategy (\ie, without any learning for the retransmissions, that is, the same channel is used for retransmission).
-\end{itemize}
+%
+	% \item
+	Lastly, we conduct simulations in order to compare the performance of the proposed heuristics with a naive uniform random approach, and a \UCB{} strategy (\ie, without any learning for the retransmissions, that is, the same channel is used for retransmission).
+% \end{itemize}
 
 
 \textbf{Outline.}
@@ -82,7 +83,7 @@ We make the hypothesis that the transmission is successful if the channel is ava
 The novelty compare to the previous model is that
 in case of RF (uplink or downlink) collision that prevent the device to receive the \emph{Ack} from the gateway,
 these devices will attempt to retransmit their packet up-to $M$ times, with $M \in\mathbb{N}$.
-It is important to note that, every retransmission is carried out after a random back-off time, uniformly distributed in $\llbracket 0, m-1 \rrbracket$, where $m \in\mathbb{N}, m>0$ is the length of the back-off interval
+It is important to note that, every retransmission is carried out after a random back-off time, uniformly distributed in $\{0, \dots, m-1\}$, where $m \in\mathbb{N}, m>0$ is the length of the back-off interval
 (note the difference between $m$ and $M$).
 
 
@@ -151,7 +152,7 @@ We make two approximations $\mathcal{H}_{1}$ and $\mathcal{H}_{2}$ defined as (t
 \end{itemize}
 
 Considering one device and one channel,
-we denote $x_t^i$ the probability that it is transmitting a packet for the $(i+1)$-th time in a given time slot $t$ (with $i\in \llbracket 0, M-1 \rrbracket$),
+we denote $x_t^i$ the probability that it is transmitting a packet for the $(i+1)$-th time in a given time slot $t$ (with $i\in \{0, \dots, M-1 \}$),
 and we denote $x_t = \sum_{i=0}^{M-1}x_t^i$ the probability that it transmits a packet (\ie, just the sum on $i$ of $x_t^i$).
 We consider $N > 0$ active devices following the same policy.
 
@@ -191,10 +192,10 @@ Hence, under hypothesis $\mathcal{H}_{2}$, we can use Bayes theorem and the law 
 %{\color{red}Hence, under hypothesis $\mathcal{H}_{2}$,
 %the collision probability with the same packets after a retransmission, $p_{ca}$, is given  the sum of collision probabilities with $n$ devices choose the same back-off interval for their retransmissions, }
 %
-\begin{equation}\label{eq:43:sumpca}
-	p_{ca} = \frac{1}{p_c}\sum_{n=1}^{N-1} p_{bp}(n).
-\end{equation}
-
+% \begin{equation}\label{eq:43:sumpca}
+	$p_{ca} = \frac{1}{p_c}\sum_{n=1}^{N-1} p_{bp}(n)$.
+% \end{equation}
+%
 % \begin{figure}[htp!]  % [htbp]
 % 	\centering
 % 	% \includegraphics[width=1.00\linewidth]{Approximation_m10.eps}
@@ -202,7 +203,7 @@ Hence, under hypothesis $\mathcal{H}_{2}$, we can use Bayes theorem and the law 
 % 	\caption{Our proposed approximation for the probability of collision at the second transmission. It is more precise for smaller values of $N$.}
 % 	\label{fig:43:Approximation_m10}
 % \end{figure}
-
+%
 Therefore, the expression of $p_{ca}$ is
 %
 \begin{align}\label{eq:43:sumpc2}
@@ -224,7 +225,7 @@ Assuming $\mathcal{H}_{1}$ amounts to consider that $x\ll 1$. As a consequence, 
 	p_{ca} \simeq  1 - \frac{\left(1-x\right)^{N-1}}{p_c}\sum_{n=1}^{N-1}{N-1 \choose n} x^n \left( 1-\frac{1}{m}\right)^n.
 \end{equation}
 
-We use the binomial theorem to compute the sum in \eqref{eq:43:sumpca4}, and we rewrite the expression of $p_{ca}$ as
+The binomial theorem expands the sum in \eqref{eq:43:sumpca4}, so we can rewrite the expression of $p_{ca}$ as
 %
 \begin{equation}\label{eq:43:pca}
 	p_{ca} \simeq 1 - \left(\frac{1}{p_c}-1\right)\left[ 1+\left(1-\left(1-p_c\right)^{\frac{1}{N-1}}\right)\left(1-\frac{1}{m}\right)\right]^{N-1}.
@@ -254,7 +255,7 @@ which suggests us to resort to MAB algorithms for the channel selection for both
 \begin{figure}[htp!]  % [htbp]
 	\centering
 	% \includegraphics[width=0.65\linewidth]{Approximation_m10.eps}
-	\includegraphics[width=0.80\linewidth]{Approximation_m10-eps-converted-to.pdf}
+	\includegraphics[width=0.70\linewidth]{Approximation_m10-eps-converted-to.pdf}
 	\caption[Proposed approximation for the probability of collision at the second transmission]{Proposed approximation for the probability of collision at the second transmission. It is more precise for smaller values of $N$.}
 	\label{fig:43:Approximation_m10}
 \end{figure}
@@ -319,7 +320,7 @@ We interpret this fact in two different situations:
 % is the one maximizing this \UCB{} index $U_k(t)$,
 % as it is the one expected to be the best one at the current time step $t$,
 % \begin{equation}\label{eq:43:maxucb}
-% 	A(t) = \arg\max_{1\leq k \leq K} U_k(t).
+% 	A(t) \sim \cU(\argmax_k U_k(t)).
 % \end{equation}
 
 % The \UCB{} algorithm is implemented independently by each device, and we present it in Algorithm~\ref{algo:43:UCB}.
@@ -333,7 +334,7 @@ We interpret this fact in two different situations:
 % 		% \begin{small} % XXX remove if needed
 % 		\For(){$t = 1, \dots, T$}{
 % 			Compute $\forall k, U_k(t) = \widehat{\mu_k}(t) + \sqrt{\alpha \log(t) / N_k(t)}$\;
-% 			Transmit in channel $A(t) = \arg\max_{1\leq k \leq K} U_k(t)$\;
+% 			Transmit in channel $A(t) \sim \cU(\argmax_k U_k(t))$\;
 % 			Reward $r_{A(t)}(t) = 1$, if \emph{Ack} is received, else $0$\;
 % 		}
 % 		\caption{The \UCB{} algorithm for channel selection (base building block).}
@@ -358,19 +359,6 @@ but we write it again to make clear the difference with first transmission and r
 %
 Note that a device using this first approach is only able to select a channel for the first transmission (using \UCB), and it uses the same channel for all the corresponding retransmissions of a packet (if retransmissions happen).
 
-More formally, for one device, let $N_k(t)$ be the number of times the channel $k$ (for $k\in \llbracket 1, K \rrbracket$) was selected up-to time $t-1$, for $t\geq 0$
-for any $t\in\mathbb{N}$,
-$N_k(t) = \sum_{\tau=0}^{t-1} \mathbbm{1}(A(\tau) = k)$.
-The empirical mean estimator $\widehat{\mu_k}(t)$ of channel $k$ is defined as the mean reward obtained up-to time $t-1$,
-$\widehat{\mu_k}(t) = \frac{1}{N_k(t)} \sum_{\tau=0}^{t-1} r(\tau) \mathbbm{1}(A(\tau) = k)$,
-where $r(t)=Y_{k,t}$ is the reward obtained after transmission in channel $k$ at time $t$.
-The upper confidence bound in each channel $k$ is defined as
-$U_k(t) = \widehat{\mu_k}(t) + \sqrt{\alpha \log(t) / N_k(t)}$.
-Finally, the transmission channel at time step $t$
-is the one maximizing this \UCB{} index $U_k(t)$,
-as it is the one expected to be the best one at the current time step $t$,
-$A(t) = \arg\max_{1\leq k \leq K} U_k(t)$.
-
 
 % \begin{small} % XXX remove if needed
 \begin{figure}[h!]
@@ -381,7 +369,7 @@ $A(t) = \arg\max_{1\leq k \leq K} U_k(t)$.
 		\For(){$t = 1, \dots, T$}{
 			\uIf{First packet transmission}{
 				Compute $\forall k, U_k(t) = \widehat{\mu_k}(t) + \sqrt{\alpha \log(t) / N_k(t)}$\;
-				Transmit in channel $A(t) = \arg\max_{1\leq k \leq K} U_k(t)$\;
+				Transmit in channel $A(t) \sim \cU(\argmax_k U_k(t))$\;
 				Reward $r(t) = 1$, if \emph{Ack} is received, else $0$\;
 			}
 			\Else(\tcp*[f]{Retransmit in same channel}){
@@ -396,6 +384,20 @@ $A(t) = \arg\max_{1\leq k \leq K} U_k(t)$.
 	\end{framed}
 \end{figure}
 % \end{small} % XXX remove if needed
+
+
+More formally, for one device, let $N_k(t)$ be the number of times the channel $k$ (for $k\in [K]$) was selected up-to time $t-1$, for $t\geq 0$
+for any $t\in\mathbb{N}$,
+$N_k(t) = \sum_{\tau=0}^{t-1} \mathbbm{1}(A(\tau) = k)$.
+The empirical mean estimator $\widehat{\mu_k}(t)$ of channel $k$ is defined as the mean reward obtained up-to time $t-1$,
+$\widehat{\mu_k}(t) = \frac{1}{N_k(t)} \sum_{\tau=0}^{t-1} r(\tau) \mathbbm{1}(A(\tau) = k)$,
+where $r(t)=Y_{k,t}$ is the reward obtained after transmission in channel $k$ at time $t$.
+The upper confidence bound in each channel $k$ is defined as
+$U_k(t) = \widehat{\mu_k}(t) + \sqrt{\alpha \log(t) / N_k(t)}$.
+Finally, the transmission channel at time step $t$
+is the one maximizing this \UCB{} index $U_k(t)$,
+as it is the one expected to be the best one at the current time step $t$,
+$A(t) = \arg\max_k U_k(t)$.
 
 \begin{leftbar}[warningbar]  % XXX leftbar warningbar, comment if needed
 	\textbf{\textcolor{red}{Small warning about notations: local (device) time vs global (gateway) time}:}
@@ -422,13 +424,13 @@ the first stage is a \UCB{} algorithm employed for the first attempt to transmit
 and the second stage is another algorithm used for channel selections for the next retransmissions.
 %
 We present below four heuristics for this second stage.
-Their short names are used in the legend on Figures~\ref{fig:43:mainExperiment1}, \ref{fig:43:mainExperiment2}), and are given in ``quotes'' in the corresponding paragraphs.
+Their short names (with their colors) are used in the legend on Figures~\ref{fig:43:mainExperiment1}, \ref{fig:43:mainExperiment2}), and are given in ``quotes'' in the corresponding paragraphs.
 
 
 % --- --- --- --- --- --- --- --- --- ---
-\paragraph{Uniform random retransmission (``Random'').}\label{sub:43:UCBthenRandom}
+\paragraph{Uniform random retransmission ``\textcolor{cyan}{(Random)''}.}\label{sub:43:UCBthenRandom}
 
-In this first proposal, the device uses a random channel selection, following a uniform distribution (in $\llbracket 1, K \rrbracket$).
+In this first proposal, the device uses a random channel selection, following a uniform distribution (on $[K]$).
 It is described below in Algorithm~\ref{algo:43:UCBthenRandom}.
 More precisely, the first-stage \UCB{} use rewards built from the acknowledgments that the device received or not for its first-stage transmission, but do not use any feedback about any of the retransmissions of any message.
 
@@ -440,7 +442,7 @@ More precisely, the first-stage \UCB{} use rewards built from the acknowledgment
 	% \begin{small} % XXX remove if needed
 	\For(){$t = 1, \dots, T$}{
 			\uIf{First packet transmission}{
-				Use first-stage \UCB. %as in Algorithm~\ref{algo:43:UCB}.
+				Use first-stage \UCB{} as in Algorithm~\ref{algo:43:UCB}.
 			}
 			\Else(\tcp*[f]{Random retransmission}){
 				Transmit in channel $A(t) \sim \mathcal{U}(1,\ldots,K)$\;
@@ -455,7 +457,7 @@ More precisely, the first-stage \UCB{} use rewards built from the acknowledgment
 
 
 % --- --- --- --- --- --- --- --- --- ---
-\paragraph{\UCB{} for retransmission (``Only \UCB{}'').}\label{sub:43:TwoUCB}
+\paragraph{\UCB{} for retransmission (``\textcolor{blue}{Only \UCB{}}'').}\label{sub:43:TwoUCB}
 
 Instead of applying a random channel selection for retransmission,
 another heuristic is to use a second \UCB{} algorithm in the second stage.
@@ -475,11 +477,11 @@ related to the \UCB{} algorithm employed for the retransmission.
 		% \begin{small} % XXX remove if needed
 		\For(){$t = 1, \dots, T$}{
 			\uIf{First packet transmission}{
-				Use first-stage \UCB. %as in Algorithm~\ref{algo:43:UCB}.
+				Use first-stage \UCB{} as in Algorithm~\ref{algo:43:UCB}.
 			}
 			\Else(\tcp*[f]{Packet retransmission with $\mathrm{UCB}^r$}){
 				Compute $\forall k, U^r_k(t) = \widehat{\mu^r_k}(t) + \sqrt{\alpha \log(t) / N_k^r(t)}$\;
-				Transmit in channel $C^r(t) = \arg\max_{1\leq k \leq K} U^r_k(t)$\;
+				Transmit in channel $C^r(t) \sim \cU(\argmax_k U^r_k(t))$\;
 				Reward $r^r(t) = 1$, if \emph{Ack} is received, else $0$\;
 			}
 		}
@@ -492,12 +494,12 @@ related to the \UCB{} algorithm employed for the retransmission.
 % \end{small} % XXX remove if needed
 
 % --- --- --- --- --- --- --- --- --- ---
-\paragraph{$K$ different {\UCB}s for retransmission (``$K$ \UCB{}'')}\label{sub:43:UCBthenKp1}
+\paragraph{$K$ different {\UCB}s for retransmission (``\textcolor{green}{$K$ \UCB}'')}\label{sub:43:UCBthenKp1}
 
 Another heuristic is to not use the same algorithm no matter where the collision occurred, but to use $K$ different second-stage \UCB{} algorithms.
 It means that after a failed first transmission in channel $j$, the device relies on the $j$-th algorithm to decide its retransmission.
 The corresponding algorithm is depicted in Algorithm~\ref{algo:43:UCBthenKp1}.
-Each of these algorithms are denoted using the subscript $({}^{j})$, for $j\in\llbracket 1, K \rrbracket$.
+Each of these algorithms are denoted using the subscript $({}^{j})$, for $j\in[K]$.
 
 % \vspace*{-3pt}
 % \begin{small} % XXX remove if needed
@@ -510,12 +512,12 @@ Each of these algorithms are denoted using the subscript $({}^{j})$, for $j\in\l
 		\For(\tcp*[f]{At every time step})
 		{$t = 1, \dots, T$}{
 			\uIf{First packet transmission}{
-				Use first-stage \UCB. %as in Algorithm~\ref{algo:43:UCB}.
+				Use first-stage \UCB{} as in Algorithm~\ref{algo:43:UCB}.
 			}
 			\Else(\tcp*[f]{Packet retransmission with $\mathrm{UCB}^j$}){ % Retr. after trying channel $j$
 				j $\leftarrow$ last channel selected by first-stage \UCB\;
 				Compute $\forall k, U_k^j(t) = \widehat{\mu_k}^j(t) + \sqrt{\alpha \log(t) / N_k^j(t)}$\;
-				Transmit in channel $A^j(t) = \arg\max_{1\leq k \leq K} U^j_k(t)$\;
+				Transmit in channel $A^j(t) \sim \cU(\argmax_k U^j_k(t))$\;
 				Reward $r^j_{A^j(t)}(t) = 1$ if \emph{Ack} is received, else $0$\;
 			}
 		}
@@ -537,7 +539,7 @@ The storage requirements and time complexity is now quadratic in $K$, and as suc
 But for LoRaWAN networks with $K=4$, storing $K+1=5$ algorithms does not cost much more than storing $2$.
 
 % --- --- --- --- --- --- --- --- --- ---
-\paragraph{Delayed \UCB{} for retransmission (``Delayed \UCB{}'').}\label{sub:43:UCBwithDelay}
+\paragraph{Delayed \UCB{} for retransmission (``\textcolor{red}{Delayed \UCB}'').}\label{sub:43:UCBwithDelay}
 
 This last heuristic is a composite of
 the random retransmission (Algorithm~\ref{algo:43:UCBthenRandom})
@@ -562,14 +564,14 @@ related to the delayed second-stage \UCB{} algorithm.
 		\For(\tcp*[f]{At every time step})
 		{$t = 1, \dots, T$}{
 			\uIf{First packet transmission}{
-				Use first-stage \UCB. %as in Algorithm~\ref{algo:43:UCB}.
+				Use first-stage \UCB{} as in Algorithm~\ref{algo:43:UCB}.
 			}
 			\uElseIf(\tcp*[f]{Random retransmission}){$t \leq \Delta$}{
 				Transmit randomly in a channel $A(t) \sim \mathcal{U}(1,\ldots,K)$.
 			}
 			\Else(\tcp*[f]{Packet retransmission with delayed $\mathrm{UCB}^d$}){
 				Compute $\forall k, U^d_k(t) = \widehat{\mu^d_k}(t) + \sqrt{\alpha \log(t) / N_k^d(t)}$\;
-				Transmit in channel $A^d(t) = \arg\max_{1\leq k \leq K} U^d_k(t)$\;
+				Transmit in channel $A^d(t) \sim \cU(\argmax_k U^d_k(t))$\;
 				Reward $r^d_{A^d(t)}(t) = 1$ if \emph{Ack} is received, else $0$\;
 			}
 		}
@@ -585,14 +587,16 @@ related to the delayed second-stage \UCB{} algorithm.
 \paragraph{Other ideas that we did not explore.}
 %
 Instead of considering a first-stage \UCB{} followed by a random channel retransmission, we could have considered a random first-stage channel retransmission followed by a second-stage \UCB.
-This was not considered in our study \cite{Bonnefoi2019WCNC}, and we preferred to not add it to the experiments presented below, for three reasons: to avoid clutter in the plots, to win some time as these experiments had to run for quite a long time, but mainly because the first-stage channel selection is most important one as we illustrate by the large difference in terms of performance between the uniform channel selection and the ``only UCB'' heuristic, below in Figures~\ref{fig:43:mainExperiment1} and \ref{fig:43:mainExperiment2}.
+This was not considered in our study \cite{Bonnefoi2019WCNC}, and we preferred to not add it to the experiments presented below, for three reasons: to avoid clutter in the plots, to win some time as these experiments had to run for quite a long time, but mainly because the first-stage channel selection is most important one as we illustrate by the large difference in terms of performance between the uniform channel selection and the ``Only UCB'' heuristic, below in Figures~\ref{fig:43:mainExperiment1} and \ref{fig:43:mainExperiment2}.
 
-\paragraph{Using another bandit policy?}
+
+\textbf{Using another bandit policy?}
 %
 Similarly, Philippe Mary asked me at the MoTION workshop where I presented \cite{Bonnefoi2019WCNC}, why didn't we rather used Bayes-UCB instead of \UCB{} (from \cite{Kaufmann12BUCB}), as it is known to empirically outperform \UCB{} (as illustrated for instance in \cite{darak2016bayesian,kumar2016two}).
 We could have chose any bandit algorithm for the ``first stage'' component used in this Section, and for simplicity and clarity we focussed on a simple but efficient one (\UCB).
-We believe that the same empirical results, but more importantly, the same conclusions, could be given if we used Bayes-UCB or other bandit algorithm for the base building block in the different heuristics proposed in Section~\ref{sub:43:heuristics}.
-The goal of this Section was not to optimize on the bandit policy (as we presented in Section~\ref{sec:3:reviewSPAlgorithms} some numerical simulations doing precisely this), but rather to compare the different heuristics, for a fixed bandit policy (for which we preferred to use \UCB{} for simplicity).
+We believe that the same empirical results, but more importantly, the same conclusions, could be given if we used Bayes-UCB or other bandit algorithm for the base building block in the different heuristics proposed in this section.
+% ~\ref{sub:43:heuristics}.
+Our goal here was not to optimize on the bandit policy (as we presented in Section~\ref{sec:3:reviewSPAlgorithms} some numerical simulations doing precisely this), but rather to compare the different heuristics, for a fixed bandit policy (for which we preferred to use \UCB{} for simplicity).
 
 
 % ----------------------------------------------------------------------
@@ -600,7 +604,7 @@ The goal of this Section was not to optimize on the bandit policy (as we present
 \label{sub:43:numExp}
 % ----------------------------------------------------------------------
 
-We simulate our network considering $N$ devices following the contention Markov process described in Section \ref{sub:43:model}, and a LoRa standard with $K=4$ channels, as in Section~\ref{sec:4:firstModel}.
+We simulate our network considering $N$ devices following the contention Markov process described in Section \ref{sub:43:model}, and a LoRaWAN standard with $K=4$ channels, as in Section~\ref{sec:4:firstModel}.
 Each device is set to transmit with a fixed probability $p=10^{-3}$, \ie, a packet about every $20$ minutes for time slots of $1\;\mathrm{s}$.
 %
 For the evaluation of the proposed heuristics, a total number of $T=20 \times 10^4$ time slots is considered, and the results are averaged over $1000$ independent random simulations.
@@ -610,7 +614,7 @@ In a first scenario, we consider a total number of $N=1000$ IoT devices, with a 
 In other words, the channels are occupied respectively $10\%$, $30\%$, $30\%$, and $30\%$ of time, and the contention Markov process considered is given by $M = 5$, and $m=5$.
 In Figure~\ref{fig:43:mainExperiment1}, we show the successful transmission rate versus the number of slots, for all the proposed heuristics.
 
-A first result is that all the heuristics clearly outperform the non-learning approach that simply uses random channel selection for both transmissions and retransmissions (\ie, the ``\textbf{no \UCB{}}'' curve), which is (still) the current state-of-the-art in IoT networks.
+A first result is that all the heuristics clearly outperform the non-learning approach that simply uses random channel selection for both transmissions and retransmissions (\ie, the ``\textbf{no \UCB{}}'' curve in black), which is (still) the current state-of-the-art in IoT networks.
 The improvement of the heuristics over the non-learning approach is clear, and for every heuristic that uses a kind of learning mechanism it can observed the successful transmission rate increases rapidly (or equivalently the PLR decreases).
 Moreover, all of these approaches show a fast convergence making them suitable for the targeted application.
 It is also worth mentioning that the employment of the same \UCB{} algorithm for retransmissions, denoted here as ``Only \UCB{}'', achieves a better performance, while a ``Random'' retransmission features a slight degradation. This result can be explained as follows: the loss of performance related to the separation of information for several algorithms is greater than the gain obtained by considering the first transmissions and retransmissions separately.
@@ -619,9 +623,9 @@ It is also worth mentioning that the employment of the same \UCB{} algorithm for
 	\centering
 	\includegraphics[width=0.80\linewidth]{ResultsUCB.eps}
 	\caption[First comparison between the exposed heuristics for the retransmission: ``Only \UCB'', ``Random, \UCB'', ``$K$ \UCB'', and ``Delayed \UCB'']{
-		Comparison between the exposed heuristics for the retransmission: \textcolor{blue}{``Only \UCB''}, \textcolor{cyan}{``Random''}, \textcolor{purple}{``\UCB''}, \textcolor{green}{``$K$ \UCB''}, and \textcolor{red}{``Delayed \UCB''}.
-		The usage of the same learning policy for transmissions and retransmission is named \textcolor{blue}{``Only \UCB{}''},
-		whereas the usage of a random channel selection, for both transmission and retransmission, is labeled as \textbf{``no \UCB{}''}.
+		Comparison between the exposed heuristics for the retransmission:`` \textcolor{blue}{Only \UCB}'', ``\textcolor{cyan}{Random}'', ``\textcolor{purple}{\UCB}'', ``\textcolor{green}{$K$ \UCB}'', and ``\textcolor{red}{Delayed \UCB}''.
+		The usage of the same learning policy for transmissions and retransmission is named ``\textcolor{blue}{Only \UCB{}}'',
+		whereas the usage of a random channel selection, for both transmission and retransmission, is labeled as ``\textbf{no \UCB{}}''.
 		First scenario: learning helps but learning to retransmit smartly is not needed, as we observe that the \textcolor{cyan}{random retransmission} heuristic achieves similar performance than the others.
 	}
 	\label{fig:43:mainExperiment1}
@@ -651,7 +655,8 @@ Secondly, using learning mechanisms for retransmissions can be a simple yet effi
 With $10\%$ to $30\%$ occupancy rates the considered example of IoT network can indeed be considered as an IoT network with a massive deployment of devices.
 
 
-\paragraph{Note on the simulation code.}
+% \paragraph{Note on the simulation code.}
+\paragraph{Reproducility of the experiments.}
 %
 The source code (MATLAB or Octave) used for the simulations and the figures of this section is open-sourced under the MIT License, and published at \href{https://Bitbucket.org/scee_ietr/ucb_smart_retrans}{\texttt{Bitbucket.org/scee\_ietr/ucb\_smart\_retrans}}.
 It was written in collaboration with Rémi Bonnefoi and Julio César Mango-Vasquez, in July and August $2018$.

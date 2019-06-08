@@ -15,7 +15,7 @@ In this Chapter~\ref{chapter:4}, we present two models of Internet of Things net
 FIXME finish !
 
 
-\TODOL{C'est bizarre ce problème d'espacement vertical ici... je ne sais pas comment le corriger !}
+% \TODOL{C'est bizarre ce problème d'espacement vertical ici... je ne sais pas comment le corriger !}
 
 \minitoc
 % ----------------------------------------------------------------------
@@ -129,103 +129,101 @@ We conclude this chapter by presenting in Section~\ref{sec:4:retransmissions} an
 \label{sec:4:conclusion}
 % ----------------------------------------------------------------------
 
-% We give in this section conclusions about the two models presented above, one for long-life IoT devices (without retransmission) and for improved QoS devices (\ie, with retransmissions), and about our demonstration, as well as directions of future works, some of which are currently being studied by researchers of our team.
+% % We give in this section conclusions about the two models presented above, one for long-life IoT devices (without retransmission) and for improved QoS devices (\ie, with retransmissions), and about our demonstration, as well as directions of future works, some of which are currently being studied by researchers of our team.
 
-% \TODOL{Je devrais réécrire toute cette conclusion, si j'ai le temps, pour faire mieux qu'une suite de 3 conclusions et 3 future works, et être plus concis et moins ``short sighted'' comme disait Emilie.}
+% % \subsection*{Conclusions}
 
-% \subsection*{Conclusions}
+% % ----------------------------------------------------------------------
+% % \paragraph{Summary of the first model.}
+% \label{sub:41:conclusion}
 
-% ----------------------------------------------------------------------
-% \paragraph{Summary of the first model.}
-\label{sub:41:conclusion}
-
-In Section~\ref{sec:4:firstModel}, we proposed an evaluation of the performance of MAB learning algorithms in IoT networks,
-with a focus on the convergence of algorithms, in terms of successful transmission rates, when the proportion of intelligent dynamic devices changes.
-Concretely, increasing this probability allows to insert more devices in the same network, while maintaining a good Quality of Service.
-Similarly, if the number of devices remain constant, increasing the successful transmission rate directly extends the IoT devices battery life, as they suffer less from failed transmissions.
-We show that \UCB{} and TS have near-optimal performance, even when their underlying \iid{} assumption (see Chapter~\ref{chapter:2}) is violated by the presence of many ``intelligent'' end-devices which follow a random activation process.
-%
-This is both surprising and encouraging, it shows that applying bandit algorithms tailored for a stochastic model is still useful in broader settings.
-The fully \emph{decentralized} application of classic stochastic MAB algorithms are almost as efficient as the best possible centralized policy in this setting, after a short learning period, even though the dynamic devices \emph{cannot} communicate with each other, and \emph{do not} know the system parameters.
+% In Section~\ref{sec:4:firstModel}, we proposed an evaluation of the performance of MAB learning algorithms in IoT networks,
+% with a focus on the convergence of algorithms, in terms of successful transmission rates, when the proportion of intelligent dynamic devices changes.
+% Concretely, increasing this probability allows to insert more devices in the same network, while maintaining a good Quality of Service.
+% Similarly, if the number of devices remain constant, increasing the successful transmission rate directly extends the IoT devices battery life, as they suffer less from failed transmissions.
+% We show that \UCB{} and TS have near-optimal performance, even when their underlying \iid{} assumption (see Chapter~\ref{chapter:2}) is violated by the presence of many ``intelligent'' end-devices which follow a random activation process.
+% %
+% This is both surprising and encouraging, it shows that applying bandit algorithms tailored for a stochastic model is still useful in broader settings.
+% The fully \emph{decentralized} application of classic stochastic MAB algorithms are almost as efficient as the best possible centralized policy in this setting, after a short learning period, even though the dynamic devices \emph{cannot} communicate with each other, and \emph{do not} know the system parameters.
 
 
-% ----------------------------------------------------------------------
-% \paragraph{Conclusions taken from the demonstration.}
-\label{sub:42:conclusionFromDemonstration}
+% % ----------------------------------------------------------------------
+% % \paragraph{Conclusions taken from the demonstration.}
+% \label{sub:42:conclusionFromDemonstration}
 
-We presented in Section~\ref{sec:4:gnuradio} a demonstration, showed in $2018$ at the ICT conference \cite{Besson2018ICT}, and further detailed in the companion paper \cite{Besson2019WCNC}.
-We gave all the necessary details on both the PHY and the MAC layer, as well as details on the User Interface developed for the demo.
-Results obtained in practice were discussed, to highlight the interest of using learning algorithms for radio online optimization problem, and especially multi-armed bandit learning algorithms.
-%
-By using such low-cost algorithms, we demonstrated empirically that a dynamically re-configurable device can learn on its own to favor a certain channel, if the environment traffic is not uniform between the $K$ different channels, by using the acknowledgement (\Ack) feedback sent from the base station.
-
-
-% ----------------------------------------------------------------------
-% \paragraph{Conclusion about this second model.}
-\label{sub:43:conclusion}
-
-In Section~\ref{sec:4:retransmissions}, we presented an extension of our model of LPWA networks based on an ALOHA protocol, slotted both in time and frequency.
-% , in which dynamic IoT devices can again use machine learning algorithms, to improve their Packet Loss Ratio (PLR) when accessing the network.
-If the priority is the Quality of Service (QoS), for instance with renewable energy capabilities, this second model is more appropriate.
-The main novelty of this model is to address the packet retransmissions upon radio collision, by using a Multi-Armed Bandit framework.
-We presented and evaluated several heuristics that try to learn how to transmit and retransmit in a smarter way, by using the \UCB{} algorithm for channel selection for first transmission, and different proposals based on \UCB{} for the retransmissions upon collisions.
-%
-We showed that incorporating learning for the transmission is needed to achieve optimal performance, with significant gain in terms of successful transmission rate in networks with a large number of devices (up-to $30\%$ in the example network).
-Our empirical simulations show that each of our proposed heuristic outperforms a naive random access scheme.
-Surprisingly, the main take-away message is that a simple \UCB{} learning approach, that retransmit in the same channel, turns out to perform as well as more complicated heuristics.
+% We presented in Section~\ref{sec:4:gnuradio} a demonstration, showed in $2018$ at the ICT conference \cite{Besson2018ICT}, and further detailed in the companion paper \cite{Besson2019WCNC}.
+% We gave all the necessary details on both the PHY and the MAC layer, as well as details on the User Interface developed for the demo.
+% Results obtained in practice were discussed, to highlight the interest of using learning algorithms for radio online optimization problem, and especially multi-armed bandit learning algorithms.
+% %
+% By using such low-cost algorithms, we demonstrated empirically that a dynamically re-configurable device can learn on its own to favor a certain channel, if the environment traffic is not uniform between the $K$ different channels, by using the acknowledgement (\Ack) feedback sent from the base station.
 
 
-% ----------------------------------------------------------------------
-\subsection*{Future works}
-\label{sub:4:futureWorks}
+% % ----------------------------------------------------------------------
+% % \paragraph{Conclusion about this second model.}
+% \label{sub:43:conclusion}
 
-% Future works related to this chapter include the following directions.
-
-
-% \paragraph{Possible extensions of the first model.}
-
-The first model presented in Section~\ref{sec:4:firstModel} could easily be generalized with two probabilities $p_S$ and $p_D$, if static and dynamic devices have different transmission pattern, and less easily with one probability per device. Also, other emission pattern could be considered, instead of a Bernoulli process for each user.
-In this whole Chapter~\ref{chapter:4}, we prefer to consider that all devices have the same activation probability, to keep the notation as simple as possible.
-%
-Moreover, for sake of simplicity we supposed that all devices use the same standard.
-Future works could consider more realistic interference scenarios and IoT networks, with, \eg, non-slotted time, more than one base station etc.
-
-Another extension could be to not have a Bernoulli process (or any random process), but a fixed rate of transmission, \eg, one transmission a day.
-So additionally to deciding the channel for communication (\ie, \emph{where} to communicate), each device has to also decide \emph{when} to communicate.
-% This is another direction of research, that we will investigate in the future.
-However, this clearly leads to a much larger action space, as there are many time slots in one day (for example), and thus we believe that as soon as the action space becomes too large in this extension, the simple MAB-based learning approach could be no longer appropriate.
-It is well-known in the MAB literature that the larger the action space, the slower is the convergence speed of any stationary MAB algorithms.
-It could be interesting to study the possible application of \emph{contextual} MAB \cite{Li10,Luo18} or structured MAB \cite{Combes17} models and algorithms for this extension.
-
-% We will investigate this behavior in order to understand it better theoretically.
-% We will also experiment more with adversarial algorithms, to confirm that they work less efficiently than stochastic bandit algorithms in our non-stochastic setting.
-
-% \paragraph{Extensions of the demonstration.}
-
-Possible future extensions of our demonstration include the following points.
-We could consider more dynamic devices (\eg, $100$) but it would either cost more in terms of equipment, or in terms of software engineering to simulation more devices with the same card.
-We could also implement a real-world IoT communication protocol (like the LoRaWAN standard), which we prefer not to do as it would cost a significant effort of development.
-Finally, we could also study the interference in case of other gateways located nearby, and this could be done without needing a lot of new hardware (using one extra USRP card to simulate another gateway).
-%
-% Pub pour notre autre article
-% We are also interested in studying the possible gain of using a learning step when the transmission model follows ALOHA-like retransmissions, and this is presented in the next Section~\ref{sec:4:retransmissions}.
+% In Section~\ref{sec:4:retransmissions}, we presented an extension of our model of LPWA networks based on an ALOHA protocol, slotted both in time and frequency.
+% % , in which dynamic IoT devices can again use machine learning algorithms, to improve their Packet Loss Ratio (PLR) when accessing the network.
+% If the priority is the Quality of Service, for instance with renewable energy capabilities, this second model is more appropriate.
+% The main novelty of this model is to address the packet retransmissions upon radio collision, by using a Multi-Armed Bandit framework.
+% We presented and evaluated several heuristics that try to learn how to transmit and retransmit in a smarter way, by using the \UCB{} algorithm for channel selection for first transmission, and different proposals based on \UCB{} for the retransmissions upon collisions.
+% %
+% We showed that incorporating learning for the transmission is needed to achieve optimal performance, with significant gain in terms of successful transmission rate in networks with a large number of devices (up-to $30\%$ in the example network).
+% Our simulations show that each of our proposed heuristic outperforms a naive random access scheme.
+% Surprisingly, the main take-away message is that a simple \UCB{} learning approach, that retransmit in the same channel, turns out to perform as well as more complicated heuristics.
 
 
-% \paragraph{Possible extensions for the second model.}
+% % ----------------------------------------------------------------------
+% \subsection*{Future works}
+% \label{sub:4:futureWorks}
 
-Finally, the utility and impact of the proposed approaches for LPWA networks motivates us to address several subjects as future works. Among them, the non-stationarity of the channel occupancy caused by the learning policy employed by the IoT devices.
-%
-For that end, modifications of MAB algorithms have been proposed, such as Sliding-Window-\UCB{} or Discounted-\UCB{} \cite{Garivier11UCBDiscount}
-or more recently M-\UCB{} \cite{CaoZhenKvetonXie18},
-or more recently GLR-\UCB{} \cite{Besson2019GLRT} which is presented in Chapter~\ref{chapter:6},
-that nevertheless have not been explored for the targeted problem.
-Chapter~\ref{chapter:6} is focusing on this direction, but we did not have enough time to explore the possible applications of MAB policies designed for non-stationary problems to the model with retransmissions presented in this Chapter.
+% % Future works related to this chapter include the following directions.
 
-In order to validate our results in a realistic experimental setting and not only with simulations, future works include a hardware implementation of the analyzed models to complete our demonstration \cite{Besson2019WCNC}.
-Note that Julio César Mango-Vasquez is currently working on this direction, for the EPHYL project, in collaboration with Carlos Faouzi Bader at IETR and CentraleSupélec campus of Rennes.
-% and Christophe Moy at IETR and University Rennes 1.
-%
-A hardware demonstrator could be also benefit to study other settings by removing some hypotheses, for instance by studying a similar model in non-slotted time.
+
+% % \paragraph{Possible extensions of the first model.}
+
+% The first model presented in Section~\ref{sec:4:firstModel} could easily be generalized with two probabilities $p_S$ and $p_D$, if static and dynamic devices have different transmission pattern, and less easily with one probability per device. Also, other emission pattern could be considered, instead of a Bernoulli process for each user.
+% In this whole Chapter~\ref{chapter:4}, we prefer to consider that all devices have the same activation probability, to keep the notation as simple as possible.
+% %
+% Moreover, for sake of simplicity we supposed that all devices use the same standard.
+% Future works could consider more realistic interference scenarios and IoT networks, with, \eg, non-slotted time, more than one base station etc.
+
+% Another extension could be to not have a Bernoulli process (or any random process), but a fixed rate of transmission, \eg, one transmission a day.
+% So additionally to deciding the channel for communication (\ie, \emph{where} to communicate), each device has to also decide \emph{when} to communicate.
+% % This is another direction of research, that we will investigate in the future.
+% However, this clearly leads to a much larger action space, as there are many time slots in one day (for example), and thus we believe that as soon as the action space becomes too large in this extension, the simple MAB-based learning approach could be no longer appropriate.
+% It is well-known in the MAB literature that the larger the action space, the slower is the convergence speed of any stationary MAB algorithms.
+% It could be interesting to study the possible application of \emph{contextual} MAB \cite{Li10,Luo18} or structured MAB \cite{Combes17} models and algorithms for this extension.
+
+% % We will investigate this behavior in order to understand it better theoretically.
+% % We will also experiment more with adversarial algorithms, to confirm that they work less efficiently than stochastic bandit algorithms in our non-stochastic setting.
+
+% % \paragraph{Extensions of the demonstration.}
+
+% Possible future extensions of our demonstration include the following points.
+% We could consider more dynamic devices (\eg, $100$) but it would either cost more in terms of equipment, or in terms of software engineering to simulation more devices with the same card.
+% We could also implement a real-world IoT communication protocol (like the LoRaWAN standard), which we prefer not to do as it would cost a significant effort of development.
+% Finally, we could also study the interference in case of other gateways located nearby, and this could be done without needing a lot of new hardware (using one extra USRP card to simulate another gateway).
+% %
+% % Pub pour notre autre article
+% % We are also interested in studying the possible gain of using a learning step when the transmission model follows ALOHA-like retransmissions, and this is presented in the next Section~\ref{sec:4:retransmissions}.
+
+
+% % \paragraph{Possible extensions for the second model.}
+
+% Finally, the utility and impact of the proposed approaches for LPWA networks motivates us to address several subjects as future works. Among them, the non-stationarity of the channel occupancy caused by the learning policy employed by the IoT devices.
+% %
+% For that end, modifications of MAB algorithms have been proposed, such as Sliding-Window-\UCB{} or Discounted-\UCB{} \cite{Garivier11UCBDiscount}
+% or more recently M-\UCB{} \cite{CaoZhenKvetonXie18},
+% or more recently GLR-\UCB{} \cite{Besson2019GLRT} which is presented in Chapter~\ref{chapter:6},
+% that nevertheless have not been explored for the targeted problem.
+% Chapter~\ref{chapter:6} is focusing on this direction, but we did not have enough time to explore the possible applications of MAB policies designed for non-stationary problems to the model with retransmissions presented in this Chapter.
+
+% In order to validate our results in a realistic experimental setting and not only with simulations, future works include a hardware implementation of the analyzed models to complete our demonstration \cite{Besson2019WCNC}.
+% Note that Julio César Mango-Vasquez is currently working on this direction, for the EPHYL project, in collaboration with Carlos Faouzi Bader at IETR and CentraleSupélec campus of Rennes.
+% % and Christophe Moy at IETR and University Rennes 1.
+% %
+% A hardware demonstrator could be also benefit to study other settings by removing some hypotheses, for instance by studying a similar model in non-slotted time.
 
 
 \subsection*{Summary of this chapter}

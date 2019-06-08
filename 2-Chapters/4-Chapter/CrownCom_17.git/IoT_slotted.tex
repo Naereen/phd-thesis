@@ -42,14 +42,14 @@ Numerical results are presented in \ref{sub:41:numericalResults}.
 
 We present our system model, which consists of one gateway and many IoT devices, using a frequency- and time- slotted protocol.
 
-\paragraph{One gateway and many devices.}
+\textbf{One gateway and many devices.}
 %
 We consider the system model presented in Figure~\ref{fig:41:system_model1}, where a set of devices all sends uplink packets to a (unique) network gateway.
 Messages can be sent in a fixed number $K\geq2$ of wireless channels,
 that are assumed to be orthogonal, that is, a message in channel $k$ will not cause collision to a message in another channel $j \neq i$.
 % (\eg, $K=4$ or $K=16$ for instance), which are centered indifferently around the $433.5\;\mathrm{MHz}$ or the $877\;\mathrm{MHz}$ ISM bands (as it is chosen for the implementation presented in Section~\ref{sec:4:gnuradio}).
 The communication between IoT devices and this gateway is done through a simple pure acknowledged ALOHA-based protocol where devices transmit uplink packets of fixed duration whenever they want.
-We mean here by ALOHA-based that devices do not use sensing, and we do not consider retransmissions of packets (see Section~\ref{sec:4:retransmissions} below where we remove this last hypothesis).
+We mean here by ALOHA-based that devices do not use sensing, and we do not consider retransmissions of packets (we remove this hypothesis in Section~\ref{sec:4:retransmissions}).
 %
 % Note that this choice of number of channels and of frequency bands is for instance the one of the current LoRa standard in Europe, but of course the precise choice does not really matter, and future standards can choose different parameters.
 
@@ -112,7 +112,7 @@ We assume that there are two types of end-devices in the network:
     \emph{Dynamic} (or \emph{smart}) end-devices can use all the available channels, by quickly changing their communication channel at any time slot, following a Machine Learning policy.
     For that end, they use their history of past communication successes or failures they experienced in each channel, to learn about channel availability.
     We also assume that the dynamic end-devices can run simple embedded decision making algorithms, and have limited but reasonable computing as well as storage capacities.
-    Note that of course we assume a limited storage capacity, so no device stores the full history of communication successes and failures, but they only store average rates (which can be stored using one $32$-bit IEEE 754 float number for each of the $K$ channels).
+    Note that of course we assume a limited storage capacity, so no device stores the full history of communication successes and failures, but they only store average rates (which can be stored using one float number for each of the $K$ channels).
     Our goal is to propose a learning algorithm than can be implemented by each dynamic device, in a decentralized and independent manner, to improve their successful communication rate automatically.
 \end{itemize}
 
@@ -140,7 +140,7 @@ Indeed, imagine if there were only $K=4$ channels being occupied by $D+S = 100$ 
 Such scenario is not our target of interest, and thus we prefer to only consider feasible scenarios where $p$ is smaller than $K/(S+D)$, in order to have an average of active devices not larger than the number of channels.
 
 
-\paragraph{MAB model.}
+\paragraph{Link with the MAB model.}
 %
 We consider the network from the point of view of one dynamic device.
 Following a Bernoulli emission process, every time a dynamic device has to communicate with the gateway,
@@ -148,10 +148,10 @@ it has to choose one channel (at each transmission $t \geq 1, t \in \mathbb{N}$)
 Then, the dynamic device waits in this channel $A(t)$ for an acknowledgement sent by the gateway, during a certain period (\eg, $5$ seconds for the example considered above).
 Before sending another message (\ie, at time $t+1$), the dynamic device knows if it received or not this \Ack{} message.
 %
-For this reason, selecting channel (or arm) $k$ at time $t$ yields a (random) feedback, called a (binary) \emph{reward}, $r(t)=Y_{k,t} \in \{0,1\}$, being $0$ if no \Ack{} was received before the next message, or $1$ if \Ack{} was successfully received.
+For this reason, selecting channel (or arm) $k$ at time $t$ yields a (random) feedback, called a (binary) \emph{reward}, $r(t) := Y_{k,t} \in \{0,1\}$, being $0$ if no \Ack{} was received before the next message, or $1$ if \Ack{} was successfully received.
 The goal of the dynamic device is to minimize its packet loss ratio, or equivalently, to maximize its number of successful transmissions, or its cumulative reward,
 $\sum_{t = 1}^T r(t),$
-which is a usual objective in MAB problems.
+which is the usual objective in MAB problems (see Section~\ref{sec:2:notations}).
 
 
 This problem is a special case of the stochastic MAB with
@@ -160,8 +160,8 @@ This problem is a special case of the stochastic MAB with
 % We consider only
 Bernoulli distributions.
 % , in which $r_k(t) \sim \mathrm{Bern}(\mu_k)$, that is, $r_k(t) \in \{0,1\}$ and $\mathbb{P}(r_k(t) = 1) = \mu_k \in [0,1]$.
-Contrary to many previous work done in the CR field \cite{Jouini10,Jouini12} (\eg, Opportunistic Spectrum Access),
-the reward $r(t)=Y_{k,t}$ does \emph{not} come from a sensing phase before sending the $t$-th message, as it would do for any ``listen-before-talk'' model.
+Contrarily to many previous work done in the CR field (\eg, Opportunistic Spectrum Access) \cite{Jouini10,Jouini12},
+the reward $r(t)$ does \emph{not} come from a sensing phase before sending the $t$-th message, as it would do for any ``listen-before-talk'' model.
 In our model, rewards rather come from receiving or not an acknowledgement from the gateway, between the $t$-th and $t+1$-th messages. A reward of one indicates that the acknowledgement was received on time, and a reward of zero indicates the opposite.
 
 The problem parameters
@@ -173,7 +173,7 @@ The goal is thus to propose a simple sequential algorithm to be applied identica
 %
 This requires to tackle the so-called \emph{exploration-exploitation dilemma}: a device has to try all channels a sufficient number of times to get a robust estimate of their qualities, while not selecting the worst channels too many times.
 %
-Before presenting \emph{multi-armed bandit algorithms}, we present some natural baseline (reference) policies.
+Before presenting the MAB algorithms used in the experiments, we present some natural baseline (reference) policies.
 
 
 % ------------------------------------------------------------------------
@@ -183,10 +183,12 @@ We present three different policies that can be used to assess the efficiency of
 The first one is naive but can be used in practice, while the two others are very efficient but require full knowledge on the system (\ie, an oracle) and are thus unpractical.
 %
 They are however useful for our numerical simulations, and are used as references, to show that our MAB-based approaches quickly learn to perform almost optimally.
+%
+Their short names are used in the legend on Figures~\ref{fig:41:from10to100}, \ref{fig:41:figure4appendix}), and are given in ``quotes'' in the corresponding paragraphs.
 
 
-\paragraph{$1^{\text{st}}$ - Naive policy: Random Channel Selection}
-
+\textbf{$1^{\text{st}}$ - Naive policy: Random Channel Selection} ``\textcolor{darkgreen}{Random}''.
+%
 We derive here the probability of having a successful transmission, for a dynamic device, in the case where all the dynamic devices make a purely random channel selection (\ie, uniform on $i \in [K]$).
 This reflects a naive policy that could be implemented by all the dynamic devices, and it provides a reference scenario to compare against.
 
@@ -211,8 +213,8 @@ This expression \eqref{eq:41:strategynaive} is constant (in time), and easy to c
 (maybe after a long enough initial learning period).
 
 
-\paragraph{$2^{\text{nd}}$ - (Unachievable) Optimal oracle policy}
-
+\textbf{$2^{\text{nd}}$ - (Unachievable) Optimal oracle policy} ``\textcolor{orange}{Optimal}''.
+%
 We investigate here the optimal policy that can be achieved if the dynamic devices have a perfect knowledge of the repartition of static devices $(S_k)_k$, and a fully centralized decision making\footnote{~This optimal policy needs an \emph{oracle} seeing the entire system, and affecting all the dynamic devices, once and for all, for a fixed stationary scenario, in order to avoid any signaling overhead. This is not possible in IoT contexts as several completely independent networks may operate in a single place.} is possible.
 We want to find the stationary repartition of devices into channels that maximizes the probability of having a successful transmission.
 
@@ -239,9 +241,9 @@ Consequently, an optimal allocation vector $(D_1,\dots,D_{K})$ is a solution of 
 \begin{proposition}\label{prop:41:Lagrangian}
 \begin{leftbar}[propositionbar]  % XXX leftbar propositionbar, comment if needed
     The \emph{Lagrange multipliers} method \cite{BoydVanderberghe04} can be used to solve the constraint real-valued maximization problem introduced in equation \eqref{eq:41:prob}.
-
+    %
     It gives a closed form expression for the (unique) optimal solution $D_k^*(\lambda)$, depending on the system parameters, and the unknown Lagrange multiplier $\lambda \in \mathbb{R}$.
-
+    %
     \begin{equation}\label{eq:41:Dilambda}
         D_k^*(\lambda) = \left(\frac{1}{\log(1-p)}\left[ \mathcal{W}\left(\frac{\lambda e}{(1-p)^{S_k-1}} \right)-1 \right]\right)^{+} .
     \end{equation}
@@ -261,7 +263,7 @@ Consequently, an optimal allocation vector $(D_1,\dots,D_{K})$ is a solution of 
     More details are given in Section~\ref{sec:4:proofLagrangian} in the Appendix of this Chapter.
 \end{smallproof}
 
-Where in the equation~\eqref{eq:41:Dilambda}, $(a)^{+} = \max(a,0)$, and $\mathcal{W}$ denotes the $\mathcal{W}$-Lambert function which is the reciprocal bijection of $x \mapsto x e^x$ on $\mathbb{R^+} = [0, +\infty)$ (which can be computed numerically in an efficient manner, \cite{Corless96}).
+Where in the equation~\eqref{eq:41:Dilambda}, $(a)^{+} := \max(a,0)$, and $\mathcal{W}$ denotes the $\mathcal{W}$-Lambert function which is the reciprocal bijection of $x \mapsto x e^x$ on $\mathbb{R^+} = [0, +\infty)$ (which can be computed numerically in an efficient manner, \cite{Corless96}).
 Moreover, condition \eqref{eq:41:eqCstr} implies that the Lagrange multiplier $\lambda$ is the solution of the constraint
 \begin{equation}\label{eq:41:constraintLambda}
     \sum_{k=1}^{K} D_k^*(\lambda) = D.
@@ -273,8 +275,9 @@ Solving the optimization problem provides the optimal real number value for $D_k
 %
 $\widehat{D_k} = \lfloor D_k^* \rfloor$ for $1 \leq k < K$, and $\widehat{D_{K}} = D - \sum_{k=1}^{K - 1} \widehat{D_k}$.
 
-\paragraph{$3^{\text{rd}}$ - A greedy approach of the oracle strategy}
 
+\textbf{$3^{\text{rd}}$ - A greedy approach of the oracle strategy} ``\textcolor{deeppurple}{Good sub-optimal}''.
+%
 We propose a \emph{sequential} approximation of the optimal policy:
 the third solution is a sub-optimal naive policy, simple to set up, but also unpractical as it also needs an oracle.
 End-devices are iteratively inserted in the channels with the lowest load (\ie, the index $k$ minimizing $S_k + D_k(\tau)$ at global time step $\tau$). Once the number of devices in each channel is computed, the probability of sending successfully a message is also given by equation \eqref{eq:41:prob_col}.
@@ -292,8 +295,8 @@ In our model, every dynamic device implements its own learning algorithm, \emph{
 For one device, the time $t$ refers to the number of time it accessed the network (following its Bernoulli transmission process, \ie, its duty cycle), \emph{not} the total number of time slots from the beginning, as rewards are only obtained after a transmission, and IoT devices only transmit sporadically, due to low transmission duty cycles.
 
 
-\paragraph{A bandit model for IoT.}
-
+\textbf{Using a bandit algorithm for IoT devices:}
+%
 Our IoT application is challenging in that there are \emph{multiple} players (the dynamic devices) interacting with the \emph{same} arms (the channels), without any centralized communication (they do not even know the total number of dynamic devices).
 
 % Considered alone, each dynamic device
@@ -306,21 +309,23 @@ However, it cannot be modeled as a stochastic MAB, as the rewards are (unfortuna
 %
 Despite this, we show in the next subsection that running a stochastic bandit algorithm for each device based on its own rewards is surprisingly successful.
 
-\paragraph{Two algorithms.}
 
-The two algorithms, \UCB{} and Thompson sampling (TS), were presented in Section~\ref{sec:2:famousMABalgorithms}.
-The \UCB{} algorithm uses a parameter $\alpha > 0$, set to $\alpha = 1/2$ in our experiments.
+\textbf{Considered algorithms.}
+%
+% In our model, every dynamic device implements its own algorithm, \emph{independently}.
+% For one dynamic device, the time $t$ is the total number of sent messages from the beginning, as rewards are only obtained after a transmission.
+%
+The two algorithms we consider are \UCB{} (``\textcolor{blue}{UCB}'' in the figures)
+and Thompson sampling (TS) (``\textcolor{red}{Thompson-sampling}''),
+and they are presented in Section~\ref{sec:2:famousMABalgorithms}.
 % originally $\alpha$ was set to $2$ \cite{Auer02}, but empirically $\alpha = 1/2$ is known to work better (uniformly across problems), and $\alpha > 1/2$ is advised by the theory \cite{Bubeck12}.
 %
-In our model, every dynamic device implements its own algorithm, \emph{independently}.
-For one dynamic device, the time $t$ is the total number of sent messages from the beginning, as rewards are only obtained after a transmission.
-%
-The TS algorithm
+The \UCB{} algorithm uses $\alpha = 1/2$ in our experiments.
+The TS algorithm is known to be empirically efficient, and for these reasons it has been used successfully in various applications, including problems from Cognitive Radio \cite{Toldov16,Mitton16}, and also in previous work on decentralized IoT-like networks \cite{Darak16}.
 % although being simple and easy to implement, is known to perform well for stochastic problems, for which it was proven to be asymptotically optimal \cite{AgrawalGoyal11,Kaufmann12Thompson}.
-is known to be empirically efficient, and for these reasons it has been used successfully in various applications, including problems from Cognitive Radio \cite{Toldov16,Mitton16}, and also in previous work on decentralized IoT-like networks \cite{Darak16}.
 
 
-\paragraph{\emph{Adversarial} bandit algorithms?.}
+\paragraph{\emph{Adversarial} bandit algorithms?}
 
 Instead of using MAB algorithms assuming a stochastic hypothesis on the system, we could try to use MAB algorithms designed to tackle a more general problem, that makes no hypothesis on the interfering traffic.
 The \emph{adversarial MAB} algorithms is a broader family, of which a well-known and efficient example is the $\mathrm{Exp}3$ algorithm \cite{Auer02,Bubeck12}.
@@ -350,7 +355,7 @@ Each static device only uses one channel, and their uneven repartition in the $1
 We simulate the network during $10^6$ discrete time slots, during which each device transmits on average $1000$ packets (\ie, the learning time is about $1000$ steps, for each algorithm).
 We tried similar experiments with other values for $K$ and this repartition vector, and results were similar for non-homogeneous repartitions. Clearly, the problem is less interesting for a homogeneous repartition, as all channels appear the same for dynamic devices, and so even with $D$ small in comparison to $S$, the system behaves like in Figure~\ref{fig:41:100intelligent}, where the performance of the five approaches are very close.
 
-\begin{figure}[!b]
+\begin{figure}[!h]
     \centering
     \subfloat[][10\% of dynamic devices]{\includegraphics[width=0.52\textwidth]{10intelligent.eps}
     \label{fig:41:10intelligent}}
@@ -390,13 +395,13 @@ Increasing the number of end-devices decreases the gap between the optimal and r
 \end{figure}
 
 
-\paragraph{Successful transmissions rate as a function of the dynamic devices.}
-
+\textbf{Successful transmissions rate as a function of the dynamic devices.}
+%
 To better assess the evolution of the optimal policy compared to the random one, we have displayed on Figure~\ref{fig:41:perf_learning} the evolution of the gain, in terms of successful transmissions rate, provided by the optimal oracle and the two learning policies, after $10^6$ time slots, \ie, about $1000$ transmissions for each IoT device.
 We can see that when the proportion of end-devices is low (\eg, $1\%$ of devices are dynamic), the optimal policy provides an improvement of $16\%$ compared to random channel selection.
 The TS algorithm always provides near-optimal performance, but the \UCB{} algorithm has a lowest rate of convergence and performs consequently worse after $1000$ transmissions, for instance it only provides a gain of $12\%$ for the same proportion of dynamic devices ($1\%$).
 
-\begin{figure}[!b]
+\begin{figure}[!h]
     \centering
     \subfloat[][10\% of intelligent devices]{\includegraphics[width=0.47\textwidth]{ch2_10.eps}
     \label{fig:41:ch2_10}}
@@ -431,7 +436,7 @@ Except for the limit case of $100\%$ of dynamic devices, which corresponds to Fi
 \textbf{Reproducibility.}
 %
 The simulation code used for the experiments in Section~\ref{sub:41:numericalResults} is for MATLAB or GNU Octave,
-and it was written in collaboration with Rémi Bonnefoi, in April and May $2017$.
+and it was written in collaboration with Rémi Bonnefoi, in May $2017$.
 Instructions to reproduce our experiments are given, and
 the code is open-sourced under the MIT License, at
 \href{https://Bitbucket.org/scee_ietr/rl_slotted_iot_networks}{\texttt{Bitbucket.org/scee\_ietr/rl\_slotted\_iot\_networks}}.
