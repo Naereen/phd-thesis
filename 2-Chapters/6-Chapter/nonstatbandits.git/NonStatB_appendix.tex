@@ -69,14 +69,14 @@ Missing proofs can be found in the article \cite{Besson2019GLRT}.
 % \subsubsection{Simplified expression for the GLR statistic}\label{app:6:GLR_with_kl}
 
 % % Remember that the Generalized Likelihood Ratio statistic for the test presented in \eqref{eq:6:firstDefGLRT} in Section~\ref{sub:6:presentationOfGLRTest} is
-% % \[\GLR(n) := \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_n ; \mu_0)},\]
+% % \[\GLR(n) \eqdef \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_n ; \mu_0)},\]
 % % %
 % % where $\ell(X_1, \ldots, X_n ; \mu_0)$ and $\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)$ respectively denote the likelihoods of the first $n$ observations under a model in $\cH_0$ and $\cH_1$.
 
 % The Generalized Likelihood Ratio statistic for the test is presented above in \eqref{eq:6:firstDefGLRT} in Section~\ref{sub:6:presentationOfGLRTest}.
 % %
 % We refer to \cite{Basseville93} and reference therein for the generic proof, but we prove here the specific case of Bernoulli distributions.
-% % For any $k \leq k'$, we denote $\widehat{\mu}_{k:k'} := \frac{1}{k - k' + 1} \sum_{l=k}^{k'} X_l$ denotes the average of the observations $X_l$ collected between the instants $k$ and $k'$.
+% % For any $k \leq k'$, we denote $\widehat{\mu}_{k:k'} \eqdef \frac{1}{k - k' + 1} \sum_{l=k}^{k'} X_l$ denotes the average of the observations $X_l$ collected between the instants $k$ and $k'$.
 % %
 % We prove below that the GLR test is equivalent to
 % \begin{align*}
@@ -86,7 +86,7 @@ Missing proofs can be found in the article \cite{Besson2019GLRT}.
 % \end{align*}
 % %
 % % Remember that the binary relative entropy $\kl$, defined for $x,y\in[0,1]$
-% % by $\kl(x,y) := x \ln\left(\frac{x}{y}\right) + (1-x)\ln\left(\frac{1-x}{1-y}\right)$,
+% % by $\kl(x,y) \eqdef x \ln\left(\frac{x}{y}\right) + (1-x)\ln\left(\frac{1-x}{1-y}\right)$,
 % % with the usual convention that $t \log(t) = 0$ if $t=0$.
 
 % \begin{proof}
@@ -101,7 +101,7 @@ Missing proofs can be found in the article \cite{Besson2019GLRT}.
 %         &= n \left[ \widehat{\mu}_{1:n} \log(\mu_0) + (1 - \widehat{\mu}_{1:n}) \log(1-\mu_0) \right].
 %     \end{align*}
 %     %
-%     For a constant $a\in[0,1]$, let $h(x) := a \log(x) + (1-a) \log(1-x)$ on $(0,1)$,
+%     For a constant $a\in[0,1]$, let $h(x) \eqdef a \log(x) + (1-a) \log(1-x)$ on $(0,1)$,
 %     and we are trying to solve $\sup_{x\in[0,1]} h(x)$.
 %     If $a=0$ or $a=1$, $h$ is maximum at $x=a$.
 %     Now if $a\neq0$, As $h$ is of class $\cC^1$, we can just differentiate and find the root of its derivative:
@@ -165,7 +165,7 @@ Missing proofs can be found in the article \cite{Besson2019GLRT}.
 
 
 % Consider $(Y_i)_{i\in\N}$ some data, and $t_0\in\N$, $t\in\N$ and any $s\in[t_0,t)$.
-% For any $a<b$, define $\mu_{a:b} := \frac{1}{b-a+1} \sum_{i=a}^{b} Y_i$ the mean of samples from $a$ to $b$.
+% For any $a<b$, define $\mu_{a:b} \eqdef \frac{1}{b-a+1} \sum_{i=a}^{b} Y_i$ the mean of samples from $a$ to $b$.
 
 % In a one dimensional exponential family, \eg, Gaussian distributions of known variance ($\sigma=1$) or Bernoulli distributions, the Kullback-Leibler divergence of two distributions is expressed with a $\kl$ function of their mean.
 % That is, for two distributions $\nu_1,\nu_2$ of means $\mu_1,\mu_2$,
@@ -183,9 +183,9 @@ Missing proofs can be found in the article \cite{Besson2019GLRT}.
 %     \end{align}
 % \end{lemma}
 % \begin{proof}
-%     Define $k_1 := \kl(\mu_{t_0:s}, \mu_{t_0:t})$,
-%     $k_2 := \kl(\mu_{s+1:t}, \mu_{t_0:t})$,
-%     and $k_3 := \kl(\mu_{s+1:t}, \mu_{t_0:s})$.
+%     Define $k_1 \eqdef \kl(\mu_{t_0:s}, \mu_{t_0:t})$,
+%     $k_2 \eqdef \kl(\mu_{s+1:t}, \mu_{t_0:t})$,
+%     and $k_3 \eqdef \kl(\mu_{s+1:t}, \mu_{t_0:s})$.
 %     In this family $\cN_1$, $\kl(x,y) = \frac{(x-y)^2}{2}$. Let us multiply everything by $2$ to avoid having this $\frac{1}{2}$ on every line.
 %     % \begin{small}
 %     \begin{align*}
@@ -807,20 +807,20 @@ We did some preliminary experiments to explore this direction and did not find a
     \item
     The first variant is the one we advised to use in practice for \GLRklUCB,
     it is very simple to compute numerically:
-    \[ \beta_1(n, \delta) := \log\left(\frac{3 n^{3/2}}{\delta}\right) = -\log(\delta) + \log(3) + 3/2 \log(n). \]
+    \[ \beta_1(n, \delta) \eqdef \log\left(\frac{3 n^{3/2}}{\delta}\right) = -\log(\delta) + \log(3) + 3/2 \log(n). \]
 
     \item
     The second variant is smaller and does not use this power $3/2$:
-    \[ \beta_2(n, \delta) := \log\left(\frac{1}{\delta}\right) + \log(1 + \log(n)). \]
+    \[ \beta_2(n, \delta) \eqdef \log\left(\frac{1}{\delta}\right) + \log(1 + \log(n)). \]
 
     \item
     The third variant is using the function $\cT$, as introduced by \eqref{def:6:function_T}.
     The function $\cT$ is computed with a numerical approximation\footnote{~The Lambert $\cW$ function is available in Python as \texttt{scipy.special.lambertw} from \texttt{scipy} \cite{scipy}.} of the Lambert function $\cW$, as explained in Section~\ref{par:6:falseAlarm},
-    \[ \beta_3(n, \delta) := 2 \mathcal{T}\left(\frac{\log(2 n^{3/2}) / \delta}{2}\right) + 6 \log(1 + \log(n)). \]
+    \[ \beta_3(n, \delta) \eqdef 2 \mathcal{T}\left(\frac{\log(2 n^{3/2}) / \delta}{2}\right) + 6 \log(1 + \log(n)). \]
 
     \item
     The forth variant is using the function $\widetilde{\mathcal{T}}(x) = x + 4 \log(1 + x + \sqrt{2x})$, as a simple approximation of $\cT(x)$, which is valid and quite accurate as soon as $x \geq 5$,
-    \[ \beta_4(n, \delta) := 2 \widetilde{\mathcal{T}}\left(\frac{\log(2 n^{3/2}) / \delta}{2}\right) + 6 \log(1 + \log(n)). \]
+    \[ \beta_4(n, \delta) \eqdef 2 \widetilde{\mathcal{T}}\left(\frac{\log(2 n^{3/2}) / \delta}{2}\right) + 6 \log(1 + \log(n)). \]
 \end{enumerate}
 
 As before, we consider the three problems $1$, $2$ and $4$, with time horizon $T=5000$,
@@ -850,7 +850,7 @@ and with the deterministic exploration scheme.
 As we could expect, the two choices $\beta_1$ and $\beta_2$ give similar results, as well as $\beta_3$ and $\beta_4$. The first two choices give better performance in most cases, and they are computationally less costly.
 The threshold $\beta_1$ is closer mathematically to the threshold $\beta_3$, that was used in the analysis, and thus it is the one we advise to use in practice.
 The sum-up of these experiments is that it sufficient to use the simplest and most explicit threshold $\beta_1$, instead of the more complicated one that was used for the analysis.
-Therefore, the choice of threshold function $\beta_1(n, \delta) := \log\left(3 n^{3/2} / \delta\right)$ for our proposal \GLRklUCB{} presented in Algorithm~\ref{algo:6:GLRklUCB} is validated by these experiments, and this choice gives good empirical performance.
+Therefore, the choice of threshold function $\beta_1(n, \delta) \eqdef \log\left(3 n^{3/2} / \delta\right)$ for our proposal \GLRklUCB{} presented in Algorithm~\ref{algo:6:GLRklUCB} is validated by these experiments, and this choice gives good empirical performance.
 
 
 % ----------------------------------------------------------------------------

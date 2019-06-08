@@ -193,8 +193,8 @@ At time step $t \in\mathbb{N},t\geq1$, player $j$ selects an arm $A^j(t)$, indep
   A \emph{collision} occurs at time $t$ if at least two players choose the same arm.
   We introduce the two events, for $j\in[M]$ and $k\in[K]$,
   \begin{equation}
-    C^j(t) :=  \{ \exists j' \neq j : A^{j'}(t) = A^j(t) \}
-    \ \ \ \text{and} \ \ \ C_k(t) :=  \left\{ \# \{ j : A^j(t) = k\} > 1 \right\},
+    C^j(t) \eqdef  \{ \exists j' \neq j : A^{j'}(t) = A^j(t) \}
+    \ \ \ \text{and} \ \ \ C_k(t) \eqdef  \left\{ \# \{ j : A^j(t) = k\} > 1 \right\},
   \end{equation}
   that respectively indicate that a collision occurs at time $t$ for player $j$ and that a collision occurs at time $t$ on arm $k$.
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
@@ -203,7 +203,7 @@ At time step $t \in\mathbb{N},t\geq1$, player $j$ selects an arm $A^j(t)$, indep
 Each player $j$ then receives (and observes) the \emph{binary rewards}
 $r^j(t) \in \{0,1\}$,
 \begin{equation}
-  r^j(t) := Y_{A^j(t),t} \; \indic(\overline{C^j(t)}).
+  r^j(t) \eqdef Y_{A^j(t),t} \; \indic(\overline{C^j(t)}).
 \end{equation}
 In other words, she receives the reward of the selected arm if she is the only one to select this arm, and a reward zero otherwise.
 This provides another reason to focus on the Bernoulli model. It is the hardest model, in the sense that receiving a reward zero is \emph{not enough} to detect collisions. For other models, the data streams $(Y_{k,s})_s$ are usually continuously distributed, with no probability mass at the value of zero (\eg, Gaussian).
@@ -268,7 +268,7 @@ and the cumulated reward of strategy $\cA$:
 \begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
   The excepted centralized multi-player regret is defined by
   \begin{equation}\label{eq:5:regret}
-    R_T(\boldsymbol{\mu}, M, \cA) := \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M r^j(t)\right].
+    R_T(\boldsymbol{\mu}, M, \cA) \eqdef \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M r^j(t)\right].
   \end{equation}
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
@@ -309,8 +309,8 @@ We introduce additional notations in the following definition.
 \begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
   % [$T_k(T)$ and $\cC_k(T)$]
   % \label{def:5:nbSelections}
-  Let $T^j_k(T) := \sum_{t=1}^T \indic(A^j(t) = k)$,
-  and denote $T_k(T) := \sum_{j=1}^M T^j_k(T)$ the \emph{number of selections} of arm $k\in[K]$ by any player $j\in[M]$, up to time $T$.
+  Let $T^j_k(T) \eqdef \sum_{t=1}^T \indic(A^j(t) = k)$,
+  and denote $T_k(T) \eqdef \sum_{j=1}^M T^j_k(T)$ the \emph{number of selections} of arm $k\in[K]$ by any player $j\in[M]$, up to time $T$.
   % and $\cC_k(T)$ be the number of collisions on arm $k$ up-to time $T$.
 % \end{definition}
 
@@ -318,7 +318,7 @@ We introduce additional notations in the following definition.
   Let $\cC_k(T)$ be the \emph{number of colliding players} on arm $k\in[K]$ up to horizon $T$:
   % \vspace*{-5pt}  % XXX
   \begin{equation}
-    \cC_k(T) :=
+    \cC_k(T) \eqdef
     \sum_{t=1}^{T} \sum_{j=1}^{M} \indic(C^j(t)) \indic(A^j(t) = k).
   \end{equation}
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
@@ -326,7 +326,7 @@ We introduce additional notations in the following definition.
 
 Note that when $n$ players choose arm $k$ at time $t$, this counts as $n$ collisions, not just one. So $\cC_k(T)$ counts the total \emph{number of colliding players} rather than the number of collision events. Hence there is small abuse of notation when calling it a number of collisions.
 %
-Letting $\cP_M := \left\{ \boldsymbol{\mu} \in [0,1]^K : \mu_M^* > \mu_{M+1}^*\right\}$
+Letting $\cP_M \eqdef \left\{ \boldsymbol{\mu} \in [0,1]^K : \mu_M^* > \mu_{M+1}^*\right\}$
 be the set of bandit instances such that there is a strict gap between the $M$ best arms and the other arms, we now provide a regret decomposition for any $\boldsymbol{\mu} \in \cP_M$.
 
 \begin{lemma}\label{lem:5:DecompositionRegret}
@@ -348,7 +348,7 @@ be the set of bandit instances such that there is a strict gap between the $M$ b
 In this decomposition, term \ref{eq:5:term1} counts the lost rewards due to \emph{sub-optimal arms} selections ($k \in \Mworst$), term \ref{eq:5:term2} counts the number of times the \emph{best arms} were \emph{not} selected ($k \in \Mbest$), and term \ref{eq:5:term3} counts the weighted number of collisions, on \emph{all arms}.
 
 \begin{smallproof}
-  Using the definition of regret $R_T$ from \eqref{eq:5:regret}, and this collision indicator $\eta^j(t):=\indic(\overline{C^j(t)})$,
+  Using the definition of regret $R_T$ from \eqref{eq:5:regret}, and this collision indicator $\eta^j(t) \eqdef \indic(\overline{C^j(t)})$,
   \begin{align*}
     R(T)
     &= \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M Y_{A^j(t),t} \eta^j(t) \right]
@@ -357,17 +357,17 @@ In this decomposition, term \ref{eq:5:term1} counts the lost rewards due to \emp
     R(T)
     &= \E_{\mu}\left[ \sum_{t=1}^{T}\sum_{j \in \Mbest} \mu_j
       - \sum_{t=1}^{T} \sum_{j=1}^{M} \mu_{A^j(t)} \eta^j(t) \right] \\
-      % &= \underbrace{\left( \frac{1}{M} \sum_{j \in \Mbest} \mu_j \right)}_{:= \overline{\mu}^*} (T M)
+      % &= \underbrace{\left( \frac{1}{M} \sum_{j \in \Mbest} \mu_j \right)}_{ \eqdef \overline{\mu}^*} (T M)
     &= \left( \frac{1}{M} \sum_{j \in \Mbest} \mu_j \right)
       - \sum_{k=1}^{K} \sum_{j=1}^{M} \mu_k \E_{\mu}\left[ T^j_k(T) \right]
       + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
     %
-    \intertext{For the first term, we have $T M = \sum\limits_{k=1}^{K} \sum\limits_{j=1}^{M} \E_{\mu}\left[ T^j_k(T)\right]$, and if we denote $\overline{\mu}^* := \frac{1}{M} \sum\limits_{j \in \Mbest} \mu_j$ the average mean of the $M$-best arms, then,}
+    \intertext{For the first term, we have $T M = \sum\limits_{k=1}^{K} \sum\limits_{j=1}^{M} \E_{\mu}\left[ T^j_k(T)\right]$, and if we denote $\overline{\mu}^* \eqdef \frac{1}{M} \sum\limits_{j \in \Mbest} \mu_j$ the average mean of the $M$-best arms, then,}
     %
     &= \sum_{k=1}^{K} \sum_{j=1}^{M} (\overline{\mu}^* - \mu_k) \E_{\mu}\left[ T^j_k(T) \right]
       + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
     %
-    \intertext{Let $\overline{\Delta_k} := \overline{\mu}^* - \mu_k$ be the gap between the mean of the arm $k$ and the $M$-best average mean, and if $M^*$ denotes the index of the worst of the $M$-best arms (\ie, $M^* = \arg\min_{k\in\Mbest}(\mu_k)$), then by splitting $[K]$ into three disjoint sets $\Mbest \cupdot \Mworst = (\Mbest\setminus\{M^*\}) \cupdot \{M^*\} \cupdot \Mworst$, we get}
+    \intertext{Let $\overline{\Delta_k} \eqdef \overline{\mu}^* - \mu_k$ be the gap between the mean of the arm $k$ and the $M$-best average mean, and if $M^*$ denotes the index of the worst of the $M$-best arms (\ie, $M^* = \arg\min_{k\in\Mbest}(\mu_k)$), then by splitting $[K]$ into three disjoint sets $\Mbest \cupdot \Mworst = (\Mbest\setminus\{M^*\}) \cupdot \{M^*\} \cupdot \Mworst$, we get}
     %
     &= \sum_{k \in \Mbest\setminus\{M\}} \overline{\Delta_k} \E_{\mu}\left[ T_k(T) \right]
       + \overline{\Delta_{M^*}} \E_{\mu}\left[ T_{M^*}(T) \right] \\
@@ -421,7 +421,7 @@ The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized___
   Note that term \ref{eq:5:term3} is clearly lower bounded by $0$
   but it is not obvious for \ref{eq:5:term2} as there is no reason for $T_k(T)$ to be upper bounded by $T$.
   %
-  Let $T_k^{!}(T) := \sum_{t=1}^{T} \indic(\exists! j, A^j(t)=k)$,
+  Let $T_k^{!}(T) \eqdef \sum_{t=1}^{T} \indic(\exists! j, A^j(t)=k)$,
   where the notation $\exists!$ stands for ``there exists a unique''.
   Then $T_k(T) = \sum_{t=1}^{T} \sum_{j=1}^{M} \indic(A^j(t) = k)$ can be decomposed as
   \begin{equation*}
@@ -454,7 +454,7 @@ The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized___
 
 Similarly to what we present above in Section~\ref{sec:2:lowerUpperBoundsRegret},
 we use the Kullback-Leibler divergence to express our lower bound.
-We remind that $\kl(x,y) := x\log(x/y) + (1-x)\log((1-x)/(1-y))$ is the KL divergence between the Bernoulli distributions of means $x$ and $y$.
+We remind that $\kl(x,y) \eqdef x\log(x/y) + (1-x)\log((1-x)/(1-y))$ is the KL divergence between the Bernoulli distributions of means $x$ and $y$.
 %
 We first introduce the assumption under which we derive a regret lower bound, that generalizes the assumption of uniform efficiency given in Definition~\ref{def:2:uniformlyEfficientAlgorithm},
 a classical assumption made by \cite{LaiRobbins85} in single-player bandit models.
@@ -506,7 +506,7 @@ For instance, \cite{Patil2019stochastic} requires that each arm must be sampled 
 The following notations and the hypothesis on the collision information term \eqref{eq:5:collisionInformationTerm} come from Appendix~E of \cite{KaufmannAbbas19}.
 Similarly to what we did in Section~\ref{sec:2:notations},
 consider the observations $O_t^j$ that she gathered after $t$ rounds of its algorithm $\cA_j$ for a fixed player $j\in[M]$,
-defined as $O_t^j := \left( U^j(1), Y_{A^j(1),1}, C^j(1), \ldots, U^j(t), Y_{A^j(t),t}, C^j(t) \right)$,
+defined as $O_t^j \eqdef \left( U^j(1), Y_{A^j(1),1}, C^j(1), \ldots, U^j(t), Y_{A^j(t),t}, C^j(t) \right)$,
 where $U^j(t)$ denotes some external source of randomness useful to select $A^j(t+1)$ (\eg, for an algorithm based on ranks and \UCB{} indexes, like \RhoRand, when two arms have the same maximum index, the decision is an $\argmax$ that is usually a uniform random selection among the arms with maximum index).
 
 Fix a problem $\bm{\mu}$,
@@ -516,7 +516,7 @@ Fix a sub-optimal arm $k$ and $\varepsilon>0$, and $\lambda_k = \mu^*_M + \varep
 We denote $\Pr_{\bm{\mu}}^{O_t^j}$ the distribution of the vector $O_t$ under the model $\bm{\mu}$ when using algorithm $\cA_j$.
 Then we introduce the \emph{collision information term} as:
 \begin{equation}\label{eq:5:collisionInformationTerm}
-  \cI_{\bm{\mu},\bm{\lambda}}(\cA_j,T) := \sum_{t=1}^{T} \mathrm{KL}(\Pr_{\bm{\mu}}^{C_t | O_{t-1}}, \Pr_{\bm{\lambda}}^{C_t | O_{t-1}^j}).
+  \cI_{\bm{\mu},\bm{\lambda}}(\cA_j,T) \eqdef \sum_{t=1}^{T} \mathrm{KL}(\Pr_{\bm{\mu}}^{C_t | O_{t-1}}, \Pr_{\bm{\lambda}}^{C_t | O_{t-1}^j}).
 \end{equation}
 
 For a \emph{decentralized strategy} $\cA$ that has access to the sensing information (\ie, ruling out model \modeltrois), and satisfies $\cI_{\bm{\mu},\bm{\lambda}}(\cA_j,T) = \smallO{\log(T)}$,
@@ -649,14 +649,14 @@ Under observation model \modeltrois{} no sensing information is available and th
 %
 % \vspace*{-5pt}
 \begin{equation}
-  \widetilde{S_k}^j(t) := \sum_{t=1}^T r^j(t) \indic(A^j(t) = k)
-  \ \ \ \text{and letting} \ \ \ \widetilde{\mu_k}^j(t) := \widetilde{S_k}^j(t) \;/\; T_k^j(t).
+  \widetilde{S_k}^j(t) \eqdef \sum_{t=1}^T r^j(t) \indic(A^j(t) = k)
+  \ \ \ \text{and letting} \ \ \ \widetilde{\mu_k}^j(t) \eqdef \widetilde{S_k}^j(t) \;/\; T_k^j(t).
 \end{equation}
 
 Note that $\widetilde{\mu_k}^j(t)$ is no longer meant to be an unbiased estimate of $\mu_k$ as it also takes into account the collision information, that is present in the reward. Based on this empirical reward, one can similarly defined modified indices as
 %
 \begin{equation}\label{eq:5:indexTilde}
-  \widetilde{U_k}^j(t) := \begin{cases}
+  \widetilde{U_k}^j(t) \eqdef \begin{cases}
       \widetilde{\mu_k}^j(t)  + \sqrt{  f(t) / (2T_k^j(t))}
       &\text{for } \UCB, \\
       \sup\left\{ q \in [0, 1]: T_k^j(t)\times \kl(\widetilde{\mu_k}^j(t), q) \leq f(t) \right\}
@@ -718,10 +718,10 @@ The approache we now describe for multi-player bandits can be used in combinatio
 and \klUCB{} \citep{KLUCBJournal}.
 For player $j\in[M]$
 %
-denote $S_k^j(t) := \sum_{s=1}^t Y_{k,s} \indic(A^j(t) = k)$ the current sum of rewards obtained for arm $k$,
-then $\widehat{\mu}_k^j(t) := S_k^j(t)/T_k^j(t)$ (if $T_k^j(t)\neq 0$) is the empirical mean of arm $k$, and thus one can define the index
+denote $S_k^j(t) \eqdef \sum_{s=1}^t Y_{k,s} \indic(A^j(t) = k)$ the current sum of rewards obtained for arm $k$,
+then $\widehat{\mu}_k^j(t) \eqdef S_k^j(t)/T_k^j(t)$ (if $T_k^j(t)\neq 0$) is the empirical mean of arm $k$, and thus one can define the index
 \begin{equation}\label{eq:5:indexFor_UCB_klUCB}
-  U_k^j(t) := \begin{cases}
+  U_k^j(t) \eqdef \begin{cases}
       \widehat{\mu}_k^j(t)  + \sqrt{  f(t) / (2T_k^j(t))}
       &\text{for } \UCB, \\
       \sup\left\{ q \in [0, 1]: T_k^j(t)\times \kl(\widehat{\mu}_k^j(t), q) \leq f(t) \right\}
@@ -747,7 +747,7 @@ More formally, letting $\pi(k,\mathbf{g})$ be the index of the $k$-th largest en
 in \rhoRand{} each player maintains at time $t$ an internal rank $R^j(t)\in[M]$
 and selects at time $t$,
 % \begin{equation}
-$A^j(t) := \pi\left(R^j(t), [U^j_\ell(t)]_{\ell=1,\dots,K}\right)$.
+$A^j(t) \eqdef \pi\left(R^j(t), [U^j_\ell(t)]_{\ell=1,\dots,K}\right)$.
 % \end{equation}
 If a collision occurs, a new rank is drawn uniformly at random, $R^j(t+1) \sim \cU([M])$.
 
@@ -756,7 +756,7 @@ If a collision occurs, a new rank is drawn uniformly at random, $R^j(t+1) \sim \
 \paragraph{Our two proposals.}
 We now propose two alternatives to this strategy, that do not rely on ranks and rather randomly fix themselves on one \emph{arm} in $\TopM(t)$, that is defined as the set of arms that have the $M$ largest indices (at the current time $t$ and for player $j$),
 \begin{equation}
-  \TopM(t) := \left\{ \pi\left(k, \{U^j_\ell(t)\}_{\ell=1,\dots,K}\right), k=1,\dots,M\right\}.
+  \TopM(t) \eqdef \left\{ \pi\left(k, \{U^j_\ell(t)\}_{\ell=1,\dots,K}\right), k=1,\dots,M\right\}.
 \end{equation}
 
 \textbf{The \RandTopM{} algorithm.}
@@ -1104,14 +1104,14 @@ happen a logarithmic number of times. The proof of this result is given below.
   \begin{align*}
     & \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t)\right)  \\ & \leq \sum_{t=1}^T \Pr\left(A^j(t) = k, k \notin \hat{M}^j(t), A^j(t+1) \in \TopM(t) \cap \{k': U_{k'}^j(t-1) \leq U_k^j(t-1)\}\right) \\
     & \leq   \sum_{t=1}^T \sum_{k' \neq k}\Pr\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right) \\
-    & = \sum_{k' \neq k} \underbrace{\sum_{t=1}^T \Pr\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right)}_{:= T_{k'}}
+    & = \sum_{k' \neq k} \underbrace{\sum_{t=1}^T \Pr\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right)}_{ \eqdef T_{k'}}
   \end{align*}
 
   Now, to control $T_{k'}$, we distinguish two cases. If $\mu_k < \mu_{k'}$, one can write
   \[T_{k'} \leq \sum_{t=1}^T \Pr\left(U_{k'}^j(t) \leq \mu_{k'}\right) + \sum_{t=1}^T \Pr\left(A^j(t) = k, U_{k}^j(t-1) \geq \mu_{k'}\right)\]
   The first sum is $o(\log(T))$ by Lemma~\ref{lem:5:Fact1KLUCB}.
   To control the second sum, we apply the same trick that led to the proof of Lemma~\ref{lem:5:Fact2KLUCB} in \cite{KLUCBJournal}.
-  Letting $\kl^+(x, y) := \kl(x, y) \indic(x \geq y)$,
+  Letting $\kl^+(x, y) \eqdef \kl(x, y) \indic(x \geq y)$,
   and $\widehat{\mu}^j_{k,s}$ be the empirical mean of the $s$ first observations from arm $k$ by player $j$, one has
   %
   \begin{align*}
@@ -1231,27 +1231,27 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
   For player $j$ and round $t$, we now introduce a few events that are useful in the proof. First, for every $x=1,2,3,4,5$, we denote $I_x^j(t)$ the event that a transition of type $(x)$ occurs for player $j$ after the first $t$ observations (\ie, between round $t$ and round $t+1$, to decide $A^j(t+1)$).
   Formally they are defined by
   \begin{align*}
-    I_1^j(t) &:= \left(\overline{s^j(t)},\overline{C_j(t)}, A^j(t) \in \TopM(t)\right), \\
+    I_1^j(t) & \eqdef \left(\overline{s^j(t)},\overline{C_j(t)}, A^j(t) \in \TopM(t)\right), \\
     % go sitted
-    I_2^j(t) &:= \left(\overline{s^j(t)},C_j(t), A^j(t) \in \TopM(t)\right),
+    I_2^j(t) & \eqdef \left(\overline{s^j(t)},C_j(t), A^j(t) \in \TopM(t)\right),
     \ \ \ &\text{and} \ \ \
-    I_3(t) &:= \left(\overline{s^j(t)},A^j(t) \notin \TopM(t)\right), \\
+    I_3(t) & \eqdef \left(\overline{s^j(t)},A^j(t) \notin \TopM(t)\right), \\
     % if sitted
-    I_3(t) &:= \left(s^j(t),A^j(t) \in \TopM(t)\right),
+    I_3(t) & \eqdef \left(s^j(t),A^j(t) \in \TopM(t)\right),
     \ \ \ &\text{and} \ \ \
-    I_5(t) &:= \left(s^j(t),A^j(t) \notin \TopM(t)\right).
+    I_5(t) & \eqdef \left(s^j(t),A^j(t) \notin \TopM(t)\right).
   \end{align*}
   %
   Then, we introduce $\widetilde{C^j}(t)$ as the event that a collision occurs for player $j$ at round $t$ if she is not yet fixed on her arm, that is
   % \begin{equation}
-  $\widetilde{C^j}(t) := \left(C^j(t), \overline{s^j(t)}\right)$.
+  $\widetilde{C^j}(t) \eqdef \left(C^j(t), \overline{s^j(t)}\right)$.
   % \end{equation}
 
   A key observation is that $C^j(t)$ implies $\bigcup_{j'=1}^M \widetilde{C^{j'}}(t)$, as a collision necessarily involves at least one player not yet fixed on her arm ($\overline{s^{j'(t)}}$).
   Otherwise, if they are all fixed, \ie, for all $j$, $s^j(t)$, then by definition of $s^j(t)$, none of the player changed their arm from $t-1$ to $t$, and none experienced any collision at time $t-1$ so by induction there is no collision at time $t$.
   %
   Thus, $\sum_{j=1}^M \Pr(C^j(t))$ can be upper bounded by $M \sum_{j=1}^M \Pr(\widetilde{C^j}(t))$ (union bound),
-  and it follows that if $\cC(T) := \sum_{k=1}^K \cC_k(T)$ then
+  and it follows that if $\cC(T) \eqdef \sum_{k=1}^K \cC_k(T)$ then
   \[\E_{\mu}[\cC(T)] \leq M \sum_{j=1}^M \sum_{t=1}^T \Pr(\widetilde{C^j}(t)).\]
   We can further  observe that $\widetilde{C^j}(t)$ implies a transition $(2)$ or $(3)$, as a transition $(1)$ cannot happen in case of collision. Thus another union bound gives
   %
@@ -1286,7 +1286,7 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
   $
   with $n(T)$ the number of such sequences,
   \ie,
-  $n(T) := \inf \{i \geq 1 : \min(\theta_i, \tau_i) \geq T \}$
+  $n(T) \eqdef \inf \{i \geq 1 : \min(\theta_i, \tau_i) \geq T \}$
   (or $0$ if $\theta_1$ does not exist).
   %
   If $\theta_i = 1$, the first sequence does not have term $\overline{I_2^j(\theta_i - 1)}$.

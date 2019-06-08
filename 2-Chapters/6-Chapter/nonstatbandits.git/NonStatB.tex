@@ -77,7 +77,7 @@ This chapter is based on our articles \cite{Besson2019GLRT,Besson2019Gretsi}.
 
 A \emph{piece-wise stationary bandit model} is characterized by a set of $K$ arms.
 A (random) stream of rewards $(Y_{k,t})_{t\in\N^*}$ is associated to each arm $k \in [K]$. We assume that the rewards are bounded, and without loss of generality we assume that $Y_{k,t} \in [0,1]$.
-We denote by $\mu_k(t) :=  \bE[Y_{k,t}]$ the mean reward of arm $k$ at round $t$. At each round $t$, a decision maker has to select an arm $A(t)\in[K]$, based on past observation and receives the corresponding reward $r(t) = Y_{A(t),t}$.
+We denote by $\mu_k(t) \eqdef  \bE[Y_{k,t}]$ the mean reward of arm $k$ at round $t$. At each round $t$, a decision maker has to select an arm $A(t)\in[K]$, based on past observation and receives the corresponding reward $r(t) = Y_{A(t),t}$.
 At time $t$, we denote by $k_t^*$ an arm with maximal expected reward, \ie, $\mu_{k_t^*}(t) = \max_k \mu_k(t)$, called an optimal arm (possibly not unique).
 
 A policy $\cA$ chooses the next arm to play based on the sequence of past plays and obtained rewards.
@@ -89,7 +89,7 @@ We use the same notation as the regret for stationary problem without ambiguity,
 \end{equation}
 
 
-In the piece-wise \iid{} model, we furthermore assume that there is a (relatively small) number of \emph{breakpoints}, denoted by $\Upsilon_T:=\sum_{t=1}^{T-1} \indic\left(\exists k\in[K]: \mu_k(t) \neq \mu_k(t+1)\right)$.
+In the piece-wise \iid{} model, we furthermore assume that there is a (relatively small) number of \emph{breakpoints}, denoted by $\Upsilon_T \eqdef \sum_{t=1}^{T-1} \indic\left(\exists k\in[K]: \mu_k(t) \neq \mu_k(t+1)\right)$.
 If we denote $\tau^{(0)} = 0$, we define the $i$-th breakpoint recursively by
 $\tau^{(i)} = \inf\{t > \tau^{(i-1)} : \exists k : \mu_k(t) \neq \mu_k(t+1)\}$.
 %
@@ -100,9 +100,9 @@ Depending on the application, many scenario can be meaningful: changes occurring
 For instance, for a cognitive radio application in a IoT-like network, we can imagine that all the objects of one company use a fixed channel or subset of channels, and on a particular day in a particular city, if the company deploys a lot of new objects, then one or some channels see their mean occupancy rates abruptly change.
 
 We define the \emph{number of change-points} on arm $k$,
-$\NCk := \sum_{t=1}^{T-1} \indic\left(\mu_k(t) \neq \mu_k(t+1)\right)$,
+$\NCk \eqdef \sum_{t=1}^{T-1} \indic\left(\mu_k(t) \neq \mu_k(t+1)\right)$,
 for which it clearly holds that
-$\NCk \leq \Upsilon_T$, but there can be an arbitrary difference between these two quantities for some arms. Letting $C_T := \sum_{k=1}^K \NCk$ be the total number of change-points on the arms, one can have $C_T \in \{ \Upsilon_T, \dots, K\Upsilon_T \}$.
+$\NCk \leq \Upsilon_T$, but there can be an arbitrary difference between these two quantities for some arms. Letting $C_T \eqdef \sum_{k=1}^K \NCk$ be the total number of change-points on the arms, one can have $C_T \in \{ \Upsilon_T, \dots, K\Upsilon_T \}$.
 We illustrate the two extreme cases in problems $1$ and $2$ presented in Figures~\ref{fig:6:Problem_1} and \ref{fig:6:Problem_2} below.
 
 
@@ -413,14 +413,14 @@ $\cH_1 : (\exists \mu_0 \neq \mu_1, \tau \in \N^*: \ \  X_1, \dots, X_\tau \ \ov
 %
 The Generalized Likelihood Ratio statistic for this test is defined by
 \begin{equation}\label{eq:6:firstDefGLRT}
-    \GLR(n) :=\frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \dots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \dots, X_n ; \mu_0)},
+    \GLR(n) \eqdef \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \dots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \dots, X_n ; \mu_0)},
 \end{equation}
 %
 where $\ell(X_1, \dots, X_n ; \mu_0)$ and $\ell(X_1, \dots, X_n ; \mu_0,\mu_1,\tau)$ respectively denote the \emph{likelihoods} of the first $n$ observations under a model in $\cH_0$ and $\cH_1$.
 High values of this statistic tend to indicate rejection of $\cH_0$.
 %
 By using the form of the likelihood for Bernoulli distributions, this statistic can be written with the binary relative entropy $\kl$, defined for $x,y\in[0,1]$ (with the usual convention that $t \log(t) = 0$ if $t=0$),
-$\kl(x,y) := x \ln\left(\frac{x}{y}\right) + (1-x)\ln\left(\frac{1-x}{1-y}\right)$
+$\kl(x,y) \eqdef x \ln\left(\frac{x}{y}\right) + (1-x)\ln\left(\frac{1-x}{1-y}\right)$
 %
 Indeed, we show below
 % in Appendix~\ref{app:6:GLR_with_kl}
@@ -429,7 +429,7 @@ that in any one-dimensional exponential family, we have
     \log \GLR(n) = \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right].
 \end{equation}
 %
-where for $k \leq k'$, $\widehat{\mu}_{k:k'} := \frac{1}{k - k' + 1} \sum\limits_{l=k}^{k'} X_l$ denotes the average of the observations $X_l$ collected between the instants $k$ and $k'$.
+where for $k \leq k'$, $\widehat{\mu}_{k:k'} \eqdef \frac{1}{k - k' + 1} \sum\limits_{l=k}^{k'} X_l$ denotes the average of the observations $X_l$ collected between the instants $k$ and $k'$.
 
 
 \begin{smallproof}
@@ -444,7 +444,7 @@ where for $k \leq k'$, $\widehat{\mu}_{k:k'} := \frac{1}{k - k' + 1} \sum\limits
         &= n \left( \widehat{\mu}_{1:n} \log(\mu_0) + (1 - \widehat{\mu}_{1:n}) \log(1-\mu_0) \right).
     \end{align*}
     %
-    For a constant $a\in[0,1]$, let $h(x) := a \log(x) + (1-a) \log(1-x)$ on $(0,1)$,
+    For a constant $a\in[0,1]$, let $h(x) \eqdef a \log(x) + (1-a) \log(1-x)$ on $(0,1)$,
     and we are trying to solve $\sup_{x\in[0,1]} h(x)$.
     If $a=0$ or $a=1$, $h$ is maximum at $x=a$.
     Now if $a\neq0$, As $h$ is of class $\cC^1$, we can just differentiate and find the root of its derivative:
@@ -522,7 +522,7 @@ This motivates the following definition of the Bernoulli GLRT change point detec
     The Bernoulli GLRT (B-GLRT) change point detector with threshold function $\beta(n,\delta)$ is the stopping time $\widehat{\tau}_{\delta}$ defined by
     %
     \begin{equation}\label{def:6:GLR}
-        \widehat{\tau}_{\delta} := \inf \left\{ n \in \N^* : \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right] \geq \beta(n,\delta)\right\}.
+        \widehat{\tau}_{\delta} \eqdef \inf \left\{ n \in \N^* : \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right] \geq \beta(n,\delta)\right\}.
     \end{equation}
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
@@ -550,7 +550,7 @@ We give below two lemmas, Lemma~\ref{lem:6:FalseAlarm} which bounds the false al
 In Lemma~\ref{lem:6:FalseAlarm} below, we propose a choice of the threshold function $\beta(n,\delta)$ under which the probability that there exists a \emph{false alarm} under \iid{} data is small. To define $\beta$, we need to introduce the function $\cT$, defined for $x>0$ by
 %
 \begin{equation}\label{def:6:function_T}
-    \cT(x) ~:=~ 2 \widetilde{h}\left(\frac{h^{-1}(1+x) + \ln(2\zeta(2))}{2}\right),
+    \cT(x) ~ \eqdef ~ 2 \widetilde{h}\left(\frac{h^{-1}(1+x) + \ln(2\zeta(2))}{2}\right),
 \end{equation}
 where for $u \ge 1$ we define $h(u) = u - \ln(u)$ and its inverse $h^{-1}(u)$,
 %
@@ -773,7 +773,7 @@ With the exploration function $f(t) = \ln(t) + 3 \ln(\ln(t))$ if $t>1$ and $f(t)
 the index is defined using the binary relative entropy $\kl$ as
 %
 \begin{equation}\label{def:6:UCB}
-    \UCB_k(t) := \max \Bigl\{ q\in[0,1] : n_k(t) \times \kl\left(\widehat{\mu}_k(t),q\right) \leq f(t - \tau_k(t)) \Bigr\}.
+    \UCB_k(t) \eqdef \max \Bigl\{ q\in[0,1] : n_k(t) \times \kl\left(\widehat{\mu}_k(t),q\right) \leq f(t - \tau_k(t)) \Bigr\}.
 \end{equation}
 
 
@@ -862,7 +862,7 @@ This section give the finite-time regret bounds for the two variants, and interp
 
 Recall that $\tau^{(i)}$ denotes the position of the $i$-th break-point and let $\mu_k^{(i)}$ be the mean of arm $k$ on the segment between the $i$ and $(i+1)$-th breakpoint:
 $\forall t \in \{ \tau^{(i-1)}+1, \dots, \tau^{(i)} \}, \mu_k(t) = \mu_k^{(i)}$.
-We also introduce $i^* = \arg\max_k \mu_k^{(i)} $ and the largest gap at break-point $i$ as $\Delta^{(i)} := \max_{k\in[K]} |\mu_k^{(i)} - \mu_k^{(i-1)}| >0$.
+We also introduce $i^* = \arg\max_k \mu_k^{(i)} $ and the largest gap at break-point $i$ as $\Delta^{(i)} \eqdef \max_{k\in[K]} |\mu_k^{(i)} - \mu_k^{(i-1)}| >0$.
 
 
 \begin{assumption}[Enough samples between two global change-points]\label{ass:6:LongPeriodsGlobal}
@@ -1243,7 +1243,7 @@ we can prove that $d^{(i-1)} \leq (\tau^{(i)} - \tau^{(i-1)})/2$,
 and thus we obtain furthermore that
 %
 \begin{eqnarray*}
-    n_k(\tau^{(i)})& \in& \left\{ \left\lfloor \frac{\alpha}{2K} (\tau^{(i)}-\tau^{(i-1)} )\right\rfloor, \dots, \tau^{(i)}-\tau^{(i-1)} \right\} := \cI_k.
+    n_k(\tau^{(i)})& \in& \left\{ \left\lfloor \frac{\alpha}{2K} (\tau^{(i)}-\tau^{(i-1)} )\right\rfloor, \dots, \tau^{(i)}-\tau^{(i-1)} \right\} \eqdef \cI_k.
 \end{eqnarray*}
 
 Introducing $\widehat{\mu}_{a,s}$ (resp. $\widehat{\mu}_{b,s}$) the empirical mean of $s$ \iid{} observations with mean $\widehat{\mu}_k^{(i-1)}$ (resp. $\widehat{\mu}_k^{(i)}$), such that $\widehat{\mu}_{a,s}$ and $\widehat{\mu}_{b,r}$ are independent, it follows that

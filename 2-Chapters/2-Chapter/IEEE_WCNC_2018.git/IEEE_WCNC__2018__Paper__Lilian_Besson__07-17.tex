@@ -73,7 +73,7 @@ The considered aggregation algorithms are special cases of the well-known \emph{
 				}
 				%
 				% \tcp{The more algorithms have chosen arm $j$, the more probable it is to be chosen.}
-				Let $p^{t}_j := \sum\limits_{a = 1}^{N} \pi^{t}_a \times \indic(\{A_a(t) = j\}), \;\forall 1\leq j \leq K$\;
+				Let $p^{t}_j \eqdef \sum\limits_{a = 1}^{N} \pi^{t}_a \times \indic(\{A_a(t) = j\}), \;\forall 1\leq j \leq K$\;
 				% \tcp*{Sum trusts}
 				Then $\Alg_{\mathrm{aggr}}$ chooses arm $A(t) \sim p^{t}$\;
 				% $\P(A(t)_{\mathrm{aggr}} = j) = p^{t}_j$
@@ -95,7 +95,7 @@ The considered aggregation algorithms are special cases of the well-known \emph{
 						\tcp*{Do not update the trust now}
 					}
 				}
-				Renormalize the new weights $\pi^{t+1}$: $\pi^{t+1} := \pi^{t+1} / \sum_{a=1}^{N} \pi^{t+1}_{a}$.
+				Renormalize the new weights $\pi^{t+1}$: $\pi^{t+1} \eqdef \pi^{t+1} / \sum_{a=1}^{N} \pi^{t+1}_{a}$.
 				% \tcp*{Project it back to $\Delta_N$}
 			}
 			\caption{Our algorithm \Aggr{} aggregating $\Alg_1,\dots,\Alg_N$.}
@@ -119,7 +119,7 @@ But we are not in the full information setting (see \cite{CesaLugosi06}), but in
 This quantity can only be observed for those algorithms $a$ for which $A_{a}^{t}=A(t)$.
 However, by dividing by the probability of observing this recommendation, one obtains an unbiased estimate of $r^a(t)$. More precisely, if we define the estimate by
 \begin{equation}
-	\widehat{r^a}(t) := \frac{Y_{A_a(t),t}}{p_{A_a(t)}^{t}} \indic(A_a(t) = A(t))
+	\widehat{r^a}(t) \eqdef \frac{Y_{A_a(t),t}}{p_{A_a(t)}^{t}} \indic(A_a(t) = A(t))
 \end{equation}
 then it satisfies $\E_{O_t}[\widehat{r^a}(t) | O_t] = Y_{A_a(t),t}$, for all $a$, where the expectation is taken conditionally to the history of observations up to round $t$, $O_t$.
 %
@@ -169,11 +169,11 @@ We also note that \ExpQ{} uses \emph{losses} instead of rewards, with $\ell(t) =
 The sequence of non-negative learning rates $(\eta_t)_{t \geq 1}$ used by \ExpQ{} can be arbitrary.
 It can be constant but should be non-increasing \cite[Theorem 4.2]{Bubeck12}.
 % helps to choose a good sequence.
-If the horizon $T$ is known (and fixed), the best choice is given by $\eta_t := \eta = 2 \log(N) / (T K)$.
+If the horizon $T$ is known (and fixed), the best choice is given by $\eta_t \eqdef \eta = 2 \log(N) / (T K)$.
 However, for real-world communication problems, it can be considered unrealistic\footnote{~For more discussion on this hypothesis, we refer to Section~1 of our article \cite{Besson2018DoublingTricks}.} to assume a fixed and known time horizon, so we prefer the alternative horizon-free choice%
 \footnote{~It is non-increasing, and is obtained by minimizing the upper-bound on the regret derived in \cite[pp48]{Bubeck12}.}
 of learning rates,
-$\eta_t := \log(N) / (t K)$ suggested by \cite{Bubeck12}.
+$\eta_t \eqdef \log(N) / (t K)$ suggested by \cite{Bubeck12}.
 We compare both approaches empirically, and the second one usually performs better.
 We also stick to this choice of $(\eta_t)_{t \geq 1}$ for \Aggr.
 

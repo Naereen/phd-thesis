@@ -6,7 +6,7 @@
 % \subsection{Proof of Lemma~\ref{lem:5:DecompositionRegret}}
 % \label{proof:5:DecompositionRegret}
 
-%     Using the definition of regret $R_T$ from \eqref{eq:5:regret}, and this collision indicator $\eta^j(t):=\indic(\overline{C^j(t)})$,
+%     Using the definition of regret $R_T$ from \eqref{eq:5:regret}, and this collision indicator $\eta^j(t) \eqdef \indic(\overline{C^j(t)})$,
 %     \begin{align*}
 %       R(T)
 %       &= \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M Y_{A^j(t),t} \eta^j(t) \right]
@@ -15,17 +15,17 @@
 %       R(T)
 %       &= \E_{\mu}\left[ \sum_{t=1}^{T}\sum_{j \in \Mbest} \mu_j
 %         - \sum_{t=1}^{T} \sum_{j=1}^{M} \mu_{A^j(t)} \eta^j(t) \right] \\
-%         % &= \underbrace{\left( \frac{1}{M} \sum_{j \in \Mbest} \mu_j \right)}_{:= \overline{\mu}^*} (T M)
+%         % &= \underbrace{\left( \frac{1}{M} \sum_{j \in \Mbest} \mu_j \right)}_{ \eqdef \overline{\mu}^*} (T M)
 %       &= \left( \frac{1}{M} \sum_{j \in \Mbest} \mu_j \right)
 %         - \sum_{k=1}^{K} \sum_{j=1}^{M} \mu_k \E_{\mu}\left[ T^j_k(T) \right]
 %         + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
 %       %
-%       \intertext{For the first term, we have $T M = \sum\limits_{k=1}^{K} \sum\limits_{j=1}^{M} \E_{\mu}\left[ T^j_k(T)\right]$, and if we denote $\overline{\mu}^* := \frac{1}{M} \sum\limits_{j \in \Mbest} \mu_j$ the average mean of the $M$-best arms, then,}
+%       \intertext{For the first term, we have $T M = \sum\limits_{k=1}^{K} \sum\limits_{j=1}^{M} \E_{\mu}\left[ T^j_k(T)\right]$, and if we denote $\overline{\mu}^* \eqdef \frac{1}{M} \sum\limits_{j \in \Mbest} \mu_j$ the average mean of the $M$-best arms, then,}
 %       %
 %       &= \sum_{k=1}^{K} \sum_{j=1}^{M} (\overline{\mu}^* - \mu_k) \E_{\mu}\left[ T^j_k(T) \right]
 %         + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
 %       %
-%       \intertext{Let $\overline{\Delta_k} := \overline{\mu}^* - \mu_k$ be the gap between the mean of the arm $k$ and the $M$-best average mean, and if $M^*$ denotes the index of the worst of the $M$-best arms (\ie, $M^* = \arg\min_{k\in\Mbest}(\mu_k)$), then by splitting $[K]$ into three disjoint sets $\Mbest \cupdot \Mworst = (\Mbest\setminus\{M^*\}) \cupdot \{M^*\} \cupdot \Mworst$, we get}
+%       \intertext{Let $\overline{\Delta_k} \eqdef \overline{\mu}^* - \mu_k$ be the gap between the mean of the arm $k$ and the $M$-best average mean, and if $M^*$ denotes the index of the worst of the $M$-best arms (\ie, $M^* = \arg\min_{k\in\Mbest}(\mu_k)$), then by splitting $[K]$ into three disjoint sets $\Mbest \cupdot \Mworst = (\Mbest\setminus\{M^*\}) \cupdot \{M^*\} \cupdot \Mworst$, we get}
 %       %
 %       &= \sum_{k \in \Mbest\setminus\{M\}} \overline{\Delta_k} \E_{\mu}\left[ T_k(T) \right]
 %         + \overline{\Delta_{M^*}} \E_{\mu}\left[ T_{M^*}(T) \right] \\
@@ -68,7 +68,7 @@
 %   Note that term \ref{eq:5:term3} is clearly lower bounded by $0$
 %   but it is not obvious for \ref{eq:5:term2} as there is no reason for $T_k(T)$ to be upper bounded by $T$.
 %   %
-%   Let $T_k^{!}(T) := \sum_{t=1}^{T} \indic(\exists! j, A^j(t)=k)$,
+%   Let $T_k^{!}(T) \eqdef \sum_{t=1}^{T} \indic(\exists! j, A^j(t)=k)$,
 %   where the notation $\exists!$ stands for ``there exists a unique''.
 %   Then $T_k(T) = \sum_{t=1}^{T} \sum_{j=1}^{M} \indic(A^j(t) = k)$ can be decomposed as
 %   \begin{equation*}
@@ -155,9 +155,9 @@
 % Now, using Markov inequality yields
 % \begin{align*}
 %   \Pr_{\bm{\mu}}\left(A_T\right)
-%     & \leq 2M\frac{\E_{\bm{\mu}}\left[T^j_k(T)\right]}{T} =: x_T, \\
+%     & \leq 2M\frac{\E_{\bm{\mu}}\left[T^j_k(T)\right]}{T} \reqdef x_T, \\
 %   \Pr_{\bm{\lambda}}\left(\overline{A_T}\right)
-%     & = \Pr_{\bm{\lambda}}\left(\frac{T}{M} - T^j_k(T) > \frac{T}{2M}\right) \leq 2M\frac{\E_{\bm{\lambda}}\left[ \frac{T}{M} - T^j_k(T)\right]}{T} =: \frac{y_T}{T},
+%     & = \Pr_{\bm{\lambda}}\left(\frac{T}{M} - T^j_k(T) > \frac{T}{2M}\right) \leq 2M\frac{\E_{\bm{\lambda}}\left[ \frac{T}{M} - T^j_k(T)\right]}{T} \reqdef \frac{y_T}{T},
 % \end{align*}
 % which defines two sequences $x_T$ and $y_T$, such that
 % \begin{eqnarray}\label{eq:5:CqCD}
@@ -182,7 +182,7 @@
 
 % Under observation model \modelun{} and \modeldeux, the strategy $A^j(t)$ decides which arm to play based on the information contained in $\cO_{t-1}$, where $\cO_0 = U_0$ and
 % \[\forall t > 0, \ \ \cO_t = (U_0,Y_1,C_1,U_1,\dots,Y_t,C_t,U_t)\]
-% where $Y_{t} := Y_{A^j(t-1),t}$ denotes the sensing information, $C_t := C^j(t)$ denotes the collision information (not always completely exploited under observation model \modeldeux) and $U_t$ denotes some external source of randomness\footnote{For instance, \MCTopM, \RandTopM{} and \rhoRand{} draws from a uniform variable in $[M]$ for new ranks or arms.} useful to select $A^j(t)$.
+% where $Y_{t} \eqdef Y_{A^j(t-1),t}$ denotes the sensing information, $C_t \eqdef C^j(t)$ denotes the collision information (not always completely exploited under observation model \modeldeux) and $U_t$ denotes some external source of randomness\footnote{For instance, \MCTopM, \RandTopM{} and \rhoRand{} draws from a uniform variable in $[M]$ for new ranks or arms.} useful to select $A^j(t)$.
 % Formally, one can say that $A^j(t)$ is $\sigma(\cO_{t-1})$ measurable, if $\sigma(\cO_t)$ denotes the sigma-Algebra generated by the observations $\cO_t$, and as $\cF^j(t) \subseteq \sigma(\cO_{t})$, with an equality under observation model \modelun.
 
 % Under two bandit models $\bm{\mu}$ and $\bm{\lambda}$, we let $\Pr_{\bm{\mu}}^{\cO_t}$ (resp. $\Pr_{\bm{\lambda}}^{\cO_t}$) be the distribution of the observations under model $\bm{\mu}$ (resp. $\bm{\lambda}$), given a fixed algorithm.
@@ -307,13 +307,13 @@
 % \begin{align*}
 %   & \sum_{t=1}^T \bP\left(A^j(t) = k, k \notin \hat{M}^j(t)\right)  \\ & \leq \sum_{t=1}^T \bP\left(A^j(t) = k, k \notin \hat{M}^j(t), A^j(t+1) \in \TopM(t) \cap \{k': U_{k'}^j(t-1) \leq U_k^j(t-1)\}\right) \\
 %   & \leq   \sum_{t=1}^T \sum_{k' \neq k}\bP\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right) \\
-%   & = \sum_{k' \neq k} \underbrace{\sum_{t=1}^T \bP\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right)}_{:= T_{k'}}
+%   & = \sum_{k' \neq k} \underbrace{\sum_{t=1}^T \bP\left(A^j(t) = k,A^j(t+1) = k', U_{k'}^j(t) \geq U_{k}^j(t), U_{k'}^j(t-1) \leq U_{k}^j(t-1)  \right)}_{ \eqdef T_{k'}}
 % \end{align*}
 
 % Now, to control $T_{k'}$, we distinguish two cases. If $\mu_k < \mu_{k'}$, one can write
 % \[T_{k'} \leq \sum_{t=1}^T \bP\left(U_{k'}^j(t) \leq \mu_{k'}\right) + \sum_{t=1}^T \bP\left(A^j(t) = k, U_{k}^j(t-1) \geq \mu_{k'}\right)\]
 % The first term in the right hand side is $o(\log(T))$ by Lemma~\ref{lem:5:Fact1KLUCB}. To control the second term, we apply the same trick that led to the proof of Lemma~\ref{lem:5:Fact2KLUCB} in \cite{KLUCBJournal}.
-% Letting $\kl^+(x, y) := \kl(x, y) \indic(x \geq y)$,
+% Letting $\kl^+(x, y) \eqdef \kl(x, y) \indic(x \geq y)$,
 % and $\widehat{\mu}^j_{k,s}$ be the empirical mean of the $s$ first observations from arm $k$ by player $j$, one has
 % \begin{align}
 %   & \sum_{t=1}^T \bP\left(A^j(t) = k, U_{k}^j(t-1) \geq \mu_{k'}\right)
@@ -335,7 +335,7 @@
 % For any arms $k, k' \in [K]$,
 % let $\phi_{k,k'}^j(t)$ be the event
 % \begin{equation*}
-%   % \phi_{k}^j(t) :=
+%   % \phi_{k}^j(t) \eqdef
 %   \left(
 %     % \overline{C^j(t-1)} \cap
 %     A^j(t-1) = k \in \TopM(t-1),
@@ -480,20 +480,20 @@
 % For player $j$ and round $t$, we now introduce a few events that are useful in the proof. First, for every $x=1,2,3,4,5$, we denote $I_x^j(t)$ the event that a transition of type $(x)$ occurs for player $j$ after the first $t$ observations (\ie, between round $t$ and round $t+1$, to decide $A^j(t+1)$).
 % Formally they are defined by
 % \begin{align*}
-%   I_1^j(t) &:= \left(\overline{s^j(t)},\overline{C_j(t)}, A^j(t) \in \TopM(t)\right), \\
+%   I_1^j(t) & \eqdef \left(\overline{s^j(t)},\overline{C_j(t)}, A^j(t) \in \TopM(t)\right), \\
 %   % go sitted
-%   I_2^j(t) &:= \left(\overline{s^j(t)},C_j(t), A^j(t) \in \TopM(t)\right),
+%   I_2^j(t) & \eqdef \left(\overline{s^j(t)},C_j(t), A^j(t) \in \TopM(t)\right),
 %   \ \ \ &\text{and} \ \ \
-%   I_3(t) &:= \left(\overline{s^j(t)},A^j(t) \notin \TopM(t)\right), \\
+%   I_3(t) & \eqdef \left(\overline{s^j(t)},A^j(t) \notin \TopM(t)\right), \\
 %   % if sitted
-%   I_3(t) &:= \left(s^j(t),A^j(t) \in \TopM(t)\right),
+%   I_3(t) & \eqdef \left(s^j(t),A^j(t) \in \TopM(t)\right),
 %   \ \ \ &\text{and} \ \ \
-%   I_5(t) &:= \left(s^j(t),A^j(t) \notin \TopM(t)\right).
+%   I_5(t) & \eqdef \left(s^j(t),A^j(t) \notin \TopM(t)\right).
 % \end{align*}
 % %
 % Then, we introduce $\widetilde{C^j}(t)$ as the event that a collision occurs for player $j$ at round $t$ if she is not yet fixed on her arm, that is
 % \begin{equation}
-%     \widetilde{C^j}(t) := \left(C^j(t), \overline{s^j(t)}\right).
+%     \widetilde{C^j}(t) \eqdef \left(C^j(t), \overline{s^j(t)}\right).
 % \end{equation}
 
 
@@ -501,7 +501,7 @@
 % Otherwise, if they are all fixed, \ie, for all $j$, $s^j(t)$, then by definition of $s^j(t)$, none of the player changed their arm from $t-1$ to $t$, and none experienced any collision at time $t-1$ so by induction there is no collision at time $t$.
 % %
 % Thus, $\sum_{j=1}^M \Pr(C^j(t))$ can be upper bounded by $M \sum_{j=1}^M \Pr(\widetilde{C^j}(t))$ (union bound),
-% and it follows that if $\cC(T) := \sum_{k=1}^K \cC_k(T)$ then
+% and it follows that if $\cC(T) \eqdef \sum_{k=1}^K \cC_k(T)$ then
 % \[\E_{\mu}[\cC(T)] \leq M \sum_{j=1}^M \sum_{t=1}^T \Pr(\widetilde{C^j}(t)).\]
 % We can further  observe that $\widetilde{C^j}(t)$ implies a transition $(2)$ or $(3)$, as a transition $(1)$ cannot happen in case of collision. Thus another union bound gives
 % %
@@ -536,7 +536,7 @@
 % $
 % with $n(T)$ the number of such sequences,
 % \ie,
-% $n(T) := \inf \{i \geq 1 : \min(\theta_i, \tau_i) \geq T \}$
+% $n(T) \eqdef \inf \{i \geq 1 : \min(\theta_i, \tau_i) \geq T \}$
 % (or $0$ if $\theta_1$ does not exist).
 % %
 % If $\theta_i = 1$, the first sequence does not have term $\overline{I_2^j(\theta_i - 1)}$.
