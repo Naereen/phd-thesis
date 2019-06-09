@@ -289,7 +289,7 @@ In this section, we provide a useful decomposition of the regret (Lemma~\ref{lem
   % FIXME
   \textbf{\textcolor{red}{Warning}.}
   %
-  The regret lower bound given in \cite{Besson2018ALT} is not applicable to any algorithm,
+  The regret lower bound that we gave in \cite{Besson2018ALT} is not applicable to any algorithm,
   as it was discovered by Etienne Boursier and Vianney Perchet, as they explain in Section~2.4 in \cite{BoursierPerchet18}.
   The proof we gave in the Appendix of our paper \cite{Besson2018ALT} was wrong in just one step,
   but the results stated in this section are now correct,
@@ -326,8 +326,8 @@ We introduce additional notations in the following definition.
 
 Note that when $n$ players choose arm $k$ at time $t$, this counts as $n$ collisions, not just one. So $\cC_k(T)$ counts the total \emph{number of colliding players} rather than the number of collision events. Hence there is small abuse of notation when calling it a number of collisions.
 %
-Letting $\cP_M \eqdef \left\{ \boldsymbol{\mu} \in [0,1]^K : \mu_M^* > \mu_{M+1}^*\right\}$
-be the set of bandit instances such that there is a strict gap between the $M$ best arms and the other arms, we now provide a regret decomposition for any $\boldsymbol{\mu} \in \cP_M$.
+By denoting $\cP_M \eqdef \left\{ \boldsymbol{\mu} \in [0,1]^K : \mu_M^* > \mu_{M+1}^*\right\}$
+the set of bandit instances with a strict gap between the $M$ best arms and the other arms, we now provide a regret decomposition for any $\boldsymbol{\mu} \in \cP_M$.
 
 \begin{lemma}\label{lem:5:DecompositionRegret}
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
@@ -406,11 +406,11 @@ In this decomposition, term \ref{eq:5:term1} counts the lost rewards due to \emp
 The regret decomposition in Lemma~\ref{lem:5:DecompositionRegret} is valid for both centralized and decentralized algorithms.
 For centralized algorithms, due to the absence of collisions, \ref{eq:5:term3} is obviously zero, and \ref{eq:5:term2} is non-negative, as $N_k(T) \leq T$. For decentralized algorithms, \ref{eq:5:term3} may be significantly large, and term \ref{eq:5:term2} may be negative, as many collisions on arm $k$ may lead to $N_k(T) > T$ (which is counter intuitive with such notations).
 However, a careful manipulation of this decomposition shows that the regret is always lower bounded by term \ref{eq:5:term1}.
-The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized____env6} in Appendix illustrate two cases of $M<K$ and $M=K$ and the different impact of the three terms (\ref{eq:5:term1}, \ref{eq:5:term2} and \ref{eq:5:term3}) on the regret.
+The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized____env6} in Appendix illustrate two cases of $M<K$ and $M=K$ and the different impact of the three terms \ref{eq:5:term1}, \ref{eq:5:term2} and \ref{eq:5:term3} on the regret.
 
 \begin{lemma}\label{lem:5:1stLowerBound}
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
-    For any strategy $\cA$ and $\boldsymbol{\mu}\in\cP_M$, it holds that
+    For any strategy $\cA$ and $\boldsymbol{\mu}\in\cP_M$, the regret is lower-bounded by \ref{eq:5:term1}:
     \begin{align*}
         R_T(\boldsymbol{\mu}, M, \cA)    \geq \sum\limits_{k \in \Mworst} (\mu_M^*- \mu_k) \E_{\mu}[N_k(T)].
     \end{align*}
@@ -460,14 +460,16 @@ We first introduce the assumption under which we derive a regret lower bound, th
 a classical assumption made by \cite{LaiRobbins85} in single-player bandit models.
 % Our lower bound will only be valid for algorithms of a certain class, that do not obtain much information from the collision indicator variables.
 % This class contains our proposals, \RandTopM{} and \MCTopM, but rules out the \textsc{Sic-MMAB} algorithm of \cite{BoursierPerchet18}.
-
+%
+\vspace*{-20pt}  % XXX
 \begin{definition}\label{def:5:DecentralizedUniformEfficiency}
 \begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
-  An algorithm $\cA$  is \emph{\textbf{strongly uniformly efficient}} if for all $\boldsymbol{\mu} \in \cP_M$ and for all $\alpha \in (0,1)$,
+  An algorithm $\cA$  is \emph{\textbf{strongly uniformly efficient}} if for all $\boldsymbol{\mu} \in \cP_M$,
+  % and for all $\alpha \in (0,1)$,
   % \vspace*{-5pt}  % XXX
   \begin{align}
-    & R_T(\boldsymbol{\mu},M,\cA) \mathop{=}\limits_{T \to +\infty} o(T^\alpha) \\
-    \text{and} & \;
+    \forall a\in(0,1) & R_T(\boldsymbol{\mu},M,\cA) \mathop{=}\limits_{T \to +\infty} o(T^\alpha) \\
+    \text{and} \forall a\in(0,1) & \;
     \forall j \in [M], k \in \Mbest, \;\;
     % a_{j,k}
     \frac{T}{M}
@@ -734,7 +736,7 @@ However, if each of the $M$ players selects the arm with largest UCB, all the pl
 To circumvent this problem, several coordination mechanisms have emerged, that rely on \emph{ordering} the indices and targeting \emph{one of} the $M$-best indices.
 
 
-\paragraph{Two ideas for orthogonalization.}
+\textbf{Two ideas for orthogonalization.}
 \label{par:5:twoIdeasOrthogonalization}
 %
 On the one hand, the \TDFS{} algorithm \citep{Zhao10} relies on the player agreeing in advance on the time steps at which they will target each of the $M$ best indices.
@@ -753,7 +755,7 @@ If a collision occurs, a new rank is drawn uniformly at random, $R^j(t+1) \sim \
 
 
 % Now, our algorithms !!
-\paragraph{Our two proposals.}
+\textbf{Our two proposals.}
 We now propose two alternatives to this strategy, that do not rely on ranks and rather randomly fix themselves on one \emph{arm} in $\TopM(t)$, that is defined as the set of arms that have the $M$ largest indices (at the current time $t$ and for player $j$),
 \begin{equation}
   \TopM(t) \eqdef \left\{ \pi\left(k, \{U^j_\ell(t)\}_{\ell=1,\dots,K}\right), k=1,\dots,M\right\}.
@@ -915,7 +917,7 @@ as well as the number of switches of arm.
 The five different transitions $(1)$, $(2)$, $(3)$, $(4)$, $(5)$ refer to the notations used in the analysis of \MCTopM, and they are illustrated in Figure~\ref{fig:5:StateMachineAlgorithm_MCTopM} below.
 
 \begin{figure}[h!]
-  \resizebox{1.10\textwidth}{!}{
+  \resizebox{1.05\textwidth}{!}{
   \begin{tikzpicture}[>=latex',line join=bevel,scale=5.0]
       %
       \node (start) at (1.5,0.30) {$(0)$ Start $t=0$};
@@ -924,9 +926,9 @@ The five different transitions $(1)$, $(2)$, $(3)$, $(4)$, $(5)$ refer to the no
       %
       \draw [black,->] (start) -> (notfixed.20);
       \draw [color=cyan,thick,->] (notfixed) to[bend right] node[midway,above,text width=5cm,text centered,black] {\small $(1)$ $\overline{C^j(t)}, A^j(t) \in \TopM(t)$} (fixed);
-      \path [color=blue,thick,->] (notfixed) edge[loop right] node[below,text width=4cm,text badly centered,black] {\small $(2)$  $C^j(t)$,\\$A^j(t) \in \TopM(t)$} (1);
+      \path [color=blue,thick,->] (notfixed) edge[loop right] node[right,text width=4cm,text badly centered,black] {\small $(2)$  $C^j(t)$,\\$A^j(t) \in \TopM(t)$} (1);
       \path [color=red,thick,->] (notfixed) edge[loop below] node[below,text centered,black] {\small $(3)$  $A^j(t) \notin \TopM(t)$} (1);
-      \path [color=darkgreen,thick,->] (fixed) edge[loop left] node[below,text width=2.9cm,text badly centered,black] {\small $(4)$ $A^j(t) \in \TopM(t)$} (fixed);
+      \path [color=darkgreen,thick,->] (fixed) edge[loop left] node[left,text width=2.9cm,text badly centered,black] {\small $(4)$ $A^j(t) \in \TopM(t)$} (fixed);
       \draw [color=red,thick,->] (fixed) to[bend right] node[midway,below,text centered,black] {\small $(5)$  $A^j(t) \notin \TopM(t)$} (notfixed);
       %
   \end{tikzpicture}
@@ -1024,10 +1026,10 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
 
   \begin{lemma}\label{lem:5:Fact1KLUCB}
   \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
-      For any arm $k$, if $U_k^{j}(t)$ is the \klUCB{} index with exploration function $f(t)=\log(t)+3\log(\log(t))$,
-      \begin{equation}
-        \sum_{t=1}^T \Pr_{\bm{\mu}} \left(U_k^{j}(t) < \mu_k\right) \leq 3 + 4e \log(\log(T)).
-      \end{equation}
+      For any arm $k$, if $U_k^{j}(t)$ is the \klUCB{} index with exploration function $f(t)=\log(t)+3\log(\log(t))$, then
+      % \begin{equation}
+      $\sum\limits_{t=1}^T \Pr_{\bm{\mu}} \left(U_k^{j}(t) < \mu_k\right) \leq 3 + 4e \log(\log(T))$.
+      % \end{equation}
   \end{leftbar}  % XXX leftbar lemmabar, comment if needed
   \end{lemma}
 
@@ -1546,7 +1548,7 @@ We now present more results for two bandit instances.
 We also include histograms showing the \emph{distribution} of the final regret $R_T$,
 as this allows to check if the regret is indeed small for \emph{each} run of the simulation.
 %
-For the plots showing the regret, our \emph{asymptotic} lower bound from Theorem~\ref{thm:5:BetterLowerBound} is displayed.
+We also include our \emph{asymptotic} lower bound from Theorem~\ref{thm:5:BetterLowerBound} on regret plots.
 
 
 %
@@ -1754,7 +1756,7 @@ of outstanding performances of \MCTopM{} and \Selfish{} in comparison to \rhoRan
 Empirically, our proposals were found to always outperform \rhoRand{}, and except for \Selfish{} that can fail badly on problems with small $K$,
 we verified that \MCTopM{} outperforms the state-of-the-art algorithms in many different problems, and is more and more efficient as $M$ and $K$ grows.
 
-Note that more numerical experiments were conducted for the article \cite{Besson2018ALT}, and in particular the last pages of the paper show more figures.
+Note that more numerical experiments were conducted for the article \cite{Besson2018ALT}, and in particular the last pages of the paper show more figures, in other settings.
 
 % \begin{framed}
 %   \textcolor{red}{\textbf{FIXME}}

@@ -92,13 +92,13 @@ Then in such networks, if one wants to apply an algorithm like \MCTopM-\klUCB,
 the $M$ devices need to know their number $M$, and have to receive it from the gateway, as it is the only part of this example of network which knowns $M$.
 It seems unrealistic to ask the gateway to send the fixed value $M$ to each device, and not a unique ID to each device, for instance $\mathrm{id}^j\in[K]$.
 
-\TODOL{Expliquer pourquoi ce n'est pas très réaliste ? Le paragraphe ci dessous n'est pas très simple à comprendre, je peux faire mieux!}
+% \TODOL{Expliquer pourquoi ce n'est pas très réaliste ? Le paragraphe ci dessous n'est pas très simple à comprendre, je peux faire mieux!}
 
-If the $M$ players each have a unique ID, then a simple explore-then-commit algorithm running on top of a round-Robin phase can achieve order-optimal regret.
-If the players know the time horizon $T$, then fix a confidence level $\delta$. For the first $T_0$ time steps, the $M$ players will use a simple round-Robin game, using their (unique) ID to stay orthogonal: player $j$ starts at arm $j$, then $j+1$, then cycle in $[K]$. They encounter no collision in these time steps, and then user $j$ targets the $j$-th best arm among the set of $M$-best arm.
+If the $M$ players each have a unique ID, then a simple explore-then-commit algorithm (see Algorithm~\ref{algo:2:naiveStrategies}), running on top of a round-Robin phase can achieve order-optimal regret.
+If the players know the time horizon $T$, then they can fix a confidence level $\delta$. For the first $T_0$ time steps, the $M$ players will use a simple round-Robin game, using their (unique) ID to stay orthogonal: player $j$ starts at arm $j$, then $j+1$, then cycle in $[K]$. They encounter no collision in these time steps, and then user $j$ targets the $j$-th best arm among the set of $M$-best arm.
 If $T_0$ is large enough, all players have built the same estimate of the ranking of the arms (and not only correctly identified the set of $M$-best arms), with high probability (at least $\delta$), and thus they will also encounter no collision and no regret from after time $T_0$.
 The mean regret of such approach is easily bounded by $R_T \leq M T_0 + (1 - \delta) (T - T_0)$, so by using $\delta = 1-1/T$, $R_T = \bigO{T_0}$.
-By calibrating $T_0$ based on $\delta$ (which needs prior knowledge of $T$) and the minimal gap $\Delta$ between \Mbest{} and \Mworst, one can show, using similar arguments as used by \cite{Rosenski16} for the Musical Chair policy, that with large probability a constant regret is obtained. A logarithmic regret can be obtained from the same bound, proving the order-optimality of this simple approach, if we assume that user $j$ knows it is user number $j$.
+By calibrating $T_0$ based on $\delta$ (which needs prior knowledge of $T$, see the proof we gave in Section~\ref{proof:2:tuningExploreThenCommit}) and the minimal gap $\Delta$ between \Mbest{} and \Mworst, one can show, using similar arguments as used by \cite{Rosenski16} for the Musical Chair policy, that with large probability a constant regret is obtained. A logarithmic regret can be obtained from the same bound, proving the order-optimality of this simple approach, if we assume that user $j$ knows it is user number $j$.
 %
 Without giving more details, we let the interested refer to what is explained for the algorithms presented in \cite{DarakHanawal18,JoshiKumar2018,KumarDarak2019}.
 %
@@ -197,7 +197,7 @@ The existing previous work on multi-player bandit models are all motivated by po
 The first work studying the relaxation of this hypothesis is \cite{Rosenski16}, where this case is called the ``dynamic setting''.
 If the arrival or departures of players is not random, but determined in advance while still being unknown to any player, the natural notion of regret is the following, where the expectancy $\E[\bullet]$ is capturing the randomness in the sensing information, as well as in the players' decisions (\ie, collisions):
 \begin{equation}\label{eq:5:defRegretDynamicSetting}
-    R_T^{\text{dyn}} \eqdef \sum_{t=1}^T \sum_{k=1}^{M(t)} \mu^*_{k} - \E\Bigl[ \sum_{t=1}^T \sum_{j=1}^{M(t)} r^j(t) \Bigr].
+    R_T^{\text{dyn}} \eqdef \sum_{t=1}^T \sum_{k=1}^{M(t)} \mu^*_{k} - \E\left[ \sum_{t=1}^T \sum_{j=1}^{M(t)} r^j(t) \right].
 \end{equation}
 
 In \cite{Rosenski16}, the authors explain that if the model allows arrival or departures of players at \emph{any time step}, then the game is much harder, and sub-linear regret is most likely un-achievable, if we consider the natural extension of the definition of regret as in our model presented in Section~\ref{sec:5:model} above.
@@ -207,14 +207,14 @@ A simple but extreme example shows that regret has to be linear for any bandit s
 Consider $K=2$ Bernoulli-distributed arms of means $\mu_1=\mu_2=1/2$, and one player is always active and play any bandit strategy (\eg, \MCTopM-\klUCB).
 Every time step, another player is either arriving, without any knowledge of the problem (\eg, it is a fresh and new IoT device). Then no matter the strategy of these new players, even if they all play \MCTopM-\klUCB{} for instance, if they play a uniformly efficient strategy there is a non-zero probability that player $1$ suffers from a collision at each time step, thus resulting in linear centralized system regret.
 
-In \cite{Rosenski16}, it is assumed that the players all know a lower-bound $L$ on the length of all the intervals during which arrival or departures of players are allowed.
+The authors of \cite{Rosenski16} also assume that the players all know a lower-bound $L$ on the length of all the intervals during which arrival or departures of players are allowed.
 A naive idea, if $L$ is large enough, is simply to restart the underlying algorithm every $L$ time steps, in order to directly benefit from the theoretical guarantees of the ``static setting'' (where $M$ stays constant).
 Unfortunately this idea yields a large regret if the length of ``static'' intervals $L$ is too small.
 Applied to the \MusicalChair{} algorithm, the authors in \cite{Rosenski16} call this basic extension Dynamic \MusicalChair
 Under the simple hypothesis that the overall number of players entering and leaving the game is sub-linear in $T$ (\ie, a $\smallO{T}$), they analyze the regret of Dynamic \MusicalChair{} and prove it is also sub-linear (see Theorem~2 in Section~3.4).
 %
-Under the same hypothesis, and if the lower-bound $L$ is known before-hand and is large enough, then we could also apply the same idea as from \cite{Rosenski16} to our approach. We believe that we could easily prove that a sub-linear regret is achievable, if all players run \MCTopM-\klUCB{} (and if currently active players restart their memory of the past observations every $L$ time steps).
-As the regret guarantees are stronger (\ie, smaller regret upper-bound) for \MCTopM{} than \MusicalChair, we also believe that in this ``slowly varying'' dynamic setting, applying the idea of Dynamic \MusicalChair{} from \cite{Rosenski16} to \MCTopM{} would also give a small regret upper-bound.
+Under the same hypothesis, and if the lower-bound $L$ is known before-hand and is large enough, then we could also apply the same idea as from \cite{Rosenski16} to our approach. We believe that we could easily prove a sub-linear regret bound, if all players run \MCTopM-\klUCB, and if currently active players restart their memory of the past observations every $L$ time steps.
+As the regret guarantee is stronger (\ie, smaller regret upper-bound) for \MCTopM{} than \MusicalChair, we also believe that in this ``slowly varying'' dynamic setting, applying the idea of Dynamic \MusicalChair{} from \cite{Rosenski16} to \MCTopM{} would also give a small regret upper-bound.
 
 After being introduced in \cite{Rosenski16}, some more recent works studied the case of arrival or departures of players, usually referred to as ``dynamic setting'' or ``dynamic case''.
 For instance, \cite{BoursierPerchet18} studies in Section~4 the first algorithm proposed for the dynamic case under the no-sensing model.
@@ -242,14 +242,14 @@ If all arriving players are using their \textsc{Dyn-MMAB} algorithm, the ``dynam
 
 We presented in Section~\ref{sec:5:model} the model \modeltrois, without sensing information. Players can only observe $Y_{k,t}$, the product of the \iid{} random sensing information from arm $k$ and of the no-collision indicator.
 This model seems harder than the model with sensing information, and even though the proposal \Selfish{} works fine in simulations (in terms of average regret), we proved that it can yield linear regret.
-In our paper \cite{Besson2018ALT} as well as the previous sections, it was left as a future work to know if an algorithm can achieve sub-linear regret in this harder model without sensing information.
+In our paper \cite{Besson2018ALT} as well as in the previous sections, it was left as a future work to know if an algorithm can achieve sub-linear regret in this harder model without sensing information.
 
 Inspired by \cite{Besson2018ALT},
 Boursier and Perchet studied this question in the summer $2018$ following its publication \cite{BoursierPerchet18}.
 Their answer is that the model without sensing information is essentially not harder than the model with sensing information.
 %
 Similarly, Lugosi and Mehrabian studied the same problem \cite{LugosiMehrabian18}.
-In both works, the authors detail algorithms that give in both cases a logarithmic regret if $M \leq K$ players all independently implement the proposed algorithm.
+In both works, the authors detail algorithms that give a logarithmic regret if $M \leq K$ players all independently implement the proposed algorithm.
 
 
 \paragraph{The ``communication trick''.}
@@ -326,7 +326,7 @@ Further empirical evaluation would be needed to fully understand the situation, 
         \hline
     \end{tabular}
     % \caption{Mean regret $\pm$ $1$ std-dev, for different algorithms on the same problem with $M=3,6,9$, for the ``no sensing'' case.}
-    \caption{Comparison of the mean regret $\pm$ $1$ std-dev, for different algorithms, on the same problem with $M=3,6,9$ players, for the ``no sensing'' case. More work is needed on our implementation on Improved \MusicalChair. The results on \textsc{Sic-MMAB} appear to confirm the numerical experiments of \cite{BoursierPerchet18}.}
+    \caption{Comparison of the mean regret $\pm$ $1$ std-dev, for different algorithms, on the same problem with $M=3,6,9$ players, for the ``no sensing'' case. More work is needed on our implementation on Improved \MusicalChair. The results on \textsc{Sic-MMAB} confirm the numerical experiments of \cite{BoursierPerchet18}.}
     \label{table:5:meanRegretSimulationsNoSensing}
 % \end{footnotesize}
 \end{table}
@@ -385,11 +385,11 @@ Further empirical evaluation would be needed to fully understand the situation, 
 \subsection{With communication or coordination between players}
 \label{sub:5:withCommunicationOrCoordination}
 
-In all the models of IoT networks considered in this thesis, we assume that \emph{the different IoT devices cannot communicate with each other}, and can only communicate with a unique gateway.
+In the models of IoT networks considered in this thesis, we assume that \emph{the different IoT devices cannot communicate with each other}, and can only communicate with their gateway.
 This hypothesis is realistic, mostly for energy consumption and spectrum efficiency reasons.
-Of course, this hypothesis can be removed, and in practice in some families of wireless networks, communication between devices are possible.
-Note that this extension is not considering a graph of distributed agents all playing cooperatively to solve a unique bandit game, like it is studied in the ``\emph{graph bandit}'' problem.
-What we are interested here is an extension of the model where players can send some bits to one or all the other players, at every time steps or some time steps.
+Of course, we can relax this hypothesis, and in practice in some families of wireless networks, communication between devices are possible.
+Note that this extension is \emph{not} considering a graph of distributed agents all playing cooperatively to solve a unique bandit game, like it is studied in the ``\emph{graph bandit}'' problem \cite{valko2016bandits}.
+We are interested here by an extension of the model where players can send some bits to one or all the other players, at some or every time steps.
 
 Clearly, the problem is easier by allowing communication, and it is quite immediate to see that the communication capacity between players must be limited otherwise the problem is already known and solved.
 Indeed, imagine that at each time step $t$, all the $M$ players could share an unbounded number of bits with the other players, at no cost (even if this hypothesis is clearly unrealistic for wireless networks).
