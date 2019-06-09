@@ -43,7 +43,7 @@ Some dynamic intelligent devices (end-user or autonomous devices) try to communi
 Once the gateway receives a packet transmitted by a dynamic device in one channel (\ie, if no collision occurred), it transmits back to it an acknowledgement in the same channel, after a fixed-time delay, as it is done in the LoRaWAN standard.
 This \emph{Ack} allows the device to learn about the channel quality (\ie, mean availability) and thus, to use learning algorithms for the purpose of best channel selection.
 
-In this demo, we can generate scenarios with different parameters (number of channels, interfering traffic, etc) in order to evaluate the performance of learning in various settings.
+We can generate scenarios with different parameters (number of channels, interfering traffic, etc) in order to evaluate the performance of learning in various settings.
 Moreover, we compare the performance of learning strategies with that of the random uniform access to channels, which is the current state-of-the-art of commercial LPWAN solutions \cite{Raza17}.
 %
 This allows to check that in case of uniform traffic, when there is nothing to learn, the intelligent devices at least do not reduce their successful communication rate in comparison to the naive devices.
@@ -124,7 +124,7 @@ and coaxial cables connecting every platform to the Octoclock for time (PPS) and
 
 
 \paragraph{Details about our implementation.}
-
+%
 We used the GNU Radio Companion software (GRC, version $3.7$ in $2017$),
 and a laptop runs a GRC design to configure and control each USRP platform.
 As such, one laptop can run in parallel the control program of any number of boards\footnote{~Even if in practice, maximum efficiency is kept as long as there is not more than one GRC design by CPU core.}.
@@ -178,7 +178,7 @@ The last part is the interface of the gateway, where we can see the traffic obse
 \label{sub:42:results}
 % ----------------------------------------------------------------------
 We compare in this PoC the two algorithms described in Section~\ref{sec:2:famousMABalgorithms} (\UCB{} and Thompson sampling) against a uniform access algorithm, that uniformly selects its channel at random.
-For one dynamic device, three algorithms are compared by their mean successful communication rates, on a horizon of $T=2000$ communication slots, and were using three algorithms: uniform random access (in \textcolor{cyan}{cyan}), Thompson Sampling (in \textcolor{green}{green}) and \UCB{} (in \textcolor{red}{red}).
+For one dynamic device, three algorithms are compared by their mean successful communication rates, on a horizon of $T=2000$ communication slots, and were using three algorithms: uniform random access (in \textcolor{cyan}{cyan}), Thompson Sampling (``\textcolor{green}{TS}'', in \textcolor{green}{green}) and \UCB{} (in \textcolor{red}{red}).
 
 \begin{figure}[!h]
 	\centering
@@ -187,7 +187,7 @@ For one dynamic device, three algorithms are compared by their mean successful c
     \label{fig:42:plot_datafile_append_Uniform_vs_UCB_vs_TS}
 \end{figure}
 
-In Figure~\ref{fig:42:plot_datafile_append_Uniform_vs_UCB_vs_TS} above, we show the results averaged on $10$ repetitions using the same conditions.
+In Figure~\ref{fig:42:plot_datafile_append_Uniform_vs_UCB_vs_TS} below, we show the results averaged on $10$ repetitions using the same conditions.
 %
 Each experiment takes about half a day,
 as we make devices generate one message every $5$ seconds, in order to artificially speed up the process and with no loss of generality (as we are using real hardware).

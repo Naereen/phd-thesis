@@ -6,14 +6,34 @@
 
 \graphicspath{{2-Chapters/4-Chapter/Images/}}
 
-\TODOL{Abstract ici et plus court, et petite introduction !}
-\TODOL{Intégrer les derniers commentaires de Christophe}
+% \TODOL{Intégrer les derniers commentaires de Christophe}
 
+% FIXME finish !
 \paragraph{Abstract.}
+%
+In this Chapter~\ref{chapter:4}, we propose two models of Internet of Things (IoT) networks, composed of many independent IoT end-devices,
+that can use low-cost RL (Reinforcement Learning) algorithms to learn to improve their spectrum access.
+%
+Decentralized RL for IoT lets the devices use acknowledgements sent by their Base Station as a reward, instead of sensing feedback like for OSA.
+We consider many independent ``dynamic'' devices, communicating with a small probability at every instant.
+Simulations show that dynamic devices can improve their spectrum efficiency,
+by using MAB algorithms like \UCB.
+% in the case of a non-uniform repartition of the static devices in the channels
+We also developed a proof-of-concept using USRP platforms, for a real-world validation of this approach.
+% Numerical simulations justify the interest of the approach,
+%  of the advantage of using MAB algorithms for the first model.
+%
+% On a simple example, we present in Section~\ref{sec:4:gnuradio} a demonstration that implements and validates the proposed approach, using real wireless radio hardware.
+The first model
+% without retransmission of packets,
+is interesting for its simplicity,
+and because considering no retransmission can improve the battery life of IoT devices, at the cost of a lower Quality of Service (QoS).
 
-In this Chapter~\ref{chapter:4}, we present two models of Internet of Things networks, composed of many independent devices that are able to run MAB algorithms to learn and improve their access to the network.
-FIXME finish !
-
+However, in case of failed transmission of a message, a dynamic device can also retransmit it up-to a fixed number of retransmission (\eg, $M=10$).
+We compare different heuristics, based on \UCB, and numerical simulations confirm that the non-naive heuristics significantly improve the network efficiency.
+% Interestingly, the simplest heuristic is found to be the most efficient one, as its simplicity implies a faster learning and convergence time.
+%
+The second model is more interesting if the main target is an improvement of the QoS, rather than a longer battery life.
 
 % \TODOL{C'est bizarre ce problème d'espacement vertical ici... je ne sais pas comment le corriger !}
 
@@ -22,35 +42,31 @@ FIXME finish !
 
 \newpage
 
-\paragraph{Abstract.}
+% \paragraph{Abstract.}
 
-In this Chapter~\ref{chapter:4}, we present two models of Internet of Things networks, composed of many independent devices that are able to run MAB algorithms to learn and improve their access to the network.
-The two models are presented mathematically, and numerical simulations justify the interest of the proposed algorithms.
-We also present a proof-of-concept real-world validation of the advantage of using Multi-Armed Bandit algorithms for the first model, by showing and explaining a demonstration implemented on USRP platforms \cite{USRPDocumentation}.
+% In this Chapter~\ref{chapter:4}, we present two models of Internet of Things networks, composed of many independent devices that are able to run MAB algorithms to learn and improve their access to the network.
+% The two models are presented mathematically, and numerical simulations justify the interest of the proposed algorithms.
+% We also present a proof-of-concept real-world validation of the advantage of using Multi-Armed Bandit algorithms for the first model, by showing and explaining a demonstration implemented on USRP platforms \cite{USRPDocumentation}.
 
-More precisely, we start by motivating the idea of independent ``selfish'' learning for IoT devices in Section~\ref{sec:4:motivations}.
-We then present in Section~\ref{sec:4:firstModel} a model where independent devices use an IoT network composed of different channels, occupied by static devices.
-Devices do not use any sensing, but use acknowledgements sent by the Base Station to know if their uplink messages were successfully received.
-We consider the case when many independent ``dynamic'' devices all have a small probability of communicating at every instant. If they use simple MAB algorithms in a decentralized and independent fashion (what we call ``selfish'' learning),
-we show in simulations that in the case of a non-uniform repartition of the static devices in the channels, the dynamic devices can drastically improve the network efficiency.
-%
-On a simple example, we present in Section~\ref{sec:4:gnuradio} a demonstration that implements and validates the proposed approach, using real wireless radio hardware.
+% More precisely, we start by motivating the idea of independent ``selfish'' learning for IoT devices in Section~\ref{sec:4:motivations}.
+% We then present in Section~\ref{sec:4:firstModel} a model where independent devices use an IoT network composed of different channels, occupied by static devices.
+% Devices do not use any sensing, but use acknowledgements sent by the Base Station to know if their uplink messages were successfully received.
+% We consider the case when many independent ``dynamic'' devices all have a small probability of communicating at every instant. If they use simple MAB algorithms in a decentralized and independent fashion (what we call ``selfish'' learning),
+% we show in simulations that in the case of a non-uniform repartition of the static devices in the channels, the dynamic devices can drastically improve the network efficiency.
+% %
+% On a simple example, we present in Section~\ref{sec:4:gnuradio} a demonstration that implements and validates the proposed approach, using real wireless radio hardware.
 
-Then we present in Section~\ref{sec:4:retransmissions} a second model, extending our first model, in which devices can retransmit their messages for a fixed number of maximum retransmission, like in the ALOHA protocol.
-In this second model, we compare five different heuristics, all based on the UCB algorithm, and numerical simulation show that all the non-naive heuristics succeed in significantly improving the network efficiency.
-Interestingly, the simplest heuristic is found to be the most efficient one, as its simplicity implies a faster learning and convergence time.
+% Then we present in Section~\ref{sec:4:retransmissions} a second model, extending our first model, in which devices can retransmit their messages for a fixed number of maximum retransmission, like in the ALOHA protocol.
+% In this second model, we compare five different heuristics, all based on the UCB algorithm, and numerical simulation show that all the non-naive heuristics succeed in significantly improving the network efficiency.
+% Interestingly, the simplest heuristic is found to be the most efficient one, as its simplicity implies a faster learning and convergence time.
 
-On the one hand, the first model, without retransmission of packets, is interesting for its simplicity, and because considering no retransmission can improve the battery life of IoT devices, at the cost of a lower Quality of Service (QoS).
-On the other hand, the second model is more interesting if the main target is an improvement of the QoS of the IoT networks rather than a longer battery life.
+% On the one hand, the first model, without retransmission of packets, is interesting for its simplicity, and because considering no retransmission can improve the battery life of IoT devices, at the cost of a lower Quality of Service (QoS).
+% On the other hand, the second model is more interesting if the main target is an improvement of the QoS of the IoT networks rather than a longer battery life.
 
 
-\vfill{}
+% \vfill{}
 
-\textbf{Publications.}
-
-This chapter is mainly based on our articles \cite{Bonnefoi17,Besson2018ICT,Besson2019WCNC,Bonnefoi2019WCNC}.
-
-\newpage
+% \newpage
 
 
 % ----------------------------------------------------------------------------
@@ -85,11 +101,16 @@ Recently, TS and \UCB{} algorithms have been used for improving the spectrum acc
 
 We present in Section~\ref{sec:4:firstModel} how the MAB algorithms can be used in a unlicensed but frequency- and time-slotted IoT network.
 Several devices are using bandit algorithms, and the assumptions made by the stochastic bandit algorithms are not satisfied: as several agents learn simultaneously and their activation processes are random, their behavior is not stationary.
-As far as we know, we provide the first practical study to confirm robustness of the use of stochastic bandit algorithms for decision making in IoT networks with a large number of intelligent devices in the network, which makes the environment ``highly'' not stationary.
-This specific context makes it very hard to give mathematical proofs of  convergence and efficiency for bandit algorithms.
+As far as we know, we provide the first practical study to confirm robustness of the use of stochastic bandit algorithms for decision making in IoT networks with a large number of intelligent devices in the network, which makes the environment ``highly not stationary''.
+This specific context makes it very hard to give mathematical proofs of  convergence and efficiency for bandit algorithms (that is why we relax the hypothesis and only consider up-to $M\leqK$ players in Chapter~\ref{chapter:5}).
 We then validate the model with a hardware implementation on real radio signals, detailed in Section~\ref{sec:4:gnuradio}.
 %
 We conclude this chapter by presenting in Section~\ref{sec:4:retransmissions} an extension of this model to take into account another aspect of the ALOHA protocol, that is the possibility for dynamic devices to retransmit their packet if the \emph{Ack} was not received.
+
+
+\textbf{Publications.}
+%
+This chapter is mainly based on our articles \cite{Bonnefoi17,Besson2018ICT,Besson2019WCNC,Bonnefoi2019WCNC}.
 
 
 % ----------------------------------------------------------------------------
@@ -231,7 +252,7 @@ We conclude this chapter by presenting in Section~\ref{sec:4:retransmissions} an
 To sum-up, we focussed in this chapter on models of IoT networks, and we proposed to use classical stationary multi-armed bandit learning algorithms implemented in a selfish and decentralized manner by each of the dynamic devices of the IoT network.
 We presented two models of wireless IoT network without sensing, inspired by the ALOHA protocol, and with or without retransmission of uplink packages in case of collisions.
 In both cases, we try to model the existing standards, like the LoRa standard, and we demonstrated the efficiency of the proposed MAB-based approach in both numerical simulations and empirical measurements on real wireless radio signals.
-%
+
 On the one hand, a satisfying message is that this learning-based approach seems to be very efficient, as it allows the IoT devices to automatically and independently increase their successful transmission rate.
 On the other hand, it is quite surprising that stochastic MAB algorithms can be of any use in such non-stationary applications.
 Sadly, analyzing our model with thousands of independent devices communicating and learning in their own (random) time scale turned out to be of extreme difficulty.
@@ -242,7 +263,7 @@ Sadly, analyzing our model with thousands of independent devices communicating a
 
 We are actually able to analyze a simpler model, if we assume to have at most $K$ devices with a transmission probability of $p=1$.
 Instead of the direction pursued in this chapter, another possibility is to consider a \emph{multi-player MAB} model to describe our problem, as proposed by \cite{Zhao10}.
-%
+
 The main difference between the two models is the fact that in this chapter, devices do not transmit their messages at every time step, but following a random activation process (with a fixed transmission probability $p < 1$).
 If static and dynamic devices that have to transmit at a fixed time are denoted \emph{active devices},
 and their random activation patter makes the number of active devices a random variable.

@@ -2,8 +2,8 @@
 
 \graphicspath{{2-Chapters/4-Chapter/IEEE_WCNC__2019__Paper__BMBM.git/}}
 
-In this section, we extend the model presented before, to take into account the possibility for retransmissions of a message after a collision.
-This extension is of major importance: most protocols for real-world IoT networks can use retransmissions, it is for instance the case of the LoRaWAN standard.
+In this section, we extend the previous model to take into account the possibility for retransmissions of a message after a collision.
+This is of major importance as most protocols for real-world IoT networks can use retransmissions, it is for instance the case of the LoRaWAN standard.
 As before, we propose and evaluate different learning strategies based on MAB algorithms.
 However, the price to be paid is a shorter battery lifetime for IoT devices. So this approach would be used only for devices with strong delivery constraints (\eg, for health-care applications), or that can refuel their energy over time (\eg, for robotic applications).
 
@@ -52,13 +52,13 @@ The contributions of this section are summarized as follows.
 % \end{itemize}
 
 
-\textbf{Outline.}
-%
-The rest of the section is organized as follows.
-First the system model is introduced in Section~\ref{sub:43:model},
-and our motivations are exposed in Section~\ref{sub:43:motivations}.
-The proposed \UCB-based heuristics are presented in Section~\ref{sub:43:heuristics}, while the corresponding numerical results are shown in Section~\ref{sub:43:numExp}.
-Finally, some conclusions are drawn later in Section~\ref{sub:43:conclusion}.
+% \textbf{Outline.}
+% %
+% The rest of the section is organized as follows.
+% First the system model is introduced in Section~\ref{sub:43:model},
+% and our motivations are exposed in Section~\ref{sub:43:motivations}.
+% The proposed \UCB-based heuristics are presented in Section~\ref{sub:43:heuristics}, while the corresponding numerical results are shown in Section~\ref{sub:43:numExp}.
+% Finally, some conclusions are drawn later in Section~\ref{sub:43:conclusion}.
 
 
 % ----------------------------------------------------------------------
@@ -331,7 +331,7 @@ We interpret this fact in two different situations:
 % 	\centering
 %     \begin{framed}
 % 	\begin{algorithm}[H]
-% 		% \begin{small} % XXX remove if needed
+		% \begin{small} % XXX remove if needed
 % 		\For(){$t = 1, \dots, T$}{
 % 			Compute $\forall k, U_k(t) = \widehat{\mu_k}(t) + \sqrt{\alpha \log(t) / N_k(t)}$\;
 % 			Transmit in channel $A(t) \sim \cU(\argmax_k U_k(t))$\;
@@ -339,14 +339,14 @@ We interpret this fact in two different situations:
 % 		}
 % 		\caption{The \UCB{} algorithm for channel selection (base building block).}
 % 		\label{algo:43:UCB}
-% 		% \end{small} % XXX remove if needed
+		% \end{small} % XXX remove if needed
 % 	\end{algorithm}
 % 	\end{framed}
 % \end{figure}
 % % \end{small} % XXX remove if needed
 
 % ----------------------------------------------------------------------
-\subsection{The first heuristics: \UCB{} unaware of retransmissions}
+\subsection{The first heuristic: \UCB{} unaware of retransmissions}
 \label{sub:43:UCBnaive}
 % ----------------------------------------------------------------------
 
@@ -357,7 +357,7 @@ The \UCB{} algorithm is implemented independently by each device, we denote it `
 It is the same algorithm as the Algorithm~\ref{algo:2:indexPolicy} in Section~\ref{sub:2:IndexPolicies} (using the same \UCB{} indexes as we defined them in equation \eqref{eq:UCB_index}),
 but we write it again to make clear the difference with first transmission and retransmission of messages.
 %
-Note that a device using this first approach is only able to select a channel for the first transmission (using \UCB), and it uses the same channel for all the corresponding retransmissions of a packet (if retransmissions happen).
+Note that a device using this first approach is only able to select a channel for the first transmission (using \UCB, line 3-5), and then it uses the same channel for all the corresponding retransmissions of a packet (if retransmissions happen, line 7-8).
 
 
 % \begin{small} % XXX remove if needed
@@ -377,7 +377,7 @@ Note that a device using this first approach is only able to select a channel fo
 				Transmit in channel $A(t) = j$\;
 			}
 		}
-		\caption{First-stage \UCB{} and retransmission in same channel.}
+		\caption[First-stage \UCB{} and retransmission in same channel.]{First-stage \UCB{} and retransmission in same channel (``\textcolor{blue}{Only \UCB{}}'').}
 		\label{algo:43:UCB}
 		% \end{small} % XXX remove if needed
 	\end{algorithm}
@@ -386,23 +386,22 @@ Note that a device using this first approach is only able to select a channel fo
 % \end{small} % XXX remove if needed
 
 
-More formally, for one device, let $N_k(t)$ be the number of times the channel $k$ (for $k\in [K]$) was selected up-to time $t-1$, for $t\geq 0$
+More formally, for one device, let $N_k(t)$ be the number of times the channel $k$ (for $k\in [K]$) was selected up-to time $t-1$, for $t\geq1$
 for any $t\in\mathbb{N}$,
-$N_k(t) = \sum_{\tau=0}^{t-1} \mathbbm{1}(A(\tau) = k)$.
-The empirical mean estimator $\widehat{\mu_k}(t)$ of channel $k$ is defined as the mean reward obtained up-to time $t-1$,
-$\widehat{\mu_k}(t) = \frac{1}{N_k(t)} \sum_{\tau=0}^{t-1} r(\tau) \mathbbm{1}(A(\tau) = k)$,
+$N_k(t) = \sum_{\tau=1}^{t-1} \mathbbm{1}(A(\tau) = k)$.
+The empirical mean estimator $\widehat{\mu_k}(t)$ of channel $k$ is defined as $\widehat{\mu_k}(t) = \frac{1}{N_k(t)} \sum_{\tau=1}^{t-1} r(\tau) \mathbbm{1}(A(\tau) = k)$,
 where $r(t)=Y_{k,t}$ is the reward obtained after transmission in channel $k$ at time $t$.
 The upper confidence bound in each channel $k$ is defined as
 $U_k(t) = \widehat{\mu_k}(t) + \sqrt{\alpha \log(t) / N_k(t)}$.
 Finally, the transmission channel at time step $t$
-is the one maximizing this \UCB{} index $U_k(t)$,
-as it is the one expected to be the best one at the current time step $t$,
-$A(t) = \arg\max_k U_k(t)$.
+is $A(t) \sim \cU(\argmax_k U_k(t))$.
+% the one maximizing this \UCB{} index $U_k(t)$,
+% as it is the one expected to be the best one at the current time step $t$,
 
 \begin{leftbar}[warningbar]  % XXX leftbar warningbar, comment if needed
 	\textbf{\textcolor{red}{Small warning about notations: local (device) time vs global (gateway) time}:}
 	%
-	In all the algorithms and notations presented in this Section, the time steps $t$ do not refer to the global time steps (as seen from the gateway), but rather the current number of uplink transmissions (or retransmissions) that was carried out by the device.
+	In all the algorithms and notations presented in this Section, the time steps $t$ do not refer to the \emph{global} time steps (as seen from the gateway), but rather the current number of uplink transmissions (or retransmissions) that was carried out by the device.
 	Each device wakes up whenever it has to send some data, following its random emission process (here, we propose a Bernoulli process of small probability, \eg, $p=10^{-3}$), and when it woke up, it sends its packet, and will send again for at most $M$ times (\eg, $M=10$) until it receives an \Ack.
 	%
 	In other words, the time steps $t$ in the following algorithms denote the number of time the device sent an uplink packet, and these uplink (re)transmissions can happen at different (real-world) times, more or less spread out in time, it does not matter to the learning part of this model and work.
@@ -428,8 +427,8 @@ Their short names (with their colors) are used in the legend on Figures~\ref{fig
 
 
 % --- --- --- --- --- --- --- --- --- ---
-\paragraph{Uniform random retransmission ``\textcolor{cyan}{(Random)''}.}\label{sub:43:UCBthenRandom}
-
+\textbf{Uniform random retransmission ``(\textcolor{cyan}{Random}'').}\label{sub:43:UCBthenRandom}
+%
 In this first proposal, the device uses a random channel selection, following a uniform distribution (on $[K]$).
 It is described below in Algorithm~\ref{algo:43:UCBthenRandom}.
 More precisely, the first-stage \UCB{} use rewards built from the acknowledgments that the device received or not for its first-stage transmission, but do not use any feedback about any of the retransmissions of any message.
@@ -448,7 +447,7 @@ More precisely, the first-stage \UCB{} use rewards built from the acknowledgment
 				Transmit in channel $A(t) \sim \mathcal{U}(1,\ldots,K)$\;
 			}
 		}
-		\caption{Uniform random retransmission.}    % A naive
+		\caption[Heuristic: uniform random retransmission.]{Heuristic: uniform random retransmission ``(\textcolor{cyan}{Random}'').}    % A naive
 		\label{algo:43:UCBthenRandom}
 	% \end{small} % XXX remove if needed
 	\end{algorithm}
@@ -457,8 +456,8 @@ More precisely, the first-stage \UCB{} use rewards built from the acknowledgment
 
 
 % --- --- --- --- --- --- --- --- --- ---
-\paragraph{\UCB{} for retransmission (``\textcolor{blue}{Only \UCB{}}'').}\label{sub:43:TwoUCB}
-
+\textbf{\UCB{} for retransmission (``\textcolor{purple}{\UCB{}}'').}\label{sub:43:TwoUCB}
+%
 Instead of applying a random channel selection for retransmission,
 another heuristic is to use a second \UCB{} algorithm in the second stage.
 In other words, we expect that this algorithm is able to learn the best channel to retransmit a packet.
@@ -485,7 +484,7 @@ related to the \UCB{} algorithm employed for the retransmission.
 				Reward $r^r(t) = 1$, if \emph{Ack} is received, else $0$\;
 			}
 		}
-		\caption{\UCB{} for retransmission.}    % A naive
+		\caption[Heuristic: \UCB{} for retransmission.]{Heuristic: \UCB{} for retransmission (``\textcolor{purple}{\UCB{}}'').}    % A naive
 		\label{algo:43:TwoUCB}
 		% \end{small} % XXX remove if needed
 	\end{algorithm}
@@ -493,9 +492,10 @@ related to the \UCB{} algorithm employed for the retransmission.
 \end{figure}
 % \end{small} % XXX remove if needed
 
-% --- --- --- --- --- --- --- --- --- ---
-\paragraph{$K$ different {\UCB}s for retransmission (``\textcolor{green}{$K$ \UCB}'')}\label{sub:43:UCBthenKp1}
 
+% --- --- --- --- --- --- --- --- --- ---
+\textbf{$K$ different {\UCB}s for retransmission (``\textcolor{green}{$K$ \UCB}'')}\label{sub:43:UCBthenKp1}
+%
 Another heuristic is to not use the same algorithm no matter where the collision occurred, but to use $K$ different second-stage \UCB{} algorithms.
 It means that after a failed first transmission in channel $j$, the device relies on the $j$-th algorithm to decide its retransmission.
 The corresponding algorithm is depicted in Algorithm~\ref{algo:43:UCBthenKp1}.
@@ -521,7 +521,7 @@ Each of these algorithms are denoted using the subscript $({}^{j})$, for $j\in[K
 				Reward $r^j_{A^j(t)}(t) = 1$ if \emph{Ack} is received, else $0$\;
 			}
 		}
-		\caption{$K$ different {\UCB}s for retransmission.}
+		\caption[Heuristic: $K$ different {\UCB}s for retransmission.]{Heuristic: $K$ different {\UCB}s for retransmission (``\textcolor{green}{$K$ \UCB}'').}
 		\label{algo:43:UCBthenKp1}
 		% \end{small} % XXX remove if needed
 	\end{algorithm}
@@ -538,9 +538,10 @@ Note that for other networks this heuristic could not be practical.
 The storage requirements and time complexity is now quadratic in $K$, and as such we no longer consider this heuristic to be a practical proposal in some LPWA networks, as for instance Sigfox networks consist in a large number of very narrow-band channels (\eg, $K=128$).
 But for LoRaWAN networks with $K=4$, storing $K+1=5$ algorithms does not cost much more than storing $2$.
 
-% --- --- --- --- --- --- --- --- --- ---
-\paragraph{Delayed \UCB{} for retransmission (``\textcolor{red}{Delayed \UCB}'').}\label{sub:43:UCBwithDelay}
 
+% --- --- --- --- --- --- --- --- --- ---
+\textbf{Delayed \UCB{} for retransmission (``\textcolor{red}{Delayed \UCB}'').}\label{sub:43:UCBwithDelay}
+%
 This last heuristic is a composite of
 the random retransmission (Algorithm~\ref{algo:43:UCBthenRandom})
 and the \UCB{} retransmission (Algorithm~\ref{algo:43:TwoUCB}) approaches.
@@ -575,7 +576,7 @@ related to the delayed second-stage \UCB{} algorithm.
 				Reward $r^d_{A^d(t)}(t) = 1$ if \emph{Ack} is received, else $0$\;
 			}
 		}
-		\caption{Delayed \UCB{} for retransmission.}
+		\caption[Heuristic: delayed \UCB{} for retransmission.]{Heuristic: delayed \UCB{} for retransmission (``\textcolor{red}{Delayed \UCB}'').}
 		\label{algo:43:UCBwithDelay}
 		% \end{small} % XXX remove if needed
 	\end{algorithm}
@@ -584,7 +585,7 @@ related to the delayed second-stage \UCB{} algorithm.
 % \end{small} % XXX remove if needed
 
 
-\paragraph{Other ideas that we did not explore.}
+\textbf{Other ideas that we did not explore.}
 %
 Instead of considering a first-stage \UCB{} followed by a random channel retransmission, we could have considered a random first-stage channel retransmission followed by a second-stage \UCB.
 This was not considered in our study \cite{Bonnefoi2019WCNC}, and we preferred to not add it to the experiments presented below, for three reasons: to avoid clutter in the plots, to win some time as these experiments had to run for quite a long time, but mainly because the first-stage channel selection is most important one as we illustrate by the large difference in terms of performance between the uniform channel selection and the ``Only UCB'' heuristic, below in Figures~\ref{fig:43:mainExperiment1} and \ref{fig:43:mainExperiment2}.
