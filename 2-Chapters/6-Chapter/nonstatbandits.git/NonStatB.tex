@@ -61,10 +61,11 @@ In this model, described in full details in Section~\ref{sec:6:BanditSetting}, t
 \textbf{Outline.}
 %
 % This chapter is structured as follows.
-We introduce the model and review related works in Section~\ref{sec:6:BanditSetting}. In Section~\ref{sec:6:ChangePointDetector}, we study the Generalized Likelihood Ratio test for sub-Bernoulli distributions (B-GLRT) as a Change-Point Detector (CPD) algorithm.
+We introduce the model in Section~\ref{sec:6:BanditSetting}, and review related works in Section~\ref{sec:6:relatedWork}.
+In Section~\ref{sec:6:ChangePointDetector} we study the Generalized Likelihood Ratio test for sub-Bernoulli distributions (B-GLRT) as a Change-Point Detector (CPD) algorithm.
 We introduce the two variants of \GLRklUCB{} algorithm in Section~\ref{sec:6:GLRklUCB_Algorithm}, where we also present upper bounds on the regret of both variants.
-The unified regret analysis for these two algorithms is given in Section~\ref{sec:6:RegretAnalysis}.
-Numerical experiments are presented in Section~\ref{sec:6:NumericalExperiments}, with more details in the Appendix.
+The unified regret analysis is given in Section~\ref{sec:6:RegretAnalysis}, we prove one result in Section~\ref{sec:6:proofRegret}.
+We discuss numerical experiments in Section~\ref{sec:6:NumericalExperiments}, with more details in the Appendix.
 
 \textbf{Publications.}
 %
@@ -78,26 +79,26 @@ This chapter is based on our articles \cite{Besson2019GLRT,Besson2019Gretsi}.
 A \emph{piece-wise stationary bandit model} is characterized by a set of $K$ arms.
 A (random) stream of rewards $(Y_{k,t})_{t\in\N^*}$ is associated to each arm $k \in [K]$. We assume that the rewards are bounded, and without loss of generality we assume that $Y_{k,t} \in [0,1]$.
 We denote by $\mu_k(t) \eqdef  \bE[Y_{k,t}]$ the mean reward of arm $k$ at round $t$. At each round $t$, a decision maker has to select an arm $A(t)\in[K]$, based on past observation and receives the corresponding reward $r(t) = Y_{A(t),t}$.
-At time $t$, we denote by $k_t^*$ an arm with maximal expected reward, \ie, $\mu_{k_t^*}(t) = \max_k \mu_k(t)$, called an optimal arm (possibly not unique).
+At time $t$, we denote by $k_t^*$ an arm with maximal expected reward, \ie, $\mu_{k_t^*}(t) \eqdef \max_k \mu_k(t)$, called an optimal arm (possibly not unique).
 
 A policy $\cA$ chooses the next arm to play based on the sequence of past plays and obtained rewards.
-Like for stationary problems (see Definition~\ref{def:2:regret}), the performance of $\cA$ is measured by its (piece-wise stationary) \emph{regret}, the difference between the expected reward obtained by an oracle policy playing an optimal arm $k_t^*$ at time $t$, and that of the policy $\cA$
-We use the same notation as the regret for stationary problem without ambiguity, as in this chapter we only consider the following definition.
+Like for stationary problems (see Definition~\ref{def:2:regret} in Chapter~\ref{chapter:2}), the performance of $\cA$ is measured by its (piece-wise stationary) \emph{regret}, the difference between the expected reward obtained by an oracle policy playing an optimal arm $k_t^*$ at time $t$, and that of the policy $\cA$
+We use the same notation as the regret for stationary problem without ambiguity, as in this chapter we only consider the following definition,
 %
 \begin{equation}\label{def:6:nti}
-    R_T^{\cA} = \E\left[\sum_{t=1}^T \left(\mu_{k_t^*}(t) - \mu_{A(t)}(t)\right)\right].
+    R_T^{\cA} \eqdef \E\left[\sum_{t=1}^T \left(\mu_{k_t^*}(t) - \mu_{A(t)}(t)\right)\right].
 \end{equation}
 
 
 In the piece-wise \iid{} model, we furthermore assume that there is a (relatively small) number of \emph{breakpoints}, denoted by $\Upsilon_T \eqdef \sum_{t=1}^{T-1} \indic\left(\exists k\in[K]: \mu_k(t) \neq \mu_k(t+1)\right)$.
-If we denote $\tau^{(0)} = 0$, we define the $i$-th breakpoint recursively by
-$\tau^{(i)} = \inf\{t > \tau^{(i-1)} : \exists k : \mu_k(t) \neq \mu_k(t+1)\}$.
+If we denote $\tau^{(0)} \eqdef 0$, we define the $i$-th breakpoint recursively by
+$\tau^{(i)} \eqdef \inf\{t > \tau^{(i-1)} : \exists k : \mu_k(t) \neq \mu_k(t+1)\}$.
 %
 Hence for $t\in[\tau^{(i)} + 1,\tau^{(i+1)}]$, that is on any stationary segments, the rewards $(Y_{k,t})$ associated to each arm $k$ are \iid{} (hence the name of \emph{piece-wise stationary} problems).
 
 Note than when a breakpoint occurs, we do not assume that all the arms means  change, but that \emph{there exists} an arm whose mean has changed.
 Depending on the application, many scenario can be meaningful: changes occurring on all arms simultaneously (due to some exogenous event), or only one or a few arms change at each breakpoint.
-For instance, for a cognitive radio application in a IoT-like network, we can imagine that all the objects of one company use a fixed channel or subset of channels, and on a particular day in a particular city, if the company deploys a lot of new objects, then one or some channels see their mean occupancy rates abruptly change.
+For instance, for a cognitive radio application in a IoT-like network, we can imagine that all the objects of one company use a fixed (or a subset of) channel(s), and on a particular day in a city, if the company deploys a lot of new objects, then one (or some) channel(s) see their mean occupancy rates abruptly change.
 
 We define the \emph{number of change-points} on arm $k$,
 $\NCk \eqdef \sum_{t=1}^{T-1} \indic\left(\mu_k(t) \neq \mu_k(t+1)\right)$,
@@ -108,7 +109,7 @@ We illustrate the two extreme cases in problems $1$ and $2$ presented in Figures
 
 \textbf{An interesting interpolation.}
 %
-The piece-wise stationary bandit model can be viewed as an interpolation between stationary and adversarial models, as the stationary model corresponds to $\Upsilon_T = 0$, while some adversarial models can be considered as a special (worst) case, with $\Upsilon_T = T$ (when considering an adaptive or an oblivious adversary).
+The piece-wise stationary bandit model can be viewed as an interpolation between stationary and adversarial models, as the stationary model corresponds to $\Upsilon_T = 0$, while some adversarial models can be considered as a special (worst) case, with $\Upsilon_T = T-1$ (when considering an adaptive or an oblivious adversary).
 However, analyzing an algorithm for the piece-wise stationary bandit model requires to assume a small number of changes, typically $\Upsilon_T = o(\sqrt{T})$.
 Note that the adversarial model of \cite{Auer02NonStochastic} is quite powerful, and the authors presented in Section~8 of their paper the EXP3.S algorithm for the piece-wise stationary problem, as explained in Section~\ref{sec:6:Introduction} above.
 
@@ -164,7 +165,7 @@ The first optimal arm decreases at every change (\textcolor{blue}{$2$ with $\nab
 We review previous works that studied the piece-wise stationary bandit model, or variants of this model.
 To our knowledge, all the previous works are based on the idea of combining a classical bandit policy, such as Thompson sampling, \UCB{} or EXP3, with a strategy to account for changes in arms' distributions.
 Following the vocabulary used in previous works, we make the distinction between passively and actively adaptive strategies.
-Active strategies monitors the rewards of each arm by using a change detection algorithm \cite{Basseville93}, and reset the history of pulls and rewards of one or all the arms as soon as a change is detected.
+Active strategies monitor the arms' rewards, by using change detection algorithms \cite{Basseville93}, and reset the history of pulls and rewards of one or all the arms as soon as a change is detected.
 Passive strategies use a (fixed) discount factor or a limited memory size, while most active strategies use a growing memory.
 % , while active strategies are usually tuned with a threshold for the statistical test.
 
