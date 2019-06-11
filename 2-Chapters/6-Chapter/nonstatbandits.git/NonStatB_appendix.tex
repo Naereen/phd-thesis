@@ -652,7 +652,7 @@ we suggest here two simple ideas to drastically speed-up its computation time.
 The new \GLR{} test is using the stopping time $\widetilde{T_\delta}$ defined in \eqref{def:6:GLRTricks},
 with $\cT = \{t \in [T], t \mod \Delta n = 0\}$
 and $\cS_t = \{s \in [t], s \mod \Delta s = 0\}$.
-The goal is to speed up the computation time of every call to the \GLR{} test (\eg, choosing $\Delta s = 10$, every call should be about $10$ times faster), and to speed up the overhead cost of running the tests on top of the index policy (\klUCB), by testing for changes less often (\eg, choosing $\Delta n = 10$ should speed up the all computation by a factor $10$).
+The goal is to speed up the computation time of every call to the \GLR{} test (\eg, choosing $\Delta s = 10$, every call should be about $10$ times faster), and to speed up the overhead cost of running the tests on top of the index policy (\klUCB), by testing for changes \emph{less} often (\eg, choosing $\Delta n = 10$ should speed up the all computation by a factor $10$).
 
 \paragraph{Empirical validation of these optimization tricks.}
 %
@@ -661,10 +661,10 @@ The other parameters of \GLRklUCB{} are chosen as $\delta = 1/\sqrt{K \Upsilon_T
 The algorithm analyzed in Section~\ref{sec:6:RegretAnalysis} corresponds to $\Delta n = \Delta s = 1$.
 
 On the same problem,
-the Oracle-Restart \klUCB{} obtained a mean regret of $37 \pm 37$ for a running time of \SI{711}{\milli\second} $\pm$ \SI{95}{\milli\second},
-while \klUCB{} obtained a regret of $270 \pm 76$ for a time of \SI{587}{\milli\second} $\pm$ \SI{47}{\milli\second}.
-In comparison with the two other efficient approaches, M-\klUCB{} obtained a regret of $290 \pm 29$ for a time of \SI{943}{\milli\second} $\pm$ \SI{102}{\milli\second},
-and \CUSUMklUCB{} obtained a regret of $148 \pm 32$ for a time of \SI{46}{\second} $\pm$ \SI{5}{\second}.
+the Oracle-Restart \klUCB{} obtained a mean regret of $37$ for a running time of \SI{711}{\milli\second},
+while \klUCB{} obtained a regret of $270$ for a time of \SI{587}{\milli\second}.
+In comparison with the two other efficient approaches, M-\klUCB{} obtained a regret of $290$ for a time of \SI{943}{\milli\second},
+and \CUSUMklUCB{} obtained a regret of $148$ for a time of \SI{46}{\second}.
 %
 This shows that our proposal is very efficient compared to stationary algorithms, and comparable to the state-of-the-art actively adaptive algorithm.
 Moreover, this shows that two heuristics efficiently speed-up the computation times of \GLRklUCB.
@@ -803,7 +803,7 @@ In the B-GLRT test, there is a $\sup$ optimization problem on $s\in[2,n-1]$, and
 We note that we also considered the possibility of using a threshold that could be a function of both $n$ the sample size as well as $s\in[2,n-1]$ the ``splitting index'' between means $\widehat{\mu}_{1:s}$ and $\widehat{\mu}_{s+1:n}$.
 We did some preliminary experiments to explore this direction and did not find a significant difference, in terms of numerical efficient of the resulting \GLRklUCB{} algorithm, and mathematically the analysis presented in Section~\ref{subsec:6:PropGLR} is simpler to follow if the threshold are uniform on $s$.
 
-\begin{enumerate}\tightlist
+\begin{enumerate}%\tightlist
     \item
     The first variant is the one we advised to use in practice for \GLRklUCB,
     it is very simple to compute numerically:
@@ -867,7 +867,7 @@ All options are parametrized by a constant $\alpha\in(0,1)$, which represents th
 %
 Note that the analysis we gave in Section~\ref{sec:6:RegretAnalysis} is based on the deterministic exploration, but with a careful handling of random events and if we prove a result similar to Proposition~\ref{prop:6:EnoughSamples}, we believe our analysis could also be extended to another exploration mechanism.
 
-\begin{enumerate}\tightlist
+\begin{enumerate}%\tightlist
     \item
     The \textbf{deterministic exploration}
     corresponds to one described in Algorithm~\ref{algo:6:GLRklUCB}.
