@@ -132,9 +132,7 @@ We then analyze our \MCTopM{} algorithm and we show that its regret upper-bound 
 %  with a regret bounded by $\bigO{\log(T)}$ for a game at horizon $T$.
 We also present extensive numerical simulations that show that our proposal outperforms all previous solutions and is much more efficient in this easier model of sensing feedback with a fixed and known number of players $M$ accessing $K \geq M$ channels.
 
-% % FIXME
 % \TODOL{Est-ce qu'on enlève toute mention de la lower-bound et de "order-optimal" du coup ?!}
-% % FIXME
 
 
 The goal for every player is to select most of the time one of the $M$ best arms, without colliding too often with other players.
@@ -765,7 +763,7 @@ We now propose two alternatives to this strategy, that do not rely on ranks and 
 %
 We precisely state our first proposal below in Algorithm~\ref{algo:5:RandTopM}.
 
-\TODOL{Est-ce qu'on devrait utiliser $t=1,\dots,T$ et pas $t=0,\dots,T-1$ et utiliser $A(t)$ et pas $A(t+1)$ pour être consistant avec les autres chapitres ?}
+% \TODOL{Est-ce qu'on devrait utiliser $t=1,\dots,T$ et pas $t=0,\dots,T-1$ et utiliser $A(t)$ et pas $A(t+1)$ pour être consistant avec les autres chapitres ?}
 
 % \vspace*{-5pt}  % XXX remove if problem
 % \begin{small}  % XXX remove if problem
@@ -785,21 +783,21 @@ We precisely state our first proposal below in Algorithm~\ref{algo:5:RandTopM}.
           % \KwData{Data}
           % \KwResult{Result}
           % XXX Algorithm
-              Let $A^j(1) \sim \cU([K])$ and $C^j(1)=\mathrm{False}$ \\
-              \For{$t = 0, \dots, T - 1$}{
+              Let $A^j(0) \sim \cU([K])$ and $C^j(0)=\mathrm{False}$ \\
+              \For{$t = 1, \dots, T$}{
                   %
-                  \eIf{$A^j(t) \notin \TopM(t)$}{
-                    \eIf(\tcp*[f]{collision}){$C^j(t)$}{
-                      $A^j(t+1) \sim \cU \left(\TopM(t)\right)$
+                  \eIf{$A^j(t-1) \notin \TopM(t)$}{
+                    \eIf(\tcp*[f]{collision at previous step}){$C^j(t-1)$}{
+                      $A^j(t) \sim \cU \left(\TopM(t)\right)$
                       \tcp*[f]{randomly switch}
                       }(\tcp*[f]{randomly switch on an arm that had smaller UCB}){
-                        $A^j(t+1) \sim \cU \left(\TopM(t) \cap \left\{k : U_k^j(t-1) \leq U^j_{A^j(t)}(t-1)\right\}\right)$
+                        $A^j(t) \sim \cU \left(\TopM(t) \cap \left\{k : U_k^j(t-1) \leq U^j_{A^j(t)}(t-1)\right\}\right)$
                       }
                     }{
-                      $A^j(t+1) = A^j(t)$
+                      $A^j(t) = A^j(t-1)$
                       \tcp*[f]{stays on the same arm}
                     }
-                  Play arm $A^j(t+1)$, get new observations (sensing and collision), \\
+                  Play arm $A^j(t)$, get new observations (sensing and collision), \\
                   Compute the indices $U^j_k(t+1)$ and set $\TopM(t+1)$ for next step.
               }
               \caption[The \RandTopM{} decentralized learning policy]{The \RandTopM{} decentralized learning policy (for an index policy $U^j$).}
@@ -831,7 +829,7 @@ Both algorithms ensure that player $j$ always
 selects at time $t+1$ an arm from $\TopM(t)$.
 When a collision occurs for a player implementing the \RandTopM{} algorithm, that player randomly switches arm within $\TopM$, while \MCTopM{} uses a more sophisticated mechanism, that is reminiscent of ``Musical Chair'' (MC) and inspired by the work of \cite{Rosenski16}: players tend to fix themselves on arms (``chairs'') and ignore future collision when this happens.
 
-\TODOL{Est-ce qu'on devrait utiliser $t=1,\dots,T$ et pas $t=0,\dots,T-1$ et utiliser $A(t)$ et pas $A(t+1)$ pour être consistant avec les autres chapitres ?}
+% \TODOL{Est-ce qu'on devrait utiliser $t=1,\dots,T$ et pas $t=0,\dots,T-1$ et utiliser $A(t)$ et pas $A(t+1)$ pour être consistant avec les autres chapitres ?}
 
 
 % \vspace*{-5pt}  % XXX remove if problem
@@ -852,29 +850,29 @@ When a collision occurs for a player implementing the \RandTopM{} algorithm, tha
           % \KwData{Data}
           % \KwResult{Result}
           % XXX Algorithm
-              Let $A^j(1) \sim \cU([K])$ and $C^j(1)=\mathrm{False}$ and $s^j(1)=\mathrm{False}$ \\
-              \For{$t = 0, \dots, T-1$}{
+              Let $A^j(0) \sim \cU([K])$ and $C^j(0)=\mathrm{False}$ and $s^j(1)=\mathrm{False}$ \\
+              \For{$t = 1, \dots, T$}{
                    \uIf(\tcp*[f]{transition $(3)$ or $(5)$}){
-                      $A^j(t) \notin \TopM(t)$}
+                      $A^j(t-1) \notin \TopM(t)$}
                     {
-                      $A^j(t+1) \sim \cU \left(\TopM(t) \cap \left\{k : U_k^j(t-1) \leq U^j_{A^j(t)}(t-1)\right\}\right)$
+                      $A^j(t) \sim \cU \left(\TopM(t) \cap \left\{k : U_k^j(t-1) \leq U^j_{A^j(t)}(t-1)\right\}\right)$
                       \tcp*[f]{not empty} \\
                       % \tcp*[f]{randomly switch on an arm that had smaller UCB}
-                      $s^j(t+1) = \mathrm{False}$
+                      $s^j(t) = \mathrm{False}$
                       \tcp*[f]{aim at an arm with a smaller UCB at $t-1$}
                     }
                     \uElseIf(\tcp*[f]{collision and not fixed}){
-                        $C^j(t)$ \emph{and} $\overline{s^j(t)}$}
+                        $C^j(t-1)$ \emph{and} $\overline{s^j(t-1)}$}
                       {
-                        $A^j(t+1) \sim \cU \left(\TopM(t)\right)$
+                        $A^j(t) \sim \cU \left(\TopM(t)\right)$
                         \tcp*[f]{transition $(2)$} \\
-                        $s^j(t+1) = \mathrm{False}$
+                        $s^j(t) = \mathrm{False}$
                     }
                     \Else(\tcp*[f]{transition $(1)$ or $(4)$}){
-                      $A^j(t+1) = A^j(t)$ \tcp*[f]{stay on the previous arm} \\
-                      $s^j(t+1) = \mathrm{True}$ \tcp*[f]{become or stay fixed on a ``chair''}
+                      $A^j(t) = A^j(t-1)$ \tcp*[f]{stay on the previous arm} \\
+                      $s^j(t) = \mathrm{True}$ \tcp*[f]{become or stay fixed on a ``chair''}
                     }
-                  Play arm $A^j(t+1)$, get new observations (sensing and collision), \\
+                  Play arm $A^j(t)$, get new observations (sensing and collision), \\
                   Compute the indices $U^j_k(t+1)$ and set $\TopM(t+1)$ for next step.
               }
               \caption[The \MCTopM{} decentralized learning policy]{The \MCTopM{} decentralized learning policy (for an index policy $U^j$).}
@@ -890,16 +888,16 @@ When a collision occurs for a player implementing the \RandTopM{} algorithm, tha
 More precisely, under \MCTopM,
 % \footnote{This choice is similar to the elementary step used in the \MusicalChair{} algorithm introduced by \cite{Rosenski16}, that gave its name to \MCTopM, even if they restrict to using the empirical averages as indices (\ie, the $0$-greedy algorithm).}
 if player $j$ did not encounter a collision when using arm $k$ at time $t$,
-then she marks her current arm as a ``chair'' ($s^j(t+1)=\mathrm{True}$),
+then she marks her current arm as a ``chair'' ($s^j(t)=\mathrm{True}$),
 and will keep using it even if collisions happen in the future (Lines~$9$-$11$).
 %
 As soon as this ``chair'' $k$ is no longer in $\widehat{M_j}(t)$,
 a new arm is sampled uniformly from a subset of $\TopM(t)$,
-defined with the previous indices $U^j(t-1)$ (Lines~$3$-$5$).
+defined with the previous indices $U^j(t)$ (Lines~$3$-$5$).
 %
 The subset enforces a certain inequality on indices,
 $U_{k'}^j(t-1) \leq U^j_{k}(t-1)$ and $U_{k'}^j(t) \geq U^j_{k}(t)$,
-when switching from $k=A^j(t)$ to $k'=A^j(t+1)$.
+when switching from $k=A^j(t-1)$ to $k'=A^j(t)$.
 This helps to control the number of such changes of arm,
 as shown in Lemma~\ref{lem:5:elementaryLemma_RandTopM_MCTopM}.
 % the Appendix~\ref{proof:5:collisionsMCTopM}
@@ -917,19 +915,19 @@ as well as the number of switches of arm.
 The five different transitions $(1)$, $(2)$, $(3)$, $(4)$, $(5)$ refer to the notations used in the analysis of \MCTopM, and they are illustrated in Figure~\ref{fig:5:StateMachineAlgorithm_MCTopM} below.
 
 \begin{figure}[h!]
-  \resizebox{1.05\textwidth}{!}{
+  \resizebox{1.03\textwidth}{!}{
   \begin{tikzpicture}[>=latex',line join=bevel,scale=5.0]
       %
       \node (start) at (1.5,0.30) {$(0)$ Start $t=0$};
-      \node (notfixed) at (1,0) [draw,rectangle,thick] {Not fixed, $\overline{s^j(t)}$};
-      \node (fixed) at (0,0) [draw,rectangle,thick] {Fixed, $s^j(t)$};
+      \node (notfixed) at (1,0) [draw,rectangle,very thick] {Not fixed, $\overline{s^j(t-1)}$};
+      \node (fixed) at (0,0) [draw,rectangle,very thick] {Fixed, $s^j(t-1)$};
       %
       \draw [black,->] (start) -> (notfixed.20);
-      \draw [color=cyan,thick,->] (notfixed) to[bend right] node[midway,above,text width=5cm,text centered,black] {\small $(1)$ $\overline{C^j(t)}, A^j(t) \in \TopM(t)$} (fixed);
-      \path [color=blue,thick,->] (notfixed) edge[loop right] node[right,text width=4cm,text badly centered,black] {\small $(2)$  $C^j(t)$,\\$A^j(t) \in \TopM(t)$} (1);
-      \path [color=red,thick,->] (notfixed) edge[loop below] node[below,text centered,black] {\small $(3)$  $A^j(t) \notin \TopM(t)$} (1);
-      \path [color=darkgreen,thick,->] (fixed) edge[loop left] node[left,text width=2.9cm,text badly centered,black] {\small $(4)$ $A^j(t) \in \TopM(t)$} (fixed);
-      \draw [color=red,thick,->] (fixed) to[bend right] node[midway,below,text centered,black] {\small $(5)$  $A^j(t) \notin \TopM(t)$} (notfixed);
+      \draw [color=cyan,very thick,->] (notfixed) to[bend right] node[midway,above,text width=5cm,text centered,black] {\small $(1)$ $\overline{C^j(t-1)}, A^j(t-1) \in \TopM(t)$} (fixed);
+      \path [color=blue,very thick,->] (notfixed) edge[loop right] node[right,text width=4cm,text badly centered,black] {\small $(2)$  $C^j(t-1)$,\\$A^j(t-1) \in \TopM(t)$} (1);
+      \path [color=red,very thick,->] (notfixed) edge[loop below] node[below,text centered,black] {\small $(3)$  $A^j(t-1) \notin \TopM(t)$} (1);
+      \path [color=darkgreen,very thick,->] (fixed) edge[loop left] node[left,text width=2.9cm,text badly centered,black] {\small $(4)$ $A^j(t-1) \in \TopM(t)$} (fixed);
+      \draw [color=red,very thick,->] (fixed) to[bend right] node[midway,below,text centered,black] {\small $(5)$  $A^j(t-1) \notin \TopM(t)$} (notfixed);
       %
   \end{tikzpicture}
   }
