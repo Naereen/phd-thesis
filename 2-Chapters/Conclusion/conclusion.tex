@@ -47,7 +47,7 @@ In Chapter~\ref{chapter:4}, we first propose some models for realistic IoT wirel
 % Chapter 5
 Because the models studied for realistic IoT networks were found to be intractable to analyze from a theoretical point of view, mainly due to the large number of algorithms interacting at random times in a noisy environment,
 in Chapter~\ref{chapter:5}, we study a weaker but still interesting model.
-We present different variants of the multi-player MAB model, and we propose the state-of-the-art algorithm for the variant with collision information (\MCTopM-\klUCB).
+We present different variants of the multi-players MAB model, and we propose the state-of-the-art algorithm for the variant with collision information (\MCTopM-\klUCB).
 % Chapter 6
 Finally, in Chapter~\ref{chapter:6}, we remove the stationary hypothesis on the single-player MAB problem, and we analyze a new actively adaptive algorithm (\GLRklUCB).
 %
@@ -79,16 +79,16 @@ We proposed an extension of the Exp4 algorithm for this problem, \Aggr, and illu
 Then we presented our Python library SMPyBandits \cite{SMPyBandits,SMPyBanditsJMLR}, by detailing
 its purpose and qualities, its organization, and an overview of its usage.
 %
-SMPyBandits allows any researcher to easily implement numerical simulations of stochastic or piece-wise stochastic problems of single- or multi-player multi-armed bandits.
+SMPyBandits allows any researcher to easily implement numerical simulations of stochastic or piece-wise stochastic problems of single- or multi-players multi-armed bandits.
 SMPyBandits is distributed on GitHub and Pypi freely, under an open-source license, and it is extensively documented (at \href{https://SMPyBandits.GitHub.io}{\texttt{SMPyBandits.GitHub.io}}).
 % Our library allows any researcher to easily run numerical simulations of different kinds of multi-armed bandit problems, requiring only a small knowledge of Python thanks to its documentation, its well-designed API, and many examples of simulation scripts and configuration files included.
 
 We detailed how SMPyBandits is implementing arms, problems, algorithms, and how the library uses these components to implement a simulation loop, with various visualizations being performed after a simulation.
 Even if SMPyBandits is still restricted to the finite-arm case, it supports a wide range of arm distributions.
-Different kinds of models are implemented, from stationary single-player to piece-wise stationary multi-player with different collision models.
+Different kinds of models are implemented, from stationary single-player to piece-wise stationary multi-players with different collision models.
 One of the main qualities of the library is that it is quite exhaustive, as all the main families of algorithms covering these different models have been implemented, even very recent algorithms from the literature.
 % We indeed followed actively the state-of-the-art research, since December $2016$ to June $2019$.
-More than $65$ algorithms (or variants) are implemented for the single-player case, $5$ for the experts aggregation problem, about $15$ for the multi-player case, and about $20$ for the piece-wise stationary case.
+More than $65$ algorithms (or variants) are implemented for the single-player case, $5$ for the experts aggregation problem, about $15$ for the multi-players case, and about $20$ for the piece-wise stationary case.
 The entire codebase is fully documented, and the library is using continuous integration to run automated tests on the code after every modification.
 %
 When comparing algorithms on a problem, the main performance measure is the regret, but the library also computes, stores and visualizes other measures, such as best-arm selection rate or mean cumulated reward, as well as real time and memory costs.
@@ -132,7 +132,7 @@ Surprisingly, the main take-away message is that a simple \UCB{} learning approa
 % ----------------------------------------------------------------------------
 \paragraph{Conclusion about \textbf{Chapter~\ref{chapter:5}}.}
 
-The second chapter of Part~\ref{part:MABIOT} of this manuscript studied Multi-Player Multi-Arm Bandits models.
+The second chapter of Part~\ref{part:MABIOT} of this manuscript studied Multi-Players Multi-Arm Bandits models.
 %
 We present three variants of this model,
 with different level of feedback being available to the decentralized players, under which we proposed efficient algorithms.
@@ -186,11 +186,11 @@ The hypotheses we made were motivated by the target applications, but these othe
 % ----------------------------------------------------------------------------
 % \paragraph{Perspectives about \textbf{Chapter~\ref{chapter:3}}.}
 
-A few tasks are left on our library SMPyBandits, a first one could be to implement new variants of the single-player stochastic models, as well as variants for the multi-player or the non-stationary cases.
+A few tasks are left on our library SMPyBandits, a first one could be to implement new variants of the single-player stochastic models, as well as variants for the multi-players or the non-stationary cases.
 For more details, see the issue tickets at \href{https://github.com/SMPyBandits/SMPyBandits/issues/}{\texttt{GitHub.com/SMPyBandits /SMPyBandits/issues/}}.
 %
 A second interesting task could be to extend the library for problems with non-finite arms, \eg, linear or contextual bandit (\href{https://github.com/SMPyBandits/SMPyBandits/issues/117}{ticket 117}),
-or to add support for the ``dynamic case'' of multi-player bandits to allow arrivals or departures of players (\href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{ticket 124}).
+or to add support for the ``dynamic case'' of multi-players bandits to allow arrivals or departures of players (\href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{ticket 124}).
 %
 A third task that I would have liked to complete is to interface the library with a web-based interactive demonstration, in order to allow anyone to launch simulations without any knowledge of programming.
 It is already possible to easily reproduce some of the experiments presented in this thesis, by using the Jupyter notebooks \cite{jupyter}, hosted on \href{https://perso.crans.org/besson/PhD/notebooks/}{\texttt{perso.crans.org/besson/PhD/notebooks/}}, which can be used locally if one installs or downloads the library, but can also be used on cloud platforms, such as
@@ -248,11 +248,11 @@ A hardware demonstrator could be also benefit to study other settings by relaxin
 % ----------------------------------------------------------------------------
 \paragraph{Perspectives about \textbf{Chapter~\ref{chapter:5}}.}
 
-Our study on multi-player bandits suggests several further research directions.
-First, one could want to investigate the notion of \emph{optimal algorithms} in the decentralized multi-player model with sensing information. So far we provided the first matching upper and lower bound on the expected number of sub-optimal arms selections, which suggests some form of (asymptotic) optimality. However, sub-optimal draws turn out not be the dominant terms in the regret, both in our upper bounds and in practice, thus a promising future work is to identify some notion of \emph{minimal number of collisions}.
+Our study on multi-players bandits suggests several further research directions.
+First, one could want to investigate the notion of \emph{optimal algorithms} in the decentralized multi-players model with sensing information. So far we provided the first matching upper and lower bound on the expected number of sub-optimal arms selections, which suggests some form of (asymptotic) optimality. However, sub-optimal draws turn out not be the dominant terms in the regret, both in our upper bounds and in practice, thus a promising future work is to identify some notion of \emph{minimal number of collisions}.
 % Similarly to what was done very recently in \cite{wang2019distributed} for the communications between players who collaborate with each other, it would be interesting to characterize the number of collisions needed to achieve logarithmic regret.
 
-We also presented many extensions of the multi-player bandit model,
+We also presented many extensions of the multi-players bandit model,
 and even if some have already been implemented, a major future work is to implement the most interesting ones in our library SMPyBandits
 (see tickets \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}).
 
@@ -265,7 +265,7 @@ We also believe that combining change-point \emph{localization} with an efficien
 
 We would also like to study in the future possible extension of our approach to the slowly varying model, as studied in \cite{Besbes14stochastic,Louedec16,WeiSrivastava18Abruptly}, or the rotting bandit model \cite{Seznec2018}.
 
-Another interesting direction of future work is to study non-stationary distributed multi-player bandits, to unify the models from Chapter~\ref{chapter:5} and~\ref{chapter:6}.
+Another interesting direction of future work is to study non-stationary distributed multi-players bandits, to unify the models from Chapter~\ref{chapter:5} and~\ref{chapter:6}.
 A natural extension of the non-stationary model is to consider non-communicating players cooperating in a decentralized way to play the same bandit game, as it was proposed recently in \cite{WeiSrivastava18Distributed}.
 %
 We could also build on the proof technique used in \cite{WeiSrivastava18Abruptly}, even if we are interested in removing the hypothesis that player $j$ knows its ID $j\in[M]$ before starting to play.

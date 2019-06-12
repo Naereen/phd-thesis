@@ -1,7 +1,7 @@
 %!TEX root = ../PhD_thesis__Lilian_Besson
 
-% \chapter[Multi-Player Multi-Armed Bandits Models]{Multi-Player Multi-Armed Bandits Models and Algorithms}
-\chapter{Multi-Player Multi-Armed Bandits}
+% \chapter[Multi-Players Multi-Armed Bandits Models]{Multi-Players Multi-Armed Bandits Models and Algorithms}
+\chapter{Multi-Players Multi-Armed Bandits}
 \label{chapter:5}
 
 \graphicspath{{2-Chapters/5-Chapter/Images/}}
@@ -16,7 +16,7 @@ We discuss three feedback levels that give variants of the multi-players MAB mod
 Using a decomposition of the centralized system regret, we start by explaining the intuition about what an efficient decentralized algorithm should do, and then we propose \RandTopM{} and \MCTopM, two new orthogonalization schemes.
 Combining them with the \klUCB{} index policy gives order-optimal algorithms, that achieve state-of-the-art performance,
 as illustrated by numerical simulations.
-We conclude by reviewing different extensions of the multi-player models.
+We conclude by reviewing different extensions of the multi-players models.
 
 
 % \TODOL{C'est bizarre ce problème d'espacement vertical ici... je ne sais pas comment le corriger !}
@@ -41,18 +41,18 @@ We conclude by reviewing different extensions of the multi-player models.
 
 Before concluding this chapter, we review many extensions to the three models presented above in Section~\ref{sec:5:model} that were introduced in recent literature.
 %
-We wanted to highlight that the community has been quite active on research on multi-player bandits in the last $10$ years, but especially active since last spring $2018$.
+We wanted to highlight that the community has been quite active on research on multi-players bandits in the last $10$ years, but especially active since last spring $2018$.
 For instance, our article \cite{Besson2018ALT} was the first to propose the ``no sensing'' case, and it was studied by (at least) two independent group of researchers since its publication in April $2018$ \cite{BoursierPerchet18,LugosiMehrabian18}.
 Another example is the model with different arm means among players, who was initially studied in \cite{Anandkumar10,Kalathil12} and then more recently in \cite{Bistritz18,KaufmannAbbas19}.
 %
 % FIXME écrit pas ça c'est inutile !
-% By following actively the research on multi-player bandit models since the last three years, we believe to be able to give an exhaustive literature review, but it is of course possible that we missed an important research work. In this case, it is our mistake and not an intentional choice as we included all the different extensions of our models that we were aware of.
+% By following actively the research on multi-players bandit models since the last three years, we believe to be able to give an exhaustive literature review, but it is of course possible that we missed an important research work. In this case, it is our mistake and not an intentional choice as we included all the different extensions of our models that we were aware of.
 
-Many extensions of the simpler model of multi-player bandits have been considered.
+Many extensions of the simpler model of multi-players bandits have been considered.
 The number of players $M$ can be fixed but initially unknown to the players, the sensing information can be absent (like the model \modeltrois{} presented above), there could be communications between players (happening at each time step or only occasionally), or $M$ could evolve over time to model the possibility of arrivals or departures of players (\ie, connexions and disconnections of devices in a wireless networks).
 Also inspired by real-world wireless networks, the arm means may vary among players, for instance to model players located at different distance of the gateway, and we can also consider networks with some ``jammers'' whose purpose is not to communicate to the gateway in a collaborative way, like the $M$ devices, but to interfere with the communications of the $M$ devices.
 
-Finally, we can also be interested by models where $M$ stays fixed, but the environment evolves, for instance with abrupt changes in the means of arms. This last model makes a good connexion between this chapter and the next one, and an exciting future work is to further study this model in order to tackle this kind of problems by merging our contributions for stationary multi-player bandits and for non-stationary single-player bandits.
+Finally, we can also be interested by models where $M$ stays fixed, but the environment evolves, for instance with abrupt changes in the means of arms. This last model makes a good connexion between this chapter and the next one, and an exciting future work is to further study this model in order to tackle this kind of problems by merging our contributions for stationary multi-players bandits and for non-stationary single-player bandits.
 
 % \TODOL{
 %     Pour les extension présentées ici, je veux suivre la même organisation :
@@ -193,7 +193,7 @@ Additional simulations, for increasing time horizons $T$, confirmed the expected
 
 As reminded above, the model assumes that the number of players $M$ remains fixed during all the bandit game.
 However, in real-world wireless networks, when players model communicating devices connected to a single gateway, devices can arrive or leave the network at any time.
-The existing previous work on multi-player bandit models are all motivated by possible applications to wireless networks, but most of them assume $M$ to be fixed.
+The existing previous work on multi-players bandit models are all motivated by possible applications to wireless networks, but most of them assume $M$ to be fixed.
 The first work studying the relaxation of this hypothesis is \cite{Rosenski16}, where this case is called the ``dynamic setting''.
 If the arrival or departures of players is not random, but determined in advance while still being unknown to any player, the natural notion of regret is the following, where the expectancy $\E[\bullet]$ is capturing the randomness in the sensing information, as well as in the players' decisions (\ie, collisions):
 \begin{equation}\label{eq:5:defRegretDynamicSetting}
@@ -429,10 +429,10 @@ Analytic performance guarantees, proving convergence to stable marriage configur
 \subsection{With different arm utilities among players}
 \label{sub:5:withDifferentMeansAmongPlayers}
 
-In the multi-player model presented in this chapter, we assume that the arm distributions are the same for all the players.
+In the multi-players model presented in this chapter, we assume that the arm distributions are the same for all the players.
 For cognitive radio applications, where arms model channels and players are radio devices, it can be unrealistic to consider that two players, maybe located at different distances from the gateway or equipped with different hardwares, encounter the same mean quality when accessing the same channel.
 %
-Motivated by this weakness, some researchers studied an interesting extension of the model of interest, considering multi-player MAB models with different arms distributions among players.
+Motivated by this weakness, some researchers studied an interesting extension of the model of interest, considering multi-players MAB models with different arms distributions among players.
 %
 Starting in 2012 by \cite{Kalathil12} where arms are Markov chain, this model was studied more actively recently, \cite{DarakHanawal18,Bistritz18,KaufmannAbbas19,Tibrewal2019}.
 
@@ -572,7 +572,7 @@ However, these algorithms work under the assumption that all the SUs faithfully 
 In the paper \cite{SawantKumar2018}, the authors study for the first time distributed algorithms that are robust against malicious behavior, also called \emph{jamming attack}.
 They consider both the cases of \emph{jammers} launching coordinated and uncoordinated attacks, and consider a set of $J$ jammers.
 In the coordinated attack, the jammers select non-overlapping channels to attack in each time slot and can significantly increase the number of collisions for SUs.
-They setup the problem in each scenario as a multi-player bandit and develop algorithm,
+They setup the problem in each scenario as a multi-players bandit and develop algorithm,
 and their analysis shows that when the SUs faithfully implement proposed algorithms, the regret is constant with high probability.
 They validate their claims through exhaustive synthetic experiments and also through a realistic USRP.
 Their synthetic experiments consider different cases, for different values of $K$ the number of channels, $M$ the number of players and $J$ the number of jammers.
@@ -647,7 +647,7 @@ Despite being more complicated than other approaches, their algorithm ``\texttt{
 \label{sec:5:conclusion}
 % -----------------------------------------------------------------
 
-To sum up, we presented in this chapter three variants of Multi-Player Multi-Arm Bandits,
+To sum up, we presented in this chapter three variants of Multi-Players Multi-Arm Bandits,
 with different levels of feedback being available to the decentralized players, under which we proposed efficient algorithms.
 The two easiest models are the ones with sensing information (\ie, for OSA), for which our theoretical contribution improves both the state-of-the-art upper and lower bounds on the regret. In the absence of sensing, we also provide some motivation for the practical use of the interesting \Selfish{} heuristic, a simple index policy based on hybrid indices that are directly taking  into account the collision information.
 %
@@ -656,14 +656,14 @@ For example, it assumes to know the number of players $M$ before-hand, but we il
 Further works would be required to adapt the theoretical analysis to these various extensions.
 
 This chapter suggests several interesting further research directions.
-First, one could want to investigate the notion of \emph{optimal algorithms} in the decentralized multi-player model with sensing information. So far we provided the first matching upper and lower bound on the expected number of sub-optimal arms selections, which suggests some form of (asymptotic) optimality. However, sub-optimal draws turn out to not be the dominant term in the regret, both in our upper bound and in practice, thus an interesting future work is to identify some notion of \emph{minimal number of collisions}.
+First, one could want to investigate the notion of \emph{optimal algorithms} in the decentralized multi-players model with sensing information. So far we provided the first matching upper and lower bound on the expected number of sub-optimal arms selections, which suggests some form of (asymptotic) optimality. However, sub-optimal draws turn out to not be the dominant term in the regret, both in our upper bound and in practice, thus an interesting future work is to identify some notion of \emph{minimal number of collisions}.
 Similarly to what was done very recently in \cite{wang2019distributed}, for communications between players who collaborate with each other, it would be interesting to characterize the (minimal) number of collisions needed to achieve logarithmic regret.
 
 % Second, it remains an open question to know if a simple decentralized algorithm can be as efficient as \MCTopM{} without knowing $M$ in advance, or in dynamic settings (when $M$ can change in time). One could start by proposing variants of our algorithm that are inspired by the \rhoRandEst{} variant of \rhoRand{} proposed by \cite{Anandkumar11}.
 % Finally, one could want to strengthen the guarantees obtained in the absence of sensing, that is to know whether logarithmic regret is achievable.
 
 
-Additionally, we have implemented in SMPyBandits \cite{SMPyBandits} the following extensions: evaluating $M$ on the fly (Section~\ref{sub:5:unknownNumberOfPlayers}), and piece-wise stationary multi-player bandits (Section~\ref{sub:5:towardsNonStationaryModels}).
+Additionally, we have implemented in SMPyBandits \cite{SMPyBandits} the following extensions: evaluating $M$ on the fly (Section~\ref{sub:5:unknownNumberOfPlayers}), and piece-wise stationary multi-players bandits (Section~\ref{sub:5:towardsNonStationaryModels}).
 We have not yet implemented the other extensions, but we are interested to do it, and it is one of the major future works left on our library.
 For more details, see the issue tickets at \href{https://github.com/SMPyBandits/SMPyBandits/issues/}{\texttt{GitHub.com/SMPyBandits/SMPyBandits/issues/}}, for tickets number \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}.
 

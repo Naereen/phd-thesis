@@ -41,6 +41,36 @@ The organization of this manuscript is detailed in a graph, which highlights tha
 
 \subsection{Example: Opportunistic Spectrum Access (OSA) in licensed bands}
 
+
+\paragraph{Applications for Opportunistic Spectrum Access.}
+% Detail the previous work from our team SCEE on bandits + OSA : Wassim, Navik
+
+The focus of this work is on cognitive radio and IoT networks, where arms can represent wireless orthogonal channels, but more generally any resource characterizing the communication between a wireless device and a gateway (\eg, spreading factor for LoRa \cite{KerkoucheAlami18}, power allocation for NOMA etc). In cognitive radio using centralized supervision, for instance if the gateway can decide the allocation of devices to resources, MAB can also be used to let the gateway explore different allocations and learn by itself a good allocation, see for instance this article that consider 5G-like networks with small cells \cite{Maghsudi16}.
+
+Previous works of our SCEE team showed that MAB can be used to model the problem of spectrum access for a secondary user accessing a licensed spectrum.
+In this model, arms represent a finite set of orthogonal channels, \ie, different frequency bands in a licensed spectrum.
+In the model with sensing, the samples $Y_{k,t}$ represents the feedback obtained by the CR-equipped device after sensing the channel $k$ at time $t$.
+A reward of $r(t) = 1$ indicates that no Primary User was sensed, while a reward of $r(t)=0$ indicates that the channel $k$ is busy at time $t$ and no uplink message can be sent.
+%
+This model was first introduced by Wassim Jouini during his PhD thesis,
+in \cite{Jouini09} and later studied in both \cite{Jouini10,Jouini12}.
+Proof-of-concepts using real-world radio hardware was first propsed in \cite{MoyWSR2014,RobertSDR2014}.
+
+\TODOL{Je sais pas à quel point je veux parler de la thèse de Navik? Peut-être que j'en aurai dit assez au Chapitre 1, et que là ça suffira..}
+In a second PhD thesis supervised by Christophe Moy, Navikkumar Modi studied the impact
+of using MAB algorithms to optimize channel selection
+on the battery life of a wireless device.
+On the one hand, running a MAB algorithm such as UCB-like algorithms was proved to be useful and can bring significant improvement in terms of successful transmission rates, directly increasing the battery life of the device.
+On the other hand, classical MAB algorithms tend to switch arms a lot of times, especially in the beginning of the learning process, and this induces a lot of dynamical hardware reconfiguration for the wireless device, as selecting a different channel requires a change in the radio hardware used by the device.
+Each hardware reconfiguration costs energy for the device, and quickly switching algorithms will lead to a reduction of the battery life.
+The tradeoff between the two aspects is studied empirically in
+\cite{modiDemo2016}.
+%
+Another interesting works is \cite{Modi17QoS}.
+
+\TODOL{FIXME Finir ce blabla rapidement ? Ou alors ce sera déjà fait en intro/chapitre1 ??}
+
+
 \subsection{Example: decentralized learning in unlicensed bands with selfish or orthogonalization-based MAB algorithms}
 
 
@@ -138,14 +168,14 @@ We can list the following points to summarize the main contributions of this the
     The source code for the two previously mentioned contributions are all published online, along with clear instructions for reproducing our work.
 
     \item
-    We formalize the multi-player bandit model, and we introduced three variants, in Chapter~\ref{chapter:5}.
+    We formalize the multi-players bandit model, and we introduced three variants, in Chapter~\ref{chapter:5}.
     For the case with sensing information, we propose two new algorithms, and we give an analysis for our algorithm \MCTopM{} to show it is order-optimal,
     as well as extensive numerical experiments to demonstrate its good performance in comparison with the rest of the literature.
-    Our work \cite{Besson2018ALT} also gave a new impulse on research on multi-player bandits, as some recent research works built up on our results.
+    Our work \cite{Besson2018ALT} also gave a new impulse on research on multi-players bandits, as some recent research works built up on our results.
 
     \item
-    We also give a detailed literature review of the different extensions of the multi-player MAB model, which we believe was never written before.
-    % were  (ALT 2018, and 4-8 works inspired by our article since then). State-of-the-art with our algorithm MCTopM + klUCB for multi-player bandits "with sensing", empirical state-of-the-art with our simple (but wrong) "selfish" approach in case of "no sensing"
+    We also give a detailed literature review of the different extensions of the multi-players MAB model, which we believe was never written before.
+    % were  (ALT 2018, and 4-8 works inspired by our article since then). State-of-the-art with our algorithm MCTopM + klUCB for multi-players bandits "with sensing", empirical state-of-the-art with our simple (but wrong) "selfish" approach in case of "no sensing"
 
     \item
     We also present the piece-wise stationary MAB model, in Chapter~\ref{chapter:6}, and a detailed literature review of the research on non stationary MAB \cite{Besson2019GLRT,Besson2019Gretsi} (GRETSI 2019).
@@ -210,12 +240,16 @@ and both Chapters~\ref{chapter:5} and \ref{chapter:6} studies an intermediate mo
 \end{itemize}
 
 
+% FIXME
+\newpage
+
+
 % ----------------------------------------------------------------------------
-\section{List of publications and other experiences}
+\section{List of publications}
 \label{sec:1:listPublications}
 
 % =============================================================================
-\subsection{Publications in international conferences with proceedings}
+\paragraph{Publications in international conferences with proceedings}
 
 \begin{itemize}
 
@@ -267,7 +301,7 @@ and both Chapters~\ref{chapter:5} and \ref{chapter:6} studies an intermediate mo
 \end{itemize}
 
 % =============================================================================
-\subsection{Demonstration in international conferences}
+\textbf{Demonstration in international conferences}
 
 \begin{itemize}
 
@@ -282,8 +316,8 @@ and both Chapters~\ref{chapter:5} and \ref{chapter:6} studies an intermediate mo
 
 
 % =============================================================================
-\subsection{French language conference with proceedings}
-% \subsection{Submitted works}
+\textbf{French language conference with proceedings}
+% \textbf{Submitted works}
 
 \begin{itemize}
 \item
@@ -298,7 +332,7 @@ and both Chapters~\ref{chapter:5} and \ref{chapter:6} studies an intermediate mo
 
 
 % =============================================================================
-\subsection{In progress works waiting for a new submission}
+\textbf{In progress works waiting for a new submission}
 
 \begin{itemize}
 
@@ -327,76 +361,76 @@ and both Chapters~\ref{chapter:5} and \ref{chapter:6} studies an intermediate mo
 \end{itemize}
 
 
-% =============================================================================
-\subsection{Other works}
+% % =============================================================================
+% \textbf{Other works}
 
-\begin{itemize}
-\item
-    \emph{A Note on the Ei Function and a Useful Sum-Inequality},
-    by \textbf{Lilian Besson},
-    February $2018$,
-    \href{https://HAL.Inria.fr/hal-01847480}{\texttt{HAL.Inria.fr/hal-01847480}}.
+% \begin{itemize}
+% \item
+%     \emph{A Note on the Ei Function and a Useful Sum-Inequality},
+%     by \textbf{Lilian Besson},
+%     February $2018$,
+%     \href{https://HAL.Inria.fr/hal-01847480}{\texttt{HAL.Inria.fr/hal-01847480}}.
 
-\end{itemize}
-
-
-% =============================================================================
-\subsection{Presentations in seminars and conferences}
-
-\textbf{Seminars.}
-    I gave some presentations in the following events:
-    SequeL team seminar at Inria Lille in September and December $2017$, and June $2019$;
-    SCEE team seminar at CentraleSupélec, Rennes campus, in October $2017$, February $2018$ and June $2019$;
-    as well as
-    for the GDR ISIS day held in Issy-les-Moulineaux on November $2017$,
-    for the brown-bag seminar at ENSAI in Bruz in January $2018$,
-    for the weekly seminar at CMAP lab at École Polytechnique in October $2018$,
-    for the weekly seminar of the PANAMA project-team at IRISA / Inria Rennes in June $2019$.
-
-\textbf{Tutorial.}
-    I gave a tutorial on the Julia language, at IETR seminar in Vannes in June $2018$,
-    with Pierre Haessig (see \href{https://pierreh.eu/}{\texttt{pierreh.eu}}), see \href{https://HAL.Inria.fr/cel-01830248}{\texttt{HAL.Inria.fr/cel-01830248}}.
-
-\textbf{Training.}
-    I was also in charge of ``GouTP'' training sessions for about $30$ PhD students at CentraleSupélec Rennes.
-    We had a lot of various $1$h training sessions between January $2017$ and June $2019$,
-    and I gave about $12$ training sessions, on various topics including Python, \texttt{git}, HAL and arXiv, the Julia language and Bib\TeX{}.
+% \end{itemize}
 
 
-% =============================================================================
-\subsection{Other experiences}
+% % =============================================================================
+% \textbf{Presentations in seminars and conferences}
 
-\textbf{Conferences.}
-    I attended the following conferences:
-	\emph{International Conference on Communication} ICC (Paris), May $2017$,
-    \emph{Conference on Learning Theory} COLT (Amsterdam), July $2017$,
-    \emph{Conference on Cognitive Radio Oriented Wireless Networks} CROWNCOM (Lisboa), September $2017$,
-    \emph{Conference on Algorithmic Learning Theory} ALT (Lanzarote), April $2018$,
-    \emph{Wireless Communication and Networking Conference} WCNC (Barcelona), April $2018$,
-	\emph{International Conference on Telecommunication} ICT (Saint-Malo), June $2018$,
-    \emph{Wireless Communication and Networking Conference} WCNC (Marrakech), April $2019$,
-    \emph{Colloque francophone de traitement du signal et des images} GRETSI (Lille), August $2019$.
+% \textbf{Seminars.}
+%     I gave some presentations in the following events:
+%     SequeL team seminar at Inria Lille in September and December $2017$, and June $2019$;
+%     SCEE team seminar at CentraleSupélec, Rennes campus, in October $2017$, February $2018$ and June $2019$;
+%     as well as
+%     for the GDR ISIS day held in Issy-les-Moulineaux on November $2017$,
+%     for the brown-bag seminar at ENSAI in Bruz in January $2018$,
+%     for the weekly seminar at CMAP lab at École Polytechnique in October $2018$,
+%     for the weekly seminar of the PANAMA project-team at IRISA / Inria Rennes in June $2019$.
 
-\textbf{Seminars.}
-    I attended the following seminars:
-	\emph{Workshop Learn with Earning} (Rotterdam), May $2018$,
-	\emph{Workshop on Optimization and Learning} (Toulouse), September $2018$,
-	\emph{European Workshop on Reinforcement Learning} (Lille), October $2018$.
+% \textbf{Tutorial.}
+%     I gave a tutorial on the Julia language, at IETR seminar in Vannes in June $2018$,
+%     with Pierre Haessig (see \href{https://pierreh.eu/}{\texttt{pierreh.eu}}), see \href{https://HAL.Inria.fr/cel-01830248}{\texttt{HAL.Inria.fr/cel-01830248}}.
 
-\textbf{Responsabilities.}
-    I was the president of the PhD Students Association of IETR lab (ADDI, \texttt{addi.asso.insa-rennes.fr}) in $2017$.
-    I was notably in charge of organizing the PhD Students day at Rennes, in June $2017$, with about $350$ people, and presentation of a research poster\footnote{~See \href{https://HAL.Inria.fr/hal-02013839}{\texttt{HAL.Inria.fr/hal-02013839}}}
-    I also helped for the organization and presented another poster\footnote{~See \href{https://HAL.Inria.fr/hal-02013847}{\texttt{HAL.Inria.fr/hal-02013847}}} at the ``IETR : Interagir Évaluer Transmettre Réunir'' seminar, held in Vannes in June $2018$.
+% \textbf{Training.}
+%     I was also in charge of ``GouTP'' training sessions for about $30$ PhD students at CentraleSupélec Rennes.
+%     We had a lot of various $1$h training sessions between January $2017$ and June $2019$,
+%     and I gave about $12$ training sessions, on various topics including Python, \texttt{git}, HAL and arXiv, the Julia language and Bib\TeX{}.
 
-\textbf{Reviews.}
-	for \emph{European Workshop on Reinforcement Learning}\footnote{~EWRL 2018, see \href{https://ewrl.wordpress.com/ewrl14-2018}{\texttt{ewrl.wordpress.com/ewrl14-2018}}} (Lille), in October $2018$, I reviewed $5$ papers.
-	I helped colleagues for articles submitted at international conferences \emph{AISTATS} $2019$, \emph{NeurIPS} $2017$ et $2018$, and \emph{COLT} $2018$ and $2019$, for about 10 \emph{reviews}.
 
-\textbf{System Administrator.}
-	maintaining our workstations running GNU/Linux and Windows
-	at SCEE team,
-	and our cognitive radio test-bed using USRP cards and the GNU Radio software,
-	from January $2017$ to September $2018$.
+% % =============================================================================
+% \textbf{Other experiences}
+
+% \textbf{Conferences.}
+%     I attended the following conferences:
+% 	\emph{International Conference on Communication} ICC (Paris), May $2017$,
+%     \emph{Conference on Learning Theory} COLT (Amsterdam), July $2017$,
+%     \emph{Conference on Cognitive Radio Oriented Wireless Networks} CROWNCOM (Lisboa), September $2017$,
+%     \emph{Conference on Algorithmic Learning Theory} ALT (Lanzarote), April $2018$,
+%     \emph{Wireless Communication and Networking Conference} WCNC (Barcelona), April $2018$,
+% 	\emph{International Conference on Telecommunication} ICT (Saint-Malo), June $2018$,
+%     \emph{Wireless Communication and Networking Conference} WCNC (Marrakech), April $2019$,
+%     \emph{Colloque francophone de traitement du signal et des images} GRETSI (Lille), August $2019$.
+
+% \textbf{Seminars.}
+%     I attended the following seminars:
+% 	\emph{Workshop Learn with Earning} (Rotterdam), May $2018$,
+% 	\emph{Workshop on Optimization and Learning} (Toulouse), September $2018$,
+% 	\emph{European Workshop on Reinforcement Learning} (Lille), October $2018$.
+
+% \textbf{Responsibilities.}
+%     I was the president of the PhD Students Association of IETR lab (ADDI, \texttt{addi.asso.insa-rennes.fr}) in $2017$.
+%     I was notably in charge of organizing the PhD Students day at Rennes, in June $2017$, with about $350$ people, and presentation of a research poster\footnote{~See \href{https://HAL.Inria.fr/hal-02013839}{\texttt{HAL.Inria.fr/hal-02013839}}}
+%     I also helped for the organization and presented another poster\footnote{~See \href{https://HAL.Inria.fr/hal-02013847}{\texttt{HAL.Inria.fr/hal-02013847}}} at the ``IETR : Interagir Évaluer Transmettre Réunir'' seminar, held in Vannes in June $2018$.
+
+% \textbf{Reviews.}
+% 	for \emph{European Workshop on Reinforcement Learning}\footnote{~EWRL 2018, see \href{https://ewrl.wordpress.com/ewrl14-2018}{\texttt{ewrl.wordpress.com/ewrl14-2018}}} (Lille), in October $2018$, I reviewed $5$ papers.
+% 	I helped colleagues for articles submitted at international conferences \emph{AISTATS} $2019$, \emph{NeurIPS} $2017$ et $2018$, and \emph{COLT} $2018$ and $2019$, for about 10 \emph{reviews}.
+
+% \textbf{System Administrator.}
+% 	maintaining our workstations running GNU/Linux and Windows
+% 	at SCEE team,
+% 	and our cognitive radio test-bed using USRP cards and the GNU Radio software,
+% 	from January $2017$ to September $2018$.
 
 % WARNING
 \vfill{}
@@ -408,7 +442,8 @@ are \href{https://github.com/Naereen/phd-thesis/}{publicly published},
 under the terms of the open-source \href{https://lbesson.mit-license.org/}{\emph{MIT License}},
 online at \href{https://github.com/Naereen/phd-thesis/}{\texttt{GitHub.com/Naereen/phd-thesis/}}.
 
-\TODOL{Open source the repository as soon as I defended my thesis!}
+% FIXME
+% \TODOL{Open source the repository as soon as I defended my thesis!}
 
 \begin{center}
     \textbf{Copyright 2016-2019, \copyright ~Lilian~Besson.}

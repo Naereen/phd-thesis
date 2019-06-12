@@ -347,7 +347,7 @@ In the rest of this thesis, \textbf{we only consider bounded rewards in the math
 First, we restrict for simplicity to Bernoulli distributions for the simulations shown in Chapter~\ref{chapter:3}, even if our library does implement all the distributions commonly found in the literature (including unbounded one-dimensional exponential families and even Markov models).
 In Chapter~\ref{chapter:4}, we only study models with binary rewards.
 %
-Then, when we study multi-player bandits in Chapter~\ref{chapter:5}, we explain that restricting to the Bernoulli case is interesting and not restrictive, as it is actually the hardest case (since continuous distributions has a null mass on $Y_{k,t}=0$, they yield a much simpler problem as the sensing/no sensing distinction no longer makes sense).
+Then, when we study multi-players bandits in Chapter~\ref{chapter:5}, we explain that restricting to the Bernoulli case is interesting and not restrictive, as it is actually the hardest case (since continuous distributions has a null mass on $Y_{k,t}=0$, they yield a much simpler problem as the sensing/no sensing distinction no longer makes sense).
 %
 Finally, in Chapter~\ref{chapter:6} we analyze our proposed algorithm for bounded distributions, without restricting to Bernoulli distributions, but we use the fact that bounded distributions on $[0,1]$ are sub-Bernoulli, and we use the Bernoulli Kullback-Leibler divergence $\kl$ in our analysis.
 
@@ -584,7 +584,7 @@ In our library SMPyBandits, we implement both estimators, and all values of regr
 
     % \item
 On the other hand, this decomposition is necessary as theoretical analyses of the regret of (single-player) MAB algorithms are usually based on controlling the suboptimal draws $N_k(T)$ and not directly the regret $R_T^{\cA}$.
-Even if we prove that controlling $N_k(T)$ is no longer sufficient to obtain low regret for the multi-player case, we extend this decomposition in Chapter~\ref{chapter:3} (in Lemma~\ref{lem:5:DecompositionRegret}), and it is the first quantity we prove to be bounded by $\bigO{\log(T)}$ when we prove the regret upper-bound of our proposal \MCTopM-\klUCB.
+Even if we prove that controlling $N_k(T)$ is no longer sufficient to obtain low regret for the multi-players case, we extend this decomposition in Chapter~\ref{chapter:3} (in Lemma~\ref{lem:5:DecompositionRegret}), and it is the first quantity we prove to be bounded by $\bigO{\log(T)}$ when we prove the regret upper-bound of our proposal \MCTopM-\klUCB.
 % \end{itemize}
 
 
@@ -618,7 +618,7 @@ This means that an upper-bound is proven on the regret of algorithm $\cA$, that 
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
-We consider uniformly efficient\footnote{This notion is then extended to ``\emph{strongly uniformly efficient} algorithms'', in the multi-player case with Definition~\ref{def:5:DecentralizedUniformEfficiency}, where we also include a notion of (expected) fairness.} algorithms, to rule out algorithms achieving low regret on some problem instances while achieving linear regret on other instances.
+We consider uniformly efficient\footnote{This notion is then extended to ``\emph{strongly uniformly efficient} algorithms'', in the multi-players case with Definition~\ref{def:5:DecentralizedUniformEfficiency}, where we also include a notion of (expected) fairness.} algorithms, to rule out algorithms achieving low regret on some problem instances while achieving linear regret on other instances.
 In particular, it is necessary to rule out algorithms that always pick the same arm, as on some problem instances such fixed-arm algorithms can achieve zero regret.
 
 \begin{definition}\label{def:2:uniformlyEfficientAlgorithm}
@@ -748,11 +748,11 @@ It has recently gained interest in the literature, for instance the authors of \
 Indeed, in single-player models it is easy to show that achieving logarithmic regret directly implies a logarithmic upper-bound on the switching cost, and conversely the lower-bound from \cite{LaiRobbins85} also gives an asymptotic logarithmic lower-bound.
 But even if $\mathrm{SC}^{\cA}(T) = \Theta(\log T)$ for an efficient algorithm, it can be interesting to numerically evaluate this quantity, as a large value might indicate an algorithm that is alternating too much between the optimal arm and other arms.\\
 %
-We find more interesting to study $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, the sum of the switching costs of the $M$ players in a multi-player bandit game (if player $j$ uses algorithm $\cA_j$ for $j=1,\dots,M$). Indeed in this case it is possible that the players attain a logarithmic centralized regret, by following an efficient centralized or decentralized algorithm, while still suffering from a linear switching cost.
+We find more interesting to study $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, the sum of the switching costs of the $M$ players in a multi-players bandit game (if player $j$ uses algorithm $\cA_j$ for $j=1,\dots,M$). Indeed in this case it is possible that the players attain a logarithmic centralized regret, by following an efficient centralized or decentralized algorithm, while still suffering from a linear switching cost.
 %
 It is very satisfying to obtain a logarithmic switching cost for our algorithm \MCTopM-\klUCB{} in Chapter~\ref{chapter:5}, even if minimizing the switching cost was not one of our objective, and the bound we obtain on $SC^{\cA_1,\dots,\cA_M}(T)$ is just a consequence of our proof of the control we give on the regret $R^{\cA}(T)$.
 % - Switching cost? \cite{modiDemo2016} \cite{Koren17}
-On a more experimental note, it was shown in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-player bandits, \rhoRand, could be tuned to run in batches\footnote{~The batch bandit setting implies that all players use the same decisions for instance for $50$ consecutive times, and update their decisions only once every $50$ time steps. For more details, see \cite{modiDemo2016} for experiments on the multi-player case, or \cite{perchet2016,gao2019batched,kolnogorov2019multi} for theoretical developments on the single-player case.}, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret. While such ideas can interest a practitioner, they does not change the asymptotic behavior of $SC^{\cA_1,\dots,\cA_M}(T)$, which is $\Theta(\log(T))$ for any efficient policy.
+On a more experimental note, it was shown in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-players bandits, \rhoRand, could be tuned to run in batches\footnote{~The batch bandit setting implies that all players use the same decisions for instance for $50$ consecutive times, and update their decisions only once every $50$ time steps. For more details, see \cite{modiDemo2016} for experiments on the multi-players case, or \cite{perchet2016,gao2019batched,kolnogorov2019multi} for theoretical developments on the single-player case.}, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret. While such ideas can interest a practitioner, they does not change the asymptotic behavior of $SC^{\cA_1,\dots,\cA_M}(T)$, which is $\Theta(\log(T))$ for any efficient policy.
 
 
 % - Fairness ?
@@ -761,7 +761,7 @@ It was not studied much for single-player problems, and usually it means that ea
 It was studied in a very recent article \cite{Patil2019stochastic},
 where a different notion of regret is introduced to account for the fairness constraint. The authors show that different algorithms, based on $\UCB_1$ or Thompson sampling, can achieve logarithmic regret while respecting the fairness constraints.
 %
-In this thesis, we only consider fairness in the multi-player bandit models,
+In this thesis, we only consider fairness in the multi-players bandit models,
 in Chapter~\ref{chapter:5}, where fairness refers to a different notion (\ie, ``cooperative fairness'').
 When $M<K$ players learn in a decentralized way, they will essentially converge to an orthogonal affectation of players to arms, so that each player uses a unique arm among the $M$ best arms (most of the times).
 The fairness constraint says that, in average, no user is arbitrarily going to converge more frequently on a better arm than another user, and it is for instance the case for permutation invariant decentralized algorithms.
@@ -983,12 +983,12 @@ The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, tha
                 Play arm $A(t) = t$\;
             }
 			\Else(){
-                For each arm, compute the \textcolor{blue}{index $U_k(t)$}\;
-                Play arm $A(t)$ uniformly among the arms of maximal index: \textcolor{blue}{$A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} U_k(t))$}\;
+                For each arm, compute the \textcolor{blue}{index $U_k^{\cA}(t)$}\;
+                Play arm $A(t)$ uniformly among the arms of maximal index: \textcolor{blue}{$A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} U_k^{\cA}(t))$}\;
             }
             Observe a reward $r(t)$ and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$\;
 		}
-		\caption[{A generic index policy, using indexes $U_k(t)$ (\eg, $\UCB_1$, \klUCB{} etc).}]{A generic \textcolor{blue}{index} policy, using \textcolor{blue}{indexes $U_k(t)$} (\eg, $\UCB_1$, \klUCB{} etc).}
+		\caption[{A generic index policy $\cA$, using indexes $U_k(t)$ (\eg, $\UCB_1$, \klUCB{} etc).}]{A generic \textcolor{blue}{index} policy $\cA$, using \textcolor{blue}{indexes $U_k^{\cA}(t)$} (\eg, $\UCB_1$, \klUCB{} etc).}
 		\label{algo:2:indexPolicy}
 		% \end{small} % XXX remove if needed
 	\end{algorithm}
@@ -1032,7 +1032,7 @@ This theorem shows that $\UCB_1$ achieves a order-optimal problem-dependent regr
     of means $\mu_1,\dots,\mu_k$, and any horizon $T>K$,
     the $\UCB_1$ algorithm with its parameter\footnotemark{} $\alpha=2$ verifies the following finite-time regret bound
     \begin{equation}\label{eq:2:UCBregretBound}
-        R_T^{\cA}(I) \leq \left(\sum_{k: \Delta_k>0} \frac{8}{\Delta_k}\right) \log(T) + \sum_{k: \Delta_k>0} \Delta_k \left(1 + \frac{\pi^2}{3}\right)
+        R_T^{\UCB_1}(I) \leq \left(\sum_{k: \Delta_k>0} \frac{8}{\Delta_k}\right) \log(T) + \sum_{k: \Delta_k>0} \Delta_k \left(1 + \frac{\pi^2}{3}\right)
         = \bigO{ \left(\sum_{k: \Delta_k>0} \frac{8}{\Delta_k}\right) \log(T)}.
     \end{equation}
     % \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
@@ -1158,7 +1158,9 @@ The constant $c>0$ is usually chosen as $c = 1$.
 \end{align}
 
 For Bernoulli distributions, the previous claim that \klUCB{} builds smaller confidence intervals (\ie, more accurate) than $\UCB_1$, \ie, $U_k^{\klUCB}(t) < U_k^{\UCB}(t)$,
-is justified by Pinkser's inequality gives $\kl(x,y) \geq 2(p-q)^2$ (see Lemma~\ref{lem:2:Pinsker} proved in appendix).
+is justified by Pinkser's inequality which gives $\kl(x,y) \geq 2(p-q)^2$ (see Lemma~\ref{lem:2:Pinsker} proved in appendix).
+%
+The \KLUCB{} and \klUCB{} algorithms achieve finite-time regret logarithmic upper-bounds on their regret, and have been proven to be asymptotically optimal, respectively for one-dimensional exponential families and for bounded rewards distributions \cite{Garivier11KL,KLUCBJournal}.
 
 
 \paragraph{A note about the implementation of \klUCB{} algorithms.}
@@ -1719,7 +1721,7 @@ first by considering players facing a stationary problem in a decentralized way 
 and then by considering a single player facing a non-stationary or a piece-wise stationary problem in Chapter~\ref{chapter:6}.
 %
 For both directions, we present in the two final chapters natural extensions of the base model, and we detail our contributions that obtained state-of-the-art results for the two problems
-of stationary multi-player and piece-wise stationary bandits.
+of stationary multi-players and piece-wise stationary bandits.
 
 We take another approach in Chapter~\ref{chapter:4}, where the MAB model is generalized to study decentralized learning of a large set of independent players, all having different activation times.
 This extension is significantly harder than the two previously evoked ones, and we were unfortunately unable to obtain any strong theoretical results under these loose hypotheses.

@@ -83,12 +83,12 @@ We then detail how it implements MAB algorithms (\eg, \UCB),
 and what kind of information is displayed, saved and plotted after a batch of simulations of bandit problems.
 %
 %
-The main goal of the library is to be easily able to simulate MAB algorithms (\eg, three algorithms like \UCB, \klUCB{} and Thompson sampling) on one or more bandit models (single- or multi-player) defined by the number of arms $K$ and the distributions $\nu_k$, for some time from $t=1$ to the horizon $T$.
+The main goal of the library is to be easily able to simulate MAB algorithms (\eg, three algorithms like \UCB, \klUCB{} and Thompson sampling) on one or more bandit models (single- or multi-players) defined by the number of arms $K$ and the distributions $\nu_k$, for some time from $t=1$ to the horizon $T$.
 After the simulation, the library then displays statistical summary of the (mean) rewards accumulated by each algorithm, as well as regret and other visualizations.
 The same problem is simulated for $N$ independent repetitions (\eg, $N=100$) in order to show mean results with a low variance.
 
 
-\subsection{Single- and multi-player MAB problems}
+\subsection{Single- and multi-players MAB problems}
 
 For the classical single-player stochastic MAB model, as defined in Chapter~\ref{chapter:2},
 a stochastic MAB problem is defined by $K>1$ distributions $\nu_k$ (also called arms),
@@ -113,14 +113,14 @@ Note that the second step is repeated a large number of times (\eg, $N=100$), in
 If one wants to compare algorithms on a same problem, it is possible to sample all the rewards $(Y_{k,t})_{k\in[K], t\in[T]}$ before-hand, and store them so that for each repetition of the simulation, the randomness from the environment (\ie, the rewards) has the same impact on all the algorithms.
 
 
-\textbf{Simulation loop for multi-player MAB.}
+\textbf{Simulation loop for multi-players MAB.}
 %
 For Cognitive Radio dealing with OSA problems and other applications, a well-studied extension is to consider $M\geq2$ players, interacting on the same $K$ arms.
 Whenever two or more players select the same arm at the same time (\eg, for OSA, the same frequency channel), they all suffer from a radio collision.
 %
 Different collision models have been proposed, and the simplest one consists in giving a $0$ reward to each colliding players.
 Without any centralized supervision or coordination between players, they must learn to access the $M$ best resources (\ie, arms with highest means) without collisions.
-We refer to Chapter~\ref{chapter:5} which introduces the multi-player bandit model.
+We refer to Chapter~\ref{chapter:5} which introduces the multi-players bandit model.
 
 SMPyBandits implements all collision models found in the literature (in the module \texttt{\href{https://SMPyBandits.GitHub.io/docs/Environment.CollisionModels.html}{Environment.CollisionModels}}), as well as all the algorithms known by the authors (in the module \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.html}{PoliciesMultiPlayers}}).
 %
@@ -142,7 +142,7 @@ and \texttt{MCTopM}
 from \cite{Besson2018ALT}.
 For comparison, realistic (\eg, \UCB{} for multiple play) or full-knowledge centralized algorithms are also implemented.
 
-Any simulation library targeting multi-player bandit problems must implement at least another component:
+Any simulation library targeting multi-players bandit problems must implement at least another component:
 % a collision model, and
 a simulation loop that essentially looks like this.
 % \begin{itemize}
@@ -400,7 +400,7 @@ This allows to check that each modification on any part of the codebase does not
 For more details, see \href{https://travis-ci.org/SMPyBandits/SMPyBandits}{\texttt{Travis-CI.org/SMPyBandits/SMPyBandits}}.
 %
 Since its first use, the service did about 160 builds, and about $30\%$ of them were useful to detect newly introduced issues or bugs in the code.
-The build is configured using the \texttt{.travis.yml} file in SMPyBandits main folder, and it runs numerical experiments with a short horizon (\eg, $T=100$ or $T=1000$) and a small number of repetitions (\ie, $N=4$), but covering all the different models implemented by SMPyBandits (and even including some that are not covered in this chapter, like the Markov model, or the sparse multi-player model).
+The build is configured using the \texttt{.travis.yml} file in SMPyBandits main folder, and it runs numerical experiments with a short horizon (\eg, $T=100$ or $T=1000$) and a small number of repetitions (\ie, $N=4$), but covering all the different models implemented by SMPyBandits (and even including some that are not covered in this chapter, like the Markov model, or the sparse multi-players model).
 Builds typically run for $15$ minutes, and Travis CI have been proven to be very useful in our development process.
 
 
@@ -415,7 +415,7 @@ In \cite{Besson2018WCNC} and in Chapter~\ref{chapter:2} above, we used SMPyBandi
 % Aggregating experts is a well-studied idea in sequential learning and in machine learning in general. We showed that it can be used in practice to select on the run the best bandit algorithm for a certain problem from a fixed pool of experts. This idea and algorithm can have interesting impact for Opportunistic Spectrum Access applications \cite{Jouini09} that use multi-armed bandits algorithms for sequential learning and network efficiency optimization.
 
     \item
-In \cite{Besson2018ALT} and in Chapter~\ref{chapter:5} below, we used SMPyBandits for all the simulations for multi-player bandit algorithms\footnote{~Similarly, see the page \texttt{\href{https://SMPyBandits.GitHub.io/MultiPlayers.html}{SMPyBandits.GitHub.io/MultiPlayers.html}} on the documentation.}. We designed the two \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html}{RandTopM}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{MCTopM}} algorithms and proved than they obtain logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (\ie, \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html}{rhoRand}}, \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html}{MEGA}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html}{MusicalChair}}).
+In \cite{Besson2018ALT} and in Chapter~\ref{chapter:5} below, we used SMPyBandits for all the simulations for multi-players bandit algorithms\footnote{~Similarly, see the page \texttt{\href{https://SMPyBandits.GitHub.io/MultiPlayers.html}{SMPyBandits.GitHub.io/MultiPlayers.html}} on the documentation.}. We designed the two \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html}{RandTopM}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{MCTopM}} algorithms and proved than they obtain logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (\ie, \texttt{\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html}{rhoRand}}, \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html}{MEGA}} and \texttt{\href{https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html}{MusicalChair}}).
 
     \item
 In \cite{Besson2018DoublingTricks} (quickly presented in Appendix~\ref{app:2:DoublingTricks}), we used SMPyBandits to illustrate and compare different "doubling trick" schemes\footnote{~Similarly, see the page \texttt{\href{https://SMPyBandits.GitHub.io/DoublingTrick.html}{SMPyBandits.GitHub.io/DoublingTrick.html}} on the documentation.}.
@@ -1640,16 +1640,16 @@ and $(iii)$ an overview of its usage:
 %
 
 $(i)$
-Its purpose is to easily implement numerical simulations of stochastic or piece-wise stochastic problems of single- or multi-player multi-armed bandits.
+Its purpose is to easily implement numerical simulations of stochastic or piece-wise stochastic problems of single- or multi-players multi-armed bandits.
 SMPyBandits is distributed on GitHub and Pypi freely, under an open-source license, and it is extensively documented (at \href{https://SMPyBandits.GitHub.io}{\texttt{SMPyBandits.GitHub.io}}).
 Our library allows any researcher to easily run numerical simulations of different kinds of multi-armed bandit problems, requiring only a small knowledge of Python thanks to its documentation, its well-designed API, and many examples of simulation scripts and configuration files included.
 
 $(ii)$
 We detailed how SMPyBandits is implementing arms, problems, algorithms, and use these components to implement a simulation loop, with various visualizations being performed after the simulation.
 As far as now, SMPyBandits is restricted to the finite-arm cases, but it supports a wide range of arms distributions.
-Different kinds of models are implemented, from stationary single-player to piece-wise stationary multi-player with different collision models.
+Different kinds of models are implemented, from stationary single-player to piece-wise stationary multi-players with different collision models.
 One of the main qualities of the library is that it is quite exhaustive, as all the main families of algorithms covering these different models have been implemented, even very recent algorithms from the literature, as we tried our best in following the active research since December $2016$ to June $2019$.
-More than $65$ algorithms or variants of algorithms are implemented for the single-player case, $5$ for the expert aggregation problem, about $15$ for the multi-player case, and about $20$ for the piece-wise stationary problem.
+More than $65$ algorithms or variants of algorithms are implemented for the single-player case, $5$ for the expert aggregation problem, about $15$ for the multi-players case, and about $20$ for the piece-wise stationary problem.
 All the codebase is fully documented, and the library is using continuous integration to run automated tests on the code after every modification.
 %
 When comparing algorithms on a problem, the main performance measure is the regret, but the library also computes, stores and visualizes other measures, such as best-arm selection rate or mean cumulated reward, as well as real time and memory costs.
@@ -1672,12 +1672,12 @@ We also used it in other publications not included in this thesis, like our work
 
 \paragraph{Future works.}
 %
-An interesting future work left on our library SMPyBandits could be to implement variants of the single-player stochastic models, as well as variants for the multi-player or the non-stationary cases.
+An interesting future work left on our library SMPyBandits could be to implement variants of the single-player stochastic models, as well as variants for the multi-players or the non-stationary cases.
 For more details, see the issue tickets at \href{https://github.com/SMPyBandits/SMPyBandits/issues/}{\texttt{GitHub.com/SMPyBandits /SMPyBandits/issues/}}.
 For instance it would be interesting to extend the library for problems with non-finite arms, \eg, linear or contextual bandit (\href{https://github.com/SMPyBandits/SMPyBandits/issues/117}{ticket 117}),
-or to add support for the ``dynamic case'' of multi-player bandits to allow arrivals or departures of players (\href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{ticket 124}).
+or to add support for the ``dynamic case'' of multi-players bandits to allow arrivals or departures of players (\href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{ticket 124}).
 %
-At the end of Chapter~\ref{chapter:5}, we present many extensions of the multi-player bandit model,
+At the end of Chapter~\ref{chapter:5}, we present many extensions of the multi-players bandit model,
 and even if some have already been implemented, a major future work is to implement the most interesting ones
 (tickets \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}).\\
 %
