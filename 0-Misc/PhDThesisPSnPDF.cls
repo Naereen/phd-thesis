@@ -371,7 +371,7 @@ supported!}
   \fi
   %\renewcommand{\thepage}{\roman{page}}
   \@mainmatterfalse
-  \linenumbers
+  \nolinenumbers
 }
 
 % Fix display lineno issue in mathmode
@@ -1184,7 +1184,7 @@ wish to left align your text}
 % Normal abstract in the thesis
   \cleardoublepage
   \setsinglecolumn
-  \chapter*{\centering \Large Résumé}
+  % \chapter*{\centering \Large Résumé}
   \thispagestyle{empty}
 \fi
 }
