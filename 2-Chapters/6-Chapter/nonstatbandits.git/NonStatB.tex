@@ -22,7 +22,7 @@
 % \emph{Problem-independent} upper bounds of the form $R_T=\Omega(\sqrt{KT})$ (with no hidden constant depending on the arms distributions) have also been established for stochastic algorithms, like MOSS, or \klUCB-Switch by \cite{Garivier18}, while \klUCB{} is known to enjoy a sub-optimal $\cO(\sqrt{KT\ln(T)})$ problem-independent regret.
 
 % Stochastic bandits were historically introduced as a simple model for clinical trials, where arms correspond to some treatments with unknown efficacy \cite{Thompson33}.
-% More recently, MAB models have been proved useful for different applications, like cognitive radio, where arms can model the vacancy of radio channels, as presented in Chapter~\ref{chapter:4}, or parameters of a dynamically configurable radio hardware \cite{Maghsudi16,Bonnefoi17,KerkoucheAlami18}.
+% More recently, MAB models have been proven useful for different applications, like cognitive radio, where arms can model the vacancy of radio channels, as presented in Chapter~\ref{chapter:4}, or parameters of a dynamically configurable radio hardware \cite{Maghsudi16,Bonnefoi17,KerkoucheAlami18}.
 % Another application is the design of recommender systems, where arms model the popularity of different items (\eg, news recommendation, \cite{Li10}).
 %
 For cognitive radio applications, as well as other applications such as recommender systems, the assumption that the arms distribution \emph{do not change over time} may be a big limitation.
@@ -176,7 +176,7 @@ Their common idea is to adapt a classical policy into forgetting old rewards, .
 If the forgetting behavior is done efficiently, then the policy can efficiently focus mostly on the most recent rewards, and passively adapt to changes when they happen.
 %
 The Discounted UCB (D-UCB) algorithm was first introduced in \cite{Kocsis06}, and it is an adaptation of the \UCB{} algorithm, with a discount factor $\gamma\in(0,1)$. It works by decreasing all the past rewards by a multiplicative factor, when receiving a new reward from an arm, so that the recent rewards weight more in the (discounted) empirical mean used for the computation of the \UCB{} indexes.
-The regret of D-UCB was proved to be upper-bounded by $\cO(\sqrt{\Upsilon_T T }\log(T))$ in \cite{Garivier11UCBDiscount}, with a tuning $\gamma = 1 - \sqrt{\Upsilon_T/T}/4$, dependent on $\Upsilon_T$.
+The regret of D-UCB was proven to be upper-bounded by $\cO(\sqrt{\Upsilon_T T }\log(T))$ in \cite{Garivier11UCBDiscount}, with a tuning $\gamma = 1 - \sqrt{\Upsilon_T/T}/4$, dependent on $\Upsilon_T$.
 %
 The Sliding-Window UCB (SW-UCB) uses a sliding window of a fixed size $\tau$, to store only the most $\tau$ recent rewards for each arm,
 and it was proposed by \cite{Garivier11UCBDiscount}.
@@ -188,7 +188,7 @@ EXP3.S actually achieves a good regret upper-bound, of the form $\cO(\sqrt{K \Up
 It constitues a good baseline for our numerical experiments in Section~\ref{sec:6:NumericalExperiments},
 even if we did find that EXP3.S performs worse that the most of the other approaches based on extensions of stationary bandit algorithms (\eg, SW-UCB).
 % , so we do not include it in .
-Similarly, previous works showed that older algorithms have no or weaker regret guarantees, and have been proved to be less efficient empirically, or are designed for more specific settings.
+Similarly, previous works showed that older algorithms have no or weaker regret guarantees, and have been proven to be less efficient empirically, or are designed for more specific settings.
 
 
 The idea of using a simple discount factor, as for D-UCB, was recently adapted to a Bayesian policy, with the Discounted Thompson sampling (DTS) algorithm presented by \cite{RajKalyani17}.
@@ -213,7 +213,7 @@ The Adapt-EVE algorithm from \cite{Hartland06} uses a Page-Hikley (PH) Test and 
 The Windowed-Mean Shift algorithm from \cite{YuMannor09} is more generic and combines any efficient bandit policy with a CD test based on a sliding window, but there approach is not applicable to the bandit setting of interest in this chapter, as they consider side observations.
 %
 The EXP3.R algorithm from \cite{Allesiardo15,Allesiardo17} combines a CD algorithm with EXP3, and the history of all arms are reset as soon as a suboptimal arm is detecting to become optimal.
-A regret bound of $\cO(\Upsilon_T \sqrt{T \log(T)})$ was proved, even when $\Upsilon_T$ is known.
+A regret bound of $\cO(\Upsilon_T \sqrt{T \log(T)})$ was proven, even when $\Upsilon_T$ is known.
 
 Two recent and related works use
 the two-sided \CUSUM{} CD algorithm for \CUSUMUCB{} in \cite{LiuLeeShroff17}
@@ -233,7 +233,7 @@ Both approaches also introduced a mechanism to force a uniform exploration of ea
 % and \MUCB{} uses a more deterministic scheme, to force exploring the $K$ arms (when the time since the last restart, $t - \tau$, is found to be in $[K]$ modulo $\left\lceil 1/\alpha \right\rceil$).
 % Both solutions ensure that all arms are sampled enough on each stationary sequence, in order for the CD algorithm to have enough \iid{} samples to detect changes.
 
-When all their parameters are tuned correctly, both approaches are proved to achieve a good regret upper-bound, of order $\cO(K \sqrt{\Upsilon_T T \log(K T)})$.
+When all their parameters are tuned correctly, both approaches are proven to achieve a good regret upper-bound, of order $\cO(K \sqrt{\Upsilon_T T \log(K T)})$.
 As both results are valid under different assumptions, we consider the two results to be the current state-of-the-art.
 As for previous works, tuning their parameters requires to know both the horizon $T$ and the number of breakpoints $\Upsilon_T$, but most importantly it requires a prior knowledge of the problem difficulty, by assuming to know a lower bound on both the length of stationary segments (\eg, $L$ for \MUCB) and on the changes on the means of arms (\eg, $\varepsilon$ for \CUSUM).
 %
@@ -285,7 +285,7 @@ The total variation budget $V_T$ is defined as $\sum_{t=1}^{T-1} \sum_{k=1}^K D(
 Two examples can be the total variation distance $\|\cdot\|_{TV}$ or the Kullback-Leibler divergence.
 %
 The RExp3 algorithm can also be qualified as passively adaptive: it is based on (non-adaptive) restarts of the EXP3 algorithm. Note that this algorithm is introduced for a different setting, where the quantity of interest is not $\Upsilon_T$ but a quantity $V_T$ called the total variational budget (satisfying $\Delta^{\text{change}} \Upsilon_T \leq V_T \leq \Upsilon_T$ with $\Delta^{\text{change}}$ the minimum magnitude of a change-point).
-A regret bound of the order of $\cO(V_T^{1/3} T^{2/3})$ is proved, which is weaker than existing results in our setting.
+A regret bound of the order of $\cO(V_T^{1/3} T^{2/3})$ is proven, which is weaker than existing results in our setting.
 
 This setting is quite different from the setting we are interested by in this chapter, and even if the most recent works on slowly-varying MAB models are very interesting, we preferred to focus on the piece-wise stationary (or abruptly changing) model,
 hence we do no include any of these algorithms in the experiments presented in Section~\ref{sec:6:NumericalExperiments}.
@@ -637,7 +637,7 @@ And so we have $\bP_{\mu_0}\left(T_{\delta} < \infty\right) \leq \sum_{s =1}^{\i
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 \begin{smallproof}
-    This Lemma~\ref{lem:6:ConcFirst} is proved in Appendix~\ref{app:6:proofConcFirst}.
+    This Lemma~\ref{lem:6:ConcFirst} is proven in Appendix~\ref{app:6:proofConcFirst}.
 \end{smallproof}
 
 
@@ -659,12 +659,12 @@ In the bandit analysis to follow, the detection delay will be crucially used to 
 \end{lemma}
 %
 \begin{smallproof}
-    It is actually not used as such in the proofs of the regret upper bounds given below, because a similar but more specific result is used and proved in the proofs.
+    It is actually not used as such in the proofs of the regret upper bounds given below, because a similar but more specific result is used and proven in the proofs.
     For instance, see below in Section~\ref{par:6:controllingDelayInOneProof} in page~\pageref{par:6:controllingDelayInOneProof}.
     % \TODOL{We have to give the proof, or remove this result? Je ne vois pas le problème de le laisser là, ça formalise le résultat mais on a pas besoin de celui là, ça permet de bien formaliser ce qu'on entend par contrôler le délai, et dans la preuve plus bas on prouve ce qu'on souhaite.}
 \end{smallproof}
 
-For a threshold $\beta$ chosen as in the Lemma~\ref{lem:6:FalseAlarm}, we can show that a consequence of the Lemma~\ref{lem:6:Delay} is that if the break-point $\tau$ takes place after $\Delta^{-2} \ln(1/\delta)$ samples, the detection time may be of the same magnitude (with high probability).
+For a threshold $\beta$ chosen as in the Lemma~\ref{lem:6:FalseAlarm}, we can show that a consequence of the Lemma~\ref{lem:6:Delay} is that if the break-point $\tau$ takes place after about $\Delta^{-2} \ln(1/\delta)$ samples, the detection time may be of the same magnitude (with high probability).
 %
 In other words, if the B-GLRT test observes enough samples before a change-point,
 its delay $\widehat{\tau}_\delta$ is in the order of $O(\Delta^{-2} \ln(1/\delta))$, with high probability.
@@ -735,26 +735,26 @@ This algorithm, formally stated as Algorithm~\ref{algo:6:GLRklUCB}, can be used 
         \textbf{Initialization: } $\forall k \in [K]$, $\tau_k = 0$ and $n_k = 0$ \\
         \For{$t=1,2,\dots, T$}{
             \uIf{
-                $\alpha>0$ and $t \mod \left\lfloor \frac{K}{\alpha}\right\rfloor \in [K]$
+                $\alpha>0$ and $t \mod \left\lfloor \frac{K}{\alpha}\right\rfloor \in [K]$\;
             }{
-                $A(t) = t \mod \left\lfloor \frac{K}{\alpha}\right\rfloor$
+                $A(t) = t \mod \left\lfloor \frac{K}{\alpha}\right\rfloor$\;
                 \tcp*[f]{forced exploration} \\
             }
             \Else{
-                $A(t) = \arg\max\limits_{k \in [K]} \mbox{UCB}_k(t)$ as defined in \eqref{def:6:UCB}
+                $A(t) \in \cU\left( \arg\max\limits_{k \in [K]} \mbox{UCB}_k(t) \right)$ as defined in \eqref{def:6:UCB}\;
             }
-            \mbox{Play arm } $A(t)$ \mbox{and receive the reward } $Y_{A(t),t}$ : $n_{A(t)} = n_{A(t)} + 1; Z_{A(t), n_{A(t)}} = Y_{A(t),t}$ \\
+            \mbox{Play arm } $A(t)$ \mbox{and receive the reward } $Y_{A(t),t}$ : $n_{A(t)} = n_{A(t)} + 1; Z_{A(t), n_{A(t)}} = Y_{A(t),t}$\;
             \uIf(\tcp*[f]{Change point is detected}){
                 $\GLR_\delta(Z_{A(t),1}, \dots, Z_{A(t), n_{A(t)}})$ = True
             }
             {
-                \uIf{Global restart}{
-                    $\forall k\in [K], \tau_k = t$ and $n_k = 0 $.
-                    \tcp*[f]{global restart}
+                \uIf{\textbf{Global} restart}{
+                    $\forall k\in [K], \tau_k = t$ and $n_k = 0$\;
+                    \tcp*[f]{restart all arms}
                     }
                 \Else{
-                    $\tau_{A(t)} = t$ and $n_{A(t)} = 0$
-                    \tcp*[f]{local restart}
+                    $\tau_{A(t)} = t$ and $n_{A(t)} = 0$\;
+                    \tcp*[f]{restart only this arm}
                 }
             }
         }

@@ -62,7 +62,7 @@ We give in Section~\ref{sec:2:famousMABalgorithms} an overview of the main famil
 Finally, we explore in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} the problem of algorithm selection: as there are many different algorithms, all having different qualities and properties, how one can decide which algorithm to use for a particular application?
 We present one of the first contributions made during my PhD \cite{Besson2018WCNC}, consisting of an efficient algorithm for aggregating algorithms,
 and we illustrate its performance empirically.
-% , but no satisfactory theoretical result is given, as the bound we had hoped for has been proved unachievable since then.
+% , but no satisfactory theoretical result is given, as the bound we had hoped for has been proven unachievable since then.
 
 
 \textbf{About notations.}
@@ -442,7 +442,7 @@ Proof-of-concepts using real-world radio hardware was first propsed in \cite{Moy
 In a second PhD thesis supervised by Christophe Moy, Navikkumar Modi studied the impact
 of using MAB algorithms to optimize channel selection
 on the battery life of a wireless device.
-On the one hand, running a MAB algorithm such as UCB-like algorithms was proved to be useful and can bring significant improvement in terms of successful transmission rates, directly increasing the battery life of the device.
+On the one hand, running a MAB algorithm such as UCB-like algorithms was proven to be useful and can bring significant improvement in terms of successful transmission rates, directly increasing the battery life of the device.
 On the other hand, classical MAB algorithms tend to switch arms a lot of times, especially in the beginning of the learning process, and this induces a lot of dynamical hardware reconfiguration for the wireless device, as selecting a different channel requires a change in the radio hardware used by the device.
 Each hardware reconfiguration costs energy for the device, and quickly switching algorithms will lead to a reduction of the battery life.
 The tradeoff between the two aspects is studied empirically in
@@ -667,7 +667,7 @@ Moreover, it is interesting to note that the second lower-bound of Theorem~\ref{
 should sample each sub-optimal arm $k$ about $\log(T)/\KL(\mu_k,\mu^*)$ times in the total of $T$ time steps.
 
 
-Many algorithms have been proved to achieve logarithmic regret in the stochastic case,
+Many algorithms have been proven to achieve logarithmic regret in the stochastic case,
 and in particular it is the case of the algorithms used in this thesis, $\UCB_1$ from \cite{Auer02}, Thompson sampling from \cite{Thompson33} and analyzed in \cite{AgrawalGoyal11,Kaufmann12Thompson}, and \klUCB{} from \cite{Garivier11KL,KLUCBJournal}.
 %
 Such bounds are valid in different settings, and in particular $\UCB_1$ is order-optimal for bounded rewards or one-dimensional exponential families,
@@ -746,8 +746,9 @@ The \textbf{switching cost} $\mathrm{SC}^{\cA}(T)$ counts how many times the pla
 It has recently gained interest in the literature, for instance the authors of \cite{Koren17} proposed an algorithm that adaptatively tries to balance the trade-off between minimizing the regret and minimizing the switching cost.
 %
 Indeed, in single-player models it is easy to show that achieving logarithmic regret directly implies a logarithmic upper-bound on the switching cost, and conversely the lower-bound from \cite{LaiRobbins85} also gives an asymptotic logarithmic lower-bound.
-But even if $\mathrm{SC}^{\cA}(T) = \Theta(\log T)$ for an efficient algorithm, it can be interesting to numerically evaluate this quantity, as a large value might indicate an algorithm that is alternating too much between the optimal arm and other arms.\\
-%
+But even if $\mathrm{SC}^{\cA}(T) = \Theta(\log T)$ for an efficient algorithm, it can be interesting to numerically evaluate this quantity, as a large value might indicate an algorithm that is alternating too much between the optimal arm and other arms.
+
+\TODOL{Enlever ça, juste une phrase qui dit "on le fait plus tard".}
 We find more interesting to study $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, the sum of the switching costs of the $M$ players in a multi-players bandit game (if player $j$ uses algorithm $\cA_j$ for $j=1,\dots,M$). Indeed in this case it is possible that the players attain a logarithmic centralized regret, by following an efficient centralized or decentralized algorithm, while still suffering from a linear switching cost.
 %
 It is very satisfying to obtain a logarithmic switching cost for our algorithm \MCTopM-\klUCB{} in Chapter~\ref{chapter:5}, even if minimizing the switching cost was not one of our objective, and the bound we obtain on $SC^{\cA_1,\dots,\cA_M}(T)$ is just a consequence of our proof of the control we give on the regret $R^{\cA}(T)$.
@@ -761,6 +762,7 @@ It was not studied much for single-player problems, and usually it means that ea
 It was studied in a very recent article \cite{Patil2019stochastic},
 where a different notion of regret is introduced to account for the fairness constraint. The authors show that different algorithms, based on $\UCB_1$ or Thompson sampling, can achieve logarithmic regret while respecting the fairness constraints.
 %
+\TODOL{Enlever ça, juste une phrase qui dit "on le fait plus tard".}
 In this thesis, we only consider fairness in the multi-players bandit models,
 in Chapter~\ref{chapter:5}, where fairness refers to a different notion (\ie, ``cooperative fairness'').
 When $M<K$ players learn in a decentralized way, they will essentially converge to an orthogonal affectation of players to arms, so that each player uses a unique arm among the $M$ best arms (most of the times).
@@ -1007,24 +1009,24 @@ the \emph{average reward} $\widehat{\mu_k}(t) \eqdef \frac{X_k(t)}{N_k(t)}$
 and a \emph{confidence radius} $\xi_k(t) \eqdef \sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}$.
 %
 \begin{align}\label{eq:UCB_index}
-    U_k^{\UCB_1}(t) = \UCB_k(t) \eqdef \underbrace{\frac{X_k(t)}{N_k(t)}}_{\text{Exploitation} \widehat{\mu_k}(t)} + \underbrace{\sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}}_{\text{Exploration} \xi_k(t)}.
+    U_k^{\UCB_1}(t) = \UCB_k(t) \eqdef \underbrace{\frac{X_k(t)}{N_k(t)}}_{\text{Exploitation }\; \widehat{\mu_k}(t)} + \underbrace{\sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}}_{\text{Exploration }\; \xi_k(t)}.
 \end{align}
 
-This selection rule \eqref{eq:UCB_index} makes sense for the following reason:
-an arm $k$ is chosen at step $t$ because it has a large $\UCB_k(t)$, which can happen for two reasons:
-$i)$ because the average reward $\widehat{\mu_k}(t)$ is large, in which case this arm is likely to have a high mean reward $\mu_k$,
+This selection rule $A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} U_k^{\cA}(t))$ makes sense for the following reasons:
+an arm $k$ is chosen at step $t$ because it has a large $\UCB_k(t)$, which can happen for two reasons.
+$i)$ Because the average reward $\widehat{\mu_k}(t)$ is large, in which case this arm is likely to have a high mean reward $\mu_k$,
 $ii)$ and/or because the confidence radius $\xi_k(t)$ is large, in which case this arm has not been explored much.
 Either reason makes this arm worth choosing.
-One can also observe that $\xi_k(t)\to\infty$ if $t\to\infty$ while $N_k(t)\ll\log(t)$, which can be used to prove that the $\UCB_1$ algorithm tries all arms at least $\mathcal{O}(\log(T))$ times (in average).
+One can also observe that $\xi_k(t)\to\infty$ if $t\to\infty$ while $N_k(t)\ll\log(t)$, which can be used to prove that the $\UCB_1$ algorithm tries all arms at least $\Omega(\log(T))$ times (in average).
 %
-Furthermore, these two terms $\widehat{\mu_k}(t)$ and $\xi_k(t)$ in the \UCB{}  respectively represent \emph{exploitation} and \emph{exploration}, and summing them up is a natural way of dealing with the exploitation/exploration trade off.
-The constant parameter $\alpha$ in $\xi_k(t)$ also controls this trade-off, and the theoretical analysis suggests to restrict to $\alpha\geq1/2$, and to choose $\alpha=1/2$ for optimal uniform performance (\ie, on all problems).
+Furthermore, these two terms $\widehat{\mu_k}(t)$ and $\xi_k(t)$ in the \UCB{} defined in \eqref{eq:UCB_index} respectively represent \emph{exploitation} and \emph{exploration}, and summing them up is a natural way of dealing with the exploitation/exploration trade off.
+The constant parameter $\alpha$ in $\xi_k(t)$ also controls this trade-off, and the theoretical analysis suggests to restrict to $\alpha\geq1/2$, and to choose $\alpha=1/2$ for optimal uniform performance (\ie, on all problems, \cite{Auer02}).
 
 We present the regret bound, which was first stated in \cite{Auer02}, and to explain how Hoeffding's inequality is used we prove it below.
 Note that for the rest of the manuscript, we use the \klUCB{} algorithm (and more subtle concentration inequality) whenever we analyze the regret of a newly introduced algorithm (\ie, in Chapters~\ref{chapter:5} and \ref{chapter:6}),
 but we preferred to start with a simpler proof in the single-player stationary case.
 %
-This theorem shows that $\UCB_1$ achieves a order-optimal problem-dependent regret, bounded by $\cO(K\log(T)/\Delta^2)$ (if $\Delta \eqdef \min\limits_{k: \Delta_k>0} \Delta$).
+This theorem shows that $\UCB_1$ achieves an order-optimal problem-dependent regret, bounded by $\cO(K\log(T)/\Delta^2)$ (if $\Delta \eqdef \min\limits_{k: \Delta_k>0} \Delta$).
 
 \begin{theorem}[Regret bound for $\UCB_1$]\label{thm:2:UCBregretBound}
 \begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
@@ -1043,7 +1045,7 @@ This theorem shows that $\UCB_1$ achieves a order-optimal problem-dependent regr
 %
 \vspace*{-10pt}  % FIXME vspace negative
 \begin{smallproof}\label{proof:2:UCBregretBound}
-    As we focus on bounded distributions in $[0,1]$, for which Hoeffding's inequality gives \eqref{eq:2:HoeffdingInequality}, as stated above in Lemma~\ref{lem:2:HoeffdingInequality}.
+    As we focus on bounded distributions in $[0,1]$, for which Hoeffding's inequality gives the inequality \eqref{eq:2:HoeffdingInequality}, as stated above in Lemma~\ref{lem:2:HoeffdingInequality}.
     Thanks to the regret decomposition from Lemma~\ref{lem:2:RegretDecomposition}, we can focus on bounding $\E[N_k(T)]$ for any sub-optimal arm $k$.\\
     %
     \indent
@@ -1251,7 +1253,7 @@ Thompson sampling was proven to achieve asymptotical optimal problem-dependent b
 
 Bayes-UCB from \cite{Kaufmann12BUCB} also uses the Bayesian point of view, updated like for Thompson sampling, but used in a different way.
 Instead of sampling from the posteriors and playing the arms with maximum sample, Bayes-UCB computes the $(1-1/(t (\log(t))^5)$ quantile of each arm, at time $t$, and plays the arm with the largest quantile.
-It was also proved to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12BUCB}.
+It was also proven to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12BUCB}.
 %
 Bayes-UCB is comparable to Thompson sampling in terms of memory complexity, but it can be slower, as computing a quantile is generally more costly than just sampling from a distribution.
 % a Beta prior and posterior, initially uniform (\ie, $\mathrm{Beta}(1,1)$) (\texttt{BayesUCB}).
@@ -1290,7 +1292,7 @@ We can briefly mention other families of policies.
 \textbf{BESA} (Best Empirical Sampled Average) was introduced in \cite{Baransi2014}, in order to fix a simple observation:
 if arm $1$ has $100$ samples and arm $2$ has $50$ samples, it should make more sense to only use $50$ samples of arm $1$ to compute and compare their empirical means.
 Based on this idea, the BESA algorithm for $K=2$ arms is quite simple: at each time step, if arms $1$ and $2$ have respectively $n_1$ and $n_2$ samples, and if $n_1>n_2$ (for instance), first it sub-samples $n_2$ observations from $n_1$, then it computes the mean of these observations, and play the arm maximizing this mean (now that there is the same number of observations for both arms, it makes more sense to compare these quantities).
-It was analyzed partially, for the two-armed case it was proved to be asymptotically optimal for one-dimensional exponential families, and the authors illustrated that it can be very efficient empirically.
+It was analyzed partially, for the two-armed case it was proven to be asymptotically optimal for one-dimensional exponential families, and the authors illustrated that it can be very efficient empirically.
 Analyzing it in the generic case was found to be difficult, and it is still an open problem.
 % We implemented it using a binary tournament implement in a naive but efficient way (not using recursive functions, \ie, using the \texttt{BESA} class with \texttt{''non\_recursive''=True}).
 % By using such binary tournament, the extension $K>2$ arms is costly in terms of both time and memory, as illustrated below, and suffers from an exponential blow-up when $K$ increases.
@@ -1316,7 +1318,7 @@ This notation $\widehat{r_k}(t)$ means an unbiased estimator of the reward $r(t)
 %
 Like for the $\varepsilon$-greedy policy, the parameter $\gamma$ can be constant, or can be a non-increasing sequence $(\gamma_t)_{t\in\N^*}$.
 %
-It was proved in \cite{Auer02NonStochastic} that Exp3 with constant parameter $\gamma$ achieves $R_T = \bigO{\sqrt{K T \log(T)}}$ problem-independent regret,
+It was proven in \cite{Auer02NonStochastic} that Exp3 with constant parameter $\gamma$ achieves $R_T = \bigO{\sqrt{K T \log(T)}}$ problem-independent regret,
 while using a decreasing sequence, such as $\gamma_t = \sqrt{\log(K) / K} \log(t) / t$ gives an order-optimal problem-independent regret upper-bound of $\bigO{\sqrt{K T}}$.
 A short proof of this results and more details on Exp3 are given in \cite{Bubeck12}.
 %
@@ -1343,7 +1345,7 @@ Both algorithms are index policies, but they are not anytime.
 For any $K$, $T$, and problem instances $I$ in a certain family $\cI$ (\eg, with Bernoulli distributions),
 they enjoy regret bounds like the following, for two constants $c_{\cA}$ and $c'_{\cA}$ that depend on the algorithm, and a constant $C_I$ that depend on the problem instance only: $R_T^{\cA} \leq \min( c_{\cA} \sqrt{K T}, c'_{\cA} C_I \log(T))$.
 
-More recently, the \klUCB-switch from \cite{Garivier18} is the first algorithm to be proved to
+More recently, the \klUCB-switch from \cite{Garivier18} is the first algorithm to be proven to
 enjoy simultaneously a distribution-free regret bound of optimal order $\sqrt{KT}$, and a distribution-dependent regret bound of optimal order as well, that is, matching the $C_I \ln(T)$ lower bound by \cite{LaiRobbins85}.
 It is an index policy that uses a modified version of the indexes of the \klUCB$^+$ algorithm (see \cite{Honda2019} for more details), for arms that are not sampled much, and a modified version of the indexes of the MOSS$^+$ algorithm, for the other arms.
 To detail this, first let $f(T, K) = \lfloor (T/K)^{\gamma}\rfloor$ for $\gamma=1/5$,
@@ -1378,6 +1380,8 @@ It is anytime, and it was also proven to obtain good ``best-of-both-world'' perf
 % \subsection{A first numerical experiment on the example Bernoulli problem}
 \subsection{Comparison of the main algorithms on the example Bernoulli problem from the online interactive demonstration}
 \label{sub:2:shortNumericalExperiments}
+
+\TODOL{Si je dois gagner de la place, je peux ne pas inclure cette section...}
 
 We finish this Section~\ref{sec:2:famousMABalgorithms} by illustrating the performance of different algorithms, on the small MAB problem used in the online demonstration shown above (see Figures~\ref{fig:2:example_of_a_5_arm_bandit_problem} and \ref{fig:2:example_of_a_5_arm_bandit_problem__step100}).
 We consider $K=5$ arms following Bernoulli distributions, of means $\mu_1=0.6,\mu_2=0.2,\mu_3=0.55,\mu_4=0.7,\mu_5=0.5$ (unknown to the algorithms), and first an horizon $T=100$ (like in the online demo) then a large value of $T=10000$.

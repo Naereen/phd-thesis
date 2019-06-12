@@ -1,6 +1,6 @@
 # "My PhD thesis"
-## « Applications of single- and multi-players multi-armed bandits algorithms for Internet of Things networks »
-This repository contains the LaTeX code of my PhD thesis, written by [Lilian Besson](https://perso.crans.org/besson/), entitled "Applications of single- and multi-players multi-armed bandits algorithms for Internet of Things networks".
+## « Multi-players Bandit Algorithms for Internet of Things Networks »
+This repository contains the LaTeX code of my PhD thesis, written by [Lilian Besson](https://perso.crans.org/besson/), entitled "Multi-players Bandit Algorithms for Internet of Things Networks".
 
 ## Calendar
 - I started to think about the outline in January 2019, I started to play with the template end of January, and to seriously write middle of February 2019.
@@ -44,7 +44,7 @@ $ make pdf
 ### How to compile to get a printable version?
 - In `PhD_thesis__Lilian_Besson.tex`, add the `print` option to the `\documentclass{0-Misc/PhDThesisPSnPDF}` line.
 
-### How to compile to get an archivable version?
+### How to compile to get a PDF/A archivable version?
 - FIXME
 
 ----

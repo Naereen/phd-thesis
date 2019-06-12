@@ -343,7 +343,7 @@ configuration["policies"] = [
 	\centering
 	\includegraphics[width=1.05\linewidth]{3.pdf}
 	\caption[Example of a single-player simulation showing the average regret of $4$ algorithms]{
-		Example of a single-player simulation showing the average regret of four algorithms. They all perform very well: each algorithm is known to be order-optimal (\ie, its regret is proved to match the lower-bound up-to a constant), and each but UCB is known to be asymptotically optimal (\ie, with the constant matching the lower-bound).
+		Example of a single-player simulation showing the average regret of four algorithms. They all perform very well: each algorithm is known to be order-optimal (\ie, its regret is proven to match the lower-bound up-to a constant), and each but UCB is known to be asymptotically optimal (\ie, with the constant matching the lower-bound).
 	}
 	\label{fig:3:firstPlot}
 \end{figure}
@@ -496,13 +496,13 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
     \item
     %  Algorithm 6 is
     Thompson sampling from \cite{Kaufmann12Thompson} (\texttt{Thompson}), using a Beta prior and posterior, initially uniform (\ie, $\pi_k(0)=\mathrm{Beta}(1,1)$).
-    % It was also proved to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12Thompson,AgrawalGoyal11}.
+    % It was also proven to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12Thompson,AgrawalGoyal11}.
     It is efficient in terms of storage, and even if $K$ random samples must be sampled from the arms posteriors at each time step $t$, Thompson sampling is not much slower than \UCB, if the random number generator used for the simulations is efficient (it is the case for SMPyBandits, as we use \texttt{numpy.random} module which relies on highly optimized C or Cython code).
 
     \item
     %  Algorithm 7 is
     Bayes-UCB from \cite{Kaufmann12BUCB} (\texttt{BayesUCB}), using a Beta prior and posterior, initially uniform, \ie, $\pi_k(0)=\mathrm{Beta}(1,1)$.
-    % It was also proved to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12BUCB}.
+    % It was also proven to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12BUCB}.
     It is comparable to Thompson sampling in terms of memory complexity, but slower as computing a quantile is more costly than sampling from a distribution.
     But in particular for Bernoulli distributed arms and for Beta posteriors and priors, Bayes-UCB is only about twice as slow as Thompson sampling.
 
@@ -1820,7 +1820,7 @@ This Appendix section starts by describing $7$ more algorithms that are also com
     % Algorithm 14 is
     \textsc{Tsallis-Inf} from \cite{Zimmert2018} (\texttt{TsallisInf}), using $\alpha=1/2$ (it seems to be the most efficient of the algorithms described in the article).
     It is based on the online mirror descent algorithm with a Tsallis entropy regularizer, and it is anytime.
-    It was also proved to obtain good ``best of both world'' performances.
+    It was also proven to obtain good ``best of both world'' performances.
     Empirically, we were unable to find any problem were it performs as well as \UCB{} (or any other efficient algorithm), and we are confident that our implementation is correct\footnote{Despite a serious amount of time spent on this implementation, maybe it has some bug which explains the poor empirical performance obtained by \textsc{Tsallis-Inf} in our simulations. Exploring in more details this kind of algorithms is very interesting, as algorithms based on online mirror descent make a rich connexion between multi-armed bandit and online convex optimization \cite{Hazan2016introduction}, and a short-term future work in SMPyBandits will be to explore different values of $\alpha$ for Tsallis entropy regularization, or other families of regularization.}.
     \textsc{Tsallis-Inf} is also slower than \UCB{} (about as slow as KL-UCB-Switch), and costs an-order-of-magnitude more memory.
 
