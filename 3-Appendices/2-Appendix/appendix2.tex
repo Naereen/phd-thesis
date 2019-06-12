@@ -16,18 +16,24 @@ We studied doubling tricks and their possible uses for multi-armed bandits, betw
 % For the theoretical analysis, it will probably be a huge failure.
 % }
 
+\paragraph{Motivations for anytime algorithms.}
+%
 As introduced in Chapter~\ref{chapter:2},
 an online reinforcement learning algorithm is \emph{anytime} if it does not need to know in advance the horizon $T$ of the experiment.
 %
 Depending on the context of the practical application of interest, it might be unrealistic to assume to know in advance $T$. We give two examples to illustrate where this prior knowledge can be realistic or not.
 On the one hand, consider clinical trials: it is likely that the number of patients is known before starting the trial, and for instance we refer to all the research that studies the setting of fixed-time best-arm identification \cite{audibert2010best,Garivier16BAI}.
-On the second hand, consider cognitive radio and decentralized MAB learning implemented on IoT devices: usually a learning step corresponds to an uplink and then downlink message sent and received by the IoT device, and so the time horizon $T$ denotes the total number of such messages. While it can be assumed that the device will run for instance for $10$ years (as it is advertised by some companies), many kinds of applications such as medical sensors or connected fields cannot predict the number of total communications before setting up the device.
+On the second hand, consider cognitive radio and decentralized MAB learning implemented on IoT devices (like we present it in Chapter~\ref{chapter:4}): usually a learning step corresponds to an uplink and then downlink message sent and received by the IoT device, and so the time horizon $T$ denotes the total number of such messages. While it can be assumed that the device will run for instance for $10$ years (as it is advertised by some companies), many kinds of application such as medical sensors or connected fields cannot predict the number of total communications before setting up the device.
 
 For this later range of applications, it is of highest interest to be able to use low-cost MAB algorithms that do not rely on prior knowledge of the problem for which they will be applied, and especially do not need to know the horizon $T$.
-While we proposed in Chapter~\ref{chapter:5} any-time algorithms solving the presented problem of stationary multi-players bandit, our solution for the problem of non-stationary MAB problem studied in Chapter~\ref{chapter:6} does rely on a prior knowledge of the horizon $T$.
+In this thesis,
+while we proposed in Chapter~\ref{chapter:5} any-time algorithms solving the presented problem of stationary multi-players bandit, our solution for the problem of non-stationary MAB problem studied in Chapter~\ref{chapter:6} does rely on a prior knowledge of the horizon $T$.
 It is interesting to know what is the best approach to fix this weakness: work more and design algorithms that are inherently any-time, or use a generic technique to avoid depending on a prior knowledge of $T$, and automatically transform our non-anytime approach to make it anytime.
 
-A well-known technique to obtain an anytime algorithm from any non-anytime algorithm is the ``Doubling Trick'', as first introduced in \cite{CesaLugosi06}.
+
+\paragraph{Solution to ``patch'' a non-anytime algorithm.}
+%
+A well-known technique to obtain an anytime algorithm from any non-anytime algorithm is the ``Doubling Trick'', as first introduced in \cite{CesaLugosi06} and used for instance in \cite{Auer10,AuerGajaneOrtner18}.
 %
 In the context of adversarial or stochastic multi-armed bandits,
 the performance of an algorithm is measured by its regret,
@@ -38,9 +44,9 @@ We give insights as to why exponential doubling tricks may be better, as they co
 Interestingly, we prove that they conserve bounds of the mixed form $R_T = \cO(T^{\gamma} (\log(T))^{\delta})$, for $0<\gamma<1$ and $\delta>0$, and so an exponential doubling trick could be used to obtain an anytime version of the algorithm we propose for non-stationary bandits, \GLRklUCB{} in Chapter~\ref{chapter:6}.
 However, our study was only focussing on stationary bandit, and it is left as a future work to explore the harder case of piece-wise stationary problems.
 
-In our article \cite{Besson2018DoublingTricks}, we also present numerical experiments in the case of stationary MAB problems, to compare the performance of efficient anytime algorithms, like \klUCB, against efficient non-anytime algorithms, like \KLUCBpp, made anytime with different doubling-trick.
+In our article \cite{Besson2018DoublingTricks}, we also present numerical experiments in the case of stationary MAB problems, to compare the performance of efficient anytime algorithms, like \klUCB, against efficient non-anytime algorithms, like \KLUCBpp{} from \cite{Menard17}, made anytime with different choices of doubling-trick.
 We conclude that for such problems, if $T$ is not known before, it is always more efficient to use policies that were designed to be anytime that to use a doubling trick.
-For example, an applicative paper written in 2018, \cite{li2019useDoublingTrick}, only tested the use of an exponential doubling trick combined with \KLUCBpp, but most surely the \klUCB{} algorithm would have given better empirical performance as well as more robust results.
+For example, an applicative paper written in 2018, \cite{li2019useDoublingTrick}, only tested the use of an exponential doubling trick combined with \KLUCBpp, but most surely the \klUCB{} algorithm would have given better empirical performance as well as more robust results\ldots
 
 To conclude this work, we would need to complete the study of the doubling tricks, and instead of focussing on two families (geometric and exponential), we need to completely characterize the doubling tricks that allow to preserve certain regret bound.
 Such doubling is given either by the function mapping the current time $t$ to the current estimate of the horizon $T(t)$, or the sequence $(T_i)_{i\in\N^*}$ of successive estimates of the horizons.
