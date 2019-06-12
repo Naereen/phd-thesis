@@ -1165,8 +1165,8 @@ It is indeed not very satisfying, from an applicative point of view, to require 
 of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
 
 \begin{smallproof}
-  A key feature of both the \RandTopM{} and \MCTopM{} algorithms is Lemma~\ref{lem:5:elementaryLemma_RandTopM_MCTopM}, that states that the probability of switching from some arm because this arm leaves $\TopM(t)$ is small. Its proof is postponed to the end of this section.
-
+  A key feature of both the \RandTopM{} and \MCTopM{} algorithms is Lemma~\ref{lem:5:elementaryLemma_RandTopM_MCTopM}, that states that the probability of switching from some arm because this arm leaves $\TopM(t)$ is small.
+  % Its proof is postponed to the end of this section.
 
   %
   Figure~\ref{fig:5:StateMachineAlgorithm_MCTopM} presented above provides a schematic representation of the execution of the \MCTopM{} algorithm, that has to be exploited in order to properly control the number of collisions.
@@ -1200,27 +1200,27 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
 
   % Explanation of the figure
 
-  As in Algorithm~\ref{algo:5:MCTopM}, $s^j(t)$ is the event that player $j$ decided to fix herself on an arm at the end of round $t-1$.
-  Formally, $s^j(0)$ is false, and $s^j(t+1)$ is defined inductively from $s^j(t)$ as
+  As in Algorithm~\ref{algo:5:MCTopM}, $s^j(t-1)$ is the event that player $j$ decided to fix herself on an arm at the end of round $t-1$.
+  Formally, $s^j(0)$ is false, and $s^j(t)$ is defined inductively from $s^j(t-1)$ as
   % following the algorithm of \MCTopM:
   \begin{equation}
-      s^j(t+1) =
-      \left( s^j(t) \cup \left( \overline{s^j(t)} \cap \overline{C^j(t)} \right) \right)
-      \cap \left( A^j(t) \in \TopM(t) \right).
+      s^j(t) =
+      \left( s^j(t-1) \cup \left( \overline{s^j(t-1)} \cap \overline{C^j(t-1)} \right) \right)
+      \cap \left( A^j(t) \in \TopM(t-1) \right).
   \end{equation}
 
-  For the sake of clarity, we now explain Figure~\ref{fig:5:StateMachineAlgorithm_MCTopM} in words. At step $t$, if player $j$ is not fixed ($\overline{s^j(t)}$), she can have three behaviors when executing \MCTopM.
+  For the sake of clarity, we now explain Figure~\ref{fig:5:StateMachineAlgorithm_MCTopM} in words. At step $t$, if player $j$ is not fixed ($\overline{s^j(t-1)}$), she can have three behaviors when executing \MCTopM.
   She keeps the same arm and goes to the other state $s^j(t)$ with transition $(1)$,
   or she stays in state $\overline{s^j(t)}$,
   with two cases.
-  Either she sampled $A^j(t+1)$ uniformly
-  from $\TopM(t) \cap \{ m : U_m^j(t) \leq U_k^j(t) \}$
+  Either she sampled $A^j(t)$ uniformly
+  from $\TopM(t) \cap \{ m : U_m^j(t-1) \leq U_k^j(t-1) \}$
   with transition $(3)$,
-  in case of collision and if $A^j(t+1) \in \TopM(t)$,
-  or she sampled $A^j(t+1)$ uniformly
+  in case of collision and if $A^j(t-1) \in \TopM(t)$,
+  or she sampled $A^j(t)$ uniformly
   from $\TopM(t)$ with transition $(2)$,
-  if $A^j(t+1) \notin \TopM(t)$.
-  In particular, note that if $\overline{C^j(t)}$, transition $(3)$ is executed and not $(2)$.
+  if $A^j(t-1) \notin \TopM(t)$.
+  In particular, note that if $\overline{C^j(t-1)}$, transition $(3)$ is executed and not $(2)$.
   %
   % The case $(2)$ happens when there is no collision at time $t-1$ but a collision at time $t$,
   % and conversely case $(3)$ happens when the player was not fixed on her arm at time $t-1$ (\ie, $\overline{s^j(t-1)}$)
@@ -1228,18 +1228,18 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
   Transition $(3)$ is a uniform sampling from $\TopM(t)$ (the ``Musical Chair'' step).
 
 
-  For player $j$ and round $t$, we now introduce a few events that are useful in the proof. First, for every $x=1,2,3,4,5$, we denote $I_x^j(t)$ the event that a transition of type $(x)$ occurs for player $j$ after the first $t$ observations (\ie, between round $t$ and round $t+1$, to decide $A^j(t+1)$).
+  For player $j$ and round $t$, we now introduce a few events that are useful in the proof. First, for every $x=1,2,3,4,5$, we denote $I_x^j(t)$ the event that a transition of type $(x)$ occurs for player $j$ after the first $t$ observations (\ie, in round $t$, to decide $A^j(t)$).
   Formally they are defined by
   \begin{align*}
-    I_1^j(t) & \eqdef \left(\overline{s^j(t)},\overline{C_j(t)}, A^j(t) \in \TopM(t)\right), \\
+    I_1^j(t) & \eqdef \left(\overline{s^j(t-1)},\overline{C_j(t-1)}, A^j(t-1) \in \TopM(t)\right), \\
     % go sitted
-    I_2^j(t) & \eqdef \left(\overline{s^j(t)},C_j(t), A^j(t) \in \TopM(t)\right),
+    I_2^j(t) & \eqdef \left(\overline{s^j(t-1)},C_j(t-1), A^j(t-1) \in \TopM(t)\right),
     \ \ \ &\text{and} \ \ \
-    I_3(t) & \eqdef \left(\overline{s^j(t)},A^j(t) \notin \TopM(t)\right), \\
+    I_3(t) & \eqdef \left(\overline{s^j(t-1)},A^j(t-1) \notin \TopM(t)\right), \\
     % if sitted
-    I_3(t) & \eqdef \left(s^j(t),A^j(t) \in \TopM(t)\right),
+    I_3(t) & \eqdef \left(s^j(t-1),A^j(t-1) \in \TopM(t)\right),
     \ \ \ &\text{and} \ \ \
-    I_5(t) & \eqdef \left(s^j(t),A^j(t) \notin \TopM(t)\right).
+    I_5(t) & \eqdef \left(s^j(t-1),A^j(t-1) \notin \TopM(t)\right).
   \end{align*}
   %
   Then, we introduce $\widetilde{C^j}(t)$ as the event that a collision occurs for player $j$ at round $t$ if she is not yet fixed on her arm, that is
@@ -1247,8 +1247,8 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
   $\widetilde{C^j}(t) \eqdef \left(C^j(t), \overline{s^j(t)}\right)$.
   % \end{equation}
 
-  A key observation is that $C^j(t)$ implies $\bigcup_{j'=1}^M \widetilde{C^{j'}}(t)$, as a collision necessarily involves at least one player not yet fixed on her arm ($\overline{s^{j'(t)}}$).
-  Otherwise, if they are all fixed, \ie, for all $j$, $s^j(t)$, then by definition of $s^j(t)$, none of the player changed their arm from $t-1$ to $t$, and none experienced any collision at time $t-1$ so by induction there is no collision at time $t$.
+  A key observation is that $C^j(t)$ implies $\bigcup_{j'=1}^M \widetilde{C^{j'}}(t)$, as a collision necessarily involves at least one player $j'\in[K]$ not yet fixed on her arm ($\overline{s^{j'(t-1)}}$).
+  Otherwise, if they are all fixed, \ie, for all $j'$, $s^{j'}(t-1)$, then by definition of $s^j(t-1)$, none of the player changed their arm from $t-1$ to $t$, and none experienced any collision at time $t-1$ so by induction there is no collision at time $t$.
   %
   Thus, $\sum_{j=1}^M \Pr(C^j(t))$ can be upper bounded by $M \sum_{j=1}^M \Pr(\widetilde{C^j}(t))$ (union bound),
   and it follows that if $\cC(T) \eqdef \sum_{k=1}^K \cC_k(T)$ then
@@ -1257,18 +1257,18 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
   %
   \begin{align}
     \sum_{t=1}^T \Pr(\widetilde{C^j}(t))
-    &\leq \sum_{t=1}^T \Pr(I_2^j(t))   + \sum_{t=1}^T \Pr(I_3^j(t)).\label{eq:5:UBTilde}
+    &\leq \sum_{t=1}^T \Pr(I_2^j(t)) + \sum_{t=1}^T \Pr(I_3^j(t)).\label{eq:5:UBTilde}
   \end{align}
   In the rest of the proof we focus on bounding the number of transitions $(2)$ and $(3)$.
 
 
   Let $N_x^j(T)$ be the random variable denoting the number of transitions of type $(x)$.
-  Neglecting the event $\overline{s^j(t)}$ for $x=3$ and $s^j(t)$ for $x=5$, one has
+  Neglecting the event $\overline{s^j(t-1)}$ for $x=3$ and $s^j(t)$ for $x=5$, one has
   \begin{equation}
       \E_{\mu}[N_x^j(t)]
       = \sum_{t=1}^T \Pr(I_x^j(t))
-      \leq \sum_{t=1}^T \Pr \left(A^j(t) \notin \TopM(t)\right)
-      \leq \sum_{t=1}^T \sum_{k=1}^K \Pr \left(A^j(t)=k, k \notin \TopM(t)\right),
+      \leq \sum_{t=1}^T \Pr \left(A^j(t-1) \notin \TopM(t)\right)
+      \leq \sum_{t=1}^T \sum_{k=1}^K \Pr \left(A^j(t-1)=k, k \notin \TopM(t)\right),
   \end{equation}
   which is $\bigO{\log T}$ (with known constants) by Lemma~\ref{lem:5:elementaryLemma_RandTopM_MCTopM}. In particular, this controls the second term in the right hand side of \eqref{eq:5:UBTilde}.
 
@@ -1322,22 +1322,22 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
 
   $(\beta)$ To control $\E_{\mu}\left[ \tau_i - \theta_i \right]$,
   a simple argument can be used.
-  $\bigcup_{t=\theta_i}^{\tau_i-1} I_2^j(t)$
+  The union of events $\bigcup_{t=\theta_i}^{\tau_i-1} I_2^j(t)$
   implies $C^j(t)$ for $\tau_i - \theta_i$ consecutive times.
   %
   The very structure of \RandTopM{} gives that in this sequence of transitions $(2)$,
   the successive collisions (\ie, $C^j(t-1) \cap C^j(t)$)
-  implies that each new arm $A^j(t+1)$ for $t \in \{\theta_i, \tau_i-1\}$ is selected uniformly from
-  $\TopM(t+1)$,
+  implies that each new arm $A^j(t)$ for $t \in \{\theta_i, \tau_i-1\}$ is selected uniformly from
+  $\TopM(t)$,
   a set of size $M$ with at least one available arm.
   %
-  Indeed, as there is $M-1$ other players, at time $t+1$ \emph{at least} one arm in $\TopM(t+1)$ is not selected by any player $k'\neq k$,
+  Indeed, as there is $M-1$ other players, at time $t$ \emph{at least} one arm in $\TopM(t)$ is not selected by any player $k'\neq k$,
   and so player $j$ has \emph{at least} a probability $1/M$ to select
-  a free arm, which implies $\overline{C^j(t+1)}$, and so implies the end of the sequence.
+  a free arm, which implies $\overline{C^j(t)}$, and so implies the end of the sequence.
   %
   In other words, the average length of sequences of transitions $(2)$,
   $\E_{\mu}\left[ \tau_i - \theta_i \right]$,
-  is bounded by the expected number of failed trial of a repeated Bernoulli experiment, with probability of success larger than $1/M$ (by the uniform choice of $A^j(t+1)$ in a set of size $M$ with at least one available arm).
+  is bounded by the expected number of failed trial of a repeated Bernoulli experiment, with probability of success larger than $1/M$ (by the uniform choice of $A^j(t)$ in a set of size $M$ with at least one available arm).
   We recognize the mean of a geometric random variable, of parameter $\lambda \geq 1/M$, and so $\E_{\mu}\left[ \tau_i - \theta_i \right] = \frac{1}{\lambda} \leq \frac{1}{1/M} = M$.
 
   This finishes the proof as $\E_{\mu}[N_2^j(T)] = \sum_{t=1}^T \Pr(I_2^j(t)) = \bigO{\log T}$ and so
@@ -1371,9 +1371,9 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
 %
 While Lemma~\ref{lem:5:collisionsMCTopM} bounds the number of collisions,
 another consequence of our proof is that we have also bounded
-the (expected) number of \emph{switches of arms}, $SC^{\cA}(T) = \sum_{t=1}^T \Pr(A^j(t+1) \neq A^j(t))$.
+the (expected) number of \emph{switches of arms}, $\mathrm{SC}^{\cA}(T) = \sum_{t=1}^{T-1} \Pr(A^j(t+1) \neq A^j(t))$.
 %
-We controlled the total number of transitions $(2)$, $(3)$ and $(5)$,
+We controlled the total number of transitions $(2)$, $(3)$ and $(5)$ (see Figure~\ref{fig:5:StateMachineAlgorithm_MCTopM}),
 which are the only transitions when a player can switch from arm $k$ to arm $k'\neq k$.
 Thus, the total number of arm switches is also proven to be logarithmic, if all players uses the \MCTopM-\klUCB{} algorithm.
 This additional guarantee was never clearly stated for previous state-of-the-art works, like \rhoRand.
@@ -1433,12 +1433,12 @@ and optimal for the term \ref{eq:5:term1}.
 
 
 % -----------------------------------------------------------------
-\subsection{Discussion on \Selfish} \label{sub:5:SelfishFails}
+\subsection{Discussion on \Selfish}\label{sub:5:SelfishFails}
 
-The analysis of \Selfish{} is harder, but we obtained some understanding of the behavior of this algorithm, that seems to be doing surprisingly well in many contexts, as in our experiments with $K=9$ arms and in extensive experiments not reported in this section. However, a disappointing result is that we found simple problems, usually with small number of arms, for which the algorithm may fail. For example with $M=2$ or $M=3$ players competing for $K=3$ arms,
+The analysis of the \Selfish{} algorithm is harder, but we obtained some understanding of the behavior of this algorithm, that seems to be doing surprisingly well in many contexts, as in our experiments with $K=9$ arms and in extensive experiments not reported in this section. However, a disappointing result is that we found simple problems, usually with small number of arms, for which the algorithm may fail. For example with $M=2$ or $M=3$ players competing for $K=3$ arms,
 with means $\boldsymbol{\mu} = [0.1, 0.5, 0.9]$, the histograms in Figure~\ref{fig:5:selfish_fail1} suggest that with a small probability, the regret $R_T$ of \Selfish-\klUCB{} can be very large.
 
-In the Appendix~E of \cite{Besson2018ALT},
+In the Appendix~E of our article \cite{Besson2018ALT},
 we explained when such situations may happen, and we included a conjectured (constant, but small) lower bound on the probability that \Selfish{} experience collision almost at every round. This result would then prevent \Selfish{} from having a logarithmic regret. However, it is to be noted that the lower bound of Theorem~\ref{thm:5:BetterLowerBound} does not apply to the censored observation model \modeltrois{} under which \Selfish{} operates.
 %
 The \textsc{Sic-MMAB} algorithm proposed in \cite{BoursierPerchet18} answers the question we left open last year in \cite{Besson2018ALT},
@@ -1508,7 +1508,7 @@ Performance is measured with the \emph{expected} regret up to horizon $T=10000$,
           & \klUCB{} & $\mathbf{248 \pm 40}$ & $\mathbf{410 \pm 54}$ & $\mathbf{42 \pm 10}$ \\
           % \hline
       \end{tabular}
-      \caption{No matter the orthogonalization policy, using \klUCB{} is much more efficient than using \UCB{}, for multi-players bandit (here in a simple problem with $K=9$ arms).}
+      \caption{No matter the orthogonalization policy and $M$ the number of players, using \klUCB{} is much more efficient than using \UCB{}, for multi-players bandit (here in a simple problem with $K=9$ arms).}
       \label{table:5:comparisonUCB_klUCB}
   \end{small}  % XXX
   \end{table}
@@ -1516,7 +1516,7 @@ Performance is measured with the \emph{expected} regret up to horizon $T=10000$,
 We report in Table~\ref{table:5:comparisonUCB_klUCB} above the results in terms of mean regret, plus or minus one standard deviation.
 The conclusions are three fold: first we observe for any of the compared algorithms, using \klUCB{} is always (much) better than using \UCB.
 Second we observe that our proposal \MCTopM{} is outperforming the state-of-the-art \RhoRand{} policy, and performs closely to the centralized (unrealistic) approach.
-Third we observe in the last column, when $M=K=9$, that \MCTopM{} is achieving constant regret, as we proved (the regret upper-bound of Theorem~\ref{thm:5:LogarithmicRegret_MCTopMklUCB} is $\cO(1)$ if there is no arms in \Mworst{} !), and it shows that the orthogonalization scheme proposed for \MCTopM{} is very efficient, especially in comparison to previous (state-of-the-art) approaches using ranks.
+Third we observe in the last column, when $M=K=9$, that \MCTopM{} is achieving constant regret, as we proved that the regret upper-bound of Theorem~\ref{thm:5:LogarithmicRegret_MCTopMklUCB} is indeed $\cO(1)$ if there is no arms in \Mworst{}, and it shows that the orthogonalization scheme proposed for \MCTopM{} is very efficient, especially in comparison to previous state-of-the-art approaches using ranks.
 %
 Additional experiments and illustrations are given below.
 We illustrate below the (empirical mean) regret $R_t$ as a function of time and not only results in terms of empirical mean regret $R_T$ at the end of the bandit game.
@@ -1647,7 +1647,7 @@ We also include our \emph{asymptotic} lower bound from Theorem~\ref{thm:5:Better
   % \begin{subfigure}[!h]{0.85\textwidth}
       \includegraphics[width=1.00\textwidth]{MP__K9_M3_T123456_N100__8_algos/all_RegretCentralized_semilogy____env1-1_7803645526012310577.pdf}
   % \end{subfigure}
-  \caption[Regret for $M=3$ players for $K=9$ arms, horizon $T=123456$, for $100$ repetitions on a fixed problem]{Regret for $M=3$ players for $K=9$ arms, horizon $T=123456$, for $100$ repetitions on problem $\mu=[0.1,\dots,0.9]$. With a perfect knowledge on the horizon and the gap ($\Delta=0.1$ here) and by using the parameters suggested from their respective articles, \MEGA{} and \MusicalChair{} perform badly in this simple setting. The first two \MusicalChair{} instances use the optimal $T_0$ value from \cite{Rosenski16}, with $\varepsilon$ taken slightly smaller than the gap $\Delta$ ($\varepsilon=0.99 \Delta$), and respectively with $\delta=0.5$ and $\delta=0.1$, for which the regret can bounded with probability $0.5$ and $0.9$ respectively. The third instance uses the optimal $T_0$ corresponding to $\delta=1/T$, that is guaranteed to have an expected regret of order $\log(T)$. The log-$y$ scale is used to easily differentiate between the different algorithms, and highlight that our proposal outperform both \MEGA{} and \MusicalChair{} by three orders of magnitudes!}
+  \caption[Regret for $M=3$ players for $K=9$ arms, horizon $T=123456$, for $100$ repetitions on a fixed problem]{Regret for $M=3$ players for $K=9$ arms, horizon $T=123456$, for $100$ repetitions on problem $\mu=[0.1,\dots,0.9]$. With a perfect knowledge on the horizon and the gap ($\Delta=0.1$ here) and by using the parameters suggested from their respective articles, \MEGA{} and \MusicalChair{} perform badly, even in this simple setting. The first two \MusicalChair{} instances use the optimal $T_0$ value from \cite{Rosenski16}, with $\varepsilon$ taken slightly smaller than the gap $\Delta$ ($\varepsilon=0.99 \Delta$), and respectively with $\delta=0.5$ and $\delta=0.1$, for which the regret can bounded with probability $0.5$ and $0.9$ respectively. The third instance uses the optimal $T_0$ corresponding to $\delta=1/T$, that is guaranteed to have an expected regret of order $\log(T)$. The log-$y$ scale is used to easily differentiate between the different algorithms, and highlight that our proposal (in \textcolor{gold}{yellow $\nabla$}) outperform both \MEGA{} and \MusicalChair{} by three orders of magnitudes!}
   \label{fig:5:MP__K9_M3_T123456_N100__8_algos}
 \end{figure}
 
@@ -1656,7 +1656,7 @@ We also include our \emph{asymptotic} lower bound from Theorem~\ref{thm:5:Better
 %
 % Regular plots of centralized regrets
 %
-\begin{figure}[!b]
+\begin{figure}[!t]
   % \centering
   % \begin{subfigure}[!h]{0.49\textwidth}
   %   \includegraphics[width=1.00\textwidth]{MP__K9_M2_T5000_N500__4_algos/all_RegretCentralized____env1-1_3251433209347345969.pdf}
@@ -1737,10 +1737,10 @@ Figure~\ref{fig:5:MP__K9_M3_T123456_N100__8_algos} that they perform poorly in c
 can be considered out of the scope of \emph{online} sequential learning.
 %In practice, on a fixed instance, the authors do not indicate how to select the parameters, even with a perfect knowledge of the parameters ($\boldsymbol{\mu}$ and $T$).
 %
-\MusicalChair{} consists of a random exploration phase of length $T_0$ after which the players quickly converge to orthogonal strategies targeting the $M$ best arms. With probability $1-\delta$, its regret is proven to be ``constant'' (of order $\log(1/\delta)$). The theoretical minimal value for $T_0$ depends on $\delta$, on the horizon $T$ and on a lower bound $\epsilon$ on the gap $\Delta = \mu^*_M - \mu^*_{M+1}$, and the practical tuning is hard too. %% which are both unavailable in our setting.
+\MusicalChair{} consists of a random exploration phase of length $T_0$ after which the players quickly converge to orthogonal strategies targeting the $M$ best arms. With probability at least $1-\delta$, its regret is proven to be ``constant'' (of order $\log(1/\delta)$). The theoretical minimal value for $T_0$ depends on $\delta$, on the horizon $T$ and on a lower bound $\epsilon$ on the gap $\Delta = \mu^*_M - \mu^*_{M+1}$, and the practical tuning is hard too. %% which are both unavailable in our setting.
 
 
-\textbf{Uniformly sampled problems.}
+\paragraph{Uniformly sampled problems.}
 %
 Experiments with a different problem for each repetition,
 that is uniformly sampled $\boldsymbol{\mu} \sim \cU([0,1]^K)$,
