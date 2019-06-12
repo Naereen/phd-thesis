@@ -64,9 +64,91 @@ This Appendix gives some proofs omitted in the main text of this chapter.
 Missing proofs can be found in the article \cite{Besson2019GLRT}.
 
 
-
 % % ----------------------------------------------------------------------------
-% \subsubsection{Simplified expression for the GLR statistic}\label{app:6:GLR_with_kl}
+\subsubsection{Simplified expression for the GLR statistic}\label{app:6:GLR_with_kl}
+
+
+% \begin{smallproof}
+    First, we consider the denominator in the expression of $\GLR(n)$ \eqref{eq:6:firstDefGLRT}, that is the $\sup$ on $\mu_0$.
+    We have $\ell(X_1, \dots, X_n ; \mu_0) = \prod\limits_{i=1}^n \ell(X_i ; \mu_0)$ by independence of the observations $X_i$,
+    and $\ell(X_i ; \mu_0) = \mu_0^{X_i} (1-\mu_0)^{1-X_i}$ for Bernoulli distributions.
+    Therefore, taking the logarithm gives
+    \begin{align*}
+        \log \left[ \ell(X_1, \dots, X_n ; \mu_0) \right]
+        &= \sum_{i=1}^n X_i \log(\mu_0) + (1-X_i) \log(1-\mu_0) \\
+        &= \log(\mu_0) \times \left( \sum_{i=1}^n X_i \right) + \log(1-\mu_0) \times \left( n - \sum_{i=1}^n X_i \right) \\
+        &= n \left( \widehat{\mu}_{1:n} \log(\mu_0) + (1 - \widehat{\mu}_{1:n}) \log(1-\mu_0) \right).
+    \end{align*}
+    %
+    For a constant $a\in[0,1]$, let $h(x) \eqdef a \log(x) + (1-a) \log(1-x)$ on $(0,1)$,
+    and we are trying to solve $\sup_{x\in[0,1]} h(x)$.
+    If $a=0$ or $a=1$, $h$ is maximum at $x=a$.
+    Now if $a\neq0$, As $h$ is of class $\cC^1$, we can just differentiate and find the root of its derivative,
+    $h'(x) = a/x - (1-a)/(1-x)$, so $h'(x) = 0$ if and only if $x=a$.
+    Thus in all cases, $\sup_{x\in[0,1]} h(x) = h(a)$.
+    %
+    Here, we have $a = \widehat{\mu}_{1:n}$, and thus we solve the $\sup_{\mu_0}$ optimization problem found in the denominator of the $\GLR(n)$ expression.
+    By replacing $\mu_0 = \widehat{\mu}_{1:n}$, we obtained the following (unique) solution,
+    \begin{equation}\label{eq:6:solutionPbOpt_for_1n}
+        \sup_{\mu_0} \log \left[ \ell(X_1, \dots, X_n ; \mu_0) \right] = n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right).
+    \end{equation}
+
+    Now let us consider the nominator of the $\GLR(n)$ expression.
+    We can again work with log-likelihoods, and so we have
+    %
+    \begin{align*}
+        & \log \left[ \ell(X_1, \dots, X_n ; \mu_0,\mu_1,\tau) \right] \\
+        &= \sum_{i=1}^{\tau} X_i \log(\mu_0) + (1-X_i) \log(1-\mu_0) + \sum_{i=\tau+1}^n X_i \log(\mu_1) + (1-X_i) \log(1-\mu_1) \\
+        &= s \bigl( \widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0) \bigr) \\
+        & \;\;\;\; + (n-s) \bigl( \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1) \bigr).
+    \end{align*}
+    Because we solved in \eqref{eq:6:solutionPbOpt_for_1n} the $\sup$ for the denominator,
+    we have
+    \begin{align*}
+        \GLR(n)
+        % &= \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \dots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \dots, X_n ; \mu_0)}, \\
+        &= \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \dots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\mu_0) + (1 - \widehat{\mu}_{1:n}) \log(1-\mu_0) \right) \right] }, \\
+        &= \sup\limits_{\mu_0,\mu_1,\tau < n} \frac{\ell(X_1, \dots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right) \right] }, \\
+        &= \exp \Bigl[ \sup\limits_{\mu_0,\mu_1,\tau < n} \Bigl[ \log\Bigl[ \frac{\ell(X_1, \dots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right) \right] } \Bigr] \Bigr] \Bigr],
+    \end{align*}
+    When the last equation comes from the fact that $\exp$ is increasing.
+    Thus by taking the logarithm of both sides, we obtain
+    \begin{align*}
+        \log \GLR(n)
+        &= \sup\limits_{\mu_0,\mu_1,\tau < n} \Bigl[ \log\Bigl[ \frac{\ell(X_1, \dots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right) \right] } \Bigr] \Bigr],  \\
+        &= \sup\limits_{\mu_0,\mu_1, 1 < s < n} \Bigl[
+            s \bigl( \widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0) \bigr) \\
+            & \hspace{35pt} + (n-s) \bigl( \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1) \bigr) \\
+            & \hspace{35pt} - n \bigl( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \bigr)
+        \Bigr].
+    \end{align*}
+    By linearity and independence, we can separate the joint optimization problem on $\mu_0,\mu_1,s$ in two optimizations problems for $\mu_0,s$ and $\mu_1,s$, that can first be solved explicitly for $\mu_0$ (resp. $\mu_1$) and then left to be solved for $s$.
+    By definition, $n \; \widehat{\mu}_{1:n} = \sum_{i=1}^n X_i = s \;\widehat{\mu}_{1:s} + (n-s) \;\widehat{\mu}_{s+1:n}$, so the right hand side (negative) part involving $\widehat{\mu}_{1:n}$ can be distributed in the two left hand side (positive) terms,
+    which are both handled similarly.
+    For instance for $\mu_0$, we use the same computation as above with the function $h$ to find the optimum:
+    $\widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0)$
+    is optimum for $\mu_0 = \widehat{\mu}_{1:s}$.
+    Similarly, the term for $\mu_1$ gives that $\sup_{\mu_1} \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1)$
+    is attained for $\mu_1 = \widehat{\mu}_{s+1:n}$.
+    Finally, by replacing the two expressions of the solutions for $\mu_0$ and $\mu_1$,
+    we obtain
+    \begin{align*}
+        \log \GLR(n)
+        = \sup\limits_{1 < s < n} \Bigl[
+            s \times \Bigl(
+                    & \widehat{\mu}_{1:s} \log(\widehat{\mu}_{1:s}) + (1 - \widehat{\mu}_{1:s}) \log(1-\widehat{\mu}_{1:s}) \\
+                    & - \widehat{\mu}_{1:s} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:s}) \log(1-\widehat{\mu}_{1:n})
+            \Bigr) \\
+            + (n-s) \times \Bigl(
+                & \widehat{\mu}_{s+1:n} \log(\widehat{\mu}_{s+1:n}) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\widehat{\mu}_{s+1:n}) \\
+                & - \widehat{\mu}_{s+1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\widehat{\mu}_{1:n})
+            \Bigr)
+        \Bigr].
+    \end{align*}
+    We conclude by recognizing the expressions of $s \times \kl(\widehat{\mu}_{1:s}, \widehat{\mu}_{1:n})$
+    and $(n-s) \times \kl(\widehat{\mu}_{s+1:n}, \widehat{\mu}_{1:n})$.
+% \end{smallproof}
+
 
 % % Remember that the Generalized Likelihood Ratio statistic for the test presented in \eqref{eq:6:firstDefGLRT} in Section~\ref{sub:6:presentationOfGLRTest} is
 % % \[\GLR(n) \eqdef \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_n ; \mu_0)},\]
@@ -238,11 +320,11 @@ there exists an independent super-martingale $W^\lambda (r)$ w.r.t. the filtrati
 \[\forall r \in \N^*, \ \ W^\lambda (r) \geq \mathrm{e}^{\lambda [r\kl(\widehat{\mu}'_r,\mu) - 3\ln(1+\ln(r))] - g(\lambda)},\]
 for the same function $g(\lambda)$.
 In the terminology of \cite{KK18Martingales},
-the two processes $\bm{X}(s)$ and $\bm{Y}(s)$ are called $g$-DCC for Doob-Cram\'er-Chernoff,
-if $\bm{X}(s) \eqdef s \, \kl(\widehat{\mu}_s,\mu) - 3\ln(1+\ln(s))$ and $\bm{Y}(s) \eqdef r \, \kl(\widehat{\mu}_r,\mu) - 3\ln(1+\ln(r))$,
-as Doob's inequality can be applied in combination with the Cram\'er-Chernoff method to obtain deviation inequalities that are uniform in time.
+the two following processes are $g$-DCC (for Doob-Cram\'er-Chernoff),
+$\bm{X}(s) \eqdef s \, \kl(\widehat{\mu}_s,\mu) - 3\ln(1+\ln(s))$ and $\bm{Y}(s) \eqdef r \, \kl(\widehat{\mu}_r,\mu) - 3\ln(1+\ln(r))$,
+as for both processes the Doob's inequality can be applied in combination with the Cram\'er-Chernoff method to obtain deviation inequalities that are uniform in time.
 
-Here we have to modify the technique used in their Lemma 4 in order to take into account the two stochastic processes, and the presence of super-martingales instead of martingales (for which Doob inequality still works).
+Here we have to modify the technique used in the Lemma~4 of \cite{KK18Martingales} in order to take into account the two stochastic processes, and the presence of super-martingales instead of martingales (for which Doob inequality still works).
 One can write
 %
 \begin{align*}
@@ -275,7 +357,8 @@ Its proof follows from a straightforward application of the Cram\'er-Chernoff me
 
 \begin{lemma}\label{lem:6:Chernoff2arms}
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
-    Let $\widehat{\mu}_{i,s}$ be the empirical mean of $s$ \iid{} observations with mean $\mu_i$, for $i \in \{a,b\}$, that are $\sigma^2$-sub-Gaussian. Define $\Delta \eqdef \mu_a - \mu_b$. Then for any $s,r > 0$, we have
+    Let $\widehat{\mu}_{i,s}$ be the empirical mean of $s\in\N^*$ \iid{} observations with mean $\mu_i$, for $i \in \{a,b\}$, that are $\sigma^2$-sub-Gaussian.
+    Define $\Delta \eqdef \mu_a - \mu_b$. Then for any $s,r > 0$, we have
     \begin{equation}
         \bP\left(\frac{s \; r}{s+r}\Big(\widehat{\mu}_{a,s} - \widehat{\mu}_{b,r} - \Delta\Big)^2 \geq u \right) \leq 2\exp\left(- \frac{u}{2\sigma^2}\right).
     \end{equation}
@@ -555,12 +638,12 @@ We include here an extensive comparison of memory costs of the different algorit
 %
 For instance on the same experiment as the one used for Table~\ref{table:6:effectOptimizations}, that is problem 1 with $T=5000$, and then with $T=10000$ and $T=20000$, and $100$ independent runs,
 in our Python implementation (using the SMPyBandits library, \cite{SMPyBandits}), we can measure the (mean) real memory cost\footnote{We used one core of an Intel $i5$ Core CPU, with GNU/Linux Ubuntu $18.04$, Python v$3.6$, and $8$ Gb of RAM.} of the different algorithms.
-The Tables \ref{table:6:TimeCosts} and \ref{table:6:MemoryCosts} included below give the mean ($\pm$ 1 standard-deviation) of real computation time and memory consumption, used by the algorithms.
+The Tables~\ref{table:6:TimeCosts} and \ref{table:6:MemoryCosts} included below give the mean ($\pm$ 1 standard-deviation) of real computation time and memory consumption, used by the algorithms.
 The computation time is normalized by the horizon, to reflect the (mean) time used for each time steps $t\in[T]$.
 %
 We also found that our two optimizations described below in \ref{sub:6:IdeasOptimizations} do not reduce the memory, thus we used $\Delta n = \Delta s = 20$ to speed-up the simulations.
 %
-The conclusions to draw for these two Tables \ref{table:6:TimeCosts} and \ref{table:6:MemoryCosts} are twofold.
+The conclusions to draw for these two Tables~\ref{table:6:TimeCosts} and \ref{table:6:MemoryCosts} are twofold.
 
 
 % \begin{small} %XXX WARNING

@@ -36,7 +36,7 @@ However, this model is a bit too general for the considered applications, where 
 For these reasons, an intermediate model, called the \emph{piece-wise stationary MAB}, has been introduced in Section~8 of the seminal paper \cite{Auer02NonStochastic}.
 They propose a simple extension of the EXP3 policy, referred to as Exp3.S, that uses exponential weights like EXP3 tweaked with an adaptive forced exploration probability to passively adapt to changes.
 It was shown that Exp3.S attains a regret of $\cO(\sqrt{K T S \log(K T)})$, when comparing with an arbitrary sequence of comparators that does not switch for more than $S-1$ times.
-Running their algorithm over the non-stationary problem, and picking their comparators sequence as the best arm in each stationary interval, one can already get $\sqrt(\Upsilon_T T \log(T))$ regret, and the only prior knowledge needed to run the Exp3.S algorithm is $T$ and $\Upsilon_T$. Moreover, Exp3.S is efficient both in term of storage and computation time, and simple to implement.
+Running their algorithm over the non-stationary problem, and picking their comparators sequence as the best arm in each stationary interval, one can already get $\sqrt{\Upsilon_T T \log(T)}$ regret, and the only prior knowledge needed to run the Exp3.S algorithm is $T$ and $\Upsilon_T$. Moreover, Exp3.S is efficient both in term of storage and computation time, and simple to implement.
 
 It could seem that the problem is considered as solved by the Exp3.S algorithm, but it was actively studied since the seminal paper \cite{Auer02NonStochastic}.
 Two main reasons explain the dynamic research on this problem:
@@ -164,9 +164,9 @@ The first optimal arm decreases at every change (\textcolor{blue}{$2$ with $\nab
 
 We review previous works that studied the piece-wise stationary bandit model, or variants of this model.
 To the best of our knowledge, all the previous works are based on the idea of combining a classical bandit policy, such as Thompson sampling, \UCB{} or EXP3, with a strategy to account for changes in arms' distributions.
-Following the vocabulary used in previous works, we make the distinction between passively and actively adaptive strategies.
-Active strategies monitor the arms' rewards, by using change detection algorithms \cite{Basseville93}, and reset the history of pulls and rewards of one or all the arms as soon as a change is detected.
-Passive strategies use a (fixed) discount factor or a limited memory size, while most active strategies use a growing memory.
+Following the vocabulary used in previous works, we make the distinction between \emph{passively} and \emph{actively} adaptive strategies.
+On the one hand, Actively adaptive strategies monitor the arms' rewards, by using change detection algorithms \cite{Basseville93}, and reset the history of pulls and rewards of one or all the arms as soon as a change is detected.
+On the other hand, Passively adaptive strategies use a (fixed) discount factor or a limited memory size, while most active strategies use a growing memory.
 % , while active strategies are usually tuned with a threshold for the statistical test.
 
 
@@ -435,90 +435,8 @@ that for Bernoulli distributions, we have
 \end{equation}
 %
 where for $k \leq k'$, $\widehat{\mu}_{k:k'} \eqdef \frac{1}{k - k' + 1} \sum\limits_{t=k}^{k'} X_t$ denotes the average of the observations $X_t$ collected between the instants $k$ and $k'$.
-
-\TODOL{Si on veut, on peut déplacer cette preuve en Annexe, voir même l'enlever, elle n'est pas spécialement palpitante et pas requise pour la suite !}
-
-\begin{smallproof}
-    First, we consider the denominator in the expression of $\GLR(n)$ \eqref{eq:6:firstDefGLRT}, that is the $\sup$ on $\mu_0$.
-    We have $\ell(X_1, \dots, X_n ; \mu_0) = \prod\limits_{i=1}^n \ell(X_i ; \mu_0)$ by independence of the observations $X_i$,
-    and $\ell(X_i ; \mu_0) = \mu_0^{X_i} (1-\mu_0)^{1-X_i}$ for Bernoulli distributions.
-    Therefore, taking the logarithm gives
-    \begin{align*}
-        \log \left[ \ell(X_1, \dots, X_n ; \mu_0) \right]
-        &= \sum_{i=1}^n X_i \log(\mu_0) + (1-X_i) \log(1-\mu_0) \\
-        &= \log(\mu_0) \times \left( \sum_{i=1}^n X_i \right) + \log(1-\mu_0) \times \left( n - \sum_{i=1}^n X_i \right) \\
-        &= n \left( \widehat{\mu}_{1:n} \log(\mu_0) + (1 - \widehat{\mu}_{1:n}) \log(1-\mu_0) \right).
-    \end{align*}
-    %
-    For a constant $a\in[0,1]$, let $h(x) \eqdef a \log(x) + (1-a) \log(1-x)$ on $(0,1)$,
-    and we are trying to solve $\sup_{x\in[0,1]} h(x)$.
-    If $a=0$ or $a=1$, $h$ is maximum at $x=a$.
-    Now if $a\neq0$, As $h$ is of class $\cC^1$, we can just differentiate and find the root of its derivative,
-    $h'(x) = a/x - (1-a)/(1-x)$, so $h'(x) = 0$ if and only if $x=a$.
-    Thus in all cases, $\sup_{x\in[0,1]} h(x) = h(a)$.
-    %
-    Here, we have $a = \widehat{\mu}_{1:n}$, and thus we solve the $\sup_{\mu_0}$ optimization problem found in the denominator of the $\GLR(n)$ expression.
-    By replacing $\mu_0 = \widehat{\mu}_{1:n}$, we obtained the following (unique) solution,
-    \begin{equation}\label{eq:6:solutionPbOpt_for_1n}
-        \sup_{\mu_0} \log \left[ \ell(X_1, \dots, X_n ; \mu_0) \right] = n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right).
-    \end{equation}
-
-    Now let us consider the nominator of the $\GLR(n)$ expression.
-    We can again work with log-likelihoods, and so we have
-    %
-    \begin{align*}
-        & \log \left[ \ell(X_1, \dots, X_n ; \mu_0,\mu_1,\tau) \right] \\
-        &= \sum_{i=1}^{\tau} X_i \log(\mu_0) + (1-X_i) \log(1-\mu_0) + \sum_{i=\tau+1}^n X_i \log(\mu_1) + (1-X_i) \log(1-\mu_1) \\
-        &= s \bigl( \widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0) \bigr) \\
-        & \;\;\;\; + (n-s) \bigl( \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1) \bigr).
-    \end{align*}
-    Because we solved in \eqref{eq:6:solutionPbOpt_for_1n} the $\sup$ for the denominator,
-    we have
-    \begin{align*}
-        \GLR(n)
-        % &= \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \dots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \dots, X_n ; \mu_0)}, \\
-        &= \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \dots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\mu_0) + (1 - \widehat{\mu}_{1:n}) \log(1-\mu_0) \right) \right] }, \\
-        &= \sup\limits_{\mu_0,\mu_1,\tau < n} \frac{\ell(X_1, \dots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right) \right] }, \\
-        &= \exp \Bigl[ \sup\limits_{\mu_0,\mu_1,\tau < n} \Bigl[ \log\Bigl[ \frac{\ell(X_1, \dots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right) \right] } \Bigr] \Bigr] \Bigr],
-    \end{align*}
-    When the last equation comes from the fact that $\exp$ is increasing.
-    Thus by taking the logarithm of both sides, we obtain
-    \begin{align*}
-        \log \GLR(n)
-        &= \sup\limits_{\mu_0,\mu_1,\tau < n} \Bigl[ \log\Bigl[ \frac{\ell(X_1, \dots, X_n ; \mu_0,\mu_1,\tau)}{ \exp\left[ n \left( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \right) \right] } \Bigr] \Bigr],  \\
-        &= \sup\limits_{\mu_0,\mu_1, 1 < s < n} \Bigl[
-            s \bigl( \widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0) \bigr) \\
-            & \hspace{35pt} + (n-s) \bigl( \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1) \bigr) \\
-            & \hspace{35pt} - n \bigl( \widehat{\mu}_{1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:n}) \log(1-\widehat{\mu}_{1:n}) \bigr)
-        \Bigr].
-    \end{align*}
-    By linearity and independence, we can separate the joint optimization problem on $\mu_0,\mu_1,s$ in two optimizations problems for $\mu_0,s$ and $\mu_1,s$, that can first be solved explicitly for $\mu_0$ (resp. $\mu_1$) and then left to be solved for $s$.
-    By definition, $n \; \widehat{\mu}_{1:n} = \sum_{i=1}^n X_i = s \;\widehat{\mu}_{1:s} + (n-s) \;\widehat{\mu}_{s+1:n}$, so the right hand side (negative) part involving $\widehat{\mu}_{1:n}$ can be distributed in the two left hand side (positive) terms,
-    which are both handled similarly.
-    For instance for $\mu_0$, we use the same computation as above with the function $h$ to find the optimum:
-    $\widehat{\mu}_{1:s} \log(\mu_0) + (1 - \widehat{\mu}_{1:s}) \log(1-\mu_0)$
-    is optimum for $\mu_0 = \widehat{\mu}_{1:s}$.
-    Similarly, the term for $\mu_1$ gives that $\sup_{\mu_1} \widehat{\mu}_{s+1:n} \log(\mu_1) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\mu_1)$
-    is attained for $\mu_1 = \widehat{\mu}_{s+1:n}$.
-    Finally, by replacing the two expressions of the solutions for $\mu_0$ and $\mu_1$,
-    we obtain
-    \begin{align*}
-        \log \GLR(n)
-        = \sup\limits_{1 < s < n} \Bigl[
-            s \times \Bigl(
-                    & \widehat{\mu}_{1:s} \log(\widehat{\mu}_{1:s}) + (1 - \widehat{\mu}_{1:s}) \log(1-\widehat{\mu}_{1:s}) \\
-                    & - \widehat{\mu}_{1:s} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{1:s}) \log(1-\widehat{\mu}_{1:n})
-            \Bigr) \\
-            + (n-s) \times \Bigl(
-                & \widehat{\mu}_{s+1:n} \log(\widehat{\mu}_{s+1:n}) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\widehat{\mu}_{s+1:n}) \\
-                & - \widehat{\mu}_{s+1:n} \log(\widehat{\mu}_{1:n}) + (1 - \widehat{\mu}_{s+1:n}) \log(1-\widehat{\mu}_{1:n})
-            \Bigr)
-        \Bigr].
-    \end{align*}
-    We conclude by recognizing the expressions of $s \times \kl(\widehat{\mu}_{1:s}, \widehat{\mu}_{1:n})$
-    and $(n-s) \times \kl(\widehat{\mu}_{s+1:n}, \widehat{\mu}_{1:n})$.
-\end{smallproof}
-
+This result is proven in Appendix~\ref{app:6:GLR_with_kl}.
+%
 
 This motivates the following definition of the Bernoulli GLRT change point detector.
 % Note that the $\exp$ appearing in the \eqref{eq:6:secondDefGLRT} is absorbed as a $\log$ in the threshold function $\beta$.
@@ -1053,7 +971,7 @@ The proof of the other variant using \emph{local restarts} follows the skeleton 
 \subsection{Sketch of the unified regret analysis}
 \label{sub:6:proofSkeleton}
 
-In this section, we sketch a unified proof for the two Theorems \ref{thm:6:mainRegretBoundGlobal} and \ref{thm:6:mainRegretBound} given above.
+In this section, we sketch a unified proof for the two Theorems~\ref{thm:6:mainRegretBoundGlobal} and \ref{thm:6:mainRegretBound} given above.
 %  whose detailed proofs are given in Section~\ref{proof:6:mainRegretBoundGlobal} and in Appendix~E of our paper \cite{Besson2019GLRT} respectively.
 We emphasize that our approach is significantly different from those proposed by \cite{CaoZhenKvetonXie18} for \MUCB{} and by \cite{LiuLeeShroff17} for \CUSUMUCB.
 %
@@ -1369,7 +1287,7 @@ using respectively
 $\delta = 1/\sqrt{\Upsilon T}$, $\omega = \omega_0 \sqrt{\Upsilon_T \log(T) /T}$
 and
 $\delta = 1/\sqrt{K \Upsilon_T T}$, $\omega = \omega_0\sqrt{K \Upsilon_T \log(T) / T}$
-from Corollaries \ref{cor:6:Global} and \ref{cor:6:Local}.
+from Corollaries~\ref{cor:6:Global} and \ref{cor:6:Local}.
 Both choices of $\omega$ appear to be too large empirically, as they come from minimizing the regret upper-bound rather than the regret itself, thus
 the constant is set to $\omega_0 = 0.05$.
 We show in Appendix~\ref{sec:6:choosingAlpha0} a certain robustness, with similar regret as soon as $\omega\leq0.1$.
@@ -1762,7 +1680,7 @@ A natural extension of the non-stationary model presented in this Chapter is to 
 The authors build on their recent work \cite{WeiSrivastava18Abruptly} and show that a regret bounded by $\cO(\sqrt{T^{\frac{1+\nu}{2}} \log(T)})$ can still be achieved by $M$ players, in the number of breaking points is $\Upsilon_T = \cO(T^{\nu})$.
 Their algorithm assume that player $j$ knows its ID $j\in[M]$ as well as $\nu$, and removing these hypotheses is an interesting direction of future work.
 % \TODOL{Evoke here the possibility of study the piece-wise stationary distributed multi-players bandit model introduced in \cite{WeiSrivastava18Distributed} by using \MCTopM{} and \GLRklUCB{} with each other? }
-Furthermore, a promising direction is to directly try to join our contributions from Chapter~\ref{chapter:5} and \ref{chapter:6}, and propose an efficient algorithm using three parts:
+Furthermore, a promising direction is to directly try to join our contributions from Chapters~\ref{chapter:5} and \ref{chapter:6}, and propose an efficient algorithm using three parts:
 \klUCB{} indexes for arm selection,
 \MCTopM{} for orthogonalization (\ie, dealing with collisions),
 and \GLRklUCB{} for non-stationarity (\ie, dealing with abrupt changes).
