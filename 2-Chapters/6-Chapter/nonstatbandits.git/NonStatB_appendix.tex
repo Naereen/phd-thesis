@@ -29,7 +29,7 @@ and for problem 4 in Figure~\ref{fig:6:meanRegretPb4}.
 \begin{figure}[h!]  % [htbp]
     \centering
     \includegraphics[width=1.09\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/SP__K3_T5000_N1000__9_algos_pb4/main____env1-1_7471744535647872376.pdf}
-    \caption{Mean regret as a function of time, $R_t$ ($1 \leq t \leq T = 5000$) for problem 4.}
+    \caption{Mean regret as a function of time, $R_t$ ($1 \leq t \leq T = 5000$) for problem 4. We see that after a ``long enough'' stationary interval, the algorithms designed for stationary problems lose track of the best arm, and suffer from linear regret for a long period (\eg, Thompson sampling in \textcolor{orange}{orange $\diamond$}).}
     \label{fig:6:meanRegretPb4}
 \end{figure}
 
@@ -222,10 +222,10 @@ Missing proofs can be found in the article \cite{Besson2019GLRT}.
 \subsubsection{Proof of Lemma~\ref{lem:6:ConcFirst}.}
 \label{app:6:proofConcFirst}
 %
-Using the same construction as in the proof of Theorem~14 in \cite{KK18Martingales}, one can prove that for every $\lambda \in I$ (for an interval $I$), there exists a non-negative super-martingale $M^\lambda (s)$ with respect to the filtration $\cF_t = \sigma(X_1,\dots,X_t)$ that satisfies $\bE[M^\lambda(s)] \leq 1$ and
+Using the same construction as in the proof of Theorem~14 in \cite{KK18Martingales}, one can prove that for every $\lambda \in I$ (for an interval $I$), there exists a non-negative super-martingale $M^\lambda (s)$ with respect to the filtration $\cF_t \eqdef \sigma(X_1,\dots,X_t)$ that satisfies $\bE[M^\lambda(s)] \leq 1$ and
 \[\forall s \in \N^*, \ \ M^\lambda (s) \geq \mathrm{e}^{\lambda [s \, \kl(\widehat{\mu}_s,\mu) - 3\ln(1+\ln(s))] - g(\lambda)}\]
 for some function $g : I \rightarrow \R$. This super-martingale is of the form
-$M^\lambda (s) = \int \mathrm{e}^{\eta\sum_{i=1}^s X_i - \phi_\mu(\lambda)s} d\pi(\eta)$,
+$M^\lambda (s) \eqdef \int \mathrm{e}^{\eta\sum_{i=1}^s X_i - \phi_\mu(\lambda)s} d\pi(\eta)$,
 for a well-chosen probability distribution $\pi$, and the function $g$ can be chosen to be any
 \begin{eqnarray*}
     g_{\xi} : \left[0; 1/(1+\xi)\right] & \longrightarrow & \R \\
@@ -233,10 +233,14 @@ for a well-chosen probability distribution $\pi$, and the function $g$ can be ch
 \end{eqnarray*}
 for a parameter $\xi \in [0,1/2]$.
 
-Similarly, there exists an independent super-martingale $W^\lambda (r)$ w.r.t. the filtration $\cF_r' = \sigma(Y_1,\dots,Y_r)$ such that
+Similarly, if we denote $\cF_r'$ the filtration $\sigma(Y_1,\dots,Y_r)$,
+there exists an independent super-martingale $W^\lambda (r)$ w.r.t. the filtration $\cF_r'$, such that
 \[\forall r \in \N^*, \ \ W^\lambda (r) \geq \mathrm{e}^{\lambda [r\kl(\widehat{\mu}'_r,\mu) - 3\ln(1+\ln(r))] - g(\lambda)},\]
 for the same function $g(\lambda)$.
-In the terminology of \cite{KK18Martingales}, the processes $\bm{X}(s) = s \, \kl(\widehat{\mu}_s,\mu) - 3\ln(1+\ln(s))$ and $\bm{Y}(s) = r \, \kl(\widehat{\mu}_r,\mu) - 3\ln(1+\ln(r))$ are called $g$-DCC for Doob-Cram\'er-Chernoff, as Doob's inequality can be applied in combination with the Cram\'er-Chernoff method to obtain deviation inequalities that are uniform in time.
+In the terminology of \cite{KK18Martingales},
+the two processes $\bm{X}(s)$ and $\bm{Y}(s)$ are called $g$-DCC for Doob-Cram\'er-Chernoff,
+if $\bm{X}(s) \eqdef s \, \kl(\widehat{\mu}_s,\mu) - 3\ln(1+\ln(s))$ and $\bm{Y}(s) \eqdef r \, \kl(\widehat{\mu}_r,\mu) - 3\ln(1+\ln(r))$,
+as Doob's inequality can be applied in combination with the Cram\'er-Chernoff method to obtain deviation inequalities that are uniform in time.
 
 Here we have to modify the technique used in their Lemma 4 in order to take into account the two stochastic processes, and the presence of super-martingales instead of martingales (for which Doob inequality still works).
 One can write
@@ -248,9 +252,9 @@ One can write
     & = \lim_{n \rightarrow \infty} \bP\left(\sup_{r \in [n]}  M^\lambda(s)W^\lambda(r) > \mathrm{e}^{\lambda u - 2g(\lambda)}\right).
 \end{align*}
 %
-Using that $\tilde{M}(r) = M^\lambda(s)W^\lambda(r)$ is a super-martingale with respect to the filtration $\tilde{\cF}_r = \sigma(X_1,\dots,X_s, Y_1,\dots,Y_r)$, one can apply Doob's maximal inequality to obtain
+Using that $\widetilde{M}(r) \eqdef M^\lambda(s)W^\lambda(r)$ is a super-martingale with respect to the filtration $\widetilde{\cF}_r \eqdef \sigma(X_1,\dots,X_s, Y_1,\dots,Y_r)$, one can apply Doob's maximal inequality to obtain
 \begin{eqnarray*}
-    \bP\left(\sup_{r \in [n]}  M^\lambda(s)W^\lambda(r) > \mathrm{e}^{\lambda u - 2g(\lambda)}\right) &\leq& \mathrm{e}^{-(\lambda u - 2g(\lambda))}\bE[\tilde{M}(1))] \\
+    \bP\left(\sup_{r \in [n]}  M^\lambda(s)W^\lambda(r) > \mathrm{e}^{\lambda u - 2g(\lambda)}\right) &\leq& \mathrm{e}^{-(\lambda u - 2g(\lambda))}\bE[\widetilde{M}(1))] \\
     & = & \mathrm{e}^{-(\lambda u - 2g(\lambda))}\bE[M^\lambda(s)W^\lambda(1)] \\
     & \leq & \mathrm{e}^{-(\lambda u - 2g(\lambda))},
 \end{eqnarray*}
@@ -271,7 +275,7 @@ Its proof follows from a straightforward application of the Cram\'er-Chernoff me
 
 \begin{lemma}\label{lem:6:Chernoff2arms}
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
-    Let $\widehat{\mu}_{i,s}$ be the empirical mean of $s$ \iid{} observations with mean $\mu_i$, for $i \in \{a,b\}$, that are $\sigma^2$-sub-Gaussian. Define $\Delta = \mu_a - \mu_b$. Then for any $s,r > 0$, we have
+    Let $\widehat{\mu}_{i,s}$ be the empirical mean of $s$ \iid{} observations with mean $\mu_i$, for $i \in \{a,b\}$, that are $\sigma^2$-sub-Gaussian. Define $\Delta \eqdef \mu_a - \mu_b$. Then for any $s,r > 0$, we have
     \begin{equation}
         \bP\left(\frac{s \; r}{s+r}\Big(\widehat{\mu}_{a,s} - \widehat{\mu}_{b,r} - \Delta\Big)^2 \geq u \right) \leq 2\exp\left(- \frac{u}{2\sigma^2}\right).
     \end{equation}
@@ -306,7 +310,7 @@ And so thanks to Markov's inequality, we obtain
 where the last inequality uses the sub-Gaussian property.
 %
 Choosing the value
-\[\lambda = \frac{x}{2\left[\sigma^2/(2n_1) + \sigma^2/(2n_2)\right]}\]
+\[\lambda \eqdef \frac{x}{2\left[\sigma^2/(2n_1) + \sigma^2/(2n_2)\right]}\]
 which minimizes the right-hand side of the inequality yields
 \[\bP\left(\widehat{\mu}_{1,n_1} - \widehat{\mu}_{2,n_2} \geq \mu_1 - \mu_2 + x \right) \leq \exp\left(- \frac{n_1n_2}{n_1+n_2}\frac{x^2}{2\sigma^2}\right).\]
 %
@@ -327,12 +331,12 @@ Using this inequality twice in the right hand side of \eqref{eq:6:Preparation} c
 % Our analysis for the other variant of \GLRklUCB{} also relies on the general regret decomposition~\eqref{eq:6:GeneRegretBound} and follows the proof skeleton presented in Section~\ref{sub:6:proofSkeleton}, with the following appropriate ``good event'', that is shown to be likely in Lemma~\ref{lem:6:GoodEvent} below.
 % %
 % \begin{equation}\label{def:6:GoodEvenLocal}
-%     \cE_T(\alpha,\delta) = \left(\forall i \in \{1, \ldots, K\}, \forall \ell \in \{1, \ldots, \NCi\}, \hat{\tau}^{(\ell)}_i \in \left[\tau_i^{(\ell)} + 1, \tau_i^{(\ell)} + d_i^{(\ell)}\right] \right),
+%     \cE_T(\omega,\delta) = \left(\forall i \in \{1, \ldots, K\}, \forall \ell \in \{1, \ldots, \NCi\}, \hat{\tau}^{(\ell)}_i \in \left[\tau_i^{(\ell)} + 1, \tau_i^{(\ell)} + d_i^{(\ell)}\right] \right),
 % \end{equation}
-% where $\widehat{\tau}_i^{(\ell)}$ is defined as the $\ell$-th change detected by the algorithm on arm $i$ and $d_i^{(\ell)}=d_i^{(\ell)}(\alpha,\delta)$ is defined as in Assumption~\ref{ass:6:LongPeriods}. Using this assumption, one can prove the following.
+% where $\widehat{\tau}_i^{(\ell)}$ is defined as the $\ell$-th change detected by the algorithm on arm $i$ and $d_i^{(\ell)}=d_i^{(\ell)}(\omega,\delta)$ is defined as in Assumption~\ref{ass:6:LongPeriods}. Using this assumption, one can prove the following.
 
 % \begin{lemma}\label{lem:6:GoodEvent}
-%     The ``bad event'' is highly unlikely, as it satisfies $\bP((\cE_T(\alpha,\delta))^c) \leq 2 \; \delta \; \EffChange$.
+%     The ``bad event'' is highly unlikely, as it satisfies $\bP((\cE_T(\omega,\delta))^c) \leq 2 \; \delta \; \EffChange$.
 % \end{lemma}
 
 
@@ -419,10 +423,10 @@ Using this inequality twice in the right hand side of \eqref{eq:6:Preparation} c
 
 % \paragraph{Upper bound on term $(b)$: controlling the delay.}
 % %
-% Controlling the detection delay on arm $i$ under an adaptive sampling scheme can be tricky. Here we need to leverage the forced exploration (Proposition~\ref{prop:6:EnoughSamples}) to be sure we have enough samples to ensure detection: the effect is that delays will be scaled by the exploration parameter $\alpha$.
+% Controlling the detection delay on arm $i$ under an adaptive sampling scheme can be tricky. Here we need to leverage the forced exploration (Proposition~\ref{prop:6:EnoughSamples}) to be sure we have enough samples to ensure detection: the effect is that delays will be scaled by the exploration parameter $\omega$.
 
 % First, it follows from Proposition~\ref{prop:6:EnoughSamples} that there exists $\overline{t} \in \left\{\tau_i^{(\ell)}, \dots, \tau_i^{(\ell)} + d_i^{(\ell)} \right\}$ such that
-% $n_i(\overline{t}) - n_i(\tau_i^{(\ell)}) = \overline{r}$ where $\overline{r} = \lfloor \frac{\alpha}{K} d_i^{(\ell)}\rfloor$
+% $n_i(\overline{t}) - n_i(\tau_i^{(\ell)}) = \overline{r}$ where $\overline{r} = \lfloor \frac{\omega}{K} d_i^{(\ell)}\rfloor$
 % (as the mapping $t\mapsto n_i(t) - n_i(\tau_i^{(\ell)})$ is non-decreasing, is $0$ at $t=\tau_i^{(\ell)}$ and its value at $\tau_i^{(\ell)}+d_i^{(\ell)}$ is larger than $\overline{r}$).
 % Using that $(\widehat{\tau}_i^{(\ell)} \geq \tau_i^{(\ell)} + d_i^{(\ell)}) \subseteq (\widehat{\tau}_i^{(\ell)} \geq \overline{t})$,
 % the event $(\widehat{\tau}_i^{(\ell)} \geq \tau_i^{(\ell)} + d_i^{(\ell)})$ further implies that
@@ -433,12 +437,12 @@ Using this inequality twice in the right hand side of \eqref{eq:6:Preparation} c
 % where $\tilde{\mu}^{\ell-1}_{i,s}$ denotes the empirical mean of the $s$ first observation of arm $i$ since the $(\ell-1)$-th restart $\hat{\tau}_i^{(\ell-1)}$ and  $\tilde{\mu}^{\ell-1}_{i,s:s'}$ the empirical mean that includes observation number $s$ to number $s'$. Conditionally to $\cC^{(\ell-1)}_i$, $\tilde{\mu}^{\ell-1}_{i,n_i(\tau_i^{(\ell)})}$ is the empirical mean of $n_i(\tau_i^{(\ell)})$ \iid{} replications of mean $\mu_i^{\ell-1}$, whereas $\tilde{\mu}^{\ell-1}_{i,n_i(\tau_i^{(\ell)}) : n_i(\overline{t})}$ is the empirical mean of $\overline{r}$ \iid{} replications of mean $\mu_i^{\ell}$.
 
 % Moreover, due to Proposition~\ref{prop:6:EnoughSamples}, $n_i(\tau_i^{(\ell)})$ lies in $
-% \left\{\left\lfloor \frac{\alpha}{K}\left(\tau_i^{(\ell)}-\widehat{\tau}_i^{(\ell-1)}\right)\right\rfloor, \dots, \tau_i^{(\ell)}-\widehat{\tau}_i^{(\ell-1)} \right\}$.
+% \left\{\left\lfloor \frac{\omega}{K}\left(\tau_i^{(\ell)}-\widehat{\tau}_i^{(\ell-1)}\right)\right\rfloor, \dots, \tau_i^{(\ell)}-\widehat{\tau}_i^{(\ell-1)} \right\}$.
 % %
 % Conditionally to $\cC_i^{(\ell-1)}$, one obtains furthermore using that $d_i^{(\ell-1)} \leq (\tau_i^{(\ell)} - \tau_i^{(\ell-1)})/2$ -- which follows from Assumption~\ref{ass:6:LongPeriods} -- that
 % \begin{eqnarray*}
-%     n_i(\tau_i^{(\ell)})& \in &  \left\{ \left\lfloor \frac{\alpha}{K}\left(\tau_i^{(\ell)}-\tau_i^{(\ell-1)} - d_i^{(\ell-1)}\right)\right\rfloor, \dots, \left(\tau_i^{(\ell)}-\tau_i^{(\ell-1)}\right) \right\} \\
-%     n_i(\tau_i^{(\ell)})& \in& \left\{ \left\lfloor \frac{\alpha}{2K}\left(\tau_i^{(\ell)}-\tau_i^{(\ell-1)}\right)\right\rfloor, \dots, \left(\tau_i^{(\ell)}-\tau_i^{(\ell-1)}\right) \right\} = \cI_k.
+%     n_i(\tau_i^{(\ell)})& \in &  \left\{ \left\lfloor \frac{\omega}{K}\left(\tau_i^{(\ell)}-\tau_i^{(\ell-1)} - d_i^{(\ell-1)}\right)\right\rfloor, \dots, \left(\tau_i^{(\ell)}-\tau_i^{(\ell-1)}\right) \right\} \\
+%     n_i(\tau_i^{(\ell)})& \in& \left\{ \left\lfloor \frac{\omega}{2K}\left(\tau_i^{(\ell)}-\tau_i^{(\ell-1)}\right)\right\rfloor, \dots, \left(\tau_i^{(\ell)}-\tau_i^{(\ell-1)}\right) \right\} = \cI_k.
 % \end{eqnarray*}
 
 % Introducing $\widehat{\mu}_{a,s}$ (resp. $\widehat{\mu}_{b,s}$) the empirical mean of $s$ \iid{} observations with mean $\widehat{\mu}_i^{(\ell-1)}$ (resp. $\widehat{\mu}_i^{(\ell)}$), such that $\widehat{\mu}_{a,s}$ and $\widehat{\mu}_{b,r}$ are independent, it follows that
@@ -463,14 +467,14 @@ Using this inequality twice in the right hand side of \eqref{eq:6:Preparation} c
 %     (b) \leq \delta + \bP\left(\exists s \in \cI_k : |\Delta_i^{(\ell)}| \leq 2\sqrt{\frac{s+\overline{r}}{2s\overline{r}}\beta(s+\overline{r},\delta)}\right).
 % \end{equation}
 % %
-% Define $s_{\min} = \left\lfloor \frac{\alpha}{K} (\tau_i^{(\ell)}-\tau_i^{(\ell-1)})/2\right\rfloor$. Using that the mappings $s \mapsto (s+\overline{r})/s\overline{r}$ and $s \mapsto \beta(s + \overline{r},\delta)$ are respectively decreasing and increasing in $s$, one has, for all $s\in \cI_k$,
+% Define $s_{\min} = \left\lfloor \frac{\omega}{K} (\tau_i^{(\ell)}-\tau_i^{(\ell-1)})/2\right\rfloor$. Using that the mappings $s \mapsto (s+\overline{r})/s\overline{r}$ and $s \mapsto \beta(s + \overline{r},\delta)$ are respectively decreasing and increasing in $s$, one has, for all $s\in \cI_k$,
 % \begin{eqnarray*}
 %     2\frac{s+\overline{r}}{s \; \overline{r}}\beta\left(s+\overline{r}, \delta\right) & \leq &
-%     2\frac{s_{\min}+\overline{r}}{s_{\min} \; \overline{r}}\beta\left(T, \delta\right) \leq \frac{4\beta(T,\delta)}{\left\lfloor \frac{\alpha}{K}d_i^{(\ell)}\right\rfloor},
+%     2\frac{s_{\min}+\overline{r}}{s_{\min} \; \overline{r}}\beta\left(T, \delta\right) \leq \frac{4\beta(T,\delta)}{\left\lfloor \frac{\omega}{K}d_i^{(\ell)}\right\rfloor},
 % \end{eqnarray*}
 % %
 % where the last inequality follows from the fact that $\overline{r} \leq s_{\min}$ as $d_i^{(\ell)} \leq (\tau_i^{(\ell)} - \tau_i^{(\ell-1)})/2$ by Assumption~\ref{ass:6:LongPeriods}. Now the definition of $d_i^{(\ell)}$ readily implies that
-% \[\left\lfloor \frac{\alpha}{K}d_i^{(\ell)}\right\rfloor > 4\beta(T,\delta) / \left(\Delta_i^{(\ell)}\right)^2,\]
+% \[\left\lfloor \frac{\omega}{K}d_i^{(\ell)}\right\rfloor > 4\beta(T,\delta) / \left(\Delta_i^{(\ell)}\right)^2,\]
 % which yields
 % \[\forall s \in \cI_k, \ \ 2\frac{s+\overline{r}}{s \; \overline{r}}\beta\left(s+\overline{r}, \delta\right) \leq \left(\Delta_i^{(\ell)}\right)^2.\]
 % Hence, the probability in the right-hand side of \eqref{eq:6:FromHere} is zero, which yields $(b) \leq \delta$.
@@ -504,7 +508,7 @@ too\footnote{Note that if implemented naively, that is if testing is $t$ is a ch
 %
 Passively adaptive algorithms should intuitively be more efficient, but as they use a non-constant storage, they are actually as costly as the oracle.
 For instance SW-UCB uses a storage of $\bigO{K \tau}$, increasing as $T$ increases, and similarly for other passively adaptive algorithms.
-We highlight that to our knowledge, the Discounted Thompson sampling algorithm (DTS) is the only algorithm tailored for abruptly changing problems that is both efficient in terms of regret (see the simulations results, even though it has no theoretical guarantee), and optimal in terms of both computational and storage costs. Indeed, it simply needs a storage proportional to the number of arms, $\bigO{K}$, and a time complexity of $\bigO{KT}$ for a horizon $T$ (see the pseudo-code in \cite{RajKalyani17}).
+We highlight that to the best of our knowledge, the Discounted Thompson sampling algorithm (DTS) is the only algorithm tailored for abruptly changing problems that is both efficient in terms of regret (see the simulations results, even though it has no theoretical guarantee), and optimal in terms of both computational and storage costs. Indeed, it simply needs a storage proportional to the number of arms, $\bigO{K}$, and a time complexity of $\bigO{KT}$ for a horizon $T$ (see the pseudo-code in \cite{RajKalyani17}).
 Note that the discounting scheme in Discounted-\UCB{} (D-UCB) from \cite{Kocsis06} requires to store the whole history, and not only empirical rewards of each arm, as after observing a reward, all previous rewards must be multiplied by $\gamma^n$ if that arm was not seen for $n>0$ times. So the storage cannot be simply proportional to $K$, but needs to grows as $t$ grows.
 Therefore, D-UCB costs $\bigO{K T}$ in memory and $\bigO{K T^2}$ in time.
 
@@ -612,7 +616,8 @@ The conclusions to draw for these two Tables \ref{table:6:TimeCosts} and \ref{ta
 % \end{small} %XXX WARNING
 
 
-First, we verify the results stated above for the time complexity of different algorithms.
+First, we verify the results stated above for the time complexity of different algorithms, implemented in Python using SMPyBandits \cite{SMPyBandits}.
+The methodology of time and memory measurements is discussed in Section~\ref{sec:3:timeAndMemoryCosts}.
 On the one hand, stationary and passively adaptive algorithms all have a time complexity scaling as $\bigO{T}$, as their normalized computation time is almost constant w.r.t. $T$.
 We check that TS and DTS are the fastest algorithms, $2.5$ to $3$ times faster than \klUCB-based algorithms, due to the fact that sampling from a Beta posterior is typically faster than doing a (small) numerical optimization step to compute the $\sup$ in the \klUCB{} indexes.
 We also check that the passively adaptive algorithms add a non-trivial but constant overhead on the computation times of their based algorithm, \eg, SW-\klUCB{} compared to \klUCB, or DTS compared to TS.
@@ -657,7 +662,7 @@ The goal is to speed up the computation time of every call to the \GLR{} test (\
 \paragraph{Empirical validation of these optimization tricks.}
 %
 We consider the problem 1 presented above (Figure~\ref{fig:6:Problem_1}), with $T=5000$ and $100$ repetitions, and we give the means ($\pm$ 1 standard-deviation) of both regret and computation time of \GLRklUCB{} with \textbf{Local} restarts, for different parameters $\Delta n$ and $\Delta s$, in Table~\ref{table:6:effectOptimizations} below.
-The other parameters of \GLRklUCB{} are chosen as $\delta = 1/\sqrt{K \Upsilon_T T}$ and $\alpha = 0.1\sqrt{K\log(T)/T}$ (from Corollary~\ref{cor:6:Local}).
+The other parameters of \GLRklUCB{} are chosen as $\delta = 1/\sqrt{K \Upsilon_T T}$ and $\omega = 0.1\sqrt{K\log(T)/T}$ (from Corollary~\ref{cor:6:Local}).
 The algorithm analyzed in Section~\ref{sec:6:RegretAnalysis} corresponds to $\Delta n = \Delta s = 1$.
 
 On the same problem,
@@ -709,17 +714,17 @@ With such numerical optimization, \GLRklUCB{} is not significantly slower than \
 
 
 % ----------------------------------------------------------------------------
-\subsection{Sensitivity analysis of the exploration probability $\alpha$}\label{sec:6:choosingAlpha0}
+\subsection{Sensitivity analysis of the exploration probability $\omega$}\label{sec:6:choosingAlpha0}
 
 As demonstrated in our experiments in Section~\ref{sec:6:NumericalExperiments},
-the choice of $\alpha=\alpha_0\sqrt{\Upsilon_T\log(T)/T}$ for the exploration probability is a good choice for \GLRklUCB{} to be efficient (for the \textbf{local restarts} option).
-The dependency w.r.t. the horizon $T$ comes from Corollary~\ref{cor:6:Local} when $\Upsilon_T$ is unknown, and we observe in the Table~\ref{table:6:sensibilityAlpha0} below that the value of $\alpha_0$ does not influence much the performance, as long as $\alpha_0\leq1$.
-Different values of $\alpha_0$ are explored, for problems $1$, $2$ and $4$, and we average the results over $100$ independent runs.
+the choice of $\omega=\omega_0\sqrt{\Upsilon_T\log(T)/T}$ for the exploration probability is a good choice for \GLRklUCB{} to be efficient (for the \textbf{local restarts} option).
+The dependency w.r.t. the horizon $T$ comes from Corollary~\ref{cor:6:Local} when $\Upsilon_T$ is unknown, and we observe in the Table~\ref{table:6:sensibilityAlpha0} below that the value of $\omega_0$ does not influence much the performance, as long as $\omega_0\leq1$.
+Different values of $\omega_0$ are explored, for problems $1$, $2$ and $4$, and we average the results over $100$ independent runs.
 Other parameters are set to \textbf{Local} restarts, $\delta_T=1/\sqrt{\Upsilon_T T}$, and $\Delta n = \Delta s = 10$ to speed-up the experiments.
 %
-In the three experiments, \GLRklUCB{} performs closely to the Oracle-Restart \klUCB{}, and outperforms all or almost all the other approaches, for all choices of $\alpha_0$.
-We observe in Table~\ref{table:6:sensibilityAlpha0} that the parameter $\alpha_0$ does not have a significative impact on the performance,
-and that surprisingly, choosing $\alpha_0 = 0$ does not reduce the empirical performance of \GLRklUCB, which means that on some problems there is no need of a forced exploration.
+In the three experiments, \GLRklUCB{} performs closely to the Oracle-Restart \klUCB{}, and outperforms all or almost all the other approaches, for all choices of $\omega_0$.
+We observe in Table~\ref{table:6:sensibilityAlpha0} that the parameter $\omega_0$ does not have a significative impact on the performance,
+and that surprisingly, choosing $\omega_0 = 0$ does not reduce the empirical performance of \GLRklUCB, which means that on some problems there is no need of a forced exploration.
 However, the analysis of \GLRklUCB{} is based on the forced exploration, and we found that for a larger number of arms, or for problems when the optimal arm change constantly, the forced exploration is required.
 %
 The same observations can be made for other variants of our algorithm, for instance with \textbf{Global} restarts, or other values of $\Delta n$, $\Delta s$, or other values of $\delta$.
@@ -729,18 +734,18 @@ The same observations can be made for other variants of our algorithm, for insta
     % \begin{small} %XXX WARNING
     \centering
     \begin{tabular}{l|cccccc}
-        \textbf{Choice of} $\alpha_0$ & Problem $1$ & Problem $2$ & Problem $4$ \\
+        \textbf{Choice of} $\omega_0$ & Problem $1$ & Problem $2$ & Problem $4$ \\
         \hline
-        $\alpha_0=1$     & $51 \pm 29$ & $79 \pm 35$ & $82 \pm 45$ \\
-        $\alpha_0=0.5$   & $38 \pm 29$ & $70 \pm 35$ & $76 \pm 39$ \\
-        $\alpha_0=0.1$   & $33 \pm 29$ & $69 \pm 31$ & $68 \pm 32$ \\
-        $\mathbf{\alpha_0=0.05}$  & $\mathbf{36 \pm 29}$ & $\mathbf{65 \pm 33}$ & $\mathbf{67 \pm 36}$ \\
-        $\alpha_0=0.01$  & $38 \pm 33$ & $66 \pm 33$ & $71 \pm 37$ \\
-        $\alpha_0=0.005$ & $40 \pm 27$ & $69 \pm 30$ & $73 \pm 56$ \\
-        $\alpha_0=0.001$ & $38 \pm 30$ & $69 \pm 34$ & $67 \pm 34$ \\
-        $\alpha_0=0$     & $36 \pm 32$ & $66 \pm 36$ & $67 \pm 33$
+        $\omega_0=1$     & $51 \pm 29$ & $79 \pm 35$ & $82 \pm 45$ \\
+        $\omega_0=0.5$   & $38 \pm 29$ & $70 \pm 35$ & $76 \pm 39$ \\
+        $\omega_0=0.1$   & $33 \pm 29$ & $69 \pm 31$ & $68 \pm 32$ \\
+        $\mathbf{\omega_0=0.05}$  & $\mathbf{36 \pm 29}$ & $\mathbf{65 \pm 33}$ & $\mathbf{67 \pm 36}$ \\
+        $\omega_0=0.01$  & $38 \pm 33$ & $66 \pm 33$ & $71 \pm 37$ \\
+        $\omega_0=0.005$ & $40 \pm 27$ & $69 \pm 30$ & $73 \pm 56$ \\
+        $\omega_0=0.001$ & $38 \pm 30$ & $69 \pm 34$ & $67 \pm 34$ \\
+        $\omega_0=0$     & $36 \pm 32$ & $66 \pm 36$ & $67 \pm 33$
     \end{tabular}
-    \caption{Mean regret $\pm$ $1$ std-dev, for different choices of scaling factor for the forced exploration probability $\alpha_0\in[0,1]$ (\ie, $\alpha=\alpha_0 \alpha_T$), on three problems of horizon $T=5000$, for \GLRklUCB{} with \textbf{local restarts}, with $\alpha_T = \alpha_0\sqrt{\Upsilon_T \log(T)/T}$.}
+    \caption{Mean regret $\pm$ $1$ std-dev, for different choices of scaling factor for the forced exploration probability $\omega_0\in[0,1]$ (\ie, $\omega=\omega_0 \omega_T$), on three problems of horizon $T=5000$, for \GLRklUCB{} with \textbf{local restarts}, with $\omega_T = \omega_0\sqrt{\Upsilon_T \log(T)/T}$.}
     \label{table:6:sensibilityAlpha0}
     % \end{small} %XXX WARNING
 \end{table}
@@ -753,13 +758,13 @@ The same observations can be made for other variants of our algorithm, for insta
 Similarly, the choice of $\delta=\delta_0 / \sqrt{\Upsilon_T T}$ for the confidence level is a good choice for \GLRklUCB{} to be efficient (for the \textbf{local restarts} option).
 The dependency w.r.t. the horizon $T$ comes from Corollary~\ref{cor:6:Local} when $\Upsilon_T$ is unknown, and we observe in the Table~\ref{table:6:sensibilityDelta} below that the value of $\delta_0$ does not influence much the performance of our proposal, as long as $\delta_0\leq1$.
 Different values of $\delta_0$ are explored, for problems $1$, $2$ and $4$, and we average the results over $100$ independent runs.
-Other parameters are set to \textbf{Local} restarts, $\alpha_T = 0.1 \sqrt{\Upsilon_T\log(T)/T}$, and $\Delta n = \Delta s = 10$ to speed-up the experiments.
+Other parameters are set to \textbf{Local} restarts, $\omega_T = 0.1 \sqrt{\Upsilon_T\log(T)/T}$, and $\Delta n = \Delta s = 10$ to speed-up the experiments.
 %
 We observe in Table~\ref{table:6:sensibilityDelta} that the parameter $\delta_0$ has no significative impact on the performance,
 and that choosing $\delta_0 = 1$ is indeed a valid choice.
 Inspired by Occam's razor, we recommend this choice of $\delta_0=1$ in practice.
 %
-The same observations can be made for other variants of our algorithm, for instance with \textbf{Global} restarts, or other values of $\Delta n$, $\Delta s$, or other values of $\alpha$.
+The same observations can be made for other variants of our algorithm, for instance with \textbf{Global} restarts, or other values of $\Delta n$, $\Delta s$, or other values of $\omega$.
 
 % \begin{small} %XXX WARNING
 \begin{table}[ht]
@@ -825,7 +830,7 @@ We did some preliminary experiments to explore this direction and did not find a
 
 As before, we consider the three problems $1$, $2$ and $4$, with time horizon $T=5000$,
 and we present in Table~\ref{table:6:exploringDifferentThresholdFunctions} the mean results of $100$ independent runs.
-We only consider the variant of \GLRklUCB{} based on \textbf{Local restarts}, and we used the parameters $\alpha_T,\delta_T$ as given by the Corollary~\ref{cor:6:Local},
+We only consider the variant of \GLRklUCB{} based on \textbf{Local restarts}, and we used the parameters $\omega_T,\delta_T$ as given by the Corollary~\ref{cor:6:Local},
 and with the deterministic exploration scheme.
 
 % \begin{small} %XXX WARNING
@@ -863,7 +868,7 @@ Therefore, the choice of threshold function $\beta_1(n, \delta) \eqdef \log\left
 % https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.GLR_IndexPolicy_WithDeterministicExploration
 
 We compare the following exploration mechanisms that can be used to enforce a sufficient exploration of all arms in the \GLRklUCB{} algorithm.
-All options are parametrized by a constant $\alpha\in(0,1)$, which represents the fraction of time steps spent in the forced exploration, either in average or in total.
+All options are parametrized by a constant $\omega\in(0,1)$, which represents the fraction of time steps spent in the forced exploration, either in average or in total.
 %
 Note that the analysis we gave in Section~\ref{sec:6:RegretAnalysis} is based on the deterministic exploration, but with a careful handling of random events and if we prove a result similar to Proposition~\ref{prop:6:EnoughSamples}, we believe our analysis could also be extended to another exploration mechanism.
 
@@ -871,29 +876,29 @@ Note that the analysis we gave in Section~\ref{sec:6:RegretAnalysis} is based on
     \item
     The \textbf{deterministic exploration}
     corresponds to one described in Algorithm~\ref{algo:6:GLRklUCB}.
-    At time $t$, if $t \mod \left\lfloor \frac{K}{\alpha}\right\rfloor \in [K]$, then the arm $A_t \leftarrow t \mod \left\lfloor \frac{K}{\alpha}\right\rfloor$ is played.
+    At time $t$, if $t \mod \left\lfloor \frac{K}{\omega}\right\rfloor \in [K]$, then the arm $A_t \leftarrow t \mod \left\lfloor \frac{K}{\omega}\right\rfloor$ is played.
     It is the simplest, both the compute numerically and to handle mathematically, as the proof of Proposition~\ref{prop:6:EnoughSamples} is short and simple.
-    Its deterministic nature makes it the easiest choice for the proof skeleton given in Section~\ref{sub:6:proofSkeleton}, as the set $\cD(T,\alpha)$ used in the decomposition \eqref{eq:6:GeneRegretBound} of the regret is deterministic and thus it greatly simplifies the manipulation of expectations and random events.
+    Its deterministic nature makes it the easiest choice for the proof skeleton given in Section~\ref{sub:6:proofSkeleton}, as the set $\cD(T,\omega)$ used in the decomposition \eqref{eq:6:GeneRegretBound} of the regret is deterministic and thus it greatly simplifies the manipulation of expectations and random events.
     Note that this mechanism is also the one used by \MUCB{} \cite{CaoZhenKvetonXie18}.
 
     \item
     The \textbf{uniform random exploration} is the one proposed for \CUSUMUCB{} \cite{LiuLeeShroff17}.
-    At time $t$, a random arm is played with probability $\alpha/K$. That is, first we sample a boolean variable from a Bernoulli law of mean $\alpha$, so that $0$ indicates a random play, and $1$ indicates a play using the $\UCB$ indexes. Then if it is a random play, arm $i\in[K]$ is selected uniformly at random (with probability $1/K$), and arm $A_t = i$ is played.
+    At time $t$, a random arm is played with probability $\omega/K$. That is, first we sample a boolean variable from a Bernoulli law of mean $\omega$, so that $0$ indicates a random play, and $1$ indicates a play using the $\UCB$ indexes. Then if it is a random play, arm $i\in[K]$ is selected uniformly at random (with probability $1/K$), and arm $A_t = i$ is played.
     Proving a result like Proposition~\ref{prop:6:EnoughSamples} is not much harder for this second mechanism,
-    but the difficulty lies in extending the proof skeleton we give in Section~\ref{sub:6:proofSkeleton} to have a random set $\cD(T,\alpha)$.
+    but the difficulty lies in extending the proof skeleton we give in Section~\ref{sub:6:proofSkeleton} to have a random set $\cD(T,\omega)$.
 
     \item
     The \textbf{tracking-based exploration} mechanism is inspired by the tracking trick used in \cite{Garivier16BAI}, and it is actually quite intuitive.
     At any time $t$, instead of having a uniform probability of sampling forcing an exploration of every arm, it can make sense to force exploring arms that are not explored enough. This way, we actively enforce that each arm have enough samples.
-    At time $t$, the goal is for any arm $i$ to have been sampled more than $\alpha (t - \tau_i)$ time, if $t - \tau_i$ represents the number of time steps since the last restart on this arm.
-    So the tracking-based exploration samples an arm $i$ uniformly at random among the set of arms $i$ such that $n_i(t) < \alpha (t - \tau_i)$, if it is not empty, otherwise it plays according to the $\UCB$ indexes.
+    At time $t$, the goal is for any arm $i$ to have been sampled more than $\omega (t - \tau_i)$ time, if $t - \tau_i$ represents the number of time steps since the last restart on this arm.
+    So the tracking-based exploration samples an arm $i$ uniformly at random among the set of arms $i$ such that $n_i(t) < \omega (t - \tau_i)$, if it is not empty, otherwise it plays according to the $\UCB$ indexes.
     Numerically, it is more complicated than the two previous solutions but it stays reasonably efficient.
     It was the first direction we pursued for our analysis, but we dropped it since mathematically, it was harder to prove a result like Proposition~\ref{prop:6:EnoughSamples}, and it was also harder to incorporate the randomness of this exploration scheme in the regret decomposition \eqref{eq:6:GeneRegretBound}.
 \end{enumerate}
 
 As before, we consider the three problems $1$, $2$ and $4$, with time horizon $T=5000$,
 and we present in Table~\ref{table:6:exploringDifferentForcedExplorationMechanisms} the mean results of $100$ independent runs.
-We include the two variants of \GLRklUCB, based on \textbf{Local restarts} or \textbf{Global restarts}, for which we used the parameters $\alpha_T,\delta_T$ as given by the two Corollaries~\ref{cor:6:Global} and \ref{cor:6:Local}.
+We include the two variants of \GLRklUCB, based on \textbf{Local restarts} or \textbf{Global restarts}, for which we used the parameters $\omega_T,\delta_T$ as given by the two Corollaries~\ref{cor:6:Global} and \ref{cor:6:Local}.
 
 % \begin{small} %XXX WARNING
 \begin{table}[ht]
