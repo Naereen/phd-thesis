@@ -753,9 +753,9 @@ But even if $\mathrm{SC}^{\cA}(T) = \Theta(\log T)$ for an efficient algorithm, 
 \TODOL{Enlever ça, juste une phrase qui dit "on le fait plus tard".}
 We find more interesting to study $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, the sum of the switching costs of the $M$ players in a multi-players bandit game (if player $j$ uses algorithm $\cA_j$ for $j=1,\dots,M$). Indeed in this case it is possible that the players attain a logarithmic centralized regret, by following an efficient centralized or decentralized algorithm, while still suffering from a linear switching cost.
 %
-It is very satisfying to obtain a logarithmic switching cost for our algorithm \MCTopM-\klUCB{} in Chapter~\ref{chapter:5}, even if minimizing the switching cost was not one of our objective, and the bound we obtain on $SC^{\cA_1,\dots,\cA_M}(T)$ is just a consequence of our proof of the control we give on the regret $R^{\cA}(T)$.
+It is very satisfying to obtain a logarithmic switching cost for our algorithm \MCTopM-\klUCB{} in Chapter~\ref{chapter:5}, even if minimizing the switching cost was not one of our objective, and the bound we obtain on $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$ is just a consequence of our proof of the control we give on the regret $R^{\cA}(T)$.
 % - Switching cost? \cite{modiDemo2016} \cite{Koren17}
-On a more experimental note, it was shown in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-players bandits, \rhoRand, could be tuned to run in batches\footnote{~The batch bandit setting implies that all players use the same decisions for instance for $50$ consecutive times, and update their decisions only once every $50$ time steps. For more details, see \cite{modiDemo2016} for experiments on the multi-players case, or \cite{perchet2016,gao2019batched,kolnogorov2019multi} for theoretical developments on the single-player case.}, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret. While such ideas can interest a practitioner, they does not change the asymptotic behavior of $SC^{\cA_1,\dots,\cA_M}(T)$, which is $\Theta(\log(T))$ for any efficient policy.
+On a more experimental note, it was shown in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-players bandits, \rhoRand, could be tuned to run in batches\footnote{~The batch bandit setting implies that all players use the same decisions for instance for $50$ consecutive times, and update their decisions only once every $50$ time steps. For more details, see \cite{modiDemo2016} for experiments on the multi-players case, or \cite{perchet2016,gao2019batched,kolnogorov2019multi} for theoretical developments on the single-player case.}, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret. While such ideas can interest a practitioner, they does not change the asymptotic behavior of $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, which is $\Theta(\log(T))$ for any efficient policy.
 
 
 % - Fairness ?
@@ -1158,7 +1158,7 @@ that is typically chosen as $f(t) \eqdef \log(t)+3\log(\log(t))$ for the theoret
 and $f(t) \eqdef \log(t)$ in practice.
 The constant $c>0$ is usually chosen as $c = 1$.
 \begin{align}\label{eq:klUCB_index}
-    U_k^{\klUCB}(t) \eqdef \sup\limits_{q \in [0, 1]} \left\{ q : \KL\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{c f(t}{N_k(t)} \right\}.
+    U_k^{\klUCB}(t) \eqdef \sup\limits_{q \in [0, 1]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{c f(t}{N_k(t)} \right\}.
 \end{align}
 
 For Bernoulli distributions, the previous claim that \klUCB{} builds smaller confidence intervals (\ie, more accurate) than $\UCB_1$, \ie, $U_k^{\klUCB}(t) < U_k^{\UCB}(t)$,
@@ -1338,6 +1338,8 @@ The first example is MOSS from \cite{Audibert2009minimax}, or \KLUCBpp{} in \cit
 and they use the following indexes:
 \begin{align}\label{eq:2:indexes_for_MOSS_klUCBpp}
     U^{\mathrm{MOSS}}_k(t) & \eqdef \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \frac{\log\left(\frac{t}{K N_k(t)}\right)}{N_k(t)} } \right). \\
+% \end{align}
+% \begin{align}\label{eq:2:indexes_for_MOSS_klUCBpp2}
     U^{\KLUCBpp}_k(t) & \eqdef \sup\limits_{q \in [a, b]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{g(N_k(t), T, K)}{N_k(t)} \right\}.
 \end{align}
 %
@@ -1352,15 +1354,28 @@ enjoy simultaneously a distribution-free regret bound of optimal order $\sqrt{KT
 It is an index policy that uses a modified version of the indexes of the \klUCB$^+$ algorithm (see \cite{Honda2019} for more details), for arms that are not sampled much, and a modified version of the indexes of the MOSS$^+$ algorithm, for the other arms.
 To detail this, first let $f(T, K) = \lfloor (T/K)^{\gamma}\rfloor$ for $\gamma=1/5$,
 then \klUCB-switch use the index defined as follows:
-%
-\begin{align}\label{eq:2:indexes_for_klUCBswitch}
-    U^{\mathrm{MOSS}+}_k(t) & \eqdef \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \frac{\log\left(\frac{T}{K N_k(t)}\right)}{N_k(t)}} \right). \\
-    U^{\KLUCB+}_k(t) & \eqdef \sup\limits_{q \in [a, b]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{\log(\frac{T}{K N_k(t)})}{N_k(t)} \right\} \\
+\[
     U^{\klUCB\text{-}\mathrm{switch}}_k(t) & \eqdef \begin{cases}
         U^{\KLUCB+}_k(t) & \text{if } N_k(t) \leq f(T, K), \\
         U^{\mathrm{MOSS}+}_k(t) & \text{if } N_k(t) > f(T, K).
     \end{cases}.
-\end{align}
+\]
+
+If the two indexes $U^{\KLUCB+}_k(t)$ and $U^{\mathrm{MOSS}+}_k(t)$ are defined by
+
+% \vspace*{-20pt}   % FIXME??
+\begin{align*}
+    U^{\mathrm{MOSS}+}_k(t) & \eqdef \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \frac{\log\left(\frac{T}{K N_k(t)}\right)}{N_k(t)}} \right). \\
+% \end{align*}
+% \begin{align*}
+    U^{\KLUCB+}_k(t) & \eqdef \sup\limits_{q \in [a, b]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{\log(\frac{T}{K N_k(t)})}{N_k(t)} \right\} \\
+% \end{align*}
+% \begin{align*}
+    % U^{\klUCB\text{-}\mathrm{switch}}_k(t) & \eqdef \begin{cases}
+    %     U^{\KLUCB+}_k(t) & \text{if } N_k(t) \leq f(T, K), \\
+    %     U^{\mathrm{MOSS}+}_k(t) & \text{if } N_k(t) > f(T, K).
+    % \end{cases}.
+\end{align*}
 
 % Recent work.
 % https://smpybandits.github.io/docs/Policies.MOSS.html
