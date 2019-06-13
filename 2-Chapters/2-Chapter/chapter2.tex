@@ -1,6 +1,6 @@
 %!TEX root = ../PhD_thesis__Lilian_Besson
 
-\chapter{Stochastic Multi-Armed Bandits Models}
+\chapter{The Stochastic Multi-Armed Bandits Model}
 \label{chapter:2}
 
 \graphicspath{{2-Chapters/2-Chapter/Images/}}
@@ -10,7 +10,12 @@
 
 \abstractStartChapter{}%
 %
-In this chapter, we present the common base of all the models studied in this thesis: the multi-armed bandit (MAB) model, restricting to the single-player and stationary stochastic case. We focus on decision-making models with a finite number of resources, called arms, and on stochastic models, where an arm is associated with a one-dimensional distribution.
+In this chapter, we present the common base of all the more sophisticated models studied in this thesis: the stochastic multi-armed bandit (MAB) model, restricting to the single-player and stationary stochastic case.
+
+We motivate this model and discuss its application to and beyond cognitive radio, and we review existing MAB algorithms.
+Some of which are crucially used in the rest of this thesis, like \UCB, \klUCB{} and Thompson sampling.
+
+We focus on decision-making models with a finite number of resources, called arms, and on stochastic models, where an arm is associated with a one-dimensional distribution.
 %
 We formalize this MAB model, then we quote some of its important applications.
 We define the notion of regret of an algorithm, and quote important results from the literature. A short review of the most important families of MAB algorithms is then given.
@@ -20,21 +25,21 @@ We define the notion of regret of an algorithm, and quote important results from
 
 % ----------------------------------------------------------------------
 
-% ----------------------------------------------------------------------------
-\section{Introduction}
-\label{sec:2:introduction}
+% % ----------------------------------------------------------------------------
+% \section{Introduction}
+% \label{sec:2:introduction}
 
-Multi-Armed Bandits (MAB) models were introduced by Thompson as early as in 1933 \cite{Thompson33}, and later studied from the 1950s by Robbins \cite{Robbins52} and others.
-This family of models was first proposed for clinical trials, and later applied to a wide range of different problems.
-Their name refers to one-armed bandits found in casinos, as shown in Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem} below.
-% The seminal paper by Lai and Robbins \cite{LaiRobbins85} was the first to introduce the measure of performance widely used in the literature, the notion of \emph{regret}, and to analyze a lower-bound on the performance of any algorithm against a fixed problem.
-% Since then, many efficient algorithms were proposed, XXX
-%
-% In all this thesis, we only consider one-dimensional exponential families, and in particular Bernoulli distributions.
-We formally define the model and the main notations used in all this document in Section~\ref{sec:2:notations}.
-%
-Multi-armed bandits have been applied to various fields, from recommender systems and information retrieval to healthcare and finance. We discuss some applications in Section~\ref{sec:2:applicationsofStochasticMAB}.
-In the rest of this thesis, we focus on cognitive radio, an important field of research where bandits has already been applied with success in the last ten years.
+% Multi-Armed Bandits (MAB) models were introduced by Thompson as early as in 1933 \cite{Thompson33}, and later studied from the 1950s by Robbins \cite{Robbins52} and others.
+% This family of models was first proposed for clinical trials, and later applied to a wide range of different problems.
+% Their name refers to one-armed bandits found in casinos, as shown in Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem} below.
+% % The seminal paper by Lai and Robbins \cite{LaiRobbins85} was the first to introduce the measure of performance widely used in the literature, the notion of \emph{regret}, and to analyze a lower-bound on the performance of any algorithm against a fixed problem.
+% % Since then, many efficient algorithms were proposed, XXX
+% %
+% % In all this thesis, we only consider one-dimensional exponential families, and in particular Bernoulli distributions.
+% We formally define the model and the main notations used in all this document in Section~\ref{sec:2:notations}.
+% %
+% Multi-armed bandits have been applied to various fields, from recommender systems and information retrieval to healthcare and finance. We discuss some applications in Section~\ref{sec:2:applicationsofStochasticMAB}.
+% In the rest of this thesis, we focus on cognitive radio, an important field of research where bandits has already been applied with success in the last ten years.
 
 % We then explain the main measure of performance used in this thesis, defined as the regret and written $R_T^{\cA}$ for algorithm $\cA$ and for horizon $T$. The regret compares the performance of the decision-making player and the oracle who knows in advance the best arm and always selects it.
 % Other measures of performance, such as best-arm identification, are not used later on in this document.
@@ -42,8 +47,8 @@ In the rest of this thesis, we focus on cognitive radio, an important field of r
 % %
 % We explain the main theoretical result from previous works: a lower-bound on the regret of any algorithm, essentially showing that no algorithm can achieve sub-logarithmic regret on all problems, in this stochastic MAB model (\ie, $R_T^{\cA} = \Omega(\log(T))$).
 
-A rich research literature has produced many different algorithms tackling the MAB problem, as suggested by the length of the reference book \cite{LattimoreBanditAlgorithmsBook}.
-We give in Section~\ref{sec:2:famousMABalgorithms} an overview of the main families of algorithms designed to tackle stochastic MAB problems, and we mainly focus on the $\UCB_1$, \klUCB{} and Thompson sampling algorithms, as they are used in the rest of the manuscript.
+% A rich research literature has produced many different algorithms tackling the MAB problem, as suggested by the length of the reference book \cite{LattimoreBanditAlgorithmsBook}.
+% We give in Section~\ref{sec:2:famousMABalgorithms} an overview of the main families of algorithms designed to tackle stochastic MAB problems, and we mainly focus on the $\UCB_1$, \klUCB{} and Thompson sampling algorithms, as they are used in the rest of the manuscript.
 % % We present SMPyBandits in the next Chapter~\ref{chapter:3}, a Python open-source library, designed to run numerical simulations of MAB problems, one of the main contributions of this thesis.
 % % We use it to compare the empirical performances of the most famous and most efficient algorithms, in terms of regret and by evaluating them on different problems.
 % % %
@@ -62,40 +67,38 @@ We give in Section~\ref{sec:2:famousMABalgorithms} an overview of the main famil
 % % , but no satisfactory theoretical result is given, as the bound we had hoped for has been proven unachievable since then.
 
 
-\textbf{About notations.}
-%
-We use in this thesis the usual notations from the MAB literature,
-% , and we follow closely the formalism of \cite{Kaufmann12PhD}, as well as \cite{Slivkins2019,LattimoreBanditAlgorithmsBook,Bubeck12}.
-and a summary is included in the Nomenclature, included in the Appendix in Part~\ref{part:Conclusion} (Page~\pageref{chapter:nomenclature}).
-
-
-\textbf{Main references for the curious reader.}
-%
-For more details and a more formal introduction to multi-armed bandits, we suggest to the interested reader to work on a very recent text-book by Slivkins \cite{Slivkins2019}.
-Another excellent but reasonably short survey is the book by Bubeck and Cesa-Bianchi \cite{Bubeck12}, while the more recent book by Lattimore and Szepesv{\'a}ri \cite{LattimoreBanditAlgorithmsBook} is the most complete resource about bandit algorithms.
-Finally, we recommend \cite{bouneffouf2019survey} for a short but good survey on applications of MAB.
-
-
-\textbf{No publication associated with this chapter.}
-%
-% The first Sections~\ref{sec:2:notations}, \ref{sec:2:applicationsofStochasticMAB}, \ref{sec:2:lowerUpperBoundsRegret} and \ref{sec:2:famousMABalgorithms} of this chapter are based on existing works.
-This chapter is based on existing works.
-% and Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is based on our article \cite{Besson2018WCNC}.
+% \textbf{No publication associated with this chapter.}
+% %
+% % The first Sections~\ref{sec:2:notations}, \ref{sec:2:applicationsofStochasticMAB}, \ref{sec:2:lowerUpperBoundsRegret} and \ref{sec:2:famousMABalgorithms} of this chapter are based on existing works.
+% This chapter is based on existing works.
+% % and Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is based on our article \cite{Besson2018WCNC}.
 
 
 % \newpage
 
 
 % ----------------------------------------------------------------------------
-\section{The stochastic Multi-Armed Bandit models}
+\section{The stochastic Multi-Armed Bandit model}
 \label{sec:2:notations}
 
 
+Multi-Armed Bandits (MAB) models were introduced by Thompson as early as in 1933 \cite{Thompson33}, and later studied from the 1950s by Robbins \cite{Robbins52} and others.
+This family of models was first proposed for clinical trials, and later applied to a wide range of different problems.
+Their name refers to one-armed bandits found in casinos, as shown in Figure~\ref{fig:2:example_of_a_5_arm_bandit_problem} below.
+% The seminal paper by Lai and Robbins \cite{LaiRobbins85} was the first to introduce the measure of performance widely used in the literature, the notion of \emph{regret}, and to analyze a lower-bound on the performance of any algorithm against a fixed problem.
+% Since then, many efficient algorithms were proposed, XXX
+%
+% In all this thesis, we only consider one-dimensional exponential families, and in particular Bernoulli distributions.
+We now formally introduce the model.
+%  and the main notations used in all this document in Section~\ref{sec:2:notations}.
 
-A MAB is a model of a decision-making game, where a \emph{player} has to sequentially select one action in a (usually finite) set of actions, and only receives a (random) feedback about the selected action, also called a \emph{reward}.
+A MAB refers to a decision-making game, where a \emph{player} has to sequentially select one action in a usually finite set of actions, and only receives a (random) feedback about the selected action, also called a \emph{reward}.
 \textbf{We always consider $K\in\N, K\geq2$ arms, and discrete times $t\in\N^*$}.
-When the player decides at time $t$ to play (or pull) the arm $A(t)\in[K]$,
-where this notation denotes $[K] \eqdef \{1,\dots,K\}$, she receives a reward $r(t) \eqdef Y_{A(t),t}\in\R$, and so on for a finite number of steps $t$ (or rounds), from $t=1$ until $t=T$ for an \emph{horizon} $T$.
+We denote $[K]$ the set $\{1,\dots,K\}$.
+Each arm $k\in[K]$ is associated with a stream of rewards $(Y_{k,t})_{t\in\N^*}$,
+and when the player decides at time $t$ to play (or pull) the arm $A(t)\in[K]$,
+she receives a reward $r(t) \eqdef Y_{A(t),t}$.
+She keeps playing an arm and observing a reward iteratively, and so on for a finite number of steps $t$ (or rounds), from $t=1$ until $t=T$ for an \emph{horizon} $T$.
 %
 A commonly studied goal for the player is to maximize its sum of received rewards, $\sum_{t=1}^T r(t)$
 (or its \emph{mean} in stochastic and stationary models).
@@ -136,17 +139,33 @@ Without loss of generality, it can be given by a sequence $U_0,U_1,\dots$ of \ii
 External randomness is used in most MAB algorithms, \eg, to break ties uniformly in an index policy.
 
 
+\textbf{About notations.}
+%
+We use in this thesis the usual notations from the MAB literature,
+% , and we follow closely the formalism of \cite{Kaufmann12PhD}, as well as \cite{Slivkins2019,LattimoreBanditAlgorithmsBook,Bubeck12}.
+and a summary is included in the Nomenclature, included in the Appendix in Part~\ref{part:Conclusion} (Page~\pageref{chapter:nomenclature}).
+
+
+\textbf{Main references for the curious reader.}
+%
+For more details and a more formal introduction to multi-armed bandits, we suggest to the interested reader to work on a very recent text-book by Slivkins \cite{Slivkins2019}.
+Another excellent but reasonably short survey is the book by Bubeck and Cesa-Bianchi \cite{Bubeck12}, while the more recent book by Lattimore and Szepesv{\'a}ri \cite{LattimoreBanditAlgorithmsBook} is the most complete resource about bandit algorithms.
+Finally, we recommend \cite{bouneffouf2019survey} for a short but good survey on applications of MAB.
+
+
 % ----------------------------------------------------------------------------
 \subsection{Finite arms and stochastic rewards}
 
-
-In all this thesis, we focus on the model with finite arms, and binary or real-valued stochastic rewards, that is $A(t)\in\{1,\dots,K\}$ for a fixed and known number of arms $K\in\N,K\geq2$, and $Y_{A(t),t}\in\R$.
+In all this thesis, we focus on the model with finite arms, that is $A(t)\in\{1,\dots,K\}$ for a fixed and known number of arms $K\in\N,K\geq2$.
+%
+We focus on the \textbf{stochastic} MAB, in which the reward stream are drawn from some (unknown) distributions.
 %
 % Restricting to models with a finite number of arms
 % rules out an entire domain of the recent research on MAB, in particular we do not consider linear nor contextual bandits (for more details, see Parts V and VI of \cite{LattimoreBanditAlgorithmsBook}).
 %
 We also restrict to \emph{stochastic} rewards, that is we associate a real-valued distribution to each arm, denoted $\nu_k$ for arm $k\in[K]$.
-Rewards are stationary, meaning that $(Y_{k,t})_{t\in\N^*}$ is independent and identically distributed (\iid), $Y_{k,t} \sim \nu_k$ for any $t\geq1$.
+Rewards are stationary, meaning that $(Y_{k,t})_{t\in\N^*}$ is independent and identically distributed (\iid), and $Y_{k,t} \sim \nu_k$ for any $t\geq1$.
+We only consider binary or real-valued rewards, \ie, $Y_{k,t}\in\R$.
 
 The most common objective for the player is to maximize its expected rewards $\E[\sum_{t=1}^T r(t)] = \sum_{t=1}^T \E[Y_{A(t),t}]$.
 The expectation $\E[\bullet]$ is taken on the rewards $(Y_{k,t})_{k,t}$, as well as on the external random variables $(U_s)_s$ (\ie, on the algorithm's decisions).
@@ -252,7 +271,7 @@ Note that this ``normalization trick'' is implemented for any policy in our libr
 
 % Bernoulli, Gaussian, sub-Bernoulli, sub-Gaussian, Exponential, sub-Exponential...
 
-% \paragraph{We restrict to one-dimensional exponential family.}
+\paragraph{One-dimensional exponential family.}
 %
 % On one-dimensional exponential family...
 
@@ -380,7 +399,7 @@ A curious reader about Markov chains could start to read Chapter~3 of \cite{Latt
 
 
 % ----------------------------------------------------------------------------
-\section{Different applications of stochastic MAB}
+\section{Applications of stochastic MAB}
 \label{sec:2:applicationsofStochasticMAB}
 
 The blooming success of the research on multi-armed bandits is easily explained by the different spectrum of applications of MAB models to real-world discrete-time decision making problems.
@@ -771,7 +790,7 @@ This Section starts by discussing two naive strategies which fail dramatically,
 and then we present two simple strategies which performs efficiently, only if they are tuned using a prior knowledge of the problem difficulty, but are thus unusable for practical applications.
 %
 We focus then on index policies, with a first efficient policy, $\UCB_1$, that uses upper confidence bounds (UCB) on the means estimates, and is known to be order-optimal for bounded rewards.
-Two other well-known and optimal algorithms are exposed: \klUCB{} extends the idea of $\UCB_1$ but use smaller confidence intervals and thus it typically obtains better theoretical results, and Thompson sampling which replaces the principle of ``optimism under uncertainty'' by a Bayesian point-of-view.
+Two other well-known and optimal algorithms are exposed: \klUCB{} extends the idea of $\UCB_1$ but use tighter confidence intervals and thus it typically obtains better theoretical results, and Thompson sampling which replaces the principle of ``optimism under uncertainty'' by a Bayesian point-of-view.
 %
 Finally, we conclude by briefly exposing other families of algorithms.
 
@@ -960,11 +979,11 @@ As such, this weakness makes the presented strategies unapplicable on an unknown
 
 
 % ----------------------------------------------------------------------------
-\subsection{Index policies: $\UCB_1$, \klUCB{} and others}
+\subsection{The optimism principle and index policies: $\UCB_1$, \klUCB{} etc}
 \label{sub:2:IndexPolicies}
 
-A large family of algorithms are index based, as they compute an index $U_k(t)$ on each arm $k$ at time $t$.
-The indexes should represent the expected quality of each arm, thus index policies play the arm that maximizes their index, \ie, $A(t) = \argmax_k U_k(t)$.
+A large family of algorithms are index based, as they compute an index $U_k(t)$ on each arm $k$ at time $t$,
+used to play the arm that maximizes their index, \ie, $A(t) = \argmax_k U_k(t)$.
 If more than one indexes maximize $(U_k(t))_k$, the arm is chosen among the set, usually in a uniformly random manner: $A(t) \sim \cU(\argmax_k U_k(t))$.
 %
 The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, that includes well known and efficient algorithms such as $\UCB_1$, \klUCB{} and many others.
@@ -998,7 +1017,7 @@ The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, tha
 %
 Let us consider another approach for adaptive exploration, known as ``optimism under uncertainty'': assume each arm is as good as it can possibly be given the observations so far, and choose the best arm based on these optimistic estimate.
 %
-This intuition leads to the $\UCB_1$ algorithm, initially introduced in \cite{Auer02}.
+This intuition leads to the $\UCB_1$ algorithm, initially introduced in \cite{Auer02}, for bounded rewards.
 For a parameter $\alpha$, the \UCB{} indexes are computed as follows, as a sum of
 the \emph{average reward} $\widehat{\mu_k}(t) \eqdef \frac{X_k(t)}{N_k(t)}$
 and a \emph{confidence radius} $\xi_k(t) \eqdef \sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}$.
@@ -1030,8 +1049,8 @@ This theorem shows that $\UCB_1$ achieves an order-optimal problem-dependent reg
     of means $\mu_1,\dots,\mu_k$, and any horizon $T>K$,
     the $\UCB_1$ algorithm with its parameter\footnotemark{} $\alpha=2$ verifies the following finite-time regret bound
     \begin{equation}\label{eq:2:UCBregretBound}
-        R_T^{\UCB_1}(I) \leq \left(\sum_{k: \Delta_k>0} \frac{8}{\Delta_k}\right) \log(T) + \sum_{k: \Delta_k>0} \Delta_k \left(1 + \frac{\pi^2}{3}\right)
-        = \bigO{ \left(\sum_{k: \Delta_k>0} \frac{8}{\Delta_k}\right) \log(T)}.
+        R_T^{\UCB_1}(I) \leq \left(\sum_{k: \Delta_k>0} \frac{8}{\Delta_k}\right) \log(T) + \sum_{k: \Delta_k>0} \Delta_k \left(1 + \frac{\pi^2}{3}\right).
+        % = \bigO{ \left(\sum_{k: \Delta_k>0} \frac{8}{\Delta_k}\right) \log(T)}.
     \end{equation}
     % \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
@@ -1151,13 +1170,14 @@ the \klUCB{} algorithm rather use the Chernoff concentration inequality for the 
 The indexes are computed as follows, for an exploration function $f(t)$
 that is typically chosen as $f(t) \eqdef \log(t)+c\log(\log(t))$ for the theoretical analyses (with $c \geq 3$),
 and $f(t) \eqdef \log(t)$ in practice.
-The constant $c>0$ is usually chosen as $c = 1$.
+% The constant $c>0$ is usually chosen as $c = 1$.
 \begin{align}\label{eq:2:klUCB_index}
     U_k^{\klUCB}(t) \eqdef \sup\limits_{q \in [0, 1]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{f(t}{N_k(t)} \right\}.
 \end{align}
 
-For Bernoulli distributions, the previous claim that \klUCB{} builds smaller confidence intervals (\ie, more accurate) than $\UCB_1$, \ie, $U_k^{\klUCB}(t) < U_k^{\UCB}(t)$,
-is justified by Pinkser's inequality which gives $\kl(x,y) \geq 2(p-q)^2$.
+For Bernoulli distributions, \klUCB{} builds tighter confidence intervals than $\UCB_1$, in the sense that $U_k^{\klUCB}(t) < U_k^{\UCB}(t)$
+but with the same probability coverage.
+This is justified by Pinkser's inequality, which gives $\kl(x,y) \geq 2(x-y)^2$.
 %
 The \KLUCB{} and \klUCB{} algorithms achieve finite-time regret logarithmic upper-bounds on their regret, and have been proven to be asymptotically optimal, respectively for one-dimensional exponential families and for bounded rewards distributions \cite{Garivier11KL,KLUCBJournal}.
 
