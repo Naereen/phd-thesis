@@ -400,7 +400,7 @@ The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized___
 
 \begin{smallproof}
   Note that term \ref{eq:5:term3} is clearly lower bounded by $0$
-  but it is not obvious for \ref{eq:5:term2} as there is no reason for $N_k(T)$ to be upper bounded by $T$ (it counts the selections of arm $k$ by \emph{all} the players, and for instance if player $1$ is fixed on arm $1$ and player $2$ plays it at least once, then $N_1(T)\geqT+1$).
+  but it is not obvious for \ref{eq:5:term2} as there is no reason for $N_k(T)$ to be upper bounded by $T$ (it counts the selections of arm $k$ by \emph{all} the players, and for instance if player $1$ is fixed on arm $1$ and player $2$ plays it at least once, then $N_1(T) \geq T+1$).
   %
   Let $N_k^{!}(T) \eqdef \sum_{t=1}^{T} \indic(\exists! j, A^j(t)=k)$,
   where the notation $\exists!$ stands for ``there exists a unique''.
@@ -409,7 +409,7 @@ The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized___
     N_k(T) = \sum_{t=1}^{T} \indic(\exists! j, A^j(t) = k) + \sum_{t=1}^{T} \sum_{j=1}^{M} c_{k,t} \indic(A^j(t) = k)
     = N_k^{!}(T) + C_k(T).
   \end{equation*}
-  By focusing on the two terms $\ref{eq:5:term2} + \ref{eq:5:term3}$ from the decomposition of $R_T(\boldsymbol{\mu}, M, \cA)$ from Lemma~\ref{lem:5:DecompositionRegret}, we have
+  We focus on the two terms $\ref{eq:5:term2} + \ref{eq:5:term3}$ from the decomposition of $R_T(\boldsymbol{\mu}, M, \cA)$ from Lemma~\ref{lem:5:DecompositionRegret},
   \begin{align*}
     \ref{eq:5:term2} + \ref{eq:5:term3} &=
     \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[N_k^!(T)])
@@ -425,7 +425,7 @@ The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized___
     + \sum_{k=1}^{M} \min(\mu_M^*, \mu_k) \E_{\mu}[C_k(T)].
   \end{align*}
   And now both terms are non-negative, as $N_k^!(T) \leq T$, $\min(\mu_M^*, \mu_k)\geq 0$, and $C_k(T) \geq 0$, so $\ref{eq:5:term2} + \ref{eq:5:term3} \geq 0$
-  which proves that $R_T(\boldsymbol{\mu}, M, \cA) \geq \ref{eq:5:term1}$, as wanted.
+  which proves that $R_T(\boldsymbol{\mu}, M, \cA) = \ref{eq:5:term1} + \ref{eq:5:term2} + \ref{eq:5:term3} \geq \ref{eq:5:term1}$, as wanted.
 \end{smallproof}
 
 
@@ -623,6 +623,13 @@ It was conjectured in \cite{Besson2018ALT} that \Selfish{} can suffer linear reg
 When sensing is possible, that is under observation models \modelun{} and \modeldeux, most existing strategies build on a \emph{single-player bandit algorithm} (usually an \emph{index policy}) that relies on the sensing information, together with an \emph{orthogonalization strategy} to deal with collisions.
 Following this approach, we introduce two new algorithms, \RandTopM{} and \MCTopM, in Section~\ref{sub:5:RandTopM_and_MCTopM}.
 
+\textcolor{red}{\textbf{Warning:}}
+We want to strengthen the fact that in all the proposed algorithms,
+the players do \emph{not} know their numbers $j\in[M]$,
+and they do not need to know it to achieve low regret.
+%
+We discuss the fact that this would be an unrealistic hypothesis in Section~\ref{par:5:knowingYourIDinMPBanditsGame} below.
+
 
 % -----------------------------------------------------------------
 \subsection{The \Selfish{} heuristic, with or without ``sensing''}
@@ -697,7 +704,7 @@ Thus we propose next our main contribution, the \MCTopM{} algorithm, proved to b
 % \textbf{Index policies.}
 % %
 The approache we now describe for multi-players bandits can be used in combination with any index policy (see Algorithm~\ref{algo:2:indexPolicy}), but we restrict our presentation to UCB algorithms, for which strong theoretical guarantees can be obtained. In particular, we focus on two types of indices:
-\UCB{} \citep{Auer02}
+$\UCB_1$ \citep{Auer02}
 and \klUCB{} \citep{KLUCBJournal}.
 For player $j\in[M]$
 %
@@ -769,17 +776,19 @@ We precisely state our first proposal below in Algorithm~\ref{algo:5:RandTopM}.
               Let $A^j(0) \sim \cU([K])$ and $C^j(0)=\mathrm{False}$ \\
               \For{$t = 1, \dots, T$}{
                   %
-                  \eIf{$A^j(t-1) \notin \TopM(t)$}{
-                    \eIf(\tcp*[f]{collision at previous step}){$C^j(t-1)$}{
+                  \uIf{$A^j(t-1) \notin \TopM(t)$}{
+                    \uIf(\tcp*[f]{collision at previous step}){$C^j(t-1)$}{
                       $A^j(t) \sim \cU \left(\TopM(t)\right)$
                       \tcp*[f]{randomly switch}
-                      }(\tcp*[f]{randomly switch on an arm that had smaller UCB}){
-                        $A^j(t) \sim \cU \left(\TopM(t) \cap \left\{k : U_k^j(t-1) \leq U^j_{A^j(t)}(t-1)\right\}\right)$
                       }
-                    }{
-                      $A^j(t) = A^j(t-1)$
-                      \tcp*[f]{stays on the same arm}
+                    \uElse(\tcp*[f]{randomly switch on an arm that had smaller UCB}){
+                      $A^j(t) \sim \cU \left(\TopM(t) \cap \left\{k : U_k^j(t-1) \leq U^j_{A^j(t)}(t-1)\right\}\right)$
                     }
+                  }
+                  \uElse{
+                    $A^j(t) = A^j(t-1)$
+                    \tcp*[f]{stays on the same arm}
+                  }
                   Play arm $A^j(t)$, get new observations (sensing and collision), \\
                   Compute the indices $U^j_k(t+1)$ and set $\TopM(t+1)$ for next step.
               }
@@ -800,9 +809,7 @@ In \RandTopM{}, player $j$ is always considered ``not fixed'',
 and a \emph{collision always forces a uniform sampling of the next arm} from $\TopM(t)$.
 
 
-
-
-\paragraph{The \MCTopM{} algorithm.}
+\textbf{The \MCTopM{} algorithm.}
 %
 Our second proposal \MCTopM{} is stated below as Algorithm~\ref{algo:5:MCTopM},
 it is a slightly more complex extension of the \RandTopM{} algorithm.
@@ -851,7 +858,7 @@ When a collision occurs for a player implementing the \RandTopM{} algorithm, tha
                         \tcp*[f]{transition $(2)$} \\
                         $s^j(t) = \mathrm{False}$
                     }
-                    \Else(\tcp*[f]{transition $(1)$ or $(4)$}){
+                    \uElse(\tcp*[f]{transition $(1)$ or $(4)$}){
                       $A^j(t) = A^j(t-1)$ \tcp*[f]{stay on the previous arm} \\
                       $s^j(t) = \mathrm{True}$ \tcp*[f]{become or stay fixed on a ``chair''}
                     }
@@ -948,7 +955,7 @@ Explicit expressions for $C_{\boldsymbol{\mu}}$, $D_{\boldsymbol{\mu}}$ can be f
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
   For any $\boldsymbol{\mu}\in\cP_M$,
   let player $j\in[M]$ use the \RandTopM-, \MCTopM- or \rhoRand-\klUCB{}
-  decentralized policy with exploration function $f(t) = \log(t) + 3 \log(\log(t))$.
+  decentralized policy with exploration function $f(t) \eqdef \log(t) + 3 \log(\log(t))$.
   Then for any sub-optimal arm $k \in \Mworst$ there exists problem-dependent constants $C_{\boldsymbol{\mu}}, D_{\boldsymbol{\mu}} > 0$ such that
   % %
   % \hfill{}
