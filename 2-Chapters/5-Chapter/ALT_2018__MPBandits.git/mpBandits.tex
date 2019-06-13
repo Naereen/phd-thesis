@@ -271,10 +271,10 @@ In this section, we provide a useful decomposition of the regret (Lemma~\ref{lem
   \textbf{\textcolor{red}{Warning}.}
   %
   The regret lower bound that we gave in \cite{Besson2018ALT} is not applicable to any algorithm,
-  as it was discovered by Etienne Boursier and Vianney Perchet, as they explain in Section~2.4 in \cite{BoursierPerchet18}.
+  as it was discovered by Boursier and Perchet, as they explain in Section~2.4 in \cite{BoursierPerchet18}.
   The proof we gave in the Appendix of our paper \cite{Besson2018ALT} was wrong in just one step,
   but the results stated in this section are now correct,
-  thanks to the modifications proposed by Emilie Kaufmann and Abbas Mehrabian in Appendix~E of \cite{KaufmannAbbas19}.
+  thanks to the modifications proposed by Kaufmann and Mehrabian in Appendix~E of \cite{KaufmannAbbas19}.
   The cost for this modification is to restrict the lower-bound to a smaller class of algorithms, which \emph{should} contain \RhoRand, \RandTopM{} and \MCTopM, but not the two algorithms proposed SIC-MMAB from \cite{BoursierPerchet18} and Multiplayer Explore-then-Commit (M-ETC) from \cite{KaufmannAbbas19}.
   Proving that the proposed algorithms are in this class is left as an open question.
 \end{leftbar}  % XXX leftbar warningbar, comment if needed
@@ -394,13 +394,13 @@ The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized___
     For any strategy $\cA$ and $\boldsymbol{\mu}\in\cP_M$, the regret is lower-bounded by \ref{eq:5:term1}:
     \begin{align*}
         R_T(\boldsymbol{\mu}, M, \cA)    \geq \sum\limits_{k \in \Mworst} (\mu_M^*- \mu_k) \E_{\mu}[N_k(T)].
-    \end{align*}
+    \end{align*}%
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
 \begin{smallproof}
   Note that term \ref{eq:5:term3} is clearly lower bounded by $0$
-  but it is not obvious for \ref{eq:5:term2} as there is no reason for $N_k(T)$ to be upper bounded by $T$.
+  but it is not obvious for \ref{eq:5:term2} as there is no reason for $N_k(T)$ to be upper bounded by $T$ (it counts the selections of arm $k$ by \emph{all} the players, and for instance if player $1$ is fixed on arm $1$ and player $2$ plays it at least once, then $N_1(T)\geqT+1$).
   %
   Let $N_k^{!}(T) \eqdef \sum_{t=1}^{T} \indic(\exists! j, A^j(t)=k)$,
   where the notation $\exists!$ stands for ``there exists a unique''.
@@ -1367,8 +1367,12 @@ where switching arms means re-configuring a radio hardware, an operation that co
 An algorithm guaranteeing a small number of switches is thus interesting,
 and for instance \cite{modiDemo2016} studied the empirical impact of the number of hardware reconfigurations on the battery life of a dynamic end-devices.
 This work highlighted a tradeoff between minimizing regret and minimizing the number of switches of arms.
+On a more experimental note, it was shown in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-players bandits, \rhoRand, could be tuned to run in batches, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret.
+While such ideas can interest a practitioner, they does not change the asymptotic behavior of $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, which is $\Theta(\log(T))$ for any efficient policy.
 %
 We also note that introducing explicit \emph{switching costs} in the regret, like it was done in previous works like \cite{Koren17} for single-player bandits, could also be fruitful.
+
+% On a more experimental note, it was shown in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-players bandits, \rhoRand, could be tuned to run in batches\footnote{~The batch bandit setting implies that all players use the same decisions for instance for $50$ consecutive times, and update their decisions only once every $50$ time steps. For more details, see \cite{modiDemo2016} for experiments on the multi-players case, or \cite{perchet2016,gao2019batched,kolnogorov2019multi} for theoretical developments on the single-player case.}, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret. While such ideas can interest a practitioner, they does not change the asymptotic behavior of $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, which is $\Theta(\log(T))$ for any efficient policy.
 
 % -----------------------------------------------------------------
 % \subsection{Logarithmic Regret for \MCTopM}\label{sub:5:Regret}

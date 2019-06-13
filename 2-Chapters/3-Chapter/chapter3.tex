@@ -39,7 +39,7 @@ Experiment results are saved in an optimized binary format (HDF5) as well as hig
 More than two years of active development have shown how easy it can be to add new algorithms, new arm distributions, and new bandit models (\eg, Markov or non-stationary).
 It is hosted on GitHub, and uses the state-of-the-art development technologies, by using two online services of continuous integration to run automated tests and to build its online documentation.
 
-SMPyBandits stands for \emph{S}ingle and \emph{M}ulti \emph{P}layer \emph{Bandits} in P\emph{y}thon.
+SMPyBandits stands for \emph{S}ingle- and \emph{M}ulti-\emph{P}layer \emph{Bandits} in P\emph{y}thon.
 The library does not aim at being blazing fast or optimized in terms of memory usage, as it comes with a pure Python implementation \cite{python}, and uses only standard open-source Python packages (\ie, no hard to install dependencies).
 Some critical parts are also available as a \texttt{C} Python extension, and the just-in-time Numba compiler \cite{numba} is used whenever it is possible, so we can note that we optimized the time efficiency of what could be (easily) optimized.
 However if simulation speed really matters, one should rather refer to less exhaustive but faster implementations, like for example \cite{TorLibbandit} in \texttt{C++} or \cite{VishMABjl} in Julia. Note that both are not maintained anymore, and contain just a few algorithms for the simple stationary MAB model.
@@ -162,7 +162,7 @@ but it also possible to mix them.
 %  (\eg, one arm is Bernoulli-distributed and another).
 %  (see for instance Figure~\ref{fig:25:HarderMixed}).
 %
-For instance the following code in Code~\ref{lst:3:pythonCodeCreateProblem} creates three arms, following a Bernoulli distribution with respective means $0.1, 0.5, 0.9$, and a \texttt{MAB} object which encapsulate sthe problem.
+For instance the following code in Code~\ref{lst:3:pythonCodeCreateProblem} creates three arms, following a Bernoulli distribution with respective means $0.1, 0.5, 0.9$, and a \texttt{MAB} object which encapsulates the problem.
 We give another example for truncated Gaussian distributions, and a visualization of a histogram of $10000$ rewards obtained from the arms, below in Figure~\ref{fig:3:exampleOfRewards}.
 
 % https://tex.stackexchange.com/a/12430/
@@ -300,7 +300,7 @@ $ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=4 \
 \end{listing}
 \end{small}
 
-Simulations are easily executed, \eg, Code~\ref{lst:3:howToRunBasicLibrary} shows how to start $N=1000$ repetitions of a simple non-Bayesian Bernoulli-distributed problem, for $K=9$ arms, an horizon of $T=10000$ and on $4$ CPUs.
+Simulations are easily executed, \eg, Code~\ref{lst:3:howToRunBasicLibrary} shows how to start $N=1000$ repetitions of a simple non-Bayesian Bernoulli-distributed problem, for $K=9$ arms, an horizon of $T=10000$ and on $4$ CPU.
 It takes about $20$ min, on a $4$-core $64$-bit GNU/Linux laptop.
 Environment variables (\texttt{N=1000} etc) in the command line are not required, but they are convenient.
 
@@ -504,7 +504,7 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
     AdBandits from \cite{Truzzi13} (\texttt{AdBandits}), using $\alpha=1$.
     % It follows the same assumptions as Thompson sampling and Bayes-UCB, and uses a Beta posterior on each arm. It uses a random mixture between the two algorithms, and with a certain probability it uses the Thompson decision rule (\ie, choose the arm maximizing one draw of random samples from the posteriors), otherwise it uses the Bayes-UCB decision rule (\ie, choose the arm maximizing the $1-1/t$ quantile).
     % It was proposed in this article \cite{Truzzi13} and illustrated on empirical simulations, but no theoretical analysis was given, and it did not gain popularity since then.
-    In practice, it is usually (slighly) more efficient than both Thompson sampling and Bayes-UCB in terms of regret, it is comparable in terms of computation times, but costs more memory.
+    In practice, it is usually (slightly) more efficient than both Thompson sampling and Bayes-UCB in terms of regret, it is comparable in terms of computation times, but costs more memory.
 
     \item
     %  Algorithm 9 is

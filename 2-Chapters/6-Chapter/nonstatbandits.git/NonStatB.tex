@@ -107,7 +107,7 @@ $\NCk \leq \Upsilon_T$, but there can be an arbitrary difference between these t
 We illustrate the two extreme cases in problems $1$ and $2$ presented in Figures~\ref{fig:6:Problem_1} and \ref{fig:6:Problem_2} below.
 
 
-\textbf{An interesting interpolation.}
+\paragraph{An interesting interpolation.}
 %
 The piece-wise stationary bandit model can be viewed as an interpolation between stationary and adversarial models, as the stationary model corresponds to $\Upsilon_T = 0$, while some adversarial models can be considered as a special (worst) case, with $\Upsilon_T = T-1$ (when considering an adaptive or an oblivious adversary).
 However, analyzing an algorithm for the piece-wise stationary bandit model requires to assume a small number of changes, typically $\Upsilon_T = o(\sqrt{T})$.
@@ -228,7 +228,7 @@ it has no theoretical guarantee, so we do not include \PHT-\UCB{} in the experim
 %
 In comparison, \MUCB{} uses a much simpler test, based on the $w$ most recent observations on one arm (for a fixed and even number $w$), and compares with a fixed threshold $h$ the difference of the sum of rewards for the first half and the second half. It is numerically much simpler, and has the advantage of using only a bounded memory (of the order $\bigO{K w}$ for $K$ arms).
 %
-Both approaches also introduced a mechanism to force a uniform exploration of each arm, parametered by $\omega\in(0,1)$.
+Both approaches also introduced a mechanism to force a uniform exploration of each arm, parametrized by $\omega\in(0,1)$ (it is called $\alpha$ in both papers, but to avoid clutter with the $\alpha$ parameter in $\UCB_1$, see \eqref{eq:2:UCB_index}, we rename it $\omega$ in this chapter).
 % \CUSUMUCB{} uses a randomized exploration, by sampling arm $k$ with probability $\omega/K$ at each time step,
 % and \MUCB{} uses a more deterministic scheme, to force exploring the $K$ arms (when the time since the last restart, $t - \tau$, is found to be in $[K]$ modulo $\left\lceil 1/\omega \right\rceil$).
 % Both solutions ensure that all arms are sampled enough on each stationary sequence, in order for the CD algorithm to have enough \iid{} samples to detect changes.
@@ -414,7 +414,7 @@ As explained in Section~\ref{par:2:normalizationTrick}, our work can be applied 
 If the samples $(X_t)$ were all drawn from a Bernoulli distribution, this change-point detection problem would reduce to a parametric sequential test of
 $\cH_0 : (\exists \mu_0: \forall t\in\N^*, X_t \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_0))$,
 against the alternative
-$\cH_1 : (\exists \mu_0 \neq \mu_1, \tau \in \N^*: \ \  X_1, \dots, X_\tau \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_0) \ \ \text{and} \ \ X_{\tau+1}, X_{\tau+2}, \dots \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_1))$.\\
+$\cH_1 : (\exists \mu_0 \neq \mu_1, \tau \in \N^*: \ \  X_1, \dots, X_\tau \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_0) \ \ \text{and} \ \ X_{\tau+1}, X_{\tau+2}, \dots \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_1))$.
 %
 The Generalized Likelihood Ratio statistic for this test is defined by
 \begin{equation}\label{eq:6:firstDefGLRT}
@@ -445,9 +445,11 @@ This motivates the following definition of the Bernoulli GLRT change point detec
 \begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
     The Bernoulli GLRT (B-GLRT) change point detector with threshold function $\beta(n,\delta)$ is the stopping time $\widehat{\tau}_{\delta}$ defined by
     %
-    \begin{equation}\label{def:6:GLR}
-        \widehat{\tau}_{\delta} \eqdef \inf \left\{ n \in \N^* : \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right] \geq \beta(n,\delta)\right\}.
-    \end{equation}
+    \begin{small}
+        \begin{equation}\label{def:6:GLR}
+            \widehat{\tau}_{\delta} \eqdef \inf \left\{ n \in \N^* : \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right] \geq \beta(n,\delta)\right\}.
+        \end{equation}
+    \end{small}
     with the convention that we \emph{enforce} $\left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right] = 0$
     in the case of $\widehat{\mu}_{1:s} = \widehat{\mu}_{s+1:n}$
     (in particular, if $\widehat{\mu}_{1:n} \in \{0,1\}$, then $\widehat{\mu}_{1:s} = \widehat{\mu}_{s+1:n} = 0$ or $\widehat{\mu}_{1:n}$).
@@ -500,7 +502,7 @@ $\cT (x) \simeq x + 4 \ln\big(1 + x + \sqrt{2x}\big)$ for $x\geq 5$ and $\cT(x) 
     $\bP_{\mu_0}(\widehat{\tau}_\delta < \infty) \leq \delta$, with the threshold function
     %
     \begin{equation}\label{def:6:beta}
-        \beta(n,\delta) = 2\cT\left(\frac{\ln(3n\sqrt{n}/\delta)}{2}\right) + 6\ln(1+\ln(n)).
+        \beta(n,\delta) \eqdef 2\cT\left(\frac{\ln(3n\sqrt{n}/\delta)}{2}\right) + 6\ln(1+\ln(n)).
     \end{equation}
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
@@ -535,7 +537,7 @@ As $\nu$ is sub-Bernoulli, the conclusion follows from Lemma~\ref{lem:6:ConcFirs
     & \leq \sum_{s =1}^{\infty} \bP_{\mu_0}\left(\exists r \in \N^* : s \, \kl\left(\widehat{\mu}_{s},\mu_0\right) + r \, \kl\left(\widehat{\mu}'_{r},\mu_0\right) > 3F(s)+3F(r) + 2 \cT\left(\frac{\ln(3s^{3/2}/\delta)}{2}\right)\right)
 \end{align*}
 %
-And so we have $\bP_{\mu_0}\left(T_{\delta} < \infty\right) \leq \sum_{s =1}^{\infty} \frac{\delta}{3s^{3/2}} \leq \delta$.
+And so we have $\bP_{\mu_0}\left(T_{\delta} < \infty\right) \leq \sum\limits_{s =1}^{\infty} \frac{\delta}{3s^{3/2}} \leq \delta$.
 %
 \end{smallproof}
 
@@ -544,11 +546,11 @@ And so we have $\bP_{\mu_0}\left(T_{\delta} < \infty\right) \leq \sum_{s =1}^{\i
     Consider a one-dimensional exponential family $\cE$,
     and let $\nu_{\mu}$ be the unique distribution in this family that has mean $\mu$,
     with moment generating function $\phi_\mu(\lambda) = \bE_{X \sim \nu_{\mu}}[e^{\lambda X}]$.
-    Let $\kl_{\cE}(\mu,\mu') = \KL(\nu_{\mu},\nu_{\mu'})$ be the divergence function associated to $\cE$.
+    Let $\kl_{\cE}(\mu,\mu') \eqdef \KL(\nu_{\mu},\nu_{\mu'})$ be the divergence function associated to $\cE$.
     Let $(X_i)_{i \in \N^*}$ and $(Y_k)_{i \in \N^*}$ be two independent \iid{} processes, with respective means $\mu$ and $\mu'$, such that
     $\bE[e^{\lambda X_1}] \leq e^{\phi_{\mu}(\lambda)}$ and $\bE[e^{\lambda Y_1}] \leq e^{\phi_{\mu'}(\lambda)}$.
     %
-    Denote $\widehat{\mu}_s = \frac{1}{s}\sum\limits_{i=1}^s X_i$ and $\widehat{\mu}'_r = \frac{1}{r}\sum\limits_{i=1}^r Y_k$.
+    Denote $\widehat{\mu}_s \denote \frac{1}{s}\sum\limits_{i=1}^s X_i$ and $\widehat{\mu}'_r \denote \frac{1}{r}\sum\limits_{i=1}^r Y_k$.
     Then for every $s,r \in \N^*$ we have,
     \begin{small}
         \begin{equation}
@@ -745,7 +747,7 @@ To sum-up these simulations, they validate the use of a simpler and more explici
 %-----------------------------------------------------------------------------
 \textbf{Forced exploration.}
 %
-The forced exploration scheme used in \GLRklUCB{} (lines $3$-$5$) generalizes the deterministic exploration scheme proposed for \MUCB{} by \cite{CaoZhenKvetonXie18}, whereas \CUSUMUCB{} performs a uniform random exploration.
+The forced exploration scheme used in \GLRklUCB{} (lines $3$-$5$) generalizes the deterministic exploration proposed for \MUCB{} by \cite{CaoZhenKvetonXie18}, whereas \CUSUMUCB{} performs a uniform random exploration.
 Both approaches are parameterized by $\omega\in(0,1)$.
 More precisely, \CUSUMUCB{} samples arm $k$ with probability $\omega/K$ at each time step,
 and \MUCB{} uses a deterministic scheme, to force exploring the $K$ arms: when the time since the last restart, $t - \tau$, is found to be in $[K]$ modulo $\left\lceil 1/\omega \right\rceil$.
@@ -913,7 +915,7 @@ We prefer to state the four cases, to highlight the modularity of the result giv
         \begin{equation}
             R_T = \bigO{\frac{K}{\left(\Delta^{\text{change}}\right)^2} \textcolor{red}{\EffChange}\sqrt{T\ln(T)} + \frac{\EffChange}{\left(\Delta^{\text{opt}}\right)^2} \ln(T)},
         \end{equation}
-        \item Choosing $\omega = \sqrt{\Upsilon_T\ln(T) / T}$, $\delta = 1 / \sqrt{\Upsilon_T T}$ (with prior knowledge of $\Upsilon_T$ and optimist guess $\Upsilon_T \simeq \EffChange \ll K \Upsilon_T$) gives
+        \item Choosing $\omega = \sqrt{\Upsilon_T\ln(T) / T}$, $\delta = 1 / \sqrt{\Upsilon_T T}$ (with prior knowledge of $\Upsilon_T$ and ``optimist'' guess $\Upsilon_T \simeq \EffChange \ll K \Upsilon_T$) gives
         \begin{equation}
             R_T = \bigO{\frac{K^{\textcolor{red}{2}}}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\Upsilon_T T\ln(T)} + \frac{K\Upsilon_T}{\left(\Delta^{\text{opt}}\right)^2}\ln(T)},
         \end{equation}
@@ -921,7 +923,7 @@ We prefer to state the four cases, to highlight the modularity of the result giv
         \begin{equation}
             R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\EffChange T\ln(T)} + \frac{\EffChange}{\left(\Delta^{\text{opt}}\right)^2}\ln(T)},
         \end{equation}
-        \item Choosing $\omega = \sqrt{K\Upsilon_T\ln(T) / T}$, $\delta = 1 / \sqrt{K\Upsilon_T T}$ (with prior knowledge of $\Upsilon_T$ and pessimist guess $\EffChange \simeq K \Upsilon_T$) gives
+        \item Choosing $\omega = \sqrt{K\Upsilon_T\ln(T) / T}$, $\delta = 1 / \sqrt{K\Upsilon_T T}$ (with prior knowledge of $\Upsilon_T$ and ``pessimist'' guess $\EffChange \simeq K \Upsilon_T$) gives
         \begin{equation}
             R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\EffChange T\ln(T)} + \frac{\EffChange}{\left(\Delta^{\text{opt}}\right)^2} \ln(T)}.
         \end{equation}
@@ -1116,9 +1118,10 @@ Rewriting the sum in $t$ as the sum of consecutive intervals $[\tau^{(i)}+1, \ta
     & \leq \sum_{k=1}^{\Upsilon_T}\bE\Big[\indic(\cE_T)\widehat{\tau}^{(i)} + \indic(\cE_T) \sum_{t=\widehat{\tau}^{(i)}+1}^{\tau^{(i+1)}}\left(\mu_{k^*}^{(i)} - \mu_{A(t)}^{(i)}\right)\indic\left(\UCB_{A(t)}(t) \geq \mu_{k^*}^{(i)}\right)\Big] \\
     & \leq \sum_{k=1}^{\Upsilon_T}d_k^{(i)}+ \sum_{k=1}^K \bE\Big[\indic(\cE_T) \sum_{t=\widehat{\tau}^{(i)}+1}^{\tau^{(i+1)}}\left(\mu_{k^*}^{(i)} - \mu_k^{(i)}\right)\indic\left(A(t)=i,\UCB_k(t) \geq \mu_{k^*}^{(i)}\right)\Big] \\
     & \leq \sum_{k=1}^{\Upsilon_T}d_k^{(i)}+ \sum_{k=1}^K \sum_{k=1}^{\Upsilon_T}\left(\mu_{k^*}^{(i)} - \mu_k^{(i)}\right)\times \\
-    &\hspace{1cm}\bE\Big[\indic(\cE_T) \sum_{t=\widehat{\tau}^{(i)}+1}^{\tau^{(i+1)}}\sum_{s=1}^{t-\widehat{\tau}^{(i)}}\indic\left(A(t) = i,n_k(t) = s\right) \indic\left(s \, \kl(\widetilde{\mu}_{k,s}^{(i)}, \mu_{k^*}^{(i)}) \leq f(\tau^{(i+1)} - \widehat{\tau}^{(i)})\right)\Big]\\
-% \end{align*}%
-% \begin{align*}
+    &\hspace{1cm}\bE\Big[\indic(\cE_T) \sum_{t=\widehat{\tau}^{(i)}+1}^{\tau^{(i+1)}}\sum_{s=1}^{t-\widehat{\tau}^{(i)}}\indic\left(A(t) = i,n_k(t) = s\right) \indic\left(s \, \kl(\widetilde{\mu}_{k,s}^{(i)}, \mu_{k^*}^{(i)}) \leq f(\tau^{(i+1)} - \widehat{\tau}^{(i)})\right)\Big]
+    % \\
+\end{align*}%
+\begin{align*}
     & \leq \sum_{k=1}^{\Upsilon_T}d_k^{(i)}+ \sum_{k=1}^K \sum_{k=1}^{\Upsilon_T}\left(\mu_{k^*}^{(i)} - \mu_k^{(i)}\right)\bE\Big[\indic(\cE_T) \sum_{s=1}^{n_k(\tau^{(i+1)})}\indic\left(s \, \kl(\widetilde{\mu}_{k,s}^{(i)}, \mu_{k^*}^{(i)}) \leq f(\tau^{(i+1)} - \tau^{(i)})\right)\Big]  \\
     & \leq \sum_{k=1}^{\Upsilon_T}d_k^{(i)}+ \sum_{k=1}^K \sum_{k=1}^{\Upsilon_T}\left(\mu_{k^*}^{(i)} - \mu_k^{(i)}\right)\bE\Big[\indic(\cC^{(i)}) \sum_{s=1}^{n_k(\tau^{(i+1)})}\indic\left(s \, \kl(\widetilde{\mu}_{k,s}^{(i)}, \mu_{k^*}^{(i)}) \leq f(\tau^{(i+1)} - \tau^{(i)})\right)\Big].
 \end{align*}
@@ -1138,7 +1141,8 @@ If $\mu_{k^*}^{(i)} > \mu_k^{(i)}$ by definition, we can use the analysis of \kl
 Combining the regret decomposition~\eqref{eq:6:GeneRegretBound} with Lemma~\ref{lem:6:GoodEventGlobal} and the two upper bounds of $(A)$ in \eqref{eq:6:TermAFinalGlobal} and of $(B)$ in \eqref{eq:6:TermBFinalGlobal},
 \[R_T \leq 2\sum_{k=1}^{\Upsilon_T} \frac{4K}{\omega \left(\Delta^{(i)}\right)^2}\beta(T,\delta) +\omega T + \delta (K+1)\Upsilon_T  + \sum_{k=1}^{\Upsilon_T}\sum_{i : \mu_k^{(i)} \neq \mu_{k^*}^{(i)}} \frac{\left( \mu_{k^*}^{(i)}-\mu_k^{(i)}\right)}{\kl\left(\mu_k^{(i)},\mu_{k^*}^{(i)}\right)}\ln(T) + \bigO{\sqrt{\ln(T)}},\]
 which concludes the proof.
-
+%
+\hfill{}$\square$
 
 \subsubsection{Controlling the probability of the good event: proof of Lemma~\ref{lem:6:GoodEventGlobal}}
 
@@ -1170,7 +1174,8 @@ We have $\widehat{\tau}^{(i)} \leq \tau^{(i)}$ and it implies that there exists 
 with $\widehat{\mu}_{s:s'} = \sum_{r=s}^{s'} Z_{i,r}$ where $Z_{i,r}$ is an \iid{} sequence with mean $\mu_k^{(i-1)}$.
 Indeed, conditionally to $\cC^{(i-1)}$, the $n_k(\tau^{(i)})$ successive observations of arm $k$ arm starting from $\widehat{\tau}^{(i)}$ are \iid{} with mean $\mu_k^{(i-1)}$.
 Using Lemma~\ref{lem:6:ConcFirst}, term $(a)$ is upper bounded by $K\delta$.
-
+%
+\hfill{}$\square$
 
 \paragraph{Upper bound on term $(b)$: controlling the delay.}
 \label{par:6:controllingDelayInOneProof}
@@ -1228,11 +1233,13 @@ Define $s_{\min} \eqdef \left\lfloor \frac{\omega}{K} (\tau^{(i)}-\tau^{(i-1)})/
 \end{eqnarray*}
 %
 where the last inequality follows from the fact that $\overline{r} \leq s_{\min}$ as $d^{(i)} \leq (\tau^{(i)} - \tau^{(i-1)})/2$ by Assumption~\ref{ass:6:LongPeriodsGlobal}. Now the definition of $d^{(i)}$ readily implies that
-\[\left\lfloor \frac{\omega}{K}d^{(i)}\right\rfloor > \frac{4\beta(T,\delta)}{\left(\Delta^{(i)}\right)^2},\]
+$\left\lfloor \frac{\omega}{K}d^{(i)}\right\rfloor > \frac{4\beta(T,\delta)}{\left(\Delta^{(i)}\right)^2}$,
 which yields
 \[\forall s \in \cI_k, \ \ 2\frac{s+\overline{r}}{s\overline{r}}\beta\left(s+\overline{r}, \delta\right) \leq \left(\Delta^{(i)}\right)^2.\]
 %
 Hence, the probability in the right-hand side of \eqref{eq:6:FromHereGlobal} is zero, which yields $(b) \leq \delta$.
+%
+\hfill{}$\square$
 
 
 % ----------------------------------------------------------------------------

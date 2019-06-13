@@ -317,7 +317,7 @@ it is interesting to illustrate this definition and the notations with two impor
     The KL divergence between $B(x)$ and $B(y)$, of parameters $\eta$, $\eta'$ is given by
     $\kl(x,y) \eqdef \KL_{B}(\eta,\eta') = x \log(x/y) + (1-x) \log((1-x)/(1-y))$,
     and it is also called the \emph{relative binary entropy}.
-    It satisfies $\kl(x,y) \geq d_{1/4}(x,y)$ (Pinsker's inadequality).
+    It satisfies $\kl(x,y) \geq d_{1/4}(x,y)$ (Pinsker's inequality).
 
     \item
     % $\bullet$
@@ -422,33 +422,23 @@ The different applications detailed above are still active research directions,
 and a curious reader can find other interesting applications of MAB models and algorithms in \cite{bouneffouf2019survey}, such as game tree search or network routing in Section~1.2 of \cite{LattimoreBanditAlgorithmsBook}.
 
 
-\paragraph{Applications for Opportunistic Spectrum Access.}
+\textbf{Applications for Opportunistic Spectrum Access.}
 % Detail the previous work from our team SCEE on bandits + OSA : Wassim, Navik
-
-The focus of this work is on cognitive radio and IoT networks, where arms can represent wireless orthogonal channels, but more generally any resource characterizing the communication between a wireless device and a gateway (\eg, spreading factor for LoRa \cite{KerkoucheAlami18}, power allocation for NOMA etc). In cognitive radio using centralized supervision, for instance if the gateway can decide the allocation of devices to resources, MAB can also be used to let the gateway explore different allocations and learn by itself a good allocation, see for instance this article that consider 5G-like networks with small cells \cite{Maghsudi16}.
-
-Previous works of our SCEE team showed that MAB can be used to model the problem of spectrum access for a secondary user accessing a licensed spectrum.
-In this model, arms represent a finite set of orthogonal channels, \ie, different frequency bands in a licensed spectrum.
-In the model with sensing, the samples $Y_{k,t}$ represents the feedback obtained by the CR-equipped device after sensing the channel $k$ at time $t$.
+%
+As highlighted in Chapter~\ref{chapter:1},
+the focus of this work is on cognitive radio and IoT networks, where arms can represent wireless orthogonal channels, but more generally any resource characterizing the communication between a wireless device and a gateway (\eg, spreading factor for LoRa \cite{KerkoucheAlami18}, power allocation for NOMA etc).
+% In cognitive radio using centralized supervision, for instance if the gateway can decide the allocation of devices to resources, MAB can also be used to let the gateway explore different allocations and learn by itself a good allocation, see for instance this article that consider 5G-like networks with small cells \cite{Maghsudi16}.
+%
+% Previous works of our SCEE team showed that MAB can be used to model the problem of spectrum access for a secondary user accessing a licensed spectrum.
+% In this model, arms represent a finite set of orthogonal channels, \ie, different frequency bands in a licensed spectrum.
+In the model of Opportunistic Spectrum Access (OSA) with sensing, the samples $Y_{k,t}$ represents the feedback obtained by the CR-equipped device after sensing the channel $k$ at time $t$.
 A reward of $r(t) = 1$ indicates that no Primary User was sensed, while a reward of $r(t)=0$ indicates that the channel $k$ is busy at time $t$ and no uplink message can be sent.
 %
 This model was first introduced by Wassim Jouini during his PhD thesis,
 in \cite{Jouini09} and later studied in both \cite{Jouini10,Jouini12}.
-Proof-of-concepts using real-world radio hardware was first propsed in \cite{MoyWSR2014,RobertSDR2014}.
-
-\TODOL{Je sais pas à quel point je veux parler de la thèse de Navik? Peut-être que j'en aurai dit assez au Chapitre 1, et que là ça suffira..}
-In a second PhD thesis supervised by Christophe Moy, Navikkumar Modi studied the impact
-of using MAB algorithms to optimize channel selection
-on the battery life of a wireless device.
-On the one hand, running a MAB algorithm such as UCB-like algorithms was proven to be useful and can bring significant improvement in terms of successful transmission rates, directly increasing the battery life of the device.
-On the other hand, classical MAB algorithms tend to switch arms a lot of times, especially in the beginning of the learning process, and this induces a lot of dynamical hardware reconfiguration for the wireless device, as selecting a different channel requires a change in the radio hardware used by the device.
-Each hardware reconfiguration costs energy for the device, and quickly switching algorithms will lead to a reduction of the battery life.
-The tradeoff between the two aspects is studied empirically in
-\cite{modiDemo2016}.
+Proof-of-concepts using real-world radio hardware was first proposed in \cite{MoyWSR2014,RobertSDR2014}.
 %
-Another interesting works is \cite{Modi17QoS}.
-
-\TODOL{FIXME Finir ce blabla rapidement ? Ou alors ce sera déjà fait en intro/chapitre1 ??}
+We study a similar model of using MAB for Cognitive Radio but without the OSA strucutre of Primary and Secondary users, \ie, without sensing information but only a collision indicator, in Chapters~\ref{chapter:4} and \ref{chapter:5}.
 
 
 % ----------------------------------------------------------------------------
@@ -741,17 +731,18 @@ By visualizing the entire \emph{distribution} (as an histogram), or the variance
 
 % - Worst case regret (max $R_T^{r}$ for $r$ index of Monte-Carlo simulation?)
 The \textbf{switching cost} $\mathrm{SC}^{\cA}(T)$ counts how many times the player's decision has changed from one time step to the next one, \ie, $\mathrm{SC}^{\cA}(T) \eqdef \sum_{t=1}^{T-1} \indic(A(t) \neq A(t+1))$.
-It has recently gained interest in the literature, for instance the authors of \cite{Koren17} proposed an algorithm that adaptatively tries to balance the trade-off between minimizing the regret and minimizing the switching cost.
+It has recently gained interest in the literature, for instance the authors of \cite{Koren17} proposed an algorithm that adaptively tries to balance the trade-off between minimizing the regret and minimizing the switching cost.
 %
 Indeed, in single-player models it is easy to show that achieving logarithmic regret directly implies a logarithmic upper-bound on the switching cost, and conversely the lower-bound from \cite{LaiRobbins85} also gives an asymptotic logarithmic lower-bound.
 But even if $\mathrm{SC}^{\cA}(T) = \Theta(\log T)$ for an efficient algorithm, it can be interesting to numerically evaluate this quantity, as a large value might indicate an algorithm that is alternating too much between the optimal arm and other arms.
-
-\TODOL{Enlever ça, juste une phrase qui dit "on le fait plus tard".}
-We find more interesting to study $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, the sum of the switching costs of the $M$ players in a multi-players bandit game (if player $j$ uses algorithm $\cA_j$ for $j=1,\dots,M$). Indeed in this case it is possible that the players attain a logarithmic centralized regret, by following an efficient centralized or decentralized algorithm, while still suffering from a linear switching cost.
 %
-It is very satisfying to obtain a logarithmic switching cost for our algorithm \MCTopM-\klUCB{} in Chapter~\ref{chapter:5}, even if minimizing the switching cost was not one of our objective, and the bound we obtain on $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$ is just a consequence of our proof of the control we give on the regret $R^{\cA}(T)$.
-% - Switching cost? \cite{modiDemo2016} \cite{Koren17}
-On a more experimental note, it was shown in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-players bandits, \rhoRand, could be tuned to run in batches\footnote{~The batch bandit setting implies that all players use the same decisions for instance for $50$ consecutive times, and update their decisions only once every $50$ time steps. For more details, see \cite{modiDemo2016} for experiments on the multi-players case, or \cite{perchet2016,gao2019batched,kolnogorov2019multi} for theoretical developments on the single-player case.}, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret. While such ideas can interest a practitioner, they does not change the asymptotic behavior of $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, which is $\Theta(\log(T))$ for any efficient policy.
+% \TODOL{Enlever ça, juste une phrase qui dit "on le fait plus tard".}
+We find more interesting to study $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, the sum of the switching costs of the $M$ players in a multi-players bandit game (if player $j$ uses algorithm $\cA_j$ for $j=1,\dots,M$), as studied in Chapter~\ref{chapter:5}.
+% Indeed in this case it is possible that the players attain a logarithmic centralized regret, by following an efficient centralized or decentralized algorithm, while still suffering from a linear switching cost.
+% %
+% It is very satisfying to obtain a logarithmic switching cost for our algorithm \MCTopM-\klUCB{} in Chapter~\ref{chapter:5}, even if minimizing the switching cost was not one of our objective, and the bound we obtain on $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$ is just a consequence of our proof of the control we give on the regret $R^{\cA}(T)$.
+% % - Switching cost? \cite{modiDemo2016} \cite{Koren17}
+% On a more experimental note, it was shown in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-players bandits, \rhoRand, could be tuned to run in batches\footnote{~The batch bandit setting implies that all players use the same decisions for instance for $50$ consecutive times, and update their decisions only once every $50$ time steps. For more details, see \cite{modiDemo2016} for experiments on the multi-players case, or \cite{perchet2016,gao2019batched,kolnogorov2019multi} for theoretical developments on the single-player case.}, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret. While such ideas can interest a practitioner, they does not change the asymptotic behavior of $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, which is $\Theta(\log(T))$ for any efficient policy.
 
 
 % - Fairness ?
@@ -760,11 +751,11 @@ It was not studied much for single-player problems, and usually it means that ea
 It was studied in a very recent article \cite{Patil2019stochastic},
 where a different notion of regret is introduced to account for the fairness constraint. The authors show that different algorithms, based on $\UCB_1$ or Thompson sampling, can achieve logarithmic regret while respecting the fairness constraints.
 %
-\TODOL{Enlever ça, juste une phrase qui dit "on le fait plus tard".}
+% \TODOL{Enlever ça, juste une phrase qui dit "on le fait plus tard".}
 In this thesis, we only consider fairness in the multi-players bandit models,
 in Chapter~\ref{chapter:5}, where fairness refers to a different notion (\ie, ``cooperative fairness'').
-When $M<K$ players learn in a decentralized way, they will essentially converge to an orthogonal affectation of players to arms, so that each player uses a unique arm among the $M$ best arms (most of the times).
-The fairness constraint says that, in average, no user is arbitrarily going to converge more frequently on a better arm than another user, and it is for instance the case for permutation invariant decentralized algorithms.
+% When $M<K$ players learn in a decentralized way, they will essentially converge to an orthogonal affectation of players to arms, so that each player uses a unique arm among the $M$ best arms (most of the times).
+% The fairness constraint says that, in average, no user is arbitrarily going to converge more frequently on a better arm than another user, and it is for instance the case for permutation invariant decentralized algorithms.
 We refer to Section~\ref{sub:5:betterLowerBound} for more details.
 
 
@@ -1006,7 +997,7 @@ For a parameter $\alpha$, the \UCB{} indexes are computed as follows, as a sum o
 the \emph{average reward} $\widehat{\mu_k}(t) \eqdef \frac{X_k(t)}{N_k(t)}$
 and a \emph{confidence radius} $\xi_k(t) \eqdef \sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}$.
 %
-\begin{align}\label{eq:UCB_index}
+\begin{align}\label{eq:2:UCB_index}
     U_k^{\UCB_1}(t) = \UCB_k(t) \eqdef \underbrace{\frac{X_k(t)}{N_k(t)}}_{\text{Exploitation }\; \widehat{\mu_k}(t)} + \underbrace{\sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}}_{\text{Exploration }\; \xi_k(t)}.
 \end{align}
 
@@ -1017,7 +1008,7 @@ $ii)$ and/or because the confidence radius $\xi_k(t)$ is large, in which case th
 Either reason makes this arm worth choosing.
 One can also observe that $\xi_k(t)\to\infty$ if $t\to\infty$ while $N_k(t)\ll\log(t)$, which can be used to prove that the $\UCB_1$ algorithm tries all arms at least $\Omega(\log(T))$ times (in average).
 %
-Furthermore, these two terms $\widehat{\mu_k}(t)$ and $\xi_k(t)$ in the \UCB{} defined in \eqref{eq:UCB_index} respectively represent \emph{exploitation} and \emph{exploration}, and summing them up is a natural way of dealing with the exploitation/exploration trade off.
+Furthermore, these two terms $\widehat{\mu_k}(t)$ and $\xi_k(t)$ in the \UCB{} defined in \eqref{eq:2:UCB_index} respectively represent \emph{exploitation} and \emph{exploration}, and summing them up is a natural way of dealing with the exploitation/exploration trade off.
 The constant parameter $\alpha$ in $\xi_k(t)$ also controls this trade-off, and the theoretical analysis suggests to restrict to $\alpha\geq1/2$, and to choose $\alpha=1/2$ for optimal uniform performance (\ie, on all problems, \cite{Auer02}).
 
 We present the regret bound, which was first stated in \cite{Auer02}, and to explain how Hoeffding's inequality is used we prove it below.
@@ -1155,7 +1146,7 @@ The indexes are computed as follows, for an exploration function $f(t)$
 that is typically chosen as $f(t) \eqdef \log(t)+c\log(\log(t))$ for the theoretical analyses (with $c \geq 3$),
 and $f(t) \eqdef \log(t)$ in practice.
 The constant $c>0$ is usually chosen as $c = 1$.
-\begin{align}\label{eq:klUCB_index}
+\begin{align}\label{eq:2:klUCB_index}
     U_k^{\klUCB}(t) \eqdef \sup\limits_{q \in [0, 1]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{f(t}{N_k(t)} \right\}.
 \end{align}
 
@@ -1170,7 +1161,7 @@ The \KLUCB{} and \klUCB{} algorithms achieve finite-time regret logarithmic uppe
 Implementing this kind of policy requires to implement two things.
 The first piece is usually easy: one has to implement a way to compute $\kl(x,y)$ the Kullback-Leibler divergence of the considered one-dimensional family,
 for instance $\kl$ for Bernoulli distributions has a closed form and is easy to compute.
-The second piece is less obvious: one has to solve the optimisation problem defining the $\sup$ in \eqref{eq:klUCB_index}.
+The second piece is less obvious: one has to solve the optimisation problem defining the $\sup$ in \eqref{eq:2:klUCB_index}.
 Any iterative algorithm for numerical optimization of one-dimensional functions can be used (\eg, see \cite{BoydVanderberghe04} for a survey), but as the $\kl(x,\bullet)$ function is usually convex (for any $x$), two practical and mathematically correct solutions are Newton's method or a bisection search.
 The search space for $q$ can be restricted to $[ X_k(t) / N_k(t), 1 ]$ instead of $[0,1]$,
 and for simplicity and efficiency, in this case a naive bisection search works well.
@@ -1268,7 +1259,7 @@ It uses a random mixture between the two algorithms, and with a certain probabil
 It was proposed in this article \cite{Truzzi13} and illustrated on empirical simulations, but no theoretical analysis was given.
 We found that in practice it can achieve very good performance, as illustrated in Section~\ref{sec:3:reviewSPAlgorithms}.
 %  and it did not gain popularity since then.
-% In practice, AdBandits is usually (slighly) more efficient than both Thompson sampling and Bayes-UCB in terms of regret, it is comparable in terms of computation times, but costs more memory.
+% In practice, AdBandits is usually (slightly) more efficient than both Thompson sampling and Bayes-UCB in terms of regret, it is comparable in terms of computation times, but costs more memory.
 
 Finally, we would like to mention that a recent work \cite{KimTewari2019} presented an approach that closes the gap between the two aforementioned point-of-views, frequentist algorithms such as UCB and Bayesian algorithms such as Thompson sampling.
 %  the principle of optimism under uncertainty and the Bayesian point-of-view.
@@ -1304,7 +1295,7 @@ Analyzing it in the generic case was found to be difficult, and it is still an o
 \textbf{Policies for adversarial bandits.}
 %
 Another important family of bandits algorithms are the algorithms proposed for the adversarial setting \cite{Auer02NonStochastic}.
-The first of them is the Exp3 policy, for ``\emph{Exp}onential weights for \emph{Exp}loitation and \emph{Exp}loiration'',
+The first of them is the Exp3 policy, for ``\emph{Exp}onential weights for \emph{Exp}loitation and \emph{Exp}loration'',
 which is an example of the well-known \emph{multiplicative weights update algorithm}\footnote{~For more details see
 % on Wikipedia \href{https://en.wikipedia.org/wiki/Multiplicative_weight_update_method}{\texttt{en.wikipedia.org/wiki/Multiplicative\_weight\_update\_method}},
 this blog post by Jeremy Kun, \href{https://jeremykun.com/2017/02/27/the-reasonable-effectiveness-of-the-multiplicative-weights-update-algorithm/}{\texttt{JeremyKun.com/2017/02/27/the-reasonable-}}\\
