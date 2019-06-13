@@ -3,12 +3,12 @@
 As we said, a third possible approach is to select \emph{on the run} the best algorithm for a specific situation, for which the so called \emph{expert aggregation algorithms} framework can be useful.
 %
 To the best of our knowledge, aggregation algorithms, such as \ExpQ{} which dates back from 2002 \cite{Auer02},
-have never been used in pratice for stochastic MAB problems.
+have never been used in practice for stochastic MAB problems.
 % and we show that it appears empirically sub-optimal when applied to simple stochastic problems.
 
 We present an improved variant of \ExpQ, called \Aggr.
 For synthetic MAB problems, with Bernoulli or other distributions for $K$ arms, simulation results are presented to demonstrate its empirical efficiency.
-We combine classical algorithms, such as Thompson sampling, Upper-Confidence Bounds algorithms (\UCB{} and variants), and Bayesian or Kullback-Leibler UCB.
+We combine classical algorithms, such as Thompson sampling, Upper-Confidence Bounds algorithms (\UCB{} and variants), and Bayesian or \klUCB.
 %
 Our algorithm offers good performance compared to state-of-the-art algorithms
 (\ExpQ{}, \CORRAL{} or \LearnExp{}) \cite{Agarwal16,Singla17},
@@ -18,8 +18,8 @@ and appears as a robust approach to select on the run the best algorithm for any
 
 
 % ----------------------------------------------------------------------
-% \subsection{Aggregating bandit algorithms}\label{sub:25:aggregation}
-\textbf{Notations:}\label{sub:25:aggregation}
+\subsection{Aggregating bandit algorithms}\label{sub:25:aggregation}
+% \paragraph{Notations:}\label{sub:25:aggregation}
 %
 We assume to have $N \geq 2$ MAB algorithms, $\Alg_1, \dots, \Alg_N$,
 and let $\Alg_{\mathrm{aggr}}$ be an aggregation algorithm,
@@ -46,9 +46,18 @@ The considered aggregation algorithms are special cases of the well-known \emph{
 
 
 % ----------------------------------------------------------------------
-\subsection{Our contribution: the \Aggr{} algorithm}\label{sub:25:Aggr}
+\section{Our contribution: the \Aggr{} algorithm}\label{sub:25:Aggr}
 
-\begin{small}
+
+Our proposed \Aggr{} is detailed in Algorithm~\ref{algo:25:Aggr}.
+%
+At every time step, after having observed a reward $r(t)=Y_{A(t),t}$ for its chosen action $A(t)$,
+the algorithm updates the trust probabilities from $\pi^t$ to $\pi^{t+1}$ by
+a multiplicative exponential factor (using the learning rate and the \emph{unbiased} reward).
+%
+Only the algorithms $\Alg_a$ who advised the last decision get their trust updated, in order to trust more the ``reliable'' algorithms.
+
+% \begin{small}
 	\begin{figure}[h!]
 		\centering
 		\begin{framed}
@@ -59,7 +68,7 @@ The considered aggregation algorithms are special cases of the well-known \emph{
 			\KwIn{$N$ bandit algorithms, $\Alg_1, \dots, \Alg_N$, with $N \geq 2$}
 			% \KwIn{Number of arms, $K \geq 2$}
 			% \KwIn{Time horizon, $T \geq 1$, \textbf{not} used for the learning}
-			\KwIn{A sequence of learning rates, $(\eta_t)_{t \geq 1}$}
+			\KwIn{A sequence of learning rates, $(\eta_t)_{t \geq 1}$, \eg, $\eta_t=\frac{\log(N)}{t K}$}
 			\KwData{Initial uniform distribution, $\pi^{0} = \cU([N])$}
 			\KwResult{$\Alg_{\mathrm{aggr}}=\Aggr\left[\Alg_1, \dots, \Alg_N\right]$}
 			% XXX Algorithm
@@ -103,17 +112,11 @@ The considered aggregation algorithms are special cases of the well-known \emph{
 		\end{algorithm}
 		\end{framed}
 	\end{figure}
-\end{small}
+% \end{small}
 
 
-Our proposed \Aggr{} is detailed in Algorithm~\ref{algo:25:Aggr}.
+\paragraph{Unbiased estimate of the rewards.}
 %
-At every time step, after having observed a reward $r(t)=Y_{A(t),t}$ for its chosen action $A(t)$,
-the algorithm updates the trust probabilities from $\pi^t$ to $\pi^{t+1}$ by
-a multiplicative exponential factor (using the learning rate and the \emph{unbiased} reward).
-%
-Only the algorithms $\Alg_a$ who advised the last decision get their trust updated, in order to trust more the ``reliable'' algorithms.
-
 The reward estimate is unbiased in the following sense. If one had access to the samples $Y_{k,t}$ for all arms $k$, the reward incurred by algorithm $a$ at time $t$ would be $r^a(t) = Y_{A_a(t),t}$.
 But we are not in the full information setting (see \cite{CesaLugosi06}), but in the bandit setting, so only one of the samples $Y_{k,t}$ can be observed, $r(t)=Y_{A(t),t}$.
 This quantity can only be observed for those algorithms $a$ for which $A_{a}^{t}=A(t)$.
@@ -141,7 +144,7 @@ It would not be so different, as there is a final renormalization step, and empi
 
 
 % ----------------------------------------------------------------------
-\textbf{Comparison with \ExpQ{}:}\label{sub:25:Exp4}
+\paragraph{Comparison with \ExpQ{}:}\label{sub:25:Exp4}
 %
 % - explain, but don't give pseudo-code ?
 The \ExpQ{} algorithm dates from \cite{Auer02NonStochastic}, and for instance it is also well explained in Section~4.2 of \cite{Bubeck12}.
@@ -164,7 +167,7 @@ $\exp(\eta_t \widetilde{R}_a(t))$.
 We also note that \ExpQ{} uses \emph{losses} instead of rewards, with $\ell(t) = 1 - r(t)$, but this is only a change of vocabulary.
 
 
-\textbf{How to choose the learning rates $(\eta_t)$:}
+\paragraph{How to choose the learning rates $(\eta_t)$:}
 %
 The sequence of non-negative learning rates $(\eta_t)_{t \geq 1}$ used by \ExpQ{} can be arbitrary.
 It can be constant but should be non-increasing \cite[Theorem 4.2]{Bubeck12}.
@@ -180,7 +183,7 @@ We also stick to this choice of $(\eta_t)_{t \geq 1}$ for \Aggr.
 
 
 % ----------------------------------------------------------------------
-\subsection{Experiments on simulated MAB problems}\label{sub:25:numExp}
+\section{Experiments on simulated MAB problems}\label{sub:25:numExp}
 
 % \TODOL{Je pense refaire complètement les expériences de ce morceau.
 
@@ -248,7 +251,7 @@ Figure~\ref{fig:25:HarderMixed_semilogx} is in semilog-$x$ scale to show that th
 
 \begin{figure}[b!]  % [htbp]
 	\centering
-	\includegraphics[width=0.95\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main_semilogx____env4-4_932221613383548446.pdf}
+	\includegraphics[width=1.10\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main_semilogx____env4-4_932221613383548446.pdf}
 	\caption{The semilog-$x$ scale clearly shows the logarithmic growth of the regret for the best algorithms and our proposal \Aggr, even in a hard ``mixed'' problem (\emph{cf}. Figure~\ref{fig:25:HarderMixed}).}
 	\label{fig:25:HarderMixed_semilogx}
 \end{figure}
@@ -266,7 +269,7 @@ Especially in difficult problems with mixed or unknown distributions, \Aggr{} sh
 
 
 % ----------------------------------------------------------------------
-\paragraph{No theoretical guarantees.}\label{sub:25:theory}
+\subsection{No theoretical guarantees.}\label{sub:25:theory}
 
 The \Aggr{} does not have satisfying theoretical guarantees in terms of regret $R_T$, unlike many bandit algorithms.
 %
@@ -294,43 +297,43 @@ for both Bernoulli and non-Bernoulli problems (\eg, Gaussian, exponential and Po
 % Further theoretical developments were left as future work.
 
 
-% ----------------------------------------------------------------------
-\paragraph{Conclusion about our \Aggr{} algorithm.}\label{sub:25:conclusion}
+% % ----------------------------------------------------------------------
+% \paragraph{Conclusion about our \Aggr{} algorithm.}\label{sub:25:conclusion}
 
-We presented the use of aggregation algorithms in the context of Opportunistic Spectrum Access for Cognitive Radio,
-especially for the real-world setting of unknown problem instances,
-when tuning parameters before-hand is no longer possible and an adaptive algorithm is preferable.
-% - \ExpQ and \Aggr works fine
-% Both algorithms \ExpQ{} and \Aggr{} have been detailed, and we explained why
-Our proposed \Aggr{} was presented in details,
-and we also highlighted its differences with \ExpQ.
-% as well \color{red} as the intuition that it seems more suited for purely stochastic problems\color{black}.
-%
-% - \Aggr{} really help to select the best algorithm against a certain problem, on the fly without any prior knowledge of the problem neither any prior knowledge on which algorithms is the best
-We presented experiments on simple MAB problems coming from previous work on bandits for OSA \cite{Jouini10},
-and the simulations results showed that \Aggr{} is able to identify on the fly the best algorithm to trust for a specific problem, as expected.
-Experiments on problems mixing different families of distributions were also presented, with similar conclusions in favor of \Aggr.
-% It is not presented in this section, but our proposed algorithm also works well in dynamic scenarios, in which the distribution of the arms can change abruptly at some time,
-% and appears to be more robust than simple non-aggregated algorithms.
+% We presented the use of aggregation algorithms in the context of Opportunistic Spectrum Access for Cognitive Radio,
+% especially for the real-world setting of unknown problem instances,
+% when tuning parameters before-hand is no longer possible and an adaptive algorithm is preferable.
+% % - \ExpQ and \Aggr works fine
+% % Both algorithms \ExpQ{} and \Aggr{} have been detailed, and we explained why
+% Our proposed \Aggr{} was presented in details,
+% and we also highlighted its differences with \ExpQ.
+% % as well \color{red} as the intuition that it seems more suited for purely stochastic problems\color{black}.
+% %
+% % - \Aggr{} really help to select the best algorithm against a certain problem, on the fly without any prior knowledge of the problem neither any prior knowledge on which algorithms is the best
+% We presented experiments on simple MAB problems coming from previous work on bandits for OSA \cite{Jouini10},
+% and the simulations results showed that \Aggr{} is able to identify on the fly the best algorithm to trust for a specific problem, as expected.
+% Experiments on problems mixing different families of distributions were also presented, with similar conclusions in favor of \Aggr.
+% % It is not presented in this section, but our proposed algorithm also works well in dynamic scenarios, in which the distribution of the arms can change abruptly at some time,
+% % and appears to be more robust than simple non-aggregated algorithms.
 
-\ExpQ{} has theoretical guarantees in terms of adversarial regret, and even if the same result could hold for \Aggr, results in terms of classical regret are yet to be proven.
-Empirically, \Aggr{} showed to always have a logarithmic
-regret $R_T$ if it aggregates algorithms with logarithmic regrets (like UCB, \klUCB, Thompson sampling, BayesUCB etc).
-It usually succeeds to be close to the best of the aggregated algorithms, both in term of regret and best arm pull frequency.
-As expected, the \Aggr{} is never able to outperform any of the aggregated algorithms, but this was an over-optimistic goal.
-%
-What matters the most is that, empirically, \Aggr{} is able to quickly discover \emph{on the fly} the best algorithms to trust, and then performs almost as well as if it was following it from the beginning.
-%
-%
-Our \Aggr{} algorithm could probably be rewritten as an Online Mirror Descent (for more details, see for instance \cite{Hazan2016introduction,Zimmert2018}), as it is the case for both \ExpQ{} and \CORRAL.
-But this direction does not appear very useful, as in the case of \CORRAL{}  the analysis cannot bring a logarithmic regret bound, even by aggregating asymptotically optimal algorithms.
-% We will continue investigating regret bounds for \Aggr,
-% and other directions include possible applications to the non-stochastic case (\eg, rested or restless Markovian problems, like it was very recently studied in \cite{Luo18}).
+% \ExpQ{} has theoretical guarantees in terms of adversarial regret, and even if the same result could hold for \Aggr, results in terms of classical regret are yet to be proven.
+% Empirically, \Aggr{} showed to always have a logarithmic
+% regret $R_T$ if it aggregates algorithms with logarithmic regrets (like UCB, \klUCB, Thompson sampling, BayesUCB etc).
+% It usually succeeds to be close to the best of the aggregated algorithms, both in term of regret and best arm pull frequency.
+% As expected, the \Aggr{} is never able to outperform any of the aggregated algorithms, but this was an over-optimistic goal.
+% %
+% What matters the most is that, empirically, \Aggr{} is able to quickly discover \emph{on the fly} the best algorithms to trust, and then performs almost as well as if it was following it from the beginning.
+% %
+% %
+% Our \Aggr{} algorithm could probably be rewritten as an Online Mirror Descent (for more details, see for instance \cite{Hazan2016introduction,Zimmert2018}), as it is the case for both \ExpQ{} and \CORRAL.
+% But this direction does not appear very useful, as in the case of \CORRAL{}  the analysis cannot bring a logarithmic regret bound, even by aggregating asymptotically optimal algorithms.
+% % We will continue investigating regret bounds for \Aggr,
+% % and other directions include possible applications to the non-stochastic case (\eg, rested or restless Markovian problems, like it was very recently studied in \cite{Luo18}).
 
-\paragraph{Reproducility of the experiments.}
-%
-Experiments presented in this Section are based on our library SMPyBandits,
-and the page \href{https://SMPyBandits.GitHub.io/Aggregation.html}{\texttt{SMPyBandits.GitHub.io/Aggregation.html}} gives instructions to reproduce them.
+% \paragraph{Reproducility of the experiments.}
+% %
+% Experiments presented in this Section are based on our library SMPyBandits,
+% and the page \href{https://SMPyBandits.GitHub.io/Aggregation.html}{\texttt{SMPyBandits.GitHub.io/Aggregation.html}} gives instructions to reproduce them.
 
 
 % ----------------------------------------------------------------------------

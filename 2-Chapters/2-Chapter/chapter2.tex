@@ -14,7 +14,7 @@ In this chapter, we present the common base of all the models studied in this th
 %
 We formalize this MAB model, then we quote some of its important applications.
 We define the notion of regret of an algorithm, and quote important results from the literature. A short review of the most important families of MAB algorithms is then given.
-We conclude this chapter by discussing the question of online algorithm selection.
+% We conclude this chapter by discussing the question of online algorithm selection.
 
 \minitocStartChapter{}
 
@@ -44,22 +44,22 @@ In the rest of this thesis, we focus on cognitive radio, an important field of r
 
 A rich research literature has produced many different algorithms tackling the MAB problem, as suggested by the length of the reference book \cite{LattimoreBanditAlgorithmsBook}.
 We give in Section~\ref{sec:2:famousMABalgorithms} an overview of the main families of algorithms designed to tackle stochastic MAB problems, and we mainly focus on the $\UCB_1$, \klUCB{} and Thompson sampling algorithms, as they are used in the rest of the manuscript.
-% We present SMPyBandits in the next Chapter~\ref{chapter:3}, a Python open-source library, designed to run numerical simulations of MAB problems, one of the main contributions of this thesis.
-% We use it to compare the empirical performances of the most famous and most efficient algorithms, in terms of regret and by evaluating them on different problems.
+% % We present SMPyBandits in the next Chapter~\ref{chapter:3}, a Python open-source library, designed to run numerical simulations of MAB problems, one of the main contributions of this thesis.
+% % We use it to compare the empirical performances of the most famous and most efficient algorithms, in terms of regret and by evaluating them on different problems.
+% % %
+% % In the point-of-view of numerical simulations or real-world applications of bandits on embedded systems, one must also take care of two other measures of performance: time and memory complexities, which can vary greatly between different families of algorithms.
+% % We also empirically compare different algorithms for these two measures in Section~\ref{sec:3:timeAndMemoryCosts}.
 % %
-% In the point-of-view of numerical simulations or real-world applications of bandits on embedded systems, one must also take care of two other measures of performance: time and memory complexities, which can vary greatly between different families of algorithms.
-% We also empirically compare different algorithms for these two measures in Section~\ref{sec:3:timeAndMemoryCosts}.
-%
-% We then give regret upper-bounds of the two main algorithms used in this thesis, $\UCB_1$ and \klUCB, to highlight the difference between their finite-time regret upper-bounds. They are order-optimal as they attain a logarithmic regret.
-% proving their order optimality.
-% (\ie, their regret upper-bound asymptotically matches the lower-bound up-to a constant factor).
-% Moreover, \klUCB{} is known to be optimal for a wide range of arms distributions.
-% A sketch of the proof of both results is given in Appendix.
-%
-Finally, we explore in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} the problem of algorithm selection: as there are many different algorithms, all having different qualities and properties, how one can decide which algorithm to use for a particular application?
-We present one of the first contributions made during my PhD \cite{Besson2018WCNC}, consisting of an efficient algorithm for aggregating algorithms,
-and we illustrate its performance empirically.
-% , but no satisfactory theoretical result is given, as the bound we had hoped for has been proven unachievable since then.
+% % We then give regret upper-bounds of the two main algorithms used in this thesis, $\UCB_1$ and \klUCB, to highlight the difference between their finite-time regret upper-bounds. They are order-optimal as they attain a logarithmic regret.
+% % proving their order optimality.
+% % (\ie, their regret upper-bound asymptotically matches the lower-bound up-to a constant factor).
+% % Moreover, \klUCB{} is known to be optimal for a wide range of arms distributions.
+% % A sketch of the proof of both results is given in Appendix.
+% %
+% Finally, we explore in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} the problem of algorithm selection: as there are many different algorithms, all having different qualities and properties, how one can decide which algorithm to use for a particular application?
+% We present one of the first contributions made during my PhD \cite{Besson2018WCNC}, consisting of an efficient algorithm for aggregating algorithms,
+% and we illustrate its performance empirically.
+% % , but no satisfactory theoretical result is given, as the bound we had hoped for has been proven unachievable since then.
 
 
 \textbf{About notations.}
@@ -76,10 +76,11 @@ Another excellent but reasonably short survey is the book by Bubeck and Cesa-Bia
 Finally, we recommend \cite{bouneffouf2019survey} for a short but good survey on applications of MAB.
 
 
-\textbf{Publication.}
+\textbf{No publication associated with this chapter.}
 %
-The first Sections~\ref{sec:2:notations}, \ref{sec:2:applicationsofStochasticMAB}, \ref{sec:2:lowerUpperBoundsRegret} and \ref{sec:2:famousMABalgorithms} of this chapter are based on existing works,
-and Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is based on our article \cite{Besson2018WCNC}.
+% The first Sections~\ref{sec:2:notations}, \ref{sec:2:applicationsofStochasticMAB}, \ref{sec:2:lowerUpperBoundsRegret} and \ref{sec:2:famousMABalgorithms} of this chapter are based on existing works.
+This chapter is based on existing works.
+% and Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is based on our article \cite{Besson2018WCNC}.
 
 
 % \newpage
@@ -93,7 +94,8 @@ and Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm} in this chapter is ba
 
 A MAB is a model of a decision-making game, where a \emph{player} has to sequentially select one action in a (usually finite) set of actions, and only receives a (random) feedback about the selected action, also called a \emph{reward}.
 \textbf{We always consider $K\in\N, K\geq2$ arms, and discrete times $t\in\N^*$}.
-When the player decides at time $t$ to play (or pull) the arm $A(t)\in\{1,\dots,K\}=[K]$, she receives a reward $r(t) \eqdef Y_{A(t),t}\in\R$, and so on for a finite number of steps $t$ (or rounds), from $t=1$ until $t=T$ for an \emph{horizon} $T$.
+When the player decides at time $t$ to play (or pull) the arm $A(t)\in[K]$,
+where this notation denotes $[K] \eqdef \{1,\dots,K\}$, she receives a reward $r(t) \eqdef Y_{A(t),t}\in\R$, and so on for a finite number of steps $t$ (or rounds), from $t=1$ until $t=T$ for an \emph{horizon} $T$.
 %
 A commonly studied goal for the player is to maximize its sum of received rewards, $\sum_{t=1}^T r(t)$
 (or its \emph{mean} in stochastic and stationary models).
@@ -143,7 +145,7 @@ In all this thesis, we focus on the model with finite arms, and binary or real-v
 % Restricting to models with a finite number of arms
 % rules out an entire domain of the recent research on MAB, in particular we do not consider linear nor contextual bandits (for more details, see Parts V and VI of \cite{LattimoreBanditAlgorithmsBook}).
 %
-We also restrict to \emph{stochastic} rewards, that is we associate a real-valued distribution to each arm, denoted $\nu_k$ for arm $k\in\{1,\dots,\}=[K]$.
+We also restrict to \emph{stochastic} rewards, that is we associate a real-valued distribution to each arm, denoted $\nu_k$ for arm $k\in[K]$.
 Rewards are stationary, meaning that $(Y_{k,t})_{t\in\N^*}$ is independent and identically distributed (\iid), $Y_{k,t} \sim \nu_k$ for any $t\geq1$.
 
 The most common objective for the player is to maximize its expected rewards $\E[\sum_{t=1}^T r(t)] = \sum_{t=1}^T \E[Y_{A(t),t}]$.
@@ -418,9 +420,6 @@ MAB have been applied successfully to various decision making problems, like the
     Discrete-valued parameters are also common, like a choice in a fixed set of kernel functions or the depth of neural networks,
     and higher dimensional or more complex hyper-parameters can for instance be the entire architecture of a neural network.
 
-The different applications detailed above are still active research directions,
-and a curious reader can find other interesting applications of MAB models and algorithms in \cite{bouneffouf2019survey}, such as game tree search or network routing in Section~1.2 of \cite{LattimoreBanditAlgorithmsBook}.
-
 
 \textbf{Applications for Opportunistic Spectrum Access.}
 % Detail the previous work from our team SCEE on bandits + OSA : Wassim, Navik
@@ -439,6 +438,10 @@ in \cite{Jouini09} and later studied in both \cite{Jouini10,Jouini12}.
 Proof-of-concepts using real-world radio hardware was first proposed in \cite{MoyWSR2014,RobertSDR2014}.
 %
 We study a similar model of using MAB for Cognitive Radio but without the OSA strucutre of Primary and Secondary users, \ie, without sensing information but only a collision indicator, in Chapters~\ref{chapter:4} and \ref{chapter:5}.
+
+
+The different applications discussed in this Section are still active research directions,
+and a curious reader can find other interesting applications of MAB models and algorithms in \cite{bouneffouf2019survey}, such as game tree search or network routing in Section~1.2 of \cite{LattimoreBanditAlgorithmsBook}.
 
 
 % ----------------------------------------------------------------------------
@@ -775,7 +778,8 @@ Finally, we conclude by briefly exposing other families of algorithms.
 
 \textbf{Implementation.}
 %
-We describe our library SMPyBandits in more details in Chapter~\ref{chapter:3}, but all the algorithms described in this chapter are implemented in SMPyBandits, in the \texttt{Policies} module, alongside with many more algorithms (there are about 65 for single-player stochastic problems).
+We describe our library SMPyBandits in more details in Chapter~\ref{chapter:3}.
+All the algorithms described in this chapter are implemented in SMPyBandits, in the \texttt{Policies} module, alongside with many more algorithms (there are about 65 for single-player stochastic problems).
 A complete list of the implemented policies can be found on the following web page on the documentation,
 \href{https://smpybandits.github.io/docs/Policies.html}{\texttt{SMPyBandits.GitHub.io/docs/Policies.html}}.
 
@@ -788,12 +792,14 @@ A complete list of the implemented policies can be found on the following web pa
 \paragraph{Naive strategies: pure exploitation or pure exploration.}
 
 Let us first describe two naive strategies, that both fail dramatically.
-They are detailed in Algorithm~\ref{algo:2:naiveStrategies} below.
+% They are detailed in Algorithm~\ref{algo:2:naiveStrategies} below.
 We recall the notations introduced above in Section~\ref{par:2:interactiveDemoDiscoverMAB}, the sums of rewards are $X_k(t) \eqdef \sum_{s=1}^t r(s) \mathbbm{1}(A(s) = k)$, and the numbers of samples are $N_k(t) \eqdef \sum_{s=1}^t \mathbbm{1}(A(s) = k)$.
 %
 The estimated means, or empirical averages, are $\widehat{\mu_k}(t) \eqdef X_k(t) / N_k(t)$ (when $N_k(t)>0$).
 
--- The uniform strategy always plays the $K$ arms uniformly at random.
+-- The uniform strategy always plays the $K$ arms uniformly at random,
+$\forall t\in[T], A(t) \sim \cU([K])$, where $\cU(S)$ denotes the uniform distribution on set $S$, and $\cU([K])$ the uniform distribution on $[K] = \{1,\dots,K\}$ (\ie, $\forall t, \forall k\in[K], \Pr(A(t) = k) = \frac{1}{K}$).
+%
 The player \textcolor{darkgreen}{\emph{only explores}} without using the collected information, and this strategy fails dramatically for any non trivial problem (\ie, linear regret).
 Indeed it obtains a linear (mean) regret $R_T = \frac{1}{K} \sum_{k=1}^K \Delta_k T$
 which gives $R_T \propto T$ for any problem with at least one sub-optimal arms (\ie, all non trivial problems, rulling out the case where $\mu_1=\mu_2=\dots=\mu_K$).
@@ -803,30 +809,30 @@ which gives $R_T \propto T$ for any problem with at least one sub-optimal arms (
 The player \textcolor{blue}{\emph{only exploits}} the collected information, and this strategy can fail dramatically, \ie, obtain linear regret in some problems.
 Indeed consider $K=2$ Bernoulli arms of means $\mu_1=1/2$ and $\mu_2=\varepsilon$ where $\varepsilon < 1/2$, then with probability $\varepsilon/2$ the player observes a reward of $0$ for arm $1$ then $1$ for arm $2$ on the first rounds, and so she will play arm $2$ for the $T-2$ remaining rounds, giving a linear (mean) regret $R_T \geq \frac{\varepsilon}{2}\left(\frac{1}{2} - \varepsilon\right) (T-1)$.
 
-% \begin{small} % XXX remove if needed
-\begin{figure}[h!]
-	\centering
-    \begin{framed}
-	\begin{algorithm}[H]
-		% \begin{small} % XXX remove if needed
-		\For(){$t = 1, 2, \dots, T$}{
-            \uIf{\textcolor{darkgreen}{pure exploration}}{
-                Play uniformly at random \textcolor{darkgreen}{$A(t) \in \cU(\{1,\dots,K\})$}
-                \tcp*[f]{Explore}
-            }
-            \uIf{\textcolor{blue}{pure exploitation}}{
-                Play uniformly among the arms of maximal empirical mean: \textcolor{blue}{$A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} \widehat{\mu_k}(t))$}
-                \tcp*[f]{Exploit}\\
-                Observe a reward $r(t)$, and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$
-            }
-		}
-		\caption[Naive strategies: pure exploitation or pure exploration.]{Naive strategies: \textcolor{darkgreen}{pure exploitation} or \textcolor{blue}{pure exploration}.}
-		\label{algo:2:naiveStrategies}
-		% \end{small} % XXX remove if needed
-	\end{algorithm}
-	\end{framed}
-\end{figure}
-% \end{small} % XXX remove if needed
+% % \begin{small} % XXX remove if needed
+% \begin{figure}[h!]
+% 	\centering
+%     \begin{framed}
+% 	\begin{algorithm}[H]
+% 		% \begin{small} % XXX remove if needed
+% 		\For(){$t = 1, 2, \dots, T$}{
+%             \uIf{\textcolor{darkgreen}{pure exploration}}{
+%                 Play uniformly at random \textcolor{darkgreen}{$A(t) \sim \cU(\{1,\dots,K\})$}
+%                 \tcp*[f]{Explore}
+%             }
+%             \uIf{\textcolor{blue}{pure exploitation}}{
+%                 Play uniformly among the arms of maximal empirical mean: \textcolor{blue}{$A(t) \sim \cU(\arg\max\limits_{1\leq k \leq K} \widehat{\mu_k}(t))$}
+%                 \tcp*[f]{Exploit}\\
+%                 Observe a reward $r(t)$, and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$
+%             }
+% 		}
+% 		\caption[Naive strategies: pure exploitation or pure exploration.]{Naive strategies: \textcolor{darkgreen}{pure exploitation} or \textcolor{blue}{pure exploration}.}
+% 		\label{algo:2:naiveStrategies}
+% 		% \end{small} % XXX remove if needed
+% 	\end{algorithm}
+% 	\end{framed}
+% \end{figure}
+% % \end{small} % XXX remove if needed
 
 
 % ---------------------------------------------------
@@ -858,11 +864,11 @@ Here again, an average of $T_0 \leq \varepsilon_0 \log(T)$ steps are spent on ex
             \uIf{\textcolor{deeppurple}{$\varepsilon$-greedy}}{
                 Sample a value uniformly in $[0,1]$: $U_t\sim\cU([0,1])$\\
                 \uIf{\textcolor{deeppurple}{$U_t < \varepsilon$ (\ie, with probability $\varepsilon$)}}{
-                    Play uniformly at random $A(t) \in \cU(\{1,\dots,K\})$
+                    Play uniformly at random $A(t) \sim \cU(\{1,\dots,K\})$
                     \tcp*[f]{Explore}
                 }
                 \uElse{
-                    Play uniformly among the arms of maximal empirical mean: $A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} \widehat{\mu_k}(t))$
+                    Play uniformly among the arms of maximal empirical mean: $A(t) \sim \cU(\arg\max\limits_{1\leq k \leq K} \widehat{\mu_k}(t))$
                     \tcp*[f]{or Exploit}
                 }
             }
@@ -873,7 +879,7 @@ Here again, an average of $T_0 \leq \varepsilon_0 \log(T)$ steps are spent on ex
                 }
                 \uElse{
                     \uIf{$t = \textcolor{deepgold}{T_0}$}{
-                        Pick one arm $A(\textcolor{deepgold}{T_0})=k$ uniformly among the arms of maximal empirical mean: \textcolor{deepgold}{$A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} \widehat{\mu_k}(\textcolor{deepgold}{T_0}))$}
+                        Pick one arm $A(\textcolor{deepgold}{T_0})=k$ uniformly among the arms of maximal empirical mean: \textcolor{deepgold}{$A(t) \sim \cU(\arg\max\limits_{1\leq k \leq K} \widehat{\mu_k}(\textcolor{deepgold}{T_0}))$}
                         \tcp*[f]{then Exploit}
                     }
                     Play the same arm $A(t) = A(\textcolor{deepgold}{T_0})$
@@ -973,9 +979,9 @@ The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, tha
             \uIf{$t \leq K$}{
                 Play arm $A(t) = t$\;
             }
-			\Else(){
+			\uElse(){
                 For each arm, compute the \textcolor{blue}{index $U_k^{\cA}(t)$}\;
-                Play arm $A(t)$ uniformly among the arms of maximal index: \textcolor{blue}{$A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} U_k^{\cA}(t))$}\;
+                Play arm $A(t)$ uniformly among the arms of maximal index: \textcolor{blue}{$A(t) \sim \cU(\arg\max\limits_{1\leq k \leq K} U_k^{\cA}(t))$}\;
             }
             Observe a reward $r(t)$ and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$\;
 		}
@@ -1001,7 +1007,7 @@ and a \emph{confidence radius} $\xi_k(t) \eqdef \sqrt{\alpha \frac{\log\left(t\r
     U_k^{\UCB_1}(t) = \UCB_k(t) \eqdef \underbrace{\frac{X_k(t)}{N_k(t)}}_{\text{Exploitation }\; \widehat{\mu_k}(t)} + \underbrace{\sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}}_{\text{Exploration }\; \xi_k(t)}.
 \end{align}
 
-This selection rule $A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} U_k^{\cA}(t))$ makes sense for the following reasons:
+This selection rule $A(t) \sim \cU(\arg\max\limits_{1\leq k \leq K} U_k^{\cA}(t))$ makes sense for the following reasons:
 an arm $k$ is chosen at step $t$ because it has a large $\UCB_k(t)$, which can happen for two reasons.
 $i)$ Because the average reward $\widehat{\mu_k}(t)$ is large, in which case this arm is likely to have a high mean reward $\mu_k$,
 $ii)$ and/or because the confidence radius $\xi_k(t)$ is large, in which case this arm has not been explored much.
@@ -1231,7 +1237,7 @@ Thompson sampling was proven to achieve asymptotical optimal problem-dependent b
         % \begin{small} % XXX remove if needed
 		\For(){$t = 1, 2, \dots, T$}{
             For each arm, sample $s_k(t) \sim \pi_k(t-1)$ from the posterior of arm $k$, $\pi_k(t-1)=\mathrm{Beta}(X_k(t-1)+1,N_k(t-1)-X_k(t-1)+1)$\;
-            Play arm $A(t)$ uniformly among the arms of maximal random sample: $A(t) \in \cU(\arg\max\limits_{1\leq k \leq K} U_k(t))$\;
+            Play arm $A(t)$ uniformly among the arms of maximal random sample: $A(t) \sim \cU(\arg\max\limits_{1\leq k \leq K} U_k(t))$\;
             Observe a reward $r(t)$ and update $X_k(t)$ and $N_k(t)$\;
             %  and $\widehat{\mu_k}(t)$
 		}
@@ -1612,96 +1618,96 @@ This also serves as a first example of numerical simulation performed with our l
 In the rest of this thesis, we mainly use the $\UCB_1$ or Thompson sampling algorithms when simplicity and realistic deployment is favored (\ie, Chapter~\ref{chapter:4}), and the \klUCB{} algorithm when we give mathematical developments (\ie, Chapters~\ref{chapter:5} and \ref{chapter:6}).
 
 
-% \newpage
+% % \newpage
 
-% ----------------------------------------------------------------------------
-\section{Different approaches on algorithm selection}
-\label{sec:2:chooseYourPreferredBanditAlgorithm}
+% % ----------------------------------------------------------------------------
+% \section{Different approaches on algorithm selection}
+% \label{sec:2:chooseYourPreferredBanditAlgorithm}
 
-For any real-world applications of MAB algorithms,
-several solutions have been explored based on various models, and for any model, typically there are many algorithms available, as we have seen above.
-%
-Thus, when a practitioner is facing a problem where MAB algorithms could be used, it is not an easy task to decide which algorithm to use.
-It is hard to predict which solution could be the best for real-world conditions at every instant,
-and even by assuming a stationary environment, when one is facing a certain problem but has limited information about it, it is hard to know beforehand which algorithm can be the best solution.
+% For any real-world applications of MAB algorithms,
+% several solutions have been explored based on various models, and for any model, typically there are many algorithms available, as we have seen above.
+% %
+% Thus, when a practitioner is facing a problem where MAB algorithms could be used, it is not an easy task to decide which algorithm to use.
+% It is hard to predict which solution could be the best for real-world conditions at every instant,
+% and even by assuming a stationary environment, when one is facing a certain problem but has limited information about it, it is hard to know beforehand which algorithm can be the best solution.
 
-In this Section, we first present two naive approaches for selecting an algorithm when facing a new problem, and then we detail the online approach that uses a ``leader'' MAB algorithm running on top of a pool of ``followers'' algorithms, and we present our contribution that is a new ``leader'' algorithm based on \ExpQ.
-This section is based on our article \cite{Besson2018WCNC}.
-
-
-% ----------------------------------------------------------------------
-\subsection{Motivation for online algorithm selection}\label{sub:25:introduction}
-
-Many different learning algorithms have been proposed by the machine learning community,
-and most of them depend on several parameters, for instance $\alpha$ for $\UCB_1$, the prior for Thompson sampling or BayesUCB,
-the $\kl$ function for \klUCB{} etc.
-Every time a new MAB algorithm $\Alg$ is introduced, it is compared and benchmarked on some bandit instances, parameterized by $\boldsymbol{\mu} = (\mu_1,\dots,\mu_K)$, usually by focusing on its expected regret $R_T^{\Alg}$.
-%
-For a known and specific instance, simulations help to select the best algorithm in a pool of algorithms,
-but when one wants to tackle an \emph{unknown} real-world problem, one expects to be efficient against \emph{any} problem, of any size and complexity in a certain family:
-ideally one would like to use an algorithm that can be applied identically against any problem of such family.
+% In this Section, we first present two naive approaches for selecting an algorithm when facing a new problem, and then we detail the online approach that uses a ``leader'' MAB algorithm running on top of a pool of ``followers'' algorithms, and we present our contribution that is a new ``leader'' algorithm based on \ExpQ.
+% This section is based on our article \cite{Besson2018WCNC}.
 
 
-\textbf{Naive approaches:}
-%
-On the one hand, a practitioner can decide to pick one algorithm, maybe because it seems efficient on other problems, or maybe because it is simple enough to be used in its application. It might be unrealistic to implement complicated algorithms on limited hardware such as embedded chips in a very low-cost IoT end-device, and for instance a practitioner could chose to only consider the $\UCB_1$ algorithm (or other low-cost algorithms).
-%
-On the other hand, if prior knowledge on the application at hand is available, one could implement some benchmarks, and compare a set of algorithms on different problems. If a leader appears clearly, it is then possible to choose it for the application.
+% % ----------------------------------------------------------------------
+% \subsection{Motivation for online algorithm selection}\label{sub:25:introduction}
+
+% Many different learning algorithms have been proposed by the machine learning community,
+% and most of them depend on several parameters, for instance $\alpha$ for $\UCB_1$, the prior for Thompson sampling or BayesUCB,
+% the $\kl$ function for \klUCB{} etc.
+% Every time a new MAB algorithm $\Alg$ is introduced, it is compared and benchmarked on some bandit instances, parameterized by $\boldsymbol{\mu} = (\mu_1,\dots,\mu_K)$, usually by focusing on its expected regret $R_T^{\Alg}$.
+% %
+% For a known and specific instance, simulations help to select the best algorithm in a pool of algorithms,
+% but when one wants to tackle an \emph{unknown} real-world problem, one expects to be efficient against \emph{any} problem, of any size and complexity in a certain family:
+% ideally one would like to use an algorithm that can be applied identically against any problem of such family.
 
 
-\textbf{Illustrative example:}
-%
-For instance, if you know that the considered problem can either have $K$ arms with very close means, or one optimal arm far away from the other, two versions of $\UCB_1$ will perform quite differently in the two problems:
-using a large $\alpha$, \ie, favoring exploration, will give low regret in the first case,
-while using a low $\alpha$, \ie, favoring exploitation, will give low regret in the second case.
-One approach can be to use an intermediate value, as $\alpha=1/2$ suggested by theory, but another approach could be to consider an aggregated vote of different versions of $\UCB_1$, each running with a different value of $\alpha$ (\eg, in a logarithmic grid), and let another learning algorithm decide which value of $\alpha$ is the best \emph{for the problem at hand}.
-
-\textbf{The online approach:}
-%
-Another possibility is to consider an online approach, which is interested in the case where the computation power or memory storage of the application is not a limitation factor, but where one cannot run benchmarks before deploying the application.
-We consider a fixed set of algorithms, and we use another learning algorithm on top of this set, to learn \emph{on the fly} which one should be trusted more, and eventually, used on its own.
-
-The aggregation approach is especially interesting if we know that the problem the application will face is one of a few known kinds of problems.
-In such cases, if there are $N$ different sorts of problems, and if the practitioner has prior knowledge on it, one can use the naive approach to select an algorithm $\cA_i$ which should perform well on problem $i$, for $i\in[N]$,
-and use the aggregation of $\cA_1,\dots,\cA_N$ when facing the unknown problem.
-
-% To choose the best algorithm, three approaches can be followed:
-% \begin{itemize}
-%     \item
-% \end{itemize}
-% either extensive benchmarks are done beforehand -- if this is possible -- to select the algorithm and its optimal parameters, or an adaptive algorithm is used to learn \emph{on the fly} its parameters.
-
-% We present a simple adaptive solution, that aggregates several learning algorithms in parallel and adaptively chooses which one to trust the most.
-
-% \paragraph{Outline.}
-% This section is organized as follows.
-% First, we explain in Section~\ref{sub:25:aggregation} how to combine such algorithms for aggregation.
-% Then we present our proposed algorithm, called \Aggr, in Section~\ref{sub:25:Aggr},
-% Finally, we present numerical experiments in Section~\ref{sub:25:numExp},
-% on Bernoulli and non-Bernoulli MAB problems,
-% comparing the regret of several algorithms against different aggregation algorithms.
-% Theoretical guarantees are shortly discussed in Section~\ref{sub:25:theory}, and Section~\ref{sub:25:conclusion} concludes.
+% \textbf{Naive approaches:}
+% %
+% On the one hand, a practitioner can decide to pick one algorithm, maybe because it seems efficient on other problems, or maybe because it is simple enough to be used in its application. It might be unrealistic to implement complicated algorithms on limited hardware such as embedded chips in a very low-cost IoT end-device, and for instance a practitioner could chose to only consider the $\UCB_1$ algorithm (or other low-cost algorithms).
+% %
+% On the other hand, if prior knowledge on the application at hand is available, one could implement some benchmarks, and compare a set of algorithms on different problems. If a leader appears clearly, it is then possible to choose it for the application.
 
 
-% \subsection{Naive approaches}
+% \textbf{Illustrative example:}
+% %
+% For instance, if you know that the considered problem can either have $K$ arms with very close means, or one optimal arm far away from the other, two versions of $\UCB_1$ will perform quite differently in the two problems:
+% using a large $\alpha$, \ie, favoring exploration, will give low regret in the first case,
+% while using a low $\alpha$, \ie, favoring exploitation, will give low regret in the second case.
+% One approach can be to use an intermediate value, as $\alpha=1/2$ suggested by theory, but another approach could be to consider an aggregated vote of different versions of $\UCB_1$, each running with a different value of $\alpha$ (\eg, in a logarithmic grid), and let another learning algorithm decide which value of $\alpha$ is the best \emph{for the problem at hand}.
 
-% As mentioned, there are two naive approaches
+% \textbf{The online approach:}
+% %
+% Another possibility is to consider an online approach, which is interested in the case where the computation power or memory storage of the application is not a limitation factor, but where one cannot run benchmarks before deploying the application.
+% We consider a fixed set of algorithms, and we use another learning algorithm on top of this set, to learn \emph{on the fly} which one should be trusted more, and eventually, used on its own.
 
-% use UCB or Thompson sampling, and forget about the rest!}
-% First solution: be naive, only use UCB everywhere
+% The aggregation approach is especially interesting if we know that the problem the application will face is one of a few known kinds of problems.
+% In such cases, if there are $N$ different sorts of problems, and if the practitioner has prior knowledge on it, one can use the naive approach to select an algorithm $\cA_i$ which should perform well on problem $i$, for $i\in[N]$,
+% and use the aggregation of $\cA_1,\dots,\cA_N$ when facing the unknown problem.
+
+% % To choose the best algorithm, three approaches can be followed:
+% % \begin{itemize}
+% %     \item
+% % \end{itemize}
+% % either extensive benchmarks are done beforehand -- if this is possible -- to select the algorithm and its optimal parameters, or an adaptive algorithm is used to learn \emph{on the fly} its parameters.
+
+% % We present a simple adaptive solution, that aggregates several learning algorithms in parallel and adaptively chooses which one to trust the most.
+
+% % \paragraph{Outline.}
+% % This section is organized as follows.
+% % First, we explain in Section~\ref{sub:25:aggregation} how to combine such algorithms for aggregation.
+% % Then we present our proposed algorithm, called \Aggr, in Section~\ref{sub:25:Aggr},
+% % Finally, we present numerical experiments in Section~\ref{sub:25:numExp},
+% % on Bernoulli and non-Bernoulli MAB problems,
+% % comparing the regret of several algorithms against different aggregation algorithms.
+% % Theoretical guarantees are shortly discussed in Section~\ref{sub:25:theory}, and Section~\ref{sub:25:conclusion} concludes.
 
 
-% \subsection{Use prior knowledge about the future application to select beforehand the chosen algorithm}
+% % \subsection{Naive approaches}
 
-% Second solution, if one has some prior knowledge about the domain or setting for which the learning algorithms will be deployed, she can run synthetic or real-world simulations, compare many algorithms before deployment, and select the best algorithm!
+% % As mentioned, there are two naive approaches
+
+% % use UCB or Thompson sampling, and forget about the rest!}
+% % First solution: be naive, only use UCB everywhere
 
 
-\subsection{Online algorithm selection with expert aggregation}
+% % \subsection{Use prior knowledge about the future application to select beforehand the chosen algorithm}
 
-\input{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/IEEE_WCNC__2018__Paper__Lilian_Besson__07-17.tex}
+% % Second solution, if one has some prior knowledge about the domain or setting for which the learning algorithms will be deployed, she can run synthetic or real-world simulations, compare many algorithms before deployment, and select the best algorithm!
 
-% A last solution is online algorithm selection, inspired from expert aggregation.
-% Include here the discussion about expert aggregation and my \textbf{Aggregator} algorithm, see https://hal.inria.fr/hal-01705292
+
+% \subsection{Online algorithm selection with expert aggregation}
+
+% \input{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/IEEE_WCNC__2018__Paper__Lilian_Besson__07-17.tex}
+
+% % A last solution is online algorithm selection, inspired from expert aggregation.
+% % Include here the discussion about expert aggregation and my \textbf{Aggregator} algorithm, see https://hal.inria.fr/hal-01705292
 
 
 \newpage  % WARNING ?
@@ -1716,15 +1722,15 @@ By showcasing an interactive demonstration made available online,
 % XXX ?
 % (\href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}),
 we presented the notations used in all this thesis.
-
-The first contribution of this manuscript concludes this chapter, in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}.
-% and corresponds to our article \cite{Besson2018WCNC}.
-We tackle the question of how to select a particular bandit algorithm when a practitioner is facing a particular (unknown) bandit problem.
-Instead of always choosing a fixed algorithm, or running costly benchmarks before real-world deployment of the chosen algorithm, we advise to select a few candidate algorithms, where at least one is expected to be very efficient for the given problem, and use online algorithm selection to automatically and dynamically decide the best candidate.
-We proposed an extension of the Exp4 algorithm for this problem, \Aggr, and illustrate its performance on some bandit problems.
 %
-The numerical simulations used our Python open-source library, SMPyBandits, that is presented in details in the next Chapter~\ref{chapter:3}.
-The next chapter also includes simulations of the most important MAB algorithms that we presented above, on Bernoulli distributed problems of various sizes and durations.
+% The first contribution of this manuscript concludes this chapter, in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}.
+% % and corresponds to our article \cite{Besson2018WCNC}.
+% We tackle the question of how to select a particular bandit algorithm when a practitioner is facing a particular (unknown) bandit problem.
+% Instead of always choosing a fixed algorithm, or running costly benchmarks before real-world deployment of the chosen algorithm, we advise to select a few candidate algorithms, where at least one is expected to be very efficient for the given problem, and use online algorithm selection to automatically and dynamically decide the best candidate.
+% We proposed an extension of the Exp4 algorithm for this problem, \Aggr, and illustrate its performance on some bandit problems.
+% %
+We also showed a small numerical simulation, comparing some algorithms on a small Bernoulli-distributed problem, using our Python open-source library, SMPyBandits, that is presented in details in the next Chapter~\ref{chapter:3}.
+% The next chapter also includes simulations of the most important MAB algorithms that we presented above, on Bernoulli distributed problems of various sizes and durations.
 
 We presented the simplest MAB model studied in this chapter, by focussing on one agent playing a stationary game.
 Both hypotheses are removed or weaken in the rest of this manuscript,

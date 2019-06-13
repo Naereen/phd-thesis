@@ -1,0 +1,150 @@
+%!TEX root = ../PhD_thesis__Lilian_Besson
+
+\chapter{Expert aggregation for online MAB algorithms selection}
+\label{chapter:25}
+
+\graphicspath{{2-Chapters/2-Chapter/Images/}}
+
+\abstractStartChapter{}%
+%
+In this chapter, we discuss the question of online algorithm selection.
+%
+We tackle the question of how to select a particular bandit algorithm when a practitioner is facing a particular (unknown) bandit problem.
+Instead of always choosing a fixed algorithm, or running costly benchmarks before real-world deployment of the chosen algorithm, we advise to select a few candidate algorithms, where at least one is expected to be very efficient for the given problem, and use online algorithm selection to automatically and dynamically decide the best candidate.
+We proposed an extension of the Exp4 algorithm for this problem, \Aggr, and illustrate its performance on some bandit problems.
+
+\minitocStartChapter{}
+
+% \newpage
+
+% ----------------------------------------------------------------------------
+\section{Different approaches on algorithm selection}
+\label{sec:25:chooseYourPreferredBanditAlgorithm}
+
+For any real-world applications of MAB algorithms,
+several solutions have been explored based on various models, and for any model, typically there are many algorithms available, as we have seen above.
+%
+Thus, when a practitioner is facing a problem where MAB algorithms could be used, it is not an easy task to decide which algorithm to use.
+It is hard to predict which solution could be the best for real-world conditions at every instant,
+and even by assuming a stationary environment, when one is facing a certain problem but has limited information about it, it is hard to know beforehand which algorithm can be the best solution.
+
+In this Section, we first present two naive approaches for selecting an algorithm when facing a new problem, and then we detail the online approach that uses a ``leader'' MAB algorithm running on top of a pool of ``followers'' algorithms, and we present our contribution that is a new ``leader'' algorithm based on \ExpQ.
+
+
+\paragraph{Publication.}
+%
+This chapter is based on our article \cite{Besson2018WCNC}.
+
+
+\paragraph{Outline.}
+This chapter is organized as follows.
+First, we explain in Section~\ref{sub:25:aggregation} how to combine such algorithms for aggregation.
+Then we present our proposed algorithm, called \Aggr, in Section~\ref{sub:25:Aggr},
+Finally, we present numerical experiments in Section~\ref{sub:25:numExp},
+on Bernoulli and non-Bernoulli MAB problems,
+comparing the regret of several algorithms against different aggregation algorithms.
+Theoretical guarantees are shortly discussed in Section~\ref{sub:25:theory}, and Section~\ref{sec:25:conclusion} concludes.
+
+
+% ----------------------------------------------------------------------
+\subsection{Motivation for online algorithm selection}\label{sub:25:introduction}
+
+Many different learning algorithms have been proposed by the machine learning community,
+and most of them depend on several parameters, for instance $\alpha$ for $\UCB_1$, the prior for Thompson sampling or BayesUCB,
+the $\kl$ function for \klUCB{} etc.
+Every time a new MAB algorithm $\Alg$ is introduced, it is compared and benchmarked on some bandit instances, parameterized by $\boldsymbol{\mu} = (\mu_1,\dots,\mu_K)$, usually by focusing on its expected regret $R_T^{\Alg}$.
+%
+For a known and specific instance, simulations help to select the best algorithm in a pool of algorithms,
+but when one wants to tackle an \emph{unknown} real-world problem, one expects to be efficient against \emph{any} problem, of any size and complexity in a certain family:
+ideally one would like to use an algorithm that can be applied identically against any problem of such family.
+
+
+\paragraph{Naive approaches:}
+%
+On the one hand, a practitioner can decide to pick one algorithm, maybe because it seems efficient on other problems, or maybe because it is simple enough to be used in its application. It might be unrealistic to implement complicated algorithms on limited hardware such as embedded chips in a very low-cost IoT end-device, and for instance a practitioner could chose to only consider the $\UCB_1$ algorithm (or other low-cost algorithms).
+%
+On the other hand, if prior knowledge on the application at hand is available, one could implement some benchmarks, and compare a set of algorithms on different problems. If a leader appears clearly, it is then possible to choose it for the application.
+
+
+\paragraph{Illustrative example:}
+%
+For instance, if you know that the considered problem can either have $K$ arms with very close means, or one optimal arm far away from the other, two versions of $\UCB_1$ will perform quite differently in the two problems:
+using a large $\alpha$, \ie, favoring exploration, will give low regret in the first case,
+while using a low $\alpha$, \ie, favoring exploitation, will give low regret in the second case.
+One approach can be to use an intermediate value, as $\alpha=1/2$ suggested by theory, but another approach could be to consider an aggregated vote of different versions of $\UCB_1$, each running with a different value of $\alpha$ (\eg, in a logarithmic grid), and let another learning algorithm decide which value of $\alpha$ is the best \emph{for the problem at hand}.
+
+
+% \paragraph{The online approach:}
+% %
+% Another possibility is to consider an online approach, which is interested in the case where the computation power or memory storage of the application is not a limitation factor, but where one cannot run benchmarks before deploying the application.
+% We consider a fixed set of algorithms, and we use another learning algorithm on top of this set, to learn \emph{on the fly} which one should be trusted more, and eventually, used on its own.
+
+% The aggregation approach is especially interesting if we know that the problem the application will face is one of a few known kinds of problems.
+% In such cases, if there are $N$ different sorts of problems, and if the practitioner has prior knowledge on it, one can use the naive approach to select an algorithm $\cA_i$ which should perform well on problem $i$, for $i\in[N]$,
+% and use the aggregation of $\cA_1,\dots,\cA_N$ when facing the unknown problem.
+
+
+
+\subsection{Online algorithm selection with expert aggregation}
+
+Another possibility is to consider an online approach, which is interested in the case where the computation power or memory storage of the application is not a limitation factor, but where one cannot run benchmarks before deploying the application.
+We consider a fixed set of algorithms, and we use another learning algorithm on top of this set, to learn \emph{on the fly} which one should be trusted more, and eventually, used on its own.
+
+The aggregation approach is especially interesting if we know that the problem the application will face is one of a few known kinds of problems.
+In such cases, if there are $N$ different sorts of problems, and if the practitioner has prior knowledge on it, one can use the naive approach to select an algorithm $\cA_i$ which should perform well on problem $i$, for $i\in[N]$,
+and use the aggregation of $\cA_1,\dots,\cA_N$ when facing the unknown problem.
+
+
+\input{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/IEEE_WCNC__2018__Paper__Lilian_Besson__07-17.tex}
+
+% A last solution is online algorithm selection, inspired from expert aggregation.
+% Include here the discussion about expert aggregation and my \textbf{Aggregator} algorithm, see https://hal.inria.fr/hal-01705292
+
+
+% \newpage  % WARNING ?
+
+% ----------------------------------------------------------------------------
+\section{Conclusion}
+\label{sec:25:conclusion}
+
+In this chapter, we presented the first contribution of this manuscript,
+that corresponds to our article \cite{Besson2018WCNC}.
+%
+We presented the use of aggregation algorithms,
+especially for the real-world setting of unknown problem instances,
+when tuning parameters before-hand is no longer possible and an adaptive algorithm is preferable.
+% - \ExpQ and \Aggr works fine
+% Both algorithms \ExpQ{} and \Aggr{} have been detailed, and we explained why
+Our proposed \Aggr{} was presented in details,
+and we also highlighted its differences with \ExpQ.
+
+% as well \color{red} as the intuition that it seems more suited for purely stochastic problems\color{black}.
+%
+% - \Aggr{} really help to select the best algorithm against a certain problem, on the fly without any prior knowledge of the problem neither any prior knowledge on which algorithms is the best
+We presented experiments on simple MAB problems, coming from previous work on bandits for OSA \cite{Jouini10},
+and the simulations results showed that \Aggr{} is able to identify on the fly the best algorithm to trust for a specific problem, as expected.
+Experiments on problems mixing different families of distributions were also presented, with similar conclusions in favor of \Aggr.
+% It is not presented in this section, but our proposed algorithm also works well in dynamic scenarios, in which the distribution of the arms can change abruptly at some time,
+% and appears to be more robust than simple non-aggregated algorithms.
+
+\ExpQ{} has theoretical guarantees in terms of adversarial regret, and even if the same result could hold for \Aggr, results in terms of classical regret are yet to be proven.
+Empirically, \Aggr{} showed to always have a logarithmic
+regret $R_T$ if it aggregates algorithms with logarithmic regrets (like UCB, \klUCB, Thompson sampling, BayesUCB etc).
+It usually succeeds to be close to the best of the aggregated algorithms, both in term of regret and best arm pull frequency.
+As expected, the \Aggr{} is never able to outperform any of the aggregated algorithms, but this was an over-optimistic goal.
+
+What matters the most is that, empirically, \Aggr{} is able to quickly discover \emph{on the fly} the best algorithms to trust, and then performs almost as well as if it was following it from the beginning.
+%
+%
+Our \Aggr{} algorithm could probably be rewritten as an Online Mirror Descent (for more details, see for instance \cite{Hazan2016introduction,Zimmert2018}), as it is the case for both \ExpQ{} and \CORRAL.
+But this direction does not appear very useful, as in the case of \CORRAL{}  the analysis cannot bring a logarithmic regret bound, even by aggregating asymptotically optimal algorithms.
+% We will continue investigating regret bounds for \Aggr,
+% and other directions include possible applications to the non-stochastic case (\eg, rested or restless Markovian problems, like it was very recently studied in \cite{Luo18}).
+
+% The numerical simulations used our Python open-source library, SMPyBandits, that is presented in details in the next Chapter~\ref{chapter:3}.
+% The next chapter also includes simulations of the most important MAB algorithms that we presented above, on Bernoulli distributed problems of various sizes and durations.
+
+\paragraph{Reproducility of the experiments.}
+%
+Experiments presented in this Section are based on our library SMPyBandits,
+and the page \href{https://SMPyBandits.GitHub.io/Aggregation.html}{\texttt{SMPyBandits.GitHub.io/Aggregation.html}} gives instructions to reproduce them.
