@@ -8,7 +8,7 @@
 
 \TODOL{Analyser les expériences les plus récentes et décrire mieux en 3.2, et refaire toutes les courbes pour 3.2 et 3.3}
 
-\paragraph{Abstract.}
+\abstractStartChapter{}
 %
 SMPyBandits is a Python package I have developed since the beginning of my PhD.
 It is designed to allow easy and fast numerical simulations on single-player and multi-players Multi-Armed Bandits (MAB) algorithms.
@@ -17,16 +17,7 @@ It is the most exhaustive open-source implementation of state-of-the-art algorit
 This chapter details the organization of the library, what it implements in terms of arm distributions, models, algorithms and visualizations.
 Then we use it to perform a numerical comparisons of the main state-of-the-art single-player MAB algorithms, and a study to compare time and memory costs of the main algorithms.
 
-
-% \TODOL{C'est bizarre ce problème d'espacement vertical ici... je ne sais pas comment le corriger !}
-
-
-\vfill{}  % WARNING vfill before minitoc?
-
-\minitoc
-
-\newpage
-
+\minitocStartChapter{}
 
 % ----------------------------------------------------------------------------
 \section{Introduction}
@@ -171,7 +162,7 @@ but it also possible to mix them.
 %  (\eg, one arm is Bernoulli-distributed and another).
 %  (see for instance Figure~\ref{fig:25:HarderMixed}).
 %
-For instance the following code in Listing~\ref{lst:3:pythonCodeCreateProblem} creates three arms, following a Bernoulli distribution with respective means $0.1, 0.5, 0.9$, and a \texttt{MAB} object which encapsulate sthe problem.
+For instance the following code in Code~\ref{lst:3:pythonCodeCreateProblem} creates three arms, following a Bernoulli distribution with respective means $0.1, 0.5, 0.9$, and a \texttt{MAB} object which encapsulate sthe problem.
 We give another example for truncated Gaussian distributions, and a visualization of a histogram of $10000$ rewards obtained from the arms, below in Figure~\ref{fig:3:exampleOfRewards}.
 
 % https://tex.stackexchange.com/a/12430/
@@ -309,7 +300,7 @@ $ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=4 \
 \end{listing}
 \end{small}
 
-Simulations are easily executed, \eg, Listing~\ref{lst:3:howToRunBasicLibrary} shows how to start $N=1000$ repetitions of a simple non-Bayesian Bernoulli-distributed problem, for $K=9$ arms, an horizon of $T=10000$ and on $4$ CPUs.
+Simulations are easily executed, \eg, Code~\ref{lst:3:howToRunBasicLibrary} shows how to start $N=1000$ repetitions of a simple non-Bayesian Bernoulli-distributed problem, for $K=9$ arms, an horizon of $T=10000$ and on $4$ CPUs.
 It takes about $20$ min, on a $4$-core $64$-bit GNU/Linux laptop.
 Environment variables (\texttt{N=1000} etc) in the command line are not required, but they are convenient.
 
@@ -1711,7 +1702,7 @@ We conclude by a discussion on parallel multi-core CPU computations to speed-up 
 \subsection{Minimalist example of use of SMPyBandits}
 \label{sub:3:miniExampleSMPyBandits}
 
-Below is presented in Listing~\ref{lst:3:exampleOfUse} a minimalist example of use of the library, to define a toy bandit problem with $K=2$ Bernoulli distributed arms (of means $\mu=0.1$ and $\mu=0.9$), one \UCB{} algorithm, and play one experiment of horizon $T=1000$.
+Below is presented in Code~\ref{lst:3:exampleOfUse} a minimalist example of use of the library, to define a toy bandit problem with $K=2$ Bernoulli distributed arms (of means $\mu=0.1$ and $\mu=0.9$), one \UCB{} algorithm, and play one experiment of horizon $T=1000$.
 Only the mean reward is printed at the end of the simulation.
 %
 With Python 3.6 this example shows that the algorithm got a mean reward very close to the optimal arm, $\hat{\mu} = 0.886 \simeq 0.9 = \mu^* = \mu_2$.
@@ -1734,7 +1725,7 @@ The UCB algorithm obtains here a mean reward = 0.886
 \subsection{A minimalist \texttt{main.py} file}
 \label{sub:3:miniMainFileSMPyBandits}
 
-We present below in Listing~\ref{lst:3:main} a full example of a minimalist \texttt{main.py} file,
+We present below in Code~\ref{lst:3:main} a full example of a minimalist \texttt{main.py} file,
 which is used to load the configuration, run the experiment and then print and plot various visualizations for the simulation.
 
 % https://tex.stackexchange.com/a/12430/
@@ -1751,7 +1742,7 @@ which is used to load the configuration, run the experiment and then print and p
 \subsection{A minimalist \texttt{configuration.py} file}
 \label{sub:3:miniConfigurationFileSMPyBandits}
 
-We present below in Listing~\ref{lst:3:configuration} a full example of a minimalist \texttt{configuration.py} file,
+We present below in Code~\ref{lst:3:configuration} a full example of a minimalist \texttt{configuration.py} file,
 which is used to define the experiment.
 It defines the number of arms $K$ and their distribution, the horizon $T$, the policies to test etc.
 It uses environment variables, so a user can configure some parameters of the simulation when launching them from a terminal:
@@ -1813,8 +1804,8 @@ This Appendix section starts by describing $7$ more algorithms that are also com
     % Algorithm 13 is
     Anytime variant of KL-UCB-Switch from \cite{GarivierHadiji2018}
     (\texttt{klUCBswitchAnytime}),
-    is a very recent variant of the \klUCB{} algorithm \cite{KLUCBJournal}.
-    It mimics the \klUCB{} algorithm but uses a much more complicated function to compute the upper confidence bounds, and uses more storage.
+    is a very recent variant of the \KLUCB{} algorithm \cite{KLUCBJournal}.
+    It mimics the \KLUCB{} algorithm but uses a much more complicated function to compute the upper confidence bounds, and uses more storage.
     It is anytime, and was prove to obtain good ``best of both world'' performances, meaning that it achieves an asymptotically optimal $\cO(\log(T))$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
     Empirically, it usually outperforms (slightly) \klUCB{} in terms of regret, and costs about the same memory, but it is slower.
 
@@ -2367,7 +2358,7 @@ This Appendix section starts by describing $7$ more algorithms that are also com
 
 
 \paragraph{Bash command to run these experiments.}
-We give below in Listing~\ref{lst:3:BashCodeToLaunchLargeExperiments} a Bash command to run the experiments presented in Sections~\ref{sec:3:reviewSPAlgorithms} and \ref{sub:3:additionalExperiments}.
+We give below in Code~\ref{lst:3:BashCodeToLaunchLargeExperiments} a Bash command to run the experiments presented in Sections~\ref{sec:3:reviewSPAlgorithms} and \ref{sub:3:additionalExperiments}.
 It uses \texttt{for} loops and environment variables from Bash, and not Python, but we could also have done the same by writing a Python script that calls the \texttt{main.py} script for the different values of $N$, $T$ and $K$.
 
 % https://tex.stackexchange.com/a/12430/

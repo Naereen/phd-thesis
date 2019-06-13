@@ -10,56 +10,11 @@
 % and provide some first theoretical elements for the understanding of its behavior.
 
 
-% -----------------------------------------------------------------
-\section{Introduction}
-\label{sec:5:introduction}
-% -----------------------------------------------------------------
+% % -----------------------------------------------------------------
+% \section{Introduction}
+% \label{sec:5:introduction}
+% % -----------------------------------------------------------------
 
-For the development of Cognitive Radio, a crucial step is to insert \emph{multiple} smart devices in the \emph{same} background traffic (at least $M \geq 2$), as we explained in Chapters~\ref{chapter:1} and \ref{chapter:4}.
-%
-In this Chapter~\ref{chapter:5}, we are interested in a more formal approach to the decentralized learning problem presented in Chapter~\ref{chapter:4}.
-Such networks can be modelled using a decentralized multi-players multi-armed bandit problem, where arms are channels and players are dynamic IoT devices.
-%
-The decentralized hypothesis means that the central base station does not given any direct order to the devices, they are all in charge of deciding the channel they each want to use at each time step.
-Moreover, the devices are independent and do not directly communicate with each other either.
-We show that dynamic end-devices are able to use limited feedback sent by the gateway to learn to find orthogonal affectations of the group of end-devices to the best radio channels, automatically and without explicit communication with each other.
-In other words, the end-devices are able to learn to cooperate efficiently, in a completely decentralized and autonomous manner.
-
-
-We start by reviewing previous works on multi-players MAB models, which all considered the easier case of \emph{sensing feedback}.
-%
-For this first model, we present two algorithms, \RandTopM{} and \MCTopM, combining an efficient MAB index policy (we chose \klUCB) and a smart orthogonalization procedure, based on a random hoping procedure called Musical Chair.
-Like in previous works, we consider the centralized system regret (multi-players regret).
-We start by showing an improved asymptotical regret lower-bound for any algorithm of a certain class, including previous solutions such as \rhoRand{} and our two solutions.
-We then analyze the \MCTopM{} algorithm and we show that its regret upper-bound is logarithmic and order-optimal, improving over the previous state-of-the-art.
-%  with a regret bounded by $\bigO{\log(T)}$ for a game at horizon $T$.
-We also present extensive numerical simulations that show that our proposal outperforms all previous solutions and is much more efficient in this easier model of sensing feedback with a fixed and known number of players $M \leq K$ accessing $K$ channels.
-
-We are also interested in the harder model where devices do not have access to the two feedback information (sensing and \Ack) but only have access to the \Ack.
-Our article \cite{Besson2018ALT} was the first to propose this ``no sensing'' model, for which we only proposed an heuristic, the naive \Selfish{} strategy as it was already used in Chapter~\ref{chapter:4}.
-Even if empirical simulations showed that \Selfish-\klUCB{} performs very well, we conjectured that it suffers from linear regret, and it was later confirmed by two works inspired by our article \cite{LugosiMehrabian18,BoursierPerchet18}.
-They both proposed new algorithms, proved to achieve logarithmic regret under the no sensing model.
-We include numerical simulations to compare their proposals, and we present in details the current state-of-the-art of research on multi-players MAB models without sensing.
-
-Finally, we review other extensions of the models, and give a overview of the current state-of-the-art.
-For some extensions, we discuss how to adapt our proposals and illustrate the empirical performances of such modification of \MCTopM-\klUCB{}, leaving theoretical analyses as future works.
-
-
-\textbf{Outline.}
-%
-This chapter is organized as follows.
-First we motivate the model of multi-players multi-armed bandits in Section~\ref{sec:5:motivation}
-We introduce the multi-players bandit model with three feedback levels in Section~\ref{sec:5:model}, and give a new regret lower bound in Section~\ref{sec:5:lowerbound}.
-The \RandTopM, \MCTopM{} and \Selfish{} algorithms are introduced in Section~\ref{sec:5:algorithms},
-for which we present our theoretical analysis in Section~\ref{sec:5:upperbounds}.
-The result of our experimental study reported in Section~\ref{sec:5:experiments}.
-Finally, we present in Section~\ref{sec:5:literatureReviewOtherModels} a review of the recent literature which studies variants of the model presented in this Chapter.
-% and finally Section~\ref{sec:5:conclusion} concludes.
-
-
-\textbf{Publication.}
-%
-This chapter is mainly based on our article \cite{Besson2018ALT}.
 
 
 % -----------------------------------------------------------------
@@ -68,28 +23,17 @@ This chapter is mainly based on our article \cite{Besson2018ALT}.
 % -----------------------------------------------------------------
 
 
-% % general intro, UCB
+As we saw in Chapters~\ref{chapter:1} and \ref{chapter:4},
+a crucial step for the development of Cognitive Radio is to insert \emph{multiple} smart devices in the \emph{same} background traffic (at least $M \geq 2$).
+%
+In this Chapter~\ref{chapter:5}, we are interested in a more formal approach to the decentralized learning problem presented in the previous Chapter~\ref{chapter:4}.
+Such networks can be modelled using a decentralized multi-players multi-armed bandit problem, where arms are channels and players are dynamic IoT devices.
+%
+The decentralized hypothesis means that the central base station does not given any direct order to the devices, they are all in charge of deciding the channel they each want to use at each time step.
+Moreover, the devices are independent and do not directly communicate with each other either.
+We show that dynamic end-devices are able to use limited feedback sent by the gateway to learn to find orthogonal affectations of the group of end-devices to the best radio channels, automatically and without explicit communication with each other.
+In other words, the end-devices are able to learn to cooperate efficiently, in a completely decentralized and autonomous manner.
 
-% Several sequential decision making problems under the constraint of partial information
-% have been studied since the 1950s under the name of Multi-Armed Bandit (MAB) problems \citep{Robbins52,LaiRobbins85}.
-% In a stochastic MAB model, an agent is facing $K$ unknown probability distributions, called arms in reference to the arms of a one-armed bandit (or slot machine) in a casino.
-% Each time she selects (or draws) an arm, she receives a reward drawn from the associated distribution.
-% Her goal is to build a sequential selection strategy that maximizes the total reward received.
-% A class of algorithms to solve this problem is based on Upper Confidence Bounds (UCB), first proposed by \cite{LaiRobbins85,Agrawal95} and further popularized by \cite{Auer02}.
-% The field has been very active since then, with several algorithms proposed and analyzed, both theoretically and empirically, even beyond the stochastic assumption on arms, as explained in the survey by \cite{Bubeck12}.
-
-% % appli, from clinical trials to cognitive radios
-
-% The initial motivation to study MAB problems arose from clinical trials (the first MAB model can be traced back to $1933$, by \citeauthor{Thompson33}), in which a doctor sequentially allocates treatments (arms) to patients and observes their efficacy (reward).
-% More recently, applications of MAB have shifted towards sequential content recommendation, \eg{} sequential display of advertising to customers or A/B testing \citep{Li10,Chapelleetal14Ad}.
-% %
-% In the mean time, MAB were found to be relevant to the field of Cognitive Radio (CR, \cite{Mitola99}),
-% and \cite{Jouini09,Jouini10} first proposed to use \UCB{} for the Opportunistic Spectrum Access (OSA) problem,
-% and successfully conducted experiments on real radio networks demonstrating its usefulness.
-% For CR applications, each arm models the quality or availability of a radio channel (a frequency band) in which there is some background traffic (\eg, primary users paying to have a guaranteed access to the channel in the case of OSA).
-% A smart radio device needs to insert itself in the background traffic, by sequentially choosing a channel to access and try to communicate on, seeking to optimize the quality of its global transmissions.
-
-% the need for multiple players in cognitive radio
 
 We consider $M$ identical dynamic IoT devices, communicating with a unique gateway, in $K$ orthogonal channels and in a acknowledgment-based wireless protocol slotted in time.
 A perfect time and frequency synchronization is assumed,
@@ -103,7 +47,8 @@ Even if there are many identical bandit algorithms learning independently and in
 Mainly for these two reasons, for this Chapter~\ref{chapter:5} we prefer to only consider at most $M \leq K$ devices, communicating at each time step.
 Note that in the model of Chapter~\ref{chapter:4}, this hypothesis $M \leq K$ corresponds to choosing a probability of activation of $p=1$, as we assumed that (in average) no more than $K$ devices should be active at the same step.
 %
-In our model in Chapter~\ref{chapter:5}, each device will use a Multi-Armed Bandit algorithm, to maximize its number of successful communications, by using the received acknowledgement \Ack{} as a (random) binary reward after each uplink message (\ie, at each time step).
+We start by reviewing previous works on multi-players MAB models, which all considered the easier case of \emph{sensing feedback}.
+But in our model in this chapter, each device also uses a Multi-Armed Bandit algorithm, to maximize its number of successful communications, by using the received acknowledgement \Ack{} as a (random) binary reward after each uplink message (\ie, at each time step).
 %
 With the presence of a central controller that can assign the devices to separate channels, this amounts to choosing at each time step \emph{several} arms of a MAB in order to maximize the global rewards, and can thus be viewed as an application of the multiple-play bandit, introduced by \cite{Anantharam87a} and recently studied by \cite{Komiyama15}.
 They essentially proved that existing algorithms can be easily extended to the multiple-play case, with provable guarantees on their regret.
@@ -150,14 +95,52 @@ Our article \cite{Besson2018ALT} was the first to study this other model of mult
 % Our article \cite{Besson2018ALT} was the first to propose this ``no sensing'' model,
 for which we only proposed an heuristic, the naive \Selfish{} strategy as it was already used in Chapter~\ref{chapter:4}.
 Even if empirical simulations showed that \Selfish-\klUCB{} performs very well, it is a mistake to only consider mean regret, as we found on numerical simulations as well as formal derivation on a simple example of $K=M=2$ that the \Selfish{} heuristic can have a linear regret with a low probability (and so asymptotically it has linear expected regret and fails to solve ``no sensing'' multi-players MAB problems).
-We do not propose any other efficient algorithm, but our work presented in April~$2018$ has strongly inspired two articles shorlty after \cite{LugosiMehrabian18,BoursierPerchet18}.
+We do not propose any other efficient algorithm, but our work presented in April~$2018$ has strongly inspired two articles shortly after \cite{LugosiMehrabian18,BoursierPerchet18}.
 They confirmed our finding that \Selfish{} can have a linear regret, and they both proposed new algorithms.
 We include some numerical simulations to compare some of them, and we present in details the current state-of-the-art of research on multi-players MAB models without sensing.
+
+
+% In this Chapter~\ref{chapter:5}, we start by reviewing previous works on multi-players MAB models, which all considered the easier case of \emph{sensing feedback}.
+% %
+% For this first model, we present two algorithms, \RandTopM{} and \MCTopM, combining an efficient MAB index policy (we chose \klUCB) and a smart orthogonalization procedure, based on a random hoping procedure called Musical Chair.
+% Like in previous works, we consider the centralized system regret (multi-players regret).
+% We start by showing an improved asymptotical regret lower-bound for any algorithm of a certain class, including previous solutions such as \rhoRand{} and our two solutions.
+% We then analyze the \MCTopM{} algorithm and we show that its regret upper-bound is logarithmic and order-optimal, improving over the previous state-of-the-art.
+% %  with a regret bounded by $\bigO{\log(T)}$ for a game at horizon $T$.
+% We also present extensive numerical simulations that show that our proposal outperforms all previous solutions and is much more efficient in this easier model of sensing feedback with a fixed and known number of players $M \leq K$ accessing $K$ channels.
+
+% We are also interested in the harder model where devices do not have access to the two feedback information (sensing and \Ack) but only have access to the \Ack.
+% Our article \cite{Besson2018ALT} was the first to propose this ``no sensing'' model, for which we only proposed an heuristic, the naive \Selfish{} strategy as it was already used in Chapter~\ref{chapter:4}.
+% Even if empirical simulations showed that \Selfish-\klUCB{} performs very well, we conjectured that it suffers from linear regret, and it was later confirmed by two works inspired by our article \cite{LugosiMehrabian18,BoursierPerchet18}.
+% They both proposed new algorithms, proved to achieve logarithmic regret under the no sensing model.
+% We include numerical simulations to compare their proposals, and we present in details the current state-of-the-art of research on multi-players MAB models without sensing.
+
+% Finally, we review other extensions of the models, and give a overview of the current state-of-the-art.
+% For some extensions, we discuss how to adapt our proposals and illustrate the empirical performances of such modification of \MCTopM-\klUCB{}, leaving theoretical analyses as future works.
 
 % In this chapter, we take a step back and present the different feedback levels possible for multi-players MAB algorithms. For each of them, we propose algorithmic solutions supported by both experimental and theoretical guarantees. In the presence of sensing information, our contributions are a new problem-dependent regret lower bound, tighter than previous work, and the introduction of two algorithms, \RandTopM{} and \MCTopM{}. Both are shown to achieve an asymptotically optimal number of selections of the sub-optimal arms, and for \MCTopM{} we furthermore establish a logarithmic upper bound on the regret, that follows from a careful control of the number of collisions. In the absence of sensing information, we propose the \Selfish{} heuristic and investigate its performance. Our study of this algorithm was supported in \cite{Besson2018ALT} by (promising) empirical performance and some first (disappointing) theoretical elements, and it was proven to be inefficient since then.
 
 % Another interesting extension of the studied model is to consider different channels utility for each device. It is a very interesting extension of our model, as for instance the devices could be located on different parts of a building or a field and suffer from different mean qualities of access to each channel.
 % This extension is not studied per say but we quickly review the existing literature, consisting in the two recent works \cite{Bistritz18,KaufmannAbbas19}, and we discuss the possible real-world usage of the existing algorithms.
+
+
+\textbf{Outline.}
+%
+The rest of this chapter is organized as follows.
+% First we motivate the model of multi-players multi-armed bandits in Section~\ref{sec:5:motivation}
+We introduce the multi-players bandit model with three feedback levels in Section~\ref{sec:5:model}.
+We present a useful regret decomposition in Section~\ref{sec:5:lowerbound}, and illustrate it in the Appendix~\ref{sec:5:appendix}.
+The \Selfish, \RandTopM{} and \MCTopM{} algorithms are introduced in Section~\ref{sec:5:algorithms},
+for which we present our theoretical analysis in Section~\ref{sec:5:upperbounds}.
+The result of our experimental study reported in Section~\ref{sec:5:experiments}.
+Finally, we present in Section~\ref{sec:5:literatureReviewOtherModels} a review of the recent literature which studies variants of the model presented in this Chapter.
+For some extensions, we discuss how to adapt our proposals and illustrate the empirical performances of such modification of \MCTopM-\klUCB{}, leaving theoretical analyses as future works.
+% and finally Section~\ref{sec:5:conclusion} concludes.
+
+
+\textbf{Publication.}
+%
+This chapter is mainly based on our article \cite{Besson2018ALT}.
 
 
 % -----------------------------------------------------------------
