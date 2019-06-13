@@ -7,7 +7,7 @@
 \graphicspath{{2-Chapters/4-Chapter/Images/}}
 
 
-\abstractStartChapter{}
+\abstractStartChapter{}%
 %
 In this Chapter~\ref{chapter:4}, we propose two models of Internet of Things (IoT) networks, composed of many independent IoT end-devices,
 that can use low-cost RL (Reinforcement Learning) algorithms to learn to improve their spectrum access.
@@ -219,28 +219,41 @@ To sum-up, we focused in this chapter on models of IoT networks, and we proposed
 We presented two models of wireless IoT network without sensing, inspired by the ALOHA protocol, and with or without retransmission of uplink packages in case of collisions.
 In both cases, we try to model the existing standards, like the LoRa standard, and we demonstrated the efficiency of the proposed MAB-based approach in both numerical simulations and empirical measurements on real wireless radio signals.
 
-On the one hand, a satisfying message is that this learning-based approach seems to be very efficient, as it allows the IoT devices to automatically and independently increase their successful transmission rate.
-On the other hand, it is quite surprising that stochastic MAB algorithms can be of any use in such non-stationary applications.
-Sadly, analyzing our model with thousands of independent devices communicating and learning in their own (random) time scale turned out to be of extreme difficulty.
+A satisfying message is that this learning-based approach seems to be very efficient, as it allows the IoT devices to automatically and independently increase their successful transmission rate.
+It is also quite surprising that stochastic MAB algorithms can be of any use in such non-stationary applications.
+Sadly, analyzing our model with thousands of independent devices communicating and learning in their own (random) time scales turned out to be of extreme difficulty.
+%
+We can also highlight that the two models we studied are complementary:
+the first model (without retransmission of packets), is interesting for its simplicity, and focused on improving the battery life of IoT devices, at the cost of a lower Quality of Service (QoS),
+%
+while the second model is more interesting if the main target is an improvement of the QoS, rather than a longer battery life.
 
 
-
-\paragraph{Multi-Players MAB with \emph{collision avoidance}.}
-
-We are actually able to analyze a simpler model, if we assume to have at most $K$ devices with a transmission probability of $p=1$.
-Instead of the direction pursued in this chapter, another possibility is to consider a \emph{multi-players MAB} model to describe our problem, as proposed by \cite{Zhao10}.
-
+\textbf{Multi-Players MAB.}
+%
+On the first hand, we are actually able to analyze a simpler model, if we assume to have at most $M \leq K$ devices with a transmission probability of $p=1$.
+Instead of the experiment-driven direction pursued in this chapter, another possibility is to consider a \emph{multi-players MAB} model to describe our problem.
+%
 The main difference between the two models is the fact that in this chapter, devices do not transmit their messages at every time step, but following a random activation process (with a fixed transmission probability $p < 1$).
 If static and dynamic devices that have to transmit at a fixed time are denoted \emph{active devices},
-and their random activation patter makes the number of active devices a random variable.
+then their random activation patter makes the number of active devices an (unpredictable) random variable.
 Analyzing multi-players MAB models under this hypothesis is much harder, and is left as a future work.
 %
-We study this other direction in the next Chapter~\ref{chapter:5}.
+We study this first direction in the next Chapter~\ref{chapter:5}.
 
 % In that case, the static and dynamic devices effect is decoupled, and arms only model the availability of the channels in the absence of dynamic devices: they are \iid{} with mean $\mu_i = 1 - p S_i$.
 % Moreover, dynamic devices are usually assumed to be able to \emph{sense} a channel before sending \cite{Zhao10}, and so communicate only if no static device is detected on the channel.
 % The smart devices try to learn the arms with highest means, while coordinating to choose different arms, \ie, avoid collisions in their choice, in a decentralized manner.
 % However, in this model it is assumed that the multiple agents can know that they experienced a collision with another agent, which is non-realistic for our problem at stake, as our model of smart device cannot do sensing nor differentiate collisions between smart and non-smart devices.
+
+
+\textbf{Non-stationary MAB.}
+%
+On the other hand, while it is hard to analyze the models of this chapter due to their non-stationary behaviors, we are also able to analyze a simpler model, if we focus on a single player accessing a network which is assumed to be \emph{piece-wise stationary}
+(MAB problems which are stationary on ``long enough'' intervals, of unknown locations and lengths).
+%
+We also study this second direction in Chapter~\ref{chapter:6}.
+
 
 \newpage
 % ----------------------------------------------------------------------------
