@@ -457,12 +457,16 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
 \begin{enumerate}
     \item
     %  Algorithm 1 is
-    $\varepsilon$-greedy \cite{Bubeck12} (\texttt{EpsilonDecreasing}), shown in Algorithm~\ref{algo:2:naiveStrategies} above, using $\varepsilon_t = \varepsilon_0 / t$, and $\varepsilon_0 = 0.1$ (chosen arbitrarily).
+    $\varepsilon$-greedy \cite{Bubeck12} (\texttt{EpsilonDecreasing}),
+    % shown in Algorithm~\ref{algo:2:naiveStrategies} above,
+    using $\varepsilon_t = \varepsilon_0 / t$, and $\varepsilon_0 = 0.1$ (chosen arbitrarily).
     It has a very small cost in terms of time and memory, but it usually achieves linear regret.
 
     \item
     %  Algorithm 2 is
-    Explore-then-Commit \cite{GarivierETC2016} (\texttt{ETC\_KnownGap}), shown in Algorithm~\ref{algo:2:naiveStrategies} above, that knows the horizon, and a lower-bound on the gap between arms (chosen arbitrarily as $\delta=0.01$, valid for all problems).
+    Explore-then-Commit \cite{GarivierETC2016} (\texttt{ETC\_KnownGap}),
+    % shown in Algorithm~\ref{algo:2:naiveStrategies} above,
+    that knows the horizon, and a lower-bound on the gap between arms (chosen arbitrarily as $\delta=0.01$, valid for all problems).
     Similarly to $\varepsilon$-greedy, it has a very small footprint in terms of time and memory, but most of the times it only obtains large (linear) regret.
 
     \item
@@ -478,7 +482,7 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
 
     \item
     %  Algorithm 5 is
-    \klUCB{} from \cite{KLUCBJournal} (\texttt{klUCB}), also shown in Algorithm~\ref{algo:2:indexPolicy} above, using the Bernoulli KL divergence and the corresponding \klUCB{} indexes, implemented as \texttt{kullback.klucbBern}.
+    \klUCB{} from \cite{KLUCBJournal} (\texttt{klUCB}), also shown in Algorithm~\ref{algo:2:indexPolicy} above, using the Bernoulli KL divergence and the corresponding \klUCB{} indexes (coded as \texttt{kullback.klucbBern}).
     % It achieves asymptotical optimal problem-dependent bounds with a $\cO(\log(T))$ regret.
     % with the scaling factor matching Lai and Robbins' lower-bound \cite{LaiRobbins85}.
     It is computationally more costly that \UCB, as at each time step $t$ and for each arm $k$, a convex optimization problem must be solved approximately, in order to compute the $K$ indexes.
@@ -579,453 +583,28 @@ We give in the figures below the results of the experiments.
 
 % DEBUG=True; NOPLOTS=False; SAVEALL=False; for N in 4 100 1000; do for BAYES in False True; do for T in 1000 5000 10000 50000; do for K in 2 5 10 20 50; do debut=$(date); DEBUG=$DEBUG NOPLOTS=$NOPLOTS SAVEALL=$SAVEALL N=$N N_JOBS=-1 T=$T K=$K BAYES=$BAYES make --noFreeSMS single && cp logs/main_py3_log.txt logs/main_py3_log__N${N}_BAYES${BAYES}_T{T}_K{K}.txt && FreeSMS.py "Expérience commencée ${debut} terminée, avec N=${N}, BAYES=${BAYES}, T=${T}, K=${K}." ; done; done; done; done time.
 
-% \begin{table}[!t]
-% \begin{footnotesize}  % WARNING
-%     \centering
-%     \begin{tabular}{c|*{5}{m{2cm}}} % WARNING size ?
-%     \textbf{Algorithms} $\;$ \textbackslash $\;$ $\mathbf{T=}$
-%         & $T_1 = 1000$ & $T_2 = 5000$ & $T_3 = 10000$ & $T_4 = 50000$ \\
-%         \hline
-%         $\varepsilon$-greedy &
-%             $R^{1}_{T_1,K_1} = 0 \pm 0$
-%                 $R^{1}_{T_1,K_2} = 0 \pm 0$
-%                 $R^{1}_{T_1,K_3} = 0 \pm 0$
-%                 $R^{1}_{T_1,K_4} = 0 \pm 0$
-%                 $R^{1}_{T_1,K_5} = 0 \pm 0$ &
-%             $R^{1}_{T_2,K_1} = 0 \pm 0$
-%                 $R^{1}_{T_2,K_2} = 0 \pm 0$
-%                 $R^{1}_{T_2,K_3} = 0 \pm 0$
-%                 $R^{1}_{T_2,K_4} = 0 \pm 0$
-%                 $R^{1}_{T_2,K_5} = 0 \pm 0$ &
-%             $R^{1}_{T_3,K_1} = 0 \pm 0$
-%                 $R^{1}_{T_3,K_2} = 0 \pm 0$
-%                 $R^{1}_{T_3,K_3} = 0 \pm 0$
-%                 $R^{1}_{T_3,K_4} = 0 \pm 0$
-%                 $R^{1}_{T_3,K_5} = 0 \pm 0$ &
-%             $R^{1}_{T_4,K_1} = 0 \pm 0$
-%                 $R^{1}_{T_4,K_2} = 0 \pm 0$
-%                 $R^{1}_{T_4,K_3} = 0 \pm 0$
-%                 $R^{1}_{T_4,K_4} = 0 \pm 0$
-%                 $R^{1}_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%         Explore-then-Commit &
-%             $R^{2}_{T_1,K_1} = 0 \pm 0$
-%                 $R^{2}_{T_1,K_2} = 0 \pm 0$
-%                 $R^{2}_{T_1,K_3} = 0 \pm 0$
-%                 $R^{2}_{T_1,K_4} = 0 \pm 0$
-%                 $R^{2}_{T_1,K_5} = 0 \pm 0$ &
-%             $R^{2}_{T_2,K_1} = 0 \pm 0$
-%                 $R^{2}_{T_2,K_2} = 0 \pm 0$
-%                 $R^{2}_{T_2,K_3} = 0 \pm 0$
-%                 $R^{2}_{T_2,K_4} = 0 \pm 0$
-%                 $R^{2}_{T_2,K_5} = 0 \pm 0$ &
-%             $R^{2}_{T_3,K_1} = 0 \pm 0$
-%                 $R^{2}_{T_3,K_2} = 0 \pm 0$
-%                 $R^{2}_{T_3,K_3} = 0 \pm 0$
-%                 $R^{2}_{T_3,K_4} = 0 \pm 0$
-%                 $R^{2}_{T_3,K_5} = 0 \pm 0$ &
-%             $R^{2}_{T_4,K_1} = 0 \pm 0$
-%                 $R^{2}_{T_4,K_2} = 0 \pm 0$
-%                 $R^{2}_{T_4,K_3} = 0 \pm 0$
-%                 $R^{2}_{T_4,K_4} = 0 \pm 0$
-%                 $R^{2}_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%         $\mathrm{Exp}3^{++}$ &
-%             $R^3_{T_1,K_1} = 0 \pm 0$
-%                 $R^3_{T_1,K_2} = 0 \pm 0$
-%                 $R^3_{T_1,K_3} = 0 \pm 0$
-%                 $R^3_{T_1,K_4} = 0 \pm 0$
-%                 $R^3_{T_1,K_5} = 0 \pm 0$ &
-%             $R^3_{T_2,K_1} = 0 \pm 0$
-%                 $R^3_{T_2,K_2} = 0 \pm 0$
-%                 $R^3_{T_2,K_3} = 0 \pm 0$
-%                 $R^3_{T_2,K_4} = 0 \pm 0$
-%                 $R^3_{T_2,K_5} = 0 \pm 0$ &
-%             $R^3_{T_3,K_1} = 0 \pm 0$
-%                 $R^3_{T_3,K_2} = 0 \pm 0$
-%                 $R^3_{T_3,K_3} = 0 \pm 0$
-%                 $R^3_{T_3,K_4} = 0 \pm 0$
-%                 $R^3_{T_3,K_5} = 0 \pm 0$ &
-%             $R^3_{T_4,K_1} = 0 \pm 0$
-%                 $R^3_{T_4,K_2} = 0 \pm 0$
-%                 $R^3_{T_4,K_3} = 0 \pm 0$
-%                 $R^3_{T_4,K_4} = 0 \pm 0$
-%                 $R^3_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%         $\UCB_1$ &
-%             $R^{4}_{T_1,K_1} = 0 \pm 0$
-%                 $R^{4}_{T_1,K_2} = 0 \pm 0$
-%                 $R^{4}_{T_1,K_3} = 0 \pm 0$
-%                 $R^{4}_{T_1,K_4} = 0 \pm 0$
-%                 $R^{4}_{T_1,K_5} = 0 \pm 0$ &
-%             $R^{4}_{T_2,K_1} = 0 \pm 0$
-%                 $R^{4}_{T_2,K_2} = 0 \pm 0$
-%                 $R^{4}_{T_2,K_3} = 0 \pm 0$
-%                 $R^{4}_{T_2,K_4} = 0 \pm 0$
-%                 $R^{4}_{T_2,K_5} = 0 \pm 0$ &
-%             $R^{4}_{T_3,K_1} = 0 \pm 0$
-%                 $R^{4}_{T_3,K_2} = 0 \pm 0$
-%                 $R^{4}_{T_3,K_3} = 0 \pm 0$
-%                 $R^{4}_{T_3,K_4} = 0 \pm 0$
-%                 $R^{4}_{T_3,K_5} = 0 \pm 0$ &
-%             $R^{4}_{T_4,K_1} = 0 \pm 0$
-%                 $R^{4}_{T_4,K_2} = 0 \pm 0$
-%                 $R^{4}_{T_4,K_3} = 0 \pm 0$
-%                 $R^{4}_{T_4,K_4} = 0 \pm 0$
-%                 $R^{4}_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%         \klUCB{} &
-%             $R^{5}_{T_1,K_1} = 0 \pm 0$
-%                 $R^{5}_{T_1,K_2} = 0 \pm 0$
-%                 $R^{5}_{T_1,K_3} = 0 \pm 0$
-%                 $R^{5}_{T_1,K_4} = 0 \pm 0$
-%                 $R^{5}_{T_1,K_5} = 0 \pm 0$ &
-%             $R^{5}_{T_2,K_1} = 0 \pm 0$
-%                 $R^{5}_{T_2,K_2} = 0 \pm 0$
-%                 $R^{5}_{T_2,K_3} = 0 \pm 0$
-%                 $R^{5}_{T_2,K_4} = 0 \pm 0$
-%                 $R^{5}_{T_2,K_5} = 0 \pm 0$ &
-%             $R^{5}_{T_3,K_1} = 0 \pm 0$
-%                 $R^{5}_{T_3,K_2} = 0 \pm 0$
-%                 $R^{5}_{T_3,K_3} = 0 \pm 0$
-%                 $R^{5}_{T_3,K_4} = 0 \pm 0$
-%                 $R^{5}_{T_3,K_5} = 0 \pm 0$ &
-%             $R^{5}_{T_4,K_1} = 0 \pm 0$
-%                 $R^{5}_{T_4,K_2} = 0 \pm 0$
-%                 $R^{5}_{T_4,K_3} = 0 \pm 0$
-%                 $R^{5}_{T_4,K_4} = 0 \pm 0$
-%                 $R^{5}_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%         Thompson sampling &
-%             $R^{6}_{T_1,K_1} = 0 \pm 0$
-%                 $R^{6}_{T_1,K_2} = 0 \pm 0$
-%                 $R^{6}_{T_1,K_3} = 0 \pm 0$
-%                 $R^{6}_{T_1,K_4} = 0 \pm 0$
-%                 $R^{6}_{T_1,K_5} = 0 \pm 0$ &
-%             $R^{6}_{T_2,K_1} = 0 \pm 0$
-%                 $R^{6}_{T_2,K_2} = 0 \pm 0$
-%                 $R^{6}_{T_2,K_3} = 0 \pm 0$
-%                 $R^{6}_{T_2,K_4} = 0 \pm 0$
-%                 $R^{6}_{T_2,K_5} = 0 \pm 0$ &
-%             $R^{6}_{T_3,K_1} = 0 \pm 0$
-%                 $R^{6}_{T_3,K_2} = 0 \pm 0$
-%                 $R^{6}_{T_3,K_3} = 0 \pm 0$
-%                 $R^{6}_{T_3,K_4} = 0 \pm 0$
-%                 $R^{6}_{T_3,K_5} = 0 \pm 0$ &
-%             $R^{6}_{T_4,K_1} = 0 \pm 0$
-%                 $R^{6}_{T_4,K_2} = 0 \pm 0$
-%                 $R^{6}_{T_4,K_3} = 0 \pm 0$
-%                 $R^{6}_{T_4,K_4} = 0 \pm 0$
-%                 $R^{6}_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%         Thompson sampling &
-%             $R^{7}_{T_1,K_1} = 0 \pm 0$
-%                 $R^{7}_{T_1,K_2} = 0 \pm 0$
-%                 $R^{7}_{T_1,K_3} = 0 \pm 0$
-%                 $R^{7}_{T_1,K_4} = 0 \pm 0$
-%                 $R^{7}_{T_1,K_5} = 0 \pm 0$ &
-%             $R^{7}_{T_2,K_1} = 0 \pm 0$
-%                 $R^{7}_{T_2,K_2} = 0 \pm 0$
-%                 $R^{7}_{T_2,K_3} = 0 \pm 0$
-%                 $R^{7}_{T_2,K_4} = 0 \pm 0$
-%                 $R^{7}_{T_2,K_5} = 0 \pm 0$ &
-%             $R^{7}_{T_3,K_1} = 0 \pm 0$
-%                 $R^{7}_{T_3,K_2} = 0 \pm 0$
-%                 $R^{7}_{T_3,K_3} = 0 \pm 0$
-%                 $R^{7}_{T_3,K_4} = 0 \pm 0$
-%                 $R^{7}_{T_3,K_5} = 0 \pm 0$ &
-%             $R^{7}_{T_4,K_1} = 0 \pm 0$
-%                 $R^{7}_{T_4,K_2} = 0 \pm 0$
-%                 $R^{7}_{T_4,K_3} = 0 \pm 0$
-%                 $R^{7}_{T_4,K_4} = 0 \pm 0$
-%                 $R^{7}_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%         AdBandits &
-%             $R^{8}_{T_1,K_1} = 0 \pm 0$
-%                 $R^{8}_{T_1,K_2} = 0 \pm 0$
-%                 $R^{8}_{T_1,K_3} = 0 \pm 0$
-%                 $R^{8}_{T_1,K_4} = 0 \pm 0$
-%                 $R^{8}_{T_1,K_5} = 0 \pm 0$ &
-%             $R^{8}_{T_2,K_1} = 0 \pm 0$
-%                 $R^{8}_{T_2,K_2} = 0 \pm 0$
-%                 $R^{8}_{T_2,K_3} = 0 \pm 0$
-%                 $R^{8}_{T_2,K_4} = 0 \pm 0$
-%                 $R^{8}_{T_2,K_5} = 0 \pm 0$ &
-%             $R^{8}_{T_3,K_1} = 0 \pm 0$
-%                 $R^{8}_{T_3,K_2} = 0 \pm 0$
-%                 $R^{8}_{T_3,K_3} = 0 \pm 0$
-%                 $R^{8}_{T_3,K_4} = 0 \pm 0$
-%                 $R^{8}_{T_3,K_5} = 0 \pm 0$ &
-%             $R^{8}_{T_4,K_1} = 0 \pm 0$
-%                 $R^{8}_{T_4,K_2} = 0 \pm 0$
-%                 $R^{8}_{T_4,K_3} = 0 \pm 0$
-%                 $R^{8}_{T_4,K_4} = 0 \pm 0$
-%                 $R^{8}_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%         BESA &
-%             $R^{9}_{T_1,K_1} = 0 \pm 0$
-%                 $R^{9}_{T_1,K_2} = 0 \pm 0$
-%                 $R^{9}_{T_1,K_3} = 0 \pm 0$
-%                 $R^{9}_{T_1,K_4} = 0 \pm 0$
-%                 $R^{9}_{T_1,K_5} = 0 \pm 0$ &
-%             $R^{9}_{T_2,K_1} = 0 \pm 0$
-%                 $R^{9}_{T_2,K_2} = 0 \pm 0$
-%                 $R^{9}_{T_2,K_3} = 0 \pm 0$
-%                 $R^{9}_{T_2,K_4} = 0 \pm 0$
-%                 $R^{9}_{T_2,K_5} = 0 \pm 0$ &
-%             $R^{9}_{T_3,K_1} = 0 \pm 0$
-%                 $R^{9}_{T_3,K_2} = 0 \pm 0$
-%                 $R^{9}_{T_3,K_3} = 0 \pm 0$
-%                 $R^{9}_{T_3,K_4} = 0 \pm 0$
-%                 $R^{9}_{T_3,K_5} = 0 \pm 0$ &
-%             $R^{9}_{T_4,K_1} = 0 \pm 0$
-%                 $R^{9}_{T_4,K_2} = 0 \pm 0$
-%                 $R^{9}_{T_4,K_3} = 0 \pm 0$
-%                 $R^{9}_{T_4,K_4} = 0 \pm 0$
-%                 $R^{9}_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%     \end{tabular}
-%     \caption{Mean regret $\pm$ $1$ std-dev, for $9$ different algorithms on \textbf{problem 1} with different values of time $T$ and number of arm $K$.
-%     }
-%     \label{table:3:meanRegret_problem1}
-% \end{footnotesize}  % WARNING
-% \end{table}
-
-
-% \begin{table}[!t]
-% \begin{footnotesize}  % WARNING
-%     \centering
-%     \begin{tabular}{c|*{5}{m{2cm}}} % WARNING size ?
-%     \textbf{Algorithms} $\;$ \textbackslash $\;$ $\mathbf{T=}$
-%         & $T_1 = 1000$ & $T_2 = 5000$ & $T_3 = 10000$ & $T_4 = 50000$ \\
-%         \hline
-%         $\varepsilon$-greedy &
-%             $R^{'1}_{T_1,K_1} = 0 \pm 0$
-%                 $R^{'1}_{T_1,K_2} = 0 \pm 0$
-%                 $R^{'1}_{T_1,K_3} = 0 \pm 0$
-%                 $R^{'1}_{T_1,K_4} = 0 \pm 0$
-%                 $R^{'1}_{T_1,K_5} = 0 \pm 0$ &
-%             $R^{'1}_{T_2,K_1} = 0 \pm 0$
-%                 $R^{'1}_{T_2,K_2} = 0 \pm 0$
-%                 $R^{'1}_{T_2,K_3} = 0 \pm 0$
-%                 $R^{'1}_{T_2,K_4} = 0 \pm 0$
-%                 $R^{'1}_{T_2,K_5} = 0 \pm 0$ &
-%             $R^{'1}_{T_3,K_1} = 0 \pm 0$
-%                 $R^{'1}_{T_3,K_2} = 0 \pm 0$
-%                 $R^{'1}_{T_3,K_3} = 0 \pm 0$
-%                 $R^{'1}_{T_3,K_4} = 0 \pm 0$
-%                 $R^{'1}_{T_3,K_5} = 0 \pm 0$ &
-%             $R^{'1}_{T_4,K_1} = 0 \pm 0$
-%                 $R^{'1}_{T_4,K_2} = 0 \pm 0$
-%                 $R^{'1}_{T_4,K_3} = 0 \pm 0$
-%                 $R^{'1}_{T_4,K_4} = 0 \pm 0$
-%                 $R^{'1}_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%         Explore-then-Commit &
-%             $R^{'2}_{T_1,K_1} = 0 \pm 0$
-%                 $R^{'2}_{T_1,K_2} = 0 \pm 0$
-%                 $R^{'2}_{T_1,K_3} = 0 \pm 0$
-%                 $R^{'2}_{T_1,K_4} = 0 \pm 0$
-%                 $R^{'2}_{T_1,K_5} = 0 \pm 0$ &
-%             $R^{'2}_{T_2,K_1} = 0 \pm 0$
-%                 $R^{'2}_{T_2,K_2} = 0 \pm 0$
-%                 $R^{'2}_{T_2,K_3} = 0 \pm 0$
-%                 $R^{'2}_{T_2,K_4} = 0 \pm 0$
-%                 $R^{'2}_{T_2,K_5} = 0 \pm 0$ &
-%             $R^{'2}_{T_3,K_1} = 0 \pm 0$
-%                 $R^{'2}_{T_3,K_2} = 0 \pm 0$
-%                 $R^{'2}_{T_3,K_3} = 0 \pm 0$
-%                 $R^{'2}_{T_3,K_4} = 0 \pm 0$
-%                 $R^{'2}_{T_3,K_5} = 0 \pm 0$ &
-%             $R^{'2}_{T_4,K_1} = 0 \pm 0$
-%                 $R^{'2}_{T_4,K_2} = 0 \pm 0$
-%                 $R^{'2}_{T_4,K_3} = 0 \pm 0$
-%                 $R^{'2}_{T_4,K_4} = 0 \pm 0$
-%                 $R^{'2}_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%         $\mathrm{Exp}3^{++}$ &
-%             $R^{'3}_{T_1,K_1} = 0 \pm 0$
-%                 $R^{'3}_{T_1,K_2} = 0 \pm 0$
-%                 $R^{'3}_{T_1,K_3} = 0 \pm 0$
-%                 $R^{'3}_{T_1,K_4} = 0 \pm 0$
-%                 $R^{'3}_{T_1,K_5} = 0 \pm 0$ &
-%             $R^{'3}_{T_2,K_1} = 0 \pm 0$
-%                 $R^{'3}_{T_2,K_2} = 0 \pm 0$
-%                 $R^{'3}_{T_2,K_3} = 0 \pm 0$
-%                 $R^{'3}_{T_2,K_4} = 0 \pm 0$
-%                 $R^{'3}_{T_2,K_5} = 0 \pm 0$ &
-%             $R^{'3}_{T_3,K_1} = 0 \pm 0$
-%                 $R^{'3}_{T_3,K_2} = 0 \pm 0$
-%                 $R^{'3}_{T_3,K_3} = 0 \pm 0$
-%                 $R^{'3}_{T_3,K_4} = 0 \pm 0$
-%                 $R^{'3}_{T_3,K_5} = 0 \pm 0$ &
-%             $R^{'3}_{T_4,K_1} = 0 \pm 0$
-%                 $R^{'3}_{T_4,K_2} = 0 \pm 0$
-%                 $R^{'3}_{T_4,K_3} = 0 \pm 0$
-%                 $R^{'3}_{T_4,K_4} = 0 \pm 0$
-%                 $R^{'3}_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%         $\UCB_1$ &
-%             $R^{'4}_{T_1,K_1} = 0 \pm 0$
-%                 $R^{'4}_{T_1,K_2} = 0 \pm 0$
-%                 $R^{'4}_{T_1,K_3} = 0 \pm 0$
-%                 $R^{'4}_{T_1,K_4} = 0 \pm 0$
-%                 $R^{'4}_{T_1,K_5} = 0 \pm 0$ &
-%             $R^{'4}_{T_2,K_1} = 0 \pm 0$
-%                 $R^{'4}_{T_2,K_2} = 0 \pm 0$
-%                 $R^{'4}_{T_2,K_3} = 0 \pm 0$
-%                 $R^{'4}_{T_2,K_4} = 0 \pm 0$
-%                 $R^{'4}_{T_2,K_5} = 0 \pm 0$ &
-%             $R^{'4}_{T_3,K_1} = 0 \pm 0$
-%                 $R^{'4}_{T_3,K_2} = 0 \pm 0$
-%                 $R^{'4}_{T_3,K_3} = 0 \pm 0$
-%                 $R^{'4}_{T_3,K_4} = 0 \pm 0$
-%                 $R^{'4}_{T_3,K_5} = 0 \pm 0$ &
-%             $R^{'4}_{T_4,K_1} = 0 \pm 0$
-%                 $R^{'4}_{T_4,K_2} = 0 \pm 0$
-%                 $R^{'4}_{T_4,K_3} = 0 \pm 0$
-%                 $R^{'4}_{T_4,K_4} = 0 \pm 0$
-%                 $R^{'4}_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%         \klUCB{} &
-%             $R^{'5}_{T_1,K_1} = 0 \pm 0$
-%                 $R^{'5}_{T_1,K_2} = 0 \pm 0$
-%                 $R^{'5}_{T_1,K_3} = 0 \pm 0$
-%                 $R^{'5}_{T_1,K_4} = 0 \pm 0$
-%                 $R^{'5}_{T_1,K_5} = 0 \pm 0$ &
-%             $R^{'5}_{T_2,K_1} = 0 \pm 0$
-%                 $R^{'5}_{T_2,K_2} = 0 \pm 0$
-%                 $R^{'5}_{T_2,K_3} = 0 \pm 0$
-%                 $R^{'5}_{T_2,K_4} = 0 \pm 0$
-%                 $R^{'5}_{T_2,K_5} = 0 \pm 0$ &
-%             $R^{'5}_{T_3,K_1} = 0 \pm 0$
-%                 $R^{'5}_{T_3,K_2} = 0 \pm 0$
-%                 $R^{'5}_{T_3,K_3} = 0 \pm 0$
-%                 $R^{'5}_{T_3,K_4} = 0 \pm 0$
-%                 $R^{'5}_{T_3,K_5} = 0 \pm 0$ &
-%             $R^{'5}_{T_4,K_1} = 0 \pm 0$
-%                 $R^{'5}_{T_4,K_2} = 0 \pm 0$
-%                 $R^{'5}_{T_4,K_3} = 0 \pm 0$
-%                 $R^{'5}_{T_4,K_4} = 0 \pm 0$
-%                 $R^{'5}_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%         Thompson sampling &
-%             $R^{'6}_{T_1,K_1} = 0 \pm 0$
-%                 $R^{'6}_{T_1,K_2} = 0 \pm 0$
-%                 $R^{'6}_{T_1,K_3} = 0 \pm 0$
-%                 $R^{'6}_{T_1,K_4} = 0 \pm 0$
-%                 $R^{'6}_{T_1,K_5} = 0 \pm 0$ &
-%             $R^{'6}_{T_2,K_1} = 0 \pm 0$
-%                 $R^{'6}_{T_2,K_2} = 0 \pm 0$
-%                 $R^{'6}_{T_2,K_3} = 0 \pm 0$
-%                 $R^{'6}_{T_2,K_4} = 0 \pm 0$
-%                 $R^{'6}_{T_2,K_5} = 0 \pm 0$ &
-%             $R^{'6}_{T_3,K_1} = 0 \pm 0$
-%                 $R^{'6}_{T_3,K_2} = 0 \pm 0$
-%                 $R^{'6}_{T_3,K_3} = 0 \pm 0$
-%                 $R^{'6}_{T_3,K_4} = 0 \pm 0$
-%                 $R^{'6}_{T_3,K_5} = 0 \pm 0$ &
-%             $R^{'6}_{T_4,K_1} = 0 \pm 0$
-%                 $R^{'6}_{T_4,K_2} = 0 \pm 0$
-%                 $R^{'6}_{T_4,K_3} = 0 \pm 0$
-%                 $R^{'6}_{T_4,K_4} = 0 \pm 0$
-%                 $R^{'6}_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%         Bayes-UCB &
-%             $R^{'7}_{T_1,K_1} = 0 \pm 0$
-%                 $R^{'7}_{T_1,K_2} = 0 \pm 0$
-%                 $R^{'7}_{T_1,K_3} = 0 \pm 0$
-%                 $R^{'7}_{T_1,K_4} = 0 \pm 0$
-%                 $R^{'7}_{T_1,K_5} = 0 \pm 0$ &
-%             $R^{'7}_{T_2,K_1} = 0 \pm 0$
-%                 $R^{'7}_{T_2,K_2} = 0 \pm 0$
-%                 $R^{'7}_{T_2,K_3} = 0 \pm 0$
-%                 $R^{'7}_{T_2,K_4} = 0 \pm 0$
-%                 $R^{'7}_{T_2,K_5} = 0 \pm 0$ &
-%             $R^{'7}_{T_3,K_1} = 0 \pm 0$
-%                 $R^{'7}_{T_3,K_2} = 0 \pm 0$
-%                 $R^{'7}_{T_3,K_3} = 0 \pm 0$
-%                 $R^{'7}_{T_3,K_4} = 0 \pm 0$
-%                 $R^{'7}_{T_3,K_5} = 0 \pm 0$ &
-%             $R^{'7}_{T_4,K_1} = 0 \pm 0$
-%                 $R^{'7}_{T_4,K_2} = 0 \pm 0$
-%                 $R^{'7}_{T_4,K_3} = 0 \pm 0$
-%                 $R^{'7}_{T_4,K_4} = 0 \pm 0$
-%                 $R^{'7}_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%         AdBandits &
-%             $R^{'8}_{T_1,K_1} = 0 \pm 0$
-%                 $R^{'8}_{T_1,K_2} = 0 \pm 0$
-%                 $R^{'8}_{T_1,K_3} = 0 \pm 0$
-%                 $R^{'8}_{T_1,K_4} = 0 \pm 0$
-%                 $R^{'8}_{T_1,K_5} = 0 \pm 0$ &
-%             $R^{'8}_{T_2,K_1} = 0 \pm 0$
-%                 $R^{'8}_{T_2,K_2} = 0 \pm 0$
-%                 $R^{'8}_{T_2,K_3} = 0 \pm 0$
-%                 $R^{'8}_{T_2,K_4} = 0 \pm 0$
-%                 $R^{'8}_{T_2,K_5} = 0 \pm 0$ &
-%             $R^{'8}_{T_3,K_1} = 0 \pm 0$
-%                 $R^{'8}_{T_3,K_2} = 0 \pm 0$
-%                 $R^{'8}_{T_3,K_3} = 0 \pm 0$
-%                 $R^{'8}_{T_3,K_4} = 0 \pm 0$
-%                 $R^{'8}_{T_3,K_5} = 0 \pm 0$ &
-%             $R^{'8}_{T_4,K_1} = 0 \pm 0$
-%                 $R^{'8}_{T_4,K_2} = 0 \pm 0$
-%                 $R^{'8}_{T_4,K_3} = 0 \pm 0$
-%                 $R^{'8}_{T_4,K_4} = 0 \pm 0$
-%                 $R^{'8}_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%         BESA &
-%             $R^{'9}_{T_1,K_1} = 0 \pm 0$
-%                 $R^{'9}_{T_1,K_2} = 0 \pm 0$
-%                 $R^{'9}_{T_1,K_3} = 0 \pm 0$
-%                 $R^{'9}_{T_1,K_4} = 0 \pm 0$
-%                 $R^{'9}_{T_1,K_5} = 0 \pm 0$ &
-%             $R^{'9}_{T_2,K_1} = 0 \pm 0$
-%                 $R^{'9}_{T_2,K_2} = 0 \pm 0$
-%                 $R^{'9}_{T_2,K_3} = 0 \pm 0$
-%                 $R^{'9}_{T_2,K_4} = 0 \pm 0$
-%                 $R^{'9}_{T_2,K_5} = 0 \pm 0$ &
-%             $R^{'9}_{T_3,K_1} = 0 \pm 0$
-%                 $R^{'9}_{T_3,K_2} = 0 \pm 0$
-%                 $R^{'9}_{T_3,K_3} = 0 \pm 0$
-%                 $R^{'9}_{T_3,K_4} = 0 \pm 0$
-%                 $R^{'9}_{T_3,K_5} = 0 \pm 0$ &
-%             $R^{'9}_{T_4,K_1} = 0 \pm 0$
-%                 $R^{'9}_{T_4,K_2} = 0 \pm 0$
-%                 $R^{'9}_{T_4,K_3} = 0 \pm 0$
-%                 $R^{'9}_{T_4,K_4} = 0 \pm 0$
-%                 $R^{'9}_{T_4,K_5} = 0 \pm 0$ \\
-%         \hline
-%     \end{tabular}
-%     \caption{Mean regret $\pm$ $1$ std-dev, for $9$ different algorithms on \textbf{problem 2} with different values of time $T$ and number of arm $K$.
-%     }
-%     \label{table:3:meanRegret_problem2}
-% \end{footnotesize}  % WARNING
-% \end{table}
-
-% Include in appendix of this chapter the results for 7 more algorithms, the most recent and less important ones (MOSSAnytime, ApproximatedFHGittins, UCBdagger, klUCBswitchAnytime, PHE, RCB, Tsallis-Inf)
 
 
 
-% FIXME generate from the notebook then copy from WS3
 \begin{figure}[h!]  % [htbp]
 	% \centering
-	\includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormregret_vs_arms__56pb__7Ks_T50000.pdf}
+	% \includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormregret_vs_arms__56pb__7Ks_T50000.pdf}
+	\includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormregret_vs_arms__16pb__T5000.pdf}
 	\caption[Regret vs different values of $K$.]{
         Regret vs different values of $K$ ($R_T / \log(T)$),
-        for $T=50000$ and for $16$ algorithms.
+        for $T=5000$ and for $16$ algorithms.
         The $y$-axis is in log-scale.
         All algorithms appear to have a regret slowly growing with respect to $K$, as predicted by the regret bounds which are linear with respect to the number of arms, as predicted.
         \textsc{Tsallis-Inf} is the only state-of-the-art algorithm which appears to be very inefficient for problems with a small number of arms.
         Both the $\varepsilon$-greedy and Explore-then-Commit algorithms performed poorly, achieving linear regret (not displayed).
 	}
-	\label{fig:3:16_different_algorithms__lognormregret_vs_arms__56pb__7Ks_T50000}
+	\label{fig:3:16_different_algorithms__lognormregret_vs_arms__16pb__T5000}
 \end{figure}
 
 \begin{figure}[h!]  % [htbp]
 	% \centering
-	\includegraphics[width=1.10\linewidth]{16_different_algorithms__normregret_vs_horizons__56pb__K32_7Ts.pdf}
+	% \includegraphics[width=1.10\linewidth]{16_different_algorithms__normregret_vs_horizons__56pb__K32_7Ts.pdf}
+	\includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormregret_vs_times__16pb__K8.pdf}
 	\caption[Regret vs different values of $T$.]{
         Regret vs different values of $T$ ($R_T / K$),
         for $K=32$ and for $16$ algorithms.
@@ -1033,40 +612,29 @@ We give in the figures below the results of the experiments.
         The respective ranking of all the algorithms also appears to remain preserved for different values of $T$, which is also backed-up by theoretical results: if two algorithms $\cA$ and $\cA'$ has a regret close to their regret bounds, of the form $R_T \leq \cO(K \log(T))$, and the bound for $\cA$ use a smaller constant than the bound for $\cA'$, $\cA$ should obtain a smaller regret than $\cA'$ no matter the horizon.
         Finally, we also observe once more than both the $\varepsilon$-greedy and Explore-then-Commit algorithms performed poorly, achieving linear regret (not displayed after $T=100000$).
 	}
-	\label{fig:3:16_different_algorithms__normregret_vs_horizons__56pb__K32_7Ts}
+	\label{fig:3:16_different_algorithms__lognormregret_vs_times__16pb__K8}
 \end{figure}
 
 
-\subsection{Summary of the experiments}
-
-\TODOL{Au lieu d'avoir des longues captions pour les figures, je vais écrire quelques paragraphes donnant les mêmes conclusion et faisant référence aux figures. Je ferai ça très vite si on est contents des figures.}
-
-We have been able to check empirically that the regret of all the efficient algorithm indeed scales as predicted by the theory, that is
+\paragraph{Summary of the experiments.}
+%
+In the two Figures~\ref{fig:3:16_different_algorithms__lognormregret_vs_arms__16pb__T5000} and \ref{fig:3:16_different_algorithms__lognormregret_vs_times__16pb__K8}
+included in this section,
+we are able to check empirically that the regret of all the efficient algorithm indeed scales as predicted by the theory, that is
 linearly in the number of arms, and logarithmically in the horizon, \ie, $R_T = \bigO{K \log T}$.
 %
 The main take-away message is the following: in all the rest of this thesis, we focus on two algorithms depending if simplicity or efficiency is favored:
 \begin{itemize}\tightlist
     \item
-    \UCB{} is used in the more applied Chapter~\ref{chapter:4}, when simplicity is favored,
+    \UCB{} (or Thompson sampling) is used in the more applied Chapter~\ref{chapter:4}, when simplicity is favored,
     \item
-    \klUCB{} is used, in the two more theoretical Chapters~\ref{chapter:5} and \ref{chapter:6}, when efficiency is favored.
+    \klUCB{} is used, in the two more theoretical Chapters~\ref{chapter:5} and \ref{chapter:6}, when efficiency is favored, and when we analyze mathematically the performance of an algorithm that is running on top of a classical stationary MAB policy, like our two contributions, \MCTopM{} and \GLR.
 \end{itemize}
-
-% I want to show that SMPyBandits contains highly documented implementations of all the most important algorithms designed for stationary single-player multi-armed bandit.
-
-% I will include here formulas about the main algorithms (klUCB, MOSS, etc).
-% I will pick some problems (Bernoulli, Gaussian, others), with fixed means or ``Bayesian'' means (\ie, changing at each time) and I will run extensive numerical simulations to compare the main algorithms.
-
-% The take away message is: klUCB beats UCB, Thompson sampling is great too, all the others algorithms are less efficient or comparable, so we only use klUCB for all the rest of this thesis.
-
-% I will include graphs showing the mean regret $R_t$ as a function of time $t$, as well as histograms or boxplots showing the distribution of $R_T$.
 
 
 % ----------------------------------------------------------------------------
 \section{Comparing real measurements of time and memory costs}
 \label{sec:3:timeAndMemoryCosts}
-
-\TODOL{Tout ce blabla est un peu trop long, je devrais couper et être plus concis !}
 
 In this section, we report additional experiment results from the simulations described in the previous Section~\ref{sec:3:reviewSPAlgorithms}.
 Instead of studying on the efficiency of the algorithms (\ie, their regret), we report results of real measurements in terms of computational time as well as memory storage.
@@ -1079,523 +647,113 @@ Hence, the reported results highly depend on many factors, including how the cod
 We take precautions to ensure the fairness of the comparison between the different algorithms, as detailed in Appendix~\ref{sub:3:precautionsTimeMemory}.
 
 
-% \subsection{Computational time}
+\paragraph{Computational time.}
 
-% \TODOL{Just one long table for problem 1, not necessary to include other problems}
+In Figure~\ref{fig:3:16_different_algorithms__lognormregret_vs_logtime__28pb}, we can see FIXME
+
+Moreover, in the two Figures~\ref{fig:3:16_different_algorithms__lognormtime_vs_arms__16pb__T5000} and
+\ref{fig:3:16_different_algorithms__lognormtime_vs_times__16pb__K8},
+we are able to check empirically that the computational time of all the efficient algorithm indeed scales as predicted by the theory, that is
+linearly in the number of arms in the horizon, \ie, $\cT_T = \bigO{KT}$.
 
 \begin{figure}[h!]  % [htbp]
 	% \centering
-	\includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormregret_vs_lognormtime__56pb__7Ks_7Ts.pdf}
+	% \includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormregret_vs_lognormtime__56pb__7Ks_7Ts.pdf}
+	\includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormregret_vs_logtime__28pb.pdf}
 	\caption[Normalized mean regret vs normalized running time (in micro-seconds).]{
         Normalized mean regret vs normalized running time (in micro-seconds),
         aggregating the results from different values of $K$ and $T$, for $16$ algorithms.
         Both the $x$-axis and $y$-axis are in log-scale.
         \UCB{} and \klUCB{} are among the best algorithms, while AdBandits, Thompson sampling and Bayes-UCB slightly outperform them in terms of regret, and have similar running times.
 	}
-	\label{fig:3:16_different_algorithms__lognormregret_vs_lognormtime__56pb__7Ks_7Ts}
+	\label{fig:3:16_different_algorithms__lognormregret_vs_logtime__28pb}
 \end{figure}
 
 
-% FIXME generate from the notebook then copy from WS3
 \begin{figure}[h!]  % [htbp]
 	% \centering
-	\includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormtime_vs_arms__56pb__7Ks_T50000.pdf}
+	% \includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormtime_vs_arms__56pb__7Ks_T50000.pdf}
+	\includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormtime_vs_arms__16pb__T5000.pdf}
 	\caption[Normalized running time vs different values of $K$.]{
         Normalized running time vs different values of $K$ ($\cT_T / T$),
-        for $T=50000$ and for $16$ algorithms.
+        for $T=5000$ and for $16$ algorithms.
         $y$-axis is in log-scale.
-        All algorithms except BESA has a linear normalized running time, meaning that for $K$ arms they use a computation time proportional to $K$, as predicted.
+        All algorithms except BESA has a linear normalized running time, meaning that for $K$ arms they use a computation time proportional to $K$, as predicted: $\cT_T = \bigO{KT}$.
 	}
-	\label{fig:3:16_different_algorithms__lognormtime_vs_arms__56pb__7Ks_T50000}
+	\label{fig:3:16_different_algorithms__lognormtime_vs_arms__16pb__T5000}
 \end{figure}
 
 \begin{figure}[h!]  % [htbp]
 	% \centering
-	\includegraphics[width=1.10\linewidth]{16_different_algorithms__normtime_vs_horizons__56pb__K32_7Ts.pdf}
+	% \includegraphics[width=1.10\linewidth]{16_different_algorithms__normtime_vs_horizons__56pb__K32_7Ts.pdf}
+	\includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormtime_vs_times__16pb__K8.pdf}
 	\caption[Normalized running time vs different values of $T$.]{
         Normalized running time vs different values of $T$ ($\cT_T / T$),
         for $K=32$ and for $16$ algorithms.
-        All algorithms except BESA has a constant normalized running time, meaning that for $T$ rounds they use a computation time proportional to $T$, as predicted.
+        $y$-axis is in log-scale.
+        All algorithms except BESA has a constant normalized running time, meaning that for $T$ rounds they use a computation time proportional to $T$, as predicted: $\cT_T = \bigO{KT}$.
 	}
-	\label{fig:3:16_different_algorithms__normtime_vs_horizons__56pb__K32_7Ts}
+	\label{fig:3:16_different_algorithms__lognormtime_vs_times__16pb__K8}
 \end{figure}
 
 
-% \begin{table}[!t]
-% \begin{footnotesize}  % WARNING
-%     \centering
-%     \begin{tabular}{c|*{5}{m{2cm}}} % WARNING size ?
-%     \textbf{Algorithms} $\;$ \textbackslash $\;$ $\mathbf{T=}$
-%         & $T_1 = 1000$ & $T_2 = 5000$ & $T_3 = 10000$ & $T_4 = 50000$ \\
-%         \hline
-%         $\varepsilon$-greedy &
-%             $\cT^{1}_{T_1,K_1} = 0$
-%                 $\cT^{1}_{T_1,K_2} = 0$
-%                 $\cT^{1}_{T_1,K_3} = 0$
-%                 $\cT^{1}_{T_1,K_4} = 0$
-%                 $\cT^{1}_{T_1,K_5} = 0$ &
-%             $\cT^{1}_{T_2,K_1} = 0$
-%                 $\cT^{1}_{T_2,K_2} = 0$
-%                 $\cT^{1}_{T_2,K_3} = 0$
-%                 $\cT^{1}_{T_2,K_4} = 0$
-%                 $\cT^{1}_{T_2,K_5} = 0$ &
-%             $\cT^{1}_{T_3,K_1} = 0$
-%                 $\cT^{1}_{T_3,K_2} = 0$
-%                 $\cT^{1}_{T_3,K_3} = 0$
-%                 $\cT^{1}_{T_3,K_4} = 0$
-%                 $\cT^{1}_{T_3,K_5} = 0$ &
-%             $\cT^{1}_{T_4,K_1} = 0$
-%                 $\cT^{1}_{T_4,K_2} = 0$
-%                 $\cT^{1}_{T_4,K_3} = 0$
-%                 $\cT^{1}_{T_4,K_4} = 0$
-%                 $\cT^{1}_{T_4,K_5} = 0$ \\
-%         \hline
-%         Explore-then-Commit &
-%             $\cT^{2}_{T_1,K_1} = 0$
-%                 $\cT^{2}_{T_1,K_2} = 0$
-%                 $\cT^{2}_{T_1,K_3} = 0$
-%                 $\cT^{2}_{T_1,K_4} = 0$
-%                 $\cT^{2}_{T_1,K_5} = 0$ &
-%             $\cT^{2}_{T_2,K_1} = 0$
-%                 $\cT^{2}_{T_2,K_2} = 0$
-%                 $\cT^{2}_{T_2,K_3} = 0$
-%                 $\cT^{2}_{T_2,K_4} = 0$
-%                 $\cT^{2}_{T_2,K_5} = 0$ &
-%             $\cT^{2}_{T_3,K_1} = 0$
-%                 $\cT^{2}_{T_3,K_2} = 0$
-%                 $\cT^{2}_{T_3,K_3} = 0$
-%                 $\cT^{2}_{T_3,K_4} = 0$
-%                 $\cT^{2}_{T_3,K_5} = 0$ &
-%             $\cT^{2}_{T_4,K_1} = 0$
-%                 $\cT^{2}_{T_4,K_2} = 0$
-%                 $\cT^{2}_{T_4,K_3} = 0$
-%                 $\cT^{2}_{T_4,K_4} = 0$
-%                 $\cT^{2}_{T_4,K_5} = 0$ \\
-%         \hline
-%         $\mathrm{Exp}3^{++}$ &
-%             $\cT^3_{T_1,K_1} = 0$
-%                 $\cT^3_{T_1,K_2} = 0$
-%                 $\cT^3_{T_1,K_3} = 0$
-%                 $\cT^3_{T_1,K_4} = 0$
-%                 $\cT^3_{T_1,K_5} = 0$ &
-%             $\cT^3_{T_2,K_1} = 0$
-%                 $\cT^3_{T_2,K_2} = 0$
-%                 $\cT^3_{T_2,K_3} = 0$
-%                 $\cT^3_{T_2,K_4} = 0$
-%                 $\cT^3_{T_2,K_5} = 0$ &
-%             $\cT^3_{T_3,K_1} = 0$
-%                 $\cT^3_{T_3,K_2} = 0$
-%                 $\cT^3_{T_3,K_3} = 0$
-%                 $\cT^3_{T_3,K_4} = 0$
-%                 $\cT^3_{T_3,K_5} = 0$ &
-%             $\cT^3_{T_4,K_1} = 0$
-%                 $\cT^3_{T_4,K_2} = 0$
-%                 $\cT^3_{T_4,K_3} = 0$
-%                 $\cT^3_{T_4,K_4} = 0$
-%                 $\cT^3_{T_4,K_5} = 0$ \\
-%         \hline
-%         $\UCB_1$ &
-%             $\cT^{4}_{T_1,K_1} = 0$
-%                 $\cT^{4}_{T_1,K_2} = 0$
-%                 $\cT^{4}_{T_1,K_3} = 0$
-%                 $\cT^{4}_{T_1,K_4} = 0$
-%                 $\cT^{4}_{T_1,K_5} = 0$ &
-%             $\cT^{4}_{T_2,K_1} = 0$
-%                 $\cT^{4}_{T_2,K_2} = 0$
-%                 $\cT^{4}_{T_2,K_3} = 0$
-%                 $\cT^{4}_{T_2,K_4} = 0$
-%                 $\cT^{4}_{T_2,K_5} = 0$ &
-%             $\cT^{4}_{T_3,K_1} = 0$
-%                 $\cT^{4}_{T_3,K_2} = 0$
-%                 $\cT^{4}_{T_3,K_3} = 0$
-%                 $\cT^{4}_{T_3,K_4} = 0$
-%                 $\cT^{4}_{T_3,K_5} = 0$ &
-%             $\cT^{4}_{T_4,K_1} = 0$
-%                 $\cT^{4}_{T_4,K_2} = 0$
-%                 $\cT^{4}_{T_4,K_3} = 0$
-%                 $\cT^{4}_{T_4,K_4} = 0$
-%                 $\cT^{4}_{T_4,K_5} = 0$ \\
-%         \hline
-%         \klUCB{} &
-%             $\cT^{5}_{T_1,K_1} = 0$
-%                 $\cT^{5}_{T_1,K_2} = 0$
-%                 $\cT^{5}_{T_1,K_3} = 0$
-%                 $\cT^{5}_{T_1,K_4} = 0$
-%                 $\cT^{5}_{T_1,K_5} = 0$ &
-%             $\cT^{5}_{T_2,K_1} = 0$
-%                 $\cT^{5}_{T_2,K_2} = 0$
-%                 $\cT^{5}_{T_2,K_3} = 0$
-%                 $\cT^{5}_{T_2,K_4} = 0$
-%                 $\cT^{5}_{T_2,K_5} = 0$ &
-%             $\cT^{5}_{T_3,K_1} = 0$
-%                 $\cT^{5}_{T_3,K_2} = 0$
-%                 $\cT^{5}_{T_3,K_3} = 0$
-%                 $\cT^{5}_{T_3,K_4} = 0$
-%                 $\cT^{5}_{T_3,K_5} = 0$ &
-%             $\cT^{5}_{T_4,K_1} = 0$
-%                 $\cT^{5}_{T_4,K_2} = 0$
-%                 $\cT^{5}_{T_4,K_3} = 0$
-%                 $\cT^{5}_{T_4,K_4} = 0$
-%                 $\cT^{5}_{T_4,K_5} = 0$ \\
-%         \hline
-%         Thompson sampling &
-%             $\cT^{6}_{T_1,K_1} = 0$
-%                 $\cT^{6}_{T_1,K_2} = 0$
-%                 $\cT^{6}_{T_1,K_3} = 0$
-%                 $\cT^{6}_{T_1,K_4} = 0$
-%                 $\cT^{6}_{T_1,K_5} = 0$ &
-%             $\cT^{6}_{T_2,K_1} = 0$
-%                 $\cT^{6}_{T_2,K_2} = 0$
-%                 $\cT^{6}_{T_2,K_3} = 0$
-%                 $\cT^{6}_{T_2,K_4} = 0$
-%                 $\cT^{6}_{T_2,K_5} = 0$ &
-%             $\cT^{6}_{T_3,K_1} = 0$
-%                 $\cT^{6}_{T_3,K_2} = 0$
-%                 $\cT^{6}_{T_3,K_3} = 0$
-%                 $\cT^{6}_{T_3,K_4} = 0$
-%                 $\cT^{6}_{T_3,K_5} = 0$ &
-%             $\cT^{6}_{T_4,K_1} = 0$
-%                 $\cT^{6}_{T_4,K_2} = 0$
-%                 $\cT^{6}_{T_4,K_3} = 0$
-%                 $\cT^{6}_{T_4,K_4} = 0$
-%                 $\cT^{6}_{T_4,K_5} = 0$ \\
-%         \hline
-%         Thompson sampling &
-%             $\cT^{7}_{T_1,K_1} = 0$
-%                 $\cT^{7}_{T_1,K_2} = 0$
-%                 $\cT^{7}_{T_1,K_3} = 0$
-%                 $\cT^{7}_{T_1,K_4} = 0$
-%                 $\cT^{7}_{T_1,K_5} = 0$ &
-%             $\cT^{7}_{T_2,K_1} = 0$
-%                 $\cT^{7}_{T_2,K_2} = 0$
-%                 $\cT^{7}_{T_2,K_3} = 0$
-%                 $\cT^{7}_{T_2,K_4} = 0$
-%                 $\cT^{7}_{T_2,K_5} = 0$ &
-%             $\cT^{7}_{T_3,K_1} = 0$
-%                 $\cT^{7}_{T_3,K_2} = 0$
-%                 $\cT^{7}_{T_3,K_3} = 0$
-%                 $\cT^{7}_{T_3,K_4} = 0$
-%                 $\cT^{7}_{T_3,K_5} = 0$ &
-%             $\cT^{7}_{T_4,K_1} = 0$
-%                 $\cT^{7}_{T_4,K_2} = 0$
-%                 $\cT^{7}_{T_4,K_3} = 0$
-%                 $\cT^{7}_{T_4,K_4} = 0$
-%                 $\cT^{7}_{T_4,K_5} = 0$ \\
-%         \hline
-%         AdBandits &
-%             $\cT^{8}_{T_1,K_1} = 0$
-%                 $\cT^{8}_{T_1,K_2} = 0$
-%                 $\cT^{8}_{T_1,K_3} = 0$
-%                 $\cT^{8}_{T_1,K_4} = 0$
-%                 $\cT^{8}_{T_1,K_5} = 0$ &
-%             $\cT^{8}_{T_2,K_1} = 0$
-%                 $\cT^{8}_{T_2,K_2} = 0$
-%                 $\cT^{8}_{T_2,K_3} = 0$
-%                 $\cT^{8}_{T_2,K_4} = 0$
-%                 $\cT^{8}_{T_2,K_5} = 0$ &
-%             $\cT^{8}_{T_3,K_1} = 0$
-%                 $\cT^{8}_{T_3,K_2} = 0$
-%                 $\cT^{8}_{T_3,K_3} = 0$
-%                 $\cT^{8}_{T_3,K_4} = 0$
-%                 $\cT^{8}_{T_3,K_5} = 0$ &
-%             $\cT^{8}_{T_4,K_1} = 0$
-%                 $\cT^{8}_{T_4,K_2} = 0$
-%                 $\cT^{8}_{T_4,K_3} = 0$
-%                 $\cT^{8}_{T_4,K_4} = 0$
-%                 $\cT^{8}_{T_4,K_5} = 0$ \\
-%         \hline
-%         BESA &
-%             $\cT^{9}_{T_1,K_1} = 0$
-%                 $\cT^{9}_{T_1,K_2} = 0$
-%                 $\cT^{9}_{T_1,K_3} = 0$
-%                 $\cT^{9}_{T_1,K_4} = 0$
-%                 $\cT^{9}_{T_1,K_5} = 0$ &
-%             $\cT^{9}_{T_2,K_1} = 0$
-%                 $\cT^{9}_{T_2,K_2} = 0$
-%                 $\cT^{9}_{T_2,K_3} = 0$
-%                 $\cT^{9}_{T_2,K_4} = 0$
-%                 $\cT^{9}_{T_2,K_5} = 0$ &
-%             $\cT^{9}_{T_3,K_1} = 0$
-%                 $\cT^{9}_{T_3,K_2} = 0$
-%                 $\cT^{9}_{T_3,K_3} = 0$
-%                 $\cT^{9}_{T_3,K_4} = 0$
-%                 $\cT^{9}_{T_3,K_5} = 0$ &
-%             $\cT^{9}_{T_4,K_1} = 0$
-%                 $\cT^{9}_{T_4,K_2} = 0$
-%                 $\cT^{9}_{T_4,K_3} = 0$
-%                 $\cT^{9}_{T_4,K_4} = 0$
-%                 $\cT^{9}_{T_4,K_5} = 0$ \\
-%         \hline
-%     \end{tabular}
-%     \caption{Normalized running time, rounded and in milli-seconds, for $9$ different algorithms on problem $1$ with different, values of time $T$ and number of arm $K$.}
-%     \label{table:3:time_problem1}
-% \end{footnotesize}  % WARNING
-% \end{table}
+\paragraph{Memory cost.}
 
+In Figure~\ref{fig:3:16_different_algorithms__lognormregret_vs_logmemory__28pb}, we can see FIXME
 
-% \subsection{Memory cost}
-
-% \TODOL{Just one long table for problem 1, not necessary to include other problems}
+Moreover, in the two Figures~\ref{fig:3:16_different_algorithms__lognormmemory_vs_arms__16pb__T5000} and
+\ref{fig:3:16_different_algorithms__lognormmemory_vs_times__16pb__K8},
+we are able to check empirically that the memory cost of all the efficient algorithm indeed scales as predicted by the theory, that is
+linearly in the number of arms but independently of the horizon, \ie, $\cM_T = \bigO{K}$.
 
 \begin{figure}[h!]  % [htbp]
 	% \centering
-	\includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormregret_vs_lognormmemory__56pb__7Ks_7Ts.pdf}
+	% \includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormregret_vs_lognormmemory__56pb__7Ks_7Ts.pdf}
+	\includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormregret_vs_logmemory__28pb.pdf}
 	\caption[Normalized mean regret vs normalized memory costs (in bytes).]{
         Normalized mean regret vs normalized memory costs (in bytes),
         aggregating the results from different values of $K$ and $T$, for $16$ algorithms.
         Both the $x$-axis and $y$-axis are in log-scale.
         Thompson sampling appears as the best algorithm in this visualization, while \UCB{} has the advantage of being memory efficient, and \klUCB{} obtains similar performances.
 	}
-	\label{fig:3:16_different_algorithms__lognormregret_vs_lognormmemory__56pb__7Ks_7Ts}
+	\label{fig:3:16_different_algorithms__lognormregret_vs_logmemory__28pb}
 \end{figure}
 
 
-% FIXME generate from the notebook then copy from WS3
 \begin{figure}[h!]  % [htbp]
 	% \centering
-	\includegraphics[width=1.10\linewidth]{16_different_algorithms__normmemory_vs_arms__56pb__7Ks_T50000.pdf}
+	% \includegraphics[width=1.10\linewidth]{16_different_algorithms__normmemory_vs_arms__56pb__7Ks_T50000.pdf}
+	\includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormmemory_vs_arms__16pb__T5000.pdf}
 	\caption[Normalized memory cost vs different values of $K$.]{
         Normalized memory cost vs different values of $K$ ($\cM_T / K$),
-        for $T=50000$ and for $16$ algorithms.
-        % $y$-axis is in log-scale.
-        All algorithms (except BESA) has an almost constant memory cost, meaning that for $K$ arms they use a storage proportional to $K$, as predicted.
+        for $T=5000$ and for $16$ algorithms.
+        $y$-axis is in log-scale.
+        All algorithms (except BESA) has an almost constant memory cost, meaning that for $K$ arms they use a storage proportional to $K$, as predicted: $\cM_T = \bigO{K}$.
 	}
-	\label{fig:3:16_different_algorithms__normmemory_vs_arms__56pb__7Ks_T50000}
+	\label{fig:3:16_different_algorithms__lognormmemory_vs_arms__16pb__T5000}
 \end{figure}
 
 \begin{figure}[h!]  % [htbp]
 	% \centering
-	\includegraphics[width=1.10\linewidth]{16_different_algorithms__normmemory_vs_horizons__56pb__K32_7Ts.pdf}
+	% \includegraphics[width=1.10\linewidth]{16_different_algorithms__normmemory_vs_horizons__56pb__K32_7Ts.pdf}
+	\includegraphics[width=1.10\linewidth]{16_different_algorithms__lognormmemory_vs_times__16pb__K8.pdf}
 	\caption[Normalized memory cost vs different values of $T$.]{
         Normalized memory cost vs different values of $T$ ($\cM_T / K$),
         for $K=32$ and for $16$ algorithms.
-        All algorithms (except BESA) has a very slowly growing normalized memory cost, meaning that for $T$ rounds they use a computation time almost independent of $T$, as predicted.
+        $y$-axis is in log-scale.
+        All algorithms (except BESA) has a very slowly growing normalized memory cost, meaning that for $T$ rounds they use a computation time almost independent of $T$, as predicted: $\cM_T = \bigO{K}$.
         There is a clear separation between three groups.
         First, BESA is very costly in terms of memory, and $\UCB\dagger$ and \textsc{Tsallis-Inf} are also more costly than others, and both experiences a linear growth of their memory cost.
         Then, we see PHE, $\mathrm{Exp}3^{++}$, Bayes-UCB and AdBandits having a small but linear growth of memory cost, and it can be explained for each of them (\eg, for Bayes-UCB, computing the $1-1/t$ quantile at time $t$ becomes more and more costly as $t$ grows, and thus as $T$ grows,  ).
         Finally, the other algorithms (including \UCB, \klUCB{} and Thompson sampling) have a very small footprint and their memory cost do not grow much when $T$ increases.
 	}
-	\label{fig:3:16_different_algorithms__normmemory_vs_horizons__56pb__K32_7Ts}
+	\label{fig:3:16_different_algorithms__lognormmemory_vs_times__16pb__K8}
 \end{figure}
 
 
-% \begin{table}[!t]
-% \begin{footnotesize}  % WARNING
-%     \centering
-%     \begin{tabular}{c|*{5}{m{2cm}}} % WARNING size ?
-%     \textbf{Algorithms} $\;$ \textbackslash $\;$ $\mathbf{T=}$
-%         & $T_1 = 1000$ & $T_2 = 5000$ & $T_3 = 10000$ & $T_4 = 50000$ \\
-%         \hline
-%         $\varepsilon$-greedy &
-%             $\cM^{1}_{T_1,K_1} = 0$
-%                 $\cM^{1}_{T_1,K_2} = 0$
-%                 $\cM^{1}_{T_1,K_3} = 0$
-%                 $\cM^{1}_{T_1,K_4} = 0$
-%                 $\cM^{1}_{T_1,K_5} = 0$ &
-%             $\cM^{1}_{T_2,K_1} = 0$
-%                 $\cM^{1}_{T_2,K_2} = 0$
-%                 $\cM^{1}_{T_2,K_3} = 0$
-%                 $\cM^{1}_{T_2,K_4} = 0$
-%                 $\cM^{1}_{T_2,K_5} = 0$ &
-%             $\cM^{1}_{T_3,K_1} = 0$
-%                 $\cM^{1}_{T_3,K_2} = 0$
-%                 $\cM^{1}_{T_3,K_3} = 0$
-%                 $\cM^{1}_{T_3,K_4} = 0$
-%                 $\cM^{1}_{T_3,K_5} = 0$ &
-%             $\cM^{1}_{T_4,K_1} = 0$
-%                 $\cM^{1}_{T_4,K_2} = 0$
-%                 $\cM^{1}_{T_4,K_3} = 0$
-%                 $\cM^{1}_{T_4,K_4} = 0$
-%                 $\cM^{1}_{T_4,K_5} = 0$ \\
-%         \hline
-%         Explore-then-Commit &
-%             $\cM^{2}_{T_1,K_1} = 0$
-%                 $\cM^{2}_{T_1,K_2} = 0$
-%                 $\cM^{2}_{T_1,K_3} = 0$
-%                 $\cM^{2}_{T_1,K_4} = 0$
-%                 $\cM^{2}_{T_1,K_5} = 0$ &
-%             $\cM^{2}_{T_2,K_1} = 0$
-%                 $\cM^{2}_{T_2,K_2} = 0$
-%                 $\cM^{2}_{T_2,K_3} = 0$
-%                 $\cM^{2}_{T_2,K_4} = 0$
-%                 $\cM^{2}_{T_2,K_5} = 0$ &
-%             $\cM^{2}_{T_3,K_1} = 0$
-%                 $\cM^{2}_{T_3,K_2} = 0$
-%                 $\cM^{2}_{T_3,K_3} = 0$
-%                 $\cM^{2}_{T_3,K_4} = 0$
-%                 $\cM^{2}_{T_3,K_5} = 0$ &
-%             $\cM^{2}_{T_4,K_1} = 0$
-%                 $\cM^{2}_{T_4,K_2} = 0$
-%                 $\cM^{2}_{T_4,K_3} = 0$
-%                 $\cM^{2}_{T_4,K_4} = 0$
-%                 $\cM^{2}_{T_4,K_5} = 0$ \\
-%         \hline
-%         $\mathrm{Exp}3^{++}$ &
-%             $\cM^3_{T_1,K_1} = 0$
-%                 $\cM^3_{T_1,K_2} = 0$
-%                 $\cM^3_{T_1,K_3} = 0$
-%                 $\cM^3_{T_1,K_4} = 0$
-%                 $\cM^3_{T_1,K_5} = 0$ &
-%             $\cM^3_{T_2,K_1} = 0$
-%                 $\cM^3_{T_2,K_2} = 0$
-%                 $\cM^3_{T_2,K_3} = 0$
-%                 $\cM^3_{T_2,K_4} = 0$
-%                 $\cM^3_{T_2,K_5} = 0$ &
-%             $\cM^3_{T_3,K_1} = 0$
-%                 $\cM^3_{T_3,K_2} = 0$
-%                 $\cM^3_{T_3,K_3} = 0$
-%                 $\cM^3_{T_3,K_4} = 0$
-%                 $\cM^3_{T_3,K_5} = 0$ &
-%             $\cM^3_{T_4,K_1} = 0$
-%                 $\cM^3_{T_4,K_2} = 0$
-%                 $\cM^3_{T_4,K_3} = 0$
-%                 $\cM^3_{T_4,K_4} = 0$
-%                 $\cM^3_{T_4,K_5} = 0$ \\
-%         \hline
-%         $\UCB_1$ &
-%             $\cM^{4}_{T_1,K_1} = 0$
-%                 $\cM^{4}_{T_1,K_2} = 0$
-%                 $\cM^{4}_{T_1,K_3} = 0$
-%                 $\cM^{4}_{T_1,K_4} = 0$
-%                 $\cM^{4}_{T_1,K_5} = 0$ &
-%             $\cM^{4}_{T_2,K_1} = 0$
-%                 $\cM^{4}_{T_2,K_2} = 0$
-%                 $\cM^{4}_{T_2,K_3} = 0$
-%                 $\cM^{4}_{T_2,K_4} = 0$
-%                 $\cM^{4}_{T_2,K_5} = 0$ &
-%             $\cM^{4}_{T_3,K_1} = 0$
-%                 $\cM^{4}_{T_3,K_2} = 0$
-%                 $\cM^{4}_{T_3,K_3} = 0$
-%                 $\cM^{4}_{T_3,K_4} = 0$
-%                 $\cM^{4}_{T_3,K_5} = 0$ &
-%             $\cM^{4}_{T_4,K_1} = 0$
-%                 $\cM^{4}_{T_4,K_2} = 0$
-%                 $\cM^{4}_{T_4,K_3} = 0$
-%                 $\cM^{4}_{T_4,K_4} = 0$
-%                 $\cM^{4}_{T_4,K_5} = 0$ \\
-%         \hline
-%         \klUCB{} &
-%             $\cM^{5}_{T_1,K_1} = 0$
-%                 $\cM^{5}_{T_1,K_2} = 0$
-%                 $\cM^{5}_{T_1,K_3} = 0$
-%                 $\cM^{5}_{T_1,K_4} = 0$
-%                 $\cM^{5}_{T_1,K_5} = 0$ &
-%             $\cM^{5}_{T_2,K_1} = 0$
-%                 $\cM^{5}_{T_2,K_2} = 0$
-%                 $\cM^{5}_{T_2,K_3} = 0$
-%                 $\cM^{5}_{T_2,K_4} = 0$
-%                 $\cM^{5}_{T_2,K_5} = 0$ &
-%             $\cM^{5}_{T_3,K_1} = 0$
-%                 $\cM^{5}_{T_3,K_2} = 0$
-%                 $\cM^{5}_{T_3,K_3} = 0$
-%                 $\cM^{5}_{T_3,K_4} = 0$
-%                 $\cM^{5}_{T_3,K_5} = 0$ &
-%             $\cM^{5}_{T_4,K_1} = 0$
-%                 $\cM^{5}_{T_4,K_2} = 0$
-%                 $\cM^{5}_{T_4,K_3} = 0$
-%                 $\cM^{5}_{T_4,K_4} = 0$
-%                 $\cM^{5}_{T_4,K_5} = 0$ \\
-%         \hline
-%         Thompson sampling &
-%             $\cM^{6}_{T_1,K_1} = 0$
-%                 $\cM^{6}_{T_1,K_2} = 0$
-%                 $\cM^{6}_{T_1,K_3} = 0$
-%                 $\cM^{6}_{T_1,K_4} = 0$
-%                 $\cM^{6}_{T_1,K_5} = 0$ &
-%             $\cM^{6}_{T_2,K_1} = 0$
-%                 $\cM^{6}_{T_2,K_2} = 0$
-%                 $\cM^{6}_{T_2,K_3} = 0$
-%                 $\cM^{6}_{T_2,K_4} = 0$
-%                 $\cM^{6}_{T_2,K_5} = 0$ &
-%             $\cM^{6}_{T_3,K_1} = 0$
-%                 $\cM^{6}_{T_3,K_2} = 0$
-%                 $\cM^{6}_{T_3,K_3} = 0$
-%                 $\cM^{6}_{T_3,K_4} = 0$
-%                 $\cM^{6}_{T_3,K_5} = 0$ &
-%             $\cM^{6}_{T_4,K_1} = 0$
-%                 $\cM^{6}_{T_4,K_2} = 0$
-%                 $\cM^{6}_{T_4,K_3} = 0$
-%                 $\cM^{6}_{T_4,K_4} = 0$
-%                 $\cM^{6}_{T_4,K_5} = 0$ \\
-%         \hline
-%         Bayes-UCB &
-%             $\cM^{7}_{T_1,K_1} = 0$
-%                 $\cM^{7}_{T_1,K_2} = 0$
-%                 $\cM^{7}_{T_1,K_3} = 0$
-%                 $\cM^{7}_{T_1,K_4} = 0$
-%                 $\cM^{7}_{T_1,K_5} = 0$ &
-%             $\cM^{7}_{T_2,K_1} = 0$
-%                 $\cM^{7}_{T_2,K_2} = 0$
-%                 $\cM^{7}_{T_2,K_3} = 0$
-%                 $\cM^{7}_{T_2,K_4} = 0$
-%                 $\cM^{7}_{T_2,K_5} = 0$ &
-%             $\cM^{7}_{T_3,K_1} = 0$
-%                 $\cM^{7}_{T_3,K_2} = 0$
-%                 $\cM^{7}_{T_3,K_3} = 0$
-%                 $\cM^{7}_{T_3,K_4} = 0$
-%                 $\cM^{7}_{T_3,K_5} = 0$ &
-%             $\cM^{7}_{T_4,K_1} = 0$
-%                 $\cM^{7}_{T_4,K_2} = 0$
-%                 $\cM^{7}_{T_4,K_3} = 0$
-%                 $\cM^{7}_{T_4,K_4} = 0$
-%                 $\cM^{7}_{T_4,K_5} = 0$ \\
-%         \hline
-%         AdBandits &
-%             $\cM^{8}_{T_1,K_1} = 0$
-%                 $\cM^{8}_{T_1,K_2} = 0$
-%                 $\cM^{8}_{T_1,K_3} = 0$
-%                 $\cM^{8}_{T_1,K_4} = 0$
-%                 $\cM^{8}_{T_1,K_5} = 0$ &
-%             $\cM^{8}_{T_2,K_1} = 0$
-%                 $\cM^{8}_{T_2,K_2} = 0$
-%                 $\cM^{8}_{T_2,K_3} = 0$
-%                 $\cM^{8}_{T_2,K_4} = 0$
-%                 $\cM^{8}_{T_2,K_5} = 0$ &
-%             $\cM^{8}_{T_3,K_1} = 0$
-%                 $\cM^{8}_{T_3,K_2} = 0$
-%                 $\cM^{8}_{T_3,K_3} = 0$
-%                 $\cM^{8}_{T_3,K_4} = 0$
-%                 $\cM^{8}_{T_3,K_5} = 0$ &
-%             $\cM^{8}_{T_4,K_1} = 0$
-%                 $\cM^{8}_{T_4,K_2} = 0$
-%                 $\cM^{8}_{T_4,K_3} = 0$
-%                 $\cM^{8}_{T_4,K_4} = 0$
-%                 $\cM^{8}_{T_4,K_5} = 0$ \\
-%         \hline
-%         BESA &
-%             $\cM^{9}_{T_1,K_1} = 0$
-%                 $\cM^{9}_{T_1,K_2} = 0$
-%                 $\cM^{9}_{T_1,K_3} = 0$
-%                 $\cM^{9}_{T_1,K_4} = 0$
-%                 $\cM^{9}_{T_1,K_5} = 0$ &
-%             $\cM^{9}_{T_2,K_1} = 0$
-%                 $\cM^{9}_{T_2,K_2} = 0$
-%                 $\cM^{9}_{T_2,K_3} = 0$
-%                 $\cM^{9}_{T_2,K_4} = 0$
-%                 $\cM^{9}_{T_2,K_5} = 0$ &
-%             $\cM^{9}_{T_3,K_1} = 0$
-%                 $\cM^{9}_{T_3,K_2} = 0$
-%                 $\cM^{9}_{T_3,K_3} = 0$
-%                 $\cM^{9}_{T_3,K_4} = 0$
-%                 $\cM^{9}_{T_3,K_5} = 0$ &
-%             $\cM^{9}_{T_4,K_1} = 0$
-%                 $\cM^{9}_{T_4,K_2} = 0$
-%                 $\cM^{9}_{T_4,K_3} = 0$
-%                 $\cM^{9}_{T_4,K_4} = 0$
-%                 $\cM^{9}_{T_4,K_5} = 0$ \\
-%         \hline
-%     \end{tabular}
-%     \caption{Non-normalized memory cost, rounded and in Bytes, for $9$ different algorithms on problem $1$ with different, values of time $T$ and number of arm $K$.}
-%     \label{table:3:memory_problem1}
-% \end{footnotesize}  % WARNING
-% \end{table}
 
-
-
-\subsection{Summary of the experiments}
-
-\TODOL{Au lieu d'avoir des longues captions pour les figures, je vais écrire quelques paragraphes donnant les mêmes conclusion et faisant référence aux figures. Je ferai ça très vite si on est contents des figures.}
-
+\paragraph{Summary of the experiments.}
+%
 The main take-away message is the following:
 the simplest (but most efficient) algorithms have a memory cost proportional to the number of arms but independent of the horizons, \ie, bounded by $\bigO{K}$, and a time complexity at each time step $t\in[T]$ bounded by $\bigO{K}$, independent of $t$.
 
@@ -1620,7 +778,7 @@ the simplest (but most efficient) algorithms have a memory cost proportional to 
 
 
 
-% \newpage  % WARNING
+\newpage  % WARNING
 % ----------------------------------------------------------------------------
 \section{Conclusion}
 \label{sec:3:conclusion}
