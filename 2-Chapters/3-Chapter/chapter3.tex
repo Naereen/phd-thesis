@@ -6,7 +6,7 @@
 \graphicspath{{2-Chapters/3-Chapter/Images/}}
 \graphicspath{{2-Chapters/3-Chapter/SMPyBandits_paper.git/plots/}}
 
-\TODOL{Analyser les expériences les plus récentes et décrire mieux en 3.2, et refaire toutes les courbes pour 3.2 et 3.3}
+\TODOL{Si j'ai le temps, je peux améliorer les expériences faites en 3.3 et 3.4. C'est déjà suffisant comme ça, je peux juste faire mieux !}
 
 \abstractStartChapter{}%
 %
@@ -556,7 +556,7 @@ and the value used for $\Delta^{\min}$ is $0.1$ for $K \leq 3$ (for ``easy'' pro
 
 \textbf{Other parameters of the experiments.}
 %
-%    FIXME update if needed?
+% FIXME update if needed?
 On the one hand, we fix $K=8$ and we consider increasing values for the horizon, from $T=1000$ to $T=50000$.
 On the other hand, we fix $T=5000$ and we consider as well an increasing number of arms, from $K=2$ to $K=32$.
 % , and we focus again on $7$ values: $K=2$, $K=4$, $K=8$, $K=12$, $K=16$, $K=20$ and $K=32$.
@@ -595,8 +595,10 @@ We give in the figures below the results of the experiments.
         for $T=5000$ and for $16$ algorithms.
         The $y$-axis is in log-scale.
         All algorithms appear to have a regret slowly growing with respect to $K$, as predicted by the regret bounds which are linear with respect to the number of arms, as predicted.
-        \textsc{Tsallis-Inf} is the only state-of-the-art algorithm which appears to be very inefficient for problems with a small number of arms.
-        Both the $\varepsilon$-greedy and Explore-then-Commit algorithms performed poorly, achieving linear regret (not displayed).
+        Bayesian algorithms appear to be the most efficient, and \klUCB{} as well as \UCB{} are also shown to be efficient.
+        % \textsc{Tsallis-Inf} is the only state-of-the-art algorithm which appears to be very inefficient for problems with a small number of arms.
+        Both the $\varepsilon$-greedy and Explore-then-Commit algorithms performed poorly, actually they achieve linear regret.
+        % (not displayed).
 	}
 	\label{fig:3:16_different_algorithms__lognormregret_vs_arms__16pb__T5000}
 \end{figure}
@@ -608,9 +610,10 @@ We give in the figures below the results of the experiments.
 	\caption[Regret vs different values of $T$.]{
         Regret vs different values of $T$ ($R_T / K$),
         for $K=32$ and for $16$ algorithms.
-        All efficient algorithms appear to have a logarithmic regret, meaning that their regret bound is indeed logarithmic with respect to the horizon, as predicted.
+        All efficient algorithms appear to have a logarithmic regret with respect to the horizon, as predicted.
         The respective ranking of all the algorithms also appears to remain preserved for different values of $T$, which is also backed-up by theoretical results: if two algorithms $\cA$ and $\cA'$ has a regret close to their regret bounds, of the form $R_T \leq \cO(K \log(T))$, and the bound for $\cA$ use a smaller constant than the bound for $\cA'$, $\cA$ should obtain a smaller regret than $\cA'$ no matter the horizon.
-        Finally, we also observe once more than both the $\varepsilon$-greedy and Explore-then-Commit algorithms performed poorly, achieving linear regret (not displayed after $T=100000$).
+        Bayesian algorithms appear to be the most efficient, and \klUCB{} as well as \UCB{} are also shown to be efficient.
+        Finally, we also observe once more than both the $\varepsilon$-greedy and Explore-then-Commit algorithms performed poorly, achieving linear regret.
 	}
 	\label{fig:3:16_different_algorithms__lognormregret_vs_times__16pb__K8}
 \end{figure}
@@ -626,7 +629,7 @@ linearly in the number of arms, and logarithmically in the horizon, \ie, $R_T = 
 The main take-away message is the following: in all the rest of this thesis, we focus on two algorithms depending if simplicity or efficiency is favored:
 \begin{itemize}\tightlist
     \item
-    \UCB{} (or Thompson sampling) is used in the more applied Chapter~\ref{chapter:4}, when simplicity is favored,
+    \UCB{} is used in the more applied Chapter~\ref{chapter:4}, when simplicity is favored,
     \item
     \klUCB{} is used, in the two more theoretical Chapters~\ref{chapter:5} and \ref{chapter:6}, when efficiency is favored, and when we analyze mathematically the performance of an algorithm that is running on top of a classical stationary MAB policy, like our two contributions, \MCTopM{} and \GLR.
 \end{itemize}
@@ -649,7 +652,11 @@ We take precautions to ensure the fairness of the comparison between the differe
 
 \paragraph{Computational time.}
 
-In Figure~\ref{fig:3:16_different_algorithms__lognormregret_vs_logtime__28pb}, we can see FIXME
+In Figure~\ref{fig:3:16_different_algorithms__lognormregret_vs_logtime__28pb}, we can see that Bayesian algorithms appear to be the most efficient (\ie, in the bottom left corner), and \klUCB{} is very close to their best empirical performances.
+\UCB, algorithms that were proven to perform similarly to \UCB{} (\ie, PHE and RCB), and other index policies inspired by \UCB{} (ApprFHG, $\UCB\dagger$) enjoy very similar performances: a larger regret than Bayesian algorithms and \klUCB, but a shorter running time.
+%
+This highlights a trade-off between optimality in terms of regret and computational efficiency.
+
 
 Moreover, in the two Figures~\ref{fig:3:16_different_algorithms__lognormtime_vs_arms__16pb__T5000} and
 \ref{fig:3:16_different_algorithms__lognormtime_vs_times__16pb__K8},
@@ -699,7 +706,11 @@ linearly in the number of arms in the horizon, \ie, $\cT_T = \bigO{KT}$.
 
 \paragraph{Memory cost.}
 
-In Figure~\ref{fig:3:16_different_algorithms__lognormregret_vs_logmemory__28pb}, we can see FIXME
+Like for the computational cost discussed above,
+in Figure~\ref{fig:3:16_different_algorithms__lognormregret_vs_logmemory__28pb}, we can see that Bayesian algorithms like Thompson sampling again appear to be the most efficient (\ie, in the bottom left corner), and \klUCB{} is close to their best empirical performances.
+\UCB{} and other index policies inspired by \UCB{} (ApprFHG, $\UCB\dagger$) enjoy very similar performances: a larger regret than Bayesian algorithms and \klUCB, but a similar memory cost.
+%
+This time, there is no clear trade-off between optimality in terms of regret and memory cost, and based on simply this Figure~\ref{fig:3:16_different_algorithms__lognormregret_vs_logmemory__28pb}, one could advise to use Thompson sampling rather than \klUCB.
 
 Moreover, in the two Figures~\ref{fig:3:16_different_algorithms__lognormmemory_vs_arms__16pb__T5000} and
 \ref{fig:3:16_different_algorithms__lognormmemory_vs_times__16pb__K8},
@@ -741,11 +752,12 @@ linearly in the number of arms but independently of the horizon, \ie, $\cM_T = \
         Normalized memory cost vs different values of $T$ ($\cM_T / K$),
         for $K=32$ and for $16$ algorithms.
         $y$-axis is in log-scale.
-        All algorithms (except BESA) has a very slowly growing normalized memory cost, meaning that for $T$ rounds they use a computation time almost independent of $T$, as predicted: $\cM_T = \bigO{K}$.
-        There is a clear separation between three groups.
-        First, BESA is very costly in terms of memory, and $\UCB\dagger$ and \textsc{Tsallis-Inf} are also more costly than others, and both experiences a linear growth of their memory cost.
-        Then, we see PHE, $\mathrm{Exp}3^{++}$, Bayes-UCB and AdBandits having a small but linear growth of memory cost, and it can be explained for each of them (\eg, for Bayes-UCB, computing the $1-1/t$ quantile at time $t$ becomes more and more costly as $t$ grows, and thus as $T$ grows,  ).
-        Finally, the other algorithms (including \UCB, \klUCB{} and Thompson sampling) have a very small footprint and their memory cost do not grow much when $T$ increases.
+        All algorithms have a growing normalized memory cost, meaning that for $T$ rounds they use a computation time almost independent of $T$, as predicted: $\cM_T = \bigO{K}$.
+        % All algorithms (except BESA) have a very slowly growing normalized memory cost, meaning that for $T$ rounds they use a computation time almost independent of $T$, as predicted: $\cM_T = \bigO{K}$.
+        % There is a clear separation between three groups.
+        % First, BESA is very costly in terms of memory, and $\UCB\dagger$ and \textsc{Tsallis-Inf} are also more costly than others, and both experiences a linear growth of their memory cost.
+        % Then, we see PHE, $\mathrm{Exp}3^{++}$, Bayes-UCB and AdBandits having a small but linear growth of memory cost, and it can be explained for each of them (\eg, for Bayes-UCB, computing a quantile at time $t$ becomes more and more costly as $t$ grows, and thus as $T$ grows,  ).
+        % Finally, the other algorithms (including \UCB, \klUCB{} and Thompson sampling) have a very small footprint and their memory cost do not grow much when $T$ increases.
 	}
 	\label{fig:3:16_different_algorithms__lognormmemory_vs_times__16pb__K8}
 \end{figure}
@@ -756,6 +768,12 @@ linearly in the number of arms but independently of the horizon, \ie, $\cM_T = \
 %
 The main take-away message is the following:
 the simplest (but most efficient) algorithms have a memory cost proportional to the number of arms but independent of the horizons, \ie, bounded by $\bigO{K}$, and a time complexity at each time step $t\in[T]$ bounded by $\bigO{K}$, independent of $t$.
+
+We also shown a trade-off between optimality in terms of regret, and efficiency in terms of time complexity or memory cost.
+Our position regarding this trade-off is motivated by Occam's razor principle.
+On the first hand, if the algorithm should be implemented on a cognitive radio device that has limited hardware capacity (for instance),
+one can reasonably aim at the simplest yet order-optimal algorithms, and we advise to use \UCB{} and algorithms running on top of this simple index policy, as we do in Chapter~\ref{chapter:4}.
+On the other hand, if one is more interested in the mathematical developments and wants to prove the tightest possible regret upper bounds, aiming at more efficient but more complex algorithms is interesting, and we chose the \klUCB{} algorithm in Chapters~\ref{chapter:5} and \ref{chapter:6}.
 
 
 % I want to show the real numerical costs in terms of computation time and storage requirement of the various algorithms for single-player bandits.
@@ -778,6 +796,7 @@ the simplest (but most efficient) algorithms have a memory cost proportional to 
 
 
 
+\newpage  % WARNING
 \newpage  % WARNING
 % ----------------------------------------------------------------------------
 \section{Conclusion}
@@ -1517,20 +1536,19 @@ This Appendix section starts by describing $7$ more algorithms that are also com
 
 \textbf{Bash command to run these experiments.}
 We give below in Code~\ref{lst:3:BashCodeToLaunchLargeExperiments} a Bash command to run the experiments presented in Sections~\ref{sec:3:reviewSPAlgorithms} and \ref{sub:3:additionalExperiments}.
-It uses \texttt{for} loops and environment variables from Bash, and not Python, but we could also have done the same by writing a Python script that calls the \texttt{main.py} script for the different values of $N$, $T$ and $K$.
+It uses \texttt{for} loops and environment variables from Bash, and not Python, but we could also have done the same by writing a Python script that calls the \texttt{main.py} script for the different values of $T$ and $K$.
 
 % https://tex.stackexchange.com/a/12430/
 \begin{listing}[h!]
     \begin{minted}[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{bash}
-$ for N in 4 100 1000;        do \
-    for T in $(seq 5000 5000 50000); do \
+$ for T in $(seq 5000 5000 50000); do \
       for K in $(seq 2 2 32); do \
-        DEBUG=False NOPLOTS=False SAVEALL=True N_JOBS=-1 \
-          N=$N BAYES=True  T=$T K=$K \
+      DEBUG=False NOPLOTS=False SAVEALL=True N_JOBS=-1 \
+          N=1000  BAYES=True    T=$T         K=$K \
           python3 main.py configuration.py \
-        && cp logs/main_py3_log.txt \
-              logs/main_py3_log__N${N}_BAYES_T{T}_K{K}.txt \
-  done; done; done
+      && cp logs/main_py3_log.txt \
+              logs/main_py3_log__N1000_BAYES_T{T}_K{K}.txt \
+  done; done
     \end{minted}
     \caption{Bash code to run the large experiments presented in Sections~\ref{sec:3:reviewSPAlgorithms} and \ref{sub:3:additionalExperiments}.}
     % \captionof{listing}{Small snippet of Bash code to run an experiment \label{lst:3:BashCodeToLaunchLargeExperiments}.}
