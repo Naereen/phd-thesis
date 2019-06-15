@@ -283,21 +283,25 @@ Our main interest is Bernoulli distributions, but we prefer to present the more 
 
 Given a measure $\lambda$, that is usually the natural Lebesgue measure on $\R$, an exponential family of probability distributions is defined as the distributions whose density (relative to $\lambda$) can be written as
 % \begin{equation}\label{eq:2:exponentialFamily}
-$ \Pr(x | \lambda) = h(x) \exp \left( \eta x - A(\eta) \right)$,
+$ \Pr_{\eta}(x | \lambda) = h(x) \exp \left( \eta x - A(\eta) \right)$,
 % \end{equation}
-for a parameter vector $\eta$ (the canonical parameter), and a sufficient statistic that we restrict to be $T(x)=x$, and a function $h$.
+for a parameter vector $\eta$ (the canonical parameter),
+% and a sufficient statistic that we restrict to be $T(x)=x$,
+and a function $h$.
 The cumulant function $A(\eta)$ is entirely determined by the $\eta$ and $h$,
 as $A(\eta) = \log \left( \int h(x) \exp(\eta x) \lambda(\mathrm{d} x) \right)$.
 %
 The natural parameter space is the set of values of $\eta$ such that this integral $A(\eta)$ is finite,
 and usually the literature focusses on regular and minimal exponential families (when the natural parameter space is an non-empty open set in $\R$).
 
-We have to quote two important results on exponential families:
+We mention two important results on exponential families:
 
 \begin{enumerate}
     \item
     \emph{A distribution in such family is entirely characterized by its parameter $\eta$}.
-    That is why one-dimensional distributions are entirely characterized by their mean, as $\mu = \E_{\eta}[X]$.
+    And the mapping $\eta \mapsto \E_{\eta}[X]$ is one-to-one,
+    if $\E_{\eta}$ is the expectation under the probabilistic model $\bP_{\eta}$.
+    That is why one-dimensional distributions are entirely characterized by their mean, $\mu = \E_{\eta}[X]$.
 
     \item
     A second important result is a simplified form for the \emph{Kullback-Leibler divergence} \cite{KullbackLeibler51}, for two distributions lying in the same exponential family.
@@ -306,7 +310,8 @@ We have to quote two important results on exponential families:
 
 \begin{definition}\label{def:2:KLDivergence}
 \begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
-    The \emph{Kullback-Leibler divergence} between distributions $d_1$ and $d_2$ is defined as
+    The \emph{Kullback-Leibler divergence} between distributions
+    with densities $d_1$ and $d_2$, wrt to $\lambda$, is defined as
     \begin{align}\label{eq:2:Kullback-LeiblerDivergenceExpFamily1}
         \KL\left(d_1, d_2\right) \eqdef \int d_1 \log\left(\frac{d_2}{d_1}\right) \lambda(\mathrm{d}x) = \E_{d_1} \left[ \log\left(\frac{d_2}{d_1}\right) \right] \in \mathbb{R}\cup\{\pm\infty\}.
     \end{align}
@@ -342,7 +347,7 @@ it is interesting to illustrate this definition and the notations with two impor
 
     \item
     % $\bullet$
-    \textbf{Gaussian distributions} of a fixed variance are a one-dimensional exponential family,
+    \textbf{Gaussian distributions of a known variance} are a one-dimensional exponential family,
     and in this thesis we do not consider Gaussian with an unknown variance.
     For a variance of $\sigma^2$, the family uses
     % $T(x) = [x ; x^2]^T$ and
@@ -863,7 +868,8 @@ The two following solutions both consist in splitting the $T$ time steps into $T
 They are detailed in Algorithm~\ref{algo:2:simpleStrategies}.
 
 % https://smpybandits.github.io/docs/Policies.EpsilonGreedy.html
--- The \textcolor{deeppurple}{$\varepsilon$-greedy strategy} consists in alternating exploration and exploitation at a certain ratio \cite{SuttonBarto2018,Bubeck12,LattimoreBanditAlgorithmsBook}.
+-- The \textcolor{deeppurple}{$\varepsilon$-greedy strategy} consists in alternating exploration and exploitation at a certain ratio \cite{Auer02}.
+% \cite{SuttonBarto2018,Bubeck12,LattimoreBanditAlgorithmsBook}.
 Fix $0<\varepsilon<1$, then at each round, with probability $\varepsilon$ the player selects an arm uniformly at random (exploration) and with probability $1-\varepsilon$ the arm with highest empirical mean is selected (exploitation).
 On the one hand, if $\varepsilon$ is constant, then the (mean) regret still grows linearly, as it is lower bounded by $(\varepsilon \frac{1}{K} \sum_{k=1}^K \Delta_k) T$.
 In average, $T_0 = \varepsilon T$ steps are spent on exploration.
@@ -871,6 +877,7 @@ In average, $T_0 = \varepsilon T$ steps are spent on exploration.
 On the other hand, if a lower-bound $d$ on the positive gaps is known beforehand,
 we can consider a sequence $(\varepsilon_t)_{t\in\N^*}$ decreasing with time $t$, for instance $\varepsilon_t = \varepsilon_0 / t$ with $\varepsilon_0 = 6 K / d^2$, for a constant $0 < d < \min_{k: \Delta_k > 0} \Delta_k$.
 Then it was shown in \cite{Auer02} that the regret of $\varepsilon$-greedy is of the order of $K \log(T) / d + \smallO{T}$, which leads to an order-optimal regret of $\bigO{K \log(T)}$.
+But this is not satisfactory, as $\min_k \Delta_k$ needs to be known in advance, which is usually not the case for real applications.
 Here again, an average of $T_0 \leq \varepsilon_0 \log(T)$ steps are spent on exploration.
 
 % \begin{small} % XXX remove if needed
@@ -916,46 +923,63 @@ Here again, an average of $T_0 \leq \varepsilon_0 \log(T)$ steps are spent on ex
 
 
 % https://smpybandits.github.io/docs/Policies.ExploreThenCommit.html
--- The ``\textcolor{deepgold}{Explore-then-Exploit}'' strategy, as studied for instance in \cite{GarivierETC2016}, first explores uniformly the $K$ arms for $T_0$ time steps, then only exploits the arm identified as the best arm after these first $T_0$ steps
+-- The ``\textcolor{deepgold}{Explore-then-Exploit}'' strategy, as presented for instance in \cite{Bubeck12}, first explores uniformly the $K$ arms for $T_0$ time steps, then only exploits the arm identified as the best arm after these first $T_0$ steps
 (\ie, one of the arms with highest empirical means, after $T_0/K$ samples of each arm).
 Usually we restrict to $T_0$ being a multiple of $K$.
-On the one hand, we can lower bound its regret by
-$R_T \geq K (\min_{k: \Delta_k > 0} \Delta_k) T_0/K + p (T - T_0)$,
-if $p$ denotes the probability that the chosen arm is not optimal.
-And we can show that $p$ only depends on the number of collected samples $T_0$ and the gaps $\Delta_k$,
-so if $T_0$ is fixed independently of $T$ and the problem difficulty, the regret is again growing linearly, \ie, $R_T = \Omega(T)$.
+% On the one hand, we can lower bound its regret by
+% $R_T \geq K (\min_{k: \Delta_k > 0} \Delta_k) T_0/K + p (T - T_0)$,
+% if $p$ denotes the probability that the chosen arm is not optimal.
+% And we can show that $p$ only depends on the number of collected samples $T_0$ and the gaps $\Delta_k$,
+% so if $T_0$ is fixed independently of $T$ and the problem difficulty, the regret is again growing linearly, \ie, $R_T = \Omega(T)$.
 
-On the other hand, if a lower-bound $d>0$ on the positive gaps is known beforehand, one can find a tuning of $T_0$ that gives a logarithmic regret.
+Here again, if a lower-bound $d>0$ on the positive gaps is known beforehand, one can find a tuning of $T_0$ that gives a logarithmic regret, as stated in Lemma~\ref{lem:2:ExploreThenExploit} below.
+It proves that the ``explore-then-exploit'' strategy can also obtain an order-optimal regret, $R_T \leq K (4/d^2) (1 + \log(d^2 T / 4)) = \bigO{K \log(T)}$, if it is tuned with a fixed time $T_0$ using prior knowledge on the problem (\ie, $d$) and the horizon $T$.
 %
-To prove a bound on $p$, we use Hoeffding's inequality from \cite{hoeffding1963probability}, reminded below in Lemma~\ref{lem:2:HoeffdingInequality}.
 %
-We have $R_T \leq (\max_{k: \Delta_k > 0} \Delta_k) T_0 + p (T - T_0)$, thus Hoeffding's inequality gives $R_T \leq K T_0 + K \exp(-T_0 d^2/4) T$. Optimizing on $T_0$ gives $T_0 = K (4/d^2) \log(d^2 T / 4)$
-and proves that the ``explore-then-exploit'' strategy can also obtain an order-optimal regret, $R_T \leq K (4/d^2) (1 + \log(d^2 T / 4)) = \bigO{K \log(T)}$, if it is tuned with a fixed time $T_0$ using prior knowledge on the problem (\ie, $d$) and the horizon $T$.
-%
-We note that this strategy can also achieve $R_T = \bigO{T^{2/3} (K \log(T))^{1/3}}$ without prior knowledge on the problem, as shown in Section~1 of \cite{Slivkins2019}.
+We note that this strategy can also achieve a much larger regret bound, $R_T = \bigO{T^{2/3} (K \log(T))^{1/3}}$, without prior knowledge on the problem, as shown in Section~1 of \cite{Slivkins2019}.
+
+\begin{theorem}\label{thm:2:ExploreThenExploit}
+\begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
+    For any instance $I$ with $K$ arms with Bernoulli distributions in $[0,1]$,
+    of means $\mu_1,\dots,\mu_k$, and any horizon $T>K$,
+    and if $d \leq \Delta = \min_k \Delta_k$ is known,
+    let $T_0 = ((2K)/d^2) \log(d^2 T / (2K))$.
+    Then the Explore-then-Exploit algorithm with parameter $T_0$ verifies the following finite-time regret bound
+    \begin{equation}\label{eq:2:ExploreThenExploit}
+        R_T^{\text{Explore-then-Exploit}} \leq \frac{2K}{d^2} \log\left( \frac{d^2 T}{2K} \right) = \bigO{\frac{K \log(T)}{\Delta^2}}.
+    \end{equation}
+\end{leftbar}  % XXX leftbar theorembar, comment if needed
+\end{theorem}
 %
 \begin{smallproof}\label{proof:2:tuningExploreThenCommit}
-    Let us prove the inequality $p \leq 2 K \exp(-T_0 d^2 / 4)$.\\
-    \indent
+    %
+    If $p$ denotes the probability that the chosen arm is not optimal,
+    the algorithm suffers from a linear regret for the first $T_0$ rounds, then with probability $p$ it suffers from a linear regret for the remaining $T-T_0$ rounds, and with probability $1-p$ it suffers no regret.
+    Thus we have $R_T \leq (\max_{k: \Delta_k > 0} \Delta_k) T_0 + p (T - T_0)$.
+    We then prove that $p \leq 2 K \exp(-T_0 d^2 / 4)$.
+
+    We use Hoeffding's inequality from \cite{hoeffding1963probability}, reminded below in Lemma~\ref{lem:2:HoeffdingInequality}.
     %
     First for the case of two arms:
-    if the distributions are Bernoulli (or sub-Gaussian), we can use Hoeffding's inequality to control this probability $p$.
+    if $\mu_1 = \mu_2 + \Delta$, then
+    $p = \bP(\widehat{\mu_1} < \widehat{\mu_2}) \leq \bP(\widehat{\mu_1} < \mu_1 - \Delta/2) + \bP(\widehat{\mu_2} > \mu_2 + \Delta/2)$, and both terms can be bounded by using Hoeffding's inequality with a (non-random) number of samples $n \leq T_0/K$,
+    to obtain $p \leq 2 \exp(-T_0 \Delta^2 / (2 K))$.
     %
-    If $\mu_1 = \mu_2 + \Delta$, then
-    $p = \bP(\widehat{\mu_1} < \widehat{\mu_2}) \leq \bP(\widehat{\mu_1} < \mu_1 - \Delta/2) + \bP(\widehat{\mu_2} > \mu_2 + \Delta/2)$, and both terms can be bounded by using Hoeffding's inequality with a (non-random) number of samples $n=T_0/2$,
-    to obtain $p \leq 2 \exp(-T_0 \Delta^2 / 4)$.\\
-    \indent
+    Then for $K\geq2$ arms, a simple union bound on the sub-optimal arms gives
+    $p \leq 2 (K-1) \exp(-T_0 d^2 / (2 K))$, if $d$ is a lower-bound on the positive gaps $\Delta_k$.
     %
-    Then for $K\geq2$ arms, a simple union bound gives
-    $p \leq 2 K \exp(-T_0 d^2 / 4)$, if $d$ is a lower-bound on the positive gaps $\Delta_k$.
-    %
-    In all cases, we showed that $p$ is controlled by $T_0$.
+    % In all cases, we showed that $p$ is controlled by $T_0$.
+
+    So this bound on $p$ gives $R_T \leq K T_0 + 2 K \exp(-T_0 d^2 / (2 K)) T$ (because $\max_{k: \Delta_k > 0} \Delta_k \leq 1$ and $T - T_0 \leq T$).
+    Optimizing the right hand-side on $T_0$ gives $T_0 = ((2K)/d^2) \log(d^2 T / (2K))$.
+    This gives the announced bound.
 \end{smallproof}
 
 \begin{lemma}\label{lem:2:HoeffdingInequality}
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
     Let $Z_1,\dots,Z_n$ be $n$ \iid{} samples from a Bernoulli distribution of parameter $\mu$ (where $n$ is fixed),
     of empirical mean $\widehat{Z_n} \eqdef \frac{1}{n} \sum\limits_{i=1}^n Z_i$, \emph{Hoeffding's inequality} gives both
+    \vspace*{-10pt}  % FIXME vspace negative to compensate the \end{leftbar}
     \begin{align}\label{eq:2:HoeffdingInequality}
         \begin{cases}
             \forall x < \mu, \;\;\; & \bP(\widehat{Z_n} < x) \leq \exp(-2 n (x-\mu)^2),
