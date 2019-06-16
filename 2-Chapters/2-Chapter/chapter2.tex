@@ -304,7 +304,8 @@ We mention two important results on exponential families:
 
     \item
     A second important result is a simplified form for the \emph{Kullback-Leibler divergence} \cite{KullbackLeibler51}, for two distributions lying in the same exponential family.
-    The KL divergence is also called the relative entropy is a measure of how one probability distribution is different from a second, reference probability distribution.
+    The KL divergence is also called the \emph{relative entropy},
+    and it is a measure of how one probability distribution is different from a second, reference probability distribution.
 \end{enumerate}
 
 \begin{definition}\label{def:2:KLDivergence}
@@ -549,16 +550,16 @@ The \emph{gap} between any arm $k\in[K]$ and an optimal arm is defined as $\Delt
 (an arm $k$ is thus sub-optimal if and only if $\Delta_k > 0$),
 and thus we can write the following decomposition on the regret.
 
-\begin{lemma}[Regret decomposition]\label{lem:2:RegretDecomposition}
-\begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
+\begin{proposition}[Regret decomposition]\label{prop:2:RegretDecomposition}
+\begin{leftbar}[propositionbar]  % XXX leftbar propositionbar, comment if needed
     The (mean) regret $R_T^{\cA}$ can be decomposed as a sum of the number of selections of sub-optimal arms $k$, weighted by their gaps:
     \begin{align}\label{eq:2:RegretDecomposition}
         R_T^{\cA} = \sum_{k=1}^K \Delta_k \; \E[ N_k(T) ]
         = \sum_{\substack{k=1,\dots,K\\\Delta_k > 0}} \Delta_k \; \E[ N_k(T) ].
     \end{align}
     % \vspace*{-20pt}  % FIXME vspace negative to compensate the \end{leftbar}
-\end{leftbar}  % XXX leftbar lemmabar, comment if needed
-\end{lemma}
+\end{leftbar}  % XXX leftbar propositionbar, comment if needed
+\end{proposition}
 %
 \begin{smallproof}\label{proof:2:RegretDecomposition}
     We use the chain rule of expectation and a conditioning on $O_t$,
@@ -593,7 +594,7 @@ Such decomposition of the regret can be useful for at least two reasons:
 %     \item
 On the one hand, from a numerical simulation point-of-view, when we run a finite number of repetitions of the same stochastic experiment, if we want to compute and visualize the regret, we can either use the definition with the rewards, or the decomposition and simply sum the gaps $\Delta_k$ with the number of sub-optimal draws.
 Both quantities are indeed equal \emph{in expectation}, but with only a finite number of trajectories and observations, the first estimate is more noisy than the second one, since the randomness on the rewards is (partially) removed in the decomposition \eqref{eq:2:RegretDecomposition} (thanks to the conditioning on $O_t$ done in the proof).
-In our library SMPyBandits, we implement both estimators, and all values of regret used in this thesis are based on the one using the decomposition of Lemma~\ref{lem:2:RegretDecomposition}, because it gives faster convergence, and also ``smoother'' plots.
+In our library SMPyBandits, we implement both estimators, and all values of regret used in this thesis are based on the one using the decomposition of Proposition~\ref{prop:2:RegretDecomposition}, because it gives faster convergence, and also ``smoother'' plots.
 \label{remark:2:moreAccurateCountofRegretForSimulations}
 
     % \item
@@ -677,7 +678,7 @@ This third theorem specifies possible values of the constants $C_I$ for the two 
 \end{leftbarnospace}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
-Moreover, it is interesting to note that the second lower-bound of Theorem~\ref{thm:2:forSecondLogTLowerBound} can be directly used to design efficient algorithms\footnote{~Tracking this quantity, by using empirical estimates of the means, is used for instance in the OSSB algorithm proposed in \cite{Combes17}, which is proven to attain the lower-bound for a wider range of problems (for problems called structured stochastic bandits).}, as thanks to the regret decomposition given in Lemma~\ref{lem:2:RegretDecomposition} above, the expression of $C_I$ essentially says that any efficient algorithm
+Moreover, it is interesting to note that the second lower-bound of Theorem~\ref{thm:2:forSecondLogTLowerBound} can be directly used to design efficient algorithms\footnote{~Tracking this quantity, by using empirical estimates of the means, is used for instance in the OSSB algorithm proposed in \cite{Combes17}, which is proven to attain the lower-bound for a wider range of problems (for problems called structured stochastic bandits).}, as thanks to the regret decomposition given in Proposition~\ref{prop:2:RegretDecomposition} above, the expression of $C_I$ essentially says that any efficient algorithm
 should sample each sub-optimal arm $k$ about $\log(T)/\KL(\mu_k,\mu^*)$ times in the total of $T$ time steps.
 
 
@@ -1084,7 +1085,7 @@ This theorem shows that $\UCB_1$ achieves an order-optimal problem-dependent reg
 \vspace*{-10pt}  % FIXME vspace negative
 \begin{smallproof}\label{proof:2:UCBregretBound}
     As we focus on bounded distributions in $[0,1]$, for which Hoeffding's inequality gives the inequality \eqref{eq:2:HoeffdingInequality}, as stated above in Lemma~\ref{lem:2:HoeffdingInequality}.
-    Thanks to the regret decomposition from Lemma~\ref{lem:2:RegretDecomposition}, we can focus on bounding $\E[N_k(T)]$ for any sub-optimal arm $k$.\\
+    Thanks to the regret decomposition from Proposition~\ref{prop:2:RegretDecomposition}, we can focus on bounding $\E[N_k(T)]$ for any sub-optimal arm $k$.\\
     %
     \indent
     The first trick consists in writing the following, which is true for any $n \geq 1$:
@@ -1159,7 +1160,7 @@ This theorem shows that $\UCB_1$ achieves an order-optimal problem-dependent reg
         \E[N_k(T)] \leq \frac{8 \log(T)}{\Delta_k^2} + \left(1 + \frac{\pi^2}{3}\right).
     \end{align*}
     %
-    By using the regret decomposition from Lemma~\ref{lem:2:RegretDecomposition}, this gives
+    By using the regret decomposition from Proposition~\ref{prop:2:RegretDecomposition}, this gives
     \begin{align*}
         R_T^{\UCB_1} &= \sum_{k: \Delta_k>0} \Delta_k \E[N_k(T)] \\
         & \leq \sum_{k: \Delta_k>0} \frac{8}{\Delta_k} \log(T) + \sum_{k: \Delta_k>0} \Delta_k \left( 1 + \frac{\pi^2}{3} \right)
@@ -1459,7 +1460,7 @@ $\UCB_1$ (with $\alpha=1$),
 and Thompson sampling (with Beta posteriors and flat uniform priors).
 %
 
-We first give in Table~\ref{table:2:oneShotResult} the cumulated rewards as well as the estimated regrets\footnote{~First, the rewards are computed as $\frac{1}{N} \sum_{j=1}^N \sum_{t=1}^T r^{(j)}_{A(t)}(t)$, where $r^{(j)}_{k}(t)$ means the reward stream of the different runs $j=1,\dots,N$. Then the estimated regret is \emph{not} computed as $\frac{1}{N} \sum_{j=1}^N \sum_{t=1}^T r^{(j)}_{k^*}(t) - r^{(j)}_{A(t)}(t)$, as this first formula could give a negative regret and is more noisy, but as $\mu^* T - \frac{1}{N} \sum_{j=1}^N \sum_{k=1}^K \mu_k N^{(j)}_{k}(T)$, as this later formula gives a more robust estimator, as noted the proof of Lemma~\ref{lem:2:RegretDecomposition} (in Page~\pageref{remark:2:moreAccurateCountofRegretForSimulations} above).}
+We first give in Table~\ref{table:2:oneShotResult} the cumulated rewards as well as the estimated regrets\footnote{~First, the rewards are computed as $\frac{1}{N} \sum_{j=1}^N \sum_{t=1}^T r^{(j)}_{A(t)}(t)$, where $r^{(j)}_{k}(t)$ means the reward stream of the different runs $j=1,\dots,N$. Then the estimated regret is \emph{not} computed as $\frac{1}{N} \sum_{j=1}^N \sum_{t=1}^T r^{(j)}_{k^*}(t) - r^{(j)}_{A(t)}(t)$, as this first formula could give a negative regret and is more noisy, but as $\mu^* T - \frac{1}{N} \sum_{j=1}^N \sum_{k=1}^K \mu_k N^{(j)}_{k}(T)$, as this later formula gives a more robust estimator, as noted the proof of Proposition~\ref{prop:2:RegretDecomposition} (in Page~\pageref{remark:2:moreAccurateCountofRegretForSimulations} above).}
 of the different algorithms, \emph{for one simulation}.
 %
 It shows that the performance can \textcolor{red}{fluctuate a lot}, as on both cases the pure exploitation strategy was very lucky and obtains close-to-optimal performance, even though we proved that it suffers from a linear mean regret.
