@@ -29,22 +29,22 @@ Nous pouvons énumérer les points suivants pour résumer les principales contri
 Nous signalons les conférences internationales auxquelles ont été publiées certains résultats.
 
 \begin{itemize}
-    \item
-    Nous présentons les concepts et les notations du modèle des bandits multi-bras, dans le chapitre~\ref{chapter:2} selon un point de vue mathématique formel.
-    Nous suivons aussi une approche didactique, puisque nous utilisons en Section~\ref{par:2:interactiveDemoDiscoverMAB} une démonstration interactive en ligne conçue pour permettre à n'importe qui de jouer contre un petit problème de bandit depuis son navigateur.
+    % \item
+    % Nous présentons les concepts et les notations du modèle des bandits multi-bras, dans le chapitre~\ref{chapter:2} selon un point de vue mathématique formel.
+    % Nous suivons aussi une approche didactique, puisque nous utilisons en Section~\ref{par:2:interactiveDemoDiscoverMAB} une démonstration interactive en ligne conçue pour permettre à n'importe qui de jouer contre un petit problème de bandit depuis son navigateur.
 
-    \item
-    Nous donnons une brève revue de la littérature de recherche concernant les algorithmes stochastiques de bandits en Section~\ref{sec:2:famousMABalgorithms}.
-
-    \item
-    Nous présentons le problème du choix de l'algorithme qu'un praticien devrait utiliser, ou de la sélection d'algorithme parmi la riche collection de différents algorithms MAB disponibles, dans la Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}.
-    Nous présentons un algorithme appelé \Aggr{} pour l'agrégation d'algorithmes, comme une solution en ligne au problème de sélection d'algorithmes, et nous montrons par quelques simulations numériques qu'il atteint de bonnes performances empiriques
-    (WCNC 2018) \cite{Besson2018WCNC}.
+    % \item
+    % Nous donnons une brève revue de la littérature de recherche concernant les algorithmes stochastiques de bandits en Section~\ref{sec:2:famousMABalgorithms}.
 
     \item
     Nous avons écrit la plus complète bibliothèque de simulation pour les problèmes MAB, appelée SMPyBandits, qui est écrite en Python et publiée en ligne sous une licence open-source \cite{SMPyBandits,SMPyBanditsJMLR}.
     Nous présentons en détail son architecture et ses fonctionnalités dans le Chapitre~\ref{chapter:3}, ainsi que différents exemples de son utilisation.
     Une documentation complète est disponible en ligne, ainsi que des instructions exhaustives pour reproduire les expériences utilisées dans la suite de cette thèse.
+
+    \item
+    Nous présentons le problème du choix de l'algorithme qu'un praticien devrait utiliser, ou de la sélection d'algorithme parmi la riche collection de différents algorithms MAB disponibles, dans le Chapitre~\ref{chapter:25}.
+    Nous présentons un algorithme appelé \Aggr{} pour l'agrégation d'algorithmes, comme une solution en ligne au problème de sélection d'algorithmes, et nous montrons par quelques simulations numériques qu'il atteint de bonnes performances empiriques
+    (WCNC 2018) \cite{Besson2018WCNC}.
 
     \item
     Nous proposons différents modèles pour les réseaux IdO (IoT), dans le Chapitre~\ref{chapter:4}, où les appareils dotés de capacités de radio intelligente peuvent implémenter de leur côté des algorithmes MAB, pour augmenter automatiquement la durée de vie de leur batterie. Cela permet à davantage de périphériques d'utiliser le même réseau tout en maintenant une haute qualité de service
@@ -91,22 +91,27 @@ Ce manuscrit est organisé comme suit.
         \node[align=center] (introduction) at (0,3.25) [rectangle,draw] {Chapitre~\ref{chapter:1}\\Introduction};
         \node[align=center] (chapter2) at (0,2.25) [rectangle,draw] {Chapitre~\ref{chapter:2}\\Modèle bandits multi-bras\\stochastique et stationnaire};
         \node[align=center] (chapter3) at (2.5,2.25) [rectangle,draw] {Chapitre~\ref{chapter:3}\\SMPyBandits : bibliothèque\\de simulations pour MAB};
+        \node[align=center] (chapter25) at (-2.5,2.25) [rectangle,draw] {Chapter~\ref{chapter:25}\\Sélection séquentielle\\d'algorithme MAB};
         \node[align=center] (chapter4) at (-2.5,1) [rectangle,draw] {Chapitre~\ref{chapter:4}\\Deux modèles MAB\\pour les réseaux IoT};
         \node[align=center] (chapter5) at (0,1) [rectangle,draw] {Chapitre~\ref{chapter:5}\\Modèle MAB\\Multi-joueurs};
         \node[align=center] (chapter6) at (2.5,1) [rectangle,draw] {Chapitre~\ref{chapter:6}\\Modèle MAB\\Non-stationnaire};
         \node[align=center] (conclusion) at (0,-0.25) [rectangle,draw] {Chapitre~\ref{chapter:conclusion}\\Conclusion générale};
+        \node[align=center] (appendix) at (2.5,-0.25) [rectangle,draw] {Appendices};
         %
         \draw [color=black,thick,->] (introduction) to (chapter2);
         \draw [color=black,thick,<->] (chapter2) to (chapter3);
+        \draw [color=black,thick,<->] (chapter2) to (chapter25);
         \draw [color=black,thick,->] (chapter2) to (chapter4);
         \draw [color=black,thick,->] (chapter2) to (chapter5);
         \draw [color=black,densely dotted,<->]   (chapter4) to (chapter5);
-        \draw [color=black,densely dotted,->] -| (chapter3) to (chapter6);
+        % \draw [color=black,densely dotted,->] -| (chapter3) to (chapter6);
+        % \draw [color=black,densely dotted,->] -| (chapter25) to (chapter5);
         \draw [color=black,densely dotted,<->]   (chapter5) to (chapter6);
         \draw [color=black,thick,->] (chapter2) to (chapter6);
         \draw [color=black,thick,->] (chapter4) to (conclusion);
         \draw [color=black,thick,->] (chapter5) to (conclusion);
         \draw [color=black,thick,->] (chapter6) to (conclusion);
+        \draw [color=black,thick,->] (conclusion) to (appendix);
         %
     \end{tikzpicture}
     }
@@ -121,7 +126,8 @@ la thèse est organisée en deux parties :
 \begin{itemize}
     \item
 Dans la Partie~\ref{part:Introduction}, nous commençons par le Chapitre~\ref{chapter:2} où nous présentons les modèles MAB, les concepts et les notations utilisés dans tout ce document. Ce premier chapitre est nécessaire à la lecture du reste du manuscrit.
-Par contre le Chapitre~\ref{chapter:3} présente notre bibliothèque de simulations SMPyBandits, et même si les Chapitres~\ref{chapter:2}, \ref{chapter:5} et \ref{chapter:6} utilisent la bibliothèque pour leurs simulations numériques, lire ce chapitre n'est pas obligatoire pour comprendre la suite du document.
+Par contre le Chapitre~\ref{chapter:3} présente notre bibliothèque de simulations SMPyBandits, et même si les Chapitres~\ref{chapter:2}, \ref{chapter:25}, \ref{chapter:5} et \ref{chapter:6} utilisent la bibliothèque pour leurs simulations numériques, lire ce chapitre n'est pas obligatoire pour comprendre la suite du document.
+Nous terminons cette première partie par le Chapitre~\ref{chapter:25}, qui n'est pas non plus nécessaire à la compréhension de la suite du manuscrit, et qui détaille la première contribution : un nouvel algorithme pour la sélection séquentielle d'algorithmes MAB.
 
     \item
 La deuxième Partie~\ref{part:MABIOT} contient ensuite trois chapitres, qui sont inclus à la fois dans l'ordre logique et chronologique, mais peuvent être lus presque indépendamment.
