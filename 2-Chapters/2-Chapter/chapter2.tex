@@ -398,8 +398,8 @@ For $K$ arms, each Markov chain has a finite number of states $s$, each correspo
 Rested Markov models means that only the state of the selected arm's Markov chain can change, following its Markov transition matrix.
 Restless models remove this hypothesis, making them harder to track and solve.
 %
-Such models were less studied than stationary or adversarial models, but some interesting works focused on Markov models in the last 10 years\footnote{~
-For instance, \cite{Melian15} proposed a cognitive radio model mixing MAB and Hidden Markov Models (HMM), solved by a mixed policy called UCB-HMM.}.
+Such models were less studied than stationary or adversarial models, but some interesting works focused on Markov models in the last 10 years.
+For instance, \cite{Melian15} proposed a cognitive radio model mixing MAB and Hidden Markov Models (HMM), solved by a mixed policy called UCB-HMM.
 A curious reader about Markov chains could start to read Chapter~3 of \cite{LattimoreBanditAlgorithmsBook} (Section~3.2) and then refer to the famous book \cite{Norris98}.
 
 
@@ -979,7 +979,7 @@ We note that this strategy can also achieve a much larger regret bound, $R_T = \
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
     Let $Z_1,\dots,Z_n$ be $n$ \iid{} samples from a Bernoulli distribution of parameter $\mu$ (where $n$ is fixed),
     of empirical mean $\widehat{Z_n} \eqdef \frac{1}{n} \sum\limits_{i=1}^n Z_i$, \emph{Hoeffding's inequality} gives both
-    \vspace*{-10pt}  % FIXME vspace negative to compensate the \end{leftbar}
+    % \vspace*{-10pt}  % FIXME vspace negative to compensate the \end{leftbar}
     \begin{align}\label{eq:2:HoeffdingInequality}
         \begin{cases}
             \forall x < \mu, \;\;\; & \bP(\widehat{Z_n} < x) \leq \exp(-2 n (x-\mu)^2),
@@ -1082,9 +1082,8 @@ This theorem shows that $\UCB_1$ achieves an order-optimal problem-dependent reg
 %
 \footnotetext{~For simplicity we present the theorem and its prove in the restricted case of $\alpha=2$. More details on this proof can be found for instance in Section~1.3 of \cite{Slivkins2019}, while for instance Chapter~2 of \cite{Bubeck12} Theorem~2.1) and Chapter~7 of \cite{LattimoreBanditAlgorithmsBook} (Theorem~7.2) both give more general proofs, in particular for any value of $\alpha\geq\frac{1}{2}$.}%
 %
-\vspace*{-10pt}  % FIXME vspace negative
 \begin{smallproof}\label{proof:2:UCBregretBound}
-    As we focus on bounded distributions in $[0,1]$, for which Hoeffding's inequality gives the inequality \eqref{eq:2:HoeffdingInequality}, as stated above in Lemma~\ref{lem:2:HoeffdingInequality}.
+    We focus on bounded distributions in $[0,1]$, for which Hoeffding's inequality gives the inequality \eqref{eq:2:HoeffdingInequality}, as stated above in Lemma~\ref{lem:2:HoeffdingInequality}.
     Thanks to the regret decomposition from Proposition~\ref{prop:2:RegretDecomposition}, we can focus on bounding $\E[N_k(T)]$ for any sub-optimal arm $k$.\\
     %
     \indent
@@ -1096,13 +1095,13 @@ This theorem shows that $\UCB_1$ achieves an order-optimal problem-dependent reg
 
     % \TODOL{J'aimerai bien rajouter des couleurs sur $k$ et $k^*$ partout plus bas ? si c'est bien fait, ça peut aider la lecture, par exemple \textcolor{darkgreen}{$k$} et \textcolor{gold}{$k^*$}.}
 
-    Remember that $\UCB_a(t) = \widehat{\mu_a}(t) + \xi_a(t)$ for any arm $a$.
+    Remember that $\UCB_k(t) = \widehat{\mu_k}(t) + \xi_k(t)$ for any arm $k$.
     According to the Algorithm~\ref{algo:2:indexPolicy} (see line~6),
     a suboptimal arm $k$ can be chosen only if $\UCB_k(t) \geq \UCB_{k^*}(t)$.
-    Both $\widehat{\mu_a}(t)$ and $\xi_a(t)$ use $n=N_k(t)$ samples of arm $a$,
+    Both $\widehat{\mu_k}(t)$ and $\xi_k(t)$ use $n=N_k(t)$ samples of arm $k$,
     but as \eqref{eq:2:trickInUCBProof} above started to isolate $N_k(t)$, we add the freedom of considering different number of samples (using $n$), so we introduce the notation
-    $\widehat{\mu}_{a,n}(t)$ and $\xi_{a,n}(t)$ where $N_k(t)$ is replaced with $n$ if $n \leq N_k(t)$,
-    \ie, $\widehat{\mu}_{a,n(t)} = \frac{1}{n} \sum_{s=1}^{t-1} r(s) \indic(A(s)=k, N_k(s) \leq n)$ and $\xi_{a,n}(t) = \sqrt{2\log(t) / n}$.
+    $\widehat{\mu}_{k,n}(t)$ and $\xi_{k,n}(t)$ where $N_k(t)$ is replaced with $n$ if $n \leq N_k(t)$,
+    \ie, $\widehat{\mu}_{k,n(t)} = \frac{1}{n} \sum_{s=1}^{t-1} r(s) \indic(A(s)=k, N_k(s) \leq n)$ and $\xi_{k,n}(t) = \sqrt{2\log(t) / n}$.
     %
     Thus, we can continue from \eqref{eq:2:trickInUCBProof} and write
     %
@@ -1147,7 +1146,7 @@ This theorem shows that $\UCB_1$ achieves an order-optimal problem-dependent reg
     \begin{align}\label{eq:2:decompositionInUCBProof3}
         \E[ N_k(T) ]
         & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t  \Pr\left( \widehat{\mu}_{k^*,n_{k^*}}(t) + \xi_{k^*,n_{k^*}}(t) < \widehat{\mu}_{k,n_k}(t) + \xi_{k,n_k}(t) \right) \nonumber \\
-        & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t \bigl[ \underbrace{\Pr(I_1)}_{=1/t^4} + \underbrace{\Pr(I_2)}_{=1/t^4} + \underbrace{\Pr(I_3)}_{=0} \bigr] \nonumber \\
+        & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t \bigl[ \underbrace{\Pr(I_1)}_{\leq 1/t^4} + \underbrace{\Pr(I_2)}_{\leq 1/t^4} + \underbrace{\Pr(I_3)}_{=0} \bigr] \nonumber \\
         & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t  2 \frac{1}{t^4} \nonumber \\
         \intertext{We actually have that $\sum\limits_{n_{k^*}=1}^t \sum\limits_{n_{k}=n_T}^t  2 \frac{1}{t^4} \leq 2 \sum\limits_{n_{k^*}=1}^t \frac{1}{t^3} \leq 2 \frac{1}{t^2}$, whose sum for $t=1$ to $\infty$ is $2\frac{\pi^2}{6}$.}
         & \leq \frac{8 \log(T)}{\Delta_k^2} + 1 + 2 \sum_{t=1}^T \frac{1}{t^2}
@@ -1168,7 +1167,7 @@ This theorem shows that $\UCB_1$ achieves an order-optimal problem-dependent reg
     \end{align*}
 \end{smallproof}
 
-We see that the $\UCB_1$ algorithm has the advantage of not relying on any prior knowledge of the problem difficulty, of being anytime, and computationally simple, for both memory and time aspects, and it achieves an order-optimal problem-dependent regret upper bound in $\cO((\sum_{k: \Delta_k>0} \frac{1}{\Delta_k})\log(T))$.
+We see in this Theorem~\ref{thm:2:UCBregretBound} that $\UCB_1$ has the advantage of not relying on any prior knowledge of the problem difficulty, of being anytime, and computationally simple, for both memory and time aspects, and it achieves an order-optimal problem-dependent regret upper bound in $\cO((\sum_{k: \Delta_k>0} \frac{1}{\Delta_k})\log(T))$.
 %
 $\UCB_1$ requires a constant storage capacity for each arm (storing $X_k(t)$ and $N_k(t)$ require two integers or a \texttt{float} and an integer, \ie, $\bigO{1}$), giving a storage capacity of $\bigO{K}$, independently of the horizon $T$.
 It also needs to perform some mathematical operations, but a square-root and a logarithm are cheap, thus it costs a $\bigO{1}$ constant time for each arm and time step, thus a time $\bigO{K T}$ for the $T$ time steps.
@@ -1188,7 +1187,7 @@ and then the \klUCB{} algorithm was introduced in \cite{KLUCBJournal} for bounde
 In all this thesis, we either restrict to exponential families or to bounded rewards in $[0,1]$ and use the fact that they are sub-Bernoulli, thus we prefer to only present \klUCB.
 
 Instead of using a confidence radius $\xi_k(t)$ based on Hoeffding's inequality,
-the \klUCB{} algorithm rather use the Chernoff concentration inequality for the considered exponential family
+the \klUCB{} algorithm rather uses the Chernoff concentration inequality for the considered exponential family
 % such as Chernoff-Hoeffding for Gaussian (or sub-Gaussian) rewards.
 % It yields improved upper confidence bounds (\ie, with smaller $\xi_k(t)$) that are based on Kullback-Leibler divergence.
 The indexes are computed as follows, for an exploration function $f(t)$
@@ -1206,7 +1205,7 @@ This is justified by Pinkser's inequality, which gives $\kl(x,y) \geq 2(x-y)^2$.
 The \KLUCB{} and \klUCB{} algorithms achieve finite-time regret logarithmic upper-bounds on their regret, and have been proven to be asymptotically optimal, respectively for one-dimensional exponential families and for bounded rewards distributions \cite{Garivier11KL,KLUCBJournal}.
 
 
-\paragraph{A note about the implementation of \klUCB{} algorithms.}
+\textbf{A note about the implementation of \klUCB{} algorithms.}
 %
 Implementing this kind of policy requires to implement two things.
 The first piece is usually easy: one has to implement a way to compute $\kl(x,y)$ the Kullback-Leibler divergence of the considered one-dimensional family,
@@ -1375,16 +1374,15 @@ and we refer to Parts~III and VI of \cite{LattimoreBanditAlgorithmsBook} for mor
 %
 As explained before, in the last few years, the MAB research community has been interested in finding algorithms which achieves both a problem-dependent logarithmic and a minimax upper-bounds.
 We present here some solutions that are index-based (see Algorithm~\ref{algo:2:indexPolicy}).
-The first example is MOSS from \cite{Audibert2009minimax}, or \KLUCBpp{} in \cite{Menard17},
-and they use the following indexes:
-\begin{align}\label{eq:2:indexes_for_MOSS_klUCBpp}
+The first example is MOSS from \cite{Audibert2009minimax}, or \KLUCBpp{} in \cite{Menard17}.
+If we denote $g(t, T, K) = \log^+(y(t) (1 + \log^+(y(t))^2))$, and $y(t) = \frac{T}{K t}$, with $\log^+(x) = \max(0, \log(x))$,
+then they use the following indexes:
+\begin{align*}\label{eq:2:indexes_for_MOSS_klUCBpp}
     U^{\mathrm{MOSS}}_k(t) & \eqdef \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \frac{\log\left(\frac{t}{K N_k(t)}\right)}{N_k(t)} } \right). \\
-% \end{align}
-% \begin{align}\label{eq:2:indexes_for_MOSS_klUCBpp2}
-    U^{\KLUCBpp}_k(t) & \eqdef \sup\limits_{q \in [a, b]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{g(N_k(t), T, K)}{N_k(t)} \right\}.
-\end{align}
-%
-If we denote $g(t, T, K) = \log^+(y(t) (1 + \log^+(y(t))^2))$, and $y(t) = \frac{T}{K t}$, with $\log^+(x) = \max(0, \log(x))$.
+% \end{align*}
+% \begin{align*}\label{eq:2:indexes_for_MOSS_klUCBpp2}
+    U^{\KLUCBpp}_k(t) & \eqdef \sup\limits_{q \in [0,1]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{g(N_k(t), T, K)}{N_k(t)} \right\}.
+\end{align*}
 
 Both algorithms are index policies, but they are not anytime.
 For any $K$, $T$, and problem instances $I$ in a certain family $\cI$ (\eg, with Bernoulli distributions),
@@ -1392,31 +1390,36 @@ they enjoy regret bounds like the following, for two constants $c_{\cA}$ and $c'
 
 More recently, the \klUCB-switch from \cite{Garivier18} is the first algorithm to be proven to
 enjoy simultaneously a distribution-free regret bound of optimal order $\sqrt{KT}$, and a distribution-dependent regret bound of optimal order as well, that is, matching the $C_I \ln(T)$ lower bound by \cite{LaiRobbins85}.
-It is an index policy that uses a modified version of the indexes of the \klUCB$^+$ algorithm (see \cite{Honda2019} for more details), for arms that are not sampled much, and a modified version of the indexes of the MOSS$^+$ algorithm, for the other arms.
-To detail this, first let $f(T, K) = \lfloor (T/K)^{\gamma}\rfloor$ for $\gamma=1/5$,
-then \klUCB-switch use the index defined as follows:
+It is an index policy that uses modified versions of the indexes of \klUCB$^+$ for arms that are not sampled much (see \cite{Honda2019} for more details), and of MOSS$^+$ for the other arms.
+If the two indexes
+% $U^{\KLUCB+}_k(t)$ and $U^{\mathrm{MOSS}+}_k(t)$
+are defined by
+$U^{\mathrm{MOSS}+}_k(t) & \eqdef \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \log\left(T / (K N_k(t))\right) / N_k(t)} \right)$
+and
+$U^{\KLUCB+}_k(t) & \eqdef \sup\limits_{q \in [0,1]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \log(T / (K N_k(t))) / N_k(t) \right\}$,
+and if $f(T, K) = \lfloor (T/K)^{\gamma}\rfloor$ for $\gamma=1/5$,
+then \klUCB-switch uses the index defined as follows:
 \begin{align*}
     U^{\klUCB\text{-}\mathrm{switch}}_k(t) & \eqdef \begin{cases}
         U^{\KLUCB+}_k(t) & \text{if } N_k(t) \leq f(T, K), \\
         U^{\mathrm{MOSS}+}_k(t) & \text{if } N_k(t) > f(T, K).
     \end{cases}.
 \end{align*}
-
-If the two indexes $U^{\KLUCB+}_k(t)$ and $U^{\mathrm{MOSS}+}_k(t)$ are defined by
 %
-% \vspace*{-20pt}   % FIXME??
-\begin{align*}
-    U^{\mathrm{MOSS}+}_k(t) & \eqdef \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \frac{\log\left(\frac{T}{K N_k(t)}\right)}{N_k(t)}} \right). \\
-% \end{align*}
+
+%
 % \begin{align*}
-    U^{\KLUCB+}_k(t) & \eqdef \sup\limits_{q \in [a, b]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{\log(\frac{T}{K N_k(t)})}{N_k(t)} \right\}
+%     U^{\mathrm{MOSS}+}_k(t) & \eqdef \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \frac{\log\left(\frac{T}{K N_k(t)}\right)}{N_k(t)}} \right). \\
+% % \end{align*}
+% % \begin{align*}
+%     U^{\KLUCB+}_k(t) & \eqdef \sup\limits_{q \in [0,1]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{\log(\frac{T}{K N_k(t)})}{N_k(t)} \right\}
+% % \end{align*}
+% % \begin{align*}
+%     % U^{\klUCB\text{-}\mathrm{switch}}_k(t) & \eqdef \begin{cases}
+%     %     U^{\KLUCB+}_k(t) & \text{if } N_k(t) \leq f(T, K), \\
+%     %     U^{\mathrm{MOSS}+}_k(t) & \text{if } N_k(t) > f(T, K).
+%     % \end{cases}.
 % \end{align*}
-% \begin{align*}
-    % U^{\klUCB\text{-}\mathrm{switch}}_k(t) & \eqdef \begin{cases}
-    %     U^{\KLUCB+}_k(t) & \text{if } N_k(t) \leq f(T, K), \\
-    %     U^{\mathrm{MOSS}+}_k(t) & \text{if } N_k(t) > f(T, K).
-    % \end{cases}.
-\end{align*}
 
 % Recent work.
 % https://smpybandits.github.io/docs/Policies.MOSS.html
@@ -1439,7 +1442,7 @@ It is anytime, and it was also proven to obtain good ``best-of-both-world'' perf
 \subsection{Comparison of the main algorithms on the example Bernoulli problem from the online interactive demonstration}
 \label{sub:2:shortNumericalExperiments}
 
-\TODOL{Si je dois gagner de la place, je peux ne pas inclure cette section...}
+% \TODOL{Si je dois gagner de la place, je peux ne pas inclure cette section...}
 
 We finish this Section~\ref{sec:2:famousMABalgorithms} by illustrating the performance of different algorithms, on the small MAB problem used in the online demonstration shown above (see Figures~\ref{fig:2:example_of_a_5_arm_bandit_problem} and \ref{fig:2:example_of_a_5_arm_bandit_problem__step100}).
 We consider $K=5$ arms following Bernoulli distributions, of means $\mu_1=0.6,\mu_2=0.2,\mu_3=0.55,\mu_4=0.7,\mu_5=0.5$ (unknown to the algorithms), and first an horizon $T=100$ (like in the online demo) then a large value of $T=10000$.
@@ -1541,7 +1544,10 @@ We also include in Figures
 % \ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT100N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT100N1000},
 \ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000} below the mean cumulated rewards and mean regrets as functions of the current time step $t$, for $T=10000$ (and $N=1000$).
 The reward of the best arm is also plotted in Figure~\ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, and it serves as an \emph{upper-bound} to illustrate convergence\footnote{~Conversely, we also add the Lai \& Robbins' logarithmic \emph{lower-bound} on regret ($C_I \log(t)$ from case 2 of Theorem~\ref{thm:2:forSecondLogTLowerBound}) on the regret plot in Figure~\ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}. It should not be surprising that the black line of the lower-bound is \emph{above} the values of the regret as the lower-bound is only asymptotic.}
-of the average rewards (\ie, $\frac{1}{t} \sum\limits_{s=1}^t r(s)$), which should converge to $\mu^*$ when $t\to\infty$ for efficient algorithms.
+of the average rewards
+(\ie, $\frac{1}{t} (r(1) + \dots + r(t))$),
+% (\ie, $\frac{1}{t} \sum\limits_{s=1}^t r(s)$),
+which should converge to $\mu^*$ when $t\to\infty$ for efficient algorithms.
 %
 We can clearly identify the behavior of the different strategies:
 the three efficient strategies indeed achieve a sub-linear regret, that looks logarithmic as supported by the theory,
@@ -1635,14 +1641,14 @@ both $\varepsilon$-greedy and Explore-then-Commit starts as pure exploration, re
 
 \begin{figure}[h!]  % [htbp]
 	% \centering
-    \includegraphics[width=1.15\linewidth]{SP__K5_T10000_N1000__7_algos/main_MeanRewards____env1-1_2506036032481767447.pdf}
+    \includegraphics[width=1.14\linewidth]{SP__K5_T10000_N1000__7_algos/main_MeanRewards____env1-1_2506036032481767447.pdf}
 	\caption{Average of the cumulated rewards, as function of $t$, for $T=10000$ and $N=1000$.}
 	\label{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}
 \end{figure}
 
 \begin{figure}[h!]  % [htbp]
 	% \centering
-	\includegraphics[width=1.15\linewidth]{SP__K5_T10000_N1000__7_algos/main____env1-1_2506036032481767447.pdf}
+	\includegraphics[width=1.14\linewidth]{SP__K5_T10000_N1000__7_algos/main____env1-1_2506036032481767447.pdf}
 	\caption{Mean regret $R_t$ as function of $t$ for $T=10000$ and $N=1000$.}
 	\label{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}
 \end{figure}
