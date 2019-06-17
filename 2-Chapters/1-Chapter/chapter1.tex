@@ -117,10 +117,10 @@ Let us define and detail both concepts.
 % This thesis studies the possible applications of a certain kind of Machine Learning algorithms, Multi-Armed Bandits, to a certain kind of Telecommunications, Cognitive Radio and Internet of Things of Networks.
 
 
-\paragraph{From Machine Learning to Reinforcement Learning.}
+\paragraph{From Machine Learning to Multi-Armed Bandits.}
 %
 We can narrow down the first field of study of this thesis, steps by steps.
-Starting from the general concept of Machine Learning (ML), we focused our interest to statistical learning, then sequential learning, then Reinforcement Learning (RL, \cite{SuttonBarto2018}), then RL with limited feedback and finally to multi-armed bandits learning.
+Starting from the general concept of Machine Learning (ML), we focused our interest to statistical learning, then sequential learning, then Reinforcement Learning (RL), then RL with limited feedback and finally to Multi-Armed Bandits (MAB) learning.
 As illustrated in Figure~\ref{fig:1:MainTypesOfMachineLearning}, there are other types of ML, that we do not focus on in this thesis.
 The reference book on RL is \cite{SuttonBarto2018}, so let us quote the definition of RL given by Richard Sutton and Andrew Barto:
 \emph{``Reinforcement learning is learning what to do -— how to map situations to actions -— so
@@ -146,7 +146,7 @@ take, but instead must discover which actions yield the most reward by trying th
 
 We illustrate this idea in the following Figure~\ref{fig:1:ReinforcementLearningCycle}, where a player (or learner) interacts with its environment by taking an action $A(t)$ (\eg, a choice in a finite set, $A(t)\in\{1,\dots,K\}$, or a vector $A(t)\in\R^d$,) and then observing a reward $r(t)$, which is a certain measure of success from the environment (\eg, $r(t)\in\{0,1\}$ for binary failure/success, or $r(t)\in\R$).
 The goal of the player is to maximize its reward, by trials and errors (\ie,actions and rewards).
-Many real-world problems can be framed as Reinforcement Learning problems \cite{bouneffouf2019survey}, for instance learning to walk or to drive, learning to play a board or computer game, or discovering which treatment is efficient in healing a certain disease.
+Many real-world problems can be framed as Reinforcement Learning problems, as illustrated by the survey \cite{bouneffouf2019survey} and Section~\ref{sec:2:applicationsofStochasticMAB}, for instance learning to walk or to drive, learning to play a board or computer game, or discovering which treatment is efficient in healing a certain disease (clinical trial).
 
 % \begin{figure}[h!]
 %     \centering
@@ -181,6 +181,11 @@ More precisely, in this thesis we focus on a certain kind of Reinforcement Learn
 In other words, we focus on RL with limited feedback, when the player only sees the reward given by its action at every round, and not the reward that would have been given if she chose any other action.
 This kind of limited feedback is called \emph{bandit information}, and we discuss the history and the concept of \emph{Multi-Armed Bandits} in details in the next Chapter~\ref{chapter:2}.
 Clinical trials and treatment discovery was historically the first application of MAB, in $1933$ with the early work of W. Thompson \cite{Thompson33}.
+%
+Multi-Armed Bandits (MAB) are a simple yet powerful example of the well-known exploration/exploitation dilemma:
+when facing a set of $K$ actions whose effects on the environment are unknown, a learning must balance between
+exploration of the unknown actions, in order to collect more information about them,
+and exploitation of the best action according to its current knowledge.
 
 
 \paragraph{From IT to Cognitive Radio.}
@@ -210,24 +215,25 @@ Cognitive Radio (CR) is not a standard technology, and as such it does not have 
 \textbf{The spectrum scarcity issue.}
 %
 A major problem of current wireless technologies is the issue of spectrum scarcity:
-in most kinds of frequency bands, as illustrated in Figure~\ref{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum} below, the entire RF spectrum is now allocated and free bands no longer exist, limiting the possibility of adding new usage.
+in most kinds of frequency bands, the entire RF spectrum is now allocated and free bands no longer exist, limiting the possibility of adding new usage.
+As illustrated in Figure~\ref{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum} below, only a very small portion of the RF spectrum in the USA is not yet allocated, from $0$ to \SI{9}{\kilo\hertz}, while the rest of the displayed portion of the spectrum, from \SI{9}{\kilo\hertz} to \SI{300}{\giga\hertz}, is allocated to various usages, that goes from maritime radionavigation (historically the first usage) to space research, inter-satellite, and mobile telephony.
 %
-% FIXME copy paste from Wikipedia, change a little bit!
+% FIXME copy paste from Wikipedia, change a little bit?
 % Traditional regulatory structures have been built for an analog model and are not optimized for cognitive radio.
-Regulatory bodies in the world, like the Federal Communications Commission in the United States, as well as different independent measurement campaigns found that most radio frequency spectrum was inefficiently utilized
-meaning that while a band can be allocated to a certain usage, it can be free from any user in certain time and/or place.
-For instance, see \cite{valenta2010survey} for a survey on spectrum utilization in Europe.
-%
+Regulatory bodies in the world, like the Federal Communications Commission in the USA, as well as different independent measurement campaigns found that most radio frequency spectrum was inefficiently utilized,
+meaning that while a band can be allocated to a certain usage, it can be free from any user in certain times and/or places.
+We refer to \cite{valenta2010survey} for a survey on spectrum utilization in Europe.
+
 Cellular network bands are overloaded in most parts of the world, but other frequency bands (such as military, amateur radio and paging frequencies) are insufficiently utilized.
 Independent studies performed in some countries confirmed that observation, and concluded that spectrum usage highly depends on time and place.
 Moreover, fixed spectrum allocation prevents rarely used frequencies (those assigned to specific services) from being used, even when any unlicensed users would not cause noticeable interference to the assigned service.
 Regulatory bodies in the world have been considering whether to allow unlicensed users in licensed bands if they would not cause any interference to licensed users.
-These initiatives have focused cognitive-radio research on \textbf{Dynamic Spectrum Access (DSA)}.
+These initiatives have focused CR research on \textbf{Dynamic Spectrum Access (DSA)}.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.65\textwidth]{United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum.pdf}
-    \caption{A chart representing the allocation of radio spectrum in the United States of (North) America, in $2016$. \copyright{} Wikimedia.}
+    \includegraphics[width=0.65\textwidth,angle=90]{United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum.pdf}
+    \caption{A chart representing the allocation of radio spectrum in the USA in $2016$. Only a small share of the spectrum is not yet allocated, the top-left corner in white (it is in logarithmic scale from \SI{0}{\kilo\hertz} to \SI{300}{\giga\hertz}). \copyright{} Wikimedia.}
     % https://upload.wikimedia.org/wikipedia/commons/c/c7/United_States_Frequency_Allocations_Chart_2016_-_The_Radio_Spectrum.pdf?uselang=fr
     \label{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum}
 \end{figure}
@@ -238,171 +244,102 @@ The PU have a strict priority over any other non-paying users, referred to as Se
 So even though the RF bands are allocated, real world measurements often show that some bands are not densely used, and thus if a SU is equipped with an efficient sensing capacity, it can analyze its environment, and use a licensed band if it is free of any PU.
 % explain DSA
 This defines the concept of DSA was thus proposed in the early $2000$s, and we refer to the survey \cite{Zhao07} for more details.
-We focus on one example, the \textbf{Opportunistic Spectrum Access} (OSA).
+We focus on one example, the \textbf{Opportunistic Spectrum Access} (OSA) problem.
 
-\TODOL{Je dois faire ça d'ici mercredi matin}
 
-% FIXME how to explain OSA ?
 \paragraph{Opportunistic Spectrum Access.}
 %
-
-
-
-
-% Il faut expliquer ce que c'est que la radio intelligente, et le cas de l'OSA
-
-
-
-
-\paragraph{Previous work in the SCEE team on OSA.}
-
-expliquer ce que Christophe Moy, Wassim Jouini, Navik Modi etc ont fait depuis 2009
-
-
-\paragraph{New challenges for the IoT networks.}
+In OSA, the focus is on spectrum access for one SU accessing a licensed spectrum.
 %
-quels nouveaux challenges en 2016 ?
-
-autre direction
-
-- radio intelligente > internet des objets
-
-
-
-
-
-\newpage
-
-% Je peux m'inspirer beaucoup de la thèse de Navik...
-% https://tel.archives-ouvertes.fr/tel-01668536/document
-
-
-Des thèses précédentes avaient déjà identifié l'apprentissage séquentiel comme étant pertinent pour la radio intelligente.
-On peut citer les travaux de \cite{Jouini09,Jouini10,Jouini12}, qui ont notamment souligné les points suivants :
-
-\begin{itemize}
-    \item implémentation peu couteuse en ressources d'exécution (temps et mémoire), contrairement aux autres approches de décision basées sur l'optimisation, ou d'autres techniques d'IA,
-    \item capacité à apprendre depuis zéro (pas de phase de pré apprentissage durant laquelle le système ne fait rien d'autre qu'apprendre), et forte capacité à s'adapter automatiquement à un nouveau contexte,
-    \item coordination décentralisée possible de plusieurs joueurs, sans qu'il n'y ait de communication autorisée entre eux,
-    \item approche cohérente dans un système décentralisé, si chaque objet sans fil apprend de son côté plutôt que de recevoir des instructions d'une station de base,
-    \item résistent aux erreurs d'apprentissage
-\end{itemize}
-
-Ces techniques ont aussi permis d'identifier les bandits multi-bras comme le bon modèle d'apprentissage séquentiel statistique dans le contexte de la radio intelligente.
-Des algorithmes de MAB ont été utilisés avec succès dans différents contextes :
-
-\begin{itemize}
-    \item le choix de la configuration radio, avec par exemple \cite{KerkoucheAlami18} récemment,
-    \item l'accès dynamique au spectre, et en particulier l'accès opportuniste (OSA) \cite{Jouini09}.
-\end{itemize}
-
-Mais le cas OSA a plusieurs faiblesses :
-
-\begin{itemize}
-    \item il est trop futuriste, car la régulation des fréquences ne permet pas encore (et en est très loin) de l'appliquer en situation réelle,
-    \item en l'absence de régulation coordonnée, chaque cas d'OSA dépendra de la bande considérée (et comment les objets "licencees" s'y comportent), mais les études de l'équipe SCEE ont montrées que les approches MAB sont capables de s'adapter à tous les cas,
-    \item le retour de décision utilisé dans l'OSA repose sur le sensing, qui est le maillon faible de la boucle (pas encore assez fiable pour être utilisé en vrai).
-    \item d'où l'idée d'utiliser les MAB en Cognitive Radio, dans les bandes non licenciées, dès 2011 \cite{Jouini12}. Dans ce cas, le contexte est comme en OSA, mais sans PU, et pas de sensing.
-\end{itemize}
-
-Pour toutes ces raisons, le cadre de l'internet des objets (IoT) apparaît comme idéal car c'est un cadre qui s'affranchit des contraintes de l'OSA.
-
-Par conséquent, cette thèse vise à refermer certaines portes qui étaient encore intéressantes à étudier dans la suite de ce qui a été considéré pour l'OSA
-
-% Detail the previous work from our team SCEE on bandits + OSA : Wassim, Navik
-
-\TODOL{Tous les paragraphes suivants sont copiés collés de plus tard dans la thèse, je peux les réadapter ici, et les supprimer/raccourcir plus loin}
-
-The focus of this work is on cognitive radio and IoT networks, where arms can represent wireless orthogonal channels, but more generally any resource characterizing the communication between a wireless device and a gateway (\eg, spreading factor for LoRa \cite{KerkoucheAlami18}, power allocation for NOMA etc). In cognitive radio using centralized supervision, for instance if the gateway can decide the allocation of devices to resources, MAB can also be used to let the gateway explore different allocations and learn by itself a good allocation, see for instance this article that consider 5G-like networks with small cells \cite{Maghsudi16}.
-
-Previous works of our SCEE team showed that MAB can be used to model the problem of spectrum access for a secondary user accessing a licensed spectrum.
-In this model, arms represent a finite set of orthogonal channels, \ie, different frequency bands in a licensed spectrum.
-In the model with sensing, the samples $Y_{k,t}$ represents the feedback obtained by the CR-equipped device after sensing the channel $k$ at time $t$.
-A reward of $r(t) = 1$ indicates that no Primary User was sensed, while a reward of $r(t)=0$ indicates that the channel $k$ is busy at time $t$ and no uplink message can be sent.
+The following hypothesis are maid:
+the SU is equipped with sensing,
+and a consider a fixed and finite set of orthogonal channels, \ie, different frequency bands in a licensed spectrum.
+For instance, it can be a set of three Wi-Fi channels at different frequency, emitted by the same Wi-Fi station.
+Another hypothesis is that both PU and SU are synchronized in times, by sub-dividing the time in discrete time steps.
 %
-This model was first introduced by Wassim Jouini during his PhD thesis,
-in \cite{Jouini09} and later studied in both \cite{Jouini10,Jouini12}.
-Proof-of-concepts using real-world radio hardware was first propsed in \cite{MoyWSR2014,RobertSDR2014}.
+Thus if the SU spends a short time in the beginning of each time slot to do sensing, it can scan for the presence or absence of any PU before transmitting.
+If a SU was able to sense for all the $K$ frequency bands, it could simply transmit in one of the free channels if any, or not transmit if all channels are used at a given time step.
+However, sensing is known to be error-prone and costly, especially for wide-band sensing, thus most works on OSA limit the sensing capacity of SU to sensing only one channel at a time. This assumption, along with the regulation that PU cannot be disturbed, enforces the SU to transmit in the channel that it sensed.
+% non negligible cost of radio reconfiguration
 
-In a second PhD thesis supervised by Christophe Moy \cite{Modi17PhD}, Navikkumar Modi studied the impact
-of using MAB algorithms to optimize channel selection
-on the battery life of a wireless device.
+Focussing on one SU in an OSA network, it has to sequentially decide a channel to sense (in the set of $K\geq2$ channels), then it performs sensing, and finally it transmits in this channel if it is free.
+The goal of the SU is to minimize its energy consumption (we remind that we focus on green radio) and to maximize its uplink data rate, or equivalently, to maximize its number of successful transmission.
+%
+If the different channels are not uniformly used by the PU, and if we assume a stationary hypothesis on the PU traffic, then the goal of the SU boils down to explore the different channels and exploiting the best ones.
+This frames the Opportunistic Spectrum Access problem as a exploration/exploitation problem, white a finite set of actions (the channels, also called arms),
+in a sequential action-then-feedback cycle (see Figure~\ref{fig:1:ReinforcementLearningCycle}, time steps are $t\in\N^*$),
+under partial information feedback.
+These three hypotheses are the ones that restrict from the general Reinforcement Learning framework to the specific Multi-Armed Bandit case.
+
+
+\TODOL{Je dois faire ça d'ici mercredi matin}
+\paragraph{MAB for OSA.}
+%
+Previous works of our SCEE team showed that MAB can be used to model the OSA problem:
+orthogonal frequency bands (or channels) are models by arms $k\in\{1,\dots,K\}$,
+and the feedback obtained by the CR-equipped device after sensing the channel $k$ at time $t$ is modeled by a reward of $r(t) \in \{0,1\}$.
+Indeed, $r(t) = 1$ indicates that no Primary User was sensed (and thus an uplink message can be sent), while a reward of $r(t)=0$ indicates that the channel $k$ is busy at time $t$ and no uplink message should be sent.
+%
+This model was first studied by Wassim Jouini during his PhD thesis, ten years ago
+in \cite{Jouini09}, and later studied in both \cite{Jouini10,Jouini12}.
+His works with Christophe Moy were among the first ones to propose to use Reinforcement Learning for Cognitive Radio and the OSA problem, especially the MAB model and the \UCB{} algorithm,
+along the early works of \cite{Liu08,Zhao10}.
+%
+Shortly after in $2014$, proof-of-concepts using real-world radio hardware were developed by Christophe Moy and his student Clément Robert \cite{RobertSDR2014,MoyWSR2014}.
+
+In a second PhD thesis supervised by Christophe Moy \cite{Modi17PhD} from $2014$ to $2017$, Navikkumar Modi studied the impact of using MAB algorithms to optimize channel selection on the battery life of a wireless device.
 On the one hand, running a MAB algorithm such as UCB-like algorithms was proven to be useful and can bring significant improvement in terms of successful transmission rates, directly increasing the battery life of the device.
 On the other hand, classical MAB algorithms tend to switch arms a lot of times, especially in the beginning of the learning process, and this induces a lot of dynamical hardware reconfiguration for the wireless device, as selecting a different channel requires a change in the radio hardware used by the device.
 Each hardware reconfiguration costs energy for the device, and quickly switching algorithms will lead to a reduction of the battery life.
 The tradeoff between the two aspects is studied empirically in
 \cite{modiDemo2016}.
-
-
-We already explained in Chapter~\ref{chapter:1} that
-unlicensed bands are more and more used and considered for mobile and LAN communication standards (WiFi, LTE-U), and for Internet of Things (IoT) standards for short-range (ZigBee, Z-Wave, Bluetooth) and long-range (LoRaWAN, SIGFOX, Ingenu, Weightless) communications \cite{Centenaro16}.
-This heavy use of unlicensed bands, in particular with the expected exponential growth of the number of IoT devices, will cause performance drop, due to radio collisions that could even compromise IoT promises.
-
-Efficient Medium Access (MAC) policies allow devices to avoid interfering traffic and can significantly reduce the spectrum contention problem in unlicensed bands.
-As end-devices battery life is a key constraint of IoT networks,
-and as IoT networks are decentralized (\ie, the devices initiate transmissions),
-this leads to IoT protocols using as low signaling overhead as possible and simple ALOHA-based mechanisms.
 %
-In this chapter, we analyze the performance of Multi-Armed Bandits (MAB) algorithms, that could be used in combination with a time-frequency slotted ALOHA-based protocol.
-Even without changing anything of the level of IoT standards, our proposal is just an add-on capability that can be used on a unit-per-unit basis.
-We consider the Upper-Confidence Bound (\UCB) \cite{Auer02}, and the Thompson-Sampling (TS) algorithms \cite{Thompson33,AgrawalGoyal11,
-Kaufmann12Thompson}, for the first model. For the demonstration as well as for the second model, without loss of generality, we preferred to focus on heuristics based on the simplest algorithm (\ie, \UCB), to give a clear presentation of the different ideas explored to solve the problem of learning in order to retransmit efficiently.
-
-As detailed in Chapter~\ref{chapter:1},
-MAB learning has already been proposed in Cognitive Radio (CR) \cite{Mitola99,Haykin05}, and in particular, for sensing-based Dynamic Spectrum Access (DSA) in licensed bands \cite{Jouini10}.
-For example,
-proof-of-concepts like \cite{kumar2016two} have proven the capability of such approaches on real radio signals for OSA,
-and \cite{Maghsudi16} shows how MAB learning can be applied for small cell management in licensed 5G networks.
-Some analysis on real radio measurements made for HF ionospheric channels have also proven that solutions based on MAB learning is appropriate and solves efficiently this kind of decision-making problems on real-world wireless signals \cite{Melian15}.
-Recent works show that stationary MAB algorithms work well to solve reinforcement learning models that represent accurately real-world radio problems.
-Recently, TS and \UCB{} algorithms have been used for improving the spectrum access in (unlicensed) WiFi networks, for instance by \cite{Toldov16} or \cite{Wilhelmi19collaborative,Wilhelmi19potential}.
-% However, even with only one dynamic user using the learning algorithm, the background traffic or the traffic of the other devices is never really stationary or \iid{}.
-
-We present in Section~\ref{sec:4:firstModel} how the MAB algorithms can be used in a unlicensed but frequency- and time-slotted IoT network.
-Several devices are using bandit algorithms, and the assumptions made by the stochastic bandit algorithms are not satisfied: as several agents learn simultaneously and their activation processes are random, their behavior is not stationary.
-As far as we know, we provide the first practical study to confirm robustness of the use of stochastic bandit algorithms for decision making in IoT networks with a large number of intelligent devices in the network, which makes the environment ``highly not stationary''.
-This specific context makes it very hard to give mathematical proofs of  convergence and efficiency for bandit algorithms (that is why we relax the hypothesis and only consider up-to $M \leq K$ players in Chapter~\ref{chapter:5}).
-We then validate the model with a hardware implementation on real radio signals, detailed in Section~\ref{sec:4:gnuradio}.
-%
-We conclude this chapter by presenting in Section~\ref{sec:4:retransmissions} an extension of this model to take into account another aspect of the ALOHA protocol, that is the possibility for dynamic devices to retransmit their packet if the \emph{Ack} was not received.
-
-As explained before in Chapter~\ref{chapter:1}, the future IoT networks will require to support more and more communicating devices.
-In this section, we show that intelligent devices in unlicensed bands can use MAB learning algorithms to improve spectral resource exploitation.
-%
-We evaluate the performance of two classical MAB learning algorithms, \UCB{} and Thomson Sampling, to handle the decentralized decision-making of Spectrum Access, applied to IoT networks.
-We mean by \emph{decentralized} that learning is performed on the device side, and is spread on the totality of the devices in a network.
-We also evaluate the learning performance when the number of intelligent end-devices grows.
-%
-We show that using learning algorithms
-firstly extends devices battery autonomy (by reducing the packet-loss-ratio or equivalently, by improving the successful-communication rate),
-and secondly does help to fit more devices in such networks, even when all end-devices are intelligent and are dynamically switching from channel to channel.
-In the studied settings,
-Stochastic MAB learning
-% provides an up to $16\%$ gain in terms of successful transmission probabilities, and
-has near optimal performance even in non-stationary settings with a majority of intelligent devices.
-
-
-The aim of this section is to assess the potential gain of learning algorithms in IoT scenarios, even when the number of intelligent devices in the network increases,
-and the network usage is more and more fluctuating.
-% and the stochastic hypothesis is more and more violated.
-To do that, we suppose an IoT network made of two types of devices: \emph{static devices} that use only one channel (fixed in time), and \emph{dynamic devices} that can choose the channel for each of their transmissions. Static devices form an interfering traffic, which could be generated by devices using other standards as well.
-Note that instead of assuming that each static device uses a fixed channel, we could also assume a looser hypothesis: if each static device uses a fixed sub-set of the $K$ channels, and a purely uniform random access in its set of considered channels, then \emph{in average} the observed occupancy of the $K$ channels can be modeled as if it were occupied by (more) static devices using only one channel. So our first hypothesis is actually not constraining.
-We first evaluate the probability of collision if dynamic devices randomly select channels (that is, a naive approach), and if a centralized controller would optimally distribute all of them in the channels at the beginning of the scenario.
-This second approach is ideal, but not realistic the most common situation of decentralized co-located IoT networks, and it is just used here as a reference.
-Then, these three reference scenarios allow to evaluate the performance of bandit algorithms, such as \UCB{} and TS, in a decentralized network, in terms of successful communication rate, as it reflects the network efficiency.
-We show that these algorithms have near-optimal performance, even when the proportion of end-devices increases and the interfering traffic from other devices becomes less and less stochastic.
-
-
-
-We evoke here some previous works that similarly implemented proof-of-concepts to show that reinforcement learning algorithms can be used within real-world wireless communications.
-Starting from $2010$, the works of Wassim Jouini \cite{Jouini09,Jouini10,Jouini12} were the first ones to propose to use Reinforcement Learning for Cognitive Radio, especially MAB and the \UCB{} algorithm, and from $2014$, proof-of-concepts were developed by Christophe Moy and his student Clément Robert \cite{RobertSDR2014,MoyWSR2014}.
-In $2015$ and $2016$, Christophe Moy continued to work on this direction, with a PhD student (Navikkumar Modi) and post-doc (Sumit J. Darak) in our team SCEE, for the following publications
+In $2017$, Christophe Moy continued to work on this direction, with a post-doctoral student, Sumit J. Darak, leading to the following publications
 \cite{darak2016bayesian,Darak16,modiDemo2016,kumar2016two}.
+%
+For example, proof-of-concepts like \cite{kumar2016two} have proven the capability of such approaches on real radio signals for OSA,
+%
+Some analysis on real radio measurements made for HF ionospheric channels have also proven that solutions based on MAB learning is appropriate and solves efficiently this kind of decision-making problems on real-world wireless signals \cite{Melian15}.
+%
 Since $2017$, Sumit J. Darak and his team at IIIT Delhi have been very active in the research on cognitive radio using multi-armed bandits, and some of their recent works are illustrated with real-world demo using USRP and the MATLAB/Simulink system
 \cite{KumarYadav2018,SawantKumar2018,JoshiKumar2018}.
 
 
+
 \newpage % WARNING
+
+\paragraph{Limitations and specifities of IoT networks.}
+%
+The aforementioned previous works have shown that MAB algorithms can be applied with success for the OSA problem.
+But if we consider CR-ready devices that cannot perform sensing, such as low-cost and low energy consumption end-devices designed for the future Internet of Things networks, the MAB model that uses sensing to detect PU in the OSA case can no longer be applied.
+Moreover, in most cases, the IoT networks use unlicensed bands, and as such there are no longer a distinction between PU and SU.
+%
+The specificities of IoT networks can be listed as follows.
+\begin{itemize}
+    \item
+    most IoT networks run in unlicensed bands, meaning that this distinction between PU and SU no longer makes sense,
+    \item
+    most IoT devices are very low-cost devices, with low material and computational capacities,
+    meaning that they are not equipped with any sensing capabilities,
+    \item
+    a single IoT base station will have to handle a very large number of devices,
+    and cannot send coordination orders to them in order to optimize the networks
+    \item
+    IoT networks are decentralized
+    \item
+    very low duty cycles (only a few messages a day).
+    % FIXME more specificities
+\end{itemize}
+
+One could think that in the absence of sensing, Reinforcement Learning is no longer possible, but any real IoT device still receives some information about its environment after some or every transmissions.
+In most IoT, either standards for short-range (ZigBee, Z-Wave, Bluetooth) or long-range (LoRaWAN, SIGFOX, Ingenu, Weightless) communications \cite{Centenaro16},
+an up-link message sent to a base station is usually followed by a down-link message sent back by the base station, to indicate if the up-link message was successfully received and understood.
+%
+By using this feedback, that consist in an \emph{acknowledgement} message received shortly after every trial 
+
+
+\newpage % WARNING
+
 % FIXME c'est bon tout ce qu'on a avant ?
 
 % ----------------------------------------------------------------------------
@@ -413,14 +350,13 @@ We start by formulating the problem studied in this thesis, and then we develop 
 
 \paragraph{Problematic.}
 %
-\begin{quote}
-    \emph{``Can we adapt the decision making tools already successfully applied to Cognitve Radio for Opportunistic Spectrum Access to the specific needs of CR for the future IoT networks''}
-\end{quote}
+If we sum-up the studied problems and summarize them in one question, it would be the following:
+\emph{``Can we adapt the decision making tools already successfully applied to Cognitve Radio for Opportunistic Spectrum Access to the specific needs of CR for the future IoT networks ?''}
+%
+We answer partially to this problematic by the following research steps.
 
-We answered partially to this problematic by the following research steps.
 
-
-\paragraph{Part I.}
+\paragraph{Focusing on MAB algorithms.}
 
 FIXME
 We explored the rich literature of multi-armed bandits.
@@ -437,10 +373,34 @@ Because there are so many different MAB algorithms, we are also interested by th
 FIXME online algorithm selection and aggregation, with our contribution \Aggr{}.
 
 
-\paragraph{Part II.}
+\paragraph{Focusing on IoT networks.}
 %
 
 First model \cite{Bonnefoi17}, CROWNCOM paper, model to detail
+
+We already explained in Chapter~\ref{chapter:1} that
+unlicensed bands are more and more used and considered for mobile and LAN communication standards (WiFi, LTE-U), and for Internet of Things (IoT) standards for short-range (ZigBee, Z-Wave, Bluetooth) and long-range (LoRaWAN, SIGFOX, Ingenu, Weightless) communications \cite{Centenaro16}.
+This heavy use of unlicensed bands, in particular with the expected exponential growth of the number of IoT devices, will cause performance drop, due to radio collisions that could even compromise IoT promises.
+
+Efficient Medium Access (MAC) policies allow devices to avoid interfering traffic and can significantly reduce the spectrum contention problem in unlicensed bands.
+As end-devices battery life is a key constraint of IoT networks,
+and as IoT networks are decentralized (\ie, the devices initiate transmissions),
+this leads to IoT protocols using as low signaling overhead as possible and simple ALOHA-based mechanisms.
+%
+In this chapter, we analyze the performance of Multi-Armed Bandits (MAB) algorithms, that could be used in combination with a time-frequency slotted ALOHA-based protocol.
+Even without changing anything of the level of IoT standards, our proposal is just an add-on capability that can be used on a unit-per-unit basis.
+We consider the Upper-Confidence Bound (\UCB) \cite{Auer02}, and the Thompson-Sampling (TS) algorithms \cite{Thompson33,AgrawalGoyal11,
+Kaufmann12Thompson}, for the first model. For the demonstration as well as for the second model, without loss of generality, we preferred to focus on heuristics based on the simplest algorithm (\ie, \UCB), to give a clear presentation of the different ideas explored to solve the problem of learning in order to retransmit efficiently.
+
+The aim of this section is to assess the potential gain of learning algorithms in IoT scenarios, even when the number of intelligent devices in the network increases,
+and the network usage is more and more fluctuating.
+% and the stochastic hypothesis is more and more violated.
+To do that, we suppose an IoT network made of two types of devices: \emph{static devices} that use only one channel (fixed in time), and \emph{dynamic devices} that can choose the channel for each of their transmissions. Static devices form an interfering traffic, which could be generated by devices using other standards as well.
+Note that instead of assuming that each static device uses a fixed channel, we could also assume a looser hypothesis: if each static device uses a fixed sub-set of the $K$ channels, and a purely uniform random access in its set of considered channels, then \emph{in average} the observed occupancy of the $K$ channels can be modeled as if it were occupied by (more) static devices using only one channel. So our first hypothesis is actually not constraining.
+We first evaluate the probability of collision if dynamic devices randomly select channels (that is, a naive approach), and if a centralized controller would optimally distribute all of them in the channels at the beginning of the scenario.
+This second approach is ideal, but not realistic the most common situation of decentralized co-located IoT networks, and it is just used here as a reference.
+Then, these three reference scenarios allow to evaluate the performance of bandit algorithms, such as \UCB{} and TS, in a decentralized network, in terms of successful communication rate, as it reflects the network efficiency.
+We show that these algorithms have near-optimal performance, even when the proportion of end-devices increases and the interfering traffic from other devices becomes less and less stochastic.
 
 Verify this first model empirically: proof of concept \cite{Besson2018ICT}
 
@@ -457,7 +417,16 @@ But we proposed new algorithms for this problem, and relaunched the research on 
 
 
 
-% \paragraph{Our approach.}
+\paragraph{Our approach.}
+%
+Our approach for the aforementioned problems is summarized as follows:
+we propose a couple of new models of decision making for IoT networks, on the device's side, for the spectrum access problem.
+By considering the difference between the hypothesis of previously studied models for the OSA problem and our problem at end for IoT, we identify the constraints and specificities of applying decentralized ML for IoT devices.
+%
+Like for the OSA, we can apply successfully model the decision making problem as a Multi-Armed Bandit problem.
+We showed on numerical simulations as well as on a real-world proof-of-concept that applying low-cost sequential learning algorithms coming from the MAB literature successfully reduce the collision rate of IoT end-devices.
+We proposed new algorithms, some of which are proven to converge efficiently.
+
 % %
 % directions de recherches
 
@@ -485,7 +454,7 @@ But we proposed new algorithms for this problem, and relaunched the research on 
 \section{Summary of the contributions}
 \label{sec:1:summaryOfContributions}
 
-We can list the following points to summarize the main contributions of this thesis:
+To summarize the main contributions of this thesis, we can list the following points:
 
 \begin{itemize}
     % \item
