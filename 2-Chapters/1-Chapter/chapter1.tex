@@ -5,6 +5,7 @@
 \label{chapter:1}
 
 \TODOL{Ecrire les 1.1 et 1.2 en quelques pages}
+\TODOL{J'enlève l'abstract et la minitoc dès que le chapitre est terminé !}
 
 \abstractStartChapter{}%
 %
@@ -67,28 +68,45 @@ Nowadays, the most well-known systems include WiFi, and systems deployed for mob
 Even if both systems initially differed in usage, as 1G was designed to exchange only voice, and WiFi to link wireless devices at home to an Internet-connected box, they are conceptually very close.
 As the systems are cellular, any device knows the antenna (or base station) it is associated with, and the bi-directional nature of their exchanges makes a centralized control possible.
 In order to optimize the efficiency of the network, the base station is equipped with decision making algorithms that affects the devices in the cell to the available resources (time slots, RF bands, power etc).
-To be able to communicate with the base station without interfering with each others, such affectation should be orthogonal, and led to systems based on Time Division Multiple Access (TDMA) and Frequency Division Multiple Access (FDMA), or more recently to Non-Orthogonal techniques (NOMA).
+To be able to communicate with the base station without interfering with each others, such affectation should be orthogonal, and led to systems based on Time Division Multiple Access (TDMA) and Frequency Division Multiple Access (FDMA), or Non-Orthogonal techniques only started to emerge recently (\eg, NOMA).
 Traditionally, the base station aimed only at maximizing the Quality of Service (QoS), that englobes the data rate, latency, availability and other measures of performance of the wireless communications to and from the devices.
 More recently, green radio has emerged as a solution to the tradeoff between maximizing QoS while minimizing the power consumption of base stations and devices.
 
 % The opposite: decentralized broadcasting, and the age of IoT
 Finally, a third kind of systems are of the opposite kind, and can be designed as decentralized broadcasting: an antenna is still in charge of many devices, but such devices can only send up-link packets, and the only down-link data they can receive are short acknowledgements sent from the base-station to indicate success or failure of an up-link packet.
 This family of wireless systems are referred to as Internet of Things,
-and a typical example of application is for sensor networks.
-
+and a typical example of application is for sensor networks.\\
+\indent
 For the future development of smart grids, smart cities, smart homes, or smart agriculture, sensor networks are promised to be widely deployed.
 Two examples of future applications that are already in deployment, in France or other countries, are connected buildings and connected agriculture.
 For buildings, the main goal is to reduce the cost of heating empty buildings and use temperature sensor networks to get accurate and regular data about the temperature in each room and each floor, and let the centralized heat control optimize its cost and energy consumption.
-For agriculture, one example can be to equipped every cow (in large farms) with a sensors that emits biological information, such as body temperature or stress level etc, in order to optimize the time of milking and monitors the health of the animals.
-
+For agriculture, one example can be to equipped every cow (in large farms) with a sensors that emits biological information, such as body temperature or stress level etc, in order to optimize the time of milking and monitors the health of the animals.\\
+%
 % OK commencer par un paragraphe qui explique qu'on étudie les télécom dans le but de les rendre automatiquement plus efficace, plus verte, plus adaptative
-
+\indent
 This third kind of wireless systems are characterized by their decentralized nature: due to the really limited information that the base station can send to the devices, it is no longer possible to optimize the efficiency of the network from the centralized point-of-view of the base station.
 In the present and future IoT networks, many devices of heterogenous nature are using the same antenna for many different applications.
 A common hypothesis is that such IoT devices have a strong constraint on their power consumption, as most of them will be deployed without a direct power access and will use a battery, which duration should be maximized (typically more than 10 years).
 Another common constraint for IoT devices is their low duty cycle, as most applications target one to a few messages sent by day, in strike opposition to the high data-rate pursued for centralized systems such as 4G/5G and WiFi.
 
 % OK commencer par décrire ce sur quoi porte la thèse, en deux phrases qui réduisent le cadre
+
+\TODOL{Citer \cite{Toledano2014EnglishSummary,Toledano2014FrenchFull} et dire les trucs suivants}
+To quote a report published by the French government, ``Dynamic Spectrum Management For Innovation And Growth'' \cite{Toledano2014EnglishSummary,Toledano2014FrenchFull}:
+\begin{quote}
+    In France, digital economy represents $5\%$ of GDP and affects $80\%$ of the French economy.
+    Radio frequencies are essential to many sectors: communications, broadcasting, transportation, satellite networks, energy networks and smart grids, public or private security, defense, etc.
+    %
+    Everyone agrees on the growing need for spectrum.
+    This growing need results from two phenomena.
+    On the one hand, mobile traffic should be multiplied by 13 to 25 fold between 2011 and 2017.
+    On the other hand, the development of new innovative services such as the Internet of Things and its multiple applications (smart cities, e-health...), could lead to a growing number of connected devices, up to 50 billion in 2020, according to estimations.
+    Today, there are no more available frequencies in the easily exploitable frequency bands.
+    Moreover, it is getting more and more difficult to resort to classical methods of frequency bands liberation.
+    Growing recourse to spectrum sharing, and in particular dynamic spectrum sharing, constitutes an important spectrum reserve.
+    A particular sharing form, the use of unlicensed bands, open to all and free, has been intensely developed with the growth of Wifi use.
+\end{quote}
+
 
 \section{Cognitive Radio and Multi-Armed Bandits}
 
@@ -97,6 +115,7 @@ More precisely, we study the possible interconnections between \textbf{Machine L
 Let us define and detail both concepts.
 
 % This thesis studies the possible applications of a certain kind of Machine Learning algorithms, Multi-Armed Bandits, to a certain kind of Telecommunications, Cognitive Radio and Internet of Things of Networks.
+
 
 \paragraph{From Machine Learning to Reinforcement Learning.}
 %
@@ -120,14 +139,14 @@ take, but instead must discover which actions yield the most reward by trying th
 % https://github.com/trekhleb/homemade-machine-learning/blob/master/images/machine-learning-map.xml
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.90\textwidth]{machine-learning-map.pdf}
+    \includegraphics[width=0.95\textwidth]{machine-learning-map.pdf}
 \caption{Classification of the main types of Machine Learning: MAB is a subset of Reinforcement Learning and RL is a subset of ML.}
 \label{fig:1:MainTypesOfMachineLearning}
 \end{figure}
 
 We illustrate this idea in the following Figure~\ref{fig:1:ReinforcementLearningCycle}, where a player (or learner) interacts with its environment by taking an action $A(t)$ (\eg, a choice in a finite set, $A(t)\in\{1,\dots,K\}$, or a vector $A(t)\in\R^d$,) and then observing a reward $r(t)$, which is a certain measure of success from the environment (\eg, $r(t)\in\{0,1\}$ for binary failure/success, or $r(t)\in\R$).
-The goal of the player is to maximize its reward.
-Many real-world problems can be framed as Reinforcement Learning problems \cite{bouneffouf2019survey}, for instance learning to walk or to drive, learning to play a game, or discovering which treatment is efficient in healing a certain disease.
+The goal of the player is to maximize its reward, by trials and errors (\ie,actions and rewards).
+Many real-world problems can be framed as Reinforcement Learning problems \cite{bouneffouf2019survey}, for instance learning to walk or to drive, learning to play a board or computer game, or discovering which treatment is efficient in healing a certain disease.
 
 % \begin{figure}[h!]
 %     \centering
@@ -156,10 +175,12 @@ Many real-world problems can be framed as Reinforcement Learning problems \cite{
 \label{fig:1:ReinforcementLearningCycle}
 \end{figure}
 
+
+% Il faut expliquer ce que c'est que les bandits, rapidement, et leur application à l'OSA
 More precisely, in this thesis we focus on a certain kind of Reinforcement Learning models where the learning does not have access to the entire reaction of the environment after taking its action.
 In other words, we focus on RL with limited feedback, when the player only sees the reward given by its action at every round, and not the reward that would have been given if she chose any other action.
 This kind of limited feedback is called \emph{bandit information}, and we discuss the history and the concept of \emph{Multi-Armed Bandits} in details in the next Chapter~\ref{chapter:2}.
-% Il faut expliquer ce que c'est que les bandits, rapidement, et leur application à l'OSA
+Clinical trials and treatment discovery was historically the first application of MAB, in $1933$ with the early work of W. Thompson \cite{Thompson33}.
 
 
 \paragraph{From IT to Cognitive Radio.}
@@ -185,13 +206,13 @@ Cognitive Radio (CR) is not a standard technology, and as such it does not have 
     \emph{``A cognitive radio (CR) is a radio that can be programmed and configured dynamically to use the best wireless channels in its vicinity to avoid user interference and congestion. Such a radio automatically detects available channels in wireless spectrum, then accordingly changes its transmission or reception parameters to allow more concurrent wireless communications in a given spectrum band at one location''}.
 \end{itemize}
 
+
 \textbf{The spectrum scarcity issue.}
 %
-% FIXME how to explain spectrum scarcity?
 A major problem of current wireless technologies is the issue of spectrum scarcity:
-in most kinds of frequency bands, the entire RF spectrum is now allocated and free bands no longer exist, limiting the possibility of adding new usage.
+in most kinds of frequency bands, as illustrated in Figure~\ref{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum} below, the entire RF spectrum is now allocated and free bands no longer exist, limiting the possibility of adding new usage.
 %
-% FIXME copy paste from Wikipedia
+% FIXME copy paste from Wikipedia, change a little bit!
 % Traditional regulatory structures have been built for an analog model and are not optimized for cognitive radio.
 Regulatory bodies in the world, like the Federal Communications Commission in the United States, as well as different independent measurement campaigns found that most radio frequency spectrum was inefficiently utilized
 meaning that while a band can be allocated to a certain usage, it can be free from any user in certain time and/or place.
@@ -203,14 +224,27 @@ Moreover, fixed spectrum allocation prevents rarely used frequencies (those assi
 Regulatory bodies in the world have been considering whether to allow unlicensed users in licensed bands if they would not cause any interference to licensed users.
 These initiatives have focused cognitive-radio research on \textbf{Dynamic Spectrum Access (DSA)}.
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.65\textwidth]{United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum.pdf}
+    \caption{A chart representing the allocation of radio spectrum in the United States of (North) America, in $2016$. \copyright{} Wikimedia.}
+    % https://upload.wikimedia.org/wikipedia/commons/c/c7/United_States_Frequency_Allocations_Chart_2016_-_The_Radio_Spectrum.pdf?uselang=fr
+    \label{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum}
+\end{figure}
+
 % explain PU and SU in a few sentences
 In licensed bands, there are Primary Users (PU) paying to access the network, for instance anybody has to pay to have a mobile phone number and use the mobile telephony network.
 The PU have a strict priority over any other non-paying users, referred to as Secondary User (SU).
 So even though the RF bands are allocated, real world measurements often show that some bands are not densely used, and thus if a SU is equipped with an efficient sensing capacity, it can analyze its environment, and use a licensed band if it is free of any PU.
 % explain DSA
 This defines the concept of DSA was thus proposed in the early $2000$s, and we refer to the survey \cite{Zhao07} for more details.
+We focus on one example, the \textbf{Opportunistic Spectrum Access} (OSA).
+
+\TODOL{Je dois faire ça d'ici mercredi matin}
+
 % FIXME how to explain OSA ?
-We focus on one example, the \textbf{Opportunistic Spectrum Access}.
+\paragraph{Opportunistic Spectrum Access.}
+%
 
 
 
@@ -220,12 +254,12 @@ We focus on one example, the \textbf{Opportunistic Spectrum Access}.
 
 
 
-\paragraph{Previous work in the SCEE team.}
+\paragraph{Previous work in the SCEE team on OSA.}
 
 expliquer ce que Christophe Moy, Wassim Jouini, Navik Modi etc ont fait depuis 2009
 
 
-\paragraph{Current challenges.}
+\paragraph{New challenges for the IoT networks.}
 %
 quels nouveaux challenges en 2016 ?
 
@@ -235,31 +269,13 @@ autre direction
 
 
 
-\paragraph{Our approach.}
-%
-directions de recherches
-
-- réfléchir aux modèles, quelles hypothèses sont retirées comparé au modèle OSA
-
-- analyser mathématiquement les modèles
-
-- proposer des solutions : algorithmes, dont la convergence est justifiée, ou heuristiques
-
-- des simulations logicielles
-
-- des démonstrations matérielles
-
-- et en bonus on obtient aussi de belles contributions théoriques
-
 
 
 \newpage
 
-\TODOL{Je dois faire ça d'ici mercredi matin}
 % Je peux m'inspirer beaucoup de la thèse de Navik...
 % https://tel.archives-ouvertes.fr/tel-01668536/document
 
-\paragraph{On Cognitive Radio.}
 
 Des thèses précédentes avaient déjà identifié l'apprentissage séquentiel comme étant pertinent pour la radio intelligente.
 On peut citer les travaux de \cite{Jouini09,Jouini10,Jouini12}, qui ont notamment souligné les points suivants :
@@ -293,9 +309,6 @@ Pour toutes ces raisons, le cadre de l'internet des objets (IoT) apparaît comme
 
 Par conséquent, cette thèse vise à refermer certaines portes qui étaient encore intéressantes à étudier dans la suite de ce qui a été considéré pour l'OSA
 
-\paragraph{On Multi-Armed Bandit.}
-
-\paragraph{Applications for Opportunistic Spectrum Access.}
 % Detail the previous work from our team SCEE on bandits + OSA : Wassim, Navik
 
 \TODOL{Tous les paragraphes suivants sont copiés collés de plus tard dans la thèse, je peux les réadapter ici, et les supprimer/raccourcir plus loin}
@@ -311,7 +324,6 @@ This model was first introduced by Wassim Jouini during his PhD thesis,
 in \cite{Jouini09} and later studied in both \cite{Jouini10,Jouini12}.
 Proof-of-concepts using real-world radio hardware was first propsed in \cite{MoyWSR2014,RobertSDR2014}.
 
-\TODOL{Je sais pas à quel point je veux parler de la thèse de Navik? Peut-être que j'en aurai dit assez au Chapitre 1, et que là ça suffira..}
 In a second PhD thesis supervised by Christophe Moy \cite{Modi17PhD}, Navikkumar Modi studied the impact
 of using MAB algorithms to optimize channel selection
 on the battery life of a wireless device.
@@ -320,8 +332,6 @@ On the other hand, classical MAB algorithms tend to switch arms a lot of times, 
 Each hardware reconfiguration costs energy for the device, and quickly switching algorithms will lead to a reduction of the battery life.
 The tradeoff between the two aspects is studied empirically in
 \cite{modiDemo2016}.
-%
-Another interesting works is \cite{Modi17QoS}.
 
 
 We already explained in Chapter~\ref{chapter:1} that
@@ -383,8 +393,6 @@ Then, these three reference scenarios allow to evaluate the performance of bandi
 We show that these algorithms have near-optimal performance, even when the proportion of end-devices increases and the interfering traffic from other devices becomes less and less stochastic.
 
 
-\subsection{Example: decentralized learning in unlicensed bands with selfish or orthogonalization-based MAB algorithms}
-
 
 We evoke here some previous works that similarly implemented proof-of-concepts to show that reinforcement learning algorithms can be used within real-world wireless communications.
 Starting from $2010$, the works of Wassim Jouini \cite{Jouini09,Jouini10,Jouini12} were the first ones to propose to use Reinforcement Learning for Cognitive Radio, especially MAB and the \UCB{} algorithm, and from $2014$, proof-of-concepts were developed by Christophe Moy and his student Clément Robert \cite{RobertSDR2014,MoyWSR2014}.
@@ -393,6 +401,7 @@ In $2015$ and $2016$, Christophe Moy continued to work on this direction, with a
 Since $2017$, Sumit J. Darak and his team at IIIT Delhi have been very active in the research on cognitive radio using multi-armed bandits, and some of their recent works are illustrated with real-world demo using USRP and the MATLAB/Simulink system
 \cite{KumarYadav2018,SawantKumar2018,JoshiKumar2018}.
 
+
 \newpage % WARNING
 % FIXME c'est bon tout ce qu'on a avant ?
 
@@ -400,14 +409,77 @@ Since $2017$, Sumit J. Darak and his team at IIIT Delhi have been very active in
 \section{Our contributions}
 \label{sec:1:contributions}
 
+We start by formulating the problem studied in this thesis, and then we develop our approach.
+
+\paragraph{Problematic.}
+%
+\begin{quote}
+    \emph{``Can we adapt the decision making tools already successfully applied to Cognitve Radio for Opportunistic Spectrum Access to the specific needs of CR for the future IoT networks''}
+\end{quote}
+
+We answered partially to this problematic by the following research steps.
+
+
+\paragraph{Part I.}
+
+FIXME
+We explored the rich literature of multi-armed bandits.
+Many algorithms exist.
+So we have to understand which ones can be applied to CR and IoT.
+
+Our exploration of the large number of MAB algorithms, and of MAB models, developed in the recent literature has produced a Python library of simulation of MAB problems.
+%
+We wrote the most exhaustive open-source simulation library for MAB problems, called SMPyBandits, which is published online under an open-source licence \cite{SMPyBandits,SMPyBanditsJMLR}.
+We present in details its architecture and its features in Chapter~\ref{chapter:3}, along with different examples of its usage.
+A full documentation is available online, as well as exhaustive instructions to reproduce the experiments used in the rest of this thesis.
+
+Because there are so many different MAB algorithms, we are also interested by the question of how practitioner can chose the one she will implement in a given IoT object.
+FIXME online algorithm selection and aggregation, with our contribution \Aggr{}.
+
+
+\paragraph{Part II.}
+%
+
+First model \cite{Bonnefoi17}, CROWNCOM paper, model to detail
+
+Verify this first model empirically: proof of concept \cite{Besson2018ICT}
+
+Second model with decision making also for the retransmissions of packets \cite{Bonnefoi2019WCNC}
+
+Selfish
+
+Understand Selfish in the simpler framework of multi-player MAB
+
+In the OSA setting, we failed
+
+But we proposed new algorithms for this problem, and relaunched the research on this model \cite{Besson2018ALT}
 
 
 
+
+% \paragraph{Our approach.}
+% %
+% directions de recherches
+
+% - réfléchir aux modèles, quelles hypothèses sont retirées comparé au modèle OSA
+
+% - analyser mathématiquement les modèles
+
+% - proposer des solutions : algorithmes, dont la convergence est justifiée, ou heuristiques
+
+% - des simulations logicielles
+
+% - des démonstrations matérielles
+
+% - et en bonus on obtient aussi de belles contributions théoriques
+
+
+
+% FIXME c'est bon tout ce qu'on a avant ?
 
 \TODOL{Je suis content de la suite de l'intro : aperçu des contributions, plans de thèse, liste des publications}
 
 \newpage % WARNING
-% FIXME c'est bon tout ce qu'on a avant ?
 
 % ----------------------------------------------------------------------------
 \section{Summary of the contributions}
