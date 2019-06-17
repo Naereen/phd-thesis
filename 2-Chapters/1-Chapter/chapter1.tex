@@ -20,45 +20,30 @@ The organization of this manuscript is detailed in a flow graph, which highlight
 \graphicspath{{2-Chapters/1-Chapter/Images/}}
 
 
-% FIXME remove this
-But de ce chapitre :
-le lecteur va savoir en quelques pages
-
-- contexte historique technologique => okay
-
-- les télécoms ? télécoms décentralisées ? => okay
-
-- l'IoT c'est quoi ? exemple d'applications ? => okay ?
-
-- les bandits c'est quoi ?
-
-- les bandits multi-joueurs décentralisés, pourquoi ?
-
-- pourquoi étudier ça ?
-
-- OK qu'est ce qu'on a proposé et pourquoi ? => plan des contributions, bullet point (1ère version, je pourrai faire mieux après)
-
-- OK comment lire la thèse => le plan Figure~\ref{fig:1:organization}
-% FIXME remove this
-
 % ----------------------------------------------------------------------------
 \section{Context of this thesis}
 \label{sec:1:problems}
 
 % Where
+\textbf{Where and when?}
+%
 This doctoral thesis started in October $2016$, and finished in October $2019$.
 My research took place at the IETR laboratory in Rennes (France), in the SCEE team hosted on the Rennes campus of the engineering college CentraleSupélec.
 In Rennes I was supervised by Professor Christophe Moy,
 and I was also co-supervised by Doctor Emilie Kaufmann, whom I visited many times at Inria Lille Nord Europe in Lille (France).
 
 % Main problem
-At the root of the problems that motivates this thesis are the questions of global warming, and the increase of the world population.
-During the last 150 years, mankind has developed a wide range of different communication technologies, and since the $1920$s wireless communications between devices have been made possible, and more and more frequent in our lives.
-With the avent of Internet of Things networks (IoT), billions of autonomous low-power devices are expected to be deployed world-wide, for a large range of different applications.
-It is now well-known that with the current trend of population and with the energy crisis, any newly deployed technology should be cheap and energy efficient,
-as well as adapted to serve a large number of people and devices.
+\textbf{Main problems.}
 %
-That is why we are interested in this thesis about the possible applications of embedding a certain kind of Machine Learning algorithms directly into the future IoT devices, in order to improve their battery life and reduce the energy cost of IoT networks, by optimizing the wireless communication thanks to embedded decentralized decision making.
+At the root of the problems that motivates this thesis are the questions of global warming, and the increase of the world population.
+% https://en.wikipedia.org/wiki/History_of_radio
+During the last 150 years, mankind has developed a wide range of different communication technologies, and since the late $1890$s wireless communications between devices have been made possible, and more and more frequent in our lives.
+With the avent of Internet of Things networks (IoT), billions of autonomous low-power devices are expected to be deployed world-wide, for a large range of different applications.
+It is now well-known that with the current trend of population increase and with the energy crisis, any newly deployed technology should be cheap and energy efficient,
+as well as adapted to serve a large number of people and devices.
+
+That is why we are interested in this thesis about the possible applications of embedding a certain kind of Machine Learning algorithms (MAB algorithms),
+directly into the future IoT devices, in order to improve their battery life and reduce the energy cost of IoT networks, by optimizing the wireless communication thanks to embedded decentralized decision making.
 
 
 \paragraph{From old TV to the IoT standards.}
@@ -70,11 +55,12 @@ Starting from FM radio music and news, then old black-and-white TV and color TV,
 Different standards have been developed, and some of them are still in use today, and their nature requires a central authority that allocates RF bands to different usages (\eg, TV channels etc).
 For example, in the city of Cesson-Sévigné where the campus of CentraleSupélec is located, a high RF tower emits on many standards, and in particular the \SI{92.3}{\mega\hertz} band is allocated to a French classical music radio (\emph{Radio Classique}).
 Broadcast-based systems are not only used for TV or radio,
-and for instance two other famous and world-wide deployed examples are the Global Positioning System (GPS) and infrared remote controllers.
+and for instance two other famous and world-wide deployed examples are the long-range Global Positioning System (GPS), and short-range infrared remote controllers.
 
 % Two ways communications
-However, this kind of mono-directional wireless communications were soon found to not be satisfactory for many applications, and thus bi-directional standards were defined from the $1940$s.
-First developed by and for the military, such applications have reached general public usage since the $1970$s.
+However, this kind of mono-directional wireless communications were soon found to not be satisfactory for many applications, and thus bi-directional standards were defined from the $1910$s.
+First developed by and for the military, and the navy (\eg, the Titanic sent the first SOS signal over radio in $1912$),
+such applications have reached general public usage since the $1950$s.
 The greatest achievement of this long-running R\&D domain was the avent of mobile telephony in the $1990$s, which has continued to be more and more present in people lives in the richer countries in the world, with the booming of cellphones since the $2000$s and smartphones since the $2010$s.
 In most systems, there is still an antenna in charge of a large area (or cell), and many devices are able to receive and transmit data to the antenna.
 Nowadays, the most well-known systems include WiFi, and systems deployed for mobile phone communications, with a long list of standards from 1G, 2G, 3G, 4G and now 5G, still in development in $2019$.
@@ -101,46 +87,20 @@ This third kind of wireless systems are characterized by their decentralized nat
 In the present and future IoT networks, many devices of heterogenous nature are using the same antenna for many different applications.
 A common hypothesis is that such IoT devices have a strong constraint on their power consumption, as most of them will be deployed without a direct power access and will use a battery, which duration should be maximized (typically more than 10 years).
 Another common constraint for IoT devices is their low duty cycle, as most applications target one to a few messages sent by day, in strike opposition to the high data-rate pursued for centralized systems such as 4G/5G and WiFi.
-%
-In this thesis, we study Internet of Things networks, and these two constraints of low power consumption (or long battery life) and low duty cycle are essential.
-More precisely, we study the possible interconnections between Cognitive Radio and Machine Learning, applied to IoT networks.
-Let us define and detail both concepts.
 
 % OK commencer par décrire ce sur quoi porte la thèse, en deux phrases qui réduisent le cadre
 
+\section{Cognitive Radio and Multi-Armed Bandits}
 
-\paragraph{From IT to Cognitive Radio.}
-%
-We can narrow down the first field of study of this thesis, steps by steps,
-from Information Technologies (IT), to telecommunications, then wireless communications, and finally to Cognitive Radio.
-Cognitive Radio (CR) is not a standard technology, and as such it does not have a single definition, so let us start by quoting the definition of two researchers whose works were the roots of the development of CR, since the last $20$ years.
-% - technologies de l'information > télécommunications > communications sans fil > radio intelligente > DSA > OSA
+In this thesis, we study Internet of Things networks, and these two constraints of low power consumption (or long battery life) and low duty cycle are essential.
+More precisely, we study the possible interconnections between \textbf{Machine Learning} and \textbf{Cognitive Radio} applied for IoT networks.
+Let us define and detail both concepts.
 
-\begin{itemize}
-    \item
-    Joseph Mittola in $1999$ said that
-    \emph{``a really smart radio that would be self-, RF- and user-aware, and that would include software technology and machine learning capabilities along with a lot of high-fidelity knowledge of the radio environment''} \cite{Mitola99}.
-
-    \item
-    Then Simon Haykin in $2005$ also said that
-    \emph{``a CR is an intelligent wireless communication system that is capable of being aware of its surroundings, learning, and adapting its operating parameters (\eg, transmit power and carrier frequency) on the fly with an objective of providing reliable anytime, anywhere, and spectrally efficient communication''} \cite{Haykin05}.
-\end{itemize}
-
-% FIXME how to explain spectrum scarcity?
-A major problem of current wireless technologies is the issue of spectrum scarcity:
-in most kinds of frequency bands, the entire RF spectrum is now allocated and free bands no longer exist, limiting the possibility of adding new usage.
-% FIXME how to explain PU and SU in a few sentences?
-In such licensed bands, Primary Users (PU) pay to access the network, and they have a priority over 
-But even though the RF bands are allocated, real world measurements often show that some bands are not densely used.
-% FIXME how to explain DSA ?
-The concept of Dynamic Spectrum Access (DSA) was thus proposed in the early $2000$s, 
-% FIXME how to explain OSA ?
-and Opportunistic Spectrum Access.
-
+% This thesis studies the possible applications of a certain kind of Machine Learning algorithms, Multi-Armed Bandits, to a certain kind of Telecommunications, Cognitive Radio and Internet of Things of Networks.
 
 \paragraph{From Machine Learning to Reinforcement Learning.}
 %
-Similarly, we can narrow down the second field of study of this thesis, steps by steps.
+We can narrow down the first field of study of this thesis, steps by steps.
 Starting from the general concept of Machine Learning (ML), we focused our interest to statistical learning, then sequential learning, then Reinforcement Learning (RL, \cite{SuttonBarto2018}), then RL with limited feedback and finally to multi-armed bandits learning.
 As illustrated in Figure~\ref{fig:1:MainTypesOfMachineLearning}, there are other types of ML, that we do not focus on in this thesis.
 The reference book on RL is \cite{SuttonBarto2018}, so let us quote the definition of RL given by Richard Sutton and Andrew Barto:
@@ -149,12 +109,12 @@ as to maximize a numerical reward signal. The learner is not told which actions 
 take, but instead must discover which actions yield the most reward by trying them''}.
 % - apprentissage statistique (machine learning) > séquentiel > par renforcement > information partielle (bandits)
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Illustration_of_Machine_Learning_and_Reinforcement_Learning.jpg}
-\caption{Main types of Machine Learning, \copyright{} from \href{https://vas3k.com/blog/machine_learning/}{\texttt{VAS3k.com/blog/machine\_learning}}.}
-\label{fig:1:MainTypesOfMachineLearning}
-\end{figure}
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=0.45\textwidth]{Illustration_of_Machine_Learning_and_Reinforcement_Learning.jpg}
+% \caption{Main types of Machine Learning, \copyright{} from \href{https://vas3k.com/blog/machine_learning/}{\texttt{VAS3k.com/blog/machine\_learning}}.}
+% \label{fig:1:MainTypesOfMachineLearning2}
+% \end{figure}
 
 % Modified from the https://draw.io/ map from
 % https://github.com/trekhleb/homemade-machine-learning/blob/master/images/machine-learning-map.xml
@@ -162,39 +122,39 @@ take, but instead must discover which actions yield the most reward by trying th
     \centering
     \includegraphics[width=0.90\textwidth]{machine-learning-map.pdf}
 \caption{Classification of the main types of Machine Learning: MAB is a subset of Reinforcement Learning and RL is a subset of ML.}
-\label{fig:1:MainTypesOfMachineLearning2}
+\label{fig:1:MainTypesOfMachineLearning}
 \end{figure}
 
 We illustrate this idea in the following Figure~\ref{fig:1:ReinforcementLearningCycle}, where a player (or learner) interacts with its environment by taking an action $A(t)$ (\eg, a choice in a finite set, $A(t)\in\{1,\dots,K\}$, or a vector $A(t)\in\R^d$,) and then observing a reward $r(t)$, which is a certain measure of success from the environment (\eg, $r(t)\in\{0,1\}$ for binary failure/success, or $r(t)\in\R$).
 The goal of the player is to maximize its reward.
 Many real-world problems can be framed as Reinforcement Learning problems \cite{bouneffouf2019survey}, for instance learning to walk or to drive, learning to play a game, or discovering which treatment is efficient in healing a certain disease.
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.20\textwidth]{Illustration_of_Reinforcement_Learning_action-reward_loop.png}
-    \caption{Reinforcement learning cycle, a learner interacts with its environment through actions, and observes a reward, iteratively. \copyright{} from \href{https://vas3k.com/blog/machine_learning/}{\texttt{VAS3k.com/blog/machine\_learning}}.}
-    \label{fig:1:ReinforcementLearningCycle}
-\end{figure}
-
-% \tikzstyle{block} = [align=center, draw, fill=gray!25, rectangle, minimum height=3em, minimum width=6em]
 % \begin{figure}[h!]
 %     \centering
-%     \resizebox{0.30\textwidth}{!}{
-%         \begin{tikzpicture}[auto,node distance=5cm,>=latex,scale=1.5]
-%             %
-%             % We start by placing the blocks
-%             \node [block] (player) at (0,0) {Player};
-%             % We draw an edge between the player and system block to
-%             \node [block] (environment) at (2,0) {Environment};
-%             % Once the nodes are placed, connecting them is easy.
-%             \draw [->] (player) to[bend left=90] node[pos=0.5] {Action} (environment);
-%             \draw [->] (environment) to[bend left=90] node[pos=0.5] {Reward} (player);
-%             %
-%         \end{tikzpicture}
-%     }
-% \caption{Reinforcement learning cycle.}
-% \label{fig:1:ReinforcementLearningCycle}
+%     \includegraphics[width=0.25\textwidth]{Illustration_of_Reinforcement_Learning_action-reward_loop.png}
+%     \caption{Reinforcement learning cycle, a learner interacts with its environment through actions, and observes a reward, iteratively. \copyright{} from \href{https://vas3k.com/blog/machine_learning/}{\texttt{VAS3k.com/blog/machine\_learning}}.}
+%     \label{fig:1:ReinforcementLearningCycle}
 % \end{figure}
+
+\tikzstyle{block} = [align=center, draw, fill=gray!25, rectangle, minimum height=3em, minimum width=6em]
+\begin{figure}[h!]
+    \centering
+    \resizebox{0.30\textwidth}{!}{
+        \begin{tikzpicture}[auto,node distance=5cm,>=latex,scale=1.5]
+            %
+            % We start by placing the blocks
+            \node [block] (player) at (0,0) {Player};
+            % We draw an edge between the player and system block to
+            \node [block] (environment) at (2,0) {Environment};
+            % Once the nodes are placed, connecting them is easy.
+            \draw [->] (player) to[bend left=90] node[pos=0.5] {Action} (environment);
+            \draw [->] (environment) to[bend left=90] node[pos=0.5] {Reward} (player);
+            %
+        \end{tikzpicture}
+    }
+\caption{Reinforcement learning cycle: a learner interacts with its environment through actions, and observes a reward, iteratively.}
+\label{fig:1:ReinforcementLearningCycle}
+\end{figure}
 
 More precisely, in this thesis we focus on a certain kind of Reinforcement Learning models where the learning does not have access to the entire reaction of the environment after taking its action.
 In other words, we focus on RL with limited feedback, when the player only sees the reward given by its action at every round, and not the reward that would have been given if she chose any other action.
@@ -202,11 +162,60 @@ This kind of limited feedback is called \emph{bandit information}, and we discus
 % Il faut expliquer ce que c'est que les bandits, rapidement, et leur application à l'OSA
 
 
-% Je peux piquer les quelques figures chouettes de Navik (en attendant la version finale ou je referai mes figures)
+\paragraph{From IT to Cognitive Radio.}
+%
+Similarly, we can narrow down the second field of study of this thesis, steps by steps:
+from Information Technologies (IT), to telecommunications, then wireless communications, and finally to Cognitive Radio.
+Cognitive Radio (CR) is not a standard technology, and as such it does not have a single definition, so let us start by quoting the definition of two researchers whose works were the roots of the development of CR, in the last $20$ years.
+% - technologies de l'information > télécommunications > communications sans fil > radio intelligente > DSA > OSA
+%
+% je peux faire comme Navik, donner des définitions de la CR, citant d'autres travaux
+\begin{itemize}
+    \item
+    Joseph Mittola in $1999$ said that
+    \emph{``a really smart radio that would be self-, RF- and user-aware, and that would include software technology and machine learning capabilities along with a lot of high-fidelity knowledge of the radio environment''} \cite{Mitola99}.
+
+    \item
+    Then Simon Haykin in $2005$ also said that
+    \emph{``a CR is an intelligent wireless communication system that is capable of being aware of its surroundings, learning, and adapting its operating parameters (\eg, transmit power and carrier frequency) on the fly with an objective of providing reliable anytime, anywhere, and spectrally efficient communication''} \cite{Haykin05}.
+    He was the first to propose to use CR for dynamic spectrum access.
+
+    \item
+    The \href{https://en.wikipedia.org/wiki/Cognitive_radio}{Wikipedia page on Cognitive Radio} states
+    \emph{``A cognitive radio (CR) is a radio that can be programmed and configured dynamically to use the best wireless channels in its vicinity to avoid user interference and congestion. Such a radio automatically detects available channels in wireless spectrum, then accordingly changes its transmission or reception parameters to allow more concurrent wireless communications in a given spectrum band at one location''}.
+\end{itemize}
+
+\textbf{The spectrum scarcity issue.}
+%
+% FIXME how to explain spectrum scarcity?
+A major problem of current wireless technologies is the issue of spectrum scarcity:
+in most kinds of frequency bands, the entire RF spectrum is now allocated and free bands no longer exist, limiting the possibility of adding new usage.
+%
+% FIXME copy paste from Wikipedia
+% Traditional regulatory structures have been built for an analog model and are not optimized for cognitive radio.
+Regulatory bodies in the world, like the Federal Communications Commission in the United States, as well as different independent measurement campaigns found that most radio frequency spectrum was inefficiently utilized
+meaning that while a band can be allocated to a certain usage, it can be free from any user in certain time and/or place.
+For instance, see \cite{valenta2010survey} for a survey on spectrum utilization in Europe.
+%
+Cellular network bands are overloaded in most parts of the world, but other frequency bands (such as military, amateur radio and paging frequencies) are insufficiently utilized.
+Independent studies performed in some countries confirmed that observation, and concluded that spectrum usage highly depends on time and place.
+Moreover, fixed spectrum allocation prevents rarely used frequencies (those assigned to specific services) from being used, even when any unlicensed users would not cause noticeable interference to the assigned service.
+Regulatory bodies in the world have been considering whether to allow unlicensed users in licensed bands if they would not cause any interference to licensed users.
+These initiatives have focused cognitive-radio research on \textbf{Dynamic Spectrum Access (DSA)}.
+
+% explain PU and SU in a few sentences
+In licensed bands, there are Primary Users (PU) paying to access the network, for instance anybody has to pay to have a mobile phone number and use the mobile telephony network.
+The PU have a strict priority over any other non-paying users, referred to as Secondary User (SU).
+So even though the RF bands are allocated, real world measurements often show that some bands are not densely used, and thus if a SU is equipped with an efficient sensing capacity, it can analyze its environment, and use a licensed band if it is free of any PU.
+% explain DSA
+This defines the concept of DSA was thus proposed in the early $2000$s, and we refer to the survey \cite{Zhao07} for more details.
+% FIXME how to explain OSA ?
+We focus on one example, the \textbf{Opportunistic Spectrum Access}.
+
+
+
 
 % Il faut expliquer ce que c'est que la radio intelligente, et le cas de l'OSA
-
-% je peux faire comme Navik, donner des définitions de la CR, citant d'autres travaux
 
 
 
@@ -285,31 +294,6 @@ Pour toutes ces raisons, le cadre de l'internet des objets (IoT) apparaît comme
 Par conséquent, cette thèse vise à refermer certaines portes qui étaient encore intéressantes à étudier dans la suite de ce qui a été considéré pour l'OSA
 
 \paragraph{On Multi-Armed Bandit.}
-
-
-% ----------------------------------------------------------------------------
-\section{Considered problems}
-\label{sec:1:problems}
-
-\TODOL{Write this!}
-
-\subsection{Spectrum scarcity}
-
-
-\subsection{Low-consumption IoT devices for the future}
-
-
-% ----------------------------------------------------------------------------
-\section{Considered solutions}
-\label{sec:1:solutions}
-
-\TODOL{Write this!}
-
-
-\subsection{Online/sequential machine learning to automatically improve wireless communications on the run}
-
-\subsection{Example: Opportunistic Spectrum Access (OSA) in licensed bands}
-
 
 \paragraph{Applications for Opportunistic Spectrum Access.}
 % Detail the previous work from our team SCEE on bandits + OSA : Wassim, Navik
@@ -409,6 +393,16 @@ In $2015$ and $2016$, Christophe Moy continued to work on this direction, with a
 Since $2017$, Sumit J. Darak and his team at IIIT Delhi have been very active in the research on cognitive radio using multi-armed bandits, and some of their recent works are illustrated with real-world demo using USRP and the MATLAB/Simulink system
 \cite{KumarYadav2018,SawantKumar2018,JoshiKumar2018}.
 
+\newpage % WARNING
+% FIXME c'est bon tout ce qu'on a avant ?
+
+% ----------------------------------------------------------------------------
+\section{Our contributions}
+\label{sec:1:contributions}
+
+
+
+
 
 \TODOL{Je suis content de la suite de l'intro : aperçu des contributions, plans de thèse, liste des publications}
 
@@ -416,8 +410,8 @@ Since $2017$, Sumit J. Darak and his team at IIIT Delhi have been very active in
 % FIXME c'est bon tout ce qu'on a avant ?
 
 % ----------------------------------------------------------------------------
-\section{Overview of the contributions}
-\label{sec:1:contributions}
+\section{Summary of the contributions}
+\label{sec:1:summaryOfContributions}
 
 We can list the following points to summarize the main contributions of this thesis:
 
@@ -457,9 +451,9 @@ We can list the following points to summarize the main contributions of this the
     as well as extensive numerical experiments to demonstrate its good performance in comparison with the rest of the literature.
     Our work \cite{Besson2018ALT} also gave a new impulse on research on multi-players bandits, as some recent research works built up on our results.
 
-    \item
-    We also give a detailed literature review of the different extensions of the multi-players MAB model, which we believe was never written before.
-    % were  (ALT 2018, and 4-8 works inspired by our article since then). State-of-the-art with our algorithm MCTopM + klUCB for multi-players bandits "with sensing", empirical state-of-the-art with our simple (but wrong) "selfish" approach in case of "no sensing"
+    % \item
+    % We also give a detailed literature review of the different extensions of the multi-players MAB model, which we believe was never written before.
+    % % were  (ALT 2018, and 4-8 works inspired by our article since then). State-of-the-art with our algorithm MCTopM + klUCB for multi-players bandits "with sensing", empirical state-of-the-art with our simple (but wrong) "selfish" approach in case of "no sensing"
 
     \item
     We also present the piece-wise stationary MAB model, in Chapter~\ref{chapter:6}, and a detailed literature review of the research on non stationary MAB \cite{Besson2019GLRT,Besson2019Gretsi}.
