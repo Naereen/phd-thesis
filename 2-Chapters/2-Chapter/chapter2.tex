@@ -764,7 +764,9 @@ Indeed, in single-player models it is easy to show that achieving logarithmic re
 But even if $\mathrm{SC}^{\cA}(T) = \Theta(\log T)$ for an efficient algorithm, it can be interesting to numerically evaluate this quantity, as a large value might indicate an algorithm that is alternating too much between the optimal arm and other arms.
 %
 % \TODOL{Enlever ça, juste une phrase qui dit "on le fait plus tard".}
-We find more interesting to study $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, the sum of the switching costs of the $M$ players in a multi-players bandit game (if player $j$ uses algorithm $\cA_j$ for $j=1,\dots,M$), as studied in Chapter~\ref{chapter:5}.
+Because it is relevant for cognitive radio applications, as a hardware reconfiguration costs energy, and so changing channel from two consecutive time steps has a non trivial energy cost, as highlighted in \cite{modiDemo2016}.
+And thus we find more interesting to study $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, the sum of the switching costs of the $M$ players in a multi-players bandit game (if player $j$ uses algorithm $\cA_j$ for $j=1,\dots,M$), as studied in Chapter~\ref{chapter:5}.
+Our proposed algorithm, \MCTopM, achieves order-optimal logarithmic regret as well as a logarithmic number of switches.
 % Indeed in this case it is possible that the players attain a logarithmic centralized regret, by following an efficient centralized or decentralized algorithm, while still suffering from a linear switching cost.
 % %
 % It is very satisfying to obtain a logarithmic switching cost for our algorithm \MCTopM-\klUCB{} in Chapter~\ref{chapter:5}, even if minimizing the switching cost was not one of our objective, and the bound we obtain on $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$ is just a consequence of our proof of the control we give on the regret $R^{\cA}(T)$.
@@ -790,14 +792,15 @@ We refer to Section~\ref{sub:5:betterLowerBound} for more details.
 \section{Review of stochastic MAB algorithms}
 \label{sec:2:famousMABalgorithms}
 
-This Section starts by discussing two naive strategies which fail dramatically,
-%
-and then we present two simple strategies which performs efficiently, only if they are tuned using a prior knowledge of the problem difficulty, but are thus unusable for practical applications.
-%
-We focus then on index policies, with a first efficient policy, $\UCB_1$, that uses upper confidence bounds (UCB) on the means estimates, and is known to be order-optimal for bounded rewards.
-Two other well-known and optimal algorithms are exposed: \klUCB{} extends the idea of $\UCB_1$ but use tighter confidence intervals and thus it typically obtains better theoretical results, and Thompson sampling which replaces the principle of ``optimism under uncertainty'' by a Bayesian point-of-view.
-%
-Finally, we conclude by briefly exposing other families of algorithms.
+This Section reviews the most important families of stochastic MAB algorithms, from naive and simple strategies, to strategies based on the optimism or the Bayesian principles, to recent ``best-of-both-worlds'' strategies.
+% starts by discussing two naive strategies which fail dramatically,
+% %
+% and then we present two simple strategies which performs efficiently, only if they are tuned using a prior knowledge of the problem difficulty, but are thus unusable for practical applications.
+% %
+% We focus then on index policies, with a first efficient policy, $\UCB_1$, that uses upper confidence bounds (UCB) on the means estimates, and is known to be order-optimal for bounded rewards.
+% Two other well-known and optimal algorithms are exposed: \klUCB{} extends the idea of $\UCB_1$ but use tighter confidence intervals and thus it typically obtains better theoretical results, and Thompson sampling which replaces the principle of ``optimism under uncertainty'' by a Bayesian point-of-view.
+% %
+% Finally, we conclude by briefly exposing other families of algorithms.
 
 
 \textbf{Implementation.}

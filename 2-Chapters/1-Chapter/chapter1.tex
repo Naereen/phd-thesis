@@ -142,35 +142,59 @@ and Opportunistic Spectrum Access.
 %
 Similarly, we can narrow down the second field of study of this thesis, steps by steps.
 Starting from the general concept of Machine Learning (ML), we focused our interest to statistical learning, then sequential learning, then Reinforcement Learning (RL, \cite{SuttonBarto2018}), then RL with limited feedback and finally to multi-armed bandits learning.
+As illustrated in Figure~\ref{fig:1:MainTypesOfMachineLearning}, there are other types of ML, that we do not focus on in this thesis.
 The reference book on RL is \cite{SuttonBarto2018}, so let us quote the definition of RL given by Richard Sutton and Andrew Barto:
 \emph{``Reinforcement learning is learning what to do -— how to map situations to actions -— so
 as to maximize a numerical reward signal. The learner is not told which actions to
 take, but instead must discover which actions yield the most reward by trying them''}.
 % - apprentissage statistique (machine learning) > séquentiel > par renforcement > information partielle (bandits)
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.45\textwidth]{Illustration_of_Machine_Learning_and_Reinforcement_Learning.jpg}
+\caption{Main types of Machine Learning, \copyright{} from \href{https://vas3k.com/blog/machine_learning/}{\texttt{VAS3k.com/blog/machine\_learning}}.}
+\label{fig:1:MainTypesOfMachineLearning}
+\end{figure}
+
+% Modified from the https://draw.io/ map from
+% https://github.com/trekhleb/homemade-machine-learning/blob/master/images/machine-learning-map.xml
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.90\textwidth]{machine-learning-map.pdf}
+\caption{Classification of the main types of Machine Learning: MAB is a subset of Reinforcement Learning and RL is a subset of ML.}
+\label{fig:1:MainTypesOfMachineLearning2}
+\end{figure}
+
 We illustrate this idea in the following Figure~\ref{fig:1:ReinforcementLearningCycle}, where a player (or learner) interacts with its environment by taking an action $A(t)$ (\eg, a choice in a finite set, $A(t)\in\{1,\dots,K\}$, or a vector $A(t)\in\R^d$,) and then observing a reward $r(t)$, which is a certain measure of success from the environment (\eg, $r(t)\in\{0,1\}$ for binary failure/success, or $r(t)\in\R$).
 The goal of the player is to maximize its reward.
 Many real-world problems can be framed as Reinforcement Learning problems \cite{bouneffouf2019survey}, for instance learning to walk or to drive, learning to play a game, or discovering which treatment is efficient in healing a certain disease.
 
-\tikzstyle{block} = [align=center, draw, fill=gray!25, rectangle, minimum height=3em, minimum width=6em]
 \begin{figure}[h!]
     \centering
-    \resizebox{0.30\textwidth}{!}{
-        \begin{tikzpicture}[auto,node distance=5cm,>=latex,scale=1.5]
-            %
-            % We start by placing the blocks
-            \node [block] (player) at (0,0) {Player};
-            % We draw an edge between the player and system block to
-            \node [block] (environment) at (2,0) {Environment};
-            % Once the nodes are placed, connecting them is easy.
-            \draw [->] (player) to[bend left=90] node[pos=0.5] {Action} (environment);
-            \draw [->] (environment) to[bend left=90] node[pos=0.5] {Reward} (player);
-            %
-        \end{tikzpicture}
-    }
-\caption{Reinforcement learning cycle.}
-\label{fig:1:ReinforcementLearningCycle}
+    \includegraphics[width=0.20\textwidth]{Illustration_of_Reinforcement_Learning_action-reward_loop.png}
+    \caption{Reinforcement learning cycle, a learner interacts with its environment through actions, and observes a reward, iteratively. \copyright{} from \href{https://vas3k.com/blog/machine_learning/}{\texttt{VAS3k.com/blog/machine\_learning}}.}
+    \label{fig:1:ReinforcementLearningCycle}
 \end{figure}
+
+% \tikzstyle{block} = [align=center, draw, fill=gray!25, rectangle, minimum height=3em, minimum width=6em]
+% \begin{figure}[h!]
+%     \centering
+%     \resizebox{0.30\textwidth}{!}{
+%         \begin{tikzpicture}[auto,node distance=5cm,>=latex,scale=1.5]
+%             %
+%             % We start by placing the blocks
+%             \node [block] (player) at (0,0) {Player};
+%             % We draw an edge between the player and system block to
+%             \node [block] (environment) at (2,0) {Environment};
+%             % Once the nodes are placed, connecting them is easy.
+%             \draw [->] (player) to[bend left=90] node[pos=0.5] {Action} (environment);
+%             \draw [->] (environment) to[bend left=90] node[pos=0.5] {Reward} (player);
+%             %
+%         \end{tikzpicture}
+%     }
+% \caption{Reinforcement learning cycle.}
+% \label{fig:1:ReinforcementLearningCycle}
+% \end{figure}
 
 More precisely, in this thesis we focus on a certain kind of Reinforcement Learning models where the learning does not have access to the entire reaction of the environment after taking its action.
 In other words, we focus on RL with limited feedback, when the player only sees the reward given by its action at every round, and not the reward that would have been given if she chose any other action.
