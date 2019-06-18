@@ -501,20 +501,24 @@ They prove a regret upper-bound of the order $R_T = \bigO{\log(T)}$, with no spe
 
 
 % ----------------------------------------------------------------------------
-\subsection{Inspirations from Cognitive Radio Proof-of-Concepts}
+% \subsection{Inspirations from Cognitive Radio Proof-of-Concepts}
+\subsection{An idea from a Cognitive Radio Proof-of-Concept: also use learning for the rank of \RhoRand}
 \label{sub:5:USRPdemos}
 
-Similarly to our demonstration of multi-armed bandit learning in an IoT network that we presented in the previous Chapter~\ref{chapter:4} in Section~\ref{sec:4:gnuradio},
+Similarly to our demonstration of MAB learning in an IoT network that we presented in the previous Chapter~\ref{chapter:4} in Section~\ref{sec:4:gnuradio},
 we list here some related works, dating back from $2016$, who proposed a similar approach for OSA.
 All the similar works that we are aware of also used USRP boards, and implemented the demonstration using either the Simulink and MATLAB softwares, or the GNU Radio software like we did \cite{Besson2018ICT}.
 %
-Indeed, the demonstrations and the works presented below are coming from our team experiments, and have been extended by the team of Sumit Darak at IIIT Delhi after his postdoctoral fellowship in our team.
-
+Indeed, the demonstrations and the works presented below are coming from our team experiments, and have been extended by the team of S. Darak at IIIT Delhi after his postdoctoral fellowship in our SCEE team.
+%
 In \cite{darak2016bayesian,Darak16}, the authors study the same model and focused on the \RhoRand{} policy, which was the state-of-the-art back in $2016$, combined with \UCB{} or \klUCB, as well as an extension using Bayes-UCB from \cite{Kaufmann12BUCB}.
-Their idea is to use the same skeleton as \RhoRand, that is to assign a \emph{rank} to each player, and make players change their rank after any collision. But instead of selecting a new rank uniformly at random among $[M]$, they proposed to use a ``second-stage'' learning policy\footnote{This is a very natural idea: use a bandit algorithm to balance the exploration/exploitation aspect of rank selection, instead of a random hoping.}, based on Bayes-UCB, to (try to) learn the best rank while still exploring each rank from time to time.
-This algorithm is implemented in SMPyBandits and named \rhoLearn,
+
+Their idea is to use the same skeleton as \RhoRand{} \cite{darak2016bayesian}, that is to assign a \emph{rank} to each player, and make players change their rank after any collision. But instead of selecting a new rank uniformly at random among $[M]$, they proposed to use a ``second-stage'' learning policy, based on Bayes-UCB, to (try to) learn the best rank while still exploring each rank from time to time.
+This is a very natural idea: use a bandit algorithm to balance the exploration/exploitation aspect of rank selection, instead of a random hoping.
+This algorithm is named \rhoLearn, and it is implemented in SMPyBandits,
 % \footnote{See \href{https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoLearn.html}{\texttt{SMPyBandits.github.io/docs/PoliciesMultiPlayers.rhoLearn.html}} for its documentation.},
-where it can use Bayes-UCB or any of the $65$ or more bandit algorithms available in the library.
+where it can use Bayes-UCB, or any of the $65$ or more bandit algorithms available in the library.
+%
 Even if no theoretical guarantee backs up this idea of second-stage learning with Bayes-UCB, empirical simulations found that it can be efficient.
 We illustrate this in Table~\ref{table:5:comparisonRhoRandRhoLearn} below, where we consider the same problem as described above in Section~\ref{sub:5:withoutSensing} (Table~\ref{table:5:meanRegretSimulationsNoSensing}).
 We include different \rhoLearn{} algorithms, that uses \klUCB{}, Bayes-UCB or Exp3 for the second-stage learning,

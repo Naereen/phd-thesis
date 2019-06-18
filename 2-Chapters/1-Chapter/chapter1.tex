@@ -4,9 +4,9 @@
 \chapter{Introduction}
 \label{chapter:1}
 
-\TODOL{Lundi soir : je dois encore relire le 1.1 pour les fautes d'orthographe (et les éventuels erreurs historiques) !}
-\TODOL{Lundi soir : je dois encore terminer le 1.2 et être plus concis ?}
-\TODOL{Je dois écrire le 1.3 en max 2 pages : j'ai déjà le plan, je dois développer}
+\TODOL{Mardi : je dois encore relire le 1.1 pour les fautes d'orthographe (et les éventuels erreurs historiques) !}
+\TODOL{Mardi : je dois encore terminer le 1.2 et être plus concis ?}
+\TODOL{Je dois écrire la fin du 1.3 en max 2 pages : j'ai déjà le plan, je dois développer}
 
 \abstractStartChapter{}%
 %
@@ -23,11 +23,6 @@ The organization of this manuscript is detailed in a flow graph, which highlight
 % Write miniTOC just after the title
 \graphicspath{{2-Chapters/1-Chapter/Images/}}
 
-
-% ----------------------------------------------------------------------------
-\section{Context of this thesis}
-\label{sec:1:problems}
-
 % Where
 \textbf{Where and when?}
 %
@@ -36,10 +31,15 @@ My research took place at the IETR laboratory in Rennes (France), in the SCEE te
 In Rennes I was supervised by Professor Christophe Moy,
 and I was also co-supervised by Doctor Emilie Kaufmann, whom I visited many times at Inria Lille Nord Europe in Lille (France).
 
-\TODOL{Est-ce que je dois détailler plus ? Quel financement j'ai eu (CDSN), quels autres financements m'ont aidés ?}
+% \TODOL{Est-ce que je dois détailler plus ? Quel financement j'ai eu (CDSN), quels autres financements m'ont aidés ?}
 
-% Main problem
-\textbf{Main problems.}
+
+% ----------------------------------------------------------------------------
+\section{Context of this thesis}
+\label{sec:1:problems}
+
+% % Main problem
+% \textbf{Main problems.}
 %
 At the root of the problems that motivates this thesis are the questions of global warming, and the increase of the world population.
 % https://en.wikipedia.org/wiki/History_of_radio
@@ -103,6 +103,70 @@ We refer to the survey \cite{Centenaro16} for more details, and references in \c
 % OK commencer par décrire ce sur quoi porte la thèse, en deux phrases qui réduisent le cadre
 
 
+\textbf{The spectrum scarcity issue.}
+%
+A major problem of current wireless technologies is the issue of spectrum scarcity:
+in most kinds of frequency bands, the entire RF spectrum is now allocated and free bands no longer exist, limiting the possibility of adding new usage.
+As illustrated in Figure~\ref{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum} below, only a very small portion of the RF spectrum in the USA is not yet allocated, from $0$ to \SI{9}{\kilo\hertz}, while the rest of the displayed portion of the spectrum, from \SI{9}{\kilo\hertz} to \SI{300}{\giga\hertz}, is allocated to various usages, that goes from maritime radionavigation (historically the first usage of radio telecommunication) to space research, inter-satellite, mobile telephony and many other applications.
+%
+% Traditional regulatory structures have been built for an analog model and are not optimized for cognitive radio.
+Regulatory bodies in the world, like the \href{https://www.fcc.gov/}{Federal Communications Commission} in the USA (see \href{https://www.fcc.gov/}{\texttt{FCC.gov}})
+or \href{http://www.tdf.fr/}{TDF} in France (see \href{https://www.TDF.fr/}{\texttt{TDF.fr}}, previously known as \emph{``TéléDiffusion de France''}), as well as different independent measurement campaigns, found that most radio frequency spectrum was inefficiently utilized,
+meaning that while a band can be allocated to a certain unique usage, it can be free from any user in certain times and/or places.
+We refer to \cite{valenta2010survey} for a survey on spectrum utilization in Europe.
+
+Cellular network bands are overloaded in most parts of the world, but other frequency bands (such as military, amateur radio and paging frequencies) are insufficiently utilized.
+Independent studies performed in some countries confirmed that observation, and concluded that spectrum usage highly depends on time and place.
+Moreover, the fixed spectrum allocation prevents rarely used frequencies, like those assigned to specific services, from being used, even when any unlicensed users would not cause noticeable interference to the assigned service.
+Therefore, in the last $15$ years, regulatory bodies in the world have been considering whether to allow unlicensed users in licensed bands if they would not cause any interference to licensed users.
+These initiatives have initiated the research on \textbf{Cognitive Radio},
+and especially on one subfield that we detail below, \textbf{Dynamic Spectrum Access (DSA)}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.65\textwidth,angle=90]{United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum.pdf}
+    \caption{A chart representing the allocation of radio spectrum in the USA in $2016$. Only a small share of the spectrum is not yet allocated, the top-left corner in white (it is in logarithmic scale from \SI{0}{\kilo\hertz} to \SI{300}{\giga\hertz}). \copyright{} Wikimedia.}
+    % https://upload.wikimedia.org/wikipedia/commons/c/c7/United_States_Frequency_Allocations_Chart_2016_-_The_Radio_Spectrum.pdf?uselang=fr
+    \label{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum}
+\end{figure}
+
+
+\TODOL{Je peux améliorer (ou enlever) ce passage qui site J.Toledano, ou alors le commenter en plus de détails ? J'aime bien son rapport en fait (j'aurai du le lire au début de ma thèse !)}
+% https://www.economie.gouv.fr/files/files/PDF/french-spectrum-mission-executive-summary-2014-06-25.pdf
+% https://www.economie.gouv.fr/files/files/PDF/rapport-gestion-dynamique-spectre-2014-06-30.pdf
+To highlight that the spectrum scarcity is not only an issue in the USA,
+we quote the abstract of the ``Dynamic Spectrum Management For Innovation And Growth'' report by Joëlle Toledano \cite{Toledano2014EnglishSummary,Toledano2014FrenchFull}, who was commissioned by the French government in $2014$.
+Different important problems are mentioned:
+%
+\begin{itemize}\tightlist
+    \item
+    \emph{``In France, digital economy represents $5\%$ of GDP and affects $80\%$ of the French economy.''}
+    And the usage of wireless communications is nowadays world-wide and omnipresent:
+    \emph{``Radio frequencies are essential to many sectors: communications, broadcasting, transportation, satellite networks, energy networks and smart grids, public or private security, defense, etc.''}
+    Thus it is of highest interest to set up efficient, green, low-cost and durable new technologies for the future wireless standards, networks and devices.
+    %
+    \item
+    The radio spectrum is not only widely used for all kinds of applications, it is nowadays intensely used for some of them.
+    \emph{``Everyone agrees on the growing need for spectrum.
+    This growing need results from two phenomena.
+    On the one hand, mobile traffic should be multiplied by 13 to 25 fold between 2011 and 2017.
+    On the other hand, the development of new innovative services such as the Internet of Things and its multiple applications (smart cities, e-health...), could lead to a growing number of connected devices, up to 50 billion in 2020, according to estimations.''}
+    The first estimation was correct, and the mobile traffic is again \href{https://www.ericsson.com/en/mobility-report/future-mobile-data-usage-and-traffic-growth}{estimated} to be increased by 10 times between 2019 and 2025.
+    % https://www.ericsson.com/en/mobility-report/future-mobile-data-usage-and-traffic-growth
+    % https://www.cisco.com/c/en/us/solutions/collateral/service-provider/visual-networking-index-vni/white-paper-c11-738429.html
+    If the second estimation was overestimating the growth of the IoT market, forecasts predict  more than 64 billion IoT devices by 2025.
+    % https://www.businessinsider.com/internet-of-things-report?IR=T
+    \item
+    \emph{``Today, there are no more available frequencies in the easily exploitable frequency bands.
+    Moreover, it is getting more and more difficult to resort to classical methods of frequency bands liberation.''}
+    As illustrated above in Figure~\ref{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum}.
+    \item
+    \emph{``Growing recourse to spectrum sharing, and in particular dynamic spectrum sharing, constitutes an important spectrum reserve.
+    A particular sharing form, the use of unlicensed bands, open to all and free, has been intensely developed with the growth of Wi-Fi use.''}
+    This thesis focusses on spectrum sharing in unlicensed bands, for IoT networks that lie at the opposite direction as the one underlying Wi-Fi networks: the spectrum sharing will be learned automatically by the end-devices, and not centrally decided by the base station.
+\end{itemize}
+
+
 \section{Cognitive Radio and Multi-Armed Bandits}
 
 In this thesis, we study Internet of Things networks, and these two constraints of low power consumption (or long battery life) and low duty cycle are essential.
@@ -112,12 +176,21 @@ Let us define and detail both concepts.
 % This thesis studies the possible applications of a certain kind of Machine Learning algorithms, Multi-Armed Bandits, to a certain kind of Telecommunications, Cognitive Radio and Internet of Things of Networks.
 
 
+\TODOL{Emilie pense que je devrais faire ça mieux :
+    Quant au survey du machine learning (Figure 1.1), je ne pense pas que
+    cela soit nécessaire. Je trouve ça plus pertinent d'introduire le
+    problème de décision séquentielle qui nous intéresse (qui n'est pas
+    juste un sub-field du machine learning d'ailleurs, la communauté
+    statistique s'y intéresse depuis bien plus longtemps !), sur l'exemple
+    de l'OSA.
+}
+
 \paragraph{From Machine Learning to Multi-Armed Bandits.}
 %
 We can narrow down the first field of study of this thesis, steps by steps.
 Starting from the general concept of Machine Learning (ML), we focused our interest to statistical learning, then sequential learning, then Reinforcement Learning (RL), then RL with limited feedback and finally to Multi-Armed Bandits (MAB) learning.
 As illustrated in Figure~\ref{fig:1:MainTypesOfMachineLearning}, there are other types of ML, that we do not focus on in this thesis.
-The reference book on RL is \cite{SuttonBarto2018}, so let us quote the definition of RL given by Richard Sutton and Andrew Barto:
+The reference book on RL is \cite{SuttonBarto2018}, so let us quote the definition of RL given by R. Sutton and A. Barto:
 \emph{``Reinforcement learning is learning what to do -— how to map situations to actions -— so
 as to maximize a numerical reward signal. The learner is not told which actions to
 take, but instead must discover which actions yield the most reward by trying them''}.
@@ -143,7 +216,7 @@ We illustrate this idea of a \emph{learning cycle} alternating between actions a
 in the following Figure~\ref{fig:1:ReinforcementLearningCycle}.
 A player (or learner) interacts with its environment by taking an action $A(t)$ (\eg, a choice in a finite set, $A(t)\in\{1,\dots,K\}$, or a vector $A(t)\in\R^d$), and then observing a reward $r(t)$, which is a certain measure of success from the environment (\eg, $r(t)\in\{0,1\}$ for binary failure/success, or $r(t)\in\R$).
 The goal of the player is to maximize its reward, by trials and errors (\ie,actions and rewards).
-Many real-world problems can be framed as Reinforcement Learning problems, as illustrated by the survey \cite{bouneffouf2019survey} and Section~\ref{sec:2:applicationsofStochasticMAB}, for instance learning to walk or to drive, learning to play a board or computer game, or discovering which treatment is efficient in healing a certain disease (clinical trial).
+Many real-world problems can be framed as Reinforcement Learning problems, as illustrated by the survey \cite{bouneffouf2019survey} and Section~\ref{sec:2:applicationsofStochasticMAB}, for instance learning to walk or to drive, learning to play a board or computer game, or discovering which treatment is efficient in healing a certain disease (clinical trial), etc.
 
 % \begin{figure}[h!]
 %     \centering
@@ -183,6 +256,9 @@ Multi-Armed Bandits (MAB) are a simple yet powerful example of the well-known ex
 when facing a set of $K$ actions whose effects on the environment are unknown, a learning must balance between
 exploration of the unknown actions, in order to collect more information about them,
 and exploitation of the best action according to its current knowledge.
+%
+The MAB problem have been studied in both the machine learning and the statistics community, since the $1950$s with pioneers like H. Robbins \cite{Robbins52}, and more recently it is an active field of research, since the late $1990$s \cite{Anantharam87a,Anantharam87b,auer1995gambling,Agrawal95}.
+Research on MAB has produced a vast literature in the $2000$s \cite{Auer02,Auer02NonStochastic,Audibert2009minimax} and continues to be a topic of high interest, as illustrated by the surveys \cite{Bubeck12,LattimoreBanditAlgorithmsBook,Slivkins2019}.
 
 
 \paragraph{From IT to Cognitive Radio.}
@@ -216,58 +292,6 @@ CR is not a standard technology, and as such it does not have a single definitio
     \emph{``A cognitive radio (CR) is a radio that can be programmed and configured dynamically to use the best wireless channels in its vicinity to avoid user interference and congestion. Such a radio automatically detects available channels in wireless spectrum, then accordingly changes its transmission or reception parameters to allow more concurrent wireless communications in a given spectrum band at one location''}.
 \end{itemize}
 
-
-\TODOL{Je peux améliorer (ou enlever) ce passage qui site J.Toledano, ou alors le commenter en plus de détails ? J'aime bien son rapport en fait (j'aurai du le lire au début de ma thèse !)}
-% https://www.economie.gouv.fr/files/files/PDF/french-spectrum-mission-executive-summary-2014-06-25.pdf
-% https://www.economie.gouv.fr/files/files/PDF/rapport-gestion-dynamique-spectre-2014-06-30.pdf
-The abstract of the ``Dynamic Spectrum Management For Innovation And Growth'' report by Joëlle Toledano, commissioned and published by the French government \cite{Toledano2014EnglishSummary,Toledano2014FrenchFull},
-mentions different important problems:
-%
-\begin{itemize}\tightlist
-    \item
-    \emph{``In France, digital economy represents $5\%$ of GDP and affects $80\%$ of the French economy''}
-    \item
-    \emph{``Radio frequencies are essential to many sectors: communications, broadcasting, transportation, satellite networks, energy networks and smart grids, public or private security, defense, etc.''}
-    %
-    \item
-    \emph{``Everyone agrees on the growing need for spectrum.
-    This growing need results from two phenomena.
-    On the one hand, mobile traffic should be multiplied by 13 to 25 fold between 2011 and 2017.
-    On the other hand, the development of new innovative services such as the Internet of Things and its multiple applications (smart cities, e-health...), could lead to a growing number of connected devices, up to 50 billion in 2020, according to estimations.''}
-    \item
-    \emph{``Today, there are no more available frequencies in the easily exploitable frequency bands.
-    Moreover, it is getting more and more difficult to resort to classical methods of frequency bands liberation.''}
-    \item
-    \emph{``Growing recourse to spectrum sharing, and in particular dynamic spectrum sharing, constitutes an important spectrum reserve.
-    A particular sharing form, the use of unlicensed bands, open to all and free, has been intensely developed with the growth of Wi-Fi use.''}
-\end{itemize}
-
-
-\textbf{The spectrum scarcity issue.}
-%
-A major problem of current wireless technologies is the issue of spectrum scarcity:
-in most kinds of frequency bands, the entire RF spectrum is now allocated and free bands no longer exist, limiting the possibility of adding new usage.
-As illustrated in Figure~\ref{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum} below, only a very small portion of the RF spectrum in the USA is not yet allocated, from $0$ to \SI{9}{\kilo\hertz}, while the rest of the displayed portion of the spectrum, from \SI{9}{\kilo\hertz} to \SI{300}{\giga\hertz}, is allocated to various usages, that goes from maritime radionavigation (historically the first usage of radio telecommunication) to space research, inter-satellite, mobile telephony and many other applications.
-%
-% Traditional regulatory structures have been built for an analog model and are not optimized for cognitive radio.
-Regulatory bodies in the world, like the \href{https://www.fcc.gov/}{Federal Communications Commission} in the USA (see \href{https://www.fcc.gov/}{\texttt{FCC.gov}})
-or \href{http://www.tdf.fr/}{TDF} in France (see \href{https://www.TDF.fr/}{\texttt{TDF.fr}}, previously known as \emph{``TéléDiffusion de France''}), as well as different independent measurement campaigns, found that most radio frequency spectrum was inefficiently utilized,
-meaning that while a band can be allocated to a certain unique usage, it can be free from any user in certain times and/or places.
-We refer to \cite{valenta2010survey} for a survey on spectrum utilization in Europe.
-
-Cellular network bands are overloaded in most parts of the world, but other frequency bands (such as military, amateur radio and paging frequencies) are insufficiently utilized.
-Independent studies performed in some countries confirmed that observation, and concluded that spectrum usage highly depends on time and place.
-Moreover, the fixed spectrum allocation prevents rarely used frequencies, like those assigned to specific services, from being used, even when any unlicensed users would not cause noticeable interference to the assigned service.
-Therefore, in the last $15$ years, regulatory bodies in the world have been considering whether to allow unlicensed users in licensed bands if they would not cause any interference to licensed users.
-These initiatives have focused CR research on \textbf{Dynamic Spectrum Access (DSA)}.
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.65\textwidth,angle=90]{United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum.pdf}
-    \caption{A chart representing the allocation of radio spectrum in the USA in $2016$. Only a small share of the spectrum is not yet allocated, the top-left corner in white (it is in logarithmic scale from \SI{0}{\kilo\hertz} to \SI{300}{\giga\hertz}). \copyright{} Wikimedia.}
-    % https://upload.wikimedia.org/wikipedia/commons/c/c7/United_States_Frequency_Allocations_Chart_2016_-_The_Radio_Spectrum.pdf?uselang=fr
-    \label{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum}
-\end{figure}
 
 % explain PU and SU in a few sentences
 In licensed bands, there are Primary Users (PU) paying to access the network, for instance anybody has to pay to have a mobile phone number and use the mobile telephony network.
@@ -310,30 +334,30 @@ orthogonal frequency bands (or channels) are models by arms $k\in\{1,\dots,K\}$,
 and the feedback obtained by the CR-equipped device after sensing the channel $k$ at time $t$ is modeled by a reward of $r(t) \in \{0,1\}$.
 Indeed, $r(t) = 1$ indicates that no Primary User was sensed (and thus an uplink message can be sent), while a reward of $r(t)=0$ indicates that the channel $k$ is busy at time $t$ and no uplink message should be sent.
 %
-This model was first studied by Wassim Jouini during his PhD thesis with Christophe Moy, ten years ago, first with \cite{Jouini09} and later with \cite{Jouini10,Jouini12}.
-His works were among the first ones to propose to use Reinforcement Learning for Cognitive Radio and the OSA problem, especially the MAB model and the \UCB{} algorithm,
-along the early works of Qing Zhao and her team, for instance with the works \cite{Liu08,Zhao10}.
-%
-Shortly after in $2014$, proof-of-concepts using real-world radio hardware and Software Defined Radio were developed by Christophe Moy and his student Clément Robert \cite{RobertSDR2014,MoyWSR2014}.
+This model was first studied by W. Jouini during his PhD thesis with C. Moy, ten years ago, first with \cite{Jouini09} and later with \cite{Jouini10,Jouini12}.
 
-In a second PhD thesis supervised by Christophe Moy \cite{Modi17PhD} from $2014$ to $2017$, Navikkumar Modi studied the impact of using MAB algorithms to optimize channel selection on the battery life of a wireless device.
+His works were among the first ones to propose to use Reinforcement Learning for Cognitive Radio and the OSA problem, especially the MAB model and the \UCB{} algorithm,
+along the early works of Q. Zhao and her team, for instance with the works \cite{Liu08,Zhao10}.
+%
+Shortly after in $2014$, proof-of-concepts using real-world radio hardware and Software Defined Radio were developed by C. Moy and his student C. Robert \cite{RobertSDR2014,MoyWSR2014}.
+In a second PhD thesis supervised by C. Moy \cite{Modi17PhD} from $2014$ to $2017$, N. Modi studied the impact of using MAB algorithms to optimize channel selection on the battery life of a wireless device.
 On the one hand, running a MAB algorithm such as UCB-like algorithms was proven to be useful and can bring significant improvement in terms of successful transmission rates, directly increasing the battery life of the device.
 On the other hand, classical MAB algorithms tend to switch arms a lot of times, especially in the beginning of the learning process, and this induces a lot of dynamical hardware reconfiguration for the wireless device, as selecting a different channel requires a change in the radio hardware used by the device.
 Each hardware reconfiguration costs energy for the device, and quickly switching algorithms will lead to a reduction of the battery life.
 The tradeoff between the two aspects is studied empirically in
 \cite{modiDemo2016}.
-%
-In $2017$, Christophe Moy continued to work on this direction, with a post-doctoral student, Sumit J. Darak, leading to the following publications
+
+In $2017$, C. Moy continued to work on this direction, with a post-doctoral student, S. Darak, leading to the following publications
 \cite{darak2016bayesian,Darak16,modiDemo2016,kumar2016two}.
 %
 For example, proof-of-concepts like \cite{kumar2016two} have proven the capability of such approaches on real radio signals for OSA,
 %
 Some analysis on real radio measurements made for HF ionospheric channels have also proven that solutions based on MAB learning is appropriate and solves efficiently this kind of decision-making problems on real-world wireless signals \cite{Melian15}.
 %
-Since $2017$, Sumit J. Darak and his team at IIIT Delhi have been very active in the research on cognitive radio using multi-armed bandits, and some of their recent works are illustrated with real-world demo using USRP and the MATLAB/Simulink system
+Since $2017$, S. Darak and his team at IIIT Delhi have been very active in the research on cognitive radio using multi-armed bandits, and some of their recent works are illustrated with real-world demo using USRP and the MATLAB/Simulink system
 \cite{KumarYadav2018,SawantKumar2018,JoshiKumar2018}.
 
-\TODOL{Raccourcir toutes les fois où je parle des travaux sur l'OSA après dans la suite de la thèse !}
+% \TODOL{Raccourcir toutes les fois où je parle des travaux sur l'OSA après dans la suite de la thèse !}
 
 
 \paragraph{Limitations and specifities of IoT networks.}
@@ -348,7 +372,9 @@ The specificities of IoT networks can be listed as follows.
     most IoT networks run in unlicensed bands (no more distinction between PU and SU),
     \item
     most IoT devices are very low-cost devices, with low material and computational capacities,
-    meaning that they are not equipped with any sensing capabilities,
+    meaning that they are not equipped with any sensing capabilities.
+    However, they are equipped with a transceiver as well as with a receiver,
+    and with low-complexity storage and computation capacities,
     \item
     a single IoT base station will have to handle a very large number of devices,
     and cannot send coordination orders to them in order to optimize the network,
@@ -375,12 +401,14 @@ We start by formulating the problem studied in this thesis, and then we develop 
 \paragraph{Problematic.}
 %
 If we sum-up the studied problems and summarize them in one question, it would be the following:
-\emph{``Can we adapt the decision making tools already successfully applied to Cognitve Radio for Opportunistic Spectrum Access to the specific needs of CR for the future IoT networks ?''}
+\emph{``Can we adapt the decision making tools already successfully applied to Cognitve Radio for Opportunistic Spectrum Access to the specific needs of CR for the (future) Internet of Things networks?''}
 %
 We answer partially to this problematic by the following research steps.
 
-\paragraph{Focusing on MAB algorithms.}
-% FIXME
+
+\subsection{Focusing on MAB algorithms}
+
+\paragraph{Chapter~\ref{chapter:2}.}
 %
 We started by exploring the rich literature of multi-armed bandits,
 as many different algorithms exist, with lots of variants on the simple problem presented above (see \cite{LattimoreBanditAlgorithmsBook,Slivkins2019} for surveys).
@@ -390,6 +418,9 @@ In order to clearly understand which algorithms could be applied to the aforemen
 we were not only interested by the usual measure of performance of any MAB algorithm (its regret, see below in Section~\ref{sec:2:lowerUpperBoundsRegret}),
 but also by their empirical performances in terms of computational complexity and storage requirements, both from the point of view of the theoretical analyses and real-world measurements on time and memory footprints of the different algorithms.
 
+
+\paragraph{Chapter~\ref{chapter:3}.}
+%
 Our exploration of the large number of MAB algorithms and models developed in the recent literature
 has gave us the ambition to write a single piece of software were we could easily implement new models and algorithms, in order to compare the existing ones and empirically explores the performances of newly proposed algorithms.
 To answer this goal, we produced a Python library of simulation of MAB problems.
@@ -398,48 +429,62 @@ We wrote the most exhaustive open-source simulation library for MAB problems, ca
 We present in details its architecture and its features in Chapter~\ref{chapter:3}, along with different examples of its usage.
 A full documentation is available online, as well as exhaustive instructions to reproduce the experiments used in the rest of this thesis.
 
+
+\paragraph{Chapter~\ref{chapter:25}.}
+%
 Because there are so many different MAB algorithms, we are also interested by the question of how practitioner can chose the one she will implement in a given IoT object.
 To answer this question, we present two approaches.
 The first one is an empirical comparison of the most efficient and well-known existing algorithms in Section~\ref{sec:3:reviewSPAlgorithms} and \ref{sec:3:timeAndMemoryCosts}, where it appears that simple algorithms such as \UCB{} \cite{Auer02}, Thompson sampling \cite{Thompson33} and \klUCB{} \cite{KLUCBJournal} are the most efficient in terms of regret, and offer a good balance between regret and (time and memory) complexity.
 The second approach is an online algorithm selection, consisting in aggregating a set of algorithms and automatically discovering which one performs the most efficiently, against a given problem, with our contribution \Aggr{} that we detail in Chapter~\ref{chapter:25}.
 
 
-\paragraph{Focusing on IoT networks.}
+\subsection{Focusing on IoT networks.}
+
+In the second Part~\ref{part:MABIOT} of this thesis, we start by proposing and studying different models of IoT networks, with simulations and a real-world proof-of-concept, and then we study interesting questions on two mathematical models of MAB that arise from our first contribution.
+
+
+\paragraph{Chapter~\ref{chapter:4}.}
 %
-\TODOL{Je dois faire ça d'ici mercredi matin}
-
-First model \cite{Bonnefoi17}, CROWNCOM paper, model to detail
-
-We already explained in Chapter~\ref{chapter:1} that
-unlicensed bands are more and more used and considered for mobile and LAN communication standards (WiFi, LTE-U), and for Internet of Things (IoT) standards for short-range (ZigBee, Z-Wave, Bluetooth) and long-range (LoRaWAN, SIGFOX, Ingenu, Weightless) communications \cite{Centenaro16}.
-This heavy use of unlicensed bands, in particular with the expected exponential growth of the number of IoT devices, will cause performance drop, due to radio collisions that could even compromise IoT promises.
-
-Efficient Medium Access (MAC) policies allow devices to avoid interfering traffic and can significantly reduce the spectrum contention problem in unlicensed bands.
-As end-devices battery life is a key constraint of IoT networks,
-and as IoT networks are decentralized (\ie, the devices initiate transmissions),
-this leads to IoT protocols using as low signaling overhead as possible and simple ALOHA-based mechanisms.
+In Chapter~\ref{chapter:4}, we study two models of IoT networks.
+The first model considers IoT devices that simply have data to send to a base station, at a regular frequency (but random times), and that use the acknowledgement as feedback to learn the best channel for their uplink communications.
+The goal of this first model of applying decentralized RL on the device side is to increase the Quality of Service (QoS) of the application of such IoT network, by reducing the rate of failed transmission. The base station will thus receive more data from the devices its serves, if they can successfully learn an efficient spectrum access scheme.
 %
-In this chapter, we analyze the performance of Multi-Armed Bandits (MAB) algorithms, that could be used in combination with a time-frequency slotted ALOHA-based protocol.
+On the other hand, the second model we study considers packet retransmissions, and while the concept stays similar, the consequence of an efficient decentralized learning will be both an increase battery life for the devices as well as an increase QoS.
+
+We present in Section~\ref{sec:4:firstModel} a first model of an IoT network, that is made of up-to thousands of end-devices and a single base station.
+We consider a time-frequency slotted ALOHA-based protocol, by assuming a perfect synchronization between all devices and the base station.
+%
+Our IoT network model contains two types of devices: \emph{static devices} that use only one channel (fixed in time), and \emph{dynamic devices} that can choose the channel for each of their transmissions.
+Static devices form an interfering traffic, which could be generated by devices using other standards as well.
+Dynamic devices can use RL, and especially MAB algorithms, to optimize their sequential choices of channels, in order to maximize the number of successful up-link transmissions, thanks to the success/failure feedback that is the presence/absence of acknowledgement (\Ack) from the base station.
+%
+We first detail three base-lines, a naive approach and two centralized ``oracle'' approaches,
+that are used to evaluate the performance of MAB algorithms (\UCB{} and TS), in terms of the centralized system-wide successful communication rate.
+We show that our approach is interesting, as these low-cost MAB algorithms have near-optimal performance, even when the proportion of end-devices increases and the interfering traffic from other devices becomes more and more unpredictable.
+%
 Even without changing anything of the level of IoT standards, our proposal is just an add-on capability that can be used on a unit-per-unit basis.
-We consider the Upper-Confidence Bound (\UCB) \cite{Auer02}, and the Thompson-Sampling (TS) algorithms \cite{Thompson33,AgrawalGoyal11,
-Kaufmann12Thompson}, for the first model. For the demonstration as well as for the second model, without loss of generality, we preferred to focus on heuristics based on the simplest algorithm (\ie, \UCB), to give a clear presentation of the different ideas explored to solve the problem of learning in order to retransmit efficiently.
+This model constitutes the first article written during this thesis, \cite{Bonnefoi17}, with R. Bonnefoi, another PhD student of our team SCEE.
 
-The aim of this section is to assess the potential gain of learning algorithms in IoT scenarios, even when the number of intelligent devices in the network increases,
-and the network usage is more and more fluctuating.
-% and the stochastic hypothesis is more and more violated.
-To do that, we suppose an IoT network made of two types of devices: \emph{static devices} that use only one channel (fixed in time), and \emph{dynamic devices} that can choose the channel for each of their transmissions. Static devices form an interfering traffic, which could be generated by devices using other standards as well.
-Note that instead of assuming that each static device uses a fixed channel, we could also assume a looser hypothesis: if each static device uses a fixed sub-set of the $K$ channels, and a purely uniform random access in its set of considered channels, then \emph{in average} the observed occupancy of the $K$ channels can be modeled as if it were occupied by (more) static devices using only one channel. So our first hypothesis is actually not constraining.
-We first evaluate the probability of collision if dynamic devices randomly select channels (that is, a naive approach), and if a centralized controller would optimally distribute all of them in the channels at the beginning of the scenario.
-This second approach is ideal, but not realistic the most common situation of decentralized co-located IoT networks, and it is just used here as a reference.
-Then, these three reference scenarios allow to evaluate the performance of bandit algorithms, such as \UCB{} and TS, in a decentralized network, in terms of successful communication rate, as it reflects the network efficiency.
-We show that these algorithms have near-optimal performance, even when the proportion of end-devices increases and the interfering traffic from other devices becomes less and less stochastic.
+Verifying the potential gain of performance brought by these MAB algorithms in numerical simulations is a first step, but it is satisfactory to also verify our results on a real-world proof-of-concept (PoC).
+In Section~\ref{sec:4:firstModel}, we propose the first PoC of using decentralized MAB learning in a simplified ``IoT'' like wireless network \cite{Besson2018ICT}.
+We were able to implement a network with a base station which receives incoming messages from different end-devices and replies with acknowledgements, that are used as feedback by the devices and let them learn an efficient spectrum access scheme.
+% Verify this first model empirically: proof of concept
 
-Verify this first model empirically: proof of concept \cite{Besson2018ICT}
+We then consider extension of our first model, following the idea of packet retransmission that is at the root of the ALOHA protocol \cite{Abramson1970,Roberts75}.
+This second model proposes to also use decision making at the second layer of the MAC protocol, that is to also use RL and MAB algorithms, in order to learn the best channel to use for retransmitting any packet that suffered from a collision at its first transmission.
+We present the model in Section~\ref{sec:4:retransmissions}, along with mathematical justifications of the potential of using this second-stage MAB learning for retransmissions, and numerical illustrations \cite{Bonnefoi2019WCNC}.
+This shows that using learning in a decentralized way on the devices' side is again a powerful idea under this model with retransmissions, and we show as well as the simplest of the different heuristics we compared is efficient and allow the devices to learn to behave almost optimally.
+
+
 \TODOL{Je dois faire ça d'ici mercredi matin}
 
-Second model with decision making also for the retransmissions of packets \cite{Bonnefoi2019WCNC}
-\TODOL{Je dois faire ça d'ici mercredi matin}
 
+\paragraph{Chapter~\ref{chapter:5}.}
+%
+In the two models presented before, the core concept is to let all the dynamic devices of a IoT network run a fully decentralized learning algorithm,
+each of them targeting their local objective of maximizing their cumulated reward (in a selfish way),
+in order to optimize the complete system.
+It is well known in the game theory literature that playing selfishly can be disastrous for the centralized performance measure: for instance, one can think of the prisoner dilemma.
 Selfish
 \TODOL{Je dois faire ça d'ici mercredi matin}
 
@@ -452,6 +497,17 @@ In the OSA setting, we failed
 But we proposed new algorithms for this problem, and relaunched the research on this model \cite{Besson2018ALT}
 \TODOL{Je dois faire ça d'ici mercredi matin}
 
+\TODOL{Emilie me dit de continuer comme ça :
+    En tout cas ce chapitre 1 commence à avoir bonne forme pour l'école
+    doctorale, il n'y aura plus qu'à finaliser la deuxième partie de la
+    section 1.3 (la première est très bien). Tu tiens le bon bout !
+}
+
+
+
+\paragraph{Chapter~\ref{chapter:6}.}
+%
+FIXME explain non stationarity !
 
 
 \paragraph{Our approach.}
@@ -464,26 +520,6 @@ Like for the OSA, we can apply successfully model the decision making problem as
 We showed on numerical simulations as well as on a real-world proof-of-concept that applying low-cost sequential learning algorithms coming from the MAB literature successfully reduce the collision rate of IoT end-devices.
 We proposed new algorithms, some of which are proven to converge efficiently.
 
-\TODOL{Je dois faire ça d'ici mercredi matin}
-
-% %
-% directions de recherches
-
-% - réfléchir aux modèles, quelles hypothèses sont retirées comparé au modèle OSA
-
-% - analyser mathématiquement les modèles
-
-% - proposer des solutions : algorithmes, dont la convergence est justifiée, ou heuristiques
-
-% - des simulations logicielles
-
-% - des démonstrations matérielles
-
-% - et en bonus on obtient aussi de belles contributions théoriques
-
-
-
-% FIXME c'est bon tout ce qu'on a avant ?
 
 \TODOL{Je suis content de la suite de l'intro : aperçu des contributions, plans de thèse, liste des publications}
 
@@ -504,9 +540,8 @@ To summarize the main contributions of this thesis, we can list the following po
     % We give a short literature review of stochastic bandit algorithms in Section~\ref{sec:2:famousMABalgorithms}.
 
     \item
-    We wrote the most exhaustive open-source simulation library for MAB problems, called SMPyBandits, which is published online under an open-source licence \cite{SMPyBandits,SMPyBanditsJMLR}.
-    We present in details its architecture and its features in Chapter~\ref{chapter:3}, along with different examples of its usage.
-    A full documentation is available online, as well as exhaustive instructions to reproduce the experiments used in the rest of this thesis.
+    We developed SMPyBandits, the most exhaustive open-source simulation library for MAB problems, published under an open-source licence \cite{SMPyBandits,SMPyBanditsJMLR}.
+    We present it in details in Chapter~\ref{chapter:3}.
 
     \item
     % We present the problem of choosing which algorithm a practitioner should use, or algorithm selection from the rich collection of different MAB available, in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}.
