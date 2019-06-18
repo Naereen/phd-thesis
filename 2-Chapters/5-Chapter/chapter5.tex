@@ -86,7 +86,7 @@ It seems unrealistic to ask the gateway to send the fixed value $M$ to each devi
 
 % \TODOL{Expliquer pourquoi ce n'est pas très réaliste ? Le paragraphe ci dessous n'est pas très simple à comprendre, je peux faire mieux!}
 
-If the $M$ players each have a unique ID, then a simple explore-then-commit algorithm (see Algorithm~\ref{algo:2:naiveStrategies}), running on top of a round-Robin phase can achieve order-optimal regret.
+If the $M$ players each have a unique ID, then a simple explore-then-commit algorithm (see Section~\ref{sub:2:naiveSimpleStrategies}), running on top of a round-Robin phase can achieve order-optimal regret.
 If the players know the time horizon $T$, then they can fix a confidence level $\delta$. For the first $T_0$ time steps, the $M$ players will use a simple round-Robin game, using their (unique) ID to stay orthogonal: player $j$ starts at arm $j$, then $j+1$, then cycle in $[K]$. They encounter no collision in these time steps, and then user $j$ targets the $j$-th best arm among the set of $M$-best arm.
 If $T_0$ is large enough, all players have built the same estimate of the ranking of the arms (and not only correctly identified the set of $M$-best arms), with high probability (at least $\delta$), and thus they will also encounter no collision and no regret from after time $T_0$.
 The mean regret of such approach is easily bounded by $R_T \leq M T_0 + (1 - \delta) (T - T_0)$, so by using $\delta = 1-1/T$, $R_T = \bigO{T_0}$.
