@@ -597,7 +597,7 @@ and thus we can write the following decomposition on the regret.
     %
     Thus $R_T^{\cA} = T \mu^* - \sum_{t=1}^T \E\left[ r(t) \right] = T \mu^* - \sum_{k=1}^K \mu_k \E[ N_k(T) ] = \sum_{k=1}^K (\mu^* - \mu_k) \E[ N_k(T) ]$,
     as $\sum_{k=1}^K  \E[ N_k(T) ] = T$.
-    The sum can then be simplified to only account for sub-optimal arms, \ie, arms $k$ such that $\Delta_k > 0$.
+    The sum is then simplified to only count sub-optimal arms (\ie, $\Delta_k > 0$).
 \end{smallproof}
 
 
@@ -634,9 +634,9 @@ We assume the rewards lie in $[0,1]$,
 to present the lower-bounds, we prefer to focus on Bernoulli distributions, for simplicity.
 
 To specify the dependency on an instance $I\in\cI$, we denote the regret of $\cA$ on instance $I$ and horizon $T$ by $R_T^{\cA}(I)$.
-We also index the Landau notations $o(\bullet)$ and $\bigO{\bullet}$ by $I$,
-for instance $R_T^{\cA}(I) = \smallO_I{\log(T)}$ means $R_T^{\cA}(I) = \smallO{c_I \log(T)}$
-where this notation means that the ``constant'' $c_I$ can depend on the problem instance $I$ (\eg, on the means and on $K$) but not on the time horizon $T$.
+We also index the Landau notations $o(\dots)$ and $\bigO{\dots}$ by $I$,
+for instance $R_T^{\cA}(I) = o_I(\log(T))$ means $R_T^{\cA}(I) = \smallO{c_I \log(T)}$
+where the ``constant'' $c_I$ can depend on the problem instance $I$ (\eg, on its means and on $K$) but \emph{not} on the time horizon $T$.
 
 
 \paragraph{Problem-dependent lower-bound in $\Omega(\log T)$.}
@@ -649,8 +649,8 @@ This means that an upper-bound is proven on the regret of algorithm $\cA$, that 
 
 \begin{theorem}\label{thm:2:firstLogTLowerBound}
 \begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
-    \emph{No algorithm $\cA$ can achieve} a (mean) regret $R_T^{\cA}(I) = \smallO_I{\log(T)}$ for all Bernoulli problem instances $I \in \cI$.
-    \cite[Theorem~2.12]{Slivkins2019}
+    \emph{No algorithm $\cA$ can achieve} a (mean) regret $R_T^{\cA}(I) = o_I(\log(T))$ for all Bernoulli problem instances $I \in \cI$.
+    \hfill{} \cite[Theorem~2.12]{Slivkins2019}
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
@@ -673,33 +673,35 @@ Now we can state the second logarithmic lower-bound, for algorithms in this fami
 \begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
     If $\cA$ is uniformly efficient,
     then for any arbitrary Bernoulli problem instance $I$,
-    the regret is asymptotically lower-bounded by $C_I \log(T)$
-    \cite[Theorem~2.13]{Slivkins2019},
-    or in other words
+    its regret is asymptotically lower-bounded by $C_I \log(T)$,
+    or in other words,
+    \hfill{} \cite[Theorem~2.13]{Slivkins2019},
     \[ \liminf_{T\to\infty} \frac{R_T^{\cA}(I)}{\log(T)} \geq C_I. \]
     % there exists a constant $C_I$ depending only on $I$,
     % and a time $T_0$ such that $\forall T \geq T_0, \;\;\; R_T^{\cA}(I) \geq C_I \log(T)$.
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
-This third theorem specifies possible values of the constants $C_I$ for the two previous results.
+We state below Theorem~2.12 from \cite{Slivkins2019}, to specify a possible value for the constant $C_I$.
 
 \begin{theorem}\label{thm:2:forSecondLogTLowerBound}
 \begin{leftbarnospace}[theorembar]  % XXX leftbar theorembar, comment if needed
-    Let $\cA$ denote a uniformly efficient algorithm,
+    If $\cA$ is uniformly efficient,
     and $I$ an arbitrary Bernoulli problem instance.
-    \cite[Theorem~2.12]{Slivkins2019}
     \begin{itemize}
         \item
         The bound from Theorem~\ref{thm:2:secondLogTLowerBound} holds with
         % \begin{equation}\label{eq:2:forSecondLogTLowerBound}
-        $C_I = \mu^* (1 - \mu^*) \sum\limits_{k: \Delta_k > 0} \frac{1}{\Delta_k}$.
+            % $C_I = \mu^* (1 - \mu^*) \sum\limits_{k: \Delta_k > 0} \frac{1}{\Delta_k}$.
+            $C_I = \sum\limits_{k: \Delta_k > 0} \frac{\Delta_k}{\kl(\mu_k, \mu^*)}$.
         % \end{equation}
         \item
-        For any $\varepsilon>0$, the bound from Theorem~\ref{thm:2:secondLogTLowerBound} also holds with
+        For any $\varepsilon>0$, the bound also holds at finite time with
         % \begin{equation}\label{eq:2:forSecondLogTLowerBound2}
-        $C_I = \sum\limits_{k: \Delta_k > 0} \frac{\Delta_k}{\kl(\mu_k, \mu^*)} - \varepsilon$.
+            $C'_I = C_I - \varepsilon$,
         % \end{equation}
+        meaning that there exists a constant $C_I$ depending only on $I$,
+        and a time $T_0$ such that $\forall T \geq T_0, \;\;\; R_T^{\cA}(I) \geq C'_I \log(T)$.
     \end{itemize}
 \end{leftbarnospace}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
@@ -730,16 +732,17 @@ Indeed, we can naively bound the regret by $R_T^{\cA} \leq (\max_k \Delta_k) T$,
 %     $\varepsilon \ll \sqrt{\frac{4 \log(T)}{T}} \Longleftrightarrow \frac{1}{4\varepsilon} \log(T) \gg \Delta T$.
 % \end{smallproof}
 
-For this reason, the research literature has also been interested by another family of regret bounds, that are not problem-dependent but worst-case, or also called minimax \cite{Audibert2009minimax,audibert2010minimax} or problem-independent.
-Hence it is interesting to quote another lower-bound on the regret, that can bring useful information in such settings.
-The following theorem is from \cite{Auer02NonStochastic}.
+For this reason, another family of regret bounds is relevant, that are not problem-dependent but worst-case, or also called minimax \cite{Audibert2009minimax,audibert2010minimax} or problem-independent.
+We give an example of such result below.
+% Hence it is interesting to quote another lower-bound on the regret, that can bring useful information in such settings.
+The following theorem is from \cite{Auer02NonStochastic}, and \cite[Theorem~2.1]{Slivkins2019}.
 %
 For more details, we refer to Chapter~15 of \cite{LattimoreBanditAlgorithmsBook}.
 
 \begin{theorem}\label{thm:2:worstCaseLowerBound}
 \begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
     Fix the number of arms $K$, and an algorithm $\cA$.
-    Then for any horizon $T$, there exists a problem instance $I_T$ on which the algorithm suffers at least a regret $R_T^{\cA}(I_T) \geq \Omega(\sqrt{K T})$.
+    Then for any horizon $T$, there exists a Bernoulli problem instance $I_T$ on which the algorithm suffers at least a regret $R_T^{\cA}(I_T) \geq \Omega(\sqrt{K T})$.
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
@@ -766,7 +769,7 @@ and such results are usually referred to as ``best of both worlds''.
 \subsection{Other measures of performances}
 \label{sub:2:otherMeasuresPerformance}
 
-The theoretical results obtained in this thesis are all expressed in terms of the mean regret $R_T^{\cA}$ (in Chapters~\ref{chapter:5} and \ref{chapter:6}), but we quickly mention other measures of performances used in our work.
+The theoretical results obtained in the rest of this thesis are all expressed in terms of the mean regret $R_T^{\cA}$ (in Chapters~\ref{chapter:5} and \ref{chapter:6}), but we quickly mention other measures of performances that we consider in our works and in this manuscript.
 
 % - Quantile regret or just histogram of regrets
 First, when doing numerical experiments about bandits, if one studies the regret as an empirical mean based on a ``large'' number of random repetitions (\eg, $N=1000$ repetitions), it is important to not only show the mean value but also the variance of the values taken by the regret on each repetition, to verify that all algorithms perform consistently.
@@ -843,7 +846,7 @@ A complete list of the implemented policies can be found on the following web pa
 \label{sub:2:naiveSimpleStrategies}
 
 
-\paragraph{Naive strategies: pure exploitation or pure exploration.}
+\paragraph{Pure exploitation or pure exploration.}
 
 Let us first describe two naive strategies, that both fail dramatically.
 % They are detailed in Algorithm~\ref{algo:2:naiveStrategies} below.
@@ -1037,8 +1040,8 @@ As such, this weakness makes the presented strategies unapplicable on an unknown
 \label{sub:2:IndexPolicies}
 
 A large family of algorithms are index based, as they compute an index $U_k(t)$ on each arm $k$ at time $t$,
-used to play the arm that maximizes their index, \ie, $A(t) = \argmax_k U_k(t)$.
-If more than one indexes maximize $(U_k(t))_k$, the arm is chosen among the set, usually in a uniformly random manner: $A(t) \sim \cU(\argmax_k U_k(t))$.
+and they play the arm that maximizes their index, \ie, $A(t) = \argmax_k U_k(t)$.
+If more than one indexes maximize $(U_k(t))_k$, the arm is chosen from the set, usually in a uniformly random manner: $A(t) \sim \cU(\argmax_k U_k(t))$ (using the external randomness, as explained above).
 %
 The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, that includes well known and efficient algorithms such as $\UCB_1$, \klUCB{} and many others.
 
@@ -1251,8 +1254,8 @@ If we perform numerical simulations with \klUCB{} algorithms, we are interested 
 and we note that our library SMPyBandits implements both parts in both a naive Python implementation (file \href{https://github.com/SMPyBandits/SMPyBandits/blob/master/SMPyBandits/Policies/kullback.py}{\texttt{kullback.py}}) and in a Python module written in a
 C file\footnote{~Note that we also wrote an intermediate implementation that uses Cython \cite{cython}, to have a file with a syntax closer to Python, while gaining from almost the same performance speed-up as with the optimized C version, see file \href{https://github.com/SMPyBandits/SMPyBandits/blob/master/SMPyBandits/Policies/kullback_cython.pyx}{\texttt{kullback\_cython.pyx}}.
     These implementations of $\KL(x,y)$ and \klUCB{} indexes are also published as an independent Python package, hosted on \href{https://github.com/Naereen/Kullback-Leibler-divergences-and-kl-UCB-indexes}{\texttt{GitHub.com/Naereen/Kullback-Leibler-divergences-and-kl-UCB-indexes}} and installable from Pypi.
-    A Julia version of the same package is also available at \href{https://github.com/Naereen/KullbackLeibler.jl}{\texttt{GitHub.com/Naereen/KullbackLeibler.jl}},
-    and installable with \texttt{Pkg.add("KullbackLeibler")}.
+    A Julia version of the same package is also available at \href{https://github.com/Naereen/KullbackLeibler.jl}{\texttt{GitHub.com/Naereen/KullbackLeibler.jl}}.
+    % and installable with \texttt{Pkg.add("KullbackLeibler")}.
 },
 in an optimized way (file \href{https://github.com/SMPyBandits/SMPyBandits/blob/master/SMPyBandits/Policies/C/kullback_py3.c}{\texttt{kullback\_py3.c}}).
 For the supported families of distributions (including Bernoulli, Gaussian, exponential and Poisson), we wrote both a naive and an optimized version of $\KL(x,y)$ and the $\sup_q \KL(x,q) \leq z$ optimization problem, using Newton's method.
@@ -1493,8 +1496,8 @@ $\UCB_1$ (with $\alpha=1$),
 and Thompson sampling (with Beta posteriors and flat uniform priors).
 %
 
-We first give in Table~\ref{table:2:oneShotResult} the cumulated rewards as well as the estimated regrets\footnote{~First, the rewards are computed as $\frac{1}{N} \sum_{j=1}^N \sum_{t=1}^T r^{(j)}_{A(t)}(t)$, where $r^{(j)}_{k}(t)$ means the reward stream of the different runs $j=1,\dots,N$. Then the estimated regret is \emph{not} computed as $\frac{1}{N} \sum_{j=1}^N \sum_{t=1}^T r^{(j)}_{k^*}(t) - r^{(j)}_{A(t)}(t)$, as this first formula could give a negative regret and is more noisy, but as $\mu^* T - \frac{1}{N} \sum_{j=1}^N \sum_{k=1}^K \mu_k N^{(j)}_{k}(T)$, as this later formula gives a more robust estimator, as noted the proof of Proposition~\ref{prop:2:RegretDecomposition} (in Page~\pageref{remark:2:moreAccurateCountofRegretForSimulations} above).}
-of the different algorithms, \emph{for one simulation}.
+We first give in Table~\ref{table:2:oneShotResult} the cumulated rewards as well as the estimated regrets of the different algorithms, \emph{for one simulation}.
+First, the rewards are computed as $\frac{1}{N} \sum_{j=1}^N \sum_{t=1}^T r^{(j)}_{A(t)}(t)$, where $r^{(j)}_{k}(t)$ means the reward stream of the different runs $j=1,\dots,N$. Then the estimated regret is \emph{not} computed as $\frac{1}{N} \sum_{j=1}^N \sum_{t=1}^T r^{(j)}_{k^*}(t) - r^{(j)}_{A(t)}(t)$, as this first formula could give a negative regret and is more noisy, but as $\mu^* T - \frac{1}{N} \sum_{j=1}^N \sum_{k=1}^K \mu_k N^{(j)}_{k}(T)$, as this later formula gives a more robust estimator, as noted the proof of Proposition~\ref{prop:2:RegretDecomposition} (in Page~\pageref{remark:2:moreAccurateCountofRegretForSimulations} above).
 %
 It shows that the performance can \textcolor{red}{fluctuate a lot}, as on both cases the pure exploitation strategy was very lucky and obtains close-to-optimal performance, even though we proved that it suffers from a linear mean regret.
 
@@ -1531,7 +1534,7 @@ It shows that the performance can \textcolor{red}{fluctuate a lot}, as on both c
 % - Policy 'Thompson sampling'    was ranked      2 / 7 for this simulation
 %         (last regret = 44.054,  total regret = 44.2,    total reward = 6949,    total weighted selection = 6955.8).
 
-\begin{table}[ht]
+\begin{table}[!h]
     \begin{small}  % WARNING
         \centering
         \begin{tabular}{c|cc|cc}
@@ -1573,11 +1576,12 @@ Then in Table~\ref{table:2:meanResults} we show the \emph{results of the average
 We also include in Figures
 % \ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT100N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT100N1000},
 \ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, \ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000} below the mean cumulated rewards and mean regrets as functions of the current time step $t$, for $T=10000$ (and $N=1000$).
-The reward of the best arm is also plotted in Figure~\ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, and it serves as an \emph{upper-bound} to illustrate convergence\footnote{~Conversely, we also add the Lai \& Robbins' logarithmic \emph{lower-bound} on regret ($C_I \log(t)$ from case 2 of Theorem~\ref{thm:2:forSecondLogTLowerBound}) on the regret plot in Figure~\ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}. It should not be surprising that the black line of the lower-bound is \emph{above} the values of the regret as the lower-bound is only asymptotic.}
+The reward of the best arm is also plotted in Figure~\ref{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}, and it serves as an \emph{upper-bound} to illustrate convergence
 of the average rewards
 (\ie, $\frac{1}{t} (r(1) + \dots + r(t))$),
 % (\ie, $\frac{1}{t} \sum\limits_{s=1}^t r(s)$),
 which should converge to $\mu^*$ when $t\to\infty$ for efficient algorithms.
+Conversely, we also add the Lai \& Robbins' logarithmic \emph{lower-bound} on regret ($C_I \log(t)$ from Theorem~\ref{thm:2:forSecondLogTLowerBound}) on the regret plot in Figure~\ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}. It should not be surprising that the black line of the lower-bound is \emph{above} the values of the regret as the lower-bound is only asymptotic.
 %
 We can clearly identify the behavior of the different strategies:
 the three efficient strategies indeed achieve a sub-linear regret, that looks logarithmic as supported by the theory,
@@ -1790,7 +1794,7 @@ In the rest of this thesis, we mainly use the $\UCB_1$ or Thompson sampling algo
 % % Include here the discussion about expert aggregation and my \textbf{Aggregator} algorithm, see https://hal.inria.fr/hal-01705292
 
 
-% \newpage  % WARNING ?
+\newpage  % WARNING ?
 
 % ----------------------------------------------------------------------------
 \section{Conclusion}
