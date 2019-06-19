@@ -85,22 +85,25 @@ A policy $\cA$ chooses the next arm to play based on the sequence of past plays 
 Like for stationary problems (see Definition~\ref{def:2:regret} in Chapter~\ref{chapter:2}), the performance of $\cA$ is measured by its (piece-wise stationary) \emph{regret}, the difference between the expected reward obtained by an oracle policy playing an optimal arm $k_t^*$ at time $t$, and that of the policy $\cA$
 We use the same notation as the regret for stationary problem without ambiguity, as in this chapter we only consider the following definition,
 %
-\begin{equation}\label{def:6:nti}
+\begin{equation}\label{def:6:regret}
     R_T^{\cA} \eqdef \E\left[\sum_{t=1}^T \left(\mu_{k_t^*}(t) - \mu_{A(t)}(t)\right)\right].
 \end{equation}
 
 
-In the piece-wise \iid{} model, we furthermore assume that there is a (relatively small) number of \emph{breakpoints}, denoted by $\Upsilon_T \eqdef \sum_{t=1}^{T-1} \indic\left(\exists k\in[K]: \mu_k(t) \neq \mu_k(t+1)\right)$.
+In the piece-wise \iid{} model, we furthermore assume that there is a (relatively small) \emph{number of breakpoints} $\Upsilon_T$, defined by
+\begin{equation}\label{def:6:breakpoints}
+    \Upsilon_T \eqdef \sum_{t=1}^{T-1} \indic\left(\exists k\in[K]: \mu_k(t) \neq \mu_k(t+1)\right).
+\end{equation}
 If we denote $\tau^{(0)} \eqdef 0$, we define the $i$-th breakpoint recursively by
 $\tau^{(i)} \eqdef \inf\{t > \tau^{(i-1)} : \exists k : \mu_k(t) \neq \mu_k(t+1)\}$.
 %
-Hence for $t\in[\tau^{(i)} + 1,\tau^{(i+1)}]$, that is on any stationary segments, the rewards $(Y_{k,t})$ associated to each arm $k$ are \iid{} (hence the name of \emph{piece-wise stationary} problems).
+Hence for $t\in[\tau^{(i)} + 1,\tau^{(i+1)}]$, that is on any stationary segments, the rewards $(Y_{k,t})$ associated to each arm $k$ are \iid{} (hence the name \emph{piece-wise stationary}).
 
 Note than when a breakpoint occurs, we do not assume that all the arms means  change, but that \emph{there exists} an arm whose mean has changed.
 Depending on the application, many scenario can be meaningful: changes occurring on all arms simultaneously (due to some exogenous event), or only one or a few arms change at each breakpoint.
 For instance, for a cognitive radio application in a IoT-like network, we can imagine that all the objects of one company (or network provider) use a fixed (or a subset of) channel(s), and on a particular day in a city, if the company deploys a lot of new objects, then one (or some) channel(s) see their mean occupancy rates abruptly change.
 
-We define the \emph{number of change-points} on arm $k$,
+We define $\NCk$ the \emph{number of change-points} on arm $k$ by
 $\NCk \eqdef \sum_{t=1}^{T-1} \indic\left(\mu_k(t) \neq \mu_k(t+1)\right)$,
 for which it clearly holds that
 $\NCk \leq \Upsilon_T$, but there can be an arbitrary difference between these two quantities for some arms. Letting $C_T \eqdef \sum_{k=1}^K \NCk$ be the total number of change-points on the arms, one can have $C_T \in \{ \Upsilon_T, \dots, K\Upsilon_T \}$.
@@ -258,7 +261,7 @@ Then follows an exploitation phase, and finally with some low probability, an ex
 Similarly to what previous approaches did (\eg, \CUSUM{} uses a threshold $\varepsilon$), this phase checks for changes of a certain minimum magnitude, but the innovation in this work is that this algorithm does not need any prior knowledge of the minimum magnitude.
 Instead, it uses geometrically decreasing magnitudes $d_k = 2^{-i}$, meaning that even difficult changes should be detected, possibly in a later episode, as each episode only considers a few different values of $d_k$.
 % Our  algorithmAdSwitch(shown  as  Algorithm  1)  proceeds  in  episodes,  where  a  newepisode starts when the algorithm detects a change in one of the arms.  Each episode startswith an estimation phase (Step 2), in which both arms are chosen alternatingly until theirmeans can be distinguished (Step 3).  After the estimation phase,  the algorithm exploitsthe empirical best arm (Step 5).  However,  in order to detect changes,  at each step withsome probability (Step 4) an exploration phase is started that checks whether a change hasoccurred (comparing the resulting empirical means to that obtained from the estimationphase).  During such exploration phases the algorithm checks for changes of certain magni-tudes (denoted bydi).  Note that our algorithm does not require knowledge of the numberof changesL.  The following theorem provides an upper bound on the expected regret ofour algorithm
-They prove it achieves a regret bound of $\cO(\log(T) \sqrt{\Upsilon_T T})$, without a prior knowledge of $\Upsilon_T$.
+They prove that their algorithm achieves a regret bound of $\cO(\log(T) \sqrt{\Upsilon_T T})$, without a prior knowledge of $\Upsilon_T$.
 However, this work as two drawbacks:
 first, the algorithm currently only applies to two arms, and the generalization does not seem straightforward.
 Then, the theoretical result is valid for ``sufficiently large constants $C_1$ and $C_2$'', with a large constant $C$ hiding in the $\cO(\bullet)$ notation.
@@ -417,6 +420,7 @@ against the alternative
 $\cH_1 : (\exists \mu_0 \neq \mu_1, \tau \in \N^*: \ \  X_1, \dots, X_\tau \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_0) \ \ \text{and} \ \ X_{\tau+1}, X_{\tau+2}, \dots \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_1))$.
 %
 The Generalized Likelihood Ratio statistic for this test is defined by
+
 \begin{equation}\label{eq:6:firstDefGLRT}
     \GLR(n) \eqdef \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \dots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \dots, X_n ; \mu_0)},
 \end{equation}
@@ -910,19 +914,23 @@ We prefer to state the four cases, to highlight the modularity of the result giv
 \begin{leftbar}[corollarybar]  % XXX leftbar corollarybar, comment if needed
     For ``easy'' problems satisfying the corresponding Assumption~\ref{ass:6:LongPeriods},
     with $\Delta^{\text{opt}}$ and ${\Delta}^{\text{change}}$ defined as in Corollary~\ref{cor:6:Global}, the following regret bounds hold.
+
     \begin{enumerate}
         \item Choosing $\omega = \sqrt{\ln(T) / T}$, $\delta = 1 / \sqrt{T}$ (with no prior knowledge of $\Upsilon_T$ or $\EffChange$) gives
         \begin{equation}
             R_T = \bigO{\frac{K}{\left(\Delta^{\text{change}}\right)^2} \textcolor{red}{\EffChange}\sqrt{T\ln(T)} + \frac{\EffChange}{\left(\Delta^{\text{opt}}\right)^2} \ln(T)},
         \end{equation}
+
         \item Choosing $\omega = \sqrt{\Upsilon_T\ln(T) / T}$, $\delta = 1 / \sqrt{\Upsilon_T T}$ (with prior knowledge of $\Upsilon_T$ and ``optimist'' guess $\Upsilon_T \simeq \EffChange \ll K \Upsilon_T$) gives
         \begin{equation}
             R_T = \bigO{\frac{K^{\textcolor{red}{2}}}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\Upsilon_T T\ln(T)} + \frac{K\Upsilon_T}{\left(\Delta^{\text{opt}}\right)^2}\ln(T)},
         \end{equation}
+
         \item Choosing $\omega = \sqrt{\EffChange\ln(T) / T}$, $\delta = 1 / \sqrt{\EffChange T}$ (with prior knowledge of $\EffChange$) gives
         \begin{equation}
             R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\EffChange T\ln(T)} + \frac{\EffChange}{\left(\Delta^{\text{opt}}\right)^2}\ln(T)},
         \end{equation}
+
         \item Choosing $\omega = \sqrt{K\Upsilon_T\ln(T) / T}$, $\delta = 1 / \sqrt{K\Upsilon_T T}$ (with prior knowledge of $\Upsilon_T$ and ``pessimist'' guess $\EffChange \simeq K \Upsilon_T$) gives
         \begin{equation}
             R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\EffChange T\ln(T)} + \frac{\EffChange}{\left(\Delta^{\text{opt}}\right)^2} \ln(T)}.
