@@ -951,8 +951,6 @@ Therefore, the choice of threshold function $\beta_1(n, \delta) \eqdef \log\left
 
 We compare the following exploration mechanisms that can be used to enforce a sufficient exploration of all arms in the \GLRklUCB{} algorithm.
 All options are parametrized by a constant $\omega\in(0,1)$, which represents the fraction of time steps spent in the forced exploration, either in average or in total.
-%
-Note that the analysis we gave in Section~\ref{sec:6:RegretAnalysis} is based on the deterministic exploration, but with a careful handling of random events and if we prove a result similar to Proposition~\ref{prop:6:EnoughSamples}, we believe our analysis could also be extended to another exploration mechanism.
 
 \begin{enumerate}%\tightlist
     \item
@@ -978,6 +976,8 @@ Note that the analysis we gave in Section~\ref{sec:6:RegretAnalysis} is based on
     It was the first direction we pursued for our analysis, but we dropped it since mathematically, it was harder to prove a result like Proposition~\ref{prop:6:EnoughSamples}, and it was also harder to incorporate the randomness of this exploration scheme in the regret decomposition \eqref{eq:6:GeneRegretBound}.
 \end{enumerate}
 
+Note that the analysis we gave in Section~\ref{sec:6:RegretAnalysis} is based on the deterministic exploration, but with a careful handling of random events and if we prove a result similar to Proposition~\ref{prop:6:EnoughSamples}, we believe our analysis could also be extended to another exploration mechanism.
+
 As before, we consider the three problems $1$, $2$ and $4$, with time horizon $T=5000$,
 and we present in Table~\ref{table:6:exploringDifferentForcedExplorationMechanisms} the mean results of $100$ independent runs.
 We include the two variants of \GLRklUCB, based on \textbf{Local restarts} or \textbf{Global restarts}, for which we used the parameters $\omega_T,\delta_T$ as given by the two Corollaries~\ref{cor:6:Global} and \ref{cor:6:Local}.
@@ -986,17 +986,20 @@ We include the two variants of \GLRklUCB, based on \textbf{Local restarts} or \t
 \begin{table}[ht]
     % \begin{small} %XXX WARNING
     \centering
-    \begin{tabular}{c|cccccc}
-        \textbf{Exploration mechanism} & Problem $1$ & Problem $2$ & Problem $4$ \\
+    \begin{tabular}{cc|ccc}
+        \textbf{Exploration mechanism} & Variant & Problem $1$ & Problem $2$ & Problem $4$ \\
         \hline
-        Deterministic exploration (Local)   & $\mathbf{68 \pm 33}$ & $116 \pm 36$ & $99 \pm 33$ \\
-        Deterministic exploration (Global)  & $97 \pm 28$ & $134 \pm 36$ & $131 \pm 32$ \\
-        \hline
-        Uniform random exploration (Local)  & $74 \pm 30$ & $\mathbf{108 \pm 33}$ & $106 \pm 31$ \\
-        Uniform random exploration (Global) & $91 \pm 30$ & $134 \pm 33$ & $129 \pm 33$ \\
-        \hline
-        Tracking-based exploration (Local)  & $73 \pm 32$ & $104 \pm 33$ & $\mathbf{89 \pm 29}$ \\
-        Tracking-based exploration (Global) & $96 \pm 26$ & $133 \pm 32$ & $120 \pm 30$
+        \multirow{2}{*}{Deterministic exploration}
+        & Local   & $\mathbf{68 \pm 33}$ & $116 \pm 36$ & $99 \pm 33$ \\
+        & Global  & $97 \pm 28$ & $134 \pm 36$ & $131 \pm 32$ \\
+        % \hline
+        \multirow{2}{*}{Uniform random exploration}
+        & Local  & $74 \pm 30$ & $\mathbf{108 \pm 33}$ & $106 \pm 31$ \\
+        & Global & $91 \pm 30$ & $134 \pm 33$ & $129 \pm 33$ \\
+        % \hline
+        \multirow{2}{*}{Tracking-based exploration}
+        & Local  & $73 \pm 32$ & $104 \pm 33$ & $\mathbf{89 \pm 29}$ \\
+        & Global & $96 \pm 26$ & $133 \pm 32$ & $120 \pm 30$
     \end{tabular}
     \caption{Mean regret $\pm$ $1$ standard-deviation, for different choices of exploration mechanisms, on three problems of horizon $T=5000$, for \GLRklUCB, with local or global restarts.}
     \label{table:6:exploringDifferentForcedExplorationMechanisms}
