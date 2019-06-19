@@ -3,8 +3,7 @@
 \chapter{SMPyBandits: a state-of-the-art Python library to simulate MAB problems}
 \label{chapter:3}
 
-\graphicspath{{2-Chapters/3-Chapter/Images/}}
-\graphicspath{{2-Chapters/3-Chapter/SMPyBandits_paper.git/plots/}}
+\graphicspath{{2-Chapters/3-Chapter/Images/}{2-Chapters/3-Chapter/logs/}{2-Chapters/3-Chapter/SMPyBandits_paper.git/plots/}}
 
 \TODOL{Si j'ai le temps, je peux améliorer les expériences faites en 3.3 et 3.4. C'est déjà suffisant comme ça, je peux juste faire mieux !}
 
@@ -56,7 +55,7 @@ and that for theoretical works where optimality of the MAB algorithm matters, we
 Finally, in Appendix~\ref{sec:3:appendix} we include some small files showing how to use the library, and we conclude with some details regarding the use of parallel computing to speed-up simulations.
 
 
-\textbf{References.}
+\paragraph{References.}
 %
 The code for SMPyBandits is hosted at \texttt{\href{https://GitHub.com/SMPyBandits/SMPyBandits/}{GitHub.com/SMPyBandits/SMPyBandits}}, its documentation is at \texttt{\href{https://SMPyBandits.GitHub.io/}{SMPyBandits.GitHub.io}}, and all the library is freely publicly released under the MIT open-source License.
 This chapter is based on our article \cite{SMPyBanditsJMLR}.
@@ -246,6 +245,11 @@ The documentation also contains extensive examples of all intermediate numerical
 For example, Figures~\ref{fig:3:twoScreenshotsOfTheDocumentation} and \ref{fig:3:twoMoreScreenshotsOfTheDocumentation} below show four screenshots from the documentation.
 We show the main page, the list of algorithms in the \texttt{Policies} module, an example of the documentation of one algorithm (for the \klUCB-Switch algorithm from \cite{GarivierHadiji2018}), and a page detailing the API and organization of the library as well as instructions to follow if someone wants to implement a new model or a new algorithm.
 
+
+% FIXME?
+\vfill{}
+% FIXME?
+
 \begin{figure}[h!]  % [htbp]
     \centering
 	\includegraphics[width=0.495\linewidth]{overview_documentation_1.png}
@@ -266,8 +270,9 @@ We show the main page, the list of algorithms in the \texttt{Policies} module, a
 \subsection{How to run experiments?}
 
 We show how to install SMPyBandits, and an example of how to run a simple experiment.
-This bash code\footnote{~See this page \texttt{\href{https://SMPyBandits.GitHub.io/How_to_run_the_code.html}{SMPyBandits.GitHub.io/How\_to\_run\_the\_code.html}} for more details.} shows how to clone the code\footnote{~SMPyBandits is also available on Pypi, see \texttt{\href{https://pypi.org/project/SMPyBandits/}{pypi.org/project/SMPyBandits}}. You can install it directly with \texttt{sudo pip install SMPyBandits}, or from a \texttt{virtualenv} \cite{virtualenv}.},
-and install the requirements for Python 3 (once):
+See this page \texttt{\href{https://SMPyBandits.GitHub.io/How_to_run_the_code.html}{SMPyBandits.GitHub.io/How\_to\_run\_the\_code.html}} for more details.
+SMPyBandits is also available on Pypi, see \texttt{\href{https://pypi.org/project/SMPyBandits/}{pypi.org/project/SMPyBandits}}, you can install it directly with \texttt{sudo pip install SMPyBandits}, or from a \texttt{virtualenv} \cite{virtualenv}.
+This bash code shows how to clone the code, and install the requirements for Python 3 (once):
 
 % https://tex.stackexchange.com/a/12430/
 \begin{small}
@@ -285,6 +290,10 @@ $ pip install -r requirements.txt
     \end{listing}
 \end{small}
 
+Simulations are easily executed, \eg, Code~\ref{lst:3:howToRunBasicLibrary} shows how to start $N=1000$ repetitions of a simple non-Bayesian Bernoulli-distributed problem, for $K=9$ arms, an horizon of $T=10000$ and on $4$ CPU.
+It takes about $20$ min, on a $4$-core $64$-bit GNU/Linux laptop.
+Environment variables (\texttt{N=1000} etc) in the command line are not required, but they are convenient.
+
 % https://tex.stackexchange.com/a/12430/
 \begin{small}
 \begin{listing}[h!]
@@ -299,10 +308,6 @@ $ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=4 \
     \label{lst:3:howToRunBasicLibrary}
 \end{listing}
 \end{small}
-
-Simulations are easily executed, \eg, Code~\ref{lst:3:howToRunBasicLibrary} shows how to start $N=1000$ repetitions of a simple non-Bayesian Bernoulli-distributed problem, for $K=9$ arms, an horizon of $T=10000$ and on $4$ CPU.
-It takes about $20$ min, on a $4$-core $64$-bit GNU/Linux laptop.
-Environment variables (\texttt{N=1000} etc) in the command line are not required, but they are convenient.
 
 
 \subsection{Example of a simulation and illustration}
@@ -1543,19 +1548,15 @@ but we could also have done the same by writing a Python script that calls the \
 \begin{listing}[h!]
     \begin{minted}[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{bash}
 $ for T in $(seq 5000 5000 50000); do \
-    DEBUG=False NOPLOTS=False SAVEALL=True N_JOBS=-1 \
-        N=1000  BAYES=True    T=$T         K=8 \
-        python3 main.py configuration.py \
-    && cp logs/main_py3_log.txt \
-          logs/main_py3_log__N1000_BAYES_T{T}_K8.txt \
+    DEBUG=False NOPLOTS=False SAVEALL=True N_JOBS=-1 N=1000 BAYES=True \
+    T=$T   K=8  python3 main.py configuration.py \
+    && cp logs/main_py3_log.txt logs/main_py3_log__N1000_BAYES_T{T}_K8.txt \
   done
 $ for K in $(seq 2 2 32); do \
-    DEBUG=False NOPLOTS=False SAVEALL=True N_JOBS=-1 \
-        N=1000  BAYES=True    T=5000       K=$K \
-        python3 main.py configuration.py \
-    && cp logs/main_py3_log.txt \
-          logs/main_py3_log__N1000_BAYES_T5000_K{K}.txt \
-done
+    DEBUG=False NOPLOTS=False SAVEALL=True N_JOBS=-1 N=1000 BAYES=True \
+    T=5000 K=$K python3 main.py configuration.py \
+    && cp logs/main_py3_log.txt logs/main_py3_log__N1000_BAYES_T5000_K{K}.txt \
+  done
     \end{minted}
     \caption{Bash code to run the large-scale experiments presented in Sections~\ref{sec:3:reviewSPAlgorithms} and \ref{sub:3:additionalExperiments}, for $K=8$ and $T\in\{5000,\dots,50000\}$ and $T=5000$ and $K\in\{2,\dots,32\}$.}
     % \captionof{listing}{Small snippet of Bash code to run an experiment \label{lst:3:BashCodeToLaunchLargeExperiments}.}
@@ -1657,9 +1658,9 @@ On the other hand, when we plot a quantity ($R_T$, $\cT_T$, $\cM_T$) as a functi
 \label{sub:3:parallelSimulations}
 % Using multi-core to speed-up simulations
 
-\TODOL{Si on a la place, j'aimerai bien inclure ces pages suivantes ? Ce n'est pas crucial.
-    % C'est en ligne sur \href{https://smpybandits.github.io/About_parallel_computations.html}{\texttt{SMPyBandits.github.io/About\_parallel\_computations.html}}
-}
+% \TODOL{Si on a la place, j'aimerai bien inclure ces pages suivantes ? Ce n'est pas crucial.
+%     % C'est en ligne sur \href{https://smpybandits.github.io/About_parallel_computations.html}{\texttt{SMPyBandits.github.io/About\_parallel\_computations.html}}
+% }
 
 Nowadays, parallelism is everywhere in the computational world, and any serious framework for numerical simulations must try to gain performance from parallelism.
 In this last section, we quickly review the chosen approach for SMPyBandits (multi-core on one machine).
@@ -1690,13 +1691,13 @@ Similarly, changing from within the Python code is simple, by changing the \text
     \begin{listing}[h!]
         \begin{minted}[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{bash}
 $ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=1 \
-  python3 main.py configuration.py  # on only one core!
+  python3 main.py configuration.py  # on only one core
 
 $ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=-1 \
-  python3 main.py configuration.py  # parallel on all the cores!
+  python3 main.py configuration.py  # parallel on all the cores
 
 $ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=100 \
-  python3 main.py configuration.py  # parallel with too many jobs!
+  python3 main.py configuration.py  # parallel with too many jobs
         \end{minted}
         \caption{Running a simulation using either one CPU core with \texttt{N\_JOBS=1}, or all of them with \texttt{N\_JOBS=-1}, or more jobs than CPU cores with \texttt{N\_JOBS=20} (if there are $4$ cores). The later option is not advised, and \texttt{N\_JOBS=-1} gives the optimal speed-up factor.}
         % \captionof{listing}{Run a simulation using 1 or \texttt{N} cores \label{lst:3:runOneCoreOrMore}.}
@@ -1710,15 +1711,15 @@ $ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=100 \
 As long as the number of jobs (\texttt{N\_JOBS} here) is less then or equal to the number of physical cores in the CPU of the computer, the final speed-up in terms of total computation runtime is almost optimal.
 %  dividing the running time by \texttt{N\_JOBS}.
 But jobs are implemented as threads, so the speed-up cannot be more than the number of cores, and using for instance $20$ jobs on $4$-cores for the $20$ repetitions is sub-optimal, as the CPU will essentially spend all its time (and memory) managing the different jobs, and not actually doing the simulations.
-Using the above example, we illustrate the effect of using multi-jobs and multi-cores on the time efficiency of simulations using SMPyBandits. We consider three values of \texttt{N\_JOBS}, $1$ to use only one core and one job, $4$ to use all the $4$ cores of my $i5$ Intel CPU, and $20$ jobs.
+Using the above example, we illustrate the effect of using multi-jobs and multi-cores on the time efficiency of simulations using SMPyBandits. We consider three values of \texttt{N\_JOBS}, $1$ to use only one core and one job, $4$ to use all the $4$ cores of my $i5$ Intel CPU, and $100$ jobs.
 %
 We give in Table~\ref{table:3:speedUpTimeParallelComputations} an example of running time of an experiment with $T=10000$, and different number of repetitions and number of jobs.
 These three experiments correspond to the three lines of Code Example~\ref{lst:3:runOneCoreOrMore} shown above.
 %
-The results of Table~\ref{table:3:speedUpTimeParallelComputations} and of Figure~\ref{fig:3:analyze_speedup_as_nb_of_jobs}
-clearly illustrate that using more jobs than the number of CPU is sub-optimal, and that as soon as the number of repetitions is large enough, using one job by available CPU core (\ie, here $4$ jobs) gives a significant speed-up time.
+The results of Table~\ref{table:3:speedUpTimeParallelComputations} clearly illustrate that using more jobs than the number of CPU is sub-optimal, and that as soon as the number of repetitions is large enough, using one job by available CPU core (\ie, here $4$ jobs) gives a significant speed-up time.
 Due to the cost of orchestrating the different jobs, and memory exchanges at the end of each repetition, the parallel version is \emph{not} $4$ times faster, but empirically we always found it to be $2$ to $3.5$ times faster.
 %
+Similar conclusions can be drawn from Figure~\ref{fig:3:analyze_speedup_as_nb_of_jobs}, which reports the results of the same experiment on a machine with $n_{\text{cores}}=12$ CPU cores.
 More details are included in the documentation page
 \href{https://smpybandits.github.io/About_parallel_computations.html}{\texttt{SMPyBandits.github.io/About\_parallel\_computations.html}}
 
@@ -1739,27 +1740,26 @@ More details are included in the documentation page
         & \SI{76}{\second} ($1.14 \%$)  % 87/76
         \\
         $N=100$ repetitions & \SI{749}{\second}
-        & \SI{272}{\second} ($2.75 \%$)  % 749/272
+        & \SI{272}{\second} (\textcolor{darkgreen}{$2.75 \%$})  % 749/272
         & \SI{308}{\second} ($2.43 \%$)  % 749/308
         \\
         $N=500$ repetitions & \SI{2944}{\second}
-        & \SI{1530}{\second} ($1.92 \%$)  % 2944/1530
+        & \SI{1530}{\second} (\textcolor{darkgreen}{$1.92 \%$})  % 2944/1530
         & \SI{1846}{\second} ($1.59 \%$)  % 2944/1846
         \\
         % \hline
     \end{tabular}
-    \caption{Effect on the running time of using \texttt{N\_JOBS} jobs in parallel, on a machine with $n_{\text{cores}}=12$ CPU cores, for a simulation with $9$ different algorithms, for $K=9$ arms, a time horizon of $T=10000$. The numbers in parentheses are the absolute gain in comparison with the non-parallel simulation (first column), in percentages.}
+    \caption{Effect on the running time of using \texttt{N\_JOBS} jobs in parallel, on a machine with $n_{\text{cores}}=4$ CPU cores, for a simulation with $9$ different algorithms, for $K=9$ arms, a time horizon of $T=10000$. The percentages are the relative gains in comparison with the non-parallel simulation.}
     \label{table:3:speedUpTimeParallelComputations}
 % \end{footnotesize}
 \end{table}
 
 
-
 \begin{figure}[h!]  % [htbp]
 	\centering
-	% \includegraphics[width=0.75\linewidth]{logs/analyze_speedup_as_nb_of_jobs.pdf}
-	\includegraphics[width=0.75\linewidth]{logs/analyze_speedup_as_nb_of_jobs_normalize.pdf}
-	\caption{Absolute gain of the running time, for the simulation of Code Example~\ref{lst:3:runOneCoreOrMore}, as a function of the number of jobs \texttt{N\_JOBS}, for a $n_{\text{cores}}=12$-core machine.}
+	% \includegraphics[width=0.85\linewidth]{analyze_speedup_as_nb_of_jobs.pdf}
+	\includegraphics[width=0.95\linewidth]{analyze_speedup_as_nb_of_jobs_normalize.pdf}
+	\caption{Relative gain on the running time in comparison to using one job, as a function of the number of jobs \texttt{N\_JOBS}, for a $n_{\text{cores}}=12$-core machine running the simulation of Code Example~\ref{lst:3:runOneCoreOrMore}.}
 	\label{fig:3:analyze_speedup_as_nb_of_jobs}
 \end{figure}
 
