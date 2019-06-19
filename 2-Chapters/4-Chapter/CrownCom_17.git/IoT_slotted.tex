@@ -27,7 +27,7 @@ Note that instead of assuming that each static device uses a fixed channel, we c
 We first evaluate the probability of collision if dynamic devices randomly select channels (that is, a naive approach), and if a centralized controller would optimally distribute all of them in the channels at the beginning of the scenario.
 This second approach is ideal, but not realistic the most common situation of decentralized co-located IoT networks, and it is just used here as a reference.
 Then, these three reference scenarios allow to evaluate the performance of bandit algorithms, such as \UCB{} and TS, in a decentralized network, in terms of successful communication rate, as it reflects the network efficiency.
-We show that these algorithms have near-optimal performance, even when the proportion of end-devices increases and the interfering traffic from other devices becomes less and less stochastic.
+We show that these algorithms have near-optimal performance, even when the proportion of end-devices increases and the interfering traffic from other devices becomes less and less stochastic, more and more fluctuating and unpredictable.
 
 
 % \textbf{Outline.}
@@ -74,8 +74,11 @@ as each IoT protocol or IoT networks can choose to use a different subset of cha
 %
 In order to simulate networks designed for the IoT, we consider a protocol \textbf{with no sensing} and no repetition of uplink messages. The gateway is in charge of sending back an acknowledgement, after some fixed-time delay, to any device paired with this gateway in this network (\ie, in \textcolor{blue}{blue} in Figure~\ref{fig:41:system_model1}) who succeeded in sending an uplink packet.
 %
-By considering a small number of wireless channels, and a unique PHY layer configuration\footnote{~But MAB learning to also optimize on the PHY layer parameters have started to be explored, after our work \cite{Bonnefoi17}, see for instance \cite{KerkoucheAlami18}.} (\ie, modulation, waveform, etc), and in case of a non-uniform traffic in the different channels,
+By considering a small number of orthogonal wireless channels, and a unique PHY layer configuration (\ie, modulation, waveform, etc), and in case of a non-uniform traffic in the different channels,
 the device can improve their usage of the network if they are able to \emph{learn} on the fly the best channels to use, that is, the most vacant one. Indeed, in this model, the \emph{quality} of the channels (\ie, the ressources) are identified by their vacancy, or one minus their occupancy rates.
+
+We note that MAB learning has also started to be applied to also optimize the PHY layer parameters, see for instance \cite{KerkoucheAlami18} following our article \cite{Bonnefoi17},
+but in this thesis we chose to restrict to the spectrum access problem and thus we only MAB models where the arms correspond to orthogonal frequency bands.
 
 
 \paragraph{Slotted protocol.}
@@ -138,7 +141,7 @@ We prefer this choice rather than non-crowded networks, \ie, where $S + D \leq K
 % \footnote{~Here, $K$ will typically be about $10$ different radio channels, usually in the same RF band and with separate mean carrier frequencies, and the number of devices will be of the order of $1000$ to $10000$.}.
 \indent
 On the opposite, imagine if there were only $K=4$ channels being occupied by $D+S = 100$ devices, each communicating with a high rate of $p=1/10$, with a non-zero occupancy in each channel (\ie, $\forall k, S_k > 0$). Then, almost all time slots will lead to collisions in all channels, for a uniformly random access scheme, and thus the network efficiency (\ie, successful communication rate) will be so close to zero that using learning algorithms cannot improve much.
-Such scenario is not our target of interest, and thus we prefer to only consider feasible scenarios where $p$ is smaller than $K/(S+D)$, in order to \emph{have an average of active devices not larger\footnote{~In Chapter~\ref{chapter:5} we simply consider the case of $p=1$ and $D \leq K$ dynamic devices.} than the number of channels}.
+Such scenario is not our target of interest, and thus we prefer to only consider feasible scenarios where $p$ is smaller than $K/(S+D)$, in order to \emph{have an average of active devices not larger\footnote{~In Chapter~\ref{chapter:5} we simply consider the case of $p=1$ and $M = D \leq K$ dynamic devices, referred to as \emph{players}.} than the number of channels}.
 
 
 \textbf{Link with the MAB model:}
@@ -190,7 +193,7 @@ Their short names are used in the legend on Figures~\ref{fig:41:from10to100}, \r
 
 
 \paragraph{$1^{\text{st}}$ - Naive policy: Random Channel Selection} (``\textcolor{darkgreen}{Random}'')
-%
+
 We derive here the probability of having a successful transmission, for a dynamic device, in the case where all the dynamic devices make a purely random channel selection (\ie, uniform on $i \in [K]$).
 This reflects a naive policy that could be implemented by all the dynamic devices, and it provides a reference scenario to compare against.
 Note that even nowadays this is still the solution implemented for real IoT devices deployed in new LoRaWAN networks.
@@ -198,7 +201,7 @@ Note that even nowadays this is still the solution implemented for real IoT devi
 In this case, for one dynamic device, a successful transmission happens if it is the only device to choose channel $k$, at that time slot.
 the $S_k$ static devices in each channel $k$ are assumed to be independent, and static and dynamic devices are assumed to \emph{not} transmit at each time $t$ with a fixed probability $1-p$,
 so probability of successful transmission is computed as follows
-%
+
 \begin{equation}
     \Pr(\text{success}|\text{sent}) = \sum_{k=1}^{K} \underbrace{\Pr(\text{success}|\text{sent in channel}\;k)}_{\text{No one else sent in channel}\; k} \; \underbrace{\Pr(\text{sent in channel}\,k)}_{= 1/K, \text{ by uniform choice}}
 \end{equation}
@@ -219,7 +222,7 @@ This expression \eqref{eq:41:strategynaive} is constant (in time), and easy to c
 
 
 \paragraph{$2^{\text{nd}}$ - (Unachievable) Optimal oracle policy} (``\textcolor{orange}{Optimal}'')
-%
+
 We investigate here the optimal policy that can be achieved if the dynamic devices have a perfect knowledge of the repartition of static devices $(S_k)_k$, and a fully centralized decision making\footnote{~This optimal policy needs an \emph{oracle} seeing the entire system, and affecting all the dynamic devices, once and for all, for a fixed stationary scenario, in order to avoid any signaling overhead. This is not possible in IoT contexts as several completely independent networks may operate in a single place.} is possible.
 We want to find the stationary repartition of devices into channels that maximizes the probability of having a successful transmission.
 
@@ -280,7 +283,7 @@ $\widehat{D_k} = \lfloor D_k^* \rfloor$ for $1 \leq k < K$, and $\widehat{D_{K}}
 
 
 \paragraph{$3^{\text{rd}}$ - A greedy approach of the oracle strategy} (``\textcolor{deeppurple}{Good sub-optimal}'')
-%
+
 We propose a \emph{sequential} approximation of the optimal policy:
 the third solution is a sub-optimal naive policy, simple to set up, but also unpractical as it also needs an oracle.
 End-devices are iteratively inserted in the channels with the lowest load (\ie, the index $k$ minimizing $S_k + D_k(\tau)$ at global time step $\tau$). Once the number of devices in each channel is computed, the probability of sending successfully a message is also given by equation \eqref{eq:41:prob_col}.
