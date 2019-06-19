@@ -366,7 +366,8 @@ The aforementioned previous works have shown that MAB algorithms can be applied 
 But if we consider CR-ready devices that cannot perform sensing, such as low-cost and low energy consumption end-devices designed for the future Internet of Things networks, the MAB model that uses sensing to detect PU in the OSA case can no longer be applied.
 Moreover, in most cases, the IoT networks use unlicensed bands, and as such there are no longer a distinction between PU and SU.
 %
-The specificities of IoT networks can be listed as follows.
+The specificities of IoT networks can be listed as follows,
+and we refer to \cite{Centenaro16} for more details.
 \begin{itemize}\tightlist
     \item
     most IoT networks run in unlicensed bands (no more distinction between PU and SU),
@@ -381,7 +382,7 @@ The specificities of IoT networks can be listed as follows.
     \item
     IoT devices have low duty cycles (only a few messages every minute) to very low duty cycles (only a few messages a day).
 \end{itemize}
-\TODOL{FIXME more specificities? Est-ce que je dois mentionner d'autres contraintes ? Il me faudrait aussi une ou deux références genre survey des standards IoT}
+\TODOL{FIXME more specificities? Est-ce que je dois mentionner d'autres contraintes }
 
 One could think that in the absence of sensing, Reinforcement Learning is no longer possible, but any real IoT device still receives some information about its environment after some or every transmissions.
 In most IoT standards an up-link message sent to a base station is usually followed by a down-link message sent back by the base station, to indicate if the up-link message was successfully received and understood.
@@ -406,7 +407,8 @@ If we sum-up the studied problems and summarize them in one question, it would b
 We answer partially to this problematic by the following research steps.
 
 
-\subsection{Focusing on MAB algorithms}
+% \subsection{Focusing on MAB algorithms}
+\subsection{Part~\ref{part:Introduction}}
 
 \paragraph{Chapter~\ref{chapter:2}.}
 %
@@ -441,7 +443,8 @@ This work on aggregating MAB algorithms was motivated for the OSA case of Cognit
 This contribution was presented at the IEEE WCNC conference in Barcelona, Spain, in April $2018$.
 
 
-\subsection{Focusing on IoT networks.}
+% \subsection{Focusing on IoT networks.}
+\subsection{Part~\ref{part:MABIOT}}
 
 In the second Part~\ref{part:MABIOT} of this thesis, we start by proposing and studying different models of IoT networks, with simulations and a real-world proof-of-concept, and then we study interesting questions on two mathematical models of MAB that arise from our first contribution.
 
@@ -529,14 +532,16 @@ Finally the adversarial case of multi-player bandit has started to be studied, i
 
 
 As explained above, the model of Chapter~\ref{chapter:4} was found intractable to analyze, mainly because we consider an IoT network with many end-devices, all following random activation patterns.
-The difficulty thus resides in the fact that we are trying to analyze MAB algorithms, designed to tackle stationary problems, on a non-stationary problem. %XXX
-Generalizing to different activation probabilities would lead to a model even harder to analyze, and enforcing at most $M \leq K$ devices is not really realistic for IoT networks, but leads to the model of Chapter~\ref{chapter:5}.
+The difficulty does not reside in the fact that we are trying to analyze MAB algorithms, designed to tackle stationary problems, on a non-stationary problem,
+but rather that we are analyzing algorithms which are all playing in different (random) subsets of the global synchronized time.
+Generalizing to different activation probabilities would lead to a model even harder to analyze, and enforcing at most $M \leq K$ devices is not really realistic for IoT networks, but leads to the model of Chapter~\ref{chapter:5}.\\
 %
+\indent
 On the first hand, if the activation pattern of all devices could be fixed, for instance based on a centralized affectation of the devices to different time slots, then the model of multi-player bandit from Chapter~\ref{chapter:5} can be used to let the devices learn an optimal orthogonal affectation of $M \leq K$ devices in the $K$ channels.
 However, it is hard to argue that this hypothesis of a centralized time schedule for the end-devices can be realistic, because we study the case of decentralized learning for OSA and IoT precisely in order to avoid any central control of the devices by the base station, as we explained above.
 %
 On the other hand, another way to relax the non-stationary hypothesis is to take the point-of-view of one device, like in the OSA case mentioned above, where the focus is on one SU surrounded by many PU having stationary behaviors.
-If we focus on one IoT device, we can assume that the environment (\ie, the surrounding devices) is stationary on some time intervals, which leads to the last contribution and chapter of this thesis.
+If we focus on one IoT device, we could assume that the environment (\ie, the surrounding devices) is stationary on some time intervals, which leads to the last contribution and chapter of this thesis.
 % DONE explain why is it interesting to study piece-wise stationary problems from the point-of-view of one player...
 
 
@@ -544,14 +549,16 @@ If we focus on one IoT device, we can assume that the environment (\ie, the surr
 %
 In order to also understand precisely how MAB algorithms behave under non-stationary environment, we studied the literature on adversarial and on non-stationary MAB, for both cases of slowly-varying and abruptly-changing environments.
 We begin our last Chapter~\ref{chapter:6} by reviewing the existing works,
-and we chose to focus on the piece-wise stationary problem.
-Two main families of algorithms have been proposed for this problem,
+and we chose to focus on the piece-wise stationary problem,
+meaning that the underlying bandit problem is stationary on some intervals, separated by change-points located at unknown times.
+Assuming the environment to be piece-wise stationary indeed makes sense for applications to wireless networks, where a change-point can for instance correspond to the arrival of a new group of end-devices in the network. Examples of such situation can be a new company arrives on the market, or a farmer installs sensors on a herd of cows, etc.
+%
+Two main families of algorithms have been proposed for the piece-wise stationary problem,
 that usually consist in combining an efficient policy designed for the stationary MAB problem (\eg, \UCB{} or \klUCB) and a way to adapt to changes in the arms distributions.
-Passively adaptive policies use a window of a fixed or evolving size, or a discount factor to slowly forget about the past observations,
-while actively adaptive policies use a statistic test to detect the change-point (\ie, the time steps between two consecutive stationary intervals).
+Passively adaptive policies use a window of a fixed or evolving size \cite{Garivier11UCBDiscount}, or a discount factor, in order to forget about the past observations \cite{Kocsis06,Gupta11thompson},
+while actively adaptive policies use a statistical test to detect the change-points \cite{MellorShapiro13,Allesiardo15}.
+%
 As the recent literature showed that the later approach is usually more competitive, and usually obtains better results from both empirical and theoretical aspects, we chose to develop our own actively adaptive algorithm.
-
-\TODOL{Mardi soir je peux mieux expliquer, là je suis long et chiant je trouve}
 
 Following two recent previous works \cite{LiuLeeShroff17,CaoZhenKvetonXie18}, we combine an efficient index policy (\klUCB) and an efficient change-point detection test, under the assumption of bounded rewards.
 We build on very recent results on the Generalized Likelihood Ratio test (GLRT) for Gaussian and sub-Gaussian variables \cite{Maillard2018GLR}, and we instead focus on bounded rewards and Bernoulli distributions.
@@ -574,8 +581,8 @@ We conclude this thesis in Chapter~\ref{chapter:conclusion}, to give some perspe
 Most of the contributions that we present in this thesis call for more developments, on both directions of providing more mathematical analysis and implementing new proof-of-concepts using real wireless hardware and realistic Internet of Things networks.
 %
 This manuscript ends with the appendixes, first with a short overview of another contribution, in Appendix~\ref{app:2:DoublingTricks} we discuss about our work on doubling-trick, in order to remove the need for an algorithm to know the horizon of the bandit game before starting to play it.
-The rest of the appendix contains a list of abbreviations and notations, then lists of figures, algorithms, code samples and tables.
-The list of the bibliographical references used in this thesis are given at the end.
+The rest of the appendix contains a list of abbreviations and notations, then lists of figures, algorithms, code samples and tables,
+and finally the list of the bibliographical references.
 
 
 % \paragraph{Our approach.}
@@ -589,7 +596,7 @@ The list of the bibliographical references used in this thesis are given at the 
 % We proposed new algorithms, some of which are proven to converge efficiently.
 
 
-\newpage % WARNING
+% \newpage % WARNING
 
 % ----------------------------------------------------------------------------
 \subsection{Summary of the contributions}
@@ -648,14 +655,14 @@ To summarize the main contributions of this thesis, we can list the following po
 \end{itemize}
 
 
-\newpage  % WARNING
+% \newpage  % WARNING
 
 % ----------------------------------------------------------------------------
 \section{Organization of the thesis}
 \label{sec:1:organization}
 
-The reading order of the manuscript can be any top-down path between the Introduction in the current Chapter~\ref{chapter:1}, and the Conclusion in the last Chapter~\ref{chapter:conclusion}. As the graph in Figure~\ref{fig:1:organization} shows,
-the thesis is organized in two parts.
+The reading order of the manuscript can be any top-down path between the Introduction in the current Chapter~\ref{chapter:1}, and the Conclusion in the last Chapter~\ref{chapter:conclusion}.
+As the graph in Figure~\ref{fig:1:organization} shows, the thesis is organized in two parts.
 
 \begin{figure}[h!]
     \centering
