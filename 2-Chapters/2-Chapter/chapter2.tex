@@ -562,6 +562,8 @@ and that the samples $Y_{k,t}$ are all \iid{} of mean $\mu_k$.
 The \emph{gap} between any arm $k\in[K]$ and an optimal arm is defined as $\Delta_k \eqdef \mu^* - \mu_k$
 (an arm $k$ is thus sub-optimal if and only if $\Delta_k > 0$),
 and thus we can write the following decomposition on the regret.
+%
+\emph{Its proof is simple and it is not a contribution, but we include it for readers that are unfamiliar with conditioning arguments}.
 
 \begin{proposition}[Regret decomposition]\label{prop:2:RegretDecomposition}
 \begin{leftbar}[propositionbar]  % XXX leftbar propositionbar, comment if needed
@@ -620,15 +622,21 @@ Even if we prove that controlling $N_k(T)$ is no longer sufficient to obtain low
 
 We include here two well-known results about what bandit algorithms \emph{cannot} do.
 First, a \emph{problem-dependent lower-bound} states that any algorithm suffers a regret at least $\Omega(\log T)$ on any problem (from \cite{LaiRobbins85}).
-Then, a \emph{worst-case result} states that any algorithm can perform as badly as $\Omega(\sqrt{K T})$ on a certain problem instance, designed specifically to make it perform badly (a result from \cite{Auer02NonStochastic}),
+Then, a \emph{worst-case result} states that for any algorithm, there exists a certain problem instance such that the algorithm can perform as badly as $\Omega(\sqrt{K T})$ (a result from \cite{Auer02NonStochastic}),
 %
 In certain families of problems, \eg, $K$ Bernoulli distributed arms, the difficulty of a problem is characterized by a constant that depends only on the arms means. This measure of difficulty of a problem is hidden in the $\Omega$ notation in these lower-bounds.
 
 In all this section, we restrict to stationary stochastic problems with $K\geq2$ arms.
 We do not give proofs of the following theorems, as they can be found in the historical papers, and simpler proofs are given in recent references, such as \cite{Bubeck12}, \cite{LattimoreBanditAlgorithmsBook}, or Chapter~2 in \cite{Slivkins2019} for instance.
 %
-Let $\cI$ denote the set of all problem instances, with $K \geq 2$ arms. We assume the rewards lie in $[0,1]$ (but no additional hypothesis).
-To specify the dependency on an instance $I$, we denote the regret of $\cA$ on instance $I$ and horizon $T$ by $R_T^{\cA}(I)$.
+Let $\cI$ denote the set of all problem instances, with $K \geq 2$ arms.
+We assume the rewards lie in $[0,1]$,
+to present the lower-bounds, we prefer to focus on Bernoulli distributions, for simplicity.
+
+To specify the dependency on an instance $I\in\cI$, we denote the regret of $\cA$ on instance $I$ and horizon $T$ by $R_T^{\cA}(I)$.
+We also index the Landau notations $o(\bullet)$ and $\bigO{\bullet}$ by $I$,
+for instance $R_T^{\cA}(I) = \smallO_I{\log(T)}$ means $R_T^{\cA}(I) = \smallO{c_I \log(T)}$
+where this notation means that the ``constant'' $c_I$ can depend on the problem instance $I$ (\eg, on the means and on $K$) but not on the time horizon $T$.
 
 
 \paragraph{Problem-dependent lower-bound in $\Omega(\log T)$.}
@@ -636,13 +644,13 @@ To specify the dependency on an instance $I$, we denote the regret of $\cA$ on i
 The following two theorems were proven in \cite{LaiRobbins85}.
 These lower-bounds are of highest interest to design efficient algorithms,
 and a significant part of the research literature on MAB algorithms has focused on finding algorithms that matches the Lai and Robbins' lower-bound asymptotically.
-This means that an upper-bound is proven on the regret of algorithm $\cA$, that asymptotically matches the lower-bound, with the same constant in the big-$\cO$ notation (in which case we say that the algorithm is \emph{optimal}), or with a larger constant (the algorithm is said to be \emph{order-optimal} in such case).
+This means that an upper-bound is proven on the regret of algorithm $\cA$, that asymptotically matches the lower-bound, with the same constant in the big-$\cO$ notation (in which case we say that the algorithm is asymptotically \emph{optimal}), or with a larger constant (the algorithm is said to be \emph{order-optimal} in such case).
 
 
 \begin{theorem}\label{thm:2:firstLogTLowerBound}
 \begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
-    \emph{No algorithm $\cA$ can achieve} a (mean) regret $R_T^{\cA}(I) = \smallO{c_I \log(T)}$ for all problem instances $I \in \cI$,
-    where this notation means that the ``constant'' $c_I$ can depend on the problem instance $I$ (\eg, on the means and on $K$) but not on the time horizon $T$.
+    \emph{No algorithm $\cA$ can achieve} a (mean) regret $R_T^{\cA}(I) = \smallO_I{\log(T)}$ for all Bernoulli problem instances $I \in \cI$.
+    \cite[Theorem~2.12]{Slivkins2019}
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
@@ -652,21 +660,25 @@ In particular, it is necessary to rule out algorithms that always pick the same 
 \begin{definition}\label{def:2:uniformlyEfficientAlgorithm}
 \begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
     An algorithm $\cA$ is \emph{uniformly efficient} if its (mean) regret satisfies
-    $R_T^{\cA}(I) = \smallO{C_{I,\alpha} T^{\alpha}}$,
-    for any value $\alpha>0$ and any problem instance $I\in \cI$,
-    where this notation means that the ``constant'' $C_{I,\alpha}$ can depend on the problem instance $I$ and on $\alpha$, but \emph{not} on the time horizon $T$.
+    $R_T^{\cA}(I) = \smallO_I{T^{\alpha}}$,
+    for any value $\alpha>0$ and any problem instance $I\in \cI$.
+    % where this notation means that the ``constant'' $C_{I,\alpha}$ can depend on the problem instance $I$ and on $\alpha$, but \emph{not} on the time horizon $T$.
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
 
-This family is non-empty as it contains for instance the $\UCB_1$ algorithm, since its regret is proven to be logarithmic on any problem instance with bounded rewards (in Theorem~\ref{thm:2:UCBregretBound} below).
-Now we can state the second logarithmic lower-bound, for algorithms in this family:
+This family is non-empty as it contains for instance the $\UCB_1$ algorithm, since its regret is proven to be logarithmic on any Bernoulli problem instance (in Theorem~\ref{thm:2:UCBregretBound} below).
+Now we can state the second logarithmic lower-bound, for algorithms in this family.
 
 \begin{theorem}\label{thm:2:secondLogTLowerBound}
 \begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
     If $\cA$ is uniformly efficient,
-    then for any arbitrary problem instance $I$,
-    there exists a constant $C_I$ depending only on $I$,
-    and a time $T_0$ such that $\forall T \geq T_0, \;\;\; R_T^{\cA}(I) \geq C_I \log(T)$.
+    then for any arbitrary Bernoulli problem instance $I$,
+    the regret is asymptotically lower-bounded by $C_I \log(T)$
+    \cite[Theorem~2.13]{Slivkins2019},
+    or in other words
+    \[ \liminf_{T\to\infty} \frac{R_T^{\cA}(I)}{\log(T)} \geq C_I. \]
+    % there exists a constant $C_I$ depending only on $I$,
+    % and a time $T_0$ such that $\forall T \geq T_0, \;\;\; R_T^{\cA}(I) \geq C_I \log(T)$.
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
@@ -675,24 +687,25 @@ This third theorem specifies possible values of the constants $C_I$ for the two 
 \begin{theorem}\label{thm:2:forSecondLogTLowerBound}
 \begin{leftbarnospace}[theorembar]  % XXX leftbar theorembar, comment if needed
     Let $\cA$ denote a uniformly efficient algorithm,
-    and $I$ an arbitrary problem instance.
+    and $I$ an arbitrary Bernoulli problem instance.
+    \cite[Theorem~2.12]{Slivkins2019}
     \begin{itemize}
         \item
-        The bound from Theorem~\ref{thm:2:secondLogTLowerBound} holds with,
+        The bound from Theorem~\ref{thm:2:secondLogTLowerBound} holds with
         % \begin{equation}\label{eq:2:forSecondLogTLowerBound}
         $C_I = \mu^* (1 - \mu^*) \sum\limits_{k: \Delta_k > 0} \frac{1}{\Delta_k}$.
         % \end{equation}
         \item
-        For any $\varepsilon>0$, the bound from Theorem~\ref{thm:2:secondLogTLowerBound} also holds with,
+        For any $\varepsilon>0$, the bound from Theorem~\ref{thm:2:secondLogTLowerBound} also holds with
         % \begin{equation}\label{eq:2:forSecondLogTLowerBound2}
-        $C_I = \sum\limits_{k: \Delta_k > 0} \frac{\Delta_k}{\KL(\mu_k, \mu^*)} - \varepsilon$.
+        $C_I = \sum\limits_{k: \Delta_k > 0} \frac{\Delta_k}{\kl(\mu_k, \mu^*)} - \varepsilon$.
         % \end{equation}
     \end{itemize}
 \end{leftbarnospace}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
 Moreover, it is interesting to note that the second lower-bound of Theorem~\ref{thm:2:forSecondLogTLowerBound} can be directly used to design efficient algorithms\footnote{~Tracking this quantity, by using empirical estimates of the means, is used for instance in the OSSB algorithm proposed in \cite{Combes17}, which is proven to attain the lower-bound for a wider range of problems (for problems called structured stochastic bandits).}, as thanks to the regret decomposition given in Proposition~\ref{prop:2:RegretDecomposition} above, the expression of $C_I$ essentially says that any efficient algorithm
-should sample each sub-optimal arm $k$ about $\log(T)/\KL(\mu_k,\mu^*)$ times in the total of $T$ time steps.
+should sample each sub-optimal arm $k$ about $\log(T)/\kl(\mu_k,\mu^*)$ times in the total of $T$ time steps.
 
 
 Many algorithms have been proven to achieve logarithmic regret in the stochastic case,
@@ -707,15 +720,15 @@ For more details, we refer to Chapter~16 of \cite{LattimoreBanditAlgorithmsBook}
 \paragraph{Worst-case lower-bound in $\Omega(\sqrt{T})$.}
 %
 For a fixed horizon $T$, it is interesting to note that one can find instances $I$ that are so ``hard'' that a logarithmic regret (lower or upper) bound that uses a constant $C_I$ no longer brings any information.
-Indeed, we can naively bound the regret by $R_T^{\cA} \leq (\max_k \Delta_k) T$, and thus if $(\max_k \Delta_k)$ can be taken so small that $C_I \log(T) \gg (\max_k \Delta_k) T$, and thus a regret upper bound like $R_T^{\cA} \leq C_I \log(T)$ is useless.
+Indeed, we can naively bound the regret by $R_T^{\cA} \leq (\max_k \Delta_k) T$, and thus if $(\max_k \Delta_k)$ can be taken so small that $C_I \log(T) \gg (\max_k \Delta_k) T$, a regret upper bound like $R_T^{\cA} \leq C_I \log(T)$ is useless.
 %
-\begin{smallproof}\label{proof:2:worstCaseLowerBound}
-    For an example, consider any large horizon $T>10$, and $K=2$ Bernoulli arms.
-    Chose any small $\varepsilon$ such that $\varepsilon \ll \sqrt{4 \log(T) / T}$, then chose let $\mu_1 = 1/2$ and $\mu_2 = 1/2 - \varepsilon$.
-    The constant $C_I$ from the first case of Theorem~\ref{thm:2:forSecondLogTLowerBound} is $C_I = 1 / (4 \varepsilon)$ and $\Delta=\varepsilon$ and it becomes so large that
-    the logarithmic upper-bound is useless in such case, as
-    $\varepsilon \ll \sqrt{\frac{4 \log(T)}{T}} \Longleftrightarrow \frac{1}{4\varepsilon} \log(T) \gg \Delta T$.
-\end{smallproof}
+% \begin{smallproof}\label{proof:2:worstCaseLowerBound}
+%     For an example, consider any large horizon $T>10$, and $K=2$ Bernoulli arms.
+%     Chose any small $\varepsilon$ such that $\varepsilon \ll \sqrt{4 \log(T) / T}$, then chose let $\mu_1 = 1/2$ and $\mu_2 = 1/2 - \varepsilon$.
+%     The constant $C_I$ from the first case of Theorem~\ref{thm:2:forSecondLogTLowerBound} is $C_I = 1 / (4 \varepsilon)$ and $\Delta=\varepsilon$ and it becomes so large that
+%     the logarithmic upper-bound is useless in such case, as
+%     $\varepsilon \ll \sqrt{\frac{4 \log(T)}{T}} \Longleftrightarrow \frac{1}{4\varepsilon} \log(T) \gg \Delta T$.
+% \end{smallproof}
 
 For this reason, the research literature has also been interested by another family of regret bounds, that are not problem-dependent but worst-case, or also called minimax \cite{Audibert2009minimax,audibert2010minimax} or problem-independent.
 Hence it is interesting to quote another lower-bound on the regret, that can bring useful information in such settings.
