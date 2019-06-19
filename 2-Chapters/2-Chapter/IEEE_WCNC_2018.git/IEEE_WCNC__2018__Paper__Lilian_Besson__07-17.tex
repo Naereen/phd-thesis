@@ -5,16 +5,17 @@ As we said, a third possible approach is to select \emph{on the run} the best al
 To the best of our knowledge, aggregation algorithms, such as \ExpQ{} which dates back from 2002 \cite{Auer02},
 have never been used in practice for stochastic MAB problems.
 For instance, if we look at the applications of MAB for Opportunistic Spectrum Access, like it was proposed in \cite{Jouini09,Jouini10,Jouini12},
-online selection of MAB algorithms was never discussed.
+online selection of MAB algorithms was never discussed,
+and usually the considered algorithm is simply $\UCB_1$, without discussion regarding this choice.
 % and we show that it appears empirically sub-optimal when applied to simple stochastic problems.
 
-We present an improved variant of \ExpQ, called \Aggr.
-For synthetic MAB problems, with Bernoulli or other distributions for $K$ arms, simulation results are presented to demonstrate its empirical efficiency.
-We combine classical algorithms, such as Thompson sampling, Upper-Confidence Bounds algorithms (\UCB{} and variants), and Bayesian or \klUCB.
-%
-Our algorithm offers good performance compared to state-of-the-art algorithms
-(\ExpQ{}, \CORRAL{} or \LearnExp{}) \cite{Agarwal16,Singla17},
-and appears as a robust approach to select on the run the best algorithm for any stochastic MAB problem, being more realistic to real-world radio settings than any tuning-based approach.
+% We present an improved variant of \ExpQ, called \Aggr.
+% For synthetic MAB problems, with Bernoulli or other distributions for $K$ arms, simulation results are presented to demonstrate its empirical efficiency.
+% We combine classical algorithms, such as Thompson sampling, Upper-Confidence Bounds algorithms (\UCB{} and variants), and Bayesian or \klUCB.
+% %
+% Our algorithm offers good performance compared to state-of-the-art algorithms
+% (\ExpQ{}, \CORRAL{} or \LearnExp{}) \cite{Agarwal16,Singla17},
+% and appears as a robust approach to select on the run the best algorithm for any stochastic MAB problem, being more realistic to real-world radio settings than any tuning-based approach.
 
 % \TODOL{This chapter is basically a raw include from my paper ``Aggregation of Multi-Armed Bandits learning algorithms for Opportunistic Spectrum Access'', see https://hal.inria.fr/hal-01705292}
 
@@ -32,14 +33,48 @@ We would like that $\Alg_{\mathrm{aggr}}$
 performs almost as well as the best of the $\Alg_a$, with a good choice of its parameters, independently of the MAB problem.
 Ideally $\Alg_{\mathrm{aggr}}$ should perform similarly to the best of the $\Alg_a$.
 %
-To simplify the presentation, we only aggregate bandit algorithms that give deterministic recommendations:
-one arm is chosen with probability $1$ and the others with probability $0$.
-However, both \ExpQ{} and \Aggr{} can be adapted to aggregate randomized bandit algorithms, \ie, algorithms that output a probability distribution $\xi_t$ over the arms $[K]$ at each time step, and draw the next selected arm according to this distribution
-(\eg, Thompson sampling).
+To simplify the presentation, we restrict in Algorithm~\ref{algo:25:Aggr} to bandit algorithms that give deterministic recommendations: one arm is chosen with probability $1$ and the others with probability $0$.
+%
+However, both \ExpQ{} and \Aggr{} can be adapted to aggregate randomized bandit algorithms, \ie, algorithms that output a probability distribution $q(t) = (q_k(t))_{k\in[K]}$ over the $K$ arms at each time step, and draw the next selected arm according to this distribution.
+For instance, Thompson sampling uses its posterior distribution, or \UCB{} can use a distribution with a mass of $1/n$ if there are $n\geq2$ arms of maximal index, in case of tie in the $\argmax$.
 
-The aggregation algorithm maintains a probability distribution $\pi^{t}$ on the $N$ algorithms $\Alg_a$, starting from a uniform distribution:
+The aggregation algorithm maintains a probability distribution $\pi^{t}$ on the $N$ algorithms $\Alg_a$ (\ie, $\pi^{t}\in\Delta_N$ the simplex of dimension $N$), starting from a uniform distribution:
 $\pi^t_a$ is the probability of trusting the decision made by algorithm $\Alg_a$ at time $t$.
-$\Alg_{\mathrm{aggr}}$ then simply performs a weighted vote on its algorithms: it decides whom to trust by sampling $a \in [N]$ from $\pi^t$, then follows $\Alg_a$'s decision.
+$\Alg_{\mathrm{aggr}}$ then simply performs a weighted vote on its algorithms: it first decides whom to trust by sampling $a \in [N]$ from $\pi^t$, then follows $\Alg_a$'s decision: $a \sim \pi^t, A_{\mathrm{aggr}}(t) = A(t) = A_a(t)$.
+We prove below that it is equivalent to first let all the algorithms decide their arm, \ie, $A_a(t)$, and then to compute
+$\forall k\in[K], p^{t}_k \eqdef \sum_{a = 1}^{N} \pi^{t}_a \times \indic(\{A_a(t) = k\})$, the weighted probability that one of the $N$ aggregated algorithms chose arm $k$, and finally to sample $A(t)\sim\pi^t$.
+
+\begin{proposition}\label{prop:25:equivalenceOfSamplingSchemes}
+\begin{leftbar}[propositionbar]  % XXX leftbar propositionbar, comment if needed
+	The two following sampling schemes for the aggregated algorithm $\Alg_{\mathrm{aggr}} \left[\Alg_1, \dots, \Alg_N\right]$ are equivalent,
+	\ie, they give the same distribution on the action chosen by $\Alg_{\mathrm{aggr}}$, $A_{\mathrm{aggr}}(t) = A(t)$.
+	%
+	\begin{enumerate}
+		\item Sample $a(t)\sim \pi^t$ first, then trusts $\Alg_{a(t)}$'s decision: $A_{\mathrm{aggr}}(t) = A(t) = A_{a(t)}(t)$,
+		\item Let $A_a(t)$ be the arm chosen by algorithm $\Alg_a$ (sampled from $q_a^t$), for each $a\in[N]$, and compute $\forall k\in[K], p^{t}_k \eqdef \sum\limits_{a = 1}^{N} \pi^{t}_a \times \indic(A_a(t) = k)$. Then, play $A_{\mathrm{aggr}}(t) = A(t) \sim p^t$.
+	\end{enumerate}
+	% \begin{align}\label{eq:25:equivalenceOfSamplingSchemes}
+	% 	 \\
+	% \end{align}
+\end{leftbar}  % XXX leftbar propositionbar, comment if needed
+\end{proposition}
+\begin{proof}
+	For any fixed time step $t\in[T]$,
+	we denote respectively $P(t)$ and $P'(t)$ the distribution of action of the aggregated algorithm $\Alg_{\mathrm{aggr}}$ at time $t$, respectively under the first and second sampling scheme.
+	Let $q_a^t\in\Delta_K$ be the distribution of the chosen action by algorithm $\Alg_a$  (for $a\in[N]$), that depends on the past observations (as well as some external randomness, see Section~\ref{par:2:externalrandomness}).
+	% \begin{enumerate}
+		% \item
+		The first sampling scheme gives
+		$P_k(t) = \bP(A_{\mathrm{aggr}}(t) = k) = \bP(\cupdot_{a=1}^N A_{\mathrm{aggr}}(t) = A_a(t) = k, a(t) = a) = \sum_{a=1}^N \bP(A_a(t) = k) \bP(a(t) = a) = \sum_{a=1}^N q_{a,k}(t) \pi_a^t$,
+		by independence of $a(t)\sim \pi^t$ and $A_i(t) \sim q_i(t)$ (for all $i$).
+		% \item
+		The second sampling scheme gives
+		$P'_k(t) = \bP(A_{\mathrm{aggr}}(t) = k) = \E[p_k^t]$ by definition,
+		and $\E[p_k^t] = \sum_{a = 1}^{N} \pi^{t}_a \E[\indic(A_a(t) = k)] = \sum_{a = 1}^{N} \pi^{t}_a \bP(A_a(t) = k) = \sum_{a=1}^N q_{a,k}(t) \pi_a^t$.
+	% \end{enumerate}
+	Thus we showed that $P_k(t) = P'_k(t)$, so the two sampling schemes are equivalent, as claimed.
+\end{proof}
+
 The main questions are then to know what observations (\ie, arms and rewards) should be given as feedback to which algorithms,
 and how to update the trusts at each step, and our proposal \Aggr{} differs from \ExpQ{} on these very points.
 %
@@ -70,7 +105,7 @@ Only the algorithms $\Alg_a$ who advised the last decision get their trust updat
 			\KwIn{$N$ bandit algorithms, $\Alg_1, \dots, \Alg_N$, with $N \geq 2$}
 			% \KwIn{Number of arms, $K \geq 2$}
 			% \KwIn{Time horizon, $T \geq 1$, \textbf{not} used for the learning}
-			\KwIn{A sequence of learning rates, $(\eta_t)_{t \geq 1}$, \eg, $\eta_t=\frac{\log(N)}{t K}$}
+			\KwIn{A sequence of learning rates, $(\eta_t)_{t \geq 1}$, \eg, $\eta_t= \log(N) / (t K)$}
 			\KwData{Initial uniform distribution, $\pi^{0} = \cU([N])$}
 			\KwResult{$\Alg_{\mathrm{aggr}}=\Aggr\left[\Alg_1, \dots, \Alg_N\right]$}
 			% XXX Algorithm
@@ -84,7 +119,7 @@ Only the algorithms $\Alg_a$ who advised the last decision get their trust updat
 				}
 				%
 				% \tcp{The more algorithms have chosen arm $j$, the more probable it is to be chosen.}
-				Let $p^{t}_j \eqdef \sum\limits_{a = 1}^{N} \pi^{t}_a \times \indic(\{A_a(t) = j\}), \;\forall 1\leq j \leq K$\;
+				Let $p^{t}_k \eqdef \sum\limits_{a = 1}^{N} \pi^{t}_a \times \indic(A_a(t) = k), \;\forall k\in[K]$\;
 				% \tcp*{Sum trusts}
 				Then $\Alg_{\mathrm{aggr}}$ chooses arm $A(t) \sim p^{t}$\;
 				% $\P(A(t)_{\mathrm{aggr}} = j) = p^{t}_j$
@@ -97,10 +132,11 @@ Only the algorithms $\Alg_a$ who advised the last decision get their trust updat
 				% \For(\tcp*[f]{Can be parallel}){$a = 1, \dots, N$}{
 				\For{$a = 1, \dots, N$}{
 					% \eIf{$\Alg_a$ was trusted, \ie, $A_a(t) = A(t)$}{
-					\eIf{$\Alg_a$ was trusted, \ie, $A_a(t) = A(t)$}{
-						$ \pi^{t+1}_{a} = \exp(\eta_t r(t)) \times \pi^{t}_{a} $
+					\uIf{$\Alg_a$ was trusted, \ie, $A_a(t) = A(t)$}{
+						$ \pi^{t+1}_{a} = \exp(\eta_t \widehat{r}(t)) \times \pi^{t}_{a} $
 						\tcp*{Trusted more}
-					}{
+					}
+					\uElse{
 						% $ \pi^{t+1}_{a} = \exp(- \eta_t r(t) \times \pi^{t}_{a} $
 						$ \pi^{t+1}_{a} = \pi^{t}_{a} $
 						\tcp*{Do not update the trust now}
@@ -155,17 +191,16 @@ but differs in the two following points.
 %
 The first difference is that $a\sim\pi^t$ is sampled first and the arm chosen by $\Alg_a$ is trusted, whereas \Aggr{}
 needs to listen to the $N$ decisions to perform the updates on $\pi^{t}$.
-Then, \ExpQ{} gives back an observation (arm, reward) only to the last trusted algorithm
+Then, \ExpQ{} gives back an observation (\ie, a pair arm, reward) only to the last trusted algorithm
 whereas \Aggr{} gives it to all algorithms.
 %
 The second difference is that after having computed the reward estimate $\widehat{r^a}(t)$, \ExpQ{} updates the estimated cumulative reward for each algorithm,
 $\widetilde{R}_a(t) = \sum_{s=1}^{t} \widehat{r^a}(t) \times \indic(A^{s}_{a} = A^{s}_{\mathrm{aggr}})$.
 %
-Instead
-\footnote{~It is the same for constant learning rates, and does not differ much for decreasing learning rates.}
-of updating $\pi^{t}$ multiplicatively as we do for our proposal, \ExpQ{} recomputes it, proportionally to
+Instead of updating $\pi^{t}$ multiplicatively as we do for our proposal, \ExpQ{} recomputes it, proportionally to
 $\exp(\eta_t \widetilde{R}_a(t))$.
-%
+Note that there is no difference for the case of constant learning rates, and it does not differ much for decreasing learning rates as well.
+
 We also note that \ExpQ{} uses \emph{losses} instead of rewards, with $\ell(t) = 1 - r(t)$, but this is only a change of vocabulary.
 
 
@@ -175,12 +210,15 @@ The sequence of non-negative learning rates $(\eta_t)_{t \geq 1}$ used by \ExpQ{
 It can be constant but should be non-increasing \cite[Theorem 4.2]{Bubeck12}.
 % helps to choose a good sequence.
 If the horizon $T$ is known (and fixed), the best choice is given by $\eta_t \eqdef \eta = 2 \log(N) / (T K)$.
-However, for real-world communication problems, it can be considered unrealistic\footnote{~For more discussion on this hypothesis, we refer to Section~1 of our article \cite{Besson2018DoublingTricks}.} to assume a fixed and known time horizon, so we prefer the alternative horizon-free choice%
-\footnote{~It is non-increasing, and is obtained by minimizing the upper-bound on the regret derived in \cite[pp48]{Bubeck12}.}
-of learning rates,
+However, for real-world communication problems, it can be considered unrealistic to assume a fixed and known time horizon.
+For more discussion on this hypothesis, we refer to Section~1 of our article \cite{Besson2018DoublingTricks}, that we shortly present in Appendix~\ref{app:2:DoublingTricks}.
+%
+Thus we prefer the alternative horizon-free choice of learning rates,
 $\eta_t \eqdef \log(N) / (t K)$ suggested by \cite{Bubeck12}.
-We compare both approaches empirically, and the second one usually performs better.
-We also stick to this choice of $(\eta_t)_{t \geq 1}$ for \Aggr.
+It is non-increasing, and is obtained by minimizing the upper-bound on the regret derived in \cite[pp48]{Bubeck12}.
+%
+We compared both approaches empirically, and the second one usually performs better.
+We also stick to this sequence $(\eta_t)_{t \geq 1}$ of decreasing learning rates for \Aggr.
 
 
 
@@ -205,7 +243,7 @@ The horizon is set to $T = 20000$ (but its value is unknown to all algorithms), 
 %
 This empirical estimation of the expected regret $R_T$ is plotted below\footnote{~The Lai \& Robbins' logarithmic lower-bound \cite{LaiRobbins85} is also plotted. It corresponds to the second case in Theorem~\ref{thm:2:secondLogTLowerBound}. It is crucial to note that the lower-bound is only asymptotic, and as such one should not be surprised to see regret curves smaller than the lower-bound (\eg, for the easier Bernoulli problem in Figure~\ref{fig:25:EasyBernoulli}).},
 as a function of $T$, comparing some algorithms $\Alg_1,\dots,\Alg_N$ (for $N=6$), and their aggregation with \Aggr{} (displayed in orange bold),
-using the parameter-free learning rate sequence, $\eta_t = \log{N} / (t K)$.
+using the parameter-free learning rate sequence, $\eta_t \eqdef \log{N} / (t K)$.
 
 Note that for each of the $N=1000$ simulations, we choose to generate all the rewards beforehand, \ie, one full matrix $(r_k(t))_{1\leq k \leq K, 1 \leq t \leq T}$ (for every repetition), in order to compare the algorithms on the same realizations%
 \footnote{~Similar plots and similar results are obtained if this choice is not made, but it makes more sense to compare them against the same randomization. Note that this choice is the default in SMPyBandits, but the other possibility is implemented as well, by changing \texttt{cache\_rewards} to \texttt{true} or \texttt{false} in the \texttt{configuration} dictionary. See Section~\ref{sub:3:miniConfigurationFileSMPyBandits} for explanations on this \texttt{configuration.py} file, or the online documentation.}
@@ -225,35 +263,35 @@ Figure~\ref{fig:25:HarderMixed_semilogx} is in semilog-$x$ scale to show that th
 
 \begin{figure}[h!]  % [htbp]
 	\centering
-	\includegraphics[width=1.10\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main_semilogy____env1-4_932221613383548446.pdf}
+	\includegraphics[width=1.07\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main_semilogy____env1-4_932221613383548446.pdf}
 	\caption{On a ``simple'' Bernoulli problem (semilog-$y$ scale).}
 	\label{fig:25:EasyBernoulli}
 \end{figure}
 
-\begin{figure}[b!]  % [htbp]
+\begin{figure}[h!]  % [htbp]
 	\centering
-	\includegraphics[width=1.10\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main____env2-4_932221613383548446.pdf}
-	\caption{On a ``harder'' Bernoulli problem, they all have similar performances, except \LearnExp.}
+	\includegraphics[width=1.07\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main____env2-4_932221613383548446.pdf}
+	\caption{On a ``harder'' Bernoulli problem, they all have similar performances, except \LearnExp, and our proposal \Aggr{} outperforms its competitors.}
 	\label{fig:25:HardBernoulli}
 \end{figure}
 
-\begin{figure}[b!]  % [htbp]
+\begin{figure}[h!]  % [htbp]
 	\centering
-	\includegraphics[width=1.10\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main____env3-4_932221613383548446.pdf}
+	\includegraphics[width=1.07\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main____env3-4_932221613383548446.pdf}
 	\caption{On an ``easy'' Gaussian problem, only \Aggr{} shows reasonable performances, thanks to BayesUCB and Thompson sampling.}
 	\label{fig:25:EasyGaussian}
 \end{figure}
 
 \begin{figure}[h!]  % [htbp]
 	\centering
-	\includegraphics[width=1.10\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main_semilogy____env4-4_932221613383548446.pdf}
+	\includegraphics[width=1.07\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main_semilogy____env4-4_932221613383548446.pdf}
 	\caption{On a harder problem, mixing Bernoulli, Gaussian, Exponential arms, with 3 arms of each type with the \emph{same mean}.}
 	\label{fig:25:HarderMixed}
 \end{figure}
 
-\begin{figure}[b!]  % [htbp]
+\begin{figure}[h!]  % [htbp]
 	\centering
-	\includegraphics[width=1.10\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main_semilogx____env4-4_932221613383548446.pdf}
+	\includegraphics[width=1.07\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main_semilogx____env4-4_932221613383548446.pdf}
 	\caption{The semilog-$x$ scale clearly shows the logarithmic growth of the regret for the best algorithms and our proposal \Aggr, even in a hard ``mixed'' problem (\emph{cf}. Figure~\ref{fig:25:HarderMixed}).}
 	\label{fig:25:HarderMixed_semilogx}
 \end{figure}
@@ -263,7 +301,7 @@ For Gaussian and exponential arms, rewards are truncated into $[0,1]$, and the v
 %
 Figure~\ref{fig:25:EasyGaussian} uses only Gaussian arms, with a large gap between their means and a relatively small variance, giving an ``easy'' problem.
 %
-And Figure~\ref{fig:25:HarderMixed} shows a considerably harder ``mixed'' problem, when the distributions are no longer in the same one-dimensional exponential family and so the Lai \& Robbins' lower-bound no longer holds (even if there still exists a lower-bound).
+And Figure~\ref{fig:25:HarderMixed} shows a considerably harder ``mixed'' problem, when the distributions are no longer in the same one-dimensional exponential family and so the Lai \& Robbins' lower-bound no longer holds.
 
 For each of the 4 problems considered, the \Aggr{} algorithm with default option (\ie, broadcast rewards to all the aggregated algorithms) is the best of all the aggregation algorithms,
 and its regret is very close to the best of the aggregated algorithms.
