@@ -105,7 +105,7 @@ A commonly studied goal for the player is to maximize its sum of received reward
 The difficulty of this decision-making game comes from balancing the trade-off between \emph{exploration}, because the player has to observe as much as possible all the arms to get more knowledge about the distributions of their rewards, and \emph{exploitation}, because she also has to select as much as possible the best arm.
 The MAB model is a famous example of a \textbf{reinforcement learning} model, where the decision-making process has to adapt to an unknown environment using noisy observations and a discrete time, alternating between decisions and observations.
 We illustrate this cycle in Figure~\ref{fig:2:ReinforcementLearningCycleMABmodel} below.
-For more details on reinforcement learning, in particular about more generic models, we refer to the famous book by Sutton and Barto \cite{SuttonBarto2018}.
+For more details on reinforcement learning, in particular about more generic models, we refer to the famous book \cite{SuttonBarto2018}.
 
 
 \tikzstyle{block} = [align=center, draw, fill=gray!25, rectangle, minimum height=3em, minimum width=6em]
@@ -287,7 +287,7 @@ $ \Pr_{\eta}(x | \lambda) = h(x) \exp \left( \eta x - A(\eta) \right)$,
 for a parameter vector $\eta$ (the canonical parameter),
 % and a sufficient statistic that we restrict to be $T(x)=x$,
 and a function $h$.
-The cumulant function $A(\eta)$ is entirely determined by the $\eta$ and $h$,
+The cumulant function $A(\eta)$ is entirely determined by $\eta$ and $h$,
 as $A(\eta) = \log \left( \int h(x) \exp(\eta x) \lambda(\mathrm{d} x) \right)$.
 %
 The natural parameter space is the set of values of $\eta$ such that this integral $A(\eta)$ is finite,
@@ -631,7 +631,7 @@ We do not give proofs of the following theorems, as they can be found in the his
 Let $\cI$ denote the set of all problem instances, with $K \geq 2$ arms.
 We assume the rewards lie in $[0,1]$,
 to present the lower-bounds, we prefer to focus on Bernoulli distributions, for simplicity.
-
+%
 To specify the dependency on an instance $I\in\cI$, we denote the regret of $\cA$ on instance $I$ and horizon $T$ by $R_T^{\cA}(I)$.
 We also index the Landau notations $o(\dots)$ and $\bigO{\dots}$ by $I$,
 for instance $R_T^{\cA}(I) = o_I(\log(T))$ means $R_T^{\cA}(I) = \smallO{c_I \log(T)}$
@@ -1537,7 +1537,13 @@ It shows that the performance can \textcolor{red}{fluctuate a lot}, as on both c
     \begin{small}  % WARNING
         \centering
         \begin{tabular}{c|cc|cc}
-        \textbf{Algorithms} & $\sum\limits_{t=1}^{T=100} r(t)$ & $R_{T=100}^{\cA}$ & $\sum\limits_{t=1}^{T=10000} r(t)$ & $R_{T=10000}^{\cA}$ \\
+        \textbf{Algorithms}
+        & rewards
+        & regret for $T=100$
+        & rewards
+        & regret for $T=10000$ \\
+        % & $\sum\limits_{t=1}^{T=100} r(t)$ & $R_{T=100}^{\cA}$ & $\sum\limits_{t=1}^{T=10000} r(t)$ & $R_{T=10000}^{\cA}$ \\
+        % & $\sum\limits_{t=1}^{T=100} r(t)$ & $R_{T=100}^{\cA}$ & $\sum\limits_{t=1}^{T=10000} r(t)$ & $R_{T=10000}^{\cA}$ \\
             \hline
             Pure exploration
                 & $46$ & $20.9$
@@ -1625,7 +1631,12 @@ both $\varepsilon$-greedy and Explore-then-Commit starts as pure exploration, re
     \begin{small}  % WARNING
         \centering
         \begin{tabular}{c|cc|cc}
-        \textbf{Algorithms} & $\frac{1}{N} \sum\limits_{j=1}^N \sum\limits_{t=1}^{T=100} r^{(j)}_{A(t)}(t)$ & $\frac{1}{N} \sum\limits_{j=1}^N R^{\cA,(j)}_{T=100}$ & $\frac{1}{N} \sum\limits_{j=1}^N \sum\limits_{t=1}^{T=10000} r^{(j)}_{A(t)}(t)$ & $\frac{1}{N} \sum\limits_{j=1}^N R^{\cA,(j)}_{T=10000}$ \\
+        \textbf{Algorithms}
+        & rewards
+        & regret for $T=100$
+        & rewards
+        & regret for $T=10000$ \\
+        % & $\frac{1}{N} \sum\limits_{j=1}^N \sum\limits_{t=1}^{T=100} r^{(j)}_{A(t)}(t)$ & $\frac{1}{N} \sum\limits_{j=1}^N R^{\cA,(j)}_{T=100}$ & $\frac{1}{N} \sum\limits_{j=1}^N \sum\limits_{t=1}^{T=10000} r^{(j)}_{A(t)}(t)$ & $\frac{1}{N} \sum\limits_{j=1}^N R^{\cA,(j)}_{T=10000}$ \\
             \hline
             Pure exploration
                 & $51$ & $19$

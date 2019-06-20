@@ -58,8 +58,8 @@ cloudwords:
 
 # Linters!
 latexstats:
-	latexstats.sh $(IN)
-	latexstats.sh $(IN) | sed -r "s:\x1B\[[0-9;]*[mK]::g" > latexstats.txt
+	latexstats.sh $(IN) */*.tex */*/*.tex
+	latexstats.sh $(IN) */*.tex */*/*.tex | sed -r "s:\x1B\[[0-9;]*[mK]::g" > latexstats.txt
 
 lint:	write-good.sh write-good
 
