@@ -227,7 +227,7 @@ Assuming $\mathcal{H}_{1}$ amounts to consider that $x\ll 1$. As a consequence, 
 	p_{ca} \simeq  1 - \frac{\left(1-x\right)^{N-1}}{p_c}\sum_{n=1}^{N-1}{N-1 \choose n} x^n \left( 1-\frac{1}{m}\right)^n.
 \end{equation}
 
-The binomial theorem expands the sum in \eqref{eq:43:sumpca4}, so we can rewrite the expression of $p_{ca}$ as
+The binomial theorem expands the sum in \eqref{eq:43:sumpca4}, so we can rewrite the expression of $p_{ca}$
 %
 \begin{equation}\label{eq:43:pca}
 	p_{ca} \simeq 1 - \left(\frac{1}{p_c}-1\right)\left[ 1+\left(1-\left(1-p_c\right)^{\frac{1}{N-1}}\right)\left(1-\frac{1}{m}\right)\right]^{N-1}.
@@ -273,7 +273,7 @@ Moreover, we can verify (\eg, numerically or by differentiating)
 that the gap decreases when $p_c$ increases (for fixed $N$ and $m$).
 This backups mathematically the observation we made from Figure~\ref{fig:43:Approximation_m10}:
 the smaller the $p_c$, the larger is the gap between $p_c$ and $p_{c1}$.
-
+%
 We interpret this fact in two different situations:
 \begin{itemize}
 	\item
@@ -374,7 +374,7 @@ Note that a device using this first approach is only able to select a channel fo
 				Transmit in channel $A(t) \sim \cU(\argmax_k U_k(t))$\;
 				Reward $r(t) = 1$, if \emph{Ack} is received, else $0$\;
 			}
-			\Else(\tcp*[f]{Retransmit in same channel}){
+			\uElse(\tcp*[f]{Retransmit in same channel}){
 				j $\leftarrow$ last channel selected by first-stage \UCB\;
 				Transmit in channel $A(t) = j$\;
 			}
@@ -445,7 +445,7 @@ More precisely, the first-stage \UCB{} use rewards built from the acknowledgment
 			\uIf{First packet transmission}{
 				Use first-stage \UCB{} as in Algorithm~\ref{algo:43:UCB}\;
 			}
-			\Else(\tcp*[f]{Random retransmission}){
+			\uElse(\tcp*[f]{Random retransmission}){
 				Transmit in channel $A(t) \sim \mathcal{U}(1,\ldots,K)$\;
 			}
 		}
@@ -480,7 +480,7 @@ related to the \UCB{} algorithm employed for the retransmission.
 			\uIf{First packet transmission}{
 				Use first-stage \UCB{} as in Algorithm~\ref{algo:43:UCB}\;
 			}
-			\Else(\tcp*[f]{Packet retransmission with $\mathrm{UCB}^r$}){
+			\uElse(\tcp*[f]{Packet retransmission with $\mathrm{UCB}^r$}){
 				Compute $\forall k, U^r_k(t) = \widehat{\mu^r_k}(t) + \sqrt{\alpha \log(t) / N_k^r(t)}$\;
 				Transmit in channel $C^r(t) \sim \cU(\argmax_k U^r_k(t))$\;
 				Reward $r^r(t) = 1$, if \emph{Ack} is received, else $0$\;
@@ -516,7 +516,7 @@ Each of these algorithms are denoted using the subscript $({}^{j})$, for $j\in[K
 			\uIf{First packet transmission}{
 				Use first-stage \UCB{} as in Algorithm~\ref{algo:43:UCB}\;
 			}
-			\Else(\tcp*[f]{Packet retransmission with $\mathrm{UCB}^j$}){ % Retr. after trying channel $j$
+			\uElse(\tcp*[f]{Packet retransmission with $\mathrm{UCB}^j$}){ % Retr. after trying channel $j$
 				j $\leftarrow$ last channel selected by first-stage \UCB\;
 				Compute $\forall k, U_k^j(t) = \widehat{\mu_k}^j(t) + \sqrt{\alpha \log(t) / N_k^j(t)}$\;
 				Transmit in channel $A^j(t) \sim \cU(\argmax_k U^j_k(t))$\;
@@ -572,7 +572,7 @@ related to the delayed second-stage \UCB{} algorithm.
 			\uElseIf(\tcp*[f]{Random retransmission}){$t \leq \Delta$}{
 				Transmit randomly in a channel $A(t) \sim \mathcal{U}(1,\ldots,K)$.
 			}
-			\Else(\tcp*[f]{Packet retransmission with delayed $\mathrm{UCB}^d$}){
+			\uElse(\tcp*[f]{Packet retransmission with delayed $\mathrm{UCB}^d$}){
 				Compute $\forall k, U^d_k(t) = \widehat{\mu^d_k}(t) + \sqrt{\alpha \log(t) / N_k^d(t)}$\;
 				Transmit in channel $A^d(t) \sim \cU(\argmax_k U^d_k(t))$\;
 				Reward $r^d_{A^d(t)}(t) = 1$ if \emph{Ack} is received, else $0$\;
