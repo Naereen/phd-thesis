@@ -64,19 +64,19 @@ but when one wants to tackle an \emph{unknown} real-world problem, one expects t
 ideally one would like to use an algorithm that can be applied identically against any problem of such family.
 
 
-\paragraph{Naive approaches:}
+\paragraph{Naive approaches.}
 %
 On the one hand, a practitioner can decide to pick one algorithm, maybe because it seems efficient on other problems, or maybe because it is simple enough to be used in its application. It might be unrealistic to implement complicated algorithms on limited hardware such as embedded chips in a very low-cost IoT end-device, and for instance a practitioner could chose to only consider the $\UCB_1$ algorithm (or other low-cost algorithms).
 %
 On the other hand, if prior knowledge on the application at hand is available, one could implement some benchmarks, and compare a set of algorithms on different problems. If a leader appears clearly, it is then possible to choose it for the application.
 
 
-\paragraph{Illustrative example:}
+\paragraph{Illustrative example.}
 %
 For instance, if you know that the considered problem can either have $K$ arms with very close means, or one optimal arm far away from the other, two versions of $\UCB_1$ will perform quite differently in the two problems:
-using a large $\alpha$, \ie, favoring exploration, will give low regret in the first case,
-while using a low $\alpha$, \ie, favoring exploitation, will give low regret in the second case.
-One approach can be to use an intermediate value, as $\alpha=1/2$ suggested by theory, but another approach could be to consider an aggregated vote of different versions of $\UCB_1$, each running with a different value of $\alpha$ (\eg, in a logarithmic grid), and let another learning algorithm decide which value of $\alpha$ is the best \emph{for the problem at hand}.
+using a large $\alpha$, \ie, favoring exploration, will give low regret in the first case and high regret in the second case,
+while using a low $\alpha$, \ie, favoring exploitation, will obtain opposite performance.
+A first approach can be to use an intermediate value, as $\alpha=1/2$ suggested by theory, but another approach could be to consider an aggregated vote of different versions of $\UCB_1$, each running with a different value of $\alpha$ (\eg, in a logarithmic grid), and let a ``master'' learning algorithm decide which value of $\alpha$ is the best \emph{for the problem at hand}.
 
 
 % \paragraph{The online approach:}

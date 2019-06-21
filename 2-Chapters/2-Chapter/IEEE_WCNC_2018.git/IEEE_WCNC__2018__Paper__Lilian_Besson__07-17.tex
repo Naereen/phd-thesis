@@ -182,7 +182,7 @@ It would not be so different, as there is a final renormalization step, and empi
 
 
 % ----------------------------------------------------------------------
-\paragraph{Comparison with \ExpQ{}:}\label{sub:25:Exp4}
+\paragraph{Comparison with \ExpQ}.\label{sub:25:Exp4}
 %
 % - explain, but don't give pseudo-code ?
 The \ExpQ{} algorithm dates from \cite{Auer02NonStochastic}, and for instance it is also well explained in Section~4.2 of \cite{Bubeck12}.
@@ -202,14 +202,16 @@ $\exp(\eta_t \widetilde{R}_a(t))$.
 Note that there is no difference for the case of constant learning rates, and it does not differ much for decreasing learning rates as well.
 
 We also note that \ExpQ{} uses \emph{losses} instead of rewards, with $\ell(t) = 1 - r(t)$, but this is only a change of vocabulary.
+A learner can equivalently play to maximize its cumulated rewards or to minimize its cumulated losses.
+Most works on using expert advice and game theory usually prefer to think about losses, as for instance the book \cite{CesaLugosi06}.
 
 
-\paragraph{How to choose the learning rates $(\eta_t)$:}
+\paragraph{How to choose $\eta_t$.}
 %
 The sequence of non-negative learning rates $(\eta_t)_{t \geq 1}$ used by \ExpQ{} can be arbitrary.
 It can be constant but should be non-increasing \cite[Theorem 4.2]{Bubeck12}.
 % helps to choose a good sequence.
-If the horizon $T$ is known (and fixed), the best choice is given by $\eta_t \eqdef \eta = 2 \log(N) / (T K)$.
+If the horizon $T$ is known (and fixed), they advise to use $\eta_t \eqdef \eta = 2 \log(N) / (T K)$.
 However, for real-world communication problems, it can be considered unrealistic to assume a fixed and known time horizon.
 For more discussion on this hypothesis, we refer to Section~1 of our article \cite{Besson2018DoublingTricks}, that we shortly present in Appendix~\ref{app:2:DoublingTricks}.
 %
@@ -235,19 +237,27 @@ We also stick to this sequence $(\eta_t)_{t \geq 1}$ of decreasing learning rate
 % }
 
 % - explain the problem studied in the simulation
-We focus on \emph{i.i.d.} MAB problems, with $K = 9$ arms\footnote{~Similar behaviors are observed for other values, \eg, trying up-to $K = 100$ gave the same results.}.
+We focus on \emph{i.i.d.} MAB problems, with $K = 9$ arms.
+Similar behaviors are observed for other values, \eg, trying up-to $K = 100$ gave the same results.
 For Bernoulli problem, the first one uses $\boldsymbol{\mu}=[0.1,\dots,0.9]$, and is considered as a ``simple'' problem.
 The second one is divided in three groups:
 2 very bad arms ($\mu = 0.01, 0.02$), 5 average arms ($\mu = 0.3$ to $0.6$) and 3 very good arms ($\mu = 0.78, 0.8, 0.82$), and it is considered as a ``harder'' problem.
 The horizon is set to $T = 20000$ (but its value is unknown to all algorithms), and simulations are repeated $1000$ times, to estimate the expected regret.
 %
-This empirical estimation of the expected regret $R_T$ is plotted below\footnote{~The Lai \& Robbins' logarithmic lower-bound \cite{LaiRobbins85} is also plotted. It corresponds to the second case in Theorem~\ref{thm:2:secondLogTLowerBound}. It is crucial to note that the lower-bound is only asymptotic, and as such one should not be surprised to see regret curves smaller than the lower-bound (\eg, for the easier Bernoulli problem in Figure~\ref{fig:25:EasyBernoulli}).},
+This empirical estimation of the expected regret $R_T$ is plotted below,
 as a function of $T$, comparing some algorithms $\Alg_1,\dots,\Alg_N$ (for $N=6$), and their aggregation with \Aggr{} (displayed in orange bold),
 using the parameter-free learning rate sequence, $\eta_t \eqdef \log{N} / (t K)$.
 
-Note that for each of the $N=1000$ simulations, we choose to generate all the rewards beforehand, \ie, one full matrix $(r_k(t))_{1\leq k \leq K, 1 \leq t \leq T}$ (for every repetition), in order to compare the algorithms on the same realizations%
-\footnote{~Similar plots and similar results are obtained if this choice is not made, but it makes more sense to compare them against the same randomization. Note that this choice is the default in SMPyBandits, but the other possibility is implemented as well, by changing \texttt{cache\_rewards} to \texttt{true} or \texttt{false} in the \texttt{configuration} dictionary. See Section~\ref{sub:3:miniConfigurationFileSMPyBandits} for explanations on this \texttt{configuration.py} file, or the online documentation.}
-of the MAB problem.
+\textbf{Lower-bound.}
+%
+The Lai \& Robbins' logarithmic lower-bound \cite{LaiRobbins85} is also plotted. It corresponds to the second case in Theorem~\ref{thm:2:secondLogTLowerBound}. It is crucial to note that the lower-bound is only asymptotic, and as such one should not be surprised to see regret curves smaller than the lower-bound (\eg, for the easier Bernoulli problem in Figure~\ref{fig:25:EasyBernoulli})
+
+
+\textbf{Comparing the algorithms against the same realizations.}
+%
+Note that for each of the $N=1000$ simulations, we choose to generate all the rewards beforehand, \ie, one full matrix $(r_k(t))_{k\in[K], t\in[T]}$, for each of the $N$ repetitions, in order to compare the algorithms on the same realizations of the MAB problem.
+%
+Similar plots and similar results are obtained if this choice is not made, but it makes more sense to compare them against the same randomization. Note that this choice is the default in SMPyBandits, but the other possibility is implemented as well, by changing \texttt{cache\_rewards} to \texttt{true} or \texttt{false} in the \texttt{configuration} dictionary. See Section~\ref{sub:3:miniConfigurationFileSMPyBandits} for explanations on this \texttt{configuration.py} file, or the online documentation.
 
 We compare our \Aggr{} algorithm,
 as well as other aggregation algorithms, \ExpQ{} from \cite{Bubeck12},
@@ -263,35 +273,35 @@ Figure~\ref{fig:25:HarderMixed_semilogx} is in semilog-$x$ scale to show that th
 
 \begin{figure}[h!]  % [htbp]
 	\centering
-	\includegraphics[width=1.07\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main_semilogy____env1-4_932221613383548446.pdf}
+	\includegraphics[width=1.09\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main_semilogy____env1-4_932221613383548446.pdf}
 	\caption{On a ``simple'' Bernoulli problem (semilog-$y$ scale).}
 	\label{fig:25:EasyBernoulli}
 \end{figure}
 
 \begin{figure}[h!]  % [htbp]
 	\centering
-	\includegraphics[width=1.07\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main____env2-4_932221613383548446.pdf}
+	\includegraphics[width=1.09\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main____env2-4_932221613383548446.pdf}
 	\caption{On a ``harder'' Bernoulli problem, they all have similar performances, except \LearnExp, and our proposal \Aggr{} outperforms its competitors.}
 	\label{fig:25:HardBernoulli}
 \end{figure}
 
 \begin{figure}[h!]  % [htbp]
 	\centering
-	\includegraphics[width=1.07\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main____env3-4_932221613383548446.pdf}
+	\includegraphics[width=1.09\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main____env3-4_932221613383548446.pdf}
 	\caption{On an ``easy'' Gaussian problem, only \Aggr{} shows reasonable performances, thanks to BayesUCB and Thompson sampling.}
 	\label{fig:25:EasyGaussian}
 \end{figure}
 
 \begin{figure}[h!]  % [htbp]
 	\centering
-	\includegraphics[width=1.07\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main_semilogy____env4-4_932221613383548446.pdf}
+	\includegraphics[width=1.09\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main_semilogy____env4-4_932221613383548446.pdf}
 	\caption{On a harder problem, mixing Bernoulli, Gaussian, Exponential arms, with 3 arms of each type with the \emph{same mean}.}
 	\label{fig:25:HarderMixed}
 \end{figure}
 
 \begin{figure}[h!]  % [htbp]
 	\centering
-	\includegraphics[width=1.07\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main_semilogx____env4-4_932221613383548446.pdf}
+	\includegraphics[width=1.09\linewidth]{2-Chapters/2-Chapter/IEEE_WCNC_2018.git/plots/main_semilogx____env4-4_932221613383548446.pdf}
 	\caption{The semilog-$x$ scale clearly shows the logarithmic growth of the regret for the best algorithms and our proposal \Aggr, even in a hard ``mixed'' problem (\emph{cf}. Figure~\ref{fig:25:HarderMixed}).}
 	\label{fig:25:HarderMixed_semilogx}
 \end{figure}
