@@ -176,7 +176,7 @@ Other commonly studied objectives include best-arm identification (BAI) \cite{au
 \paragraph{An interactive demo to discover the MAB problem (for the novice).}
 \label{par:2:interactiveDemoDiscoverMAB}
 %
-If you are discovering here the concept of bandits, I would like to recommend you to go online and play a few times with an interactive demonstration.
+If you are discovering here the concept of bandits, we would like to recommend you to go online and play a few times with an interactive demonstration.
 On this demo, you will be facing a MAB problem with $K=5$ arms, and you have $T=100$ decisions to make.
 The demo is hosted on my website, at \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}, and it is illustrated below.
 
@@ -1008,7 +1008,7 @@ We note that this strategy can also achieve a much larger regret bound, $R_T = \
     Optimizing the right hand-side on $T_0$ gives $T_0 = ((2K)/d^2) \log(d^2 T / (2K))$.
     This gives the announced bound.
 \end{smallproof}
-
+%
 \begin{lemma}\label{lem:2:HoeffdingInequality}
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
     Let $Z_1,\dots,Z_n$ be $n$ \iid{} samples from a Bernoulli distribution of parameter $\mu$ (where $n$ is fixed),
@@ -1046,20 +1046,6 @@ If more than one indexes maximize $(U_k(t))_k$, the arm is chosen from the set, 
 %
 The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, that includes well known and efficient algorithms such as $\UCB_1$, \klUCB{} and many others.
 
-
-\textbf{The $\UCB_1$ index policy: using Hoeffding's inequality to build confidence intervals.}\\
-%
-Let us consider another approach for adaptive exploration, known as ``optimism under uncertainty'': assume each arm is as good as it can possibly be given the observations so far, and choose the best arm based on these optimistic estimate.
-%
-This intuition leads to the $\UCB_1$ algorithm, initially introduced in \cite{Auer02}, for bounded rewards.
-For a parameter $\alpha$, the \UCB{} indexes are computed as follows, as a sum of
-the \emph{average reward} $\widehat{\mu_k}(t) \eqdef \frac{X_k(t)}{N_k(t)}$
-and a \emph{confidence radius} $\xi_k(t) \eqdef \sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}$.
-%
-\begin{align}\label{eq:2:UCB_index}
-    U_k^{\UCB_1}(t) = \UCB_k(t) \eqdef \underbrace{\frac{X_k(t)}{N_k(t)}}_{\text{Exploitation }\; \widehat{\mu_k}(t)} + \underbrace{\sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}}_{\text{Exploration }\; \xi_k(t)}.
-\end{align}
-
 % \begin{small} % XXX remove if needed
 \begin{figure}[h!]
 	\centering
@@ -1083,6 +1069,21 @@ and a \emph{confidence radius} $\xi_k(t) \eqdef \sqrt{\alpha \frac{\log\left(t\r
 	\end{framed}
 \end{figure}
 % \end{small} % XXX remove if needed
+
+
+\paragraph{The $\UCB_1$ index policy: using Hoeffding's inequality to build confidence intervals.}\\
+%
+Let us consider another approach for adaptive exploration, known as ``optimism under uncertainty'': assume each arm is as good as it can possibly be given the observations so far, and choose the best arm based on these optimistic estimate.
+%
+This intuition leads to the $\UCB_1$ algorithm, initially introduced in \cite{Auer02}, for bounded rewards.
+
+For a parameter $\alpha$, the \UCB{} indexes are computed as follows, as a sum of
+the \emph{average reward} $\widehat{\mu_k}(t) \eqdef \frac{X_k(t)}{N_k(t)}$
+and a \emph{confidence radius} $\xi_k(t) \eqdef \sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}$.
+%
+\begin{align}\label{eq:2:UCB_index}
+    U_k^{\UCB_1}(t) = \UCB_k(t) \eqdef \underbrace{\frac{X_k(t)}{N_k(t)}}_{\text{Exploitation }\; \widehat{\mu_k}(t)} + \underbrace{\sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}}_{\text{Exploration }\; \xi_k(t)}.
+\end{align}
 
 This selection rule $A(t) \sim \cU(\arg\max\limits_{1\leq k \leq K} U_k^{\cA}(t))$ makes sense for the following reasons:
 an arm $k$ is chosen at step $t$ because it has a large $\UCB_k(t)$, which can happen for two reasons.
@@ -1180,7 +1181,7 @@ This theorem shows that $\UCB_1$ achieves an order-optimal problem-dependent reg
     \begin{align}\label{eq:2:decompositionInUCBProof3}
         \E[ N_k(T) ]
         & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t  \Pr\left( \widehat{\mu}_{k^*,n_{k^*}}(t) + \xi_{k^*,n_{k^*}}(t) < \widehat{\mu}_{k,n_k}(t) + \xi_{k,n_k}(t) \right) \nonumber \\
-        & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t \bigl[ \underbrace{\Pr(I_1)}_{\leq 1/t^4} + \underbrace{\Pr(I_2)}_{\leq 1/t^4} + \underbrace{\Pr(I_3)}_{=0} \bigr] \nonumber \\
+        & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t \bigl( \underbrace{\Pr(I_1)}_{\leq 1/t^4} + \underbrace{\Pr(I_2)}_{\leq 1/t^4} + \underbrace{\Pr(I_3)}_{=0} \bigr) \nonumber \\
         & \leq 1 + \frac{8 \log(T)}{\Delta_k^2} + \sum_{t=n_T}^T \sum_{n_{k^*}=1}^t \sum_{n_{k}=n_T}^t  2 \frac{1}{t^4} \nonumber \\
         \intertext{We actually have that $\sum\limits_{n_{k^*}=1}^t \sum\limits_{n_{k}=n_T}^t  2 \frac{1}{t^4} \leq 2 \sum\limits_{n_{k^*}=1}^t \frac{1}{t^3} \leq 2 \frac{1}{t^2}$, whose sum for $t=1$ to $\infty$ is $2\frac{\pi^2}{6}$.}
         & \leq \frac{8 \log(T)}{\Delta_k^2} + 1 + 2 \sum_{t=1}^T \frac{1}{t^2}
@@ -1201,11 +1202,11 @@ This theorem shows that $\UCB_1$ achieves an order-optimal problem-dependent reg
     \end{align*}
 \end{smallproof}
 
-We see in this Theorem~\ref{thm:2:UCBregretBound} that $\UCB_1$ has the advantage of not relying on any prior knowledge of the problem difficulty, of being anytime, and computationally simple, for both memory and time aspects, and it achieves an order-optimal problem-dependent regret upper bound in $\cO((\sum_{k: \Delta_k>0} \frac{1}{\Delta_k})\log(T))$.
+We see in this Theorem~\ref{thm:2:UCBregretBound} that $\UCB_1$ has the advantage of not relying on any prior knowledge of the problem difficulty, of being anytime and computationally simple, for both memory and time aspects, and it achieves an order-optimal problem-dependent regret upper bound in $\cO((\sum_{k: \Delta_k>0} \frac{1}{\Delta_k})\log(T))$.
 %
 $\UCB_1$ requires a constant storage capacity for each arm (storing $X_k(t)$ and $N_k(t)$ require two integers or a \texttt{float} and an integer, \ie, $\bigO{1}$), giving a storage capacity of $\bigO{K}$, independently of the horizon $T$.
 It also needs to perform some mathematical operations, but a square-root and a logarithm are cheap, thus it costs a $\bigO{1}$ constant time for each arm and time step, thus a time $\bigO{K T}$ for the $T$ time steps.
-%
+
 We use $\UCB_1$ as the base building block for other policies in Chapter~\ref{chapter:4}, for these reasons.
 Moreover, the $\UCB_1$ algorithm has the advantage of being easy to explain and understand, and its decisions can be interpreted clearly: by reading the values of $\widehat{\mu_k}(t)$ and $\UCB_k(t)$, anyone can see why an arm was chosen at anytime.
 This is why it is used in our demonstration presented in Section~\ref{sec:4:gnuradio}.
@@ -1224,9 +1225,11 @@ Instead of using a confidence radius $\xi_k(t)$ based on Hoeffding's inequality,
 the \klUCB{} algorithm rather uses the Chernoff concentration inequality for the considered exponential family
 % such as Chernoff-Hoeffding for Gaussian (or sub-Gaussian) rewards.
 % It yields improved upper confidence bounds (\ie, with smaller $\xi_k(t)$) that are based on Kullback-Leibler divergence.
-The indexes are computed as follows, for an exploration function $f(t)$
+We remind that we consider bounded rewards in $[0,1]$.
+Consider an exploration function $f(t)$,
 that is typically chosen as $f(t) \eqdef \log(t)+c\log(\log(t))$ for the theoretical analyses (with $c \geq 3$),
-and $f(t) \eqdef \log(t)$ in practice.
+and $f(t) \eqdef \log(t)$ in practice,
+then the \klUCB{} indexes are defined as follows
 % The constant $c>0$ is usually chosen as $c = 1$.
 \begin{align}\label{eq:2:klUCB_index}
     U_k^{\klUCB}(t) \eqdef \sup\limits_{q \in [0, 1]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \frac{f(t}{N_k(t)} \right\}.
@@ -1262,7 +1265,7 @@ in an optimized way (file \href{https://github.com/SMPyBandits/SMPyBandits/blob/
 For the supported families of distributions (including Bernoulli, Gaussian, exponential and Poisson), we wrote both a naive and an optimized version of $\KL(x,y)$ and the $\sup_q \KL(x,q) \leq z$ optimization problem, using Newton's method.
 
 
-\textbf{Variants on $\UCB_1$.}
+\paragraph{Variants on $\UCB_1$.}
 %
 Many variants of the $\UCB_1$ algorithms have been studied in the multi-armed bandits literature.
 For instance, \UCB-H replaces the $\log(t)$ by a $\log(T)$ (as well as \klUCB-H), and it actually corresponds to the first algorithm analyzed in \cite{Auer02}.
@@ -1317,7 +1320,7 @@ Thompson sampling was proven to achieve asymptotical optimal problem-dependent b
             Observe a reward $r(t)$ and update $X_k(t)$ and $N_k(t)$\;
             %  and $\widehat{\mu_k}(t)$
 		}
-		\caption{Thompson Sampling for Beta prior and posteriors, on Bernoulli rewards.}
+		\caption{Thompson Sampling for Bernoulli rewards, with a Beta prior on each arm, and also Beta posteriors.}
 		\label{algo:2:ThompsonSampling}
 		% \end{small} % XXX remove if needed
 	\end{algorithm}
@@ -1334,12 +1337,12 @@ Bayes-UCB is comparable to Thompson sampling in terms of memory complexity, but 
 % a Beta prior and posterior, initially uniform (\ie, $\mathrm{Beta}(1,1)$) (\texttt{BayesUCB}).
 % But in particular for Bernoulli distributed arms and for Beta posteriors and priors, Bayes-UCB is only about twice as slow as Thompson sampling.
 
-For curiosity, we mention a third Bayesian algorithm, AdBandits introduced in \cite{Truzzi13}, mainly because it has not gained any popularity despite its good empirical performance.
+We mention a third Bayesian algorithm for curiosity, AdBandits introduced in \cite{Truzzi13}, because it has not gained any popularity despite its good empirical performance.
 %  using $\alpha=1$ (\texttt{AdBandits}).
 AdBandits follows the same assumptions as Thompson sampling, and for instance for Bernoulli problems it uses a Beta posterior on each arm.
-It uses a random mixture between the two algorithms, and with a certain probability it follows Thompson sampling decision rule, otherwise it samples the arm with highest empirical mean (\ie, forced exploitation).
-It was proposed in this article \cite{Truzzi13} and illustrated on empirical simulations, but no theoretical analysis was given.
-We found that in practice it can achieve very good performance, as illustrated in Section~\ref{sec:3:reviewSPAlgorithms}.
+It uses a random mixture of two algorithms: with a certain probability it follows Thompson sampling decision rule, otherwise it samples the arm with highest empirical mean (\ie, forced exploitation).
+It was proposed in the small article \cite{Truzzi13} and illustrated on empirical simulations, but no theoretical analysis was given.
+We illustrate in Section~\ref{sec:3:reviewSPAlgorithms} that it can achieve good performance in practice.
 %  and it did not gain popularity since then.
 % In practice, AdBandits is usually (slightly) more efficient than both Thompson sampling and Bayes-UCB in terms of regret, it is comparable in terms of computation times, but costs more memory.
 
@@ -1805,7 +1808,7 @@ In the rest of this thesis, we mainly use the $\UCB_1$ or Thompson sampling algo
 % % Include here the discussion about expert aggregation and my \textbf{Aggregator} algorithm, see https://hal.inria.fr/hal-01705292
 
 
-\newpage  % WARNING ?
+% \newpage  % WARNING ?
 
 % ----------------------------------------------------------------------------
 \section{Conclusion}
