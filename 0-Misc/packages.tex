@@ -184,11 +184,78 @@
 %\addto\captionsfrench{\def\figurename{{Figure}}}
 %\addto\captionsfrench{\def\tablename{{Tableau}}}
 %\addto\captionsfrench{\def\ALG@mname{{Tableau}}}
-\makeatletter
+% \makeatletter
 %\renewcommand{\ALG@name}{Algorithme}
-\newcommand{\clearevenpage}{\clearpage\if@twoside \ifodd\c@page
-    \hbox{}\newpage\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+% \makeatother
+% \makeatletter
+\newcommand{\clearevenpage}{%
+	\clearpage%
+	\if@twoside%
+		\ifodd\c@page%
+			\hbox{}\newpage%
+			\if@twocolumn%
+				\hbox{}\newpage%
+			\fi%
+		\fi%
+	\fi%
+}
 \makeatother
+
+\makeatletter
+% https://tex.stackexchange.com/a/365249/97964
+\def\cleardoublepage{%
+	\clearpage%
+	\if@twoside%
+		\ifodd\c@page%
+		\else%
+			\hbox{}\thispagestyle{empty}\newpage%
+			\if@twocolumn%
+				\hbox{}\newpage%
+			\fi%
+		\fi%
+	\fi%
+}
+% https://tex.stackexchange.com/a/365249/97964
+\newcommand*{\cleartoleftpage}{%
+	\clearpage%
+	\if@twoside%
+		\ifodd\c@page%
+			\hbox{}\thispagestyle{empty}\newpage%
+			\if@twocolumn%
+				\hbox{}\newpage%
+			\fi%
+		\fi%
+	\fi%
+}
+\makeatother
+
+% https://tex.stackexchange.com/questions/25137/how-to-change-the-background-color-only-for-the-current-page
+% \usepackage{afterpage}% for "\afterpage"
+% \usepackage{pagecolor}% With option pagecolor={somecolor or none}
+% \newcommand{\colorthispage}[1]{
+% 	\newpagecolor{#1}%
+% 	\afterpage{\restorepagecolor}%
+% }
+% \newcommand{\emptycolorpage}[1]{
+% 	\newpagecolor{#1}%
+% 	\newpage%
+% 	\afterpage{\restorepagecolor}%
+% }
+\newcommand{\emptycolorpage}[1]{
+	% \if@print
+		% \clearpage%
+		\cleardoublepage%
+		% \cleartoleftpage%
+		% \newpage%
+		\thispagestyle{plain}%
+		\null%
+		\pagecolor{#1}%
+		% \null%
+		\newpage%
+		% \null%
+		\pagecolor{white}%
+	% \fi
+}
 
 % Macros from Émilie Kaufmann's articles
 \usepackage{0-Misc/macrosText}
