@@ -58,7 +58,7 @@ In this model, described in full details in Section~\ref{sec:6:BanditSetting}, t
 % Our numerical simulations reveal that using local restart leads to better empirical performance, and show that our approach often outperforms existing competitors.
 
 
-\textbf{Outline.}
+\paragraph{Outline.}
 %
 % This chapter is structured as follows.
 We introduce the model in Section~\ref{sec:6:BanditSetting}, and review related works in Section~\ref{sec:6:relatedWork}.
@@ -67,7 +67,7 @@ We introduce the two variants of \GLRklUCB{} algorithm in Section~\ref{sec:6:GLR
 The unified regret analysis is given in Section~\ref{sec:6:RegretAnalysis}, we prove one result in Section~\ref{sec:6:proofRegret}.
 We discuss numerical experiments in Section~\ref{sec:6:NumericalExperiments}, with more details in the Appendix~\ref{sec:6:appendix}.
 
-\textbf{Publications.}
+\paragraph{Publications.}
 %
 This chapter is based on our articles \cite{Besson2019GLRT,Besson2019Gretsi}.
 
@@ -134,7 +134,7 @@ and the optimal arm changes once at $\tau_2^{(1)}=2000$.
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=1.05\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_1.pdf}
+    \includegraphics[width=1.09\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_1.pdf}
     \caption{Problem $1$: $K=3$ arms with $T=5000$, and $\Upsilon=4$ changes occur on only one arm at a time (\ie, $C=4$).
         The means are in $[0,1]$, and there are $C+1=5$ stationary intervals of equal lengths.
         Some changes do not modify the optimal arm (\eg, at $T=1000$ and $T=4000$) and others do.
@@ -152,7 +152,7 @@ The first optimal arm decreases at every change (\textcolor{blue}{$2$ with $\nab
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=1.05\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_2.pdf}
+    \includegraphics[width=1.09\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_2.pdf}
     \caption{Problem $2$: $K=3$ arms with $T=5000$, and $\Upsilon=4$ changes occur on all arms (\ie, $C=12$).
         The means are again in $[0,1]$, and there are also $C+1=5$ stationary intervals of equal lengths.
         % Some changes do not modify the optimal arm, but the mean of each arm does change at all change points.
@@ -855,11 +855,13 @@ This last term does not mean the whole inequality is only valid for $T\to\infty$
     For ``easy'' problems satisfying the corresponding Assumption~\ref{ass:6:LongPeriodsGlobal},
     let $\Delta^{\text{opt}}$ denote the smallest value of a sub-optimality gap on one of the stationary segments, and $\Delta^{\text{change}}$ be the smallest magnitude of any change point on any arm.
     \begin{enumerate}
-        \item Choosing $\omega = \sqrt{\ln(T)/T}$, $\delta = 1/\sqrt{T}$ gives
+        \item
+        Choosing $\omega = \sqrt{\ln(T)/T}$, $\delta = 1/\sqrt{T}$ (with no prior knowledge of $\Upsilon_T$) gives
         \begin{equation}
             R_T = \bigO{\frac{K}{\left(\Delta^{\text{change}}\right)^2} \Upsilon_T\sqrt{T\ln(T)} + \frac{(K-1)}{\Delta^{\text{opt}}} \Upsilon_T\ln(T)},
         \end{equation}
-        \item Choosing $\omega = \sqrt{\Upsilon_T\ln(T) / T}$, $\delta = 1 / \sqrt{\Upsilon_T T}$ gives
+        \item
+        Choosing $\omega = \sqrt{\Upsilon_T\ln(T) / T}$, $\delta = 1 / \sqrt{\Upsilon_T T}$ (with prior knowledge of $\Upsilon_T$) gives
         \begin{equation}
             R_T = \bigO{\frac{K}{\left(\Delta^{\text{change}}\right)^2}\sqrt{\Upsilon_T T \ln(T)} + \frac{(K-1)}{\Delta^{\text{opt}}} \Upsilon_T\ln(T)}.
         \end{equation}
@@ -917,22 +919,26 @@ We prefer to state the four cases, to highlight the modularity of the result giv
     with $\Delta^{\text{opt}}$ and ${\Delta}^{\text{change}}$ defined as in Corollary~\ref{cor:6:Global}, the following regret bounds hold.
 
     \begin{enumerate}
-        \item Choosing $\omega = \sqrt{\ln(T) / T}$, $\delta = 1 / \sqrt{T}$ (with no prior knowledge of $\Upsilon_T$ or $\EffChange$) gives
+        \item
+        Choosing $\omega = \sqrt{\ln(T) / T}$, $\delta = 1 / \sqrt{T}$ (with no prior knowledge of $\Upsilon_T$ or $\EffChange$) gives
         \begin{equation}
             R_T = \bigO{\frac{K}{\left(\Delta^{\text{change}}\right)^2} \textcolor{red}{\EffChange}\sqrt{T\ln(T)} + \frac{\EffChange}{\left(\Delta^{\text{opt}}\right)^2} \ln(T)},
         \end{equation}
 
-        \item Choosing $\omega = \sqrt{\Upsilon_T\ln(T) / T}$, $\delta = 1 / \sqrt{\Upsilon_T T}$ (with prior knowledge of $\Upsilon_T$ and ``optimist'' guess $\Upsilon_T \simeq \EffChange \ll K \Upsilon_T$) gives
+        \item
+        Choosing $\omega = \sqrt{\Upsilon_T\ln(T) / T}$, $\delta = 1 / \sqrt{\Upsilon_T T}$ (with prior knowledge of $\Upsilon_T$ and ``optimist'' guess $\Upsilon_T \simeq \EffChange \ll K \Upsilon_T$) gives
         \begin{equation}
             R_T = \bigO{\frac{K^{\textcolor{red}{2}}}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\Upsilon_T T\ln(T)} + \frac{K\Upsilon_T}{\left(\Delta^{\text{opt}}\right)^2}\ln(T)},
         \end{equation}
 
-        \item Choosing $\omega = \sqrt{\EffChange\ln(T) / T}$, $\delta = 1 / \sqrt{\EffChange T}$ (with prior knowledge of $\EffChange$) gives
+        \item
+        Choosing $\omega = \sqrt{\EffChange\ln(T) / T}$, $\delta = 1 / \sqrt{\EffChange T}$ (with prior knowledge of $\EffChange$) gives
         \begin{equation}
             R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\EffChange T\ln(T)} + \frac{\EffChange}{\left(\Delta^{\text{opt}}\right)^2}\ln(T)},
         \end{equation}
 
-        \item Choosing $\omega = \sqrt{K\Upsilon_T\ln(T) / T}$, $\delta = 1 / \sqrt{K\Upsilon_T T}$ (with prior knowledge of $\Upsilon_T$ and ``pessimist'' guess $\EffChange \simeq K \Upsilon_T$) gives
+        \item
+        Choosing $\omega = \sqrt{K\Upsilon_T\ln(T) / T}$, $\delta = 1 / \sqrt{K\Upsilon_T T}$ (with prior knowledge of $\Upsilon_T$ and ``pessimist'' guess $\EffChange \simeq K \Upsilon_T$) gives
         \begin{equation}
             R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\EffChange T\ln(T)} + \frac{\EffChange}{\left(\Delta^{\text{opt}}\right)^2} \ln(T)}.
         \end{equation}
@@ -989,7 +995,7 @@ First, we introduce $\cD(T,\omega)$ the (deterministic) set of time steps at whi
 and as we observe that $\mu_{k_t^*} - \mu_{A(t)} \leq 1$ because rewards are assumed to be bounded in $[0,1]$,
 we can write a first decomposition of the regret,
 \begin{align*}
-    & \sum_{t=1}^T (\mu_{k_t^*}(t) - \mu_{A(t)}(t)) \\
+    & R_T = \sum_{t=1}^T (\mu_{k_t^*}(t) - \mu_{A(t)}(t)) \leq \ldots \\
     & \hspace{1cm} \leq  \sum_{t=1}^{T} \indic(t \in \cD(T,\omega)) + \sum_{t=1}^T (\mu_{k_t^*}(t) - \mu_{A(t)}(t))\indic\left(t \notin\cD(T,\omega), \UCB_{A(t)}(t) \geq \UCB_{k_t^*}(t)\right) \\
     & \hspace{1cm}\leq  \omega T + \sum_{t=1}^T \indic\left(\UCB_{k_t^*}(t) \leq \mu_{k_t^*}(t)\right) + \sum_{k=1}^K\sum_{t=1}^T (\mu_{k_t^*}(t) - \mu_k(t))\indic\left(A(t) = k, \UCB_k(t) \geq \mu_{k_t^*}(t)\right).
 \end{align*}
@@ -1654,6 +1660,14 @@ This illustrates the conjecture that classical algorithms can suffer linear regr
     \includegraphics[width=1.15\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/SP__K3_T5000_N1000__9_algos_pb1/main____env1-1_1316297932259102962.pdf}
     \caption{Mean regret as a function of time, $R_t$ ($1 \leq t \leq T = 5000$) for problem 1.}
     \label{fig:6:meanRegretPb1}
+\end{figure}
+
+% -----------------------------------------------------------------
+\begin{figure}[h!]  % [htbp]
+    \centering
+    \includegraphics[width=1.09\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/SP__K3_T5000_N1000__9_algos_pb2/main____env1-1_7882655236216606305.pdf}
+    \caption{Mean regret as a function of time, $R_t$ ($1 \leq t \leq T = 5000$) for problem $2$.}
+    \label{fig:6:meanRegretPb2}
 \end{figure}
 
 On simple problems, like problem $1$, all the algorithms being designed for piece-wise stationary environments perform similarly, but as soon as the gaps are smaller or there are more changes, we clearly observe that our approach \GLRklUCB{} can outperform the two other actively adaptive algorithms \CUSUMklUCB{} and \MklUCB{} (\eg, on Figure~\ref{fig:6:meanRegretPb2}), and performs much better than passively adaptive algorithms DTS and SW-\klUCB{}  (\eg, on Figure~\ref{fig:6:meanRegretPb3}).

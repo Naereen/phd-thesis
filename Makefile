@@ -50,8 +50,8 @@ stats:
 	git wdiff ./complete-stats.txt
 
 cloudwords:
-	-generate-word-cloud.py -s -m 180 -t "Words from LaTeX sources - PhD Thesis - (C) 2016-2019 Lilian Besson" ./*.tex ./*/*.tex ./*/*/*.tex
-	generate-word-cloud.py -f -o cloudwords_latex_sources.png -m 180 -t "Words from LaTeX sources - PhD Thesis - (C) 2016-2019 Lilian Besson" ./*.tex ./*/*.tex ./*/*/*.tex
+	-generate-word-cloud.py -s -m 180 -t "Words from LaTeX sources - PhD Thesis - (C) 2016-2019 Lilian Besson" ./*.tex ./*/*.tex ./*/*/*.tex ./*/*/*/*.tex ./*/*/*/*/*.tex
+	generate-word-cloud.py -f -o cloudwords_latex_sources.png -m 180 -t "Words from LaTeX sources - PhD Thesis - (C) 2016-2019 Lilian Besson" ./*.tex ./*/*.tex ./*/*/*.tex ./*/*/*/*.tex ./*/*/*/*/*.tex
 	-generate-word-cloud.py -s -m 180 -t "Words from Python code - PhD Thesis - (C) 2016-2019 Lilian Besson" ~/SMPyBandits.git/*.py ~/SMPyBandits.git/*/*.py ~/SMPyBandits.git/*/*/*.py ~/SMPyBandits.git/*/*/*/*.py
 	generate-word-cloud.py -f -o cloudwords_python_code.png -m 180 -t "Words from Python code - PhD Thesis - (C) 2016-2019 Lilian Besson" ~/SMPyBandits.git/*.py ~/SMPyBandits.git/*/*.py ~/SMPyBandits.git/*/*/*.py ~/SMPyBandits.git/*/*/*/*.py
 
