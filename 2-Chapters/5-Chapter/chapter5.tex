@@ -235,12 +235,13 @@ We presented in Section~\ref{sec:5:model} the model \modeltrois, without sensing
 This model seems harder than the model with sensing information, and even though the proposal \Selfish{} works fine in simulations (in terms of average regret), we proved that it can yield linear regret.
 In our paper \cite{Besson2018ALT} as well as in the previous sections, it was left as a future work to know if an algorithm can achieve sub-linear regret in this harder model without sensing information.
 
-Inspired by \cite{Besson2018ALT},
-Boursier and Perchet studied this question in the summer $2018$ following its publication \cite{BoursierPerchet18}.
-Their answer is that the model without sensing information is essentially not harder than the model with sensing information.
+Inspired by the publication of our article \cite{Besson2018ALT},
+V. Boursier and E. Perchet studied this question in the following summer $2018$ \cite{BoursierPerchet18}.
+Their main contribution is an answer to the aforementioned open problem,
+as they showed that the model without sensing information is essentially not harder than the model with sensing information.
 %
-Similarly, Lugosi and Mehrabian studied the same problem \cite{LugosiMehrabian18}.
-In both works, the authors detail algorithms that give a logarithmic regret if $M \leq K$ players all independently implement the proposed algorithm.
+Similarly, G. Lugosi and A. Mehrabian studied the same problem \cite{LugosiMehrabian18}.
+In both works, the authors detail algorithms that give a logarithmic system regret, if $M \leq K$ players all independently implement the proposed solution.
 
 
 \paragraph{The ``communication trick''.}
@@ -406,14 +407,17 @@ This ``communication trick'' is used for instance in \cite{KaufmannAbbas19}.
 Due to space constraint, we let the interested reader refer to these last two works \cite{BoursierPerchet18,KaufmannAbbas19} as they are both solid, and well explained.
 
 Another line of research is to consider models that are closer to realistic wireless communication networks, as it is done in \cite{Avner16,AvnerMannor18}.
-Explaining in details their model and proposed solutions would be quite lengthy, and we rather prefer to let the interested reader refer to the later work \cite{AvnerMannor18}.
-We sum-up its contributions quickly.
+Explaining in details their model and proposed solutions is out of the scope of this thesis,
+but we sum-up the contributions of the latest \cite{AvnerMannor18}.
+%
 They address several aspects of the challenge of communication networks shared by many users simultaneously: learning unknown stochastic network characteristics, sharing resources with other users while keeping coordination overhead to a minimum.
 The solution they proposed combines Multi-Armed Bandit learning with a lightweight signalling-based coordination scheme, and ensures convergence to a stable allocation of resources.
-Their work considers single-user level algorithms for two scenarios: an unknown fixed number of users, and a dynamic number of users, both for different arms means for each user (players).
-Analytic performance guarantees, proving convergence to stable marriage configurations, are presented for both setups. The algorithms are based on a system-wide perspective, rather than focusing on single user welfare.
+Their work considers single-user level algorithms for two scenarios: an unknown fixed number of users, and a dynamic number of users, both for different arms means for each user.
+Analytic performance guarantees, proving convergence to stable marriage configurations, are presented for both setups.
+Similarly to our work, the algorithms are based on a system-wide perspective, rather than focusing on single user welfare.
+%
 
-% \TODOL{A conclusion from this sub-section presenting this model?}
+\TODOL{A conclusion from this sub-section presenting this model?}
 
 
 % ----------------------------------------------------------------------------
@@ -425,7 +429,7 @@ For cognitive radio applications, where arms model channels and players are radi
 %
 Motivated by this weakness, some researchers studied an interesting extension of the model of interest, considering multi-players MAB models with different arms distributions among players.
 %
-Starting in 2012 by \cite{Kalathil12} where arms are Markov chain, this model was studied more actively recently, \cite{DarakHanawal18,Bistritz18,KaufmannAbbas19,Tibrewal2019}.
+Starting in 2012 by \cite{Kalathil12} where arms are Markov chain, this model was studied more actively recently, in two articles published in $2018$ \cite{DarakHanawal18,Bistritz18} and two more in $2019$ \cite{KaufmannAbbas19,Tibrewal2019}.
 
 In such models, instead of considering $K$ arms characterized by a vector of distributions, $(\nu_k)_{1\leq k \leq K}$, if there is $M$ players we consider a \emph{matrix of distributions}, $(\nu_k^j)_{1 \leq k \leq K, 1 \leq j \leq M}$. Two users $j$ and $j'$ can experience different utilities for the same arm $k$, \ie, $\nu_k^{j} \neq \nu_k^{j'}$.
 The goal stays the same, each player wants to maximize its cumulated reward, with or without explicit communications between players, with or without sensing information, but always without central supervision.
@@ -443,7 +447,7 @@ The question is to know if it is possible to obtain a logarithmic --or even sub-
 This question was first answered in \cite{Bistritz18}, and proposed an algorithm based on alternating three phases, and increasing their lengths after the end of each epoch ($2^p$ for the $p$-th epoch).
 First, players explore in order to estimate the expectations of the arm rewards ; then players use their ``Game of Thrones'' dynamics (GoT, inspired by Musical Chair \cite{Rosenski16}) and play the optimal solution most of the time ; finally players play the action they played most of the time in the recent GoT phases.
 % combining Musical Chair with an epoch-based alternative phases of forced exploration and pure exploitation.
-They analyze their GoT algorithm and proven that it achieves a regret of $\cO((\log(T))^{2+\kappa})$ for any positive constant $\kappa$, as small as possible, if $\kappa$ is known by the algorithm.
+They proved that their GoT algorithm achieves a regret of $\cO((\log(T))^{2+\kappa})$, for any positive constant $\kappa$, as small as possible, if $\kappa$ is known by the algorithm.
 
 Until the very recent work of \cite{KaufmannAbbas19}, it was unknown if a logarithmic regret was possible.
 They proposed an algorithm that is based on two phases: first, players will learn $M$ and learn orthogonal ranks, using the ``communication trick'' of~\cite{BoursierPerchet18}, and then one player is elected as a leader and the others are followers.
@@ -583,45 +587,48 @@ Their synthetic experiments consider different cases, for different values of $K
 Since the beginning of this thesis, all the studied bandit problems were stationary: the rewards coming from choosing arm $k$ are \iid{} and follow the same distribution $\nu_k$.
 The next Chapter~\ref{chapter:6} is focused on the piece-wise stationary bandit model, a relaxation of this hypothesis.
 
-When we were working on multi-players bandits in Autumn $2017$ \cite{Besson2018ALT}, we left the study of the piece-wise stationary case as a future work, and shortly after we were excited to see that three independent works tackling this question were published, in December $2018$ \cite{WeiSrivastava18Distributed} and in February $2019$ \cite{AlaturLevyKrause19,bande2019adversarial}.
+When we were working on multi-players bandits, in Autumn $2017$ and $2018$ \cite{Besson2018ALT}, we left the study of the piece-wise stationary case as a future work, and shortly after we were excited to see that three independent works tackling this question were published, in December $2018$ \cite{WeiSrivastava18Distributed} and in February $2019$ \cite{AlaturLevyKrause19,bande2019adversarial}.
 Without diving too much into the details, we review here these three works.
 Without a more serious analysis, we conjecture that it should not be difficult to merge the regret lower-bound for stationary \emph{multi-players} MAB (Theorem~\ref{thm:5:BetterLowerBound}) and the lower-bound for \emph{piece-wise stationary} single-player MAB from \cite{Garivier11UCBDiscount}.
 We conjecture that any reasonable decentralized bandit algorithm must suffer a regret at least $\Omega(M \sqrt{K \Upsilon_T T})$ for $M \leq K$ players, $K$ arms, and $\Upsilon_T$ stationary intervals.
 
+
+\paragraph{Extending the single-player case.}
+%
 On the one hand, piece-wise stationary multi-players MAB can be tackled by extending algorithms developed for the single-player case.
-In \cite{WeiSrivastava18Distributed}, the authors study exactly the same multi-players bandit model as our model, and they propose two distributed algorithms that can efficiently be used by $M \leq K$ players to achieve sub-linear regret for piece-wise stationary problems, essentially by considering it as a harder case of a stationary problem. \\
-\indent
+In \cite{WeiSrivastava18Distributed}, the authors study exactly the same multi-players bandit model as our model, and they propose two distributed algorithms that can efficiently be used by $M \leq K$ players to achieve sub-linear regret for piece-wise stationary problems, essentially by considering it as a harder case of a stationary problem.
+
 The proposed the RR-SW-UCB\# algorithm, which combines their SW-UCB\# algorithm, previously proposed in \cite{WeiSrivastava18Abruptly}, and a Round-Robin hoping, under the assumption that each user $j\in[M]$ knows its ID $j$ (we criticize this unrealistic assumption in Section~\ref{par:5:knowingYourIDinMPBanditsGame} above).
 The SW-UCB\# algorithm is discussed more in details in the literature review of Chapter~\ref{chapter:6} below.
 %
 If $\Upsilon_T$ is bounded by $\Upsilon_T = \bigO{T^{\gamma}}$, for a known $\gamma$ but an unknown $\Upsilon_T$, they prove for instance in Theorem~2 \cite{WeiSrivastava18Distributed} that the expected cumulative regret of their RR-SW-UCB\# algorithm is bounded by $R_T = \bigO{T^{\frac{1+\gamma}{2}} \log(T)}$ (what we call the centralized system regret).
 This bound is of the same order as the bound obtained by the same authors for the SW-UCB\# algorithm in \cite{WeiSrivastava18Abruptly} for the single-player case.
 If $\Upsilon_T = \bigO{T^{\gamma}}$, this bound is comparable to the results obtained for most of the research literature on piece-wise stationary bandits (earlier works like D-UCB in \cite{Garivier11UCBDiscount} have the $\log(T)$ outside the square root, while more recent works all improved this aspect and have the $\log(T)$ in the square root, like for instance our algorithm \GLRklUCB{} in \cite{Besson2019GLRT} and presented in Chapter~\ref{chapter:6}).
-Even if their analysis is not explicit regarding the constant, in the case where $\Upsilon_T = \bigO{T^{\gamma}}$ for a known $\gamma$, their regret upper-bound actually matches the conjectured lower-bound, up to a logarithmic factor $\log(T)$. \\
-%
-\indent
+Even if their analysis is not explicit regarding the constant, in the case where $\Upsilon_T = \bigO{T^{\gamma}}$ for a known $\gamma$, their regret upper-bound actually matches the conjectured lower-bound, up to a logarithmic factor $\log(T)$.
+
 And finally, even though numerical simulations in their papers \cite{WeiSrivastava18Abruptly,WeiSrivastava18Distributed} are interesting and confirm the regret upper-bounds, they do not compare with any other algorithm, and it is left as an interesting future work to study this direction in more details.
 Sadly, a major drawback of their work is that assume that player $j\in[M]$ knows its index $j$, and as we explained above this small hypothesis is actually quite strong, as it allows players to be already orthogonal, and it reduces greatly the difficulty of the decentralized bandit problem.
 
+
+\paragraph{In the adversarial setting.}
+%
 On the other hand, another possibility is to extend ideas developed for the adversarial setting.
 In \cite{AlaturLevyKrause19}, the authors essentially consider the piece-wise stationary as an easier case of an adversarial problem.
 The recent work \cite{bande2019adversarial} also proposes a decentralized algorithm that can achieve sub-linear regret ($\cO(T^{3/4})$) under an adversarial multi-players bandit model.
-\\
-\indent
+
 In \cite{AlaturLevyKrause19}, the authors build on the \MusicalChair{} algorithm from \cite{Rosenski16}, to let the $M$ players converge to a ranking in an efficient and decentralized way (cf. Algorithm 1), and they apparently discovered the ``communication trick'' independently from \cite{BoursierPerchet18} to use (virtual) communications between players to set up a ``coordinator'' player and $M-1$ ``followers'' (running respectively their Algorithms 2 and 3).
 %
-Their key algorithmic technique is to imitate the idealized case where there is full communication between the players. Then, to address the no-communication constraint, we enforce the players to keep the same decisions (arms) within long periods of time (blocks). This gives them the chance to coordinate between themselves via a simple protocol that uses collisions as a primitive, yet effective manner of communication.\\
-%
-\indent
+Their key algorithmic technique is to imitate the idealized case where there is full communication between the players. Then, to address the no-communication constraint, we enforce the players to keep the same decisions (arms) within long periods of time (blocks). This gives them the chance to coordinate between themselves via a simple protocol that uses collisions as a primitive, yet effective manner of communication.
+
 Their proposal is using the Exp3 algorithm from \cite{Auer02NonStochastic} on a combinatorial problem: they consider ``meta'' arms that are affectations of the $M$ players to $M$ distinct arms among the $K$ arms.
 As soon as the ``coordinator'' can effectively use one algorithm to decide the arms played by all the $M$ players, they show that the regret will grow as $R_T = \bigO{M^{4/3} K^{2/3} (\log(K))^{1/3} T^{2/3}}$ as shown in Theorem~4.1
 (they used $K$ for $M$ the number of players, and $N$ for $K$ the number of arms).
 This bound is much worse than the one obtained for the first article \cite{WeiSrivastava18Distributed}, but is more general, and it is much worse than the bound of $\bigO{\sqrt{K T \log(K)}}$ obtained for Exp3 for the single-player adversarial setting in \cite{Auer02NonStochastic}.
 Note that this bound in $T^{2/3}$ is of the same order as the one given in \cite{Avner15}, for the \MEGA{} algorithm.
-However, we note that the dependency in $M$ is surprisingly better for their result than for the regret upper-bound for \MCTopM-\klUCB{} (while scales in $M^3$ in Theorem~\ref{thm:5:LogarithmicRegret_MCTopMklUCB}).\\
-\indent
+However, we note that the dependency in $M$ is surprisingly better for their result than for the regret upper-bound for \MCTopM-\klUCB{} (while scales in $M^3$ in Theorem~\ref{thm:5:LogarithmicRegret_MCTopMklUCB}).
+
 Moreover, at first sight, this idea of ``meta'' arms implies an exponential blow up in terms of computational and storage cost, as there is ${M \choose K}$ such ``meta arms'', but
-the authors provide in Section~4.1 and Lemma~4.1 an interesting discussion regarding the time efficiency of their proposed algorithm, and they show it can stay polynomial in $M$ and $K$ by leveraging techniques from the Determinental Point Processes (DPP, see \cite{GaBaVa18} for a good review).
+the authors provide in Section~4.1 and Lemma~4.1 \cite{AlaturLevyKrause19} an interesting discussion regarding the time efficiency of their proposed algorithm, and they show it can stay polynomial in $M$ and $K$ by leveraging techniques from the Determinental Point Processes (DPP, see \cite{GaBaVa18} for a good review).
 %
 In this second work also, we can note the poor experimental section, as the proposed algorithm is only compared against the \MusicalChair{} algorithm, in ``easy'' problems (small number of break-points $\Upsilon_T$).
 Despite being more complicated than other approaches, their algorithm ``\texttt{C \& P}'' should not be too hard to implement by ourselves, and studying its empirical performance is an interesting future work.
@@ -637,7 +644,7 @@ Despite being more complicated than other approaches, their algorithm ``\texttt{
 % \TODOL{Je peux faire des expériences pour cette approche, est-ce que j'en fais ? Ici, ou à la fin du chapitre 6 ? Ou en conclusion ?}
 
 
-% \newpage  % FIXME
+\newpage  % FIXME
 
 % ----------------------------------------------------------------------------
 \section{Conclusion}

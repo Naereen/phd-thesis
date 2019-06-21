@@ -29,9 +29,9 @@ a crucial step for the development of Cognitive Radio is to insert \emph{multipl
 In this Chapter~\ref{chapter:5}, we are interested in a more formal approach to the decentralized learning problem presented in the previous Chapter~\ref{chapter:4}.
 Such networks can be modelled using a decentralized multi-players multi-armed bandit problem, where arms are channels and players are dynamic IoT devices.
 %
-The decentralized hypothesis means that the central base station does not given any direct order to the devices, they are all in charge of deciding the channel they each want to use at each time step.
+The decentralized hypothesis means that the central base station (or gateway) does not given any direct order to the devices, they are all in charge of deciding the channel they each want to use at each time step.
 Moreover, the devices are independent and do not directly communicate with each other either.
-We show that dynamic end-devices are able to use limited feedback sent by the gateway to learn to find orthogonal affectations of the group of end-devices to the best radio channels, automatically and without explicit communication with each other.
+We show that dynamic end-devices are able to use limited feedback sent by the gateway  to learn to find orthogonal affectations of the group of end-devices to the best radio channels, automatically and without explicit communication with each other.
 In other words, the end-devices are able to learn to cooperate efficiently, in a completely decentralized and autonomous manner.
 
 
@@ -124,7 +124,7 @@ We include some numerical simulations to compare some of them, and we present in
 % This extension is not studied per say but we quickly review the existing literature, consisting in the two recent works \cite{Bistritz18,KaufmannAbbas19}, and we discuss the possible real-world usage of the existing algorithms.
 
 
-\textbf{Outline.}
+\paragraph{Outline.}
 %
 The rest of this chapter is organized as follows.
 % First we motivate the model of multi-players multi-armed bandits in Section~\ref{sec:5:motivation}
@@ -138,7 +138,7 @@ For some extensions, we discuss how to adapt our proposals and illustrate the em
 % and finally Section~\ref{sec:5:conclusion} concludes.
 
 
-\textbf{Publication.}
+\paragraph{Publication.}
 %
 This chapter is mainly based on our article \cite{Besson2018ALT}.
 
@@ -450,7 +450,7 @@ a classical assumption made by \cite{LaiRobbins85} in single-player bandit model
   % \vspace*{-5pt}  % XXX
   \begin{align}
     \forall a\in(0,1) & R_T(\boldsymbol{\mu},M,\cA) \mathop{=}\limits_{T \to +\infty} o(T^\alpha) \\
-    \text{and} \forall a\in(0,1) & \;
+    \text{and } \; \forall a\in(0,1) & \;
     \forall j \in [M], k \in \Mbest, \;\;
     % a_{j,k}
     \frac{T}{M}
@@ -461,11 +461,11 @@ a classical assumption made by \cite{LaiRobbins85} in single-player bandit model
 \end{definition}
 
 
-Having a small regret on every problem instance, \ie, being uniformly efficient,
+Having a small regret on every problem instance (\ie, being uniformly efficient)
 is a natural assumption,
-that rules out algorithms tuned to perform well on specific instances only (\eg, fixed-armed algorithms).
+that rules out policies tuned to perform well only on specific instances (\eg, fixed-armed policies).
 %
-From this assumption $\left(R_T(\boldsymbol{\mu},M,\cA)=o(T^\alpha)\right)$ and the decomposition of Lemma~\ref{lem:5:DecompositionRegret} one can see\footnote{With some arguments used in the proof of Lemma~\ref{lem:5:1stLowerBound} to circumvent the fact that \ref{eq:5:term2} may be negative.} that for every $k \in \Mbest$,
+From this assumption $R_T(\boldsymbol{\mu},M,\cA)=o(T^\alpha)$ and the decomposition of Lemma~\ref{lem:5:DecompositionRegret} one can see\footnote{With some arguments used in the proof of Lemma~\ref{lem:5:1stLowerBound} to circumvent the fact that \ref{eq:5:term2} may be negative.} that for every $k \in \Mbest$,
 ${T}- \E_{\mu}[N_k(T)] {=} o(T^{\alpha})$, and so
 \begin{equation}\label{eq:5:intermediate}
   % \vspace*{-5pt}  % XXX
@@ -478,19 +478,25 @@ In that case, it holds that  $\E_{\mu}[N_k^j(T)]=\E_{\mu}[N_k^{j'}(T)]$ for ever
 Note that the algorithms studied in Section~\ref{sec:5:algorithms} are permutation invariant, and \MCTopM-\klUCB{} is thus an example of strongly uniformly efficient algorithm, as we prove in Section~\ref{sec:5:upperbounds} that its regret is logarithmic on every instance $\mu \in \cP_M$.
 
 % As we state it here, the constraint on fairness is new, and it was not studied as such in previous works.
+\textbf{About fairness.}
+%
 In the proofs of the regret bounds for \rhoRand{} in \cite{Anandkumar11}, the authors briefly mention that their policy is invariant under permutation and that this yields a certain fairness guarantee, but without formalizing it more.
 The notion of fairness defined above can be interpreted as a ``cooperative fairness'', opposed to the notion of ``arm fairness'' that has been studied in a few papers on single-player stochastic MAB.
-For instance, \cite{Patil2019stochastic} requires that each arm must be sampled at least a given fraction of the total time steps, \ie, $\forall k, \E[N_k(T)] \geq r_k T$, where the constraint vector $[r_1,\dots,r_K]$ is given and known to the algorithm.
+For instance, \cite{Patil2019stochastic} requires that each arm must be sampled at least a given fraction of the total time steps, \ie, $\forall k, \E[N_k(T)] \geq r_k T$, where the constraint vector $[r_1,\dots,r_K]$ is known by the algorithm.
 
 % As it was discovered in \cite{BoursierPerchet18} and further explained in Appendix~E of \cite{KaufmannAbbas19}, our lower-bound was not true for any algorithm, as we wrongly claimed in \cite{Besson2018ALT} that the ``collision information term'' is zero for any algorithm $\cA$.
 % However, we wanted to be still able to present the derivations of our lower-bound, mainly because its proof and its form give important insights on how to design an asymptotically optimal algorithm $\cA$.
 % % and because it still applies to algorithms of the \RhoRand{} family as well as our proposals \RandTopM{} and \MCTopM.
 
-The following notations and the hypothesis on the collision information term \eqref{eq:5:collisionInformationTerm} come from Appendix~E of \cite{KaufmannAbbas19}.
+
+\textbf{Collision information.}
+%
+The following notations and the hypothesis on the collision information term \eqref{eq:5:collisionInformationTerm} comes from Appendix~E of \cite{KaufmannAbbas19}.
 Similarly to what we did in Section~\ref{sec:2:notations},
 consider the observations $O_t^j$ that she gathered after $t$ rounds of its algorithm $\cA_j$ for a fixed player $j\in[M]$,
 defined as $O_t^j \eqdef \left( U^j(1), Y_{A^j(1),1}, C^j(1), \ldots, U^j(t), Y_{A^j(t),t}, C^j(t) \right)$,
-where $U^j(t)$ denotes some external source of randomness useful to select $A^j(t+1)$ (\eg, for an algorithm based on ranks and \UCB{} indexes, like \RhoRand, when two arms have the same maximum index, the decision is an $\argmax$ that is usually a uniform random selection among the arms with maximum index).
+where $U^j(t)$ denotes some external source of randomness useful to select $A^j(t+1)$.
+For instance, an algorithm based on ranks and \UCB{} indexes, like \RhoRand, when two arms have the same maximum index the decision is an $\argmax$, and ties are usually broken by a uniform random selection among the arms with maximum index.
 
 Fix a problem $\bm{\mu}$,
 % and as we do in Appendix~\ref{proof:5:BetterLowerBound},
@@ -600,11 +606,12 @@ The following result shows that term \ref{eq:5:term2} can be related to the numb
 
 
 This result can also be used to recover Proposition~1 from \cite{Anandkumar11}, giving an upper bound on the regret that only depends on
-the \emph{expected number of sub-optimal selections} -- $\E_{\mu}[N_k(T)]$ for $k \in \Mworst$ --
-and the \emph{expected number of colliding players on the optimal arms} -- $\E_{\mu}[\cC_k(T)]$ for $k \in \Mbest$. Note that, in term (c) the number of colliding players on the sub-optimal arm $k$ may be upper bounded as $\E_{\mu}[\cC_k(T)] \leq M \E_{\mu}[N_k(T)]$.
+the \emph{expected number of sub-optimal selections}, $\E_{\mu}[N_k(T)]$ for $k \in \Mworst$,
+and the \emph{expected number of colliding players on the optimal arms}, $\E_{\mu}[\cC_k(T)]$ for $k \in \Mbest$. Note that, in term (c) the number of colliding players on the sub-optimal arm $k$ may be upper bounded as $\E_{\mu}[\cC_k(T)] \leq M \E_{\mu}[N_k(T)]$.
 %
 
 In the next section, we present an algorithm that has a logarithmic regret,
+by controlling its sub-optimal selections,
 while ensuring that the number of sub-optimal selections is matching the lower bound of Theorem~\ref{thm:5:BetterLowerBound}.
 
 
@@ -623,12 +630,15 @@ It was conjectured in \cite{Besson2018ALT} that \Selfish{} can suffer linear reg
 When sensing is possible, that is under observation models \modelun{} and \modeldeux, most existing strategies build on a \emph{single-player bandit algorithm} (usually an \emph{index policy}) that relies on the sensing information, together with an \emph{orthogonalization strategy} to deal with collisions.
 Following this approach, we introduce two new algorithms, \RandTopM{} and \MCTopM, in Section~\ref{sub:5:RandTopM_and_MCTopM}.
 
-\textcolor{red}{\textbf{Warning:}}
-We want to strengthen the fact that in all the proposed algorithms,
-the players do \emph{not} know their numbers $j\in[M]$,
-and they do not need to know it to achieve low regret.
-%
-We discuss the fact that this would be an unrealistic hypothesis in Section~\ref{par:5:knowingYourIDinMPBanditsGame} below.
+
+\begin{leftbar}[warningbar]  % XXX leftbar warningbar, comment if needed
+  \textcolor{red}{\textbf{Warning.}}
+  We want to strengthen the fact that in all the proposed algorithms,
+  the players do \emph{not} know their numbers $j\in[M]$,
+  and they do not need to know it to achieve low regret.
+  %
+  This would be an unrealistic hypothesis, as explained in Section~\ref{par:5:knowingYourIDinMPBanditsGame} below.
+\end{leftbar}  % XXX leftbar warningbar, comment if needed
 
 
 % -----------------------------------------------------------------
@@ -703,7 +713,7 @@ Thus we propose next our main contribution, the \MCTopM{} algorithm, proved to b
 
 % \textbf{Index policies.}
 % %
-The approache we now describe for multi-players bandits can be used in combination with any index policy (see Algorithm~\ref{algo:2:indexPolicy}), but we restrict our presentation to UCB algorithms, for which strong theoretical guarantees can be obtained. In particular, we focus on two types of indices:
+The approaches we now describe for multi-players bandits can be used in combination with any index policy (see Algorithm~\ref{algo:2:indexPolicy}), but we restrict our presentation to UCB algorithms, for which strong theoretical guarantees can be obtained. In particular, we focus on two types of indices:
 $\UCB_1$ \citep{Auer02}
 and \klUCB{} \citep{KLUCBJournal}.
 For player $j\in[M]$
@@ -724,7 +734,7 @@ However, if each of the $M$ players selects the arm with largest UCB, all the pl
 To circumvent this problem, several coordination mechanisms have emerged, that rely on \emph{ordering} the indices and targeting \emph{one of} the $M$-best indices.
 
 
-\textbf{Two ideas for orthogonalization.}
+\paragraph{Two ideas for orthogonalization.}
 \label{par:5:twoIdeasOrthogonalization}
 %
 On the one hand, the \TDFS{} algorithm \citep{Zhao10} relies on the player agreeing in advance on the time steps at which they will target each of the $M$ best indices.
@@ -732,26 +742,32 @@ Even though some alternative without pre-agreement are proposed, they are quite 
 %
 On the other hand, the \rhoRand{} algorithm \citep{Anandkumar11} relies on randomly selected \emph{ranks}. %\footnote{\rhoRand{} only works if $M$ is known, and \cite{Anandkumar11} extended it to the case of an unknown $U$, with \rhoRandEst. Extending our algorithms for the case of unknown number of players $M$ is an interesting future work.}.
 %
-More formally, letting $\pi(k,\mathbf{g})$ be the index of the $k$-th largest entry in a vector $\mathbf{g}$,
+More formally, letting $\pi(k,\mathbf{U})$ be the index of the $k$-th largest entry in a vector $\mathbf{U}$,
 % (for $k\in[K]$),
 in \rhoRand{} each player maintains at time $t$ an internal rank $R^j(t)\in[M]$
 and selects at time $t$,
 % \begin{equation}
-$A^j(t) \eqdef \pi\left(R^j(t), [U^j_\ell(t)]_{\ell=1,\dots,K}\right)$.
+$A^j(t) \eqdef \pi\left(R^j(t), [U^j_\ell(t)]_{\ell\in[K]}\right)$.
 % \end{equation}
 If a collision occurs, a new rank is drawn uniformly at random, $R^j(t+1) \sim \cU([M])$.
 
 
 % Now, our algorithms !!
-\textbf{Our two proposals.}
+\paragraph{Our two proposals.}
 We now propose two alternatives to this strategy, that do not rely on ranks and rather randomly fix themselves on one \emph{arm} in $\TopM(t)$, that is defined as the set of arms that have the $M$ largest indices (at the current time $t$ and for player $j$),
 \begin{equation}
-  \TopM(t) \eqdef \left\{ \pi\left(k, \{U^j_\ell(t)\}_{\ell=1,\dots,K}\right), k=1,\dots,M\right\}.
+  \TopM(t) \eqdef \left\{ \pi\left(k, \{U^j_\ell(t)\}_{\ell\in[K]}\right), k=1,\dots,M\right\}.
 \end{equation}
 
-\textbf{The \RandTopM{} algorithm.}
+\paragraph{The \RandTopM{} algorithm.}
 %
 We precisely state our first proposal below in Algorithm~\ref{algo:5:RandTopM}.
+%
+\RandTopM{} is essentially a refinement over \RhoRand, to not use the indirection of ranks, and a simpler version of \MCTopM.
+The difference with \MCTopM{} is that the later introduces a concept of a ``Chair'', by considering a binary ``being fixed'' state $s^j(t)$, as presented in Algorithm~\ref{algo:5:MCTopM} below.
+%
+In \RandTopM{}, player $j$ is always considered ``not fixed'',
+and a \emph{collision always forces a uniform sampling of the next arm} from $\TopM(t)$.
 
 % \TODOL{Est-ce qu'on devrait utiliser $t=1,\dots,T$ et pas $t=0,\dots,T-1$ et utiliser $A(t)$ et pas $A(t+1)$ pour être consistant avec les autres chapitres ?}
 
@@ -802,14 +818,8 @@ We precisely state our first proposal below in Algorithm~\ref{algo:5:RandTopM}.
 % \vspace*{-5pt}  % XXX remove if problem
 
 
-\RandTopM{} is essentially a refinement over \RhoRand, to not use the indirection of ranks, and a simpler version of \MCTopM.
-The difference with \MCTopM{} is that the later introduces a concept of a ``Chair'', by considering a binary ``being fixed'' state $s^j(t)$, as presented in Algorithm~\ref{algo:5:MCTopM} below.
-%
-In \RandTopM{}, player $j$ is always considered ``not fixed'',
-and a \emph{collision always forces a uniform sampling of the next arm} from $\TopM(t)$.
 
-
-\textbf{The \MCTopM{} algorithm.}
+\paragraph{The \MCTopM{} algorithm.}
 %
 Our second proposal \MCTopM{} is stated below as Algorithm~\ref{algo:5:MCTopM},
 it is a slightly more complex extension of the \RandTopM{} algorithm.
@@ -1191,7 +1201,7 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
   % Explanation of the figure
 
   As in Algorithm~\ref{algo:5:MCTopM}, $s^j(t-1)$ is the event that player $j$ decided to fix herself on an arm at the end of round $t-1$.
-  Formally, $s^j(0)$ is false, and $s^j(t)$ is defined inductively from $s^j(t-1)$ as
+  Thus $s^j(0)$ is false, and $s^j(t)$ is defined inductively from $s^j(t-1)$ as
   % following the algorithm of \MCTopM:
   \begin{equation}
       s^j(t) =
@@ -1201,8 +1211,8 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
 
   For the sake of clarity, we now explain Figure~\ref{fig:5:StateMachineAlgorithm_MCTopM} in words. At step $t$, if player $j$ is not fixed ($\overline{s^j(t-1)}$), she can have three behaviors when executing \MCTopM.
   She keeps the same arm and goes to the other state $s^j(t)$ with transition $(1)$,
-  or she stays in state $\overline{s^j(t)}$,
-  with two cases.
+  or she stays in state $\overline{s^j(t)}$
+  in two cases.
   Either she sampled $A^j(t)$ uniformly
   from $\TopM(t) \cap \{ m : U_m^j(t-1) \leq U_k^j(t-1) \}$
   with transition $(3)$,
@@ -1210,7 +1220,7 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
   or she sampled $A^j(t)$ uniformly
   from $\TopM(t)$ with transition $(2)$,
   if $A^j(t-1) \notin \TopM(t)$.
-  In particular, note that if $\overline{C^j(t-1)}$, transition $(3)$ is executed and not $(2)$.
+  In particular, note that $(3)$ is executed and not $(2)$ if $\overline{C^j(t-1)}$.
   %
   % The case $(2)$ happens when there is no collision at time $t-1$ but a collision at time $t$,
   % and conversely case $(3)$ happens when the player was not fixed on her arm at time $t-1$ (\ie, $\overline{s^j(t-1)}$)
@@ -1267,7 +1277,7 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
   the starting times $(\theta_i)_{i \geq 1}$
   and the ending times $(\tau_i)_{i \geq 1}$
   (possibly larger than $T$),
-  of sequences during which $I_2(s)$ is true for all $s=\theta_i,\dots,\tau_i-1$ but not before and after,
+  of sequences during which $I_2(s)$ is true for all $s \in [\theta_i,\dots,\tau_i-1]$, but not before and not after,
   that is
   $\forall i \in \{1,\dots,n(T)\},
   \overline{I_2^j(\theta_i - 1)}
@@ -1293,7 +1303,7 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
   Both $n(T)$ and $\tau_i - \theta_i \geq 0$ have finite averages for any $i$ (as $\tau_i - \theta_i \leq T$), and $n(T)$ is a \emph{stopping time} with respect to the past events (that is, $\cF^j_T$),
   thus we can use Wald's Lemma \citep{Wald45},
   to obtain a decomposition with two terms $(\alpha)$ and $(\beta)$,
-  $\E_{\mu}[N_2^j(t)] \leq \E_{\mu}\left[ n(T) \right] \times \max_{i\in\N} \E_{\mu}\left[ \tau_i - \theta_i \right]$.
+  $\E_{\mu}[N_2^j(t)] \leq \E_{\mu}\left[ n(T) \right] \times \max\limits_{i \geq 1} \E_{\mu}\left[ \tau_i - \theta_i \right]$.
   % $\E_{\mu}[N_2^j(t)] \leq \underbrace{\E_{\mu}\left[ n(T) \right]}_{(\alpha)} \times \underbrace{\max_{i\in\N} \E_{\mu}\left[ \tau_i - \theta_i \right]}_{(\beta)}$.
 
   $(\alpha)$ To control $\E_{\mu}[n(T)]$, we can observe that
@@ -1335,25 +1345,23 @@ of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
   and finally
   $\E_{\mu}[\cC(T)] = \sum_{k=1}^K \E_{\mu}[\cC^k(T)] = \bigO{\log T}$ also.
 
-  We can be more precise about the constants, all the previous arguments can be used successively:
-  \begin{align}
+  We can be more precise about the constants, by using the previous arguments successively.
+  \begin{align*}
     \E_{\mu}[\cC(T)]
     &\leq M \sum_{j=1}^M \left(\sum_{t=1}^T \Pr(I_2^j(t)) + \sum_{t=1}^T \Pr(I_3^j(t))\right)
     = M \left(\sum_{j=1}^M \E_{\mu}[N_2^j(T)] + \E_{\mu}[N_3^j(T)]\right) \\
-    &\leq M^2 \left(\E_{\mu}[n(T)] \E_{\mu}[\theta_i - \tau_i] \right) + M^2 \E_{\mu}[N_3^1(T)] \notag
-  \end{align}%
-  \begin{align}
-    &\leq M^2 (1+\E_{\mu}[N_3^1(T)] + \E_{\mu}[N_5^1(T)]) M + M^2 \E_{\mu}[N_3^1(T)] \notag \\
-    &\leq 2 M^3 \E_{\mu}[N_3^1(T)] + \smallO{\log T} + M^2 \left(\sum_{\substack{a,b=1,\dots,K\\\mu_a < \mu_b}} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T} \notag  \\
-    &\leq \left(2 M^3 + M^2\right) \left(\sum_{\substack{a,b=1,\dots,K\\\mu_a < \mu_b}} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T}.
-  \end{align}
+    &\leq M^2 \left(\E_{\mu}[n(T)] \E_{\mu}[\theta_i - \tau_i] \right) + M^2 \E_{\mu}[N_3^1(T)] \\
+    &\leq M^2 (1+\E_{\mu}[N_3^1(T)] + \E_{\mu}[N_5^1(T)]) M + M^2 \E_{\mu}[N_3^1(T)] \\
+    &\leq 2 M^3 \E_{\mu}[N_3^1(T)] + \smallO{\log T} + M^2 \sum_{\substack{a,b=1,\dots,K\\\mu_a < \mu_b}} \frac{\log(T)}{\kl(\mu_a,\mu_b)} + \smallO{\log T}  \\
+    &\leq \left(2 M^3 + M^2\right) \sum_{\substack{a,b=1,\dots,K\\\mu_a < \mu_b}} \frac{\log(T)}{\kl(\mu_a,\mu_b)} + \smallO{\log T}.
+  \end{align*}
 
   Thus we prove the desired inequality, with explicit constants depending only on $\boldsymbol{\mu}$ and $M$.
   %
-  \begin{align}
-    \sum_{k=1}^K \E_{\mu}[\cC^k(T)] & = \E_{\mu}[\cC(T)] \nonumber\\
-    & \leq M^2\left(2 M + 1\right) \left(\sum_{\substack{a,b=1,\dots,K\\\mu_a < \mu_b}} \frac{1}{\kl(\mu_a,\mu_b)}\right) \log(T) + \smallO{\log T}.
-  \end{align}
+  \begin{equation}
+    \sum_{k=1}^K \E_{\mu}[\cC^k(T)] = \E_{\mu}[\cC(T)]
+    \leq M^2\left(2 M + 1\right) \sum_{\substack{a,b=1,\dots,K\\\mu_a < \mu_b}} \frac{\log(T)}{\kl(\mu_a,\mu_b)} + \smallO{\log T}.
+  \end{equation}
 \end{smallproof}
 
 
@@ -1479,7 +1487,7 @@ Performance is measured with the \emph{expected} regret up to horizon $T=10000$,
   \begin{small}  % XXX
       \centering
       \begin{tabular}{cc|ccc}
-          \textbf{Algorithm} & \textbf{Index policy} & $M=3$ players & $M=6$ players & $M=9$ players \\
+          \textbf{Algorithm} & \textbf{Index policy} & $M=3$ players & $M=6$ & $M=9$ \\
           \hline
           \multirow{2}{*}{Centralized multiple-play}
           & \UCB{} & $321 \pm 30$ & $233 \pm 25$ & $0$ \\
@@ -1502,7 +1510,7 @@ Performance is measured with the \emph{expected} regret up to horizon $T=10000$,
           & \klUCB{} & $\mathbf{248 \pm 40}$ & $\mathbf{410 \pm 54}$ & $\mathbf{42 \pm 10}$ \\
           % \hline
       \end{tabular}
-      \caption{No matter the orthogonalization policy and $M$ the number of players, using \klUCB{} is much more efficient than using \UCB{}, for multi-players bandit (here in a simple problem with $K=9$ arms).}
+      \caption{For all orthogonalization policies and different numbers of players, using \klUCB{} is much more efficient than using \UCB{}, for multi-players bandit (here in a simple problem with $K=9$ arms).}
       \label{table:5:comparisonUCB_klUCB}
   \end{small}  % XXX
   \end{table}
@@ -1523,7 +1531,7 @@ from now on we only report results for \klUCB.
 %, as the theoretical guarantees for single player suggested,
 
 
-\textbf{Other experiments.}
+\paragraph{Other experiments.}
 %
 We now present more results for two bandit instances.
 % \begin{itemize}
