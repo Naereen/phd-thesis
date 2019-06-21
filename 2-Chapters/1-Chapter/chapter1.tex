@@ -129,8 +129,8 @@ and especially on one subfield that we detail below, \textbf{Dynamic Spectrum Ac
     % https://upload.wikimedia.org/wikipedia/commons/c/c7/United_States_Frequency_Allocations_Chart_2016_-_The_Radio_Spectrum.pdf?uselang=fr
     \label{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum}
 \end{figure}
-%
-%
+
+
 \TODOL{Je peux améliorer (ou enlever) ce passage qui site J.Toledano, ou alors le commenter en plus de détails ? J'aime bien son rapport en fait (j'aurai du le lire au début de ma thèse !)}
 % https://www.economie.gouv.fr/files/files/PDF/french-spectrum-mission-executive-summary-2014-06-25.pdf
 % https://www.economie.gouv.fr/files/files/PDF/rapport-gestion-dynamique-spectre-2014-06-30.pdf
@@ -289,16 +289,17 @@ CR is not a standard technology, and as such it does not have a single definitio
 
     \item
     The \href{https://en.wikipedia.org/wiki/Cognitive_radio}{Wikipedia encyclopedia} states
-    \emph{``A cognitive radio (CR) is a radio that can be programmed and configured dynamically to use the best wireless channels in its vicinity to avoid user interference and congestion. Such a radio automatically detects available channels in wireless spectrum, then accordingly changes its transmission or reception parameters to allow more concurrent wireless communications in a given spectrum band at one location''}.
+    \emph{``a CR is a radio that can be programmed and configured dynamically to use the best wireless channels in its vicinity to avoid user interference and congestion. Such a radio automatically detects available channels in wireless spectrum, then accordingly changes its transmission or reception parameters to allow more concurrent wireless communications in a given spectrum band at one location''}.
 \end{itemize}
 
 
 % explain PU and SU in a few sentences
-In licensed bands, there are Primary Users (PU) paying to access the network, for instance anybody has to pay to have a mobile phone number and use the mobile telephony network.
-The PU have a strict priority over any other non-paying users, referred to as Secondary User (SU).
-So even though the RF bands are allocated, real world measurements often show that some bands are not densely used, and thus if a SU is equipped with an efficient sensing capacity, it can analyze its environment, and use a licensed band if it is free of any PU.
+In licensed bands, there are Primary Users (PU) paying to access the network, for instance anybody has to pay to have a mobile phone number and use the network.
+As exposed in the definition above, the CR philosophy suggests that if the network is not used by any PU in a certain location and time, then non-paying users, referred to as Secondary User (SU), could use it.
+Regulations state that PU have a strict priority over any other SU,
+but even though the RF bands are allocated, real world measurements often show that some bands are not densely used, and thus if a SU is equipped with an efficient sensing capacity, it can analyze its environment, and use a licensed band if it is free of any PU.
 % explain DSA
-This defines the concept of DSA was thus proposed in the early $2000$s, and we refer to the survey \cite{Zhao07} for more details.
+This defines the concept of DSA, proposed in the early $2000$s, and we refer to the surveys \cite{akyildiz2006next,Zhao07,garhwal2012survey} for more details.
 We focus on one example, the \textbf{Opportunistic Spectrum Access} (OSA) problem.
 
 
@@ -314,7 +315,7 @@ Another hypothesis is that both PU and SU are synchronized in times, by sub-divi
 %
 Thus if the SU spends a short time in the beginning of each time slot to do sensing, it can scan for the presence or absence of any PU before transmitting.
 If a SU was able to sense for all the $K$ frequency bands, it could simply transmit in one of the free channels if any, or not transmit if all channels are used at a given time step.
-However, sensing is known to be error-prone and costly, especially for wide-band sensing, thus most works on OSA limit the sensing capacity of SU to sensing only one channel at a time. This assumption, along with the regulation that PU cannot be disturbed, enforces the SU to transmit in the channel that it sensed.
+However, sensing is known to be error-prone and costly, especially for wide-band sensing (for more details, see the surveys \cite{yucek2009survey,subhedar2011spectrum}), thus most works on OSA limit the sensing capacity of SU to sensing only one channel at a time. This assumption, along with the regulation that PU cannot be disturbed, enforces the SU to transmit in the channel that it sensed.
 % non negligible cost of radio reconfiguration
 
 Focussing on one SU in an OSA network, it has to sequentially decide a channel to sense (in the set of $K\geq2$ channels), then it performs sensing, and finally it transmits in this channel if it is free.
@@ -356,6 +357,8 @@ Some analysis on real radio measurements made for HF ionospheric channels have a
 %
 Since $2017$, S. Darak and his team at IIIT Delhi have actively worked in the research on cognitive radio using multi-armed bandits, and some of their recent works are illustrated with real-world demo using USRP and the MATLAB/Simulink system
 \cite{KumarYadav2018,SawantKumar2018,JoshiKumar2018}.
+%
+For more details on the entire research on Cognitive Radio, we refer to the surveys \cite{garhwal2012survey,marinho2012cognitive}.
 
 % \TODOL{Raccourcir toutes les fois où je parle des travaux sur l'OSA après dans la suite de la thèse !}
 
@@ -453,9 +456,11 @@ In the second Part~\ref{part:MABIOT} of this thesis, we start by proposing and s
 %
 We study two models of IoT networks in Chapter~\ref{chapter:4}.
 The first model considers IoT devices that simply have data to send to a base station, at a regular frequency (but random times), and that use the acknowledgement as feedback, in order to optimize their uplink communications, by accessing more the best channels (\ie, the less occupied by the surrounding traffic).
-The goal of this first model of applying decentralized RL on the device side is to increase the Quality of Service (QoS) of the application of such IoT network, by reducing the rate of failed transmission. The base station will thus receive more up-link packets from the devices it serves, if they can successfully learn an efficient spectrum access scheme.
+The goal of this first model of applying decentralized RL on the device side is to increase the Quality of Service (QoS) of the application of such IoT network, by reducing the rate of failed transmission.
+The base station will thus receive more up-link packets from the devices being served, if they can successfully learn an efficient spectrum access scheme.
+It implies that the network can accept more end-devices while maintaining the same QoS.
 %
-The second model we propose then considers packet retransmissions, and while the two concepts are similar, the application of an efficient decentralized learning algorithm now results in both an increased battery life for each of the devices, as well as an increase QoS for the entire network.
+Our second model then considers packet retransmissions, and while the two concepts are similar, the application of an efficient decentralized learning algorithm now results in both an increased battery life for each of the devices, as well as an increase QoS for the entire network.
 
 We present in Section~\ref{sec:4:firstModel} a first model of an IoT network, that is made of thousands (or more) of end-devices and a single base station.
 We consider a time-frequency slotted ALOHA-based protocol, by assuming a perfect synchronization between all devices and the base station.
@@ -489,9 +494,9 @@ This third contribution concluded our collaboration with R. Bonnefoi, and was pr
 
 \paragraph{Chapter~\ref{chapter:5}.}
 %
-In the two models presented above, the core concept is to let every dynamic device of a IoT network runs a fully decentralized learning algorithm, each running on its own (random) activation times, in order to optimize the complete system.
+In both models presented above, the core concept is to let every dynamic device of a IoT network runs a fully decentralized learning algorithm, each running on its own (random) activation times, in order to optimize the complete system.
 It means that each of them target its own local objective, which is to maximize its cumulated reward (in a selfish way).
-It is well known in the game theory literature that playing selfishly can be disastrous for the centralized performance measure: for instance, one can think of the \href{https://en.wikipedia.org/wiki/Prisoner%27s_dilemma}{prisoner dilemma} or other popular ``dilemma'' games.
+It is well known in the game theory literature that playing selfishly can be disastrous for the centralized performance measure: for instance, one can think of the \href{https://en.wikipedia.org/wiki/Prisoner%27s_dilemma}{prisoner dilemma} or other popular ``dilemmas''.
 % , and for more examples we refer to the book \cite{CesaLugosi06}.
 % https://www.ii.uni.wroc.pl/~lukstafi/pmwiki/uploads/AGT/Prediction_Learning_and_Games.pdf
 So it was quite surprising that our numerical simulations, as well as the realistic PoC, showed that decentralized selfish MAB learning lead to efficient coordination between devices, despite the fact that these IoT objects cannot communicate directly with each other and receive only a collision feedback from the base station they are associated to.
@@ -582,7 +587,7 @@ Our work also lead to the long version article \cite{Besson2019GLRT}, that will 
 \paragraph{Conclusion.}
 %
 We conclude this thesis in Chapter~\ref{chapter:conclusion}, to give some perspectives and directions about possible future works.
-Most of the contributions that we present in this thesis call for more developments, on both directions of providing more mathematical analysis and implementing new proof-of-concepts, using real wireless hardware and realistic Internet of Things networks.
+Most of the contributions that we present in this thesis call for more developments, on both directions of providing more mathematical analysis and implementing new proof-of-concepts, using real wireless hardware and realistic IoT networks.
 
 This manuscript ends with the appendixes, first with a short overview of another contribution, in Appendix~\ref{app:2:DoublingTricks} we discuss about our work on doubling-trick, in order to remove the need for an algorithm to know the horizon of the bandit game before starting to play it.
 The rest of the appendix contains a list of abbreviations and notations, then lists of figures, algorithms, code samples and tables,

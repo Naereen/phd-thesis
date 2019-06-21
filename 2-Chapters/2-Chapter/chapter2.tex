@@ -699,7 +699,7 @@ We state below Theorem~2.12 from \cite{Slivkins2019}, to specify a possible valu
         % \begin{equation}\label{eq:2:forSecondLogTLowerBound2}
             $C'_I = C_I - \varepsilon$,
         % \end{equation}
-        meaning that there exists a constant $C_I$ depending only on $I$,
+        meaning that there exists a constant $C'_I$ depending only on $I$,
         and a time $T_0$ such that $\forall T \geq T_0, \;\;\; R_T^{\cA}(I) \geq C'_I \log(T)$.
     \end{itemize}
 \end{leftbarnospace}  % XXX leftbar theorembar, comment if needed
@@ -746,10 +746,10 @@ For more details, we refer to Chapter~15 of \cite{LattimoreBanditAlgorithmsBook}
 \end{theorem}
 
 Similarly to what is considered for the first lower-bound,
-a natural question is to know if there is an algorithm that achieve a regret upper-bound of the form $R_T^{\cA}(I) \leq \bigO{\sqrt{K T}}$ for any instance, independently on the problem difficulty.
-It is the case for the Exp3 algorithm from \cite{Auer02}, for example.
-Since a few years, some algorithms were shown to achieve both a problem-dependent logarithmic and a minimax upper-bounds,
-like MOSS in \cite{Audibert2009minimax} or recently \KLUCBpp{} in \cite{Menard17},
+a natural question is to know if there is an algorithm achieving a regret upper-bound of the form $R_T^{\cA}(I) \leq \bigO{\sqrt{K T}}$ for any instance, independently on the problem difficulty.
+The question has been answered since the early $2000$s, as it is for instance the case for the Exp3 algorithm from \cite{Auer02}.
+In the last decade, some algorithms were shown to achieve both a problem-dependent logarithmic and a minimax upper-bounds,
+like MOSS from \cite{Audibert2009minimax} or recently \KLUCBpp{} from \cite{Menard17},
 and such results are usually referred to as ``best of both worlds''.
 
 
@@ -899,18 +899,6 @@ The two following solutions both consist in splitting the $T$ time steps into $T
 %  either in an alternative way or in a fixed way (``explore then exploit'').
 They are detailed in Algorithm~\ref{algo:2:simpleStrategies}.
 
-% https://smpybandits.github.io/docs/Policies.EpsilonGreedy.html
--- The \textcolor{deeppurple}{$\varepsilon$-greedy strategy} consists in alternating exploration and exploitation at a certain ratio \cite{Auer02}.
-% \cite{SuttonBarto2018,Bubeck12,LattimoreBanditAlgorithmsBook}.
-Fix $0<\varepsilon<1$, then at each round, with probability $\varepsilon$ the player selects an arm uniformly at random (exploration) and with probability $1-\varepsilon$ the arm with highest empirical mean is selected (exploitation).
-On the one hand, if $\varepsilon$ is constant, then the (mean) regret still grows linearly, as it is lower bounded by $(\varepsilon \frac{1}{K} \sum_{k=1}^K \Delta_k) T$.
-In average, $T_0 = \varepsilon T$ steps are spent on exploration.
-%
-On the other hand, if a lower-bound $d$ on the positive gaps is known beforehand,
-we can consider a sequence $(\varepsilon_t)_{t\in\N^*}$ decreasing with time $t$, for instance $\varepsilon_t = \varepsilon_0 / t$ with $\varepsilon_0 = 6 K / d^2$, for a constant $0 < d < \min_{k: \Delta_k > 0} \Delta_k$.
-Then it was shown in \cite{Auer02} that the regret of $\varepsilon$-greedy is of the order of $K \log(T) / d + \smallO{T}$, which leads to an order-optimal regret of $\bigO{K \log(T)}$.
-But this is not satisfactory, as $\min_k \Delta_k$ needs to be known in advance, which is usually not the case for real applications.
-Here again, an average of $T_0 \leq \varepsilon_0 \log(T)$ steps are spent on exploration.
 
 % \begin{small} % XXX remove if needed
 \begin{figure}[h!]
@@ -952,6 +940,20 @@ Here again, an average of $T_0 \leq \varepsilon_0 \log(T)$ steps are spent on ex
 	\end{framed}
 \end{figure}
 % \end{small} % XXX remove if needed
+
+
+% https://smpybandits.github.io/docs/Policies.EpsilonGreedy.html
+-- The \textcolor{deeppurple}{$\varepsilon$-greedy strategy} consists in alternating exploration and exploitation at a certain ratio \cite{Auer02}.
+% \cite{SuttonBarto2018,Bubeck12,LattimoreBanditAlgorithmsBook}.
+Fix $0<\varepsilon<1$, then at each round, with probability $\varepsilon$ the player selects an arm uniformly at random (exploration) and with probability $1-\varepsilon$ the arm with highest empirical mean is selected (exploitation).
+On the one hand, if $\varepsilon$ is constant, then the (mean) regret still grows linearly, as it is lower bounded by $(\varepsilon \frac{1}{K} \sum_{k=1}^K \Delta_k) T$.
+In average, $T_0 = \varepsilon T$ steps are spent on exploration.
+%
+On the other hand, if a lower-bound $d$ on the positive gaps is known beforehand,
+we can consider a sequence $(\varepsilon_t)_{t\in\N^*}$ decreasing with time $t$, for instance $\varepsilon_t = \varepsilon_0 / t$ with $\varepsilon_0 = 6 K / d^2$, for a constant $0 < d < \min_{k: \Delta_k > 0} \Delta_k$.
+Then it was shown in \cite{Auer02} that the regret of $\varepsilon$-greedy is of the order of $K \log(T) / d + \smallO{T}$, which leads to an order-optimal regret of $\bigO{K \log(T)}$.
+But this is not satisfactory, as $\min_k \Delta_k$ needs to be known in advance, which is usually not the case for real applications.
+Here again, an average of $T_0 \leq \varepsilon_0 \log(T)$ steps are spent on exploration.
 
 
 % https://smpybandits.github.io/docs/Policies.ExploreThenCommit.html
@@ -1044,6 +1046,20 @@ If more than one indexes maximize $(U_k(t))_k$, the arm is chosen from the set, 
 %
 The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, that includes well known and efficient algorithms such as $\UCB_1$, \klUCB{} and many others.
 
+
+\textbf{The $\UCB_1$ index policy: using Hoeffding's inequality to build confidence intervals.}\\
+%
+Let us consider another approach for adaptive exploration, known as ``optimism under uncertainty'': assume each arm is as good as it can possibly be given the observations so far, and choose the best arm based on these optimistic estimate.
+%
+This intuition leads to the $\UCB_1$ algorithm, initially introduced in \cite{Auer02}, for bounded rewards.
+For a parameter $\alpha$, the \UCB{} indexes are computed as follows, as a sum of
+the \emph{average reward} $\widehat{\mu_k}(t) \eqdef \frac{X_k(t)}{N_k(t)}$
+and a \emph{confidence radius} $\xi_k(t) \eqdef \sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}$.
+%
+\begin{align}\label{eq:2:UCB_index}
+    U_k^{\UCB_1}(t) = \UCB_k(t) \eqdef \underbrace{\frac{X_k(t)}{N_k(t)}}_{\text{Exploitation }\; \widehat{\mu_k}(t)} + \underbrace{\sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}}_{\text{Exploration }\; \xi_k(t)}.
+\end{align}
+
 % \begin{small} % XXX remove if needed
 \begin{figure}[h!]
 	\centering
@@ -1067,20 +1083,6 @@ The Algorithm~\ref{algo:2:indexPolicy} below details a generic index policy, tha
 	\end{framed}
 \end{figure}
 % \end{small} % XXX remove if needed
-
-
-\textbf{The $\UCB_1$ index policy: using Hoeffding's inequality to build confidence intervals.}\\
-%
-Let us consider another approach for adaptive exploration, known as ``optimism under uncertainty'': assume each arm is as good as it can possibly be given the observations so far, and choose the best arm based on these optimistic estimate.
-%
-This intuition leads to the $\UCB_1$ algorithm, initially introduced in \cite{Auer02}, for bounded rewards.
-For a parameter $\alpha$, the \UCB{} indexes are computed as follows, as a sum of
-the \emph{average reward} $\widehat{\mu_k}(t) \eqdef \frac{X_k(t)}{N_k(t)}$
-and a \emph{confidence radius} $\xi_k(t) \eqdef \sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}$.
-%
-\begin{align}\label{eq:2:UCB_index}
-    U_k^{\UCB_1}(t) = \UCB_k(t) \eqdef \underbrace{\frac{X_k(t)}{N_k(t)}}_{\text{Exploitation }\; \widehat{\mu_k}(t)} + \underbrace{\sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}}_{\text{Exploration }\; \xi_k(t)}.
-\end{align}
 
 This selection rule $A(t) \sim \cU(\arg\max\limits_{1\leq k \leq K} U_k^{\cA}(t))$ makes sense for the following reasons:
 an arm $k$ is chosen at step $t$ because it has a large $\UCB_k(t)$, which can happen for two reasons.
@@ -1237,12 +1239,12 @@ This is justified by Pinkser's inequality, which gives $\kl(x,y) \geq 2(x-y)^2$.
 The \KLUCB{} and \klUCB{} algorithms achieve finite-time regret logarithmic upper-bounds on their regret, and have been proven to be asymptotically optimal, respectively for one-dimensional exponential families and for bounded rewards distributions \cite{Garivier11KL,KLUCBJournal}.
 
 
-\textbf{A note about the implementation of \klUCB{} algorithms.}
+\paragraph{A note about the implementation of \klUCB{} algorithms.}
 %
 Implementing this kind of policy requires to implement two things.
-The first piece is usually easy: one has to implement a way to compute $\kl(x,y)$ the Kullback-Leibler divergence of the considered one-dimensional family,
+The first one is usually easy: one has to implement $\kl(x,y)$ the Kullback-Leibler divergence of the considered one-dimensional family,
 for instance $\kl$ for Bernoulli distributions has a closed form and is easy to compute.
-The second piece is less obvious: one has to solve the optimisation problem defining the $\sup$ in \eqref{eq:2:klUCB_index}.
+The second one is less obvious: one has to solve the optimisation problem defining the $\sup$ in \eqref{eq:2:klUCB_index}.
 Any iterative algorithm for numerical optimization of one-dimensional functions can be used (\eg, see \cite{BoydVanderberghe04} for a survey), but as the $\kl(x,\bullet)$ function is usually convex (for any $x$), two practical and mathematically correct solutions are Newton's method or a bisection search.
 The search space for $q$ can be restricted to $[ X_k(t) / N_k(t), 1 ]$ instead of $[0,1]$,
 and for simplicity and efficiency, in this case a naive bisection search works well.
@@ -1264,11 +1266,10 @@ For the supported families of distributions (including Bernoulli, Gaussian, expo
 %
 Many variants of the $\UCB_1$ algorithms have been studied in the multi-armed bandits literature.
 For instance, \UCB-H replaces the $\log(t)$ by a $\log(T)$ (as well as \klUCB-H), and it actually corresponds to the first algorithm analyzed in \cite{Auer02}.
-Using an estimator for the variance of the arms' samples gives \UCB-V, which was for instance proven to be efficient against Gaussian distributions with unknown variance.
+Using an estimator for the variance of the arms' samples gives \UCB-V, which was proven to be efficient against Gaussian distributions with unknown variance.
 Other variants include \UCB$^+$, $\UCB^{\dagger}$ from \cite{Lattimore2018refining}, {\UCB}oost, and many more.
 %
 All these variants are usually comparable to the original $\UCB_1$ algorithm, in terms of time and memory complexity, and they achieve improved regret upper bounds in the same setting or some extensions of the initial setting.
-
 
 % \textbf{Other policies inspired by \UCB.}
 % %
@@ -1335,8 +1336,8 @@ Bayes-UCB is comparable to Thompson sampling in terms of memory complexity, but 
 
 For curiosity, we mention a third Bayesian algorithm, AdBandits introduced in \cite{Truzzi13}, mainly because it has not gained any popularity despite its good empirical performance.
 %  using $\alpha=1$ (\texttt{AdBandits}).
-AdBandits follows the same assumptions as Thompson sampling and Bayes-UCB, and for instance for Bernoulli problems it uses a Beta posterior on each arm.
-It uses a random mixture between the two algorithms, and with a certain probability it uses the Thompson sampling decision rule, otherwise it uses the Bayes-UCB decision rule.
+AdBandits follows the same assumptions as Thompson sampling, and for instance for Bernoulli problems it uses a Beta posterior on each arm.
+It uses a random mixture between the two algorithms, and with a certain probability it follows Thompson sampling decision rule, otherwise it samples the arm with highest empirical mean (\ie, forced exploitation).
 It was proposed in this article \cite{Truzzi13} and illustrated on empirical simulations, but no theoretical analysis was given.
 We found that in practice it can achieve very good performance, as illustrated in Section~\ref{sec:3:reviewSPAlgorithms}.
 %  and it did not gain popularity since then.
