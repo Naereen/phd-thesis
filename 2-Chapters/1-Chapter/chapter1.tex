@@ -39,7 +39,7 @@ and I was also co-supervised by Doctor Emilie Kaufmann, whom I visited many time
 % % Main problem
 % \textbf{Main problems.}
 %
-At the root of the problems that motivate this thesis are the two questions of global warming, and the increase of the world population.
+At the root of the problems that motivate this thesis are the questions of global warming and the increase of the world population.
 % https://en.wikipedia.org/wiki/History_of_radio
 During the last 150 years, mankind has developed a wide range of different communication technologies, and since the late $1890$s wireless communications between man-made manufactured devices have been made possible, and more and more frequent in our lives.
 With the avent of Internet of Things networks (IoT), billions of autonomous low-power devices are expected to be deployed worldwide, for a large range of different applications.
@@ -84,7 +84,7 @@ and a typical example of application is for sensor networks.
 
 For the future development of smart grids, smart cities, smart homes, or smart agriculture, sensor networks are promised to be widely deployed.
 Two examples of future applications that are already in deployment, in France or other countries, are connected buildings and connected agriculture.
-For buildings, the main goal is to reduce the cost of heating empty buildings (at night etc) and use temperature sensor networks to get accurate and regular data about the temperature in all rooms and floors, and let the centralized heat control optimize its cost and energy consumption.
+For buildings, the main goal is to reduce the cost of heating empty buildings and use temperature sensor networks to get accurate and regular data about the temperature in all rooms and floors, and let the centralized heat control optimize its cost and energy consumption.
 For agriculture, one example can be to equipped every cow (in large farms) with a sensor that emits biological information, such as body temperature or stress level etc, in order to optimize the time of milking and to monitor the health of the animals.
 %
 % OK commencer par un paragraphe qui explique qu'on étudie les télécom dans le but de les rendre automatiquement plus efficace, plus verte, plus adaptative
@@ -248,7 +248,7 @@ Many real-world problems can be framed as Reinforcement Learning problems, as il
 
 
 % Il faut expliquer ce que c'est que les bandits, rapidement, et leur application à l'OSA
-More precisely, in this thesis we focus on a certain kind of Reinforcement Learning models where the learner does not have access to the entire reaction of the environment after taking its action.
+More precisely, in this thesis we focus on Reinforcement Learning models, in particular the learner does not have access to the entire reaction of the environment after taking its action.
 In other words, we focus on RL with limited feedback, when the player only sees the reward given by its action at every round, and not the reward that would have been given if she chose any other action.
 This kind of limited feedback is called \emph{bandit information}, and we discuss the history and the concept of \emph{Multi-Armed Bandits} (MAB) in details in the next Chapter~\ref{chapter:2}.
 Clinical trials and treatment discovery were historically the first applications of MAB since $1930$s, with the early work of W. Thompson \cite{Thompson33}.
@@ -402,8 +402,8 @@ By using this feedback, that consists in an \emph{acknowledgement} (\Ack) messag
 \label{sec:1:contributions}
 
 We start by formulating the problem studied in this thesis, and then we develop our approach.
-
-\textbf{Problematic.}
+%
+% \textbf{Problematic.}
 %
 If we sum-up the studied problems and summarize them in one question, it could be the following:
 \emph{``Can we adapt the decision making tools already successfully applied to Cognitive Radio for Opportunistic Spectrum Access to the specific needs of CR for the (future) Internet of Things networks?''}
@@ -412,12 +412,14 @@ We answer partially to this problematic by the following research steps.
 
 
 % \subsection{Focusing on MAB algorithms}
-\subsection{Exploring the literature of MAB algorithms, Part~\ref{part:Introduction}}
+% \subsection{Exploring the literature of MAB algorithms}
+\subsection{Exploring the Jungle of MAB algorithms}
 
 \paragraph{Chapter~\ref{chapter:2}.}
 %
 We started by exploring the rich literature of multi-armed bandits,
-as many different algorithms exist, with lots of variants on the simple problem presented above (see \cite{LattimoreBanditAlgorithmsBook,Slivkins2019} for surveys).
+as many different algorithms exist, with lots of variants on the simple problem presented above.
+% (see \cite{LattimoreBanditAlgorithmsBook,Slivkins2019} for surveys).
 We thus start the first Part~\ref{part:Introduction} of this thesis with Chapter~\ref{chapter:2}, which presents the MAB model and gives a review of the most important algorithms designed to solve stochastic and stationary MAB problems.
 %
 In order to clearly understand which algorithms could be adapted to the aforementioned constraints of CR for IoT networks,
@@ -429,7 +431,7 @@ but also by their empirical performances in terms of computational complexity an
 %
 Our exploration of the large number of MAB algorithms and models developed in the recent literature
 has given us the ambition to write a single piece of software allowing anyone to easily implement new models and algorithms, in order to compare the existing ones and empirically explores the performances of newly proposed algorithms.
-To answer this goal, we produced a Python library of simulation of MAB problems.
+To tackle this goal, we produced a Python library of simulation of MAB problems.
 %
 We wrote the most exhaustive open-source simulation library for MAB problems, called SMPyBandits, which is published online under an open-source licence \cite{SMPyBanditsJMLR,SMPyBandits} and hosted on \href{https://GitHub.com/SMPyBandits}{\texttt{GitHub.com/SMPyBandits}}.
 We present in details its architecture and its features in Chapter~\ref{chapter:3}, along with different examples of its usage.
@@ -448,7 +450,7 @@ This contribution was presented at the IEEE WCNC conference in Barcelona, Spain,
 
 
 % \subsection{Focusing on IoT networks.}
-\subsection{Our model of IoT network and decentralized MAB, Part~\ref{part:MABIOT}}
+\subsection{Our model of IoT network and decentralized MAB}
 
 In the second Part~\ref{part:MABIOT} of this thesis, we start by proposing and studying different models of IoT networks, with simulations and a real-world proof-of-concept, and then we study interesting questions on two mathematical models of MAB that arise from our first contribution.
 
@@ -496,12 +498,12 @@ This third contribution concluded our collaboration with R. Bonnefoi, and was pr
 
 \paragraph{Chapter~\ref{chapter:5}.}
 %
-In both models presented above, the core concept is to let every dynamic device of an IoT network runs a fully decentralized learning algorithm, each running on its own (random) activation times, in order to optimize the complete system.
+In both models presented above, the core concept is to let every dynamic device of an IoT network run a fully decentralized learning algorithm, each running on its own (random) activation times, in order to optimize the complete system.
 It means that each of them target its own local objective, which is to maximize its cumulated reward (in a selfish way).
-It is well known in the game theory literature that playing selfishly can be disastrous for the centralized performance measure: for instance, one can think of the \href{https://en.wikipedia.org/wiki/Prisoner%27s_dilemma}{prisoner dilemma} or other popular ``dilemmas''.
+It is well known in the game theory literature that playing selfishly can be disastrous for the centralized performance measure, one can think of popular ``dilemmas'', such as the \href{https://en.wikipedia.org/wiki/Prisoner%27s_dilemma}{prisoner dilemma}.
 % , and for more examples we refer to the book \cite{CesaLugosi06}.
 % https://www.ii.uni.wroc.pl/~lukstafi/pmwiki/uploads/AGT/Prediction_Learning_and_Games.pdf
-So it was quite surprising that our numerical simulations, as well as the realistic PoC, showed that decentralized selfish MAB learning lead to efficient coordination between devices, despite the fact that these IoT objects cannot communicate directly with each other and receive only a collision feedback from the base station they are associated to.
+So it was quite surprising that our numerical simulations, as well as the realistic PoC, showed that decentralized selfish MAB learning lead to efficient coordination between devices, despite the fact that these IoT objects cannot communicate directly with each other, and receive only a collision feedback from the base station they are associated to.
 
 We first tried to analyze the performance of this decentralized algorithm, that we refer to as \Selfish, in the model of Section~\ref{sec:4:firstModel},
 but due to the random number of active devices at each time step (\ie, as soon as the probability $p$ of activation is $p < 1$), we were unable to develop a clean analysis.
@@ -525,12 +527,17 @@ This strong theoretical result heavily depends on the presence of sensing feedba
 
 Our work on multi-player bandit was presented at the ALT conference in Lanzarote, Spain, in April $2019$ \cite{Besson2018ALT},
 %
-and it relaunched the research on this model, as a few independent teams started to work on different questions shortly after its publication.
+and since then, many work have studied extension of our framework or alternative algorithms, as a few independent teams started to work on different questions shortly after its publication.
 %
 Since last year, it was proven that the ``no sensing'' case (\ie, IoT) is essentially not harder that the ``sensing'' (\ie, OSA) case, from a theoretical point-of-view, by E. Boursier and V. Perchet \cite{BoursierPerchet18}.
 Even if their approach is costly empirically, the result is surprising and very interesting.
 They showed that even under the strong hypothesis of no direct communication between players and no central coordination (in the same model as the one of our paper), the players can actually use the collision feedback (\ie, receiving or not an \Ack) as an indirect way to communicate bits of information with each other.
-This idea requires that devices coordinate and split the time steps between ``listening'' and ``talking'' phases, and the authors denote it the ``communication trick''. As they showed, after a long enough initialization period, the $M$ players have elected a ``master'' player and $M-1$ ``followers'' players (with high probability), and thanks to this communication trick, the problem can boil down to a centralized multiple-play (MP) MAB, which can be solved efficiently with the MP generalization of \klUCB{} \cite{Luedtke16} or Thompson sampling \cite{Komiyama15}.
+This idea requires that devices coordinate and split the time steps between ``listening'' and ``talking'' phases, and the authors denote it the ``communication trick''.
+As they showed, the players can start by a ``musical chair'' phase, to reach an orthogonal allocation, and then they can alternate exploration, communication and exploitation phases until the end of the game at horizon $T$.
+The communication trick is used by each player to send and receive observations about all arms from the other players, using one forced collision to send one bit at a time.
+They use about $T-\bigO{\log(T)}$ rounds in exploitation of the best arms, and only $\bigO{\log(T)}$ rounds in exploration and communication, yielding a logarithmic regret.
+% As they showed, after a long enough initialization period, the $M$ players have elected a ``master'' player and $M-1$ ``followers'' players (with high probability),
+Another direction, as followed by \cite{Bistritz18}, is to use this communication trick and reduce the problem to a centralized multiple-play (MP) MAB, which can be solved efficiently with the MP generalization of \klUCB{} \cite{Luedtke16} or Thompson sampling \cite{Komiyama15}.
 
 We discuss more in details this interesting follow-up of our article \cite{BoursierPerchet18}, along with other recent research works such as \cite{LugosiMehrabian18}, in Section~\ref{sec:5:literatureReviewOtherModels}.
 %
@@ -587,11 +594,11 @@ This last chapter is based on our last work, and it first lead to a publication 
 Our work also lead to the long version article \cite{Besson2019GLRT}, that will be partially rewritten and completed with more recent results, in order to submit it soon to a journal (probably the Journal of Machine Learning Research) before December $2019$.
 
 
-\paragraph{Conclusion.}
+\paragraph{Appendix.}
 %
-We conclude this thesis in Chapter~\ref{chapter:conclusion}, to give some perspectives and directions about possible future works.
-Most of the contributions that we present in this thesis call for more developments, on both directions of providing more mathematical analysis and implementing new proof-of-concepts, using real wireless hardware and realistic IoT networks.
-
+% We conclude this thesis in Chapter~\ref{chapter:conclusion}, to give some perspectives and directions about possible future works.
+% Most of the contributions that we present in this thesis call for more developments, on both directions of providing more mathematical analysis and implementing new proof-of-concepts, using real wireless hardware and realistic IoT networks.
+%
 This manuscript ends with the appendixes, first with a short overview of another contribution, in Appendix~\ref{app:2:DoublingTricks}.
 We discuss about our work on doubling-trick, in order to remove the need for an algorithm to know the horizon of the bandit game before starting to play it.
 The rest of the appendix contains a list of abbreviations and notations, then lists of figures, algorithms, code samples and tables,
@@ -609,63 +616,63 @@ and finally the list of the bibliographical references.
 % We proposed new algorithms, some of which are proven to converge efficiently.
 
 
-\newpage % WARNING
+% \newpage % WARNING
 
-% ----------------------------------------------------------------------------
-\subsection{Summary of the contributions}
-\label{sec:1:summaryOfContributions}
+% % ----------------------------------------------------------------------------
+% \subsection{Summary of the contributions}
+% \label{sec:1:summaryOfContributions}
 
-To summarize the main contributions of this thesis, we can list the following points:
+% To summarize the main contributions of this thesis, we can list the following points:
 
-\begin{itemize}
-    % \item
-    % We present the concepts and the notations of the multi-armed bandit problem in Chapter~\ref{chapter:2}, from a mathematical point-of-view.
-    % But we also follow a didactic approach as we use an online interactive demonstration designed to let anyone play against a small bandit problem from his/her browser, in Section~\ref{par:2:interactiveDemoDiscoverMAB}.
+% \begin{itemize}
+%     % \item
+%     % We present the concepts and the notations of the multi-armed bandit problem in Chapter~\ref{chapter:2}, from a mathematical point-of-view.
+%     % But we also follow a didactic approach as we use an online interactive demonstration designed to let anyone play against a small bandit problem from his/her browser, in Section~\ref{par:2:interactiveDemoDiscoverMAB}.
 
-    % \item
-    % We give a short literature review of stochastic bandit algorithms in Section~\ref{sec:2:famousMABalgorithms}.
+%     % \item
+%     % We give a short literature review of stochastic bandit algorithms in Section~\ref{sec:2:famousMABalgorithms}.
 
-    \item
-    We developed SMPyBandits, the most exhaustive open-source simulation library for MAB problems, that we published on-line under an open-source licence (MIT) \cite{SMPyBanditsJMLR,SMPyBandits}.
-    We present it in details in Chapter~\ref{chapter:3}.
+%     \item
+%     We developed SMPyBandits, the most exhaustive open-source simulation library for MAB problems, that we published on-line under an open-source licence (MIT) \cite{SMPyBanditsJMLR,SMPyBandits}.
+%     We present it in details in Chapter~\ref{chapter:3}.
 
-    \item
-    % We present the problem of choosing which algorithm a practitioner should use, or algorithm selection from the rich collection of different MAB available, in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}.
-    We present in Chapter~\ref{chapter:25} an algorithm called \Aggr{} for aggregation of algorithms as an online solution to the algorithm selection problem, and numerical simulations to illustrate that it achieves state-of-the-art empirical performances
-    \cite{Besson2018WCNC}.
-    % with \textbf{Aggregator} (WCNC 2018)
+%     \item
+%     % We present the problem of choosing which algorithm a practitioner should use, or algorithm selection from the rich collection of different MAB available, in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}.
+%     We present in Chapter~\ref{chapter:25} an algorithm called \Aggr{} for aggregation of algorithms as an online solution to the algorithm selection problem, and numerical simulations to illustrate that it achieves state-of-the-art empirical performances
+%     \cite{Besson2018WCNC}.
+%     % with \textbf{Aggregator} (WCNC 2018)
 
-    \item
-    We propose different models for IoT networks, in Chapter~\ref{chapter:4}, where end-devices with cognitive radio capabilities can implement MAB algorithms on their side, to automatically increase their battery life and allow more devices to use the same network while maintaining a high Quality of Service
-    \cite{Bonnefoi17,Besson2019WCNC,Bonnefoi2019WCNC,MoyBesson2019}.
-    % (CROWNCOM 2017, ICT demo 2018, WCNC 2019 and MOTIoN 2019)
+%     \item
+%     We propose different models for IoT networks, in Chapter~\ref{chapter:4}, where end-devices with cognitive radio capabilities can implement MAB algorithms on their side, to automatically increase their battery life and allow more devices to use the same network while maintaining a high Quality of Service
+%     \cite{Bonnefoi17,Besson2019WCNC,Bonnefoi2019WCNC,MoyBesson2019}.
+%     % (CROWNCOM 2017, ICT demo 2018, WCNC 2019 and MOTIoN 2019)
 
-    \item
-    We implemented a proof-of-concept of the aforementioned model \cite{Besson2018ICT}, and we present it in details in Section~\ref{sec:4:gnuradio}. We made a video showcasing our demonstration, hosted at \texttt{\href{https://youtu.be/HospLNQhcMk}{youtu.be/HospLNQhcMk}}.
+%     \item
+%     We implemented a proof-of-concept of the aforementioned model \cite{Besson2018ICT}, and we present it in details in Section~\ref{sec:4:gnuradio}. We made a video showcasing our demonstration, hosted at \texttt{\href{https://youtu.be/HospLNQhcMk}{youtu.be/HospLNQhcMk}}.
 
-    % \item
-    % The source code for the two previously mentioned contributions are all published online, along with clear instructions for reproducing our work.
+%     % \item
+%     % The source code for the two previously mentioned contributions are all published online, along with clear instructions for reproducing our work.
 
-    \item
-    We present the multi-players bandit model, for which we introduce three variants, in Chapter~\ref{chapter:5}.
-    For the case with sensing information, we propose two new algorithms, and we give an analysis for our algorithm \MCTopM{} to show it is order-optimal,
-    as well as extensive numerical experiments to demonstrate its excellent performance in comparison with the rest of the literature.
-    Our work \cite{Besson2018ALT} also gave a new impulse on research on multi-players bandits, as some recent research works heavily built up on our results.
+%     \item
+%     We present the multi-players bandit model, for which we introduce three variants, in Chapter~\ref{chapter:5}.
+%     For the case with sensing information, we propose two new algorithms, and we give an analysis for our algorithm \MCTopM{} to show it is order-optimal,
+%     as well as extensive numerical experiments to demonstrate its excellent performance in comparison with the rest of the literature.
+%     Our work \cite{Besson2018ALT} also gave a new impulse on research on multi-players bandits, as some recent research works heavily built up on our results.
 
-    % \item
-    % We also give a detailed literature review of the different extensions of the multi-players MAB model, which we believe was never written before.
-    % % were  (ALT 2018, and 4-8 works inspired by our article since then). State-of-the-art with our algorithm MCTopM + klUCB for multi-players bandits "with sensing", empirical state-of-the-art with our simple (but wrong) "selfish" approach in case of "no sensing"
+%     % \item
+%     % We also give a detailed literature review of the different extensions of the multi-players MAB model, which we believe was never written before.
+%     % % were  (ALT 2018, and 4-8 works inspired by our article since then). State-of-the-art with our algorithm MCTopM + klUCB for multi-players bandits "with sensing", empirical state-of-the-art with our simple (but wrong) "selfish" approach in case of "no sensing"
 
-    \item
-    We also present the piece-wise stationary MAB model, in Chapter~\ref{chapter:6}, and a detailed literature review of the research on non-stationary MAB \cite{Besson2019GLRT,Besson2019Gretsi}.
-    Following two recent works, we propose a new actively adaptive algorithm for the piece-wise stationary problem, \GLRklUCB, that achieves state-of-the-art performance.
-    % - Literature review on non stationary models and algorithms, state-of-the-art for piece-wise stationary with our algorithm, GLR test + klUCB
+%     \item
+%     We also present the piece-wise stationary MAB model, in Chapter~\ref{chapter:6}, and a detailed literature review of the research on non-stationary MAB \cite{Besson2019GLRT,Besson2019Gretsi}.
+%     Following two recent works, we propose a new actively adaptive algorithm for the piece-wise stationary problem, \GLRklUCB, that achieves state-of-the-art performance.
+%     % - Literature review on non stationary models and algorithms, state-of-the-art for piece-wise stationary with our algorithm, GLR test + klUCB
 
-    \item
-    The last contribution of this thesis is a literature review of the possible use cases of the sequentially doubling horizon trick technique for MAB problems,
-    and a unified and more generic analysis of two families of doubling tricks.
-    This lead to the article \cite{Besson2018DoublingTricks}, which is quickly presented in Appendix~\ref{app:2:DoublingTricks}.
-\end{itemize}
+%     \item
+%     The last contribution of this thesis is a literature review of the possible use cases of the sequentially doubling horizon trick technique for MAB problems,
+%     and a unified and more generic analysis of two families of doubling tricks.
+%     This lead to the article \cite{Besson2018DoublingTricks}, which is quickly presented in Appendix~\ref{app:2:DoublingTricks}.
+% \end{itemize}
 
 
 % \newpage  % WARNING
