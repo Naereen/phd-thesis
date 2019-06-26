@@ -4,8 +4,6 @@
 \chapter{Introduction}
 \label{chapter:1}
 
-\TODOL{Mardi soir : je dois encore tout relire et améliorer un peu !}
-
 % \abstractStartChapter{}%
 % %
 % We start by presenting the context then the problems studied in this thesis.
@@ -29,8 +27,6 @@ My research took place at the IETR laboratory in Rennes (France), in the SCEE te
 In Rennes I was supervised by Professor Christophe Moy,
 and I was also co-supervised by Doctor Emilie Kaufmann, whom I visited many times at Inria Lille Nord Europe in Lille (France).
 
-% \TODOL{Est-ce que je dois détailler plus ? Quel financement j'ai eu (CDSN), quels autres financements m'ont aidés ?}
-
 
 % ----------------------------------------------------------------------------
 \section{Context of this thesis}
@@ -39,15 +35,18 @@ and I was also co-supervised by Doctor Emilie Kaufmann, whom I visited many time
 % % Main problem
 % \textbf{Main problems.}
 %
-At the root of the problems that motivate this thesis are the questions of global warming and the increase of the world population.
+The root of the problems motivating this thesis are the questions of global warming and the increase of the world population.
 % https://en.wikipedia.org/wiki/History_of_radio
-During the last 150 years, mankind has developed a wide range of different communication technologies, and since the late $1890$s wireless communications between man-made manufactured devices have been made possible, and more and more frequent in our lives.
+During the last $150$ years, mankind has developed many different communication technologies, and since the late $1890$s, wireless communications between man-made manufactured devices have been made possible, and more and more frequent in our lives.
 With the avent of Internet of Things networks (IoT), billions of autonomous low-power devices are expected to be deployed worldwide, for a large range of different applications.
 It is now a world-wide consensus that with the current trend of population increase and with the energy crisis, any newly deployed technology should be both cheap and energy efficient,
 as well as adapted to serve a large number of people and devices.
+%
+Such IoT technologies should be able to adapt automatically to different environments and application contexts, and be as efficient as possible.
+Instead of devoting a lot of time, energy and money on Research and Development to set up efficient radio access schemes, for all possible cases, a cheap and promising direction is to use Machine Learning to (try to) attain the same performance gain automatically.
 
 That is why we are interested in this thesis about the possible applications of embedding a certain kind of Machine Learning algorithms (Multi-Armed Bandit algorithms),
-directly into the future IoT devices, in order to improve their battery life and reduce the energy cost of IoT networks, by optimizing their wireless communications and learning to be self-organized, thanks to embedded decentralized decision making.
+directly into the future IoT devices, in order to improve their battery life and reduce the energy cost of IoT networks, by optimizing their wireless communications and by learning to be self-organized, thanks to embedded decentralized decision making.
 
 
 \paragraph{From old TV to the IoT standards.}
@@ -91,7 +90,7 @@ For agriculture, one example can be to equipped every cow (in large farms) with 
 
 This third kind of wireless systems are characterized by their decentralized nature: due to the really limited information that the base station can send to the devices, it is no longer possible to optimize the efficiency of the network from the centralized point-of-view of the base station.
 In the present and future IoT networks, many devices of heterogeneous natures are using the same antenna for different applications.
-A common hypothesis is that such IoT devices have a strong constraint on their power consumption, as most of them will be deployed without a direct power access and run on a tiny battery, which lifespan should be maximized, as typically commercial IoT companies sell a lifespan more than 10 years \cite{Centenaro16}.
+A common hypothesis is that such IoT devices have a strong constraint on their power consumption, as most of them will be deployed without a direct power access and run on a tiny battery, which lifespan should be maximized, as typically commercial IoT companies sell a lifespan more than $10$ years \cite{Centenaro16}.
 Another common constraint for IoT devices is their low duty cycles, as most applications target one or a few messages to send every day, in strike opposition to the high data-rate pursued for centralized systems such as 4G/5G and WiFi.
 %
 Many different standards for IoT networks have been proposed,
@@ -115,14 +114,7 @@ or \href{http://www.tdf.fr/}{TDF} in France (see \href{https://www.TDF.fr/}{\tex
 meaning that while a band can be allocated to a certain unique usage, it can be free from any user in certain times and/or places.
 We refer to \cite{patil2011survey} for a survey on worldwide spectrum utilization, and to \cite{valenta2010survey} for the situation in Europe.
 
-Cellular network bands are overloaded in most parts of the world, but other frequency bands (such as military, amateur radio and paging frequencies) are insufficiently utilized.
-Independent studies performed in some countries confirmed that observation, and concluded that spectrum usage highly depends on time and place.
-Moreover, the fixed spectrum allocation prevents rarely used frequencies, like those assigned to specific services, from being used, even when any unlicensed users would not cause noticeable interference to the assigned service.
-Therefore, in the last $15$ years, regulatory bodies in the world have been considering whether to allow unlicensed users in licensed bands, if they would not cause any interference to the (paying) licensed users.
-These initiatives have initiated the research on \textbf{Cognitive Radio},
-and especially on a field that we detail below, \textbf{Dynamic Spectrum Access (DSA)}.
-%
-%
+
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.65\textwidth,angle=90]{United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum.pdf}
@@ -130,6 +122,13 @@ and especially on a field that we detail below, \textbf{Dynamic Spectrum Access 
     % https://upload.wikimedia.org/wikipedia/commons/c/c7/United_States_Frequency_Allocations_Chart_2016_-_The_Radio_Spectrum.pdf?uselang=fr
     \label{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum}
 \end{figure}
+
+Cellular network bands are overloaded in most parts of the world, but other frequency bands (such as military, amateur radio and paging frequencies) are insufficiently utilized.
+Independent studies performed in some countries confirmed that observation, and concluded that spectrum usage highly depends on time and place.
+Moreover, the fixed spectrum allocation prevents rarely used frequencies, like those assigned to specific services, from being used, even when any unlicensed users would not cause noticeable interference to the assigned service.
+Therefore, in the last $15$ years, regulatory bodies in the world have been considering whether to allow unlicensed users in licensed bands, if they would not cause any interference to the (paying) licensed users.
+These initiatives have initiated the research on \textbf{Cognitive Radio},
+and especially on a field that we detail below, \textbf{Dynamic Spectrum Access (DSA)}.
 
 
 % \TODOL{Je peux améliorer (ou enlever) ce passage qui site J.Toledano, ou alors le commenter en plus de détails ? J'aime bien son rapport en fait (j'aurai du le lire au début de ma thèse !)}
@@ -186,16 +185,22 @@ Let us define and detail both concepts.
 %     de l'OSA.
 % }
 
-\paragraph{From Machine Learning to Multi-Armed Bandits.}
+\paragraph{From Statistics or Machine Learning to Multi-Armed Bandits.}
 %
 We can narrow down the first field of study of this thesis, steps by steps.
-Starting from the general concept of Machine Learning (ML), we focused our interest to statistical learning, then sequential learning, then Reinforcement Learning (RL), then RL with limited feedback and finally to Multi-Armed Bandits (MAB) learning.
+% Stats > sequential learning > bandits
+A first point-of-view is the historical one, as Multi-Armed Bandits (MAB) learning emerged as an interesting problem in the statistics community and among researchers interested by sequential learning, as shown by the earlier works of \cite{Thompson33,Robbins52,LaiRobbins85}.
+% ML > RL > MAB
+We can also expose another point-of-view, which starts from the general concept of Machine Learning (ML), and focus on Reinforcement Learning (RL), then on MAB learning.
 As illustrated in Figure~\ref{fig:1:MainTypesOfMachineLearning}, there are other types of ML, that we do not focus on in this thesis.
+%
 The reference book on RL is \cite{SuttonBarto2018}, so let us quote the definition of RL given by R. Sutton and A. Barto:
 \emph{``Reinforcement learning is learning what to do - how to map situations to actions - so
 as to maximize a numerical reward signal. The learner is not told which actions to
 take, but instead must discover which actions yield the most reward by trying them''}.
 % - apprentissage statistique (machine learning) > séquentiel > par renforcement > information partielle (bandits)
+
+
 
 % \begin{figure}[h!]
 %     \centering
@@ -209,11 +214,11 @@ take, but instead must discover which actions yield the most reward by trying th
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.95\textwidth]{machine-learning-map.pdf}
-\caption[Classification of the main types of Machine Learning.]{Classification of the main types of Machine Learning: MAB is a subset of Reinforcement Learning and RL is a subset of ML. MAB is RL with partial information, and RL is ML with no supervision or data, just an environment to interact with.}
-\label{fig:1:MainTypesOfMachineLearning}
+    \caption[Classification of the main types of Machine Learning.]{Classification of the main types of Machine Learning: MAB is a subset of Reinforcement Learning and RL is a subset of ML. MAB is RL with partial information, and RL is ML with no supervision or data, just an environment to interact with.}
+    \label{fig:1:MainTypesOfMachineLearning}
 \end{figure}
 
-We illustrate this idea of a \emph{learning cycle} alternating between actions and feedback,
+We illustrate this idea of a \emph{learning cycle} alternating between action and feedback,
 in the following Figure~\ref{fig:1:ReinforcementLearningCycle}.
 A player (or learner) interacts with its environment by taking an action $A(t)$ (\eg, a choice in a finite set, $A(t)\in\{1,\dots,K\}$, or a vector $A(t)\in\R^d$), and then observing a reward $r(t)$, which is a certain measure of success from the environment (\eg, $r(t)\in\{0,1\}$ for binary failure/success, or $r(t)\in\R$).
 The goal of the player is to maximize its reward, by trials and errors (\ie, actions and rewards).
@@ -248,8 +253,10 @@ Many real-world problems can be framed as Reinforcement Learning problems, as il
 
 
 % Il faut expliquer ce que c'est que les bandits, rapidement, et leur application à l'OSA
-More precisely, in this thesis we focus on Reinforcement Learning models, in particular the learner does not have access to the entire reaction of the environment after taking its action.
-In other words, we focus on RL with limited feedback, when the player only sees the reward given by its action at every round, and not the reward that would have been given if she chose any other action.
+As this thesis focus on Reinforcement Learning models,
+it is important to highlight that in such decision making models, the learner does not have access to the entire reaction of the environment after taking its action.
+%
+In other words, the player only sees the reward given by its action at every round, and not the reward that would have been given if she chose any other action.
 This kind of limited feedback is called \emph{bandit information}, and we discuss the history and the concept of \emph{Multi-Armed Bandits} (MAB) in details in the next Chapter~\ref{chapter:2}.
 Clinical trials and treatment discovery were historically the first applications of MAB since $1930$s, with the early work of W. Thompson \cite{Thompson33}.
 %
@@ -450,7 +457,7 @@ This contribution was presented at the IEEE WCNC conference in Barcelona, Spain,
 
 
 % \subsection{Focusing on IoT networks.}
-\subsection{Our model of IoT network and decentralized MAB}
+\subsection{Our models of IoT networks and decentralized MAB}
 
 In the second Part~\ref{part:MABIOT} of this thesis, we start by proposing and studying different models of IoT networks, with simulations and a real-world proof-of-concept, and then we study interesting questions on two mathematical models of MAB that arise from our first contribution.
 
@@ -517,7 +524,7 @@ as our model requires that an \Ack{} is sent back by the base station if the tra
 It differs from the previously studied models of applying MAB for OSA, as they only considered synchronized devices, one SU and PU, and thus if the sensing indicates that one channel is free at one time slot, the up-link message sent by the SU device is sure to be successfully received by the base station (in the ideal model), so there is no risk of collision.
 
 
-On the first hand, in the OSA setting, we failed to obtain positive result for the Selfish policy, as we proved that in some limited settings (\eg, $K=3$ and $M=2$), \Selfish-\UCB{} can suffer from linear regret with a small probability, and thus suffers from linear mean regret.
+On the one hand, in the OSA setting, we failed to obtain positive result for the Selfish policy, as we proved that in some limited settings (\eg, $K=3$ and $M=2$), \Selfish-\UCB{} can suffer from linear regret with a small probability, and thus suffers from linear mean regret.
 This result was later confirmed and analyzed by \cite{BoursierPerchet18}.
 %
 On the other hand, we were able to propose new algorithms for this multi-player bandit problem with sensing information, and we analyzed our proposal \MCTopM-\klUCB, to show that it achieves a finite-time logarithmic regret upper bound, improving over previous state-of-the-art results.
@@ -551,7 +558,7 @@ The difficulty does not reside in the fact that we are trying to analyze MAB alg
 but rather that we are analyzing algorithms which are all playing in different (random) subsets of the global synchronized time.
 Generalizing to different activation probabilities would lead to a model even harder to analyze, and enforcing at most $M \leq K$ devices is not really realistic for IoT networks, but leads to the model of Chapter~\ref{chapter:5}.
 
-On the first hand, if the activation pattern of all devices could be fixed, for instance based on a centralized affectation of the devices to different time slots, then the model of multi-player bandit from Chapter~\ref{chapter:5} can be used to let all groups of $M \leq K$ devices learn an optimal orthogonal affectation in the $K$ channels (\eg, groups can be the set of devices that all emit at the same time).
+On the one hand, if the activation pattern of all devices could be fixed, for instance based on a centralized affectation of the devices to different time slots, then the model of multi-player bandit from Chapter~\ref{chapter:5} can be used to let all groups of $M \leq K$ devices learn an optimal orthogonal affectation in the $K$ channels (\eg, groups can be the set of devices that all emit at the same time).
 %
 However, even if we continue to assume a synchronized time in all the rest of the thesis,
 it is hard to argue that this hypothesis of a centralized time schedule for the end-devices can be realistic, because we study the case of decentralized learning for OSA and IoT precisely in order to avoid any central control of the devices by the base station, as we explained above.
@@ -735,12 +742,14 @@ and both Chapters~\ref{chapter:5} and \ref{chapter:6} studies an intermediate mo
 
 
 % WARNING
-\newpage
+% \newpage
 
 
 % ----------------------------------------------------------------------------
 \section{List of publications}
 \label{sec:1:listPublications}
+
+\TODOL{Guy Carrault me dit : Sinon les publications du doctorant sont indiquées en début de document, je ne me rappelle plus si elles ne doivent pas figurées à la fin}
 
 We conclude this chapter with a list of works published during this PhD.
 All the following works are published entirely and freely, on the HAL platform (see the \href{https://hal.archives-ouvertes.fr/}{\texttt{HAL.Archives-Ouvertes.fr}} website).
@@ -761,7 +770,7 @@ The following publications are ordered historically, from the most recent to the
     % \footnote{~See \href{https://sites.google.com/view/ISIoT2019}{\texttt{sites.google.com/view/ISIoT2019}}},
     at \emph{Conference on Distributed Computing in Sensor Systems},
     % \footnote{~IEEE DCOSS 2019, see \href{http://2019.dcoss.org}{\texttt{2019.dcoss.org}}},
-    Santorini, Greece, May 2019.
+    Santorini, Greece, May $2019$.
     % \href{https://HAL.Inria.fr/hal-02144465}{\texttt{HAL.Inria.fr/hal-02144465}}.
     See Section~\ref{sec:4:gnuradio}.
     \cite{MoyBesson2019}
@@ -773,7 +782,7 @@ The following publications are ordered historically, from the most recent to the
     by Rémi Bonnefoi, \textbf{Lilian Besson}, J. Manco-Vasquez \& Christophe Moy.
     1st International MOTIoN workshop,
     % \footnote{~MOTIoN 2019, see \href{https://sites.google.com/view/wcncworkshop-motion2019}{\texttt{sites.google.com/view/wcncworkshop-motion2019}}},
-    at \emph{IEEE WCNC}, Marrakech, Morocco, April 2019.
+    at \emph{IEEE WCNC}, Marrakech, Morocco, April $2019$.
     % \href{https://HAL.Inria.fr/hal-02049824}{\texttt{HAL.Inria.fr/hal-02049824}}.
     See Section~\ref{sec:4:retransmissions}.
     \cite{Bonnefoi2019WCNC}
@@ -783,7 +792,7 @@ The following publications are ordered historically, from the most recent to the
     by \textbf{Lilian Besson}, Rémi Bonnefoi \& Christophe Moy.
     \emph{Wireless Communication and Networks Conference},
     % \footnote{~IEEE WCNC 2019, see \href{http://wcnc2019.ieee-wcnc.org}{\texttt{wcnc2019.ieee-wcnc.org}}},
-    Marrakech, Morocco, April 2019,
+    Marrakech, Morocco, April $2019$,
     % \href{https://HAL.Inria.fr/hal-02006825}{\texttt{HAL.Inria.fr/hal-02006825}}.
     See Section~\ref{sec:4:gnuradio}.
     \cite{Besson2019WCNC}
@@ -793,7 +802,7 @@ The following publications are ordered historically, from the most recent to the
     by \textbf{Lilian Besson} \& Emilie Kaufmann.
     \emph{Algorithmic Learning Theory},
     % \footnote{~ALT 2018, see \href{http://www.cs.cornell.edu/conferences/alt2018}{\texttt{www.cs.cornell.edu/conferences/alt2018}}},
-    Lanzarote, Spain, April 2018,
+    Lanzarote, Spain, April $2018$,
     % \href{https://HAL.Inria.fr/hal-01629733}{\texttt{HAL.Inria.fr/hal-01629733}}.
     See Chapter~\ref{chapter:5}.
     \cite{Besson2018ALT}
@@ -803,7 +812,7 @@ The following publications are ordered historically, from the most recent to the
     by \textbf{Lilian Besson}, Emilie Kaufmann \& Christophe Moy.
     \emph{Wireless Communication and Networks Conference},
     % \footnote{~IEEE WCNC 2018, see \href{http://wcnc2018.ieee-wcnc.org}{\texttt{wcnc2018.ieee-wcnc.org}}},
-    Barcelona, Spain, April 2018,
+    Barcelona, Spain, April $2018$,
     % \href{https://HAL.Inria.fr/hal-01705292}{\texttt{HAL.Inria.fr/hal-01705292}}.
     See Chapter~\ref{chapter:25}.
     \cite{Besson2018WCNC}
@@ -977,5 +986,5 @@ online at \href{https://github.com/Naereen/phd-thesis/}{\texttt{GitHub.com/Naere
 % \TODOL{Open source the repository as soon as I defended my thesis!}
 
 \begin{center}
-    \textbf{Copyright 2016-2019, \copyright ~Lilian~Besson.}
+    \textbf{Copyright $2016$-$2019$, \copyright ~Lilian~Besson.}
 \end{center}
