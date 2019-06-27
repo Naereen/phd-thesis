@@ -185,6 +185,50 @@ Let us define and detail both concepts.
 %     de l'OSA.
 % }
 
+
+\paragraph{From IT to Cognitive Radio.}
+%
+Similarly, we can narrow down the second field of study of this thesis, steps by steps:
+from Information Technologies (IT), to Telecommunications, to Wireless Communications, then to Software Defined Radio (SDR),
+and finally to Cognitive Radio (CR).
+%
+The transition from the historical approach of hardware-based radio to SDR architectures and is a gradual process that started in the early $1990$s and has accelerated in the $2000$s.
+% https://en.wikipedia.org/wiki/Software-defined_radio
+A SDR is a radio communication system where components that have been traditionally implemented in hardware (\eg, mixers, filters, amplifiers, modulators/demodulators, detectors, etc) are all instead implemented by means of software on a personal computer or an embedded system, with the exception of a unique pair of receiver/transmitter antennas.
+Even though the SDR paradigm was initiated by the USA defense research, over the past years the industry has started to be interested by SDR, and CR have got significant attention from the academia and industry as well.
+% CR has been the first answer to solve spectrum scarcity issue which collected a huge attention in early 21st century.
+%
+CR is not a standard technology, and as such it does not have a single definition, so let us start by quoting the definition of two researchers whose works were the roots of the development of CR, in the last $20$ years.
+% - technologies de l'information > télécommunications > communications sans fil > radio intelligente > DSA > OSA
+%
+% je peux faire comme Navik, donner des définitions de la CR, citant d'autres travaux
+\begin{itemize}
+    \item
+    Joseph Mittola in $1999$ said that
+    \emph{``a really smart radio that would be self-, RF- and user-aware, and that would include software technology and machine learning capabilities along with a lot of high-fidelity knowledge of the radio environment''} \cite{Mitola99}.
+
+    \item
+    Then Simon Haykin in $2005$ also said that
+    \emph{``a CR is an intelligent wireless communication system that is capable of being aware of its surroundings, learning, and adapting its operating parameters (\eg, transmit power and carrier frequency) on the fly with an objective of providing reliable anytime, anywhere, and spectrally efficient communication''} \cite{Haykin05}.
+    He was the first to propose to use CR for Dynamic Spectrum Access.
+
+    \item
+    The \href{https://en.wikipedia.org/wiki/Cognitive_radio}{Wikipedia encyclopedia} states
+    \emph{``a CR is a radio that can be programmed and configured dynamically to use the best wireless channels in its vicinity to avoid user interference and congestion. Such a radio automatically detects available channels in wireless spectrum, then accordingly changes its transmission or reception parameters to allow more concurrent wireless communications in a given spectrum band at one location''}.
+\end{itemize}
+
+
+% explain PU and SU in a few sentences
+In licensed bands, there are Primary Users (PU) paying to access the network, for instance anybody has to pay to have a mobile phone number and use the network.
+As exposed in the definition above, the CR philosophy suggests that if the network is not used by any PU in a certain location and time, then non-paying users, referred to as Secondary User (SU), could use it.
+Regulations state that PU have a strict priority over any other SU,
+but even though the RF bands are allocated, real world measurements often show that some bands are not densely used, and thus if a SU is equipped with an efficient sensing capacity, it can analyze its environment, and use a licensed band if it is free of any PU.
+% explain DSA
+This defines the concept of DSA, proposed in the early $2000$s, and we refer to the surveys \cite{akyildiz2006next,Zhao07,garhwal2012survey} for more details.
+After a short paragraph on Reinforcement Learning, we then focus on one example, the \textbf{Opportunistic Spectrum Access} (OSA) problem.
+
+
+
 \paragraph{From Statistics or Machine Learning to Multi-Armed Bandits.}
 %
 We can narrow down the first field of study of this thesis, steps by steps.
@@ -192,7 +236,7 @@ We can narrow down the first field of study of this thesis, steps by steps.
 A first point-of-view is the historical one, as Multi-Armed Bandits (MAB) learning emerged as an interesting problem in the statistics community and among researchers interested by sequential learning, as shown by the earlier works of \cite{Thompson33,Robbins52,LaiRobbins85}.
 % ML > RL > MAB
 We can also expose another point-of-view, which starts from the general concept of Machine Learning (ML), and focus on Reinforcement Learning (RL), then on MAB learning.
-As illustrated in Figure~\ref{fig:1:MainTypesOfMachineLearning}, there are other types of ML, that we do not focus on in this thesis.
+% As illustrated in Figure~\ref{fig:1:MainTypesOfMachineLearning}, there are other types of ML, that we do not focus on in this thesis.
 %
 The reference book on RL is \cite{SuttonBarto2018}, so let us quote the definition of RL given by R. Sutton and A. Barto:
 \emph{``Reinforcement learning is learning what to do - how to map situations to actions - so
@@ -209,14 +253,14 @@ take, but instead must discover which actions yield the most reward by trying th
 % \label{fig:1:MainTypesOfMachineLearning2}
 % \end{figure}
 
-% Modified from the https://draw.io/ map from
-% https://github.com/trekhleb/homemade-machine-learning/blob/master/images/machine-learning-map.xml
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.95\textwidth]{machine-learning-map.pdf}
-    \caption[Classification of the main types of Machine Learning.]{Classification of the main types of Machine Learning: MAB is a subset of Reinforcement Learning and RL is a subset of ML. MAB is RL with partial information, and RL is ML with no supervision or data, just an environment to interact with.}
-    \label{fig:1:MainTypesOfMachineLearning}
-\end{figure}
+% % Modified from the https://draw.io/ map from
+% % https://github.com/trekhleb/homemade-machine-learning/blob/master/images/machine-learning-map.xml
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=0.95\textwidth]{machine-learning-map.pdf}
+%     \caption[Classification of the main types of Machine Learning.]{Classification of the main types of Machine Learning: MAB is a subset of Reinforcement Learning and RL is a subset of ML. MAB is RL with partial information, and RL is ML with no supervision or data, just an environment to interact with.}
+%     \label{fig:1:MainTypesOfMachineLearning}
+% \end{figure}
 
 We illustrate this idea of a \emph{learning cycle} alternating between action and feedback,
 in the following Figure~\ref{fig:1:ReinforcementLearningCycle}.
@@ -267,48 +311,6 @@ and exploitation of the best action, according to its current knowledge.
 %
 The MAB problem have been studied in both the machine learning and the statistics community, since the $1950$s with pioneers like H. Robbins \cite{Robbins52}, and more recently it is an active field of research, since the late $1990$s \cite{Anantharam87a,Anantharam87b,auer1995gambling,Agrawal95}.
 Research on MAB has produced a vast literature in the $2000$s \cite{Auer02,Auer02NonStochastic,Audibert2009minimax} and continues to be a topic of high interest, as illustrated by the surveys and books \cite{Bubeck12,LattimoreBanditAlgorithmsBook,Slivkins2019}, and the wide range of applications of MAB in the recent years.
-
-
-\paragraph{From IT to Cognitive Radio.}
-%
-Similarly, we can narrow down the second field of study of this thesis, steps by steps:
-from Information Technologies (IT), to Telecommunications, to Wireless Communications, then to Software Defined Radio (SDR),
-and finally to Cognitive Radio (CR).
-%
-The transition from the historical approach of hardware-based radio to SDR architectures and is a gradual process that started in the early $1990$s and has accelerated in the $2000$s.
-% https://en.wikipedia.org/wiki/Software-defined_radio
-A SDR is a radio communication system where components that have been traditionally implemented in hardware (\eg, mixers, filters, amplifiers, modulators/demodulators, detectors, etc) are all instead implemented by means of software on a personal computer or an embedded system, with the exception of a unique pair of receiver/transmitter antennas.
-Even though the SDR paradigm was initiated by the USA defense research, over the past years the industry has started to be interested by SDR, and CR have got significant attention from the academia and industry as well.
-% CR has been the first answer to solve spectrum scarcity issue which collected a huge attention in early 21st century.
-%
-CR is not a standard technology, and as such it does not have a single definition, so let us start by quoting the definition of two researchers whose works were the roots of the development of CR, in the last $20$ years.
-% - technologies de l'information > télécommunications > communications sans fil > radio intelligente > DSA > OSA
-%
-% je peux faire comme Navik, donner des définitions de la CR, citant d'autres travaux
-\begin{itemize}
-    \item
-    Joseph Mittola in $1999$ said that
-    \emph{``a really smart radio that would be self-, RF- and user-aware, and that would include software technology and machine learning capabilities along with a lot of high-fidelity knowledge of the radio environment''} \cite{Mitola99}.
-
-    \item
-    Then Simon Haykin in $2005$ also said that
-    \emph{``a CR is an intelligent wireless communication system that is capable of being aware of its surroundings, learning, and adapting its operating parameters (\eg, transmit power and carrier frequency) on the fly with an objective of providing reliable anytime, anywhere, and spectrally efficient communication''} \cite{Haykin05}.
-    He was the first to propose to use CR for Dynamic Spectrum Access.
-
-    \item
-    The \href{https://en.wikipedia.org/wiki/Cognitive_radio}{Wikipedia encyclopedia} states
-    \emph{``a CR is a radio that can be programmed and configured dynamically to use the best wireless channels in its vicinity to avoid user interference and congestion. Such a radio automatically detects available channels in wireless spectrum, then accordingly changes its transmission or reception parameters to allow more concurrent wireless communications in a given spectrum band at one location''}.
-\end{itemize}
-
-
-% explain PU and SU in a few sentences
-In licensed bands, there are Primary Users (PU) paying to access the network, for instance anybody has to pay to have a mobile phone number and use the network.
-As exposed in the definition above, the CR philosophy suggests that if the network is not used by any PU in a certain location and time, then non-paying users, referred to as Secondary User (SU), could use it.
-Regulations state that PU have a strict priority over any other SU,
-but even though the RF bands are allocated, real world measurements often show that some bands are not densely used, and thus if a SU is equipped with an efficient sensing capacity, it can analyze its environment, and use a licensed band if it is free of any PU.
-% explain DSA
-This defines the concept of DSA, proposed in the early $2000$s, and we refer to the surveys \cite{akyildiz2006next,Zhao07,garhwal2012survey} for more details.
-We focus on one example, the \textbf{Opportunistic Spectrum Access} (OSA) problem.
 
 
 \paragraph{Opportunistic Spectrum Access.}
