@@ -304,17 +304,19 @@ We introduce additional notations in the following definition.
     \cC_k(T) \eqdef
     \sum_{t=1}^{T} \sum_{j=1}^{M} \indic(C^j(t)) \indic(A^j(t) = k).
   \end{equation}
+  Note that when $n$ players choose arm $k$ at time $t$, this counts as $n$ collisions, not just one. So $\cC_k(T)$ counts the total \emph{number of colliding players} rather than the number of collision events.
+  Hence there is small abuse of notation when calling it a number of collisions.
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
 
-Note that when $n$ players choose arm $k$ at time $t$, this counts as $n$ collisions, not just one. So $\cC_k(T)$ counts the total \emph{number of colliding players} rather than the number of collision events. Hence there is small abuse of notation when calling it a number of collisions.
 %
-By denoting $\cP_M \eqdef \left\{ \boldsymbol{\mu} \in [0,1]^K : \mu_M^* > \mu_{M+1}^*\right\}$
-the set of bandit instances with a strict gap between the $M$ best arms and the other arms, we now provide a regret decomposition for any $\boldsymbol{\mu} \in \cP_M$.
+% By denoting $\cP_M \eqdef \left\{ \boldsymbol{\mu} \in [0,1]^K : \mu_M^* > \mu_{M+1}^*\right\}$
+% the set of bandit instances with a strict gap between the $M$ best arms and the other arms,
+We now provide a regret decomposition for any bandit instances with a strict gap between the $M$ best arms and the other arms (\ie, $\mu_M^* > \mu_{M+1}^*$).
 
 \begin{lemma}\label{lem:5:DecompositionRegret}
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
-  For any bandit instance $\boldsymbol{\mu}\in\cP_M$ such that $\mu_M^* > \mu_{M+1}^*$, it holds that
+  For any bandit instance $\boldsymbol{\mu}\in\cP_M  \eqdef \left\{ \boldsymbol{\mu} \in [0,1]^K : \mu_M^* > \mu_{M+1}^*\right\}$, it holds that
   % \vspace*{-5pt}  % XXX
   % \begin{small}
     \begin{align}\label{eq:5:termeundeuxtermetrois}
@@ -324,12 +326,11 @@ the set of bandit instances with a strict gap between the $M$ best arms and the 
       + \;\; \underbrace{\sum_{k \in \Mbest} (\mu_k -  \mu_M^*) (T - \E_{\mu}[N_k(T)])}_{\emph{\mytag{(b)}{eq:5:term2}}}
       + \;\; \underbrace{\sum_{k=1}^{K} \mu_k \E_{\mu}[\cC_k(T)]}_{\emph{\mytag{(c)}{eq:5:term3}}}. \nonumber
     \end{align}
+    % \vspace*{-5pt}  % XXX
+    In this decomposition, term \ref{eq:5:term1} counts the lost rewards due to \emph{sub-optimal arms} selections ($k \in \Mworst$), term \ref{eq:5:term2} counts the number of times the \emph{best arms} were \emph{not} selected ($k \in \Mbest$), and term \ref{eq:5:term3} counts the weighted number of collisions, on \emph{all arms}.
   % \end{small}
-  \vspace*{-5pt}  % XXX
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
-
-In this decomposition, term \ref{eq:5:term1} counts the lost rewards due to \emph{sub-optimal arms} selections ($k \in \Mworst$), term \ref{eq:5:term2} counts the number of times the \emph{best arms} were \emph{not} selected ($k \in \Mbest$), and term \ref{eq:5:term3} counts the weighted number of collisions, on \emph{all arms}.
 
 \begin{smallproof}
   Using the definition of regret $R_T^{\cA}(\boldsymbol{\mu}, M)$ from \eqref{eq:5:regret}, denoted here $R_T$, and this collision indicator $\eta^j(t) \eqdef \indic(\overline{C^j(t)})$,
@@ -452,7 +453,7 @@ a classical assumption made by \cite{LaiRobbins85} in single-player bandit model
   % and for all $\alpha \in (0,1)$,
   % \vspace*{-5pt}  % XXX
   \begin{align}
-    \forall a\in(0,1), & R_T^{\cA}(\boldsymbol{\mu},M) \mathop{=}\limits_{T \to +\infty} o(T^\alpha) \\
+    \forall a\in(0,1), & R_T^{\cA}(\boldsymbol{\mu},M) \mathop{=}\limits_{T \to +\infty} o(T^\alpha), \\
     \text{and } \; \forall a\in(0,1), & \;
     \forall j \in [M], k \in \Mbest, \;\;
     % a_{j,k}
@@ -492,11 +493,11 @@ For instance, \cite{Patil2019stochastic} requires that each arm must be sampled 
 % % and because it still applies to algorithms of the \RhoRand{} family as well as our proposals \RandTopM{} and \MCTopM.
 
 
-\textbf{Collision information.}
+\paragraph{Collision information.}
 %
 The following notations and the hypothesis on the collision information term \eqref{eq:5:collisionInformationTerm} comes from Appendix~E of \cite{KaufmannAbbas19}.
 Similarly to what we did in Section~\ref{sec:2:notations},
-consider the observations $O_t^j$ that she gathered after $t$ rounds of its algorithm $\cA_j$ for a fixed player $j\in[M]$,
+consider the observations $O_t^j$ that player $j$ gathered after $t$ rounds of its algorithm $\cA_j$ for a fixed player $j\in[M]$,
 defined as $O_t^j \eqdef \left( U^j(1), Y_{A^j(1),1}, C^j(1), \ldots, U^j(t), Y_{A^j(t),t}, C^j(t) \right)$,
 where $U^j(t)$ denotes some external source of randomness useful to select $A^j(t+1)$.
 For instance, an algorithm based on ranks and \UCB{} indexes, like \RhoRand, when two arms have the same maximum index the decision is an $\argmax$, and ties are usually broken by a uniform random selection among the arms with maximum index.
@@ -906,7 +907,7 @@ as shown in Lemma~\ref{lem:5:elementaryLemma_RandTopM_MCTopM}.
 % the Appendix~\ref{proof:5:collisionsMCTopM}
 The considered subset is never empty as it contains
 at least the arm replacing the $k\in\TopM(t-1)$ in $\TopM(t)$.
-Collisions are dealt with only for non-fixed player $j$,
+Collisions are dealt with only for non-fixed players $j$,
 and when the previous arm is still in $\TopM(t)$.
 %
 In this case, a new arm is sampled uniformly from $\TopM(t)$ (Lines~$6$-$8$).
@@ -915,7 +916,7 @@ In this case, a new arm is sampled uniformly from $\TopM(t)$ (Lines~$6$-$8$).
 This stationary aspect helps to minimize the number of collisions,
 as well as the number of switches of arm.
 %
-The five different transitions $(1)$, $(2)$, $(3)$, $(4)$, $(5)$ refer to the notations used in the analysis of \MCTopM, and they are illustrated in Figure~\ref{fig:5:StateMachineAlgorithm_MCTopM} below.
+The five different transitions $(1)$, $(2)$, $(3)$, $(4)$, $(5)$ refer to the notations used in the analysis of \MCTopM{} (in the next section), and they are illustrated in Figure~\ref{fig:5:StateMachineAlgorithm_MCTopM} below.
 
 \begin{figure}[h!]
   \resizebox{1.03\textwidth}{!}{
@@ -935,7 +936,7 @@ The five different transitions $(1)$, $(2)$, $(3)$, $(4)$, $(5)$ refer to the no
   \end{tikzpicture}
   }
   \caption[``State-machine'' representation of \MCTopM]{Player $j$ using \MCTopM, represented as ``state machine'' with $5$ transitions.
-  Taking one of the five transitions means playing one round of the Algorithm~\ref{algo:5:MCTopM}, to decide $A^j(t+1)$ using information of previous steps.}
+  Taking one of the five transitions means playing one round of the Algorithm~\ref{algo:5:MCTopM}, to decide $A^j(t)$ using information of previous steps.}
   \label{fig:5:StateMachineAlgorithm_MCTopM}
 \end{figure}
 
@@ -950,7 +951,7 @@ We now focus on obtaining positive results for the algorithms we proposed in Sec
 Section~\ref{sub:5:UpperBoundSelections} gives
 an asymptotically optimal analysis of the expected number of sub-optimal draws
 for our two proposals \RandTopM{} and \MCTopM{} as well as for \rhoRand{}, when they are combined with \klUCB{} indices,
-and Section~\ref{sub:5:UpperBoundCollisions} proves that the number of collisions are logarithmic, and hence the regret of \MCTopM{} is also logarithmic.
+and then we restrict to the most efficient algorithm \MCTopM, by proving in Section~\ref{sub:5:UpperBoundCollisions} that the number of collisions are logarithmic, and hence the regret of \MCTopM{} is also logarithmic.
 %
 Finally, Section~\ref{sub:5:SelfishFails} shortly discusses a disappointing result regarding \Selfish.
 %  with more insights provided in Appendix~\ref{app:5:SelfishFails}.
@@ -991,10 +992,13 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
   %
   Fix $k\in\Mworst$ and a player $j \in [M]$.
   The key observation is that for \MCTopM, \RandTopM{} as well as the \rhoRand{} algorithm, it holds that
-  \begin{equation}\left(A^j(t) = k\right) = \left(A^j(t) = k , \exists m \in \Mbest : U_m^j(t) < U_k^j(t) \right).\label{eq:5:KeyInclusion}\end{equation}
-  Indeed, for the three algorithms, an arm selected at time $t+1$ belongs to the set $\TopM(t)$ of arms with $M$ largest indices.
-  If the sub-optimal arm $k$ is selected at time $t$, it implies that $k \in \TopM(t)$, and, because there are $M$ arms in both \Mbest{} and $\TopM(t)$, one of the arms in \Mbest{} must be excluded from $\TopM(t)$.
-  In particular, the index of arm $k$ must be larger than the index of this particular arm $m$.
+  \begin{equation}\label{eq:5:KeyInclusion}
+    \left(A^j(t) = k\right) = \left(A^j(t) = k , \exists m \in \Mbest : U_m^j(t) < U_k^j(t) \right).
+  \end{equation}
+
+  For each algorithm, the arm selected at time $t$ always belongs to the set $\TopM(t)$ of arms with $M$ largest indices.
+  Selecting the sub-optimal arm $k$ at time $t$ implies that $k \in \TopM(t)$, and that one of the arms in \Mbest{} must be excluded from $\TopM(t)$, because there are $M$ arms in both \Mbest{} and $\TopM(t)$.
+  In particular, arm $k$ must have a larger index than this particular arm $m$.
 
   Thanks to \eqref{eq:5:KeyInclusion} and if $\Pr_{\bm{\mu}} $ denote here the probability under model $\bm{\mu}$, it is easy to decompose the number of selections of arm $k$ by user $j$ up to round $T$ as
   \begin{align*}
@@ -1007,13 +1011,13 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
   \end{align*}
 
   Considering the relative position of the upper-confidence bound $U_{m^*}^j(t)$ and the corresponding mean $\mu_m^* = \mu_{m^*}$, one can write the decomposition
-  \begin{align*}
-    \E_{\mu}[N_k^j(T)] &\leq
-    \sum_{t=1}^T\Pr_{\bm{\mu}} \left( \exists m_1 \in [M]: \; U_{m_1^*}(t) < \mu_m^* \right) + \\
-    \;\;\;\;
-    \sum_{t=1}^T\Pr_{\bm{\mu}} & \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; U_{m_2^*}(t) \leq U_k(t) , \forall {m_3} \in [M]: \;  U_{{m_3}^*}(t) \geq \mu_{m_3}^* \right)
-  \end{align*}
   \begin{align}
+    \E_{\mu}[N_k^j(T)] &\leq
+    \sum_{t=1}^T\Pr_{\bm{\mu}} \left( \exists m_1 \in [M]: \; U_{m_1^*}(t) < \mu_m^* \right) + \nonumber \\
+    \;\;\;\;
+    \sum_{t=1}^T\Pr_{\bm{\mu}} & \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; U_{m_2^*}(t) \leq U_k(t) , \forall {m_3} \in [M]: \;  U_{{m_3}^*}(t) \geq \mu_{m_3}^* \right) \nonumber \\
+  % \end{align}
+  % \begin{align}
     \E_{\mu}[N_k^j(T)] &\leq \sum_{m_1=1}^M\sum_{t=1}^T\Pr_{\bm{\mu}} \left(U_{m_1^*}(t) < \mu_{m_1}^* \right) + \sum_{t=1}^T\Pr_{\bm{\mu}} \left(A^j(t) = k,\;\; \exists m_2 \in [M]:\; \mu_{m_2}^* \leq U_k(t)\right) \notag \\
     %
     & \leq \sum_{m_1=1}^M \sum_{t=1}^T \Pr_{\bm{\mu}} \left( U_{m_1^*}(t) < \mu_{m_1}^* \right)
@@ -1029,7 +1033,7 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
   \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
       For any arm $k$, if $U_k^{j}(t)$ is the \klUCB{} index with exploration function $f(t)=\log(t)+3\log(\log(t))$, then
       % \begin{equation}
-      $\sum\limits_{t=1}^T \Pr_{\bm{\mu}} \left(U_k^{j}(t) < \mu_k\right) \leq 3 + 4e \log(\log(T))$.
+      $\sum\limits_{t=1}^T \Pr_{\bm{\mu}} \left(U_k^{j}(t) < \mu_k\right) \leq 3 + 4 \mathrm{e} \log(\log(T))$.
       % \end{equation}
   \end{leftbar}  % XXX leftbar lemmabar, comment if needed
   \end{lemma}
@@ -1053,7 +1057,7 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
   \begin{align}\label{eq:5:UBprecise}
     \E_{\mu}\left[N_k^j(T)\right]
     & \leq \frac{\log(T) + 3 \log(\log(T))}{\kl(\mu_k,\mu_{M^*})} + \sqrt{2\pi} \sqrt{\frac{\kl'(\mu_k,\mu_{M^*})^2}{\kl(\mu_k,\mu_{M*})^3}}\sqrt{\log(T) + 3\log(\log(T))}  \nonumber\\
-    & \;\;\;\;\;\;+ 2\left(\frac{\kl'(\mu_k,\mu_{M^*})}{\kl(\mu_k,\mu_{M^*})}\right)^2 + 4Me \log(\log(T)) + 3M+1,
+    & \;\;\;\;\;\;+ 2\left(\frac{\kl'(\mu_k,\mu_{M^*})}{\kl(\mu_k,\mu_{M^*})}\right)^2 + 4M \mathrm{e} \log(\log(T)) + 3M+1,
   \end{align}
   which yields Lemma~\ref{lem:5:SubOptimalSelections},
   with explicit constants $C_{\boldsymbol{\mu}}$ and $D_{\boldsymbol{\mu}}$.
@@ -1162,10 +1166,10 @@ that we can then bound by the number of changes of arms.
 \end{lemma}
 
 Note that this bound is in $\bigO{M^3}$,
-which significantly improves the $\bigO{M{2M-1 \choose M}}$ proven by \cite{Anandkumar11} for \rhoRand. It is worse than the $\bigO{M^2}$ proven by \cite{Rosenski16} for \MusicalChair{}. %, due to our trick of focusing on collisions for non-sitted players.
+which significantly improves over the $\bigO{M{2M-1 \choose M}}$ bound, proven by \cite{Anandkumar11} for \rhoRand.
+Our bound is worse than the $\bigO{M^2}$ proven by \cite{Rosenski16} for \MusicalChair{}. %, due to our trick of focusing on collisions for non-sitted players.
 However, unlike \MusicalChair, our algorithm does not need any prior knowledge on the problem complexity.
-It is indeed not very satisfying, from an applicative point of view, to require a prior knowledge
-of $\mu^*_{M}-\mu^*_{M+1}$ if one wants to run the \MusicalChair{} algorithm.
+The \MusicalChair{} algorithm is indeed not very satisfying from an applicative point of view, as it requires a prior knowledge of $\mu^*_{M}-\mu^*_{M+1}$.
 
 \begin{smallproof}
   A key feature of both the \RandTopM{} and \MCTopM{} algorithms is Lemma~\ref{lem:5:elementaryLemma_RandTopM_MCTopM}, that states that the probability of switching from some arm because this arm leaves $\TopM(t)$ is small.
@@ -1385,7 +1389,7 @@ where switching arms means re-configuring a radio hardware, an operation that co
 An algorithm guaranteeing a small number of switches is thus interesting,
 and for instance \cite{modiDemo2016} studied the empirical impact of the number of hardware reconfigurations on the battery life of a dynamic end-devices.
 This work highlighted a tradeoff between minimizing regret and minimizing the number of switches of arms.
-On a more experimental note, it was shown in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-players bandits, \rhoRand, could be tuned to run in batches, in order to reduce by a certain multiplicative factor its switching cost while only adding an additive factor on its regret.
+On a more experimental note, it was shown in \cite{modiDemo2016} that the previous state-of-the-art policy for multi-players bandits, \rhoRand, could be tuned to run in batches, in order to reduce by a certain multiplicative factor its switching cost while multiplying its regret by the same factor.
 While such ideas can interest a practitioner, they does not change the asymptotic behavior of $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, which is $\Theta(\log(T))$ for any efficient policy.
 %
 We also note that introducing explicit \emph{switching costs} in the regret, like it was done in previous works like \cite{Koren17} for single-player bandits, could also be fruitful.
@@ -1398,8 +1402,8 @@ We also note that introducing explicit \emph{switching costs} in the regret, lik
 \paragraph{Logarithmic Regret for \MCTopM.}
 %
 Now that the sub-optimal arms selections and the collisions
-are both proven to be at most logarithmic in Lemmas~\ref{lem:5:SubOptimalSelections} and \ref{lem:5:collisionsMCTopM},
-it follows from our regret decomposition (Lemma~\ref{lem:5:DecompositionRegret}) together with Lemma~\ref{lem:5:1stUpperBound} that the regret of \MCTopM-\klUCB{} is logarithmic. More precisely, one obtains a finite-time problem-depend upper bound on the regret of this algorithm.
+are both proven to be at most logarithmic in Lemmas~\ref{lem:5:SubOptimalSelections} and \ref{lem:5:collisionsMCTopM} above,
+it follows from our regret decomposition (Lemma~\ref{lem:5:DecompositionRegret}) together with Lemma~\ref{lem:5:1stUpperBound} that the regret of \MCTopM-\klUCB{} is logarithmic. More precisely, we obtain a finite-time problem-depend upper bound on the regret of this algorithm.
 
 \begin{theorem}\label{thm:5:LogarithmicRegret_MCTopMklUCB}
 \begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
@@ -1426,8 +1430,8 @@ it follows from our regret decomposition (Lemma~\ref{lem:5:DecompositionRegret})
 
 \paragraph{Strong uniform efficiency.}\label{app:5:JustifyingDefinition5}
 %
-As soon as $R_T = \bigO{\log T}$ for all problems, \MCTopM{} is clearly proven
-to be uniformly efficient, as $\log T$ is $\smallO{T^{\alpha}}$ for any $\alpha\in(0,1)$.
+As soon as $R_T = \bigO{\log(T)}$ for all problems, \MCTopM{} is clearly proven
+to be uniformly efficient, as $\log(T)$ is $\smallO{T^{\alpha}}$ for any $\alpha\in(0,1)$.
 %
 And as justified after Definition~\ref{def:5:DecentralizedUniformEfficiency} (page~\pageref{def:5:DecentralizedUniformEfficiency}), uniform efficiency and invariance under permutations of the users implies strong uniform efficiency, and so \MCTopM{} satisfies Definition~\ref{def:5:DecentralizedUniformEfficiency}.
 %
@@ -1453,7 +1457,7 @@ They confirmed that \Selfish-\UCB{} can indeed suffer linear regret, and propose
 
 
 % -----------------------------------------------------------------
-\section{Experimental results for multi-player bandits, with sensing information}
+\section{Experimental results for multi-player bandits with sensing}
 \label{sec:5:experiments}
 % -----------------------------------------------------------------
 
@@ -1472,9 +1476,12 @@ The analysis given in Section~\ref{sec:5:upperbounds} was focussing on \klUCB, b
 To illustrate this, we first show below the result of some experiments comparing different algorithms that use either the \UCB{} or the \klUCB{} indexes.
 %
 Our proposed algorithms, \MCTopM{}, \RandTopM{} and \Selfish{} are benchmarked against the state-of-the-art \RhoRand{} algorithm.
+
 We also include a (unrealistic) centralized multiple-play \klUCB{} algorithm,
 as defined by \cite{Anantharam87a},
 essentially to check that the \emph{``price of decentralized learning''} is not too large.
+Centralized multiple-play index policies are very similar to single-player index policies (see Algorithm~\ref{algo:2:indexPolicy}), they work by computing an index $U_k'(t)$ for each arm $k\in[K]$, and then sort the arm by decreasing index, and affect the $M$ players to the $M$ arms with highest index.
+They are based on a central supervision, as a single algorithm is in charge of deciding the arms used by the $M$ players, and as such they are both unrealistic to set-up in practice, and falling outside of our focus that is on decentralized algorithms.
 
 
 \paragraph{First experiment: \UCB{} vs \klUCB{}.}
@@ -1733,7 +1740,7 @@ We also include our \emph{asymptotic} lower bound from Theorem~\ref{thm:5:Better
 % were considered in the analysis of both
 We also compared our algorithms to  %multi-players multi-armed bandits algorithms
 with \MEGA{} \citep{Avner15} and \MusicalChair{} \citep{Rosenski16}, in the presence of sensing, \ie, observation model \modeldeux, for which they were developed.
-Yet these two algorithms were found hard to use efficiently in practice and we show in
+Yet these two algorithms were found to both be very hard to use efficiently in practice, and we show in
 % that were also proposed
 %
 Figure~\ref{fig:5:MP__K9_M3_T123456_N100__8_algos} that they perform poorly in comparison to \rhoRand, \RandTopM{} and \MCTopM.
