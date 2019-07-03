@@ -196,7 +196,7 @@ gaussian_problem.plotHistogram()  # display the histogram shown below
 \begin{figure}[h!]  % [htbp]
 	\centering
 	\includegraphics[width=0.75\linewidth]{exampleOfRewards.pdf}
-	\caption{Histogram of $10000$ \iid{} rewards obtained from three arms with a Gaussian distribution truncated to $[0,1]$, of respective means $0.1$, $0.5$ and $0.9$.}
+	\caption{Histogram of $10000$ \iid{} rewards obtained from three arms with a Gaussian distribution truncated to $[0,1]$, of respective means $0.1$ (in \textcolor{red}{red}), $0.5$ (in \textcolor{green}{green}) and $0.9$ (in \textcolor{blue}{blue}).}
 	\label{fig:3:exampleOfRewards}
 \end{figure}
 
@@ -329,11 +329,10 @@ For instance, one can compare the standard anytime \klUCB{} algorithm (class \te
 \begin{listing}[h!]
     \begin{minted}[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{python3}
 configuration["policies"] = [
-  {"archtype": klUCB, "params": {"klucb": klucbBern}},
-  {"archtype": klUCBPlusPlus,
-   "params": {"horizon": T, "klucb": klucbBern}},
-  {"archtype": UCBalpha, "params": {"alpha": 1}},
-  {"archtype": Thompson, "params": {"posterior": Beta}}
+    { "archtype": klUCB, "params": { "klucb": klucbBern } },
+    { "archtype": klUCBPlusPlus, "params": {"horizon": T, "klucb": klucbBern}},
+    { "archtype": UCBalpha, "params": { "alpha": 1 } },
+    { "archtype": Thompson, "params": { "posterior": Beta } }
 ]
     \end{minted}
     \caption{Example of Python code to configure the list of algorithms tested on a problem.}
@@ -346,7 +345,7 @@ configuration["policies"] = [
 	\centering
 	\includegraphics[width=1.05\linewidth]{3.pdf}
 	\caption[Example of a single-player simulation showing the average regret of $4$ algorithms.]{
-		Example of a single-player simulation showing the average regret of four algorithms. They all perform very well: each algorithm is known to be order-optimal (\ie, its regret is proven to match the lower-bound up-to a constant), and each but UCB is known to be asymptotically optimal (\ie, with the constant matching the lower-bound).
+		Example of a single-player simulation showing the average regret of four algorithms (\textcolor{red}{\UCB}, \textcolor{blue}{\KLUCBpp}, \textcolor{darkgreen}{\klUCB} and \textcolor{gold}{Thompson sampling}). They all perform very well: each algorithm is known to be order-optimal (\ie, its regret is proven to match the lower-bound up-to a constant), and each but UCB is known to be asymptotically optimal (\ie, with the constant matching the lower-bound).
 	}
 	\label{fig:3:firstPlot}
 \end{figure}
@@ -361,7 +360,7 @@ The Figure~\ref{fig:3:firstPlot_hist} below shows the histogram of regret obtain
 \begin{figure}[h!]  % [htbp]
 	\centering
 	\includegraphics[width=1.05\linewidth]{3_hist.pdf}
-	\caption{Histogram of regret for the same experiment as of Figure~\ref{fig:3:firstPlot}. For instance, Thomson sampling is very efficient in average (in yellow), and UCB shows a larger variance (in red).}
+	\caption{Histogram of regret for the same experiment as of Figure~\ref{fig:3:firstPlot}. For instance, \textcolor{gold}{Thomson sampling} is very efficient in average (\textcolor{gold}{in yellow}), and \textcolor{red}{\UCB} shows a larger variance (\textcolor{red}{in red}).}
 	\label{fig:3:firstPlot_hist}
 \end{figure}
 
@@ -542,7 +541,7 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
 
 We focused here on the most well known algorithms, discussed in Section~\ref{sec:2:famousMABalgorithms}, and two others that are efficient but less known (AdBandits and BESA).
 To highlight that SMPyBandits implements many other MAB algorithms proposed in recent works, we detail in Appendix~\ref{sub:3:additionalExperiments} $7$ other algorithms.
-They are more recent (\eg, $3$ from $2018$ and $2$ from early $2019$) and are usually more complex, or based on a different point-of-view.
+They are more recent (\eg, $3$ from $2018$ and $2$ from $2019$) and are usually more complex, or based on a different point-of-view.
 The numerical results presented below include these extra algorithms, to justify empirically that despite their respective qualities, and despite being very efficient, it is reasonable to focus on \UCB{} and \klUCB{} in the rest of this thesis, as they stay comparable with or more efficient than other recent algorithms, but are simpler to implement (\eg, when comparing \UCB{} to \texttt{ApproximatedFHGittins} or $\mathrm{MOSS}$-$\mathrm{Anytime}$) to manipulate theoretically (\eg, when comparing \klUCB{} to BESA, PHE or RCB).
 
 
@@ -670,7 +669,7 @@ Hence, the reported results highly depend on many factors, including how the cod
 We take precautions to ensure the fairness of the comparison between the different algorithms, as detailed in Appendix~\ref{sub:3:precautionsTimeMemory}.
 
 
-\subsection{Computational time.}
+\subsection{Computational time}
 
 In Figure~\ref{fig:3:16_different_algorithms__lognormregret_vs_logtime__28pb}, we can see that Bayesian algorithms appear to be the most efficient (\ie, in the bottom left corner), and \klUCB{} is very close to their best empirical performances.
 \UCB, algorithms that were proven to perform similarly to \UCB{} (\ie, PHE and RCB), and other index policies inspired by \UCB{} (ApprFHG, $\UCB\dagger$) enjoy very similar performances: a larger regret than Bayesian algorithms and \klUCB, but a shorter running time.
@@ -725,7 +724,7 @@ linearly in the number of arms in the horizon, \ie, $\cT_T = \bigO{KT}$.
 \end{figure}
 
 
-\subsection{Memory cost.}
+\subsection{Memory cost}
 
 Like for the computational cost discussed above,
 in Figure~\ref{fig:3:16_different_algorithms__lognormregret_vs_logmemory__28pb}, we can see that Bayesian algorithms like Thompson sampling again appear to be the most efficient (\ie, in the bottom left corner), and \klUCB{} is close to their best empirical performances.

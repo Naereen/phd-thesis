@@ -1251,7 +1251,7 @@ This is justified by Pinkser's inequality, which gives $\kl(x,y) \geq 2(x-y)^2$.
 The \KLUCB{} and \klUCB{} algorithms achieve finite-time regret logarithmic upper-bounds on their regret, and have been proven to be asymptotically optimal, respectively for one-dimensional exponential families and for bounded rewards distributions \cite{Garivier11KL,KLUCBJournal}.
 
 
-\paragraph{A note about the implementation of \klUCB{} algorithms.}
+\textbf{A note about the implementation of \klUCB{} algorithms.}
 %
 Implementing this kind of policy requires to implement two things.
 The first one is usually easy: one has to implement $\kl(x,y)$ the Kullback-Leibler divergence of the considered one-dimensional family,
@@ -1266,15 +1266,15 @@ For instance, a precision level of $\varepsilon=10^{-8}$ is enough for numerical
 If we perform numerical simulations with \klUCB{} algorithms, we are interested in having efficient implementations, and ideally \klUCB{} should not be significantly slower than \UCB. The bottleneck of the performance is the computations of the $\KL$ functions and the optimization problem,
 and we note that our library SMPyBandits implements the two parts in both a naive Python implementation (file \href{https://github.com/SMPyBandits/SMPyBandits/blob/master/SMPyBandits/Policies/kullback.py}{\texttt{kullback.py}}) and in a Python module written in a
 C file\footnote{~We also wrote an intermediate implementation that uses Cython \cite{cython}, to have a file with a syntax closer to Python, while gaining from almost the same performance speed-up as with the optimized C version, see file \href{https://github.com/SMPyBandits/SMPyBandits/blob/master/SMPyBandits/Policies/kullback_cython.pyx}{\texttt{kullback\_cython.pyx}}.
-    These implementations are also published an independent Python and Julia packages, on \href{https://github.com/Naereen/Kullback-Leibler-divergences-and-kl-UCB-indexes}{\texttt{GitHub.com/Naereen/Kullback-Leibler-divergences-and-kl-UCB-indexes}} (also on Pypi),
-    and on \href{https://github.com/Naereen/KullbackLeibler.jl}{\texttt{GitHub.com/Naereen/KullbackLeibler.jl}}.
+    These implementations are also published an independent Python package, on \href{https://github.com/Naereen/Kullback-Leibler-divergences-and-kl-UCB-indexes}{\texttt{GitHub.com/Naereen/Kullback-Leibler-divergences-and-kl-UCB-indexes}} (also on Pypi),
+    as well as a Julia package, on \href{https://github.com/Naereen/KullbackLeibler.jl}{\texttt{GitHub.com/Naereen/KullbackLeibler.jl}}.
     % and installable with \texttt{Pkg.add("KullbackLeibler")}.
 },
 in an optimized way (file \href{https://github.com/SMPyBandits/SMPyBandits/blob/master/SMPyBandits/Policies/C/kullback_py3.c}{\texttt{kullback\_py3.c}}).
 For the supported families of distributions (including Bernoulli, Gaussian, exponential and Poisson), we wrote both a naive Python and an optimized CPython version of their Kullback-Leibler divergence (\ie, $\KL(x,y)$) and a bisection search for the optimization problem for the \klUCB{} index (\ie, $\sup_q \KL(x,q) \leq z$).
 
 
-\paragraph{Variants on $\UCB_1$.}
+\textbf{Variants on $\UCB_1$.}
 %
 Many variants of the $\UCB_1$ algorithms have been studied in the multi-armed bandits literature.
 For instance, \UCB-H replaces the $\log(t)$ by a $\log(T)$ (as well as \klUCB-H), and it actually corresponds to the first algorithm analyzed in \cite{Auer02}.
@@ -1547,7 +1547,7 @@ It shows that the performance can \textcolor{red}{fluctuate a lot}, as on both c
 %         (last regret = 44.054,  total regret = 44.2,    total reward = 6949,    total weighted selection = 6955.8).
 
 \begin{table}[!h]
-    \begin{small}  % WARNING
+    % \begin{small}  % WARNING
         \centering
         \begin{tabular}{c|cc|cc}
         \textbf{Algorithms}
@@ -1585,7 +1585,7 @@ It shows that the performance can \textcolor{red}{fluctuate a lot}, as on both c
         \end{tabular}
         \caption{Cumulated rewards and regret, for horizons $T=100$ and $T=10000$, \emph{for only one run of the simulation}, for different algorithms.}
         \label{table:2:oneShotResult}
-    \end{small}  % WARNING
+    % \end{small}  % WARNING
 \end{table}
 
 Then in Table~\ref{table:2:meanResults} we show the \emph{results of the average on $N=1000$ independent runs}.
@@ -1641,7 +1641,7 @@ both $\varepsilon$-greedy and Explore-then-Commit starts as pure exploration, re
 %         (last regret = 49.366,  total regret = 49.402,  total reward = 6951.4,  total weighted selection = 6950.6).
 
 \begin{table}[ht]
-    \begin{small}  % WARNING
+    % \begin{small}  % WARNING
         \centering
         \begin{tabular}{c|cc|cc}
         \textbf{Algorithms}
@@ -1678,7 +1678,7 @@ both $\varepsilon$-greedy and Explore-then-Commit starts as pure exploration, re
         \end{tabular}
         \caption{Cumulated rewards and regret, for horizons $T=100$ and $T=10000$, \emph{averaged over $N=1000$ independent simulations} ($j=1,\dots,N$), for different algorithms.}
         \label{table:2:meanResults}
-    \end{small}  % WARNING
+    % \end{small}  % WARNING
 \end{table}
 
 % \begin{figure}[h!]  % [htbp]
@@ -1713,14 +1713,14 @@ In the rest of this thesis, we mainly use the $\UCB_1$ or Thompson sampling algo
 
 \begin{figure}[h!]  % [htbp]
 	% \centering
-    \includegraphics[width=1.14\linewidth]{SP__K5_T10000_N1000__7_algos/main_MeanRewards____env1-1_2506036032481767447.pdf}
+    \includegraphics[width=1.23\linewidth]{SP__K5_T10000_N1000__7_algos/main_MeanRewards____env1-1_2506036032481767447.pdf}
 	\caption{Average of the cumulated rewards, as function of $t$, for $T=10000$ and $N=1000$.}
 	\label{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}
 \end{figure}
 
 \begin{figure}[h!]  % [htbp]
 	% \centering
-	\includegraphics[width=1.14\linewidth]{SP__K5_T10000_N1000__7_algos/main____env1-1_2506036032481767447.pdf}
+	\includegraphics[width=1.17\linewidth]{SP__K5_T10000_N1000__7_algos/main____env1-1_2506036032481767447.pdf}
 	\caption{Mean regret $R_t$ as function of $t$ for $T=10000$ and $N=1000$.}
 	\label{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}
 \end{figure}
@@ -1846,7 +1846,7 @@ Both hypotheses are removed or weaken in the rest of this manuscript,
 first by considering players facing a stationary problem in a decentralized way in Chapter~\ref{chapter:5},
 and then by considering a single player facing a non-stationary or a piece-wise stationary problem in Chapter~\ref{chapter:6}.
 %
-For both directions, we present in the two final chapters natural extensions of the base model, and we detail our contributions that obtained state-of-the-art results for the two problems
+For both directions, we present in the two final chapters of this thesis natural extensions of the base model, and we detail our contributions that obtained state-of-the-art results for the two problems
 of stationary multi-players and piece-wise stationary bandits.
 
 We take another approach in Chapter~\ref{chapter:4}, where the MAB model is generalized to study decentralized learning of a large set of independent players, all having different activation times.
@@ -1856,9 +1856,9 @@ This model is however more generic and as such it was found suitable for applica
 
 \paragraph{Possible future works.}
 %
-We focused in this thesis on finite-arms and one-dimensional bandit problems,
-and thus two possible directions of future works could be to extend our works
-to MAB models with either multidimensional rewards, like contextual bandits, or infinite arms, like Lipschitz bandits.
+We focus in this thesis on finite-arms and one-dimensional bandit problems,
+and therefore, two possible directions of future works could be to extend our works
+to MAB models with either multidimensional rewards, like contextual bandits \cite{Li10,Luo18,ChenLeeLuoWei2019}, or infinite arms \cite{valko2016bandits,Combes17}, like Lipschitz bandits.
 
 
 % % % ----------------------------------------------------------------------------
