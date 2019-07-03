@@ -26,7 +26,7 @@ To do that, we suppose an IoT network made of two types of devices: \emph{static
 Note that instead of assuming that each static device uses a fixed channel, we could also assume a looser hypothesis: if each static device uses a fixed sub-set of the $K$ channels, and a purely uniform random access in its set of considered channels, then \emph{in average} the observed occupancy of the $K$ channels can be modeled as if it were occupied by (more) static devices using only one channel. So our first hypothesis is actually not constraining.
 We first evaluate the probability of collision if the dynamic devices randomly select their channels (that is, a naive approach), and if a centralized controller would optimally distribute all of them in the channels at the beginning of the scenario.
 This second approach is ideal, but not realistic for the most common situation of decentralized co-located IoT networks, and it is just used here as a reference.
-Then, these three reference scenarios allow to evaluate the performance of bandit algorithms, such as \UCB{} and TS, in a decentralized network, in terms of successful communication rate, as it reflects the network efficiency.
+Then, these three reference scenarios allow to evaluate the performance of bandit algorithms, such as \UCB{} and TS, in a decentralized network, in terms of successful communications rate, as it reflects the network efficiency.
 We show that these algorithms have near-optimal performance, even when the proportion of end-devices increases and the interfering traffic from other devices becomes less and less stochastic, more and more fluctuating and unpredictable.
 
 
@@ -116,7 +116,7 @@ We assume that there are two types of end-devices in the network:
     For that end, they use their history of successes or failures of their past communication they experienced in each channel, to learn about channel availability.
     We also assume that the dynamic end-devices can run simple embedded decision making algorithms, and have limited but reasonable computing as well as storage capacities.
     Note that of course we assume a limited storage capacity, so no device stores the full history of communications successes and failures, but they only store average rates (which can be stored using two integers for each of the $K$ channels).
-    Our goal is to propose a learning algorithm than can be implemented by each dynamic device, in a decentralized and independent manner, in order to improve their successful communication rate automatically.
+    Our goal is to propose a learning algorithm than can be implemented by each dynamic device, in a decentralized and independent manner, in order to improve their successful communications rate automatically.
 \end{itemize}
 
 We further assume that there are $K \geq 2$ channels, $D \geq 0$ dynamic end-devices, and $S \geq 0$ static devices
@@ -142,7 +142,7 @@ Note that even unlicensed bands have such limitations, as for instance this is a
 We prefer this choice rather than non-crowded networks, \ie, where $S + D \leq K$, as the former makes more sense for realistic IoT networks.
 % \footnote{~Here, $K$ will typically be about $10$ different radio channels, usually in the same RF band and with separate mean carrier frequencies, and the number of devices will be of the order of $1000$ to $10000$.}.
 
-On the opposite, imagine if there were only $K=4$ channels being occupied by $D+S = 100$ devices, each communicating with a high rate of $p=1/10$, with a non-zero occupancy in each channel (\ie, $\forall k, S_k > 0$). Then, almost all time slots will lead to collisions in all channels, for a uniformly random access scheme, and thus the network efficiency (\ie, successful communication rate) will be so close to zero that using learning algorithms cannot improve much.
+On the opposite, imagine if there were only $K=4$ channels being occupied by $D+S = 100$ devices, each communicating with a high rate of $p=1/10$, with a non-zero occupancy in each channel (\ie, $\forall k, S_k > 0$). Then, almost all time slots will lead to collisions in all channels, for a uniformly random access scheme, and thus the network efficiency (\ie, successful communications rate) will be so close to zero that using learning algorithms cannot improve much.
 Such scenario is not our target of interest, and thus we prefer to only consider feasible scenarios where $p$ is smaller than $K/(S+D)$, in order to \emph{have an average of active devices not larger\footnote{~In Chapter~\ref{chapter:5} we simply consider the case of $p=1$ and $M = D \leq K$ dynamic devices, referred to as \emph{players}.} than the number of channels}.
 
 
@@ -174,7 +174,7 @@ In our model, rewards rather come from receiving or not an acknowledgement from 
 The problem parameters
 % are $\mu_1,\dots,\mu_K$, the mean availability of the channels,
 are $S_1, \dots, S_K$ which represent the (stationary) occupancy of the channels by the static devices,
-and they are unknown to each dynamic device, so to maximize their cumulated rewards, they must learn the distributions of the channels, in order to be able to progressively improve their respective successful communication rate.
+and they are unknown to each dynamic device, so to maximize their cumulated rewards, they must learn the distributions of the channels, in order to be able to progressively improve their respective successful communications rate.
 %
 The goal is thus to propose a simple sequential algorithm to be applied identically and independently by each dynamic device, in a fully distributed setting (each device runs its own algorithm, from its observations), in order to minimize collisions and maximize the fraction of successful transmissions of all the dynamic devices.
 %
