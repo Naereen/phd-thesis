@@ -24,7 +24,7 @@
 
 
 As we saw in Chapters~\ref{chapter:1} and \ref{chapter:4},
-a crucial step for the development of Cognitive Radio is to insert \emph{multiple} smart devices in the \emph{same} background traffic (at least $M \geq 2$).
+a crucial step for the development of Cognitive Radio is to insert \emph{multiple} smart devices (at least $M \geq 2$), in the \emph{same} environment, or background traffic.
 %
 In this Chapter~\ref{chapter:5}, we are interested in a more formal approach to the decentralized learning problem presented in the previous Chapter~\ref{chapter:4}.
 Such networks can be modelled using a decentralized multi-players multi-armed bandit problem, where arms are channels and players are dynamic IoT devices.
@@ -37,7 +37,7 @@ In other words, the end-devices are able to learn to cooperate efficiently, in a
 
 We consider $M$ identical dynamic IoT devices, communicating with a unique gateway, in $K$ orthogonal channels and in a acknowledgment-based wireless protocol slotted in time.
 A perfect time and frequency synchronization is assumed,
-and some \iid{} background traffic is assumed to be non-uniformly in the $K$ channels.
+and some \iid{} background traffic is assumed to be non-uniformly distributed in the $K$ channels.
 As before, if two or more devices decide to use the same channel at the same time, a \emph{collision} arises and none of sent uplink packet can be received by the gateway.
 %
 Unfortunately, it is very hard to formally analyze the IoT network models we presented in Chapter~\ref{chapter:4}, mainly because of the random activation process of all the dynamic (\ie, learning) devices.
@@ -50,7 +50,7 @@ Note that in the model of Chapter~\ref{chapter:4}, this hypothesis $M \leq K$ co
 We start by reviewing previous works on multi-players MAB models, which all considered the easier case of \emph{sensing feedback}.
 But in our model in this chapter, each device also uses a Multi-Armed Bandit algorithm, to maximize its number of successful communications, by using the received acknowledgement \Ack{} as a (random) binary reward after each uplink message (\ie, at each time step).
 %
-With the presence of a central controller that can assign the devices to separate channels, this amounts to choosing at each time step \emph{several} arms of a MAB in order to maximize the global rewards, and can thus be viewed as an application of the multiple-play bandit, introduced by \cite{Anantharam87a} and recently studied by \cite{Komiyama15}.
+With the presence of a central controller that can assign the devices to different channels, this amounts to choosing at each time step \emph{several} arms of a MAB in order to maximize the global rewards, and can thus be viewed as an application of the multiple-play bandit, introduced by \cite{Anantharam87a} and recently studied by \cite{Komiyama15}.
 They essentially proved that existing algorithms can be easily extended to the multiple-play case, with provable guarantees on their regret.
 % In the context of CR, this first extension can model a centralized agent taking decisions for end-devices, for instance a base station affecting devices to channels.
 % Multiple-Play MAB algorithms successfully used for other Cognitive Radio tasks,
@@ -87,7 +87,7 @@ Hence, in that case the trade-off is to be found between exploration, exploitati
 
 All these above-mentioned works are motivated by the OSA problem, in which it is assumed that \emph{sensing} occurs, that is, each smart device observes the availability of a channel (\ie, a reward from the arm) \emph{before} trying to transmit and possibly experiment a collision with other smart devices.
 However some real radio networks do not use sensing at all, \eg, emerging standards currently or recently developed for \emph{Internet of Things} (IoT) networks, such as LoRaWAN.
-Thus, to take into account these new applications, algorithms with additional constraints on the available feedback have to be proposed within the multiple-player MAB model.
+Thus, to take into account these new applications, algorithms with additional constraints on the available feedback have to be proposed, within the multiple-player MAB model.
 Especially, the typical approach that combines a (single-player) bandit algorithm based on the sensing information --to learn the quality of the channels while targeting the best ones-- with a low-complexity decentralized collision avoidance protocol, is no longer possible.
 %
 Our article \cite{Besson2018ALT} was the first to study this other model of multi-players bandits for the ``no sensing'' case,
@@ -96,7 +96,7 @@ Our article \cite{Besson2018ALT} was the first to study this other model of mult
 for which we only proposed an heuristic, the naive \Selfish{} strategy as it was already used in Chapter~\ref{chapter:4}.
 Even if empirical simulations showed that \Selfish-\klUCB{} performs very well, it is a mistake to only consider mean regret, as we found on numerical simulations as well as formal derivation on a simple example of $K=M=2$ that the \Selfish{} heuristic can have a linear regret with a low probability (and so asymptotically it has linear expected regret and fails to solve ``no sensing'' multi-players MAB problems).
 We do not propose any other efficient algorithm, but our work presented in April~$2018$ has strongly inspired two articles shortly after \cite{LugosiMehrabian18,BoursierPerchet18}.
-They confirmed our finding that \Selfish{} can have a linear regret, and they both proposed new algorithms.
+They confirmed our findings that \Selfish{} can have a linear regret, and they both proposed new algorithms.
 We include some numerical simulations to compare some of them, and we present in details the current state-of-the-art of research on multi-players MAB models without sensing.
 
 
@@ -128,17 +128,17 @@ We include some numerical simulations to compare some of them, and we present in
 %
 The rest of this chapter is organized as follows.
 % First we motivate the model of multi-players multi-armed bandits in Section~\ref{sec:5:motivation}
-We introduce the multi-players bandit model with three feedback levels in Section~\ref{sec:5:model}.
+We first introduce the multi-players bandit model with three feedback levels in Section~\ref{sec:5:model}.
 We present a useful regret decomposition in Section~\ref{sec:5:lowerbound}, and illustrate it in the Appendix~\ref{sec:5:appendix}.
 The \Selfish, \RandTopM{} and \MCTopM{} algorithms are introduced in Section~\ref{sec:5:algorithms},
 for which we present our theoretical analysis in Section~\ref{sec:5:upperbounds}.
-The result of our experimental study reported in Section~\ref{sec:5:experiments}.
+We report the results of our experimental study in Section~\ref{sec:5:experiments}.
 Finally, we present in Section~\ref{sec:5:literatureReviewOtherModels} a review of the recent literature which studies variants of the model presented in this Chapter.
 For some extensions, we discuss how to adapt our proposals and illustrate the empirical performances of such modification of \MCTopM-\klUCB{}, leaving theoretical analyses as future works.
 % and finally Section~\ref{sec:5:conclusion} concludes.
 
 
-\paragraph{Publication.}
+\textbf{Publication.}
 %
 This chapter is mainly based on our article \cite{Besson2018ALT}.
 
@@ -151,11 +151,12 @@ This chapter is mainly based on our article \cite{Besson2018ALT}.
 % describe our stochastic assumptions
 Similarly to what is presented in Chapter~\ref{chapter:2},
 we consider a $K$-armed Bernoulli bandit model, % (for $K\geq2$),
+of horizon $T \geq 2$,
 in which arm $k$ is a Bernoulli distribution with mean $\mu_k\in[0,1]$.
-We denote $(Y_{k,t})_{t\in\N}$ the \iid{} (binary) \emph{reward stream} for arm $k$, that satisfies $\Pr(Y_{k,t}=1) = \mu_k$ and that is independent from the other rewards streams.
+We denote $(Y_{k,t})_{t\in[T]}$ the \iid{} (binary) \emph{reward stream} for arm $k$, that satisfies $\Pr(Y_{k,t}=1) = \mu_k$ and that is independent from the other rewards streams.
 
 \textbf{Only Bernoulli.}
-However we mention that our lower bound and all our algorithms (and their analysis) can be easily extended to one-dimensional exponential families (just like for the \klUCB{} algorithm of \cite{KLUCBJournal}). For simplicity, we focus on the Bernoulli case, that is also the most relevant for Cognitive Radio problems, based on channel availability.
+However we mention that our lower bound and all our algorithms (and their analysis) can be easily extended to one-dimensional exponential families (just like for the \klUCB{} algorithm of \cite{KLUCBJournal}). For simplicity, we focus on the Bernoulli case, that is also the most relevant for Cognitive Radio problems, by considering channel availability.
 
 
 % stochastic bandit model in which each arm distribution is assumed to belong to a one-dimensional canonical exponential family. That is, arm $k$ has a density with respect to a reference measure that takes the form
@@ -177,7 +178,7 @@ At time step $t \in\mathbb{N},t\geq1$, player $j$ selects an arm $A^j(t)$, indep
     C^j(t) \eqdef  \{ \exists j' \neq j : A^{j'}(t) = A^j(t) \}
     \ \ \ \text{and} \ \ \ C_k(t) \eqdef  \left\{ \# \{ j : A^j(t) = k\} > 1 \right\},
   \end{equation}
-  that respectively indicate that a collision occurs at time $t$ for player $j$ and that a collision occurs at time $t$ on arm $k$.
+  that respectively indicate that a collision occurs at time $t$ for player $j$ ($C^j(t)$, $j$ in superscript), and that a collision occurs at time $t$ on arm $k$ ($C_k(t)$, $k$ in subscript).
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
 
@@ -190,9 +191,9 @@ In other words, she receives the reward of the selected arm if she is the only o
 This provides another reason to focus on the Bernoulli model. It is the hardest model, in the sense that receiving a reward zero is \emph{not enough} to detect collisions. For other models, the data streams $(Y_{k,s})_s$ are usually continuously distributed, with no probability mass at the value of zero (\eg, Gaussian).
 Hence receiving $r^j(t) = 0$ directly gives $\indic(C^j(t)) = 1$.
 %
-Note that other models for rewards loss have also been proposed in the literature, for instance the reward is randomly allocated to one of the players selecting it.
-To stay consistent and for simplicity, with the model presented in the previous Chapter~\ref{chapter:4},
-we preferred to focus on full reward occlusion in this chapter.
+Note that other models for rewards loss have also been proposed in the literature, for instance the reward could be randomly allocated to one of the players selecting it.
+To stay consistent with the model presented in the previous Chapter~\ref{chapter:4},
+and for simplicity, we preferred to focus on full reward occlusion in this chapter.
 
 
 A multi-players MAB strategy is formally defined as a tuple $\cA = (\cA_1,\dots,\cA_M)$ of arm selection strategies for of each of the $M$ players, and the goal is to propose a strategy that maximizes the total reward of the system, under some constraints.
@@ -241,15 +242,16 @@ More formally, $A^j(t)$ is assumed to be $\cF^j_{t-1}$-measurable.
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
 
-Following a natural approach in the bandit literature, we evaluate the performance of a multi-players strategy using the \emph{expected regret} (later simply referred to as regret), that measures the performance gap with respect to the best possible strategy.
+Following a natural approach in the bandit literature, like in Section~\ref{sec:2:lowerUpperBoundsRegret},
+we evaluate the performance of a multi-players strategy using the \emph{expected regret} (later simply referred to as regret), that measures the performance gap with respect to the best possible strategy.
 The regret of the strategy $\cA$ at horizon $T$ is the difference between the cumulated reward of an oracle strategy, assigning in this case the $M$ players to \Mbest,
-and the cumulated reward of strategy $\cA$:
+and its cumulated reward:
 
 \begin{definition}
 \begin{leftbar}[defnbar]  % XXX leftbar defnbar, comment if needed
   The excepted centralized multi-players regret is defined by
   \begin{equation}\label{eq:5:regret}
-    R_T(\boldsymbol{\mu}, M, \cA) \eqdef \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M r^j(t)\right].
+    R_T^{\cA}(\boldsymbol{\mu}, M) \eqdef \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M r^j(t)\right].
   \end{equation}
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
@@ -316,25 +318,26 @@ the set of bandit instances with a strict gap between the $M$ best arms and the 
   % \vspace*{-5pt}  % XXX
   % \begin{small}
     \begin{align}\label{eq:5:termeundeuxtermetrois}
-      R_T(\boldsymbol{\mu}, M, \cA) &=
+      R_T^{\cA}(\boldsymbol{\mu}, M) &=
       \underbrace{\sum_{k \in \Mworst} (\mu_M^* -  \mu_k) \E_{\mu}[N_k(T)]}_{\emph{\mytag{(a)}{eq:5:term1}}} \\
       & \;\;\;\;\;\;
       + \;\; \underbrace{\sum_{k \in \Mbest} (\mu_k -  \mu_M^*) (T - \E_{\mu}[N_k(T)])}_{\emph{\mytag{(b)}{eq:5:term2}}}
       + \;\; \underbrace{\sum_{k=1}^{K} \mu_k \E_{\mu}[\cC_k(T)]}_{\emph{\mytag{(c)}{eq:5:term3}}}. \nonumber
     \end{align}
   % \end{small}
+  \vspace*{-5pt}  % XXX
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
 In this decomposition, term \ref{eq:5:term1} counts the lost rewards due to \emph{sub-optimal arms} selections ($k \in \Mworst$), term \ref{eq:5:term2} counts the number of times the \emph{best arms} were \emph{not} selected ($k \in \Mbest$), and term \ref{eq:5:term3} counts the weighted number of collisions, on \emph{all arms}.
 
 \begin{smallproof}
-  Using the definition of regret $R_T(\boldsymbol{\mu}, M, \cA)$ from \eqref{eq:5:regret}, denoted here $R_T$, and this collision indicator $\eta^j(t) \eqdef \indic(\overline{C^j(t)})$,
+  Using the definition of regret $R_T^{\cA}(\boldsymbol{\mu}, M)$ from \eqref{eq:5:regret}, denoted here $R_T$, and this collision indicator $\eta^j(t) \eqdef \indic(\overline{C^j(t)})$,
   \begin{align*}
     R_T
     &= \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M Y_{A^j(t),t} \eta^j(t) \right]
      = \left(\sum_{k=1}^{M}\mu_k^*\right)T - \E_{\mu}\left[\sum_{t=1}^T\sum_{j=1}^M \mu_{A^j(t)} \eta^j(t)\right]
-    \intertext{The last equality comes from the linearity of expectations, and the fact that $\E_{\mu}[Y_{k,t}] = \mu_k$ (for all $t$, from the \iid{} hypothesis), and the independence from $A^j(t)$, $\eta^j(t)$ and $Y_{k,t}$ (observed \emph{after} playing $A^j(t)$). So $\E_{\mu}[Y_{A^j(t),t} \eta^j(t)] = \sum_{k} \E_{\mu}[\mu_k \indic(A^j(t),t) \eta^j(t)] = \E_{\mu}[\mu_{A^j(t)} \eta^j(t)]$. And so}
+    \intertext{The last equality comes from the linearity of expectations, and the fact that $\E_{\mu}[Y_{k,t}] = \mu_k$ (for all $t$, from the \iid{} hypothesis), and the independence with $A^j(t)$, $\eta^j(t)$ and $Y_{k,t}$ (observed \emph{after} playing $A^j(t)$). So $\E_{\mu}[Y_{A^j(t),t} \eta^j(t)] = \sum_{k} \E_{\mu}[\mu_k \indic(A^j(t),t) \eta^j(t)] = \E_{\mu}[\mu_{A^j(t)} \eta^j(t)]$. And so}
     R_T
     &= \E_{\mu}\left[ \sum_{t=1}^{T}\sum_{j \in \Mbest} \mu_j
       - \sum_{t=1}^{T} \sum_{j=1}^{M} \mu_{A^j(t)} \eta^j(t) \right] \\
@@ -348,7 +351,7 @@ In this decomposition, term \ref{eq:5:term1} counts the lost rewards due to \emp
     &= \sum_{k=1}^{K} \sum_{j=1}^{M} (\overline{\mu}^* - \mu_k) \E_{\mu}\left[ N_k^j(T) \right]
       + \sum_{k=1}^{K} \mu_k \E_{\mu}\left[ \cC_k(T) \right].
     %
-    \intertext{Let $\overline{\Delta_k} \eqdef \overline{\mu}^* - \mu_k$ be the gap between the mean of the arm $k$ and the $M$-best average mean, and if $M^*$ denotes the index of the worst of the $M$-best arms (\ie, $M^* = \arg\min_{k\in\Mbest}(\mu_k)$), then by splitting $[K]$ into three disjoint sets $\Mbest \cupdot \Mworst = (\Mbest\setminus\{M^*\}) \cupdot \{M^*\} \cupdot \Mworst$, we get}
+    \intertext{If $\overline{\Delta_k} \eqdef \overline{\mu}^* - \mu_k$ is the gap between the mean of the arm $k$ and the $M$-best average mean, and if $M^*$ denotes the index of the worst of the $M$-best arms (\ie, $M^* = \arg\min_{k\in\Mbest}(\mu_k)$), we can split $[K]$ into three disjoint sets $\Mbest \cupdot \Mworst = (\Mbest\setminus\{M^*\}) \cupdot \{M^*\} \cupdot \Mworst$}
     %
     &= \sum_{k \in \Mbest\setminus\{M\}} \overline{\Delta_k} \E_{\mu}\left[ N_k(T) \right]
       + \overline{\Delta_{M^*}} \E_{\mu}\left[ N_{M^*}(T) \right] \\
@@ -393,7 +396,7 @@ The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized___
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
     For any strategy $\cA$ and $\boldsymbol{\mu}\in\cP_M$, the regret is lower-bounded by \ref{eq:5:term1}:
     \begin{align*}
-        R_T(\boldsymbol{\mu}, M, \cA)    \geq \sum\limits_{k \in \Mworst} (\mu_M^*- \mu_k) \E_{\mu}[N_k(T)].
+        R_T^{\cA}(\boldsymbol{\mu}, M)    \geq \sum\limits_{k \in \Mworst} (\mu_M^*- \mu_k) \E_{\mu}[N_k(T)].
     \end{align*}%
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
@@ -409,7 +412,7 @@ The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized___
     N_k(T) = \sum_{t=1}^{T} \indic(\exists! j, A^j(t) = k) + \sum_{t=1}^{T} \sum_{j=1}^{M} c_{k,t} \indic(A^j(t) = k)
     = N_k^{!}(T) + C_k(T).
   \end{equation*}
-  We focus on the two terms $\ref{eq:5:term2} + \ref{eq:5:term3}$ from the decomposition of $R_T(\boldsymbol{\mu}, M, \cA)$ from Lemma~\ref{lem:5:DecompositionRegret},
+  We focus on the two terms $\ref{eq:5:term2} + \ref{eq:5:term3}$ from the decomposition of $R_T^{\cA}(\boldsymbol{\mu}, M)$ from Lemma~\ref{lem:5:DecompositionRegret},
   \begin{align*}
     \ref{eq:5:term2} + \ref{eq:5:term3} &=
     \sum_{k \in \Mbest} (\mu_k - \mu_M^*) (T - \E_{\mu}[N_k^!(T)])
@@ -425,7 +428,7 @@ The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized___
     + \sum_{k=1}^{M} \min(\mu_M^*, \mu_k) \E_{\mu}[C_k(T)].
   \end{align*}
   And now both terms are non-negative, as $N_k^!(T) \leq T$, $\min(\mu_M^*, \mu_k)\geq 0$, and $C_k(T) \geq 0$, so $\ref{eq:5:term2} + \ref{eq:5:term3} \geq 0$
-  which proves that $R_T(\boldsymbol{\mu}, M, \cA) = \ref{eq:5:term1} + \ref{eq:5:term2} + \ref{eq:5:term3} \geq \ref{eq:5:term1}$, as wanted.
+  which proves that $R_T^{\cA}(\boldsymbol{\mu}, M) = \ref{eq:5:term1} + \ref{eq:5:term2} + \ref{eq:5:term3} \geq \ref{eq:5:term1}$, as wanted.
 \end{smallproof}
 
 
@@ -449,8 +452,8 @@ a classical assumption made by \cite{LaiRobbins85} in single-player bandit model
   % and for all $\alpha \in (0,1)$,
   % \vspace*{-5pt}  % XXX
   \begin{align}
-    \forall a\in(0,1) & R_T(\boldsymbol{\mu},M,\cA) \mathop{=}\limits_{T \to +\infty} o(T^\alpha) \\
-    \text{and } \; \forall a\in(0,1) & \;
+    \forall a\in(0,1), & R_T^{\cA}(\boldsymbol{\mu},M) \mathop{=}\limits_{T \to +\infty} o(T^\alpha) \\
+    \text{and } \; \forall a\in(0,1), & \;
     \forall j \in [M], k \in \Mbest, \;\;
     % a_{j,k}
     \frac{T}{M}
@@ -465,7 +468,7 @@ Having a small regret on every problem instance (\ie, being uniformly efficient)
 is a natural assumption,
 that rules out policies tuned to perform well only on specific instances (\eg, fixed-armed policies).
 %
-From this assumption $R_T(\boldsymbol{\mu},M,\cA)=o(T^\alpha)$ and the decomposition of Lemma~\ref{lem:5:DecompositionRegret} one can see\footnote{With some arguments used in the proof of Lemma~\ref{lem:5:1stLowerBound} to circumvent the fact that \ref{eq:5:term2} may be negative.} that for every $k \in \Mbest$,
+From this assumption $R_T^{\cA}(\boldsymbol{\mu},M)=o(T^\alpha)$ and the decomposition of Lemma~\ref{lem:5:DecompositionRegret} one can see\footnote{With some arguments used in the proof of Lemma~\ref{lem:5:1stLowerBound} to circumvent the fact that \ref{eq:5:term2} may be negative.} that for every $k \in \Mbest$,
 ${T}- \E_{\mu}[N_k(T)] {=} o(T^{\alpha})$, and so
 \begin{equation}\label{eq:5:intermediate}
   % \vspace*{-5pt}  % XXX
@@ -482,7 +485,7 @@ Note that the algorithms studied in Section~\ref{sec:5:algorithms} are permutati
 %
 In the proofs of the regret bounds for \rhoRand{} in \cite{Anandkumar11}, the authors briefly mention that their policy is invariant under permutation and that this yields a certain fairness guarantee, but without formalizing it more.
 The notion of fairness defined above can be interpreted as a ``cooperative fairness'', opposed to the notion of ``arm fairness'' that has been studied in a few papers on single-player stochastic MAB.
-For instance, \cite{Patil2019stochastic} requires that each arm must be sampled at least a given fraction of the total time steps, \ie, $\forall k, \E[N_k(T)] \geq r_k T$, where the constraint vector $[r_1,\dots,r_K]$ is known by the algorithm.
+For instance, \cite{Patil2019stochastic} requires that each arm must be sampled at least a given fraction of bandit game, \ie, $\forall k, \E[N_k(T)] \geq r_k T$, where the constraint vector $[r_1,\dots,r_K] \in [0,1]^K$ is known by the algorithm.
 
 % As it was discovered in \cite{BoursierPerchet18} and further explained in Appendix~E of \cite{KaufmannAbbas19}, our lower-bound was not true for any algorithm, as we wrongly claimed in \cite{Besson2018ALT} that the ``collision information term'' is zero for any algorithm $\cA$.
 % However, we wanted to be still able to present the derivations of our lower-bound, mainly because its proof and its form give important insights on how to design an asymptotically optimal algorithm $\cA$.
@@ -502,10 +505,10 @@ Fix a problem $\bm{\mu}$,
 % and as we do in Appendix~\ref{proof:5:BetterLowerBound},
 then introduce an alternative model parametrized by $\bm{\lambda}$, with a small difference between $\bm{\mu}$.
 Fix a sub-optimal arm $k$ and $\varepsilon>0$, and $\lambda_k = \mu^*_M + \varepsilon$ and $\lambda_{\ell} = \mu_{\ell}$ for any $\ell\neq k$.
-We denote $\Pr_{\bm{\mu}}^{O_t^j}$ the distribution of the vector $O_t$ under the model $\bm{\mu}$ when using algorithm $\cA_j$.
+We denote $\Pr_{\bm{\mu}}^{O_t^j}$ the distribution of the vector $O_t^j$ under the model $\bm{\mu}$ when using algorithm $\cA_j$.
 Then we introduce the \emph{collision information term} as:
 \begin{equation}\label{eq:5:collisionInformationTerm}
-  \cI_{\bm{\mu},\bm{\lambda}}(\cA_j,T) \eqdef \sum_{t=1}^{T} \mathrm{KL}(\Pr_{\bm{\mu}}^{C_t | O_{t-1}}, \Pr_{\bm{\lambda}}^{C_t | O_{t-1}^j}).
+  \cI_{\bm{\mu},\bm{\lambda}}(\cA_j,T) \eqdef \sum_{t=1}^{T} \mathrm{KL}(\Pr_{\bm{\mu}}^{C_t | O_{t-1}^j}, \Pr_{\bm{\lambda}}^{C_t | O_{t-1}^j}).
 \end{equation}
 
 For a \emph{decentralized strategy} $\cA$ that has access to the sensing information (\ie, ruling out model \modeltrois), and satisfies $\cI_{\bm{\mu},\bm{\lambda}}(\cA_j,T) = \smallO{\log(T)}$,
@@ -528,7 +531,7 @@ and it also yields an asymptotic logarithmic lower bound on the regret.
   \noindent And so if $\cA_1,\dots,\cA_M$ all satisfy this hypothesis, from Lemma~\ref{lem:5:1stLowerBound}, it follows that
   % \vspace*{-5pt}  % XXX
   \begin{equation}\label{eq:5:ourLowerBound}
-    \mathop{\lim\inf}\limits_{T \to +\infty} \frac{R_T(\boldsymbol{\mu}, M, \cA)}{\log(T)}
+    \mathop{\lim\inf}\limits_{T \to +\infty} \frac{R_T^{\cA}(\boldsymbol{\mu}, M)}{\log(T)}
     \geq M \times \left( \sum_{k \in \Mworst} \frac{(\mu_M^* -  \mu_k)}{\kl(\mu_k, \mu_M^*)} \right) .
   \end{equation}
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
@@ -538,7 +541,7 @@ and it also yields an asymptotic logarithmic lower bound on the regret.
 Observe that the regret lower bound \eqref{eq:5:ourLowerBound} is tighter than the state-of-the-art lower bound in this setup
 given by \cite{Zhao10}, that states that
 \begin{equation}\label{eq:5:Zhao10LowerBound}
-  \mathop{\lim\inf}\limits_{T \to +\infty} \frac{R_T(\boldsymbol{\mu}, M, \cA)}{\log(T)}
+  \mathop{\lim\inf}\limits_{T \to +\infty} \frac{R_T^{\cA}(\boldsymbol{\mu}, M)}{\log(T)}
   \geq \sum_{k \in \Mworst} \left( \sum_{j=1}^{M} \frac{(\mu_M^* -  \mu_k)}{\kl(\mu_k, \mu_{j}^*)} \right),
 \end{equation}
 as for every $k \in \Mworst$ and $j \in [M]$, $\kl(\mu_k, \mu_j^*) \geq \kl(\mu_k, \mu_M^*)$
@@ -1406,7 +1409,7 @@ it follows from our regret decomposition (Lemma~\ref{lem:5:DecompositionRegret})
   there exists a problem dependent constant $G_{M,\boldsymbol{\mu}}$, such that
   the regret satisfies:
   \begin{equation}\label{eq:5:LogarithmicRegret_MCTopMklUCB}
-    R_T(\boldsymbol{\mu}, M, \cA) \leq G_{M,\boldsymbol{\mu}} \log(T) + \smallO{\log T}.
+    R_T^{\cA}(\boldsymbol{\mu}, M) \leq G_{M,\boldsymbol{\mu}} \log(T) + \smallO{\log T}.
   \end{equation}
   Moreover, the dependency of the constant regarding the number of players is $G_{M,\boldsymbol{\mu}} = \bigO{M^3}$.
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
