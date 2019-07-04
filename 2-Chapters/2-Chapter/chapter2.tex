@@ -751,7 +751,7 @@ We also refer to Chapter~15 of \cite{LattimoreBanditAlgorithmsBook}.
 
 Similarly to what is considered for the first lower-bound,
 a natural question is to know if there is an algorithm achieving a regret upper-bound of the form $R_T^{\cA}(I) \leq \bigO{\sqrt{K T}}$ for any instance, independently on the problem difficulty.
-The question has been answered since the early $2000$s, as it is for instance the case for the Exp3 algorithm from \cite{Auer02}.
+The question has been answered since the early $2000$s, as it is for instance the case for the \ExpThree{} algorithm from \cite{Auer02}.
 In the last decade, some algorithms were shown to achieve both a problem-dependent logarithmic and a minimax upper-bounds,
 like MOSS from \cite{Audibert2009minimax} or recently \KLUCBpp{} from \cite{Menard17},
 and such results are usually referred to as ``best of both worlds''.
@@ -1452,7 +1452,7 @@ Analyzing it in the generic case was found to be difficult, and it is still an o
 \textbf{Policies for adversarial bandits.}
 %
 Another important family of bandits algorithms are the algorithms proposed for the adversarial setting \cite{Auer02NonStochastic}.
-The first of them is the Exp3 policy, for ``\emph{Exp}onential weights for \emph{Exp}loitation and \emph{Exp}loration'',
+The first of them is the \ExpThree{} policy, for ``\emph{Exp}onential weights for \emph{Exp}loitation and \emph{Exp}loration'',
 which is an example of the well-known \emph{multiplicative weights update algorithm}\footnote{~For more details, see
 % on Wikipedia \href{https://en.wikipedia.org/wiki/Multiplicative_weight_update_method}{\texttt{en.wikipedia.org/wiki/Multiplicative\_weight\_update\_method}},
 this article by J. Kun, \href{https://jeremykun.com/2017/02/27/the-reasonable-effectiveness-of-the-multiplicative-weights-update-algorithm/}{\texttt{JeremyKun.com/2017/02/27/the-reasonable-effectiveness-}}\\
@@ -1461,16 +1461,16 @@ this article by J. Kun, \href{https://jeremykun.com/2017/02/27/the-reasonable-ef
 a family of algorithms developed since the 1950s, and applied to a wide range of different domains.
 % https://smpybandits.github.io/docs/Policies.Exp3.html
 %
-The Exp3 policy maintains weights $w_k(t)$ on the $K$ arms, and at time $t$ it samples an arm from the distribution which is a mixture of $\bm{w}(t)=[w_1(t),\dots,w_K(t)]$ and the uniform distribution, \ie,
+The \ExpThree{} policy maintains weights $w_k(t)$ on the $K$ arms, and at time $t$ it samples an arm from the distribution which is a mixture of $\bm{w}(t)=[w_1(t),\dots,w_K(t)]$ and the uniform distribution, \ie,
 $\Pr(A(t)=k) \eqdef (1-\gamma) w_k(t) + \gamma \frac{1}{K}$.
-The weights are initially uniform, \ie, $w_k(0)=1/K$, and then at each time after observing a reward $Y_{k,t}$ from arm $k$, Exp3 updates the weight of the chosen arm multiplicatively, using $w_k(t+1) = w_k(t) \times \exp(\widehat{r_k}(t) / (\gamma N_k(t)))$. The weights are then renormalized, to have a sum $\sum_k w_k(t+1) = 1$.
+The weights are initially uniform, \ie, $w_k(0)=1/K$, and then at each time after observing a reward $Y_{k,t}$ from arm $k$, \ExpThree{} updates the weight of the chosen arm multiplicatively, using $w_k(t+1) = w_k(t) \times \exp(\widehat{r_k}(t) / (\gamma N_k(t)))$. The weights are then renormalized, to have a sum $\sum_k w_k(t+1) = 1$.
 This notation $\widehat{r_k}(t)$ means an unbiased estimator of the reward $r(t)=Y_{k,t}$, that is, $\widehat{r_k}(t) = r(t) / \Pr(A(t)=k)$.
 %
 Like for the $\varepsilon$-greedy policy, the parameter $\gamma$ can be constant, or can be a non-increasing sequence $(\gamma_t)_{t\in\N^*}$.
 %
-It was proven in \cite{Auer02NonStochastic} that Exp3 with constant parameter $\gamma$ achieves $R_T = \bigO{\sqrt{K T \log(T)}}$ problem-independent regret,
+It was proven in \cite{Auer02NonStochastic} that \ExpThree{} with constant parameter $\gamma$ achieves $R_T = \bigO{\sqrt{K T \log(T)}}$ problem-independent regret,
 while using a decreasing sequence, such as $\gamma_t = \sqrt{\log(K) / K} \log(t) / t$ gives an order-optimal problem-independent regret upper-bound of $\bigO{\sqrt{K T}}$.
-A short proof of this results and more details on Exp3 are given in \cite{Bubeck12}.
+A short proof of this results and more details on \ExpThree{} are given in \cite{Bubeck12}.
 %
 Many other policies have been proposed for adversarial bandits, like Follow-the-Perturbed-Leader or Follow-the-Regularized-Leader for linear adversarial bandits,
 % but we do not study them in this thesis,
@@ -1540,7 +1540,7 @@ then \klUCB-switch uses the index defined as follows:
 % https://smpybandits.github.io/docs/Policies.OSSB.html
 
 % https://smpybandits.github.io/docs/Policies.Exp3PlusPlus.html
-Finally, it is worth mentioning the Exp3$^{++}$ algorithm, as a recent variant of Exp3 that uses an adaptive tuning of its parameters, proposed by \cite{Seldin17}.
+Finally, it is worth mentioning the \Exppp{} algorithm, as a recent variant of \ExpThree{} that uses an adaptive tuning of its parameters, proposed by \cite{Seldin17}.
 It is anytime, and it was also proven to obtain good ``best-of-both-world'' performance.
 % meaning that it achieves $\cO(K\log(T)/\Delta^2)$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
 

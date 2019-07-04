@@ -526,7 +526,7 @@ where it can use Bayes-UCB, or any of the $65$ or more bandit algorithms availab
 %
 Even if no theoretical guarantee backs up this idea of second-stage learning with Bayes-UCB, empirical simulations found that it can be efficient.
 We illustrate this in Table~\ref{table:5:comparisonRhoRandRhoLearn} below, where we consider the same problem as described above in Section~\ref{sub:5:withoutSensing} (Table~\ref{table:5:meanRegretSimulationsNoSensing}).
-We include different \rhoLearn{} algorithms, that uses \klUCB{}, Bayes-UCB or Exp3 for the second-stage learning,
+We include different \rhoLearn{} algorithms, that uses \klUCB{}, Bayes-UCB or \ExpThree{} for the second-stage learning,
 and we include both the centralized multiple-play version of \klUCB{} and \MCTopM-\klUCB{} for comparison.
 
 % DONE run the simulations with N=100 and not N=4
@@ -543,7 +543,7 @@ and we include both the centralized multiple-play version of \klUCB{} and \MCTop
         \hline
         \rhoLearn-\klUCB{} + \klUCB{} & $546 \pm 190$ & $1172 \pm 295$ & $1416 \pm 347$ \\
         \rhoLearn-\klUCB{} + Bayes-UCB & $561 \pm 219$ & $1204 \pm 394$ & $1363 \pm 331$ \\
-        \rhoLearn-\klUCB{} + Exp3 & $529 \pm 175$ & $1659 \pm 331$ & $5134 \pm 976$ \\
+        \rhoLearn-\klUCB{} + \ExpThree{} & $529 \pm 175$ & $1659 \pm 331$ & $5134 \pm 976$ \\
         \hline
         \MCTopM-\klUCB{} & $244 \pm 39$ & $401 \pm 55$ & $44 \pm 13$ \\
         % \hline
@@ -621,10 +621,10 @@ In \cite{AlaturLevyKrause19}, the authors build on the \MusicalChair{} algorithm
 %
 Their key algorithmic technique is to imitate the idealized case where there is full communication between the players. Then, to address the no-communication constraint, we enforce the players to keep the same decisions (arms) within long periods of time (blocks). This gives them the chance to coordinate between themselves via a simple protocol that uses collisions as a primitive, yet effective manner of communication.
 
-Their proposal is using the Exp3 algorithm from \cite{Auer02NonStochastic} on a combinatorial problem: they consider ``meta'' arms that are affectations of the $M$ players to $M$ distinct arms among the $K$ arms.
+Their proposal is using the \ExpThree{} algorithm from \cite{Auer02NonStochastic} on a combinatorial problem: they consider ``meta'' arms that are affectations of the $M$ players to $M$ distinct arms among the $K$ arms.
 As soon as the ``coordinator'' can effectively use one algorithm to decide the arms played by all the $M$ players, they show that the regret will grow as $R_T = \bigO{M^{4/3} K^{2/3} (\log(K))^{1/3} T^{2/3}}$ as shown in Theorem~4.1
 (they used $K$ for $M$ the number of players, and $N$ for $K$ the number of arms).
-This bound is much worse than the one obtained for the first article \cite{WeiSrivastava18Distributed}, but is more general, and it is much worse than the bound of $\bigO{\sqrt{K T \log(K)}}$ obtained for Exp3 for the single-player adversarial setting in \cite{Auer02NonStochastic}.
+This bound is much worse than the one obtained for the first article \cite{WeiSrivastava18Distributed}, but is more general, and it is much worse than the bound of $\bigO{\sqrt{K T \log(K)}}$ obtained for \ExpThree{} for the single-player adversarial setting in \cite{Auer02NonStochastic}.
 Note that this bound in $T^{2/3}$ is of the same order as the one given in \cite{Avner15}, for the \MEGA{} algorithm.
 However, we note that the dependency in $M$ is surprisingly better for their result than for the regret upper-bound for \MCTopM-\klUCB{} (while scales in $M^3$ in Theorem~\ref{thm:5:LogarithmicRegret_MCTopMklUCB}).
 

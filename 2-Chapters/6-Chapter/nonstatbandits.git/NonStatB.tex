@@ -32,16 +32,16 @@ And for instance in online recommendation, the popularity of items is also subje
 Hence, there has been some interest on how to take those \emph{non-stationary} aspects into account within a multi-armed bandit model.
 
 A first possibility to cope with non-stationary is to model the decision making problem as an \emph{adversarial bandit problem} \cite{Auer02NonStochastic}. Under this model, rewards are completely arbitrary and are not assumed to follow any probability distribution.
-For adversarial environments, the pseudo-regret, which compares the accumulated reward of a given strategy with that of the best fixed-arm policy, is often studied. The pseudo regret of the Exp3 algorithm has been shown to be $\cO(\sqrt{KT})$, which matches the lower bound given by \cite{Auer02NonStochastic}.
+For adversarial environments, the pseudo-regret, which compares the accumulated reward of a given strategy with that of the best fixed-arm policy, is often studied. The pseudo regret of the \ExpThree{} algorithm has been shown to be $\cO(\sqrt{KT})$, which matches the lower bound given by \cite{Auer02NonStochastic}.
 However, this model is a bit too general for the considered applications, where reward distributions do not necessarily vary at every round.
 For these reasons, an intermediate model, called the \emph{piece-wise stationary MAB}, has been introduced in Section~8 of the seminal paper \cite{Auer02NonStochastic}.
-They propose a simple extension of the Exp3 policy, referred to as Exp3.S, that uses exponential weights like Exp3 tweaked with an adaptive forced exploration probability to passively adapt to changes.
-It was shown that Exp3.S attains a regret of $\cO(\sqrt{K T S \log(K T)})$, when comparing with an arbitrary sequence of comparators that does not switch for more than $S-1$ times.
-Running their algorithm over the non-stationary problem, and picking their comparators sequence as the best arm in each stationary interval, one can already get $\sqrt{\Upsilon_T T \log(T)}$ regret, and the only prior knowledge needed to run the Exp3.S algorithm is $T$ and $\Upsilon_T$. Moreover, Exp3.S is efficient in terms of both storage and computation time, and is simple to implement.
+They propose a simple extension of the \ExpThree{} policy, referred to as \ExpThreeS, that uses exponential weights like \ExpThree{} tweaked with an adaptive forced exploration probability to passively adapt to changes.
+It was shown that \ExpThreeS{} attains a regret of $\cO(\sqrt{K T S \log(K T)})$, when comparing with an arbitrary sequence of comparators that does not switch for more than $S-1$ times.
+Running their algorithm over the non-stationary problem, and picking their comparators sequence as the best arm in each stationary interval, one can already get $\sqrt{\Upsilon_T T \log(T)}$ regret, and the only prior knowledge needed to run the \ExpThreeS{} algorithm is $T$ and $\Upsilon_T$. Moreover, \ExpThreeS{} is efficient in terms of both storage and computation time, and is simple to implement.
 
-It could seem that the problem is considered as solved by the Exp3.S algorithm, but it was actively studied since the seminal paper \cite{Auer02NonStochastic}.
+It could seem that the problem is considered as solved by the \ExpThreeS{} algorithm, but it was actively studied since the seminal paper \cite{Auer02NonStochastic}.
 Two main reasons explain the dynamic research on this problem:
-first, it is well known that despite their qualities, exponential-weights algorithms like Exp3 can usually be greatly outperformed by UCB-based algorithms, for stochastic problems, and so it is expected that Exp3.S can be outperformed by other algorithms, thus any practical application might benefit from algorithms that are more efficient than Exp3.S.
+first, it is well known that despite their qualities, exponential-weights algorithms like \ExpThree{} can usually be greatly outperformed by UCB-based algorithms, for stochastic problems, and so it is expected that \ExpThreeS{} can be outperformed by other algorithms, thus any practical application might benefit from algorithms that are more efficient than \ExpThreeS.
 %
 The second reason is that passively adaptive algorithms function as black-box models: they do not try to detect changes and do not explain why they changed from one arm to another. A lot of the recent research has been focused on actively adaptive algorithms, precisely because they allow to interpret their decisions, by detecting changes on arms with statistical tests.
 The piece-wise stationary MAB model has then been studied by \cite{Kocsis06} and \cite{YuMannor09}.
@@ -50,7 +50,7 @@ This model is sometimes referred to as the abruptly changing \cite{WeiSrivastava
 %
 In this model, described in full details in Section~\ref{sec:6:BanditSetting}, the (random) reward of arm $k$ at round $t$ has some mean $\mu_k(t)$, that is constant on intervals between two \emph{breakpoints}, and the regret is measured with respect to the \emph{current} best arm $k_t^* \eqdef \arg\max_i \mu_k(t)$.
 
-% \TODOL{I need to write a paragraph about using the ``adversarial setting'' for piece-wise stationary. It is very important to state that Exp3.S from \cite{Auer02NonStochastic} (Section~8) achieves $\bigO{\sqrt{K \Upsilon_T T}}$ regret with NO prior knowledge of $T$ and $\Upsilon_T$.}
+% \TODOL{I need to write a paragraph about using the ``adversarial setting'' for piece-wise stationary. It is very important to state that \ExpThreeS{} from \cite{Auer02NonStochastic} (Section~8) achieves $\bigO{\sqrt{K \Upsilon_T T}}$ regret with NO prior knowledge of $T$ and $\Upsilon_T$.}
 
 % In this chapter, we propose a new algorithm for the piece-wise stationary bandit problem with bounded rewards, called \GLRklUCB. Like previous approaches -- \CUSUM{} \cite{LiuLeeShroff17} and \MUCB{} \cite{CaoZhenKvetonXie18} -- our algorithm relies on combining a standard multi-armed bandit algorithm with a change-point detector. For the bandit component, we propose the use of the \klUCB{} algorithm, that is known to outperform {\UCB}1 used in previous works. For the change-point detector, we propose the Bernoulli Generalized Likelihood Ratio Test (GLRT), for which we provide new non-asymptotic properties that are of independent interest. This choice is particularly appealing because unlike previous approaches, the Bernoulli GLRT is \emph{parameter-free}: it does not need the tuning of a window size ($w$ in \MUCB), or the knowledge of a lower bound on the magnitude of the smallest change ($\varepsilon$ in \CUSUM).
 
@@ -120,7 +120,7 @@ We illustrate the two extreme cases in problems $1$ and $2$ presented in Figures
 %
 The piece-wise stationary bandit model can be viewed as an interpolation between stationary and adversarial models, as the stationary model corresponds to $\Upsilon_T = 0$ (\ie, one stationary segment), while some adversarial models can be considered as a special (worst) case, with $\Upsilon_T = T-1$ (when considering an adaptive or an oblivious adversary).
 However, typical analyzes of algorithms designed for the piece-wise stationary model assume a small number of changes, typically $\Upsilon_T = o(\sqrt{T})$.
-Note that the adversarial model of \cite{Auer02NonStochastic} is quite powerful, and the authors presented in Section~8 of their paper the Exp3.S algorithm for the piece-wise stationary problem, as explained in Section~\ref{sec:6:Introduction} above.
+Note that the adversarial model of \cite{Auer02NonStochastic} is quite powerful, and the authors presented in Section~8 of their paper the \ExpThreeS{} algorithm for the piece-wise stationary problem, as explained in Section~\ref{sec:6:Introduction} above.
 
 
 \paragraph{Two example of problems.}\label{par:6:benchmark1}
@@ -172,7 +172,7 @@ The first optimal arm decreases at every change (\textcolor{blue}{$2$ with $\nab
 \label{sec:6:relatedWork}
 
 We review previous works that studied the piece-wise stationary bandit model, or variants of this model.
-To the best of our knowledge, all the previous works are based on the idea of combining a classical bandit policy, such as Thompson sampling, \UCB{} or Exp3, with a strategy to account for changes in arms' distributions.
+To the best of our knowledge, all the previous works are based on the idea of combining a classical bandit policy, such as Thompson sampling, \UCB{} or \ExpThree, with a strategy to account for changes in arms' distributions.
 Following the vocabulary used in previous works, we make the distinction between \emph{passively} and \emph{actively} adaptive strategies.
 On the one hand, actively adaptive strategies monitor the arms' rewards, by using change detection algorithms \cite{Basseville93}, and reset the history of pulls and rewards of one or all the arms as soon as a change is detected.
 On the other hand, passively adaptive strategies use a (fixed) discount factor or a limited memory size, while most active strategies use a growing memory.
@@ -190,11 +190,11 @@ The regret of D-UCB was proven to be upper-bounded by $\cO(\sqrt{\Upsilon_T T }\
 The Sliding-Window UCB (SW-UCB), proposed by \cite{Garivier11UCBDiscount}, uses a sliding window of a fixed size $\tau$, to store only the most $\tau$ recent rewards for each arm.
 They prove that tuning its window-size to $\tau = 2 \sqrt{T\log(T)/\Upsilon_T}$, gives a bound on the regret of SW-UCB of the form $\cO(\sqrt{\Upsilon_T T \log(T)})$.
 
-Both D-UCB and SW-UCB build on a stationary policy, but for example Exp3.S from \cite{Auer02NonStochastic}
-builds on the Exp3 policy, which is designed for the adversarial case.
-Exp3.S actually achieves a good regret upper-bound, of the form $\cO(\sqrt{K \Upsilon_T T})$, with no additional prior knowledge except that of $T$ and $\Upsilon_T$.
+Both D-UCB and SW-UCB build on a stationary policy, but for example \ExpThreeS{} from \cite{Auer02NonStochastic}
+builds on the \ExpThree{} policy, which is designed for the adversarial case.
+\ExpThreeS{} actually achieves a good regret upper-bound, of the form $\cO(\sqrt{K \Upsilon_T T})$, with no additional prior knowledge except that of $T$ and $\Upsilon_T$.
 It constitues a good baseline for our numerical experiments in Section~\ref{sec:6:NumericalExperiments},
-even if we did find that Exp3.S performs worse that the most of the other approaches based on extending stationary bandit algorithms (\eg, SW-UCB).
+even if we did find that \ExpThreeS{} performs worse that the most of the other approaches based on extending stationary bandit algorithms (\eg, SW-UCB).
 % , so we do not include it in .
 Similarly, previous works showed that older algorithms have no or weaker regret guarantees, and have been proven to be less efficient empirically, or are designed for more specific settings.
 
@@ -221,7 +221,7 @@ The Adapt-EVE algorithm from \cite{Hartland06} used a Page-Hikley (PH) Test and 
 %
 The Windowed-Mean Shift algorithm from \cite{YuMannor09} is more generic and combines any efficient bandit policy with a CD test based on a sliding window, but their approach is not applicable to the bandit setting of interest in this chapter, as they consider side observations.
 %
-The Exp3.R algorithm from \cite{Allesiardo15,Allesiardo17} combines a CD algorithm with Exp3, and the history of all arms are reset as soon as a suboptimal arm is detecting to become optimal.
+The \ExpThreeR{} algorithm from \cite{Allesiardo15,Allesiardo17} combines a CD algorithm with \ExpThree, and the history of all arms are reset as soon as a suboptimal arm is detecting to become optimal.
 A regret bound of $\cO(\Upsilon_T \sqrt{T \log(T)})$ was proven, even when $\Upsilon_T$ is known.
 
 Two recent and related works use
@@ -293,11 +293,11 @@ therefore we choose to not include them in our experiments.
 
 \paragraph{Slowly-varying model.}
 
-A different setting where the quantity of interest is not $\Upsilon_T$ but the total variational budget $V_T$, was introduced by \cite{Besbes14stochastic}, for which they proposed the RExp3 algorithm.
+A different setting where the quantity of interest is not $\Upsilon_T$ but the total variational budget $V_T$, was introduced by \cite{Besbes14stochastic}, for which they proposed the R\ExpThree{} algorithm.
 The total variation budget $V_T$ is defined as $\sum_{t=1}^{T-1} \sum_{k=1}^K D(\nu_k(t), \nu_k(t+1))$, for a certain measure of difference $D$, which measures how much the two distributions of any arm $k$ have changed from time $t$ to time $t+1$.
 Two examples can be the total variation distance $\|\cdot\|_{TV}$ or the Kullback-Leibler divergence.
 %
-The RExp3 algorithm can also be qualified as passively adaptive: it is based on (non-adaptive) restarts of the Exp3 algorithm. Note that this algorithm is introduced for a different setting, where the quantity of interest is not $\Upsilon_T$ but a quantity $V_T$ called the total variational budget (satisfying $\Delta^{\text{change}} \Upsilon_T \leq V_T \leq \Upsilon_T$ with $\Delta^{\text{change}}$ the minimum magnitude of a change-point).
+The R\ExpThree{} algorithm can also be qualified as passively adaptive: it is based on (non-adaptive) restarts of the \ExpThree{} algorithm. Note that this algorithm is introduced for a different setting, where the quantity of interest is not $\Upsilon_T$ but a quantity $V_T$ called the total variational budget (satisfying $\Delta^{\text{change}} \Upsilon_T \leq V_T \leq \Upsilon_T$ with $\Delta^{\text{change}}$ the minimum magnitude of a change-point).
 A regret bound of the order of $\cO(V_T^{1/3} T^{2/3})$ is proven, which is weaker than existing results in our setting.
 
 This setting is quite different from the setting we are considering in this chapter, and even if the most recent works on slowly-varying MAB models are very interesting, we preferred to focus on the piece-wise stationary (or abruptly changing) model,
@@ -327,8 +327,8 @@ From Table~1 in \cite{Luo18}, one can see that their two algorithms Exp4.S and A
 that is, a $\cO(\Upsilon_T \sqrt{T})$ regret without knowing the number of changes and $\cO(\sqrt{\Upsilon_T T})$ with this knowledge.
 We discuss both these algorithms:
 %
-first, Exp4.S actually reduces to Exp3.S in the non-contextual case, and Exp3.S is discussed above.
-% As already acknowledged in the answer to  Reviewer 1,  we were indeed unaware of the very good theoretical properties of this algorithm in the piece-wise non-stationary setting. We will revise our state-of-the-art section and include the Exp3.S algorithm as a baseline in our experiments. However, preliminary experiments reveal that this algorithm is much less efficient that GLR-klUCB.
+first, Exp4.S actually reduces to \ExpThreeS{} in the non-contextual case, and \ExpThreeS{} is discussed above.
+% As already acknowledged in the answer to  Reviewer 1,  we were indeed unaware of the very good theoretical properties of this algorithm in the piece-wise non-stationary setting. We will revise our state-of-the-art section and include the \ExpThreeS{} algorithm as a baseline in our experiments. However, preliminary experiments reveal that this algorithm is much less efficient that GLR-klUCB.
 %
 Then, the Ada-ILTCB algorithm is however a less appealing candidate for our setting, for the following reason.
 This algorithm requires as input a parameter $L$ which needs to be an upper bound on the largest stationary sequence in the problem, in order for its regret to scale as $\Upsilon_T \sqrt{L}$ (neglecting $K$ and $\log$ factors).
@@ -1298,7 +1298,7 @@ More precisely, we found that $\gamma\leq0.95$ gives better performances for sho
 %
 % \TODOE{Tu confirmes bien que $\gamma=0.75$ ne marchait sur AUCUN problème ? Car ta phrase actuelle n'exclut pas que ce choix marche pour les probèmes courts}
 %
-Additionally, we include the Exp3.S algorithm from \cite{Auer02NonStochastic}, setting its parameters as in Corollary 8.3 of the paper, based on a prior knowledge of $T$ and $\Upsilon_T$, using $\omega=1/T$ and $\gamma = \min(1, \sqrt{K (\Upsilon_T \log(KT) + \mathrm{e}) / ((\mathrm{e}-1)T)})$.
+Additionally, we include the \ExpThreeS{} algorithm from \cite{Auer02NonStochastic}, setting its parameters as in Corollary 8.3 of the paper, based on a prior knowledge of $T$ and $\Upsilon_T$, using $\omega=1/T$ and $\gamma = \min(1, \sqrt{K (\Upsilon_T \log(KT) + \mathrm{e}) / ((\mathrm{e}-1)T)})$.
 
 
 Our main goal is to compare against \emph{actively adaptive algorithms}. We include \CUSUMklUCB, tuned with $M=150$ and $\varepsilon=0.1$ for easy problems ($1,2,4$) and $\varepsilon=0.001$ for hard problems ($3,5$),
@@ -1604,8 +1604,8 @@ DTS and SW-\klUCB{} can sometimes be more efficient than their stationary counte
 For \klUCB{} indexes, M- and \CUSUM- outperform the previous algorithms, but \GLR- is often better.
 %
 On these problems, \GLRklUCB{} with \textbf{Local} restarts is always more efficient than with \textbf{Global} restarts. Note that on problem 2, all means change at every breakpoint, hence one could expect the Global variant to be more efficient, yet the experiments show the superiority of Location variant on every instance.
-The Exp3.S algorithm was found to outperform other algorithms based on Exp3, including recent variants like Exp3$++$ \cite{Seldin17} or Exp3.R from \cite{Allesiardo17}.
-Exp3.S usually performs similarly to \MklUCB, but it is greatly outperformed by the oracle algorithm, by \GLRklUCB{} and by \CUSUMklUCB.
+The \ExpThreeS{} algorithm was found to outperform other algorithms based on \ExpThree{}, including recent variants like \Exppp{} \cite{Seldin17} or \ExpThreeR{} from \cite{Allesiardo17}.
+\ExpThreeS{} usually performs similarly to \MklUCB, but it is greatly outperformed by the oracle algorithm, by \GLRklUCB{} and by \CUSUMklUCB.
 
 
 \begin{table}[ht]
@@ -1616,7 +1616,7 @@ Exp3.S usually performs similarly to \MklUCB, but it is greatly outperformed by 
         \hline
         Oracle-Restart \klUCB{} & $\mathbf{37 \pm 37}$ & $\mathbf{45 \pm 34}$ & $\mathbf{257 \pm 86}$ \\
         \hline
-        Exp3.S & $352 \pm 51$ & $310 \pm 62$ & $665 \pm 93$ \\
+        \ExpThreeS{} & $352 \pm 51$ & $310 \pm 62$ & $665 \pm 93$ \\
         \hline
         \klUCB{} & $270 \pm 76$ & $162 \pm 59$ & $529 \pm 148$ \\
         Discounted-\klUCB{} & $1456 \pm 214$ & $1442 \pm 440$ & $1376 \pm 37$ \\
@@ -1644,7 +1644,7 @@ Exp3.S usually performs similarly to \MklUCB, but it is greatly outperformed by 
         \hline
         Oracle-Restart \klUCB{} & $\mathbf{68 \pm 40}$ & $\mathbf{86 \pm 50}$ & $126 \pm 54$ \\
         \hline
-        Exp3.S & $551 \pm 63$ & $860 \pm 109$ & $723 \pm 121$ \\
+        \ExpThreeS{} & $551 \pm 63$ & $860 \pm 109$ & $723 \pm 121$ \\
         \hline
         \klUCB{} & $615 \pm 74$ & $1218 \pm 123$ & $106 \pm 36$ \\
         SW-\klUCB{} & $202 \pm 33$ & $322 \pm 47$ & $228 \pm 27$ \\
@@ -1674,7 +1674,7 @@ thus the experiments confirm that an efficient bandit algorithm (\eg, \klUCB) co
 We show below on Figure~\ref{fig:6:meanRegretPb1} and additional in Appendix~\ref{app:6:moreFigures} the simulation results for the five problems.
 The results in terms of mean regret $R_T$ are given above in Tables~\ref{table:6:totalResults1} and \ref{table:6:totalResults2}, but it is also interesting to observe two plots for each experiment.
 %
-First, we show the mean regret as a function of time (\ie, $R_t$ for $1 \leq t \leq T$), for $9$ of the considered algorithms (as they are outperformed by the others, Exp3.S and Discounted-\klUCB{} are not included to avoid clutter).
+First, we show the mean regret as a function of time (\ie, $R_t$ for $1 \leq t \leq T$), for $9$ of the considered algorithms (as they are outperformed by the others, \ExpThreeS{} and Discounted-\klUCB{} are not included to avoid clutter).
 %
 Efficient stationary algorithms, like TS and \klUCB, typically suffer a linear regret after a change on the optimal arm changes if they had ``too'' many samples before the change-points (\eg, on Figure~\ref{fig:6:meanRegretPb1} and even more on Figures~\ref{fig:6:meanRegretPb4} and \ref{fig:6:meanRegretPb5}).
 This illustrates the conjecture that classical algorithms can suffer linear regret even on simple piece-wise stationary problems.
