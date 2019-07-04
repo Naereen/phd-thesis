@@ -230,7 +230,8 @@ For instance the code specific to $\UCB_1$ (with $\alpha=2$) is as written and f
 
 \subsection{Summary of the features}
 
-With this numerical framework, simulations can run on a single CPU or a multi-core machine using joblib \cite{joblib} (see Appendix~\ref{sub:3:parallelSimulations}),
+With this numerical framework, simulations can run on a single CPU or a multi-core machine using joblib \cite{joblib},
+% (see Appendix~\ref{sub:3:parallelSimulations}),
 and summary plots are automatically saved as high-quality PNG, PDF and EPS, using matplotlib \cite{matplotlib} and seaborn \cite{seaborn}.
 Raw data from each simulation is also saved in an HDF5 file, using h5py \cite{h5py}, an efficient and compressed binary format, to allow easy post-mortem manipulation of any simulation results.
 Making new simulations is very easy, one only needs to write a configuration script (\texttt{configuration.py}), without needing a complete knowledge of the internal code architecture.
@@ -1557,7 +1558,7 @@ This Appendix section starts by describing $7$ more algorithms that are also com
 % \TODOL{A faire}
 
 
-\paragraph{Bash command to run these experiments.}
+\paragraph{How to run such experiments.}
 %
 We give below in Code~\ref{lst:3:BashCodeToLaunchLargeExperiments} a Bash command to run the experiments presented in Sections~\ref{sec:3:reviewSPAlgorithms} and \ref{sub:3:additionalExperiments} above.
 It uses \texttt{for} loops and environment variables from Bash, and not Python, mainly for concision,
@@ -1662,7 +1663,7 @@ For each algorithm, we ran simulations to obtain its (empirical) regret, computa
 Simply considering the average of such measurements makes no sense, as for instance two values of the regret for $T=1000$ or $T=50000$ do not have the same order of magnitude.
 %
 We know that efficient algorithms are expected to follow these patterns:
-\begin{itemize}\tightlist
+\begin{itemize}%\tightlist
     \item The final regret $R_T$ should scale as $\cO(K \log(T))$,
     \item The total computation time $\cT_T$ should scale as $\cO(K T)$ (\ie, a computation time of $\cO(K)$ for each time step $t$),
     \item The total memory cost $\cM_T$ should scale as $\cO(K)$, independent of the horizon.
@@ -1672,156 +1673,156 @@ Thus, on the one hand, when we show aggregated results from all the different va
 On the other hand, when we plot a quantity ($R_T$, $\cT_T$, $\cM_T$) as a function of $T$ (resp. of $K$) we only normalize by $K$ (resp. by $T$).
 
 
-% --------------------------------------------------------------
-\subsection{Using multi-cores parallelism to speed-up simulations in SMPyBandits}
-\label{sub:3:parallelSimulations}
-% Using multi-core to speed-up simulations
+% % --------------------------------------------------------------
+% \subsection{Using multi-cores parallelism to speed-up simulations in SMPyBandits}
+% \label{sub:3:parallelSimulations}
+% % Using multi-core to speed-up simulations
 
-% \TODOL{Si on a la place, j'aimerai bien inclure ces pages suivantes ? Ce n'est pas crucial.
-%     % C'est en ligne sur \href{https://smpybandits.github.io/About_parallel_computations.html}{\texttt{SMPyBandits.github.io/About\_parallel\_computations.html}}
-% }
+% % \TODOL{Si on a la place, j'aimerai bien inclure ces pages suivantes ? Ce n'est pas crucial.
+% %     % C'est en ligne sur \href{https://smpybandits.github.io/About_parallel_computations.html}{\texttt{SMPyBandits.github.io/About\_parallel\_computations.html}}
+% % }
 
-Nowadays, parallelism is everywhere in the computational world, and any serious framework for numerical simulations must try to gain performance from parallelism.
-In this last section, we quickly review the chosen approach for SMPyBandits (multi-core on one machine).
+% Nowadays, parallelism is everywhere in the computational world, and any serious framework for numerical simulations must try to gain performance from parallelism.
+% In this last section, we quickly review the chosen approach for SMPyBandits (multi-core on one machine).
 
-For all the numerical simulations presented in this thesis,
-% except the ones based on MATLAB or GNU Radio in Chapter~\ref{chapter:4},
-the setting is the same:
-we consider a small set of $p$ different problems, of time horizon $T$ that we want to simulate for $N$ independent runs (\eg, $p=6$, $T=10000$ and $N=1000$ like in Chapter~\ref{chapter:6}).
-%
-Because of the fundamentally sequential nature of bandit games, each repetition of the simulation must be sequential regarding the time steps $t=1,\dots,T$, and so no parallelism can be done to speed up this axis.
-But parallelism can help greatly for the two other axes: if we have a way to run in parallel $4$ processes, and we have $p=4$ problems to simulate, then running a process for each problem directly brings a speed-up factor of $4$.
-Similarly, if we want to run $1000$ repetitions of the same (random) problem, and we can run $4$ processes in parallel, then running $1000/4=25$ repetitions on each process also bring a speed-up factor close to $4$.
-%
-%  and we explain why the two other approaches were less appropriate for our study of multi-armed bandit problems.
-
-\textbf{\texttt{Joblib} for multi-core simulations.}
-%
-The first approach is to use multiple cores of the same machines, and because it is both the simplest and the less financially as well as ecologically costly, this is the approach implemented in SMPyBandits.
-The machines I had access to during my thesis, either my own laptop or a workstation hosted the SCEE team in CentraleSupélec campus, were equipped with $i5$ or $i7$ Intel CPU with $4$ or $12$ cores.
-%
-As explained in the page \href{https://smpybandits.github.io/How_to_run_the_code.html}{\texttt{SMPyBandits.GitHub.io/How\_to\_run\_the\_code.html}}, we implemented in SMPyBandits an easy way to run any simulations on $n$ cores of a machine, using the \texttt{Joblib} \cite{joblib} library.
-
-It is implemented in a completely transparent way, and if someone uses the command-line variable to configure experiments, switching from using one core to using all the cores of the machine is as simple as changing \texttt{N\_JOBS=1} to \texttt{N\_JOBS=-1}, like in the Code Example~\ref{lst:3:runOneCoreOrMore} below.
-Similarly, changing from within the Python code is simple, by changing the \texttt{configuration["n\_jobs"]} value.
-
-% https://tex.stackexchange.com/a/12430/
-\begin{small}
-    \begin{listing}[h!]
-        \begin{minted}[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{bash}
-$ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=1 \
-  python3 main.py configuration.py  # on only one core
-
-$ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=-1 \
-  python3 main.py configuration.py  # parallel on all the cores
-
-$ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=100 \
-  python3 main.py configuration.py  # parallel with too many jobs
-        \end{minted}
-        \caption{Running a simulation using either one CPU core with \texttt{N\_JOBS=1}, or all of them with \texttt{N\_JOBS=-1}, or more jobs than CPU cores with \texttt{N\_JOBS=20} (if there are $4$ cores). The later option is not advised, and \texttt{N\_JOBS=-1} gives the optimal speed-up factor.}
-        % \captionof{listing}{Run a simulation using 1 or \texttt{N} cores \label{lst:3:runOneCoreOrMore}.}
-        \label{lst:3:runOneCoreOrMore}
-    \end{listing}
-\end{small}
-
-
-\textbf{Effect of the number of jobs.}
-%
-As long as the number of jobs (\texttt{N\_JOBS} here) is less then or equal to the number of physical cores in the CPU of the computer, the final speed-up in terms of total computation runtime is almost optimal.
-%  dividing the running time by \texttt{N\_JOBS}.
-But jobs are implemented as threads, so the speed-up cannot be more than the number of cores, and using for instance $20$ jobs on $4$-cores for the $20$ repetitions is sub-optimal, as the CPU will essentially spend all its time (and memory) managing the different jobs, and not actually doing the simulations.
-Using the above example, we illustrate the effect of using multi-jobs and multi-cores on the time efficiency of simulations using SMPyBandits. We consider three values of \texttt{N\_JOBS}, $1$ to use only one core and one job, $4$ to use all the $4$ cores of my $i5$ Intel CPU, and $100$ jobs.
-%
-We give in Table~\ref{table:3:speedUpTimeParallelComputations} an example of running time of an experiment with $T=10000$, and different number of repetitions and number of jobs.
-These three experiments correspond to the three lines of Code Example~\ref{lst:3:runOneCoreOrMore} shown above.
-%
-The results of Table~\ref{table:3:speedUpTimeParallelComputations} clearly illustrate that using more jobs than the number of CPU is sub-optimal, and that as soon as the number of repetitions is large enough, using one job by available CPU core (\ie, here $4$ jobs) gives a significant speed-up time.
-Due to the cost of orchestrating the different jobs, and memory exchanges at the end of each repetition, the parallel version is \emph{not} $4$ times faster, but empirically we always found it to be $2$ to $3.5$ times faster.
-%
-Similar conclusions can be drawn from Figure~\ref{fig:3:analyze_speedup_as_nb_of_jobs}, which reports the results of the same experiment on a machine with $n_{\text{cores}}=12$ CPU cores.
-More details are included in the documentation page
-\href{https://smpybandits.github.io/About_parallel_computations.html}{\texttt{SMPyBandits.github.io/About\_parallel\_computations.html}}
-
-% for N in 1 10 100; do for NJOBS in 1 4 100; do DEBUG=True SAVEALL=False NOPLOTS=True N=$N T=10000 N_JOBS=$NJOBS make single; read; done
-
-\begin{table}[ht]
-% \begin{footnotesize}
-    \centering
-    \begin{tabular}{c|rrr}
-    \textbf{Repetitions} & \texttt{N\_JOBS}$=1$ & \textcolor{darkgreen}{\texttt{N\_JOBS}$=4$ ($= n_{\text{cores}}$)} & \texttt{N\_JOBS}=$20$ ($> n_{\text{cores}}$) \\
-        \hline
-        $N=1$ repetition    & \SI{15}{\second}
-        & \SI{26}{\second} ($0.57 \%$)  % 15/26
-        & \SI{43}{\second} ($0.34 \%$)  % 15/43
-        \\
-        $N=10$ repetitions  & \SI{87}{\second}
-        & \SI{51}{\second} ($1.70 \%$)  % 87/51
-        & \SI{76}{\second} ($1.14 \%$)  % 87/76
-        \\
-        $N=100$ repetitions & \SI{749}{\second}
-        & \SI{272}{\second} (\textcolor{darkgreen}{$2.75 \%$})  % 749/272
-        & \SI{308}{\second} ($2.43 \%$)  % 749/308
-        \\
-        $N=500$ repetitions & \SI{2944}{\second}
-        & \SI{1530}{\second} (\textcolor{darkgreen}{$1.92 \%$})  % 2944/1530
-        & \SI{1846}{\second} ($1.59 \%$)  % 2944/1846
-        \\
-        % \hline
-    \end{tabular}
-    \caption{Effect on the running time of using \texttt{N\_JOBS} jobs in parallel, on a machine with $n_{\text{cores}}=4$ CPU cores, for a simulation with $9$ different algorithms, for $K=9$ arms, a time horizon of $T=10000$. The percentages are the relative gains in comparison with the non-parallel simulation.}
-    \label{table:3:speedUpTimeParallelComputations}
-% \end{footnotesize}
-\end{table}
-
-
-\begin{figure}[h!]  % [htbp]
-	\centering
-	% \includegraphics[width=0.85\linewidth]{analyze_speedup_as_nb_of_jobs.pdf}
-	\includegraphics[width=1.10\linewidth]{analyze_speedup_as_nb_of_jobs_normalize.pdf}
-	\caption{Relative gain on the running time in comparison to using one job, as a function of the number of jobs \texttt{N\_JOBS}, for a $n_{\text{cores}}=12$-core machine running the simulation of Code Example~\ref{lst:3:runOneCoreOrMore}.}
-	\label{fig:3:analyze_speedup_as_nb_of_jobs}
-\end{figure}
-
-% for N in 1 10 100 1000; do for NJ in 1 12 100; do echo "With N=$N repetitions and N_JOBS=$NJ jobs..."; time NOPLOTS=True SAVEALL=False BAYES=False ARM_TYPE=Bernoulli N=$N T=1000 K=9 N_JOBS=$NJ python3 main.py configuration.py 2>/dev/null | grep "real "; done; done && FreeSMS.py "DONE"
-
-% $N=1$ repetition    & \SI{15}{\second}
-% & \SI{26}{\second} ($0.57 \%$)  % 15/26
-% & \SI{43}{\second} ($0.34 \%$)  % 15/43
-% \\
-% $N=10$ repetitions  & \SI{87}{\second}
-% & \SI{51}{\second} ($1.70 \%$)  % 87/51
-% & \SI{76}{\second} ($1.14 \%$)  % 87/76
-% \\
-% $N=100$ repetitions & \SI{749}{\second}
-% & \SI{272}{\second} ($2.75 \%$)  % 749/272
-% & \SI{308}{\second} ($2.43 \%$)  % 749/308
-% \\
-% $N=500$ repetitions & \SI{2944}{\second}
-% & \SI{1530}{\second} ($1.92 \%$)  % 2944/1530
-% & \SI{1846}{\second} ($1.59 \%$)  % 2944/1846
-
-
-
-% \TODOL{Pas sûr que ça vaille la peine d'inclure ce passage, c'est vraiment optionnel !}
-
-% % Explain why I didn't try more on parallelisation (eg on Grid5000 or other large scale computer).
-% \paragraph{Approaches we did not try.}
+% For all the numerical simulations presented in this thesis,
+% % except the ones based on MATLAB or GNU Radio in Chapter~\ref{chapter:4},
+% the setting is the same:
+% we consider a small set of $p$ different problems, of time horizon $T$ that we want to simulate for $N$ independent runs (\eg, $p=6$, $T=10000$ and $N=1000$ like in Chapter~\ref{chapter:6}).
 % %
-% The two other approaches we could have consider is parallel computations running on not multiple cores but multiple machines, in a computer cluster, or parallel computations running in a Graphical Processing Unit (GPU).
-
-% $(i)$ I did not try to add in SMPyBandits the possibility to run simulations using a GPU, or any general purpose computation libraries offering a GPU-backend.
-% Initially designed for graphical simulations and mainly for video-games applications, the use of GPU for scientific computations have been gaining attention for numerical simulation in the research world since the last $15$ years, and NVidia CUDA for GPGPU (General Purpose GPU) started to become popular in $2011$.
-% Since $2016$, we saw a large press coverage as well as an extensive use in research of deep learning libraries that make general-purpose machine learning algorithms train on the GPU of a user's laptop or a cluster of GPU.
-% This success is mainly possible because of the heavy parallelism of such training algorithms, and the parallel nature of GPU.
-% To the best of the author knowledge, nobody has tried to implement high performance MAB simulations by using the ``parallelism power'' of a GPU (at least, no code for such experiments were made public in $2019$).
-% I worked on a GPU, implementing fluid dynamic simulations in an internship in $2012$, and I have since then kept a curiosity on how to use GPU-powered libraries and code.
-% I have contributed to and used famous deep-learning libraries, like Theano (\href{http://deeplearning.net/software/theano/}{\texttt{DeepLearning.net/software/theano}}) or Keras (\href{https://keras.io/}{\texttt{keras.io}}), and my limited knowledge on such libraries made me believe that it was not easy to use a GPU for bandit simulations, and most surely it would not have been worth the time.
-% I would be very curious to understand how a GPU could be used to implement highly efficient simulations for sequential learning problems, because it seemed hard whenever I thought about it.
-
-% $(ii)$ I also did not try to use any large scale computer cluster, even if I was aware of the possibility offered by the Grid 5000 project, for instance.
-% It is partly due to time constraint, as I would have been curious to try, but mainly because we found that it would not have helped us much to use a large scale cluster.
-% The main reason is that in the multi-armed bandit and sequential learning literature, most research papers do not even include an experimental section, and for the papers who did take the time to implement and test their proposed algorithms, it is almost done on just a few problems and for short- or medium- duration experiments.
-% For instance, the papers we consider to be the best ones regarding their empirical sections are \cite{LiuLeeShroff17,CaoZhenKvetonXie18}, for piece-wise stationary bandits, and they mainly consider reasonable problems of horizon $T=10000$ and no more than $1000$ independent repetitions. Each paper considers one harder problem, of horizon $T=1000000$ and less repetitions.
+% Because of the fundamentally sequential nature of bandit games, each repetition of the simulation must be sequential regarding the time steps $t=1,\dots,T$, and so no parallelism can be done to speed up this axis.
+% But parallelism can help greatly for the two other axes: if we have a way to run in parallel $4$ processes, and we have $p=4$ problems to simulate, then running a process for each problem directly brings a speed-up factor of $4$.
+% Similarly, if we want to run $1000$ repetitions of the same (random) problem, and we can run $4$ processes in parallel, then running $1000/4=25$ repetitions on each process also bring a speed-up factor close to $4$.
 % %
-% In each article written during my thesis, we included extensive numerical simulations, and even the longest ones (for \cite{Besson2019GLRT}) were short enough to run in less than $12$ hours on a $12$-core workstation, so we could run a few large-scale simulations over night.
-% For such reasons, we prefer to not try to run simulations on a cluster.
+% %  and we explain why the two other approaches were less appropriate for our study of multi-armed bandit problems.
+
+% \textbf{\texttt{Joblib} for multi-core simulations.}
+% %
+% The first approach is to use multiple cores of the same machines, and because it is both the simplest and the less financially as well as ecologically costly, this is the approach implemented in SMPyBandits.
+% The machines I had access to during my thesis, either my own laptop or a workstation hosted the SCEE team in CentraleSupélec campus, were equipped with $i5$ or $i7$ Intel CPU with $4$ or $12$ cores.
+% %
+% As explained in the page \href{https://smpybandits.github.io/How_to_run_the_code.html}{\texttt{SMPyBandits.GitHub.io/How\_to\_run\_the\_code.html}}, we implemented in SMPyBandits an easy way to run any simulations on $n$ cores of a machine, using the \texttt{Joblib} \cite{joblib} library.
+
+% It is implemented in a completely transparent way, and if someone uses the command-line variable to configure experiments, switching from using one core to using all the cores of the machine is as simple as changing \texttt{N\_JOBS=1} to \texttt{N\_JOBS=-1}, like in the Code Example~\ref{lst:3:runOneCoreOrMore} below.
+% Similarly, changing from within the Python code is simple, by changing the \texttt{configuration["n\_jobs"]} value.
+
+% % https://tex.stackexchange.com/a/12430/
+% \begin{small}
+%     \begin{listing}[h!]
+%         \begin{minted}[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{bash}
+% $ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=1 \
+%   python3 main.py configuration.py  # on only one core
+
+% $ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=-1 \
+%   python3 main.py configuration.py  # parallel on all the cores
+
+% $ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=100 \
+%   python3 main.py configuration.py  # parallel with too many jobs
+%         \end{minted}
+%         \caption{Running a simulation using either one CPU core with \texttt{N\_JOBS=1}, or all of them with \texttt{N\_JOBS=-1}, or more jobs than CPU cores with \texttt{N\_JOBS=20} (if there are $4$ cores). The later option is not advised, and \texttt{N\_JOBS=-1} gives the optimal speed-up factor.}
+%         % \captionof{listing}{Run a simulation using 1 or \texttt{N} cores \label{lst:3:runOneCoreOrMore}.}
+%         \label{lst:3:runOneCoreOrMore}
+%     \end{listing}
+% \end{small}
+
+
+% \textbf{Effect of the number of jobs.}
+% %
+% As long as the number of jobs (\texttt{N\_JOBS} here) is less then or equal to the number of physical cores in the CPU of the computer, the final speed-up in terms of total computation runtime is almost optimal.
+% %  dividing the running time by \texttt{N\_JOBS}.
+% But jobs are implemented as threads, so the speed-up cannot be more than the number of cores, and using for instance $20$ jobs on $4$-cores for the $20$ repetitions is sub-optimal, as the CPU will essentially spend all its time (and memory) managing the different jobs, and not actually doing the simulations.
+% Using the above example, we illustrate the effect of using multi-jobs and multi-cores on the time efficiency of simulations using SMPyBandits. We consider three values of \texttt{N\_JOBS}, $1$ to use only one core and one job, $4$ to use all the $4$ cores of my $i5$ Intel CPU, and $100$ jobs.
+% %
+% We give in Table~\ref{table:3:speedUpTimeParallelComputations} an example of running time of an experiment with $T=10000$, and different number of repetitions and number of jobs.
+% These three experiments correspond to the three lines of Code Example~\ref{lst:3:runOneCoreOrMore} shown above.
+% %
+% The results of Table~\ref{table:3:speedUpTimeParallelComputations} clearly illustrate that using more jobs than the number of CPU is sub-optimal, and that as soon as the number of repetitions is large enough, using one job by available CPU core (\ie, here $4$ jobs) gives a significant speed-up time.
+% Due to the cost of orchestrating the different jobs, and memory exchanges at the end of each repetition, the parallel version is \emph{not} $4$ times faster, but empirically we always found it to be $2$ to $3.5$ times faster.
+% %
+% Similar conclusions can be drawn from Figure~\ref{fig:3:analyze_speedup_as_nb_of_jobs}, which reports the results of the same experiment on a machine with $n_{\text{cores}}=12$ CPU cores.
+% More details are included in the documentation page
+% \href{https://smpybandits.github.io/About_parallel_computations.html}{\texttt{SMPyBandits.github.io/About\_parallel\_computations.html}}
+
+% % for N in 1 10 100; do for NJOBS in 1 4 100; do DEBUG=True SAVEALL=False NOPLOTS=True N=$N T=10000 N_JOBS=$NJOBS make single; read; done
+
+% \begin{table}[ht]
+% % \begin{footnotesize}
+%     \centering
+%     \begin{tabular}{c|rrr}
+%     \textbf{Repetitions} & \texttt{N\_JOBS}$=1$ & \textcolor{darkgreen}{\texttt{N\_JOBS}$=4$ ($= n_{\text{cores}}$)} & \texttt{N\_JOBS}=$20$ ($> n_{\text{cores}}$) \\
+%         \hline
+%         $N=1$ repetition    & \SI{15}{\second}
+%         & \SI{26}{\second} ($0.57 \%$)  % 15/26
+%         & \SI{43}{\second} ($0.34 \%$)  % 15/43
+%         \\
+%         $N=10$ repetitions  & \SI{87}{\second}
+%         & \SI{51}{\second} ($1.70 \%$)  % 87/51
+%         & \SI{76}{\second} ($1.14 \%$)  % 87/76
+%         \\
+%         $N=100$ repetitions & \SI{749}{\second}
+%         & \SI{272}{\second} (\textcolor{darkgreen}{$2.75 \%$})  % 749/272
+%         & \SI{308}{\second} ($2.43 \%$)  % 749/308
+%         \\
+%         $N=500$ repetitions & \SI{2944}{\second}
+%         & \SI{1530}{\second} (\textcolor{darkgreen}{$1.92 \%$})  % 2944/1530
+%         & \SI{1846}{\second} ($1.59 \%$)  % 2944/1846
+%         \\
+%         % \hline
+%     \end{tabular}
+%     \caption{Effect on the running time of using \texttt{N\_JOBS} jobs in parallel, on a machine with $n_{\text{cores}}=4$ CPU cores, for a simulation with $9$ different algorithms, for $K=9$ arms, a time horizon of $T=10000$. The percentages are the relative gains in comparison with the non-parallel simulation.}
+%     \label{table:3:speedUpTimeParallelComputations}
+% % \end{footnotesize}
+% \end{table}
+
+
+% \begin{figure}[h!]  % [htbp]
+% 	\centering
+% 	% \includegraphics[width=0.85\linewidth]{analyze_speedup_as_nb_of_jobs.pdf}
+% 	\includegraphics[width=1.10\linewidth]{analyze_speedup_as_nb_of_jobs_normalize.pdf}
+% 	\caption{Relative gain on the running time in comparison to using one job, as a function of the number of jobs \texttt{N\_JOBS}, for a $n_{\text{cores}}=12$-core machine running the simulation of Code Example~\ref{lst:3:runOneCoreOrMore}.}
+% 	\label{fig:3:analyze_speedup_as_nb_of_jobs}
+% \end{figure}
+
+% % for N in 1 10 100 1000; do for NJ in 1 12 100; do echo "With N=$N repetitions and N_JOBS=$NJ jobs..."; time NOPLOTS=True SAVEALL=False BAYES=False ARM_TYPE=Bernoulli N=$N T=1000 K=9 N_JOBS=$NJ python3 main.py configuration.py 2>/dev/null | grep "real "; done; done && FreeSMS.py "DONE"
+
+% % $N=1$ repetition    & \SI{15}{\second}
+% % & \SI{26}{\second} ($0.57 \%$)  % 15/26
+% % & \SI{43}{\second} ($0.34 \%$)  % 15/43
+% % \\
+% % $N=10$ repetitions  & \SI{87}{\second}
+% % & \SI{51}{\second} ($1.70 \%$)  % 87/51
+% % & \SI{76}{\second} ($1.14 \%$)  % 87/76
+% % \\
+% % $N=100$ repetitions & \SI{749}{\second}
+% % & \SI{272}{\second} ($2.75 \%$)  % 749/272
+% % & \SI{308}{\second} ($2.43 \%$)  % 749/308
+% % \\
+% % $N=500$ repetitions & \SI{2944}{\second}
+% % & \SI{1530}{\second} ($1.92 \%$)  % 2944/1530
+% % & \SI{1846}{\second} ($1.59 \%$)  % 2944/1846
+
+
+
+% % \TODOL{Pas sûr que ça vaille la peine d'inclure ce passage, c'est vraiment optionnel !}
+
+% % % Explain why I didn't try more on parallelisation (eg on Grid5000 or other large scale computer).
+% % \paragraph{Approaches we did not try.}
+% % %
+% % The two other approaches we could have consider is parallel computations running on not multiple cores but multiple machines, in a computer cluster, or parallel computations running in a Graphical Processing Unit (GPU).
+
+% % $(i)$ I did not try to add in SMPyBandits the possibility to run simulations using a GPU, or any general purpose computation libraries offering a GPU-backend.
+% % Initially designed for graphical simulations and mainly for video-games applications, the use of GPU for scientific computations have been gaining attention for numerical simulation in the research world since the last $15$ years, and NVidia CUDA for GPGPU (General Purpose GPU) started to become popular in $2011$.
+% % Since $2016$, we saw a large press coverage as well as an extensive use in research of deep learning libraries that make general-purpose machine learning algorithms train on the GPU of a user's laptop or a cluster of GPU.
+% % This success is mainly possible because of the heavy parallelism of such training algorithms, and the parallel nature of GPU.
+% % To the best of the author knowledge, nobody has tried to implement high performance MAB simulations by using the ``parallelism power'' of a GPU (at least, no code for such experiments were made public in $2019$).
+% % I worked on a GPU, implementing fluid dynamic simulations in an internship in $2012$, and I have since then kept a curiosity on how to use GPU-powered libraries and code.
+% % I have contributed to and used famous deep-learning libraries, like Theano (\href{http://deeplearning.net/software/theano/}{\texttt{DeepLearning.net/software/theano}}) or Keras (\href{https://keras.io/}{\texttt{keras.io}}), and my limited knowledge on such libraries made me believe that it was not easy to use a GPU for bandit simulations, and most surely it would not have been worth the time.
+% % I would be very curious to understand how a GPU could be used to implement highly efficient simulations for sequential learning problems, because it seemed hard whenever I thought about it.
+
+% % $(ii)$ I also did not try to use any large scale computer cluster, even if I was aware of the possibility offered by the Grid 5000 project, for instance.
+% % It is partly due to time constraint, as I would have been curious to try, but mainly because we found that it would not have helped us much to use a large scale cluster.
+% % The main reason is that in the multi-armed bandit and sequential learning literature, most research papers do not even include an experimental section, and for the papers who did take the time to implement and test their proposed algorithms, it is almost done on just a few problems and for short- or medium- duration experiments.
+% % For instance, the papers we consider to be the best ones regarding their empirical sections are \cite{LiuLeeShroff17,CaoZhenKvetonXie18}, for piece-wise stationary bandits, and they mainly consider reasonable problems of horizon $T=10000$ and no more than $1000$ independent repetitions. Each paper considers one harder problem, of horizon $T=1000000$ and less repetitions.
+% % %
+% % In each article written during my thesis, we included extensive numerical simulations, and even the longest ones (for \cite{Besson2019GLRT}) were short enough to run in less than $12$ hours on a $12$-core workstation, so we could run a few large-scale simulations over night.
+% % For such reasons, we prefer to not try to run simulations on a cluster.

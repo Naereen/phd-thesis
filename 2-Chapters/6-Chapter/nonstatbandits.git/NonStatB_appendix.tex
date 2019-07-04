@@ -554,155 +554,155 @@ Using this inequality twice in the right hand side of \eqref{eq:6:Preparation} c
 % Hence, the probability in the right-hand side of \eqref{eq:6:FromHere} is zero, which yields $(b) \leq \delta$.
 
 
-% % -----------------------------------------------------------------
-% % -----------------------------------------------------------------
-\subsection{Time and memory costs of \GLRklUCB}
-\label{app:6:EmpiricalPerformances}
+% % % -----------------------------------------------------------------
+% % % -----------------------------------------------------------------
+% \subsection{Time and memory costs of \GLRklUCB}
+% \label{app:6:EmpiricalPerformances}
 
-As demonstrated in Section~\ref{sec:6:NumericalExperiments}, our proposal is empirically efficient in terms of regret, but it is important to also evaluate its cost in terms of both \emph{time} and \emph{memory}.
-Remember that $\Upsilon_T$ denotes the number of change-points.
-If we denote $d_{\max}$ the longest duration of a stationary sequence, for the question of the memory storage, the worst case is $d_{\max} = T$ for a stationary problem, and the easiest case is $d_{\max} \simeq T / \Upsilon_T$, typically obtained for $\Upsilon_T$ evenly spaced change-points.
-%
-We begin by reviewing the costs of the algorithms designed for stationary problems and then of other approaches, similarly to what is presented in Section~\ref{sec:3:timeAndMemoryCosts}.
-
-
-\textbf{Classical algorithms.}
-%
-For a stationary bandit problem, almost all \emph{classical algorithms} (\ie, designed for stationary problems) need and use a storage proportional to the number of arms, \ie, $\bigO{K}$, as most of them only need to store the number of pulls and the empirical mean of rewards for each arm.
-They also have a time complexity $\bigO{K}$ at every time step $t\in[T]$, hence an optimal total time complexity of $\bigO{KT}$.
-In particular, this case includes \UCB, Thompson sampling and \klUCB.
-
-\textbf{Oracle algorithms.}
-%
-Most algorithms designed for abruptly changing environments are more costly, both in terms of storage and computation time, as they need more storage and time to test for changes.
-The \emph{oracle algorithm} presented in Section~\ref{sec:6:NumericalExperiments}, combined with any efficient index policy, needs a storage at most $\bigO{K \Upsilon_T}$ as it stores the change-points, and have an optimal time complexity of $\bigO{K T}$ too.
-% \footnote{Note that if implemented naively, that is if testing is $t$ is a change-points takes a time $\bigO{\Upsilon_T}$, its performance is sub-optimal, as it is of the order of $\bigO{K T \Upsilon_T}$. However, if the change-points are stored in a \emph{dynamic linked list}, and the head is removed when it is found to be equal to the current time step, then the test at a time $t$ costs only a constant time $\bigO{1}$, hence the total time complexity is bounded by $\bigO{K T}$ and the oracle algorithm is indeed optimal in terms of time complexity.}.
-
-\textbf{Passively adaptive algorithms.}
-%
-Passively adaptive algorithms should intuitively be more efficient, but as they use a non-constant storage, they are actually as costly as the oracle.
-For instance SW-UCB uses a storage of $\bigO{K \tau}$, increasing as $T$ increases, and similarly for other passively adaptive algorithms.
-We highlight that to the best of our knowledge, the Discounted Thompson sampling algorithm (DTS) is the only algorithm tailored for abruptly changing problems that could be efficient in terms of regret (see the simulations results, even though it has no theoretical guarantee), and optimal in terms of both computational and storage costs. Indeed, it simply needs a storage proportional to the number of arms, $\bigO{K}$, and a time complexity of $\bigO{KT}$ for a horizon $T$ (see the pseudo-code in \cite{RajKalyani17}).
-% Note that the discounting scheme in Discounted-\UCB{} (D-UCB) from \cite{Kocsis06} requires to store the whole history, and not only empirical rewards of each arm, as after observing a reward, all previous rewards must be multiplied by $\gamma^n$ if that arm was not seen for $n>0$ times. So the storage cannot be simply proportional to $K$, but needs to grows as $t$ grows. Therefore, D-UCB costs $\bigO{K T}$ in memory and $\bigO{K T^2}$ in time.
+% As demonstrated in Section~\ref{sec:6:NumericalExperiments}, our proposal is empirically efficient in terms of regret, but it is important to also evaluate its cost in terms of both \emph{time} and \emph{memory}.
+% Remember that $\Upsilon_T$ denotes the number of change-points.
+% If we denote $d_{\max}$ the longest duration of a stationary sequence, for the question of the memory storage, the worst case is $d_{\max} = T$ for a stationary problem, and the easiest case is $d_{\max} \simeq T / \Upsilon_T$, typically obtained for $\Upsilon_T$ evenly spaced change-points.
+% %
+% We begin by reviewing the costs of the algorithms designed for stationary problems and then of other approaches, similarly to what is presented in Section~\ref{sec:3:timeAndMemoryCosts}.
 
 
-\textbf{Actively adaptive algorithms.}
-%
-Limited memory actively adaptive algorithms, like \MUCB, are even more costly.
-For instance, \MUCB{} would have the same cost of $\bigO{K T d_{\max}}$, except that \cite{CaoZhenKvetonXie18} introduces a window-size $w$ and run their CPD algorithm only using the last $w$ observations of each arm. If $w$ is constant w.r.t. the horizon $T$, their algorithm has a storage cost bounded by $\bigO{K w}$ and a running time of $\bigO{K T w}$, being comparable to the cost $\bigO{K T}$ of the oracle approach.
-However in practice and in the theoretical results, the window size should depend on $T$, and a prior knowledge of the minimal change size $\widehat{\delta}$ (see Remark~1 in \cite{CaoZhenKvetonXie18}), with $w = \cO(\log(T) / \widehat{\delta}^2)$.
-Hence it makes more sense to consider that \MUCB{} has a time cost bounded by $\bigO{K T \log(T)}$ and a memory costs bounded by $\bigO{K \log(T)}$, which is better than our proposal but more costly than the oracle or DTS or stationary algorithms.
+% \textbf{Classical algorithms.}
+% %
+% For a stationary bandit problem, almost all \emph{classical algorithms} (\ie, designed for stationary problems) need and use a storage proportional to the number of arms, \ie, $\bigO{K}$, as most of them only need to store the number of pulls and the empirical mean of rewards for each arm.
+% They also have a time complexity $\bigO{K}$ at every time step $t\in[T]$, hence an optimal total time complexity of $\bigO{KT}$.
+% In particular, this case includes \UCB, Thompson sampling and \klUCB.
+
+% \textbf{Oracle algorithms.}
+% %
+% Most algorithms designed for abruptly changing environments are more costly, both in terms of storage and computation time, as they need more storage and time to test for changes.
+% The \emph{oracle algorithm} presented in Section~\ref{sec:6:NumericalExperiments}, combined with any efficient index policy, needs a storage at most $\bigO{K \Upsilon_T}$ as it stores the change-points, and have an optimal time complexity of $\bigO{K T}$ too.
+% % \footnote{Note that if implemented naively, that is if testing is $t$ is a change-points takes a time $\bigO{\Upsilon_T}$, its performance is sub-optimal, as it is of the order of $\bigO{K T \Upsilon_T}$. However, if the change-points are stored in a \emph{dynamic linked list}, and the head is removed when it is found to be equal to the current time step, then the test at a time $t$ costs only a constant time $\bigO{1}$, hence the total time complexity is bounded by $\bigO{K T}$ and the oracle algorithm is indeed optimal in terms of time complexity.}.
+
+% \textbf{Passively adaptive algorithms.}
+% %
+% Passively adaptive algorithms should intuitively be more efficient, but as they use a non-constant storage, they are actually as costly as the oracle.
+% For instance SW-UCB uses a storage of $\bigO{K \tau}$, increasing as $T$ increases, and similarly for other passively adaptive algorithms.
+% We highlight that to the best of our knowledge, the Discounted Thompson sampling algorithm (DTS) is the only algorithm tailored for abruptly changing problems that could be efficient in terms of regret (see the simulations results, even though it has no theoretical guarantee), and optimal in terms of both computational and storage costs. Indeed, it simply needs a storage proportional to the number of arms, $\bigO{K}$, and a time complexity of $\bigO{KT}$ for a horizon $T$ (see the pseudo-code in \cite{RajKalyani17}).
+% % Note that the discounting scheme in Discounted-\UCB{} (D-UCB) from \cite{Kocsis06} requires to store the whole history, and not only empirical rewards of each arm, as after observing a reward, all previous rewards must be multiplied by $\gamma^n$ if that arm was not seen for $n>0$ times. So the storage cannot be simply proportional to $K$, but needs to grows as $t$ grows. Therefore, D-UCB costs $\bigO{K T}$ in memory and $\bigO{K T^2}$ in time.
 
 
-\paragraph{Time and memory cost of \GLRklUCB.}
-%
-On the other hand, actively adaptive algorithms are more efficient (when tuned correctly) but at the price of being more costly, both in terms of time and memory.
-The algorithms using the \CUSUM{} or \GLR{} tests (as well as \PHT) are found to be efficient in terms of regret, when used with an efficient and low-cost index policy (that is, choosing the arm to play only costs $\bigO{K}$ at any time $t$).
-However, they need to store all past rewards and pulls history, to be able to reset them when the CPD algorithm indicates to do, so they have a memory cost of $\bigO{K d_{\max}}$, that is $\bigO{K T}$ in the worst case (compared to $\bigO{K}$ for algorithms designed for the stationary setting).
-%
-They are also costly in terms of computation time, as at current time $t$, when trying to detect a change with $n_i$ observations of arm $i$ (\ie, $(Z_{i,n})_{1\leq n \leq n_i}$ in Algorithm~\ref{algo:6:GLRklUCB}), the CPD algorithm (\CUSUM{} or \GLR) costs a time $\bigO{n_i}$.
-Indeed, it needs to compute sliding averages for every $s$ in an interval of size $n_i$ (\ie, $\mu_{\text{left}}=\mu_{1:s}$ and $\mu_{\text{right}}=\mu_{s+1:n_i}$) and a test for each $s$ which costs a constant time $\bigO{1}$ (\eg, computing two $\kl$ and checking for a threshold for our \GLR{} test).
-So for every $s$, the running time is $\bigO{1}$, if the sliding averages are computed iteratively based on a simple scheme: first, one compute the total average $\mu_{t_0:t}$ and set $\mu_{\text{left}}=0$ and $\mu_{\text{right}}=\mu_{t_0:t}$. Then for every successive values of $s$, both the left and right sliding window means can be updated with a single memory access and two computations (\ie, $\bigO{1}$):
-%
-\begin{equation}
-    z \leftarrow Z_{i, s + 1},\,\,
-    \mu_{\text{left}} \leftarrow \frac{s \mu_{\text{left}} + z}{s + 1},\,\,
-    \mu_{\text{right}} \leftarrow \frac{(n_i + 1 - s) \mu_{\text{right}} - z}{n_i - s},\,\,
-    s \leftarrow s + 1.
-\end{equation}
-%
-To sum up, at every time step the CPD algorithm needs a time $\bigO{n_i}=\bigO{d_{\max}}$, and at the end, the time complexity of \CUSUMklUCB{} as well as \GLRklUCB{} is $\bigO{K T d_{\max}}$, which can be up-to $\bigO{K T^2}$, much more costly than $\bigO{K T}$ for \klUCB{} for instance.
-
-Our proposal \GLRklUCB{} requires a storage of the order of $\bigO{K d_{\max}}$ and a running time of the order of $\bigO{K T d_{\max}}$, and the two bounds are validated experimentally, see Table~\ref{table:6:TimeCosts}.
-
-% \TODOL{Also for detection delay? Also for false alarm probability?}
+% \textbf{Actively adaptive algorithms.}
+% %
+% Limited memory actively adaptive algorithms, like \MUCB, are even more costly.
+% For instance, \MUCB{} would have the same cost of $\bigO{K T d_{\max}}$, except that \cite{CaoZhenKvetonXie18} introduces a window-size $w$ and run their CPD algorithm only using the last $w$ observations of each arm. If $w$ is constant w.r.t. the horizon $T$, their algorithm has a storage cost bounded by $\bigO{K w}$ and a running time of $\bigO{K T w}$, being comparable to the cost $\bigO{K T}$ of the oracle approach.
+% However in practice and in the theoretical results, the window size should depend on $T$, and a prior knowledge of the minimal change size $\widehat{\delta}$ (see Remark~1 in \cite{CaoZhenKvetonXie18}), with $w = \cO(\log(T) / \widehat{\delta}^2)$.
+% Hence it makes more sense to consider that \MUCB{} has a time cost bounded by $\bigO{K T \log(T)}$ and a memory costs bounded by $\bigO{K \log(T)}$, which is better than our proposal but more costly than the oracle or DTS or stationary algorithms.
 
 
-\paragraph{Empirical measurements of computation times and memory costs.}
-%
-A theoretical analysis shows that there is a large gap between the costs of stationary or passively adaptive algorithms,
-and the costs of actively adaptive algorithms, for both computation time and memory consumption.
-% because the later need to store a large number of rewards and pulls history, while the first can keep a storage that grows as $\bigO{K}$ independently on the horizon.
-%
-We include here an extensive comparison of memory costs of the different algorithms.
-%
-For instance on the same experiment as the one used for Table~\ref{table:6:effectOptimizations}, that is problem 1 with $T=5000$, and then with $T=10000$ and $T=20000$, and $100$ independent runs,
-in our Python implementation (using the SMPyBandits library, \cite{SMPyBandits}), we can measure the (mean) real memory cost\footnote{We used one core of an Intel $i5$ Core CPU, with GNU/Linux Ubuntu $18.04$, Python v$3.6$, and $8$ Gb of RAM.} of the different algorithms.
-The Tables~\ref{table:6:TimeCosts} and \ref{table:6:MemoryCosts} included below give the mean ($\pm$ 1 standard-deviation) of real computation time and memory consumption, used by the algorithms.
-The computation time is normalized by the horizon, to reflect the (mean) time used for each time steps $t\in[T]$.
-%
-We also found that our two optimizations described below in \ref{sub:6:IdeasOptimizations} do not reduce the memory, thus we used $\Delta n = \Delta s = 20$ to speed-up the simulations.
-%
-The conclusions to draw for these two Tables~\ref{table:6:TimeCosts} and \ref{table:6:MemoryCosts} are twofold.
+% \paragraph{Time and memory cost of \GLRklUCB.}
+% %
+% On the other hand, actively adaptive algorithms are more efficient (when tuned correctly) but at the price of being more costly, both in terms of time and memory.
+% The algorithms using the \CUSUM{} or \GLR{} tests (as well as \PHT) are found to be efficient in terms of regret, when used with an efficient and low-cost index policy (that is, choosing the arm to play only costs $\bigO{K}$ at any time $t$).
+% However, they need to store all past rewards and pulls history, to be able to reset them when the CPD algorithm indicates to do, so they have a memory cost of $\bigO{K d_{\max}}$, that is $\bigO{K T}$ in the worst case (compared to $\bigO{K}$ for algorithms designed for the stationary setting).
+% %
+% They are also costly in terms of computation time, as at current time $t$, when trying to detect a change with $n_i$ observations of arm $i$ (\ie, $(Z_{i,n})_{1\leq n \leq n_i}$ in Algorithm~\ref{algo:6:GLRklUCB}), the CPD algorithm (\CUSUM{} or \GLR) costs a time $\bigO{n_i}$.
+% Indeed, it needs to compute sliding averages for every $s$ in an interval of size $n_i$ (\ie, $\mu_{\text{left}}=\mu_{1:s}$ and $\mu_{\text{right}}=\mu_{s+1:n_i}$) and a test for each $s$ which costs a constant time $\bigO{1}$ (\eg, computing two $\kl$ and checking for a threshold for our \GLR{} test).
+% So for every $s$, the running time is $\bigO{1}$, if the sliding averages are computed iteratively based on a simple scheme: first, one compute the total average $\mu_{t_0:t}$ and set $\mu_{\text{left}}=0$ and $\mu_{\text{right}}=\mu_{t_0:t}$. Then for every successive values of $s$, both the left and right sliding window means can be updated with a single memory access and two computations (\ie, $\bigO{1}$):
+% %
+% \begin{equation}
+%     z \leftarrow Z_{i, s + 1},\,\,
+%     \mu_{\text{left}} \leftarrow \frac{s \mu_{\text{left}} + z}{s + 1},\,\,
+%     \mu_{\text{right}} \leftarrow \frac{(n_i + 1 - s) \mu_{\text{right}} - z}{n_i - s},\,\,
+%     s \leftarrow s + 1.
+% \end{equation}
+% %
+% To sum up, at every time step the CPD algorithm needs a time $\bigO{n_i}=\bigO{d_{\max}}$, and at the end, the time complexity of \CUSUMklUCB{} as well as \GLRklUCB{} is $\bigO{K T d_{\max}}$, which can be up-to $\bigO{K T^2}$, much more costly than $\bigO{K T}$ for \klUCB{} for instance.
+
+% Our proposal \GLRklUCB{} requires a storage of the order of $\bigO{K d_{\max}}$ and a running time of the order of $\bigO{K T d_{\max}}$, and the two bounds are validated experimentally, see Table~\ref{table:6:TimeCosts}.
+
+% % \TODOL{Also for detection delay? Also for false alarm probability?}
 
 
-% \begin{small} %XXX WARNING
-\begin{table}[ht]
-    % \begin{small} %XXX WARNING
-    \centering
-    \begin{tabular}{c|cccccc}
-    \textbf{Algorithms} & $T=5000$ & $T=10000$ & $T=20000$ \\
-        \hline
-        Thompson sampling & \textbf{\SI{55}{\micro\second} $\pm$ \SI{11}{\micro\second}} & \textbf{\SI{51}{\micro\second} $\pm$ \SI{6}{\micro\second}} & \textbf{\SI{49}{\micro\second} $\pm$ \SI{4}{\micro\second}} \\
-        DTS & \SI{62}{\micro\second} $\pm$ \SI{11}{\micro\second} & \SI{60}{\micro\second} $\pm$ \SI{8}{\micro\second} & \SI{59}{\micro\second} $\pm$ \SI{7}{\micro\second} \\
-        \hline
-        \klUCB{} & \SI{122}{\micro\second} $\pm$ \SI{13}{\micro\second} & \SI{125}{\micro\second} $\pm$ \SI{13}{\micro\second} & \SI{128}{\micro\second} $\pm$ \SI{11}{\micro\second} \\
-        Discounted-\klUCB{} & \SI{94}{\micro\second} $\pm$ \SI{10}{\micro\second} & \SI{97}{\micro\second} $\pm$ \SI{12}{\micro\second} & \SI{103}{\micro\second} $\pm$ \SI{12}{\micro\second} \\
-        SW-\klUCB{} & \SI{162}{\micro\second} $\pm$ \SI{21}{\micro\second} & \SI{169}{\micro\second} $\pm$ \SI{18}{\micro\second} & \SI{167}{\micro\second} $\pm$ \SI{12}{\micro\second} \\
-        \hline
-        Oracle-Restart \klUCB{} & \SI{159}{\micro\second} $\pm$ \SI{31}{\micro\second} & \SI{157}{\micro\second} $\pm$ \SI{21}{\micro\second} & \SI{149}{\micro\second} $\pm$ \SI{15}{\micro\second} \\
-        \hline
-        \MklUCB{} & \SI{202}{\micro\second} $\pm$ \SI{25}{\micro\second} & \SI{220}{\micro\second} $\pm$ \SI{26}{\micro\second} & \SI{230}{\micro\second} $\pm$ \SI{19}{\micro\second} \\
-        \CUSUMklUCB{} & \SI{264}{\micro\second} $\pm$ \SI{53}{\micro\second} & \SI{227}{\micro\second} $\pm$ \SI{31}{\micro\second} & \SI{270}{\micro\second} $\pm$ \SI{33}{\micro\second} \\
-        \GLRklUCB{} & \SI{314}{\micro\second} $\pm$ \SI{50}{\micro\second} & \SI{399}{\micro\second} $\pm$ \SI{33}{\micro\second} & \SI{920}{\micro\second} $\pm$ \SI{180}{\micro\second}
-    \end{tabular}
-    \caption{\textbf{Normalized} computation time, for each time step $t\in[T]$, for different horizons.}
-    \label{table:6:TimeCosts}
-    % \end{small} %XXX WARNING
-\end{table}
-% \end{small} %XXX WARNING
-
-% \begin{small} %XXX WARNING
-\begin{table}[ht]
-    % \begin{small} %XXX WARNING
-    \centering
-    \begin{tabular}{c|cccccc}
-    \textbf{Algorithms} & $T=5000$ & $T=10000$ & $T=20000$ \\
-        \hline
-        Thompson sampling & \SI{813}{\byte} $\pm$ \SI{63}{\byte} & \SI{819}{\byte} $\pm$ 27 B & \SI{818}{\byte} $\pm$ \SI{35}{\byte} \\\
-        DTS & \SI{946}{\byte} $\pm$ \SI{38}{\byte} & \SI{946}{\byte} $\pm$ \SI{38}{\byte} & \SI{946}{\byte} $\pm$ \SI{39}{\byte} \\
-        \hline
-        \klUCB{} & \SI{937}{\byte} $\pm$ \SI{164}{\byte} & \SI{931}{\byte} $\pm$ \SI{172}{\byte} & \SI{933}{\byte} $\pm$ \SI{164}{\byte} \\
-        Discounted-\klUCB{} & \SI{1}{\kibi\byte} $\pm$ \SI{79}{\byte} & \SI{1}{\kibi\byte} $\pm$ \SI{94}{\byte} & \SI{1}{\kibi\byte} $\pm$ \SI{78}{\byte} \\
-        SW-\klUCB{} & \SI{6}{\kibi\byte} $\pm$ \SI{976}{\byte} & \SI{8}{\kibi\byte} $\pm$ \SI{1}{\kibi\byte} & \SI{12}{\kibi\byte} $\pm$ \SI{2}{\kibi\byte} \\
-        \hline
-        Oracle-Restart \klUCB{} & \SI{11}{\kibi\byte} $\pm$ \SI{3}{\kibi\byte} & \SI{19}{\kibi\byte} $\pm$ \SI{7}{\kibi\byte} & \SI{31}{\kibi\byte} $\pm$ \SI{17}{\kibi\byte} \\
-        \hline
-        \MklUCB{} & \SI{4}{\kibi\byte} $\pm$ \SI{1}{\kibi\byte} & \SI{6}{\kibi\byte} $\pm$ \SI{2}{\kibi\byte} & \SI{9}{\kibi\byte} $\pm$ \SI{4}{\kibi\byte} \\
-        \CUSUMklUCB{} & \SI{8}{\kibi\byte} $\pm$ \SI{4}{\kibi\byte} & \SI{11}{\kibi\byte} $\pm$ \SI{6}{\kibi\byte} & \SI{15}{\kibi\byte} $\pm$ \SI{10}{\kibi\byte} \\
-        \GLRklUCB{} & \SI{19}{\kibi\byte} $\pm$ \SI{7}{\kibi\byte} & \SI{32}{\kibi\byte} $\pm$ \SI{15}{\kibi\byte} & \SI{75}{\kibi\byte} $\pm$ \SI{26}{\kibi\byte}
-    \end{tabular}
-    \caption{\textbf{Non normalized} memory costs, for the same problem (Pb 1) with different horizons.}
-    \label{table:6:MemoryCosts}
-    % \end{small} %XXX WARNING
-\end{table}
-% \end{small} %XXX WARNING
+% \paragraph{Empirical measurements of computation times and memory costs.}
+% %
+% A theoretical analysis shows that there is a large gap between the costs of stationary or passively adaptive algorithms,
+% and the costs of actively adaptive algorithms, for both computation time and memory consumption.
+% % because the later need to store a large number of rewards and pulls history, while the first can keep a storage that grows as $\bigO{K}$ independently on the horizon.
+% %
+% We include here an extensive comparison of memory costs of the different algorithms.
+% %
+% For instance on the same experiment as the one used for Table~\ref{table:6:effectOptimizations}, that is problem 1 with $T=5000$, and then with $T=10000$ and $T=20000$, and $100$ independent runs,
+% in our Python implementation (using the SMPyBandits library, \cite{SMPyBandits}), we can measure the (mean) real memory cost\footnote{We used one core of an Intel $i5$ Core CPU, with GNU/Linux Ubuntu $18.04$, Python v$3.6$, and $8$ Gb of RAM.} of the different algorithms.
+% The Tables~\ref{table:6:TimeCosts} and \ref{table:6:MemoryCosts} included below give the mean ($\pm$ 1 standard-deviation) of real computation time and memory consumption, used by the algorithms.
+% The computation time is normalized by the horizon, to reflect the (mean) time used for each time steps $t\in[T]$.
+% %
+% We also found that our two optimizations described below in \ref{sub:6:IdeasOptimizations} do not reduce the memory, thus we used $\Delta n = \Delta s = 20$ to speed-up the simulations.
+% %
+% The conclusions to draw for these two Tables~\ref{table:6:TimeCosts} and \ref{table:6:MemoryCosts} are twofold.
 
 
-First, we verify the results stated above for the time complexity of different algorithms, implemented in Python using SMPyBandits \cite{SMPyBandits}.
-The methodology of time and memory measurements is discussed in Section~\ref{sec:3:timeAndMemoryCosts}.
-On the one hand, stationary and passively adaptive algorithms all have a time complexity scaling as $\bigO{T}$, as their normalized computation time is almost constant w.r.t. $T$.
-We check that TS and DTS are the fastest algorithms, $2.5$ to $3$ times faster than \klUCB-based algorithms, due to the fact that sampling from a Beta posterior is typically faster than doing a (small) numerical optimization step to compute the $\sup$ in the \klUCB{} indexes.
-We also check that the passively adaptive algorithms add a non-trivial but constant overhead on the computation times of their based algorithm, \eg, SW-\klUCB{} compared to \klUCB, or DTS compared to TS.
-On the other hand, we also check that actively adaptive algorithms are most costly.
-\MklUCB{} normalized computation time is not increasing much when the horizon is doubled, as the window-size $M$ was set to a constant w.r.t. the horizon $T$ for this experiment.
-The complexity of \GLRklUCB{} follows the $\bigO{K T^2}$ bound we presented above.
+% % \begin{small} %XXX WARNING
+% \begin{table}[ht]
+%     % \begin{small} %XXX WARNING
+%     \centering
+%     \begin{tabular}{c|cccccc}
+%     \textbf{Algorithms} & $T=5000$ & $T=10000$ & $T=20000$ \\
+%         \hline
+%         Thompson sampling & \textbf{\SI{55}{\micro\second} $\pm$ \SI{11}{\micro\second}} & \textbf{\SI{51}{\micro\second} $\pm$ \SI{6}{\micro\second}} & \textbf{\SI{49}{\micro\second} $\pm$ \SI{4}{\micro\second}} \\
+%         DTS & \SI{62}{\micro\second} $\pm$ \SI{11}{\micro\second} & \SI{60}{\micro\second} $\pm$ \SI{8}{\micro\second} & \SI{59}{\micro\second} $\pm$ \SI{7}{\micro\second} \\
+%         \hline
+%         \klUCB{} & \SI{122}{\micro\second} $\pm$ \SI{13}{\micro\second} & \SI{125}{\micro\second} $\pm$ \SI{13}{\micro\second} & \SI{128}{\micro\second} $\pm$ \SI{11}{\micro\second} \\
+%         Discounted-\klUCB{} & \SI{94}{\micro\second} $\pm$ \SI{10}{\micro\second} & \SI{97}{\micro\second} $\pm$ \SI{12}{\micro\second} & \SI{103}{\micro\second} $\pm$ \SI{12}{\micro\second} \\
+%         SW-\klUCB{} & \SI{162}{\micro\second} $\pm$ \SI{21}{\micro\second} & \SI{169}{\micro\second} $\pm$ \SI{18}{\micro\second} & \SI{167}{\micro\second} $\pm$ \SI{12}{\micro\second} \\
+%         \hline
+%         Oracle-Restart \klUCB{} & \SI{159}{\micro\second} $\pm$ \SI{31}{\micro\second} & \SI{157}{\micro\second} $\pm$ \SI{21}{\micro\second} & \SI{149}{\micro\second} $\pm$ \SI{15}{\micro\second} \\
+%         \hline
+%         \MklUCB{} & \SI{202}{\micro\second} $\pm$ \SI{25}{\micro\second} & \SI{220}{\micro\second} $\pm$ \SI{26}{\micro\second} & \SI{230}{\micro\second} $\pm$ \SI{19}{\micro\second} \\
+%         \CUSUMklUCB{} & \SI{264}{\micro\second} $\pm$ \SI{53}{\micro\second} & \SI{227}{\micro\second} $\pm$ \SI{31}{\micro\second} & \SI{270}{\micro\second} $\pm$ \SI{33}{\micro\second} \\
+%         \GLRklUCB{} & \SI{314}{\micro\second} $\pm$ \SI{50}{\micro\second} & \SI{399}{\micro\second} $\pm$ \SI{33}{\micro\second} & \SI{920}{\micro\second} $\pm$ \SI{180}{\micro\second}
+%     \end{tabular}
+%     \caption{\textbf{Normalized} computation time, for each time step $t\in[T]$, for different horizons.}
+%     \label{table:6:TimeCosts}
+%     % \end{small} %XXX WARNING
+% \end{table}
+% % \end{small} %XXX WARNING
 
-Second, we also verify the results for the memory costs of the different algorithms.
-Similarly, stationary and passively adaptive algorithms based on a discount factor (D-UCB, DTS) have a memory cost constant w.r.t. the horizon $T$, as stated above,
-while algorithms based on a sliding-window have a memory cost increasing w.r.t. the horizon $T$.
-The Oracle-Restart and the actively adaptive algorithms see their memory costs increase similarly.
-These measurements validate the upper-bound we gave on their memory costs, $\bigO{K d_{\max}}$, as $d_{\max} \simeq T / \Upsilon$ for this problem with evenly spaced change-points.
+% % \begin{small} %XXX WARNING
+% \begin{table}[ht]
+%     % \begin{small} %XXX WARNING
+%     \centering
+%     \begin{tabular}{c|cccccc}
+%     \textbf{Algorithms} & $T=5000$ & $T=10000$ & $T=20000$ \\
+%         \hline
+%         Thompson sampling & \SI{813}{\byte} $\pm$ \SI{63}{\byte} & \SI{819}{\byte} $\pm$ 27 B & \SI{818}{\byte} $\pm$ \SI{35}{\byte} \\\
+%         DTS & \SI{946}{\byte} $\pm$ \SI{38}{\byte} & \SI{946}{\byte} $\pm$ \SI{38}{\byte} & \SI{946}{\byte} $\pm$ \SI{39}{\byte} \\
+%         \hline
+%         \klUCB{} & \SI{937}{\byte} $\pm$ \SI{164}{\byte} & \SI{931}{\byte} $\pm$ \SI{172}{\byte} & \SI{933}{\byte} $\pm$ \SI{164}{\byte} \\
+%         Discounted-\klUCB{} & \SI{1}{\kibi\byte} $\pm$ \SI{79}{\byte} & \SI{1}{\kibi\byte} $\pm$ \SI{94}{\byte} & \SI{1}{\kibi\byte} $\pm$ \SI{78}{\byte} \\
+%         SW-\klUCB{} & \SI{6}{\kibi\byte} $\pm$ \SI{976}{\byte} & \SI{8}{\kibi\byte} $\pm$ \SI{1}{\kibi\byte} & \SI{12}{\kibi\byte} $\pm$ \SI{2}{\kibi\byte} \\
+%         \hline
+%         Oracle-Restart \klUCB{} & \SI{11}{\kibi\byte} $\pm$ \SI{3}{\kibi\byte} & \SI{19}{\kibi\byte} $\pm$ \SI{7}{\kibi\byte} & \SI{31}{\kibi\byte} $\pm$ \SI{17}{\kibi\byte} \\
+%         \hline
+%         \MklUCB{} & \SI{4}{\kibi\byte} $\pm$ \SI{1}{\kibi\byte} & \SI{6}{\kibi\byte} $\pm$ \SI{2}{\kibi\byte} & \SI{9}{\kibi\byte} $\pm$ \SI{4}{\kibi\byte} \\
+%         \CUSUMklUCB{} & \SI{8}{\kibi\byte} $\pm$ \SI{4}{\kibi\byte} & \SI{11}{\kibi\byte} $\pm$ \SI{6}{\kibi\byte} & \SI{15}{\kibi\byte} $\pm$ \SI{10}{\kibi\byte} \\
+%         \GLRklUCB{} & \SI{19}{\kibi\byte} $\pm$ \SI{7}{\kibi\byte} & \SI{32}{\kibi\byte} $\pm$ \SI{15}{\kibi\byte} & \SI{75}{\kibi\byte} $\pm$ \SI{26}{\kibi\byte}
+%     \end{tabular}
+%     \caption{\textbf{Non normalized} memory costs, for the same problem (Pb 1) with different horizons.}
+%     \label{table:6:MemoryCosts}
+%     % \end{small} %XXX WARNING
+% \end{table}
+% % \end{small} %XXX WARNING
+
+
+% First, we verify the results stated above for the time complexity of different algorithms, implemented in Python using SMPyBandits \cite{SMPyBandits}.
+% The methodology of time and memory measurements is discussed in Section~\ref{sec:3:timeAndMemoryCosts}.
+% On the one hand, stationary and passively adaptive algorithms all have a time complexity scaling as $\bigO{T}$, as their normalized computation time is almost constant w.r.t. $T$.
+% We check that TS and DTS are the fastest algorithms, $2.5$ to $3$ times faster than \klUCB-based algorithms, due to the fact that sampling from a Beta posterior is typically faster than doing a (small) numerical optimization step to compute the $\sup$ in the \klUCB{} indexes.
+% We also check that the passively adaptive algorithms add a non-trivial but constant overhead on the computation times of their based algorithm, \eg, SW-\klUCB{} compared to \klUCB, or DTS compared to TS.
+% On the other hand, we also check that actively adaptive algorithms are most costly.
+% \MklUCB{} normalized computation time is not increasing much when the horizon is doubled, as the window-size $M$ was set to a constant w.r.t. the horizon $T$ for this experiment.
+% The complexity of \GLRklUCB{} follows the $\bigO{K T^2}$ bound we presented above.
+
+% Second, we also verify the results for the memory costs of the different algorithms.
+% Similarly, stationary and passively adaptive algorithms based on a discount factor (D-UCB, DTS) have a memory cost constant w.r.t. the horizon $T$, as stated above,
+% while algorithms based on a sliding-window have a memory cost increasing w.r.t. the horizon $T$.
+% The Oracle-Restart and the actively adaptive algorithms see their memory costs increase similarly.
+% These measurements validate the upper-bound we gave on their memory costs, $\bigO{K d_{\max}}$, as $d_{\max} \simeq T / \Upsilon$ for this problem with evenly spaced change-points.
 
 
 %-----------------------------------------------------------------------------
@@ -732,27 +732,15 @@ with $\cT = \{t \in [T], t \mod \Delta n = 0\}$
 and $\cS_t = \{s \in [t], s \mod \Delta s = 0\}$.
 The goal is to speed up the computation time of every call to the \GLR{} test (\eg, choosing $\Delta s = 10$, every call should be about $10$ times faster), and to speed up the overhead cost of running the tests on top of the index policy (\klUCB), by testing for changes \emph{less} often (\eg, choosing $\Delta n = 10$ should speed up the all computation by a factor $10$).
 
+
 \paragraph{Empirical validation of these optimization tricks.}
 %
 We consider the problem 1 presented above (Figure~\ref{fig:6:Problem_1}), with $T=5000$ and $100$ repetitions, and we give the means ($\pm$ 1 standard-deviation) of both regret and computation time of \GLRklUCB{} with \textbf{Local} restarts, for different parameters $\Delta n$ and $\Delta s$, in Table~\ref{table:6:effectOptimizations} below.
 The other parameters of \GLRklUCB{} are chosen as $\delta = 1/\sqrt{K \Upsilon_T T}$ and $\omega = 0.1\sqrt{K\log(T)/T}$ (from Corollary~\ref{cor:6:Local}).
 The algorithm analyzed in Section~\ref{sec:6:RegretAnalysis} corresponds to $\Delta n = \Delta s = 1$.
 
-On the same problem,
-the Oracle-Restart \klUCB{} obtained a mean regret of $37$ for a running time of \SI{711}{\milli\second},
-while \klUCB{} obtained a regret of $270$ for a time of \SI{587}{\milli\second}.
-In comparison with the two other efficient approaches, M-\klUCB{} obtained a regret of $290$ for a time of \SI{943}{\milli\second},
-and \CUSUMklUCB{} obtained a regret of $148$ for a time of \SI{46}{\second}.
-%
-This shows that our proposal is very efficient compared to stationary algorithms, and comparable to the state-of-the-art actively adaptive algorithm.
-Moreover, this shows that two heuristics efficiently speed-up the computation times of \GLRklUCB.
-Choosing small values, like $\Delta n = 20, \Delta s = 20$, can speed-up \GLRklUCB, making it fast enough to be comparable to recent efficient approaches like \MUCB{} and even comparable to the oracle policy.
-%
-It is very satisfying to see that these optimizations do not reduce much the regret of \GLRklUCB, as it still outperforms most state-of-the-art algorithms, and significantly reduces the computation time as wanted.
-With such numerical optimization, \GLRklUCB{} is not significantly slower than \klUCB{} while being much more efficient for piece-wise stationary problems.
-
 % \begin{small} %XXX WARNING
-\begin{table}[ht]
+\begin{table}[!h]
     % \begin{small} %XXX WARNING
     \centering
     % \begin{minipage}[b]{0.49\linewidth}\centering
@@ -785,86 +773,99 @@ With such numerical optimization, \GLRklUCB{} is not significantly slower than \
 \end{table}
 % \end{small} %XXX WARNING
 
-
-% ----------------------------------------------------------------------------
-\subsection{Sensitivity analysis of the exploration probability $\omega$}\label{sec:6:choosingAlpha0}
-
-As demonstrated in our experiments in Section~\ref{sec:6:NumericalExperiments},
-the choice of $\omega=\omega_0\sqrt{\Upsilon_T\log(T)/T}$ for the exploration probability is a good choice for \GLRklUCB{} to be efficient (for the \textbf{local restarts} option).
-The dependency w.r.t. the horizon $T$ comes from Corollary~\ref{cor:6:Local} when $\Upsilon_T$ is unknown, and we observe in the Table~\ref{table:6:sensibilityAlpha0} below that the value of $\omega_0$ does not influence much the performance, as long as $\omega_0\leq1$.
-Different values of $\omega_0$ are explored, for problems $1$, $2$ and $4$, and we average the results over $100$ independent runs.
-Other parameters are set to \textbf{Local} restarts, $\delta_T=1/\sqrt{\Upsilon_T T}$, and $\Delta n = \Delta s = 10$ to speed-up the experiments.
+On the same problem,
+the Oracle-Restart \klUCB{} obtained a mean regret of $37$ for a running time of \SI{711}{\milli\second},
+while \klUCB{} obtained a regret of $270$ for a time of \SI{587}{\milli\second}.
+In comparison with the two other efficient approaches, M-\klUCB{} obtained a regret of $290$ for a time of \SI{943}{\milli\second},
+and \CUSUMklUCB{} obtained a regret of $148$ for a time of \SI{46}{\second}.
 %
-In the three experiments, \GLRklUCB{} performs closely to the Oracle-Restart \klUCB{}, and outperforms all or almost all the other approaches, for all choices of $\omega_0$.
-We observe in Table~\ref{table:6:sensibilityAlpha0} that the parameter $\omega_0$ does not have a significative impact on the performance,
-and that surprisingly, choosing $\omega_0 = 0$ does not reduce the empirical performance of \GLRklUCB, which means that on some problems there is no need of a forced exploration.
-However, the analysis of \GLRklUCB{} is based on the forced exploration, and we found that for a larger number of arms, or for problems when the optimal arm change constantly, the forced exploration is required.
+This shows that our proposal is very efficient compared to stationary algorithms, and comparable to the state-of-the-art actively adaptive algorithm.
+Moreover, this shows that two heuristics efficiently speed-up the computation times of \GLRklUCB.
+Choosing small values, like $\Delta n = 20, \Delta s = 20$, can speed-up \GLRklUCB, making it fast enough to be comparable to recent efficient approaches like \MUCB{} and even comparable to the oracle policy.
 %
-The same observations can be made for other variants of our algorithm, for instance with \textbf{Global} restarts, or other values of $\Delta n$, $\Delta s$, or other values of $\delta$.
-
-% \begin{small} %XXX WARNING
-\begin{table}[ht]
-    % \begin{small} %XXX WARNING
-    \centering
-    \begin{tabular}{l|cccccc}
-        \textbf{Choice of} $\omega_0$ & Problem $1$ & Problem $2$ & Problem $4$ \\
-        \hline
-        $\omega_0=1$     & $51 \pm 29$ & $79 \pm 35$ & $82 \pm 45$ \\
-        $\omega_0=0.5$   & $38 \pm 29$ & $70 \pm 35$ & $76 \pm 39$ \\
-        $\omega_0=0.1$   & $33 \pm 29$ & $69 \pm 31$ & $68 \pm 32$ \\
-        $\mathbf{\omega_0=0.05}$  & $\mathbf{36 \pm 29}$ & $\mathbf{65 \pm 33}$ & $\mathbf{67 \pm 36}$ \\
-        $\omega_0=0.01$  & $38 \pm 33$ & $66 \pm 33$ & $71 \pm 37$ \\
-        $\omega_0=0.005$ & $40 \pm 27$ & $69 \pm 30$ & $73 \pm 56$ \\
-        $\omega_0=0.001$ & $38 \pm 30$ & $69 \pm 34$ & $67 \pm 34$ \\
-        $\omega_0=0$     & $36 \pm 32$ & $66 \pm 36$ & $67 \pm 33$
-    \end{tabular}
-    \caption{Mean regret $\pm$ $1$ std-dev, for different choices of scaling factor for the forced exploration probability $\omega_0\in[0,1]$ (\ie, $\omega=\omega_0 \omega_T$), on three problems of horizon $T=5000$, for \GLRklUCB{} with \textbf{local restarts}, with $\omega_T = \omega_0\sqrt{\Upsilon_T \log(T)/T}$.}
-    \label{table:6:sensibilityAlpha0}
-    % \end{small} %XXX WARNING
-\end{table}
-% \end{small} %XXX WARNING
+It is very satisfying to see that these optimizations do not reduce much the regret of \GLRklUCB, as it still outperforms most state-of-the-art algorithms, and significantly reduces the computation time as wanted.
+With such numerical optimization, \GLRklUCB{} is not significantly slower than \klUCB{} while being much more efficient for piece-wise stationary problems.
 
 
-% ----------------------------------------------------------------------------
-\subsection{Sensitivity analysis of the confidence level $\delta$}\label{sec:6:choosingDelta}
+% % ----------------------------------------------------------------------------
+% \subsection{Sensitivity analysis of the exploration probability $\omega$}\label{sec:6:choosingAlpha0}
 
-Similarly, the choice of $\delta=\delta_0 / \sqrt{\Upsilon_T T}$ for the confidence level is a good choice for \GLRklUCB{} to be efficient (for the \textbf{local restarts} option).
-The dependency w.r.t. the horizon $T$ comes from Corollary~\ref{cor:6:Local} when $\Upsilon_T$ is unknown, and we observe in the Table~\ref{table:6:sensibilityDelta} below that the value of $\delta_0$ does not influence much the performance of our proposal, as long as $\delta_0\leq1$.
-Different values of $\delta_0$ are explored, for problems $1$, $2$ and $4$, and we average the results over $100$ independent runs.
-Other parameters are set to \textbf{Local} restarts, $\omega_T = 0.1 \sqrt{\Upsilon_T\log(T)/T}$, and $\Delta n = \Delta s = 10$ to speed-up the experiments.
-%
-We observe in Table~\ref{table:6:sensibilityDelta} that the parameter $\delta_0$ has no significative impact on the performance,
-and that choosing $\delta_0 = 1$ is indeed a valid choice.
-Inspired by Occam's razor, we recommend this choice of $\delta_0=1$ in practice.
-%
-The same observations can be made for other variants of our algorithm, for instance with \textbf{Global} restarts, or other values of $\Delta n$, $\Delta s$, or other values of $\omega$.
+% As demonstrated in our experiments in Section~\ref{sec:6:NumericalExperiments},
+% the choice of $\omega=\omega_0\sqrt{\Upsilon_T\log(T)/T}$ for the exploration probability is a good choice for \GLRklUCB{} to be efficient (for the \textbf{local restarts} option).
+% The dependency w.r.t. the horizon $T$ comes from Corollary~\ref{cor:6:Local} when $\Upsilon_T$ is unknown, and we observe in the Table~\ref{table:6:sensibilityAlpha0} below that the value of $\omega_0$ does not influence much the performance, as long as $\omega_0\leq1$.
+% Different values of $\omega_0$ are explored, for problems $1$, $2$ and $4$, and we average the results over $100$ independent runs.
+% Other parameters are set to \textbf{Local} restarts, $\delta_T=1/\sqrt{\Upsilon_T T}$, and $\Delta n = \Delta s = 10$ to speed-up the experiments.
+% %
+% In the three experiments, \GLRklUCB{} performs closely to the Oracle-Restart \klUCB{}, and outperforms all or almost all the other approaches, for all choices of $\omega_0$.
+% We observe in Table~\ref{table:6:sensibilityAlpha0} that the parameter $\omega_0$ does not have a significative impact on the performance,
+% and that surprisingly, choosing $\omega_0 = 0$ does not reduce the empirical performance of \GLRklUCB, which means that on some problems there is no need of a forced exploration.
+% However, the analysis of \GLRklUCB{} is based on the forced exploration, and we found that for a larger number of arms, or for problems when the optimal arm change constantly, the forced exploration is required.
+% %
+% The same observations can be made for other variants of our algorithm, for instance with \textbf{Global} restarts, or other values of $\Delta n$, $\Delta s$, or other values of $\delta$.
 
-% \begin{small} %XXX WARNING
-\begin{table}[ht]
-    % \begin{small} %XXX WARNING
-    \centering
-    \begin{tabular}{l|cccccc}
-        \textbf{Choice of} $\delta_0$ & Problem $1$ & Problem $2$ & Problem $4$ \\
-        \hline
-        $\delta_0=1000$       & $\mathbf{65 \pm 31}$ & $106 \pm 35$ & $\mathbf{93 \pm 34}$ \\
-        $\delta_0=500$        & $70 \pm 28$ & $104 \pm 35$ & $94 \pm 33$ \\
-        $\delta_0=100$        & $72 \pm 32$ & $105 \pm 34$ & $95 \pm 32$ \\
-        $\delta_0=50$         & $72 \pm 32$ & $112 \pm 31$ & $94 \pm 31$ \\
-        $\delta_0=10$         & $75 \pm 32$ & $107 \pm 31$ & $97 \pm 33$ \\
-        $\delta_0=5$          & $76 \pm 31$ & $\mathbf{103 \pm 30}$ & $97 \pm 32$ \\
-        \textcolor{blue}{$\delta_0=1$}  & $72 \pm 32$ & $111 \pm 30$ & $96 \pm 31$ \\
-        $\delta_0=0.5$        & $72 \pm 30$ & $117 \pm 35$ & $97 \pm 31$ \\
-        $\delta_0=0.1$        & $70 \pm 29$ & $111 \pm 29$ & $99 \pm 32$ \\
-        $\delta_0=0.05$       & $68 \pm 29$ & $116 \pm 37$ & $101 \pm 30$ \\
-        $\delta_0=0.01$       & $74 \pm 29$ & $114 \pm 32$ & $101 \pm 32$ \\
-        $\delta_0=0.005$      & $76 \pm 26$ & $114 \pm 34$ & $101 \pm 31$ \\
-        $\delta_0=0.001$      & $76 \pm 29$ & $117 \pm 34$ & $102 \pm 32$
-    \end{tabular}
-    \caption{Mean regret $\pm$ $1$ std-dev, for different choices of scaling factor for the confidence level $\delta_0$ (\ie, $\delta=\delta_0 \delta_T$), on three problems of horizon $T=5000$, for \GLRklUCB{} with $\delta=\delta_0 / \sqrt{\Upsilon_T T}$.}
-    \label{table:6:sensibilityDelta}
-    % \end{small} %XXX WARNING
-\end{table}
-% \end{small} %XXX WARNING
+% % \begin{small} %XXX WARNING
+% \begin{table}[ht]
+%     % \begin{small} %XXX WARNING
+%     \centering
+%     \begin{tabular}{l|cccccc}
+%         \textbf{Choice of} $\omega_0$ & Problem $1$ & Problem $2$ & Problem $4$ \\
+%         \hline
+%         $\omega_0=1$     & $51 \pm 29$ & $79 \pm 35$ & $82 \pm 45$ \\
+%         $\omega_0=0.5$   & $38 \pm 29$ & $70 \pm 35$ & $76 \pm 39$ \\
+%         $\omega_0=0.1$   & $33 \pm 29$ & $69 \pm 31$ & $68 \pm 32$ \\
+%         $\mathbf{\omega_0=0.05}$  & $\mathbf{36 \pm 29}$ & $\mathbf{65 \pm 33}$ & $\mathbf{67 \pm 36}$ \\
+%         $\omega_0=0.01$  & $38 \pm 33$ & $66 \pm 33$ & $71 \pm 37$ \\
+%         $\omega_0=0.005$ & $40 \pm 27$ & $69 \pm 30$ & $73 \pm 56$ \\
+%         $\omega_0=0.001$ & $38 \pm 30$ & $69 \pm 34$ & $67 \pm 34$ \\
+%         $\omega_0=0$     & $36 \pm 32$ & $66 \pm 36$ & $67 \pm 33$
+%     \end{tabular}
+%     \caption{Mean regret $\pm$ $1$ std-dev, for different choices of scaling factor for the forced exploration probability $\omega_0\in[0,1]$ (\ie, $\omega=\omega_0 \omega_T$), on three problems of horizon $T=5000$, for \GLRklUCB{} with \textbf{local restarts}, with $\omega_T = \omega_0\sqrt{\Upsilon_T \log(T)/T}$.}
+%     \label{table:6:sensibilityAlpha0}
+%     % \end{small} %XXX WARNING
+% \end{table}
+% % \end{small} %XXX WARNING
+
+
+% % ----------------------------------------------------------------------------
+% \subsection{Sensitivity analysis of the confidence level $\delta$}\label{sec:6:choosingDelta}
+
+% Similarly, the choice of $\delta=\delta_0 / \sqrt{\Upsilon_T T}$ for the confidence level is a good choice for \GLRklUCB{} to be efficient (for the \textbf{local restarts} option).
+% The dependency w.r.t. the horizon $T$ comes from Corollary~\ref{cor:6:Local} when $\Upsilon_T$ is unknown, and we observe in the Table~\ref{table:6:sensibilityDelta} below that the value of $\delta_0$ does not influence much the performance of our proposal, as long as $\delta_0\leq1$.
+% Different values of $\delta_0$ are explored, for problems $1$, $2$ and $4$, and we average the results over $100$ independent runs.
+% Other parameters are set to \textbf{Local} restarts, $\omega_T = 0.1 \sqrt{\Upsilon_T\log(T)/T}$, and $\Delta n = \Delta s = 10$ to speed-up the experiments.
+% %
+% We observe in Table~\ref{table:6:sensibilityDelta} that the parameter $\delta_0$ has no significative impact on the performance,
+% and that choosing $\delta_0 = 1$ is indeed a valid choice.
+% Inspired by Occam's razor, we recommend this choice of $\delta_0=1$ in practice.
+% %
+% The same observations can be made for other variants of our algorithm, for instance with \textbf{Global} restarts, or other values of $\Delta n$, $\Delta s$, or other values of $\omega$.
+
+% % \begin{small} %XXX WARNING
+% \begin{table}[ht]
+%     % \begin{small} %XXX WARNING
+%     \centering
+%     \begin{tabular}{l|cccccc}
+%         \textbf{Choice of} $\delta_0$ & Problem $1$ & Problem $2$ & Problem $4$ \\
+%         \hline
+%         $\delta_0=1000$       & $\mathbf{65 \pm 31}$ & $106 \pm 35$ & $\mathbf{93 \pm 34}$ \\
+%         $\delta_0=500$        & $70 \pm 28$ & $104 \pm 35$ & $94 \pm 33$ \\
+%         $\delta_0=100$        & $72 \pm 32$ & $105 \pm 34$ & $95 \pm 32$ \\
+%         $\delta_0=50$         & $72 \pm 32$ & $112 \pm 31$ & $94 \pm 31$ \\
+%         $\delta_0=10$         & $75 \pm 32$ & $107 \pm 31$ & $97 \pm 33$ \\
+%         $\delta_0=5$          & $76 \pm 31$ & $\mathbf{103 \pm 30}$ & $97 \pm 32$ \\
+%         \textcolor{blue}{$\delta_0=1$}  & $72 \pm 32$ & $111 \pm 30$ & $96 \pm 31$ \\
+%         $\delta_0=0.5$        & $72 \pm 30$ & $117 \pm 35$ & $97 \pm 31$ \\
+%         $\delta_0=0.1$        & $70 \pm 29$ & $111 \pm 29$ & $99 \pm 32$ \\
+%         $\delta_0=0.05$       & $68 \pm 29$ & $116 \pm 37$ & $101 \pm 30$ \\
+%         $\delta_0=0.01$       & $74 \pm 29$ & $114 \pm 32$ & $101 \pm 32$ \\
+%         $\delta_0=0.005$      & $76 \pm 26$ & $114 \pm 34$ & $101 \pm 31$ \\
+%         $\delta_0=0.001$      & $76 \pm 29$ & $117 \pm 34$ & $102 \pm 32$
+%     \end{tabular}
+%     \caption{Mean regret $\pm$ $1$ std-dev, for different choices of scaling factor for the confidence level $\delta_0$ (\ie, $\delta=\delta_0 \delta_T$), on three problems of horizon $T=5000$, for \GLRklUCB{} with $\delta=\delta_0 / \sqrt{\Upsilon_T T}$.}
+%     \label{table:6:sensibilityDelta}
+%     % \end{small} %XXX WARNING
+% \end{table}
+% % \end{small} %XXX WARNING
 
 
 % ----------------------------------------------------------------------------

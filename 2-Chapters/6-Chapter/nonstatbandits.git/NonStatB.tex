@@ -58,7 +58,7 @@ In this model, described in full details in Section~\ref{sec:6:BanditSetting}, t
 % Our numerical simulations reveal that using local restart leads to better empirical performance, and show that our approach often outperforms existing competitors.
 
 
-\paragraph{Outline.}
+\textbf{Outline.}
 %
 % This chapter is structured as follows.
 We introduce the model in Section~\ref{sec:6:BanditSetting}, and review related works in Section~\ref{sec:6:relatedWork}.
@@ -67,7 +67,7 @@ We introduce the two variants of \GLRklUCB{} algorithm in Section~\ref{sec:6:GLR
 The unified regret analysis is given in Section~\ref{sec:6:RegretAnalysis}, we prove one result in Section~\ref{sec:6:proofRegret}.
 We discuss numerical experiments in Section~\ref{sec:6:NumericalExperiments}, with more details in the Appendix~\ref{sec:6:appendix}.
 
-\paragraph{Publications.}
+\textbf{Publications.}
 %
 This chapter is based on our articles \cite{Besson2019GLRT,Besson2019Gretsi}.
 
@@ -803,8 +803,8 @@ As it is the simplest one to handle in our proofs, this is the one we chose for 
 \label{sec:6:RegretAnalysis}
 %-----------------------------------------------------------------------------
 
-This section gives the finite-time regret bounds for the two variants, and interpretations of the different results.
-Although we only prove one bound, the other proof can be found in \cite{Besson2019GLRT}.
+This section gives the finite-time regret bounds for the two variants, and interpretations of our results.
+We include only one proof, as the other is given in \cite{Besson2019GLRT}.
 
 % ----------------------------------------------------------------------------
 \subsection{Results for \GLRklUCB{} using \emph{global restarts}}
@@ -836,10 +836,10 @@ and the $\Delta^{(i)}$ terms expressing the hardness of the change-point detecti
 
 \begin{theorem}\label{thm:6:mainRegretBoundGlobal}
 \begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
-    For $\omega$ and $\delta$ for which Assumption~\ref{ass:6:LongPeriodsGlobal} is satisfied, the regret of \GLRklUCB{} with parameters $\omega$ and $\delta$ based on \textbf{Global} Restart satisfies
+    For $\omega$ and $\delta$ for which Assumption~\ref{ass:6:LongPeriodsGlobal} is satisfied, the regret of \GLRklUCB{} with parameters $\omega$ and $\delta$ based on \textbf{Global} Restart satisfies the following \emph{finite-time} regret bound
     \begin{align}
         R_T \;\; \leq \;\; & 2\sum_{k=1}^{\Upsilon_T} \frac{4K}{\omega \left(\Delta^{(i)}\right)^2}\beta(T,\delta) +\omega T + \delta (K+1)\Upsilon_T \\
-        & + \sum_{k=1}^{\Upsilon_T}\sum_{\substack{i = 1,\dots,Y_T\\\mu_k^{(i)} \neq \mu_{k^*}^{(i)}}} \frac{\left( \mu_{k^*}^{(i)}-\mu_k^{(i)}\right)}{\kl\left(\mu_k^{(i)},\mu_{k^*}^{(i)}\right)}\ln(T) + \bigO{\sqrt{\ln(T)}}. \nonumber
+        & + \sum_{k=1}^{\Upsilon_T}\sum_{\substack{i = 1,\dots,Y_T\\\mu_k^{(i)} \neq \mu_{k^*}^{(i)}}} \frac{\left( \mu_{k^*}^{(i)}-\mu_k^{(i)}\right)}{\kl\left(\mu_k^{(i)},\mu_{k^*}^{(i)}\right)}\ln(T) + \textcolor{red}{\bigO{\sqrt{\ln(T)}}}. \nonumber
     \end{align}
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
@@ -847,8 +847,11 @@ and the $\Delta^{(i)}$ terms expressing the hardness of the change-point detecti
 
 \textbf{\textcolor{red}{Warning}:}
 %
-We highlight that \emph{this result is finite-time} and not asymptotic, even if it uses the notation $\bigO{\sqrt{\ln(T)}}$.
-This last term does not mean the whole inequality is only valid for $T\to\infty$, but it rather means that at finite time, the inequality is valid with the last term being a function $g(T)$, which is upper-bounded by a constant times $\sqrt{\ln(T)}$ from a certain time $T_0$.
+We highlight that \emph{this result is finite-time} and not asymptotic, but if it uses the notation $\textcolor{red}{\bigO{\sqrt{\ln(T)}}}$ for simplicity.
+This last term $\bigO{\dots}$ does not mean the whole inequality is only valid for $T\to\infty$, but it rather means that at finite time, the inequality is valid with the last term being a function $g(T)$, which is upper-bounded by a certain $c_0 \times \sqrt{\ln(T)}$, from a certain time $T_0$ (\ie, $\forall T \geq T_0$).
+It is also the case of the next Theorem~\ref{thm:6:mainRegretBound}.
+
+% \vspace*{-20pt}  % FIXME
 
 \begin{corollary}\label{cor:6:Global}
 % \begin{leftbar}[corollarybar]  % XXX leftbar corollarybar, comment if needed
@@ -897,17 +900,17 @@ It requires that any two consecutive change-points \emph{on a given arm} are suf
 
 \begin{theorem}\label{thm:6:mainRegretBound}
 \begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
-    For $\omega$ and $\delta$ for which Assumption~\ref{ass:6:LongPeriods} is satisfied, the regret of \GLRklUCB{} with parameters $\omega$ and $\delta$ based on Local Restart satisfies
+    For $\omega$ and $\delta$ for which Assumption~\ref{ass:6:LongPeriods} is satisfied, the regret of \GLRklUCB{} with parameters $\omega$ and $\delta$ based on Local Restart satisfies the following \emph{finite-time} regret bound
     %
     \begin{equation}
-        R_T \leq 2\sum_{k=1}^K\sum_{\ell=1}^{\NCk} \frac{4K}{\omega \left(\Delta_k^{(\ell)}\right)^2}\beta(T,\delta) +\omega T + 2 \delta \EffChange  + \sum_{k=1}^K\sum_{\ell=1}^{\NCk} \frac{\ln(T)}{\kl(\overline{\mu}_k^{(\ell)},{\mu}^*_{i,\ell})} +\bigO{\sqrt{\ln(T)}},
+        R_T \leq 2\sum_{k=1}^K\sum_{\ell=1}^{\NCk} \frac{4K}{\omega \left(\Delta_k^{(\ell)}\right)^2}\beta(T,\delta) +\omega T + 2 \delta \EffChange  + \sum_{k=1}^K\sum_{\ell=1}^{\NCk} \frac{\ln(T)}{\kl(\overline{\mu}_k^{(\ell)},{\mu}^*_{i,\ell})} + \textcolor{red}{\bigO{\sqrt{\ln(T)}}},
     \end{equation}
     where ${\mu}^*_{i,\ell} \eqdef \inf \left\{ \mu_{k_t^*}(t) : \mu_{k_t^*}(t) \neq \overline{\mu}_k^{(\ell)}, t \in [\tau_k^{(\ell)}+1, \tau_k^{(\ell+1)}]\right\}$.
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
 Like for the first Theorem~\ref{thm:6:mainRegretBoundGlobal},
-we highlight that \emph{this result is finite-time}.
+we highlight that \textcolor{red}{\emph{this result is finite-time}}.
 The proof of \GLRklUCB{} with \emph{local restarts} is not included, but it can be found in the Appendix of \cite{Besson2019GLRT}, as it is quite similar to the proof for \emph{global restarts} given above. The main difficulty relies in defining the ``good event'' $\cE_T$, and proving that it happens with high probability (by showing that the complementary event $\cE_T^c$ is highly unlikely).
 %
 We can directly obtain different regret upper-bounds for different choices of the two parameters $\omega$ and $\delta$.
@@ -943,6 +946,7 @@ We prefer to state the four cases, to highlight the modularity of the result giv
             R_T = \bigO{\frac{K}{\left({\Delta}^{\text{change}}\right)^2}\sqrt{\EffChange T\ln(T)} + \frac{\EffChange}{\left(\Delta^{\text{opt}}\right)^2} \ln(T)}.
         \end{equation}
     \end{enumerate}
+    \vspace*{-20pt}  % FIXME
 % \end{leftbar}  % XXX leftbar corollarybar, comment if needed
 \end{corollary}
 
@@ -1310,11 +1314,27 @@ $\delta = 1/\sqrt{K \Upsilon_T T}$, $\omega = \omega_0\sqrt{K \Upsilon_T \log(T)
 from Corollaries~\ref{cor:6:Global} and \ref{cor:6:Local}.
 Both choices of $\omega$ appear to be too large empirically, as they come from minimizing the regret upper-bound rather than the regret itself, thus
 the constant is set to $\omega_0 = 0.05$.
-We show in Appendix~\ref{sec:6:choosingAlpha0} a certain robustness, with similar regret as soon as $\omega\leq0.1$.
-We do not use a constant $\delta_0$ to change the confidence level to $\delta = \delta_0 \delta_T$, as we show in Appendix~\ref{sec:6:choosingDelta} that $\delta_0=1$ is uniformly better for different problems.
+% We show in Appendix~\ref{sec:6:choosingAlpha0}
+We show in Appendix~G of \cite{Besson2019GLRT} a sensitivity analysis on $\omega$,
+which concludes to a robustness regarding this parameter, with similar regret as soon as $\omega\leq0.1$.
+We do not use a constant $\delta_0$ to change the confidence level to $\delta = \delta_0 \delta_T$, as we
+verified empirically
+% show in Appendix~\ref{sec:6:choosingDelta}
+that $\delta_0=1$ is uniformly better for different problems.
 %
 To speed up the simulations, two optimizations are used, with $\Delta n = \Delta s = 10$,
 and \CUSUM{} also uses the first trick with $\Delta n = 10$ (see Appendix~\ref{sub:6:IdeasOptimizations} for more details).
+
+
+\paragraph{Time and memory costs of \GLRklUCB.}
+%
+Finally, we mention that we discuss in details in Appendix~F of \cite{Besson2019GLRT} about the time and memory complexities of \GLRklUCB, and the other algorithms considered for the numerical experiments.
+%
+To sum up, at every time step the CPD algorithm needs a time $\bigO{n_i}=\bigO{d_{\max}}$, and at the end, the time complexity of \CUSUMklUCB{} as well as \GLRklUCB{} is $\bigO{K T d_{\max}}$, which can be up-to $\bigO{K T^2}$, much more costly than $\bigO{K T}$ for \klUCB{} for instance.
+%
+Our proposal \GLRklUCB{} requires a storage of the order of $\bigO{K d_{\max}}$ and a running time of the order of $\bigO{K T d_{\max}}$.
+We validated the two bounds experimentally, with results presented in Tables~2 and 3 in \cite{Besson2019GLRT}.
+
 
 % \TODOE{Je l'ai déjà dit, mais vraiment on va nous accuser d'avoir optimisé un paramètre chez nous et pas chez les autres. Est-ce qu'avec $\omega_0=1$ on a des résultats comparables ou bien on est complètement à côté ?}
 %
