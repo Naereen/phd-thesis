@@ -323,12 +323,12 @@ We mention two important results on exponential families:
 \end{definition}
 
 Following this Definition~\ref{def:2:KLDivergence} for two distributions
-$d_1=\Pr(x|\eta_1)$ and $d_2=\Pr(x|\eta_2)$ in the same exponential family,
+$d_1=\Pr(x|\eta_1)$ and $d_2=\Pr(x|\eta_2)$ in the same exponential family $\cE$,
 we can use a shorter notation and write $\KL( \eta_1, \eta_2 ) \eqdef \KL(\Pr(x|\eta_1), \Pr(x|\eta_2))$, which can be simplified to use only the two parameters $\eta_1$ and $\eta_2$ of $d_1$ and $d_2$,
 and $\mu_1 = \E_{\eta_1}[X]$ the mean of distribution $d_1$,
 %
 % \begin{equation}\label{eq:2:Kullback-LeiblerDivergenceExpFamily2}
-$\KL\left( \eta_1, \eta_2 \right) = \E_{d_1}[ (\eta_1 - \eta_2) X ] - A(\eta_1) + A(\eta_2) = (\eta_1 - \eta_2) \mu_1 - A(\eta_1) + A(\eta_2)$.
+$\KL_{\cE}\left( \eta_1, \eta_2 \right) = \E_{d_1}[ (\eta_1 - \eta_2) X ] - A(\eta_1) + A(\eta_2) = (\eta_1 - \eta_2) \mu_1 - A(\eta_1) + A(\eta_2)$.
 % \end{equation}
 %
 Without diving more in the details of exponential families,
@@ -340,7 +340,7 @@ it is interesting to illustrate this definition and the notations with two impor
     % $\bullet$
     \textbf{Bernoulli distributions} can be seen as an exponential family with $h(x) = 1$,
     and for a Bernoulli distribution of mean $\mu\in[0,1]$, denoted $B(\mu)$,
-    the parameter is $\eta = \mu / (1 - \mu)$, giving $A(\eta) = \log(1 + \mathrm{e}^{\eta})$
+    the parameter is $\eta = \mu / (1 - \mu)$, giving $A(\eta) = \log(1 + \e^{\eta})$
     (with the limit behavior $\eta=+\infty$ if $\mu=1$).
 
     The KL divergence between $\cB(x)$ and $\cB(y)$, of parameters $\eta$, $\eta'$ is given by
@@ -1566,7 +1566,7 @@ from Section~\ref{sub:2:naiveSimpleStrategies}, which both uses a tuning based o
 %
 We then include efficient algorithms, that do not need prior knowledge of the $T$ (they are anytime) nor $\Delta$ (their are robust and efficient on unknown problems):
 $\UCB_1$ (with $\alpha=1$),
-\klUCB{} (with Bernoulli $\kl = \KL_{B}$),
+\klUCB{} (with Bernoulli $\kl = \KL_{\cB}$),
 and Thompson sampling (with Beta posteriors and flat uniform priors).
 %
 

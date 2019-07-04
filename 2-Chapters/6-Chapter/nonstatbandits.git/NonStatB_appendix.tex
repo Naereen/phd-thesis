@@ -155,7 +155,7 @@ The remaining missing proofs can be found in the article \cite{Besson2019GLRT}.
 % \begin{align*}
 %     \GLR(n)
 %     &= \frac{\sup\limits_{\mu_0,\mu_1,\tau < n}\ell(X_1, \ldots, X_n ; \mu_0,\mu_1,\tau)}{\sup\limits_{\mu_0}\ell(X_1, \ldots, X_n ; \mu_0)} \\
-%     &= \exp\Bigl[ \sup_{s \in [2,n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right] \Bigr].
+%     &= \exp\Bigl[ \sup_{s \in [n-1]} \left[s \times \kl\left(\widehat{\mu}_{1:s},\widehat{\mu}_{1:n}\right) + (n-s) \times \kl\left(\widehat{\mu}_{s+1:n},\widehat{\mu}_{1:n}\right)\right] \Bigr].
 % \end{align*}
 % %
 % % Remember that the binary relative entropy $\kl$, defined for $x,y\in[0,1]$
@@ -296,9 +296,9 @@ The remaining missing proofs can be found in the article \cite{Besson2019GLRT}.
 \label{app:6:proofConcFirst}
 %
 Using the same construction as in the proof of Theorem~14 in \cite{KK18Martingales}, one can prove that for every $\lambda \in I$ (for an interval $I$), there exists a non-negative super-martingale $M^\lambda (s)$ with respect to the filtration $\cF_t \eqdef \sigma(X_1,\dots,X_t)$ that satisfies $\bE[M^\lambda(s)] \leq 1$ and
-\[\forall s \in \N^*, \ \ M^\lambda (s) \geq \mathrm{e}^{\lambda [s \, \kl(\widehat{\mu}_s,\mu) - 3\ln(1+\ln(s))] - g(\lambda)}\]
+\[\forall s \in \N^*, \ \ M^\lambda (s) \geq \e^{\lambda [s \, \kl(\widehat{\mu}_s,\mu) - 3\ln(1+\ln(s))] - g(\lambda)}\]
 for some function $g : I \rightarrow \R$. This super-martingale is of the form
-$M^\lambda (s) \eqdef \int \mathrm{e}^{\eta\sum_{i=1}^s X_i - \phi_\mu(\lambda)s} d\pi(\eta)$,
+$M^\lambda (s) \eqdef \int \e^{\eta\sum_{i=1}^s X_i - \phi_\mu(\lambda)s} d\pi(\eta)$,
 for a well-chosen probability distribution $\pi$, and the function $g$ can be chosen to be any
 \begin{eqnarray*}
     g_{\xi} : \left[0; 1/(1+\xi)\right] & \longrightarrow & \R \\
@@ -308,7 +308,7 @@ for a parameter $\xi \in [0,1/2]$.
 
 Similarly, if we denote $\cF_r'$ the filtration $\sigma(Y_1,\dots,Y_r)$,
 there exists an independent super-martingale $W^\lambda (r)$ w.r.t. the filtration $\cF_r'$, such that
-\[\forall r \in \N^*, \ \ W^\lambda (r) \geq \mathrm{e}^{\lambda [r\kl(\widehat{\mu}'_r,\mu) - 3\ln(1+\ln(r))] - g(\lambda)},\]
+\[\forall r \in \N^*, \ \ W^\lambda (r) \geq \e^{\lambda [r\kl(\widehat{\mu}'_r,\mu) - 3\ln(1+\ln(r))] - g(\lambda)},\]
 for the same function $g(\lambda)$.
 In the terminology of \cite{KK18Martingales},
 the two following processes are $g$-DCC (for Doob-Cram\'er-Chernoff),
@@ -320,21 +320,21 @@ One can write
 %
 \begin{align*}
     &\bP\bigl( \exists r \in \N^* : s \, \kl\left(\widehat{\mu}_{s},\mu\right) + r \, \kl\left(\widehat{\mu}_r',\mu'\right) > 3\ln(1+\ln(s)) + 3\ln(1+\ln(r)) + u \bigr) \\
-    & \leq \bP\left(\exists r \in \N^* : M^\lambda(s)W^\lambda(r) > \mathrm{e}^{\lambda u - 2g(\lambda)}\right) \\
-    & = \lim_{n \rightarrow \infty} \bP\left(\exists r \in [n] :  M^\lambda(s)W^\lambda(r) > \mathrm{e}^{\lambda u - 2g(\lambda)}\right) \\
-    & = \lim_{n \rightarrow \infty} \bP\left(\sup_{r \in [n]}  M^\lambda(s)W^\lambda(r) > \mathrm{e}^{\lambda u - 2g(\lambda)}\right).
+    & \leq \bP\left(\exists r \in \N^* : M^\lambda(s)W^\lambda(r) > \e^{\lambda u - 2g(\lambda)}\right) \\
+    & = \lim_{n \rightarrow \infty} \bP\left(\exists r \in [n] :  M^\lambda(s)W^\lambda(r) > \e^{\lambda u - 2g(\lambda)}\right) \\
+    & = \lim_{n \rightarrow \infty} \bP\left(\sup_{r \in [n]}  M^\lambda(s)W^\lambda(r) > \e^{\lambda u - 2g(\lambda)}\right).
 \end{align*}
 %
 Using that $\widetilde{M}(r) \eqdef M^\lambda(s)W^\lambda(r)$ is a super-martingale with respect to the filtration $\widetilde{\cF}_r \eqdef \sigma(X_1,\dots,X_s, Y_1,\dots,Y_r)$, one can apply Doob's maximal inequality to obtain
 \begin{eqnarray*}
-    \bP\left(\sup_{r \in [n]}  M^\lambda(s)W^\lambda(r) > \mathrm{e}^{\lambda u - 2g(\lambda)}\right) &\leq& \mathrm{e}^{-(\lambda u - 2g(\lambda))}\bE[\widetilde{M}(1))] \\
-    & = & \mathrm{e}^{-(\lambda u - 2g(\lambda))}\bE[M^\lambda(s)W^\lambda(1)] \\
-    & \leq & \mathrm{e}^{-(\lambda u - 2g(\lambda))},
+    \bP\left(\sup_{r \in [n]}  M^\lambda(s)W^\lambda(r) > \e^{\lambda u - 2g(\lambda)}\right) &\leq& \e^{-(\lambda u - 2g(\lambda))}\bE[\widetilde{M}(1))] \\
+    & = & \e^{-(\lambda u - 2g(\lambda))}\bE[M^\lambda(s)W^\lambda(1)] \\
+    & \leq & \e^{-(\lambda u - 2g(\lambda))},
 \end{eqnarray*}
 using that $M^\lambda(s)$ and $W^\lambda(1)$ are independent and have an expectation smaller than $1$.
 
 Putting things together yields
-\[\bP\left(\exists r \in \N^* : s \, \kl\left(\widehat{\mu}_{s},\mu\right) + r \, \kl\left(\widehat{\mu}_r',\mu'\right) > 3\ln(1+\ln(s)) + 3\ln(1+\ln(r)) + u\right) \leq \mathrm{e}^{-\left(\lambda u - 2g_{\xi}(\lambda)\right)},\]
+\[\bP\left(\exists r \in \N^* : s \, \kl\left(\widehat{\mu}_{s},\mu\right) + r \, \kl\left(\widehat{\mu}_r',\mu'\right) > 3\ln(1+\ln(s)) + 3\ln(1+\ln(r)) + u\right) \leq \e^{-\left(\lambda u - 2g_{\xi}(\lambda)\right)},\]
 for any function $g_{\xi}$ defined above.
 %
 The conclusion follows by optimizing for both $\lambda$ and $\xi$, using Lemma~18 in \cite{KK18Martingales}.
@@ -371,12 +371,12 @@ Then for every $\lambda > 0$, we have
 \begin{eqnarray*}
     \bP\left(\widehat{\mu}_{1,n_1} - \widehat{\mu}_{2,n_2} \geq \mu_1 - \mu_2 + x \right)
     & \leq & \bP\left(\frac{1}{n_1}\sum_{i=1}^{n_1} (X_i-\mu_1) - \frac{1}{n_2}\sum_{i=1}^{n_2} (Y_i - \mu_2) \geq x \right)\\
-    & \leq & \bP\left(\mathrm{e}^{\lambda \left(\frac{1}{n_1}\sum\limits_{i=1}^{n_1} (X_i-\mu_1) - \frac{1}{n_2}\sum\limits_{i=1}^{n_2} (Y_i - \mu_2)\right)} \geq \mathrm{e}^{\lambda x} \right)
+    & \leq & \bP\left(\e^{\lambda \left(\frac{1}{n_1}\sum\limits_{i=1}^{n_1} (X_i-\mu_1) - \frac{1}{n_2}\sum\limits_{i=1}^{n_2} (Y_i - \mu_2)\right)} \geq \e^{\lambda x} \right)
 \end{eqnarray*}
 And so thanks to Markov's inequality, we obtain
 \begin{eqnarray*}
     \bP\left(\widehat{\mu}_{1,n_1} - \widehat{\mu}_{2,n_2} \geq \mu_1 - \mu_2 + x \right)
-    & \leq & \mathrm{e}^{-\lambda x}\bE\left[\mathrm{e}^{\lambda \frac{1}{n_1}\sum\limits_{i=1}^{n_1} (X_i-\mu_1)}\right]\bE\left[\mathrm{e}^{-\lambda \frac{1}{n_2}\sum\limits_{i=1}^{n_2} (Y_i-\mu_2)}\right] \\
+    & \leq & \e^{-\lambda x}\bE\left[\e^{\lambda \frac{1}{n_1}\sum\limits_{i=1}^{n_1} (X_i-\mu_1)}\right]\bE\left[\e^{-\lambda \frac{1}{n_2}\sum\limits_{i=1}^{n_2} (Y_i-\mu_2)}\right] \\
     & = & \exp\left(- \lambda x + n_1\phi_{X_1 - \mu_1}\left(\frac{\lambda}{n_1}\right) + n_2\phi_{Y_1 - \mu_2}\left(-\frac{\lambda}{n_2}\right)\right) \\
     & \leq & \exp\left(- \lambda x + \frac{\lambda^2\sigma^2}{2n_2} + \frac{\lambda^2\sigma^2}{2n_1}\right),
 \end{eqnarray*}
@@ -878,9 +878,9 @@ With such numerical optimization, \GLRklUCB{} is not significantly slower than \
 
 We compare the following threshold functions, $\beta(n,\delta)$ for $n\in\N^*$ and $\delta>0$, that can be used in the B-GLRT test used for the \GLRklUCB{} algorithm (see the details in equation \eqref{eq:whenDoesGLRklUCBrestart} and in Algorithm~\ref{algo:6:GLRklUCB}).
 %
-In the B-GLRT test, there is a $\sup$ optimization problem on $s\in[2,n-1]$, and this $\sup$ is compared with the threshold $\beta(n,\delta)$. The threshold function given in \eqref{def:6:beta} was chosen to have Lemma~\ref{lem:6:FalseAlarm}, that is a false alarm probability bounded by $\delta$.
+In the B-GLRT test, there is a $\sup$ optimization problem on $s\in[n-1]$, and this $\sup$ is compared with the threshold $\beta(n,\delta)$. The threshold function given in \eqref{def:6:beta} was chosen to have Lemma~\ref{lem:6:FalseAlarm}, that is a false alarm probability bounded by $\delta$.
 %
-We note that we also considered the possibility of using a threshold that could be a function of both $n$ the sample size as well as $s\in[2,n-1]$ the ``splitting index'' between means $\widehat{\mu}_{1:s}$ and $\widehat{\mu}_{s+1:n}$.
+We note that we also considered the possibility of using a threshold that could be a function of both $n$ the sample size as well as $s\in[n-1]$ the ``splitting index'' between means $\widehat{\mu}_{1:s}$ and $\widehat{\mu}_{s+1:n}$.
 We did some preliminary experiments to explore this direction and did not find a significant difference, in terms of numerical efficient of the resulting \GLRklUCB{} algorithm, and mathematically the analysis presented in Section~\ref{subsec:6:PropGLR} is simpler to follow if the threshold are uniform on $s$.
 
 \begin{enumerate}%\tightlist
