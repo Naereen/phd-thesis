@@ -900,7 +900,12 @@ Indeed consider $K=2$ Bernoulli arms of means $\mu_1=1/2$ and $\mu_2=\varepsilon
 As illustrated by the two previous examples, an efficient strategy needs to solve the trade-off between exploration and exploitation.
 The two following solutions both consist in splitting the $T$ time steps into $T_0$ steps of exploration and $T-T_0$ steps of exploitation.
 %  either in an alternative way or in a fixed way (``explore then exploit'').
-They are detailed in Algorithm~\ref{algo:2:simpleStrategies}.
+% They are detailed in
+% % The first is detailed in
+% % Algorithm~\ref{algo:2:simpleStrategies}.
+% Algorithms~\ref{algo:2:simpleStrategies_EpsilonGreedy} and \ref{algo:2:simpleStrategies_ExploreThenExploit} below.
+% % Algorithm~\ref{algo:2:simpleStrategies_EpsilonGreedy}.
+% % and \ref{algo:2:simpleStrategies_ExploreThenExploit}.
 
 
 % \begin{small} % XXX remove if needed
@@ -910,34 +915,19 @@ They are detailed in Algorithm~\ref{algo:2:simpleStrategies}.
 	\begin{algorithm}[H]
 		% \begin{small} % XXX remove if needed
 		\For(){$t = 1, 2, \dots, T$}{
-            \uIf{\textcolor{deeppurple}{$\varepsilon$-greedy}}{
-                Sample a value uniformly in $[0,1]$: $U_t\sim\cU([0,1])$\\
-                \uIf{\textcolor{deeppurple}{$U_t < \varepsilon$ (\ie, with probability $\varepsilon$)}}{
-                    Play uniformly at random $A(t) \sim \cU(\{1,\dots,K\})$
-                    \tcp*[f]{Explore}
-                }
-                \uElse{
-                    Play uniformly among the arms of maximal empirical mean: $A(t) \sim \cU(\arg\max\limits_{1\leq k \leq K} \widehat{\mu_k}(t))$
-                    \tcp*[f]{or Exploit}
-                }
+            Sample a value uniformly in $[0,1]$: $U_t\sim\cU([0,1])$\\
+            \uIf{\textcolor{deeppurple}{$U_t < \varepsilon$ (\ie, with probability $\varepsilon$)}}{
+                Play uniformly at random $A(t) \sim \cU(\{1,\dots,K\})$
+                \tcp*[f]{Explore}
             }
-            \uIf{\textcolor{deepgold}{Explore-then-Exploit}}{
-                \uIf{$t \leq \textcolor{deepgold}{T_0}$}{
-                    Play sequentially $A(t) \in 1 + (t \mod K)$
-                    \tcp*[f]{Explore}
-                }
-                \uElse{
-                    \uIf{$t = \textcolor{deepgold}{T_0}$}{
-                        Pick one arm $A(\textcolor{deepgold}{T_0})=k$ uniformly among the arms of maximal empirical mean: \textcolor{deepgold}{$A(t) \sim \cU(\arg\max\limits_{1\leq k \leq K} \widehat{\mu_k}(\textcolor{deepgold}{T_0}))$}
-                        \tcp*[f]{then Exploit}
-                    }
-                    Play the same arm $A(t) = A(\textcolor{deepgold}{T_0})$
-                }
+            \uElse{
+                Play uniformly among the arms of maximal empirical mean: $A(t) \sim \cU(\arg\max\limits_{1\leq k \leq K} \widehat{\mu_k}(t))$
+                \tcp*[f]{or Exploit}
             }
             Observe a reward $r(t)$, and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$
 		}
-		\caption[Simple efficient strategies: $\varepsilon$-greedy and Explore-then-Exploit.]{Simple efficient strategies: \textcolor{deeppurple}{$\varepsilon$-greedy} and \textcolor{deepgold}{Explore-then-Exploit}.}
-		\label{algo:2:simpleStrategies}
+		\caption[A simple efficient strategy, the $\varepsilon$-greedy algorithm.]{A simple efficient strategy, the \textcolor{deeppurple}{$\varepsilon$-greedy} algorithm.}
+		\label{algo:2:simpleStrategies_EpsilonGreedy}
 		% \end{small} % XXX remove if needed
 	\end{algorithm}
 	\end{framed}
@@ -945,8 +935,51 @@ They are detailed in Algorithm~\ref{algo:2:simpleStrategies}.
 % \end{small} % XXX remove if needed
 
 
+% % \begin{small} % XXX remove if needed
+% \begin{figure}[h!]
+% 	\centering
+%     \begin{framed}
+% 	\begin{algorithm}[H]
+% 		% \begin{small} % XXX remove if needed
+% 		\For(){$t = 1, 2, \dots, T$}{
+%             \uIf{\textcolor{deeppurple}{$\varepsilon$-greedy}}{
+%                 Sample a value uniformly in $[0,1]$: $U_t\sim\cU([0,1])$\\
+%                 \uIf{\textcolor{deeppurple}{$U_t < \varepsilon$ (\ie, with probability $\varepsilon$)}}{
+%                     Play uniformly at random $A(t) \sim \cU(\{1,\dots,K\})$
+%                     \tcp*[f]{Explore}
+%                 }
+%                 \uElse{
+%                     Play uniformly among the arms of maximal empirical mean: $A(t) \sim \cU(\arg\max\limits_{1\leq k \leq K} \widehat{\mu_k}(t))$
+%                     \tcp*[f]{or Exploit}
+%                 }
+%             }
+%             \uIf{\textcolor{deepgold}{Explore-then-Exploit}}{
+%                 \uIf{$t \leq \textcolor{deepgold}{T_0}$}{
+%                     Play sequentially $A(t) \in 1 + (t \mod K)$
+%                     \tcp*[f]{Explore}
+%                 }
+%                 \uElse{
+%                     \uIf{$t = \textcolor{deepgold}{T_0}$}{
+%                         Pick one arm $A(\textcolor{deepgold}{T_0})=k$ uniformly among the arms of maximal empirical mean: \textcolor{deepgold}{$A(t) \sim \cU(\arg\max\limits_{1\leq k \leq K} \widehat{\mu_k}(\textcolor{deepgold}{T_0}))$}
+%                         \tcp*[f]{then Exploit}
+%                     }
+%                     Play the same arm $A(t) = A(\textcolor{deepgold}{T_0})$
+%                 }
+%             }
+%             Observe a reward $r(t)$, and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$
+% 		}
+% 		\caption[Simple efficient strategies: $\varepsilon$-greedy and Explore-then-Exploit.]{Simple efficient strategies: \textcolor{deeppurple}{$\varepsilon$-greedy} and \textcolor{deepgold}{Explore-then-Exploit}.}
+% 		\label{algo:2:simpleStrategies}
+% 		% \end{small} % XXX remove if needed
+% 	\end{algorithm}
+% 	\end{framed}
+% \end{figure}
+% % \end{small} % XXX remove if needed
+
+
 % https://smpybandits.github.io/docs/Policies.EpsilonGreedy.html
--- The \textcolor{deeppurple}{$\varepsilon$-greedy strategy} consists in alternating exploration and exploitation at a certain ratio \cite{Auer02}.
+-- The \textcolor{deeppurple}{$\varepsilon$-greedy strategy} (in Algorithm~\ref{algo:2:simpleStrategies_EpsilonGreedy})
+consists in alternating exploration and exploitation at a certain ratio \cite{Auer02}.
 % \cite{SuttonBarto2018,Bubeck12,LattimoreBanditAlgorithmsBook}.
 Fix $0<\varepsilon<1$, then at each round, with probability $\varepsilon$ the player selects an arm uniformly at random (exploration) and with probability $1-\varepsilon$ the arm with highest empirical mean is selected (exploitation).
 On the one hand, if $\varepsilon$ is constant, then the (mean) regret still grows linearly, as it is lower bounded by $(\varepsilon \frac{1}{K} \sum_{k=1}^K \Delta_k) T$.
@@ -959,8 +992,37 @@ But this is not satisfactory, as $\min_k \Delta_k$ needs to be known in advance,
 Here again, an average of $T_0 \leq \varepsilon_0 \log(T)$ steps are spent on exploration.
 
 
+% \begin{small} % XXX remove if needed
+\begin{figure}[h!]
+	\centering
+    \begin{framed}
+	\begin{algorithm}[H]
+		% \begin{small} % XXX remove if needed
+		\For(){$t = 1, 2, \dots, T$}{
+            \uIf{$t \leq \textcolor{deepgold}{T_0}$}{
+                Play sequentially $A(t) \in 1 + (t \mod K)$
+                \tcp*[f]{Explore}
+            }
+            \uElse{
+                \uIf{$t = \textcolor{deepgold}{T_0}$}{
+                    Pick one arm $A(\textcolor{deepgold}{T_0})=k$ uniformly among the arms of maximal empirical mean: \textcolor{deepgold}{$A(t) \sim \cU(\arg\max\limits_{1\leq k \leq K} \widehat{\mu_k}(\textcolor{deepgold}{T_0}))$}
+                    \tcp*[f]{then Exploit}
+                }
+                Play the same arm $A(t) = A(\textcolor{deepgold}{T_0})$
+            }
+            Observe a reward $r(t)$, and update $X_k(t)$, $N_k(t)$ and $\widehat{\mu_k}(t)$
+		}
+		\caption[A simple efficient strategy, the Explore-then-Exploit algorithm.]{A simple efficient strategy, the \textcolor{deepgold}{Explore-then-Exploit} algorithm.}
+		\label{algo:2:simpleStrategies_ExploreThenExploit}
+		% \end{small} % XXX remove if needed
+	\end{algorithm}
+	\end{framed}
+\end{figure}
+% \end{small} % XXX remove if needed
+
+
 % https://smpybandits.github.io/docs/Policies.ExploreThenCommit.html
--- The ``\textcolor{deepgold}{Explore-then-Exploit}'' strategy, as presented for instance in \cite{Bubeck12}, first explores uniformly the $K$ arms for $T_0$ time steps, then only exploits the arm identified as the best arm after these first $T_0$ steps
+-- The ``\textcolor{deepgold}{Explore-then-Exploit}'' strategy (in Algorithm~\ref{algo:2:simpleStrategies_ExploreThenExploit}), presented for instance in \cite{Bubeck12}, first explores uniformly the $K$ arms for $T_0$ time steps, then only exploits the arm identified as the best arm after these first $T_0$ steps
 (\ie, one of the arms with highest empirical means, after $T_0/K$ samples of each arm).
 Usually we restrict to $T_0$ being a multiple of $K$.
 % On the one hand, we can lower bound its regret by
@@ -1089,7 +1151,7 @@ This intuition took roots in \cite{LaiRobbins85}, and later lead to the $\UCB_1$
 For a parameter $\alpha$, the \UCB{} indexes are computed as follows, as a sum of
 the \emph{average reward} $\widehat{\mu_k}(t) \eqdef \frac{X_k(t)}{N_k(t)}$
 and a \emph{confidence radius} $\xi_k(t) \eqdef \sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}$.
-%
+
 \begin{align}\label{eq:2:UCB_index}
     U_k^{\UCB_1}(t) = \UCB_k(t) \eqdef \underbrace{\frac{X_k(t)}{N_k(t)}}_{\text{Exploitation }\; \widehat{\mu_k}(t)} + \underbrace{\sqrt{\alpha \frac{\log\left(t\right)}{N_k(t)}}}_{\text{Exploration }\; \xi_k(t)}.
 \end{align}
@@ -1707,7 +1769,7 @@ and some of them are known to be optimal in different settings.
 To clearly understand the difference in their empirical behaviors, we illustrated the performance of two naive and two simple strategies against three efficient ones, on the example of Bernoulli-distributed problem used for the online demonstration from Section~\ref{sec:2:notations} (see Figures~\ref{fig:2:example_of_a_5_arm_bandit_problem} and \ref{fig:2:example_of_a_5_arm_bandit_problem__step100}).
 This also serves as a first example of numerical simulation performed with our library SMPyBandits, before the large-scale experiments of Section~\ref{sec:3:reviewSPAlgorithms} below.
 %
-In the rest of this thesis, we mainly use the $\UCB_1$ or Thompson sampling algorithms when simplicity and realistic deployment is favored (\ie, Chapter~\ref{chapter:4}), and the \klUCB{} algorithm when we give mathematical developments (\ie, Chapters~\ref{chapter:5} and \ref{chapter:6}).
+In the rest of this thesis, we mainly use the $\UCB_1$ or Thompson sampling algorithms when simplicity and realistic deployment is favored (in Chapter~\ref{chapter:4}), and the \klUCB{} algorithm when we give mathematical developments (in Chapters~\ref{chapter:5} and \ref{chapter:6}).
 
 
 
@@ -1725,7 +1787,8 @@ In the rest of this thesis, we mainly use the $\UCB_1$ or Thompson sampling algo
 	\label{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}
 \end{figure}
 
-\newpage
+% % FIXME
+% \newpage
 
 % % ----------------------------------------------------------------------------
 % \section{Different approaches on algorithm selection}
@@ -1836,12 +1899,18 @@ we presented the notations used in all this thesis.
 % Instead of always choosing a fixed algorithm, or running costly benchmarks before real-world deployment of the chosen algorithm, we advise to select a few candidate algorithms, where at least one is expected to be very efficient for the given problem, and use online algorithm selection to automatically and dynamically decide the best candidate.
 % We proposed an extension of the Exp4 algorithm for this problem, \Aggr, and illustrate its performance on some bandit problems.
 % %
-We then use the small Bernoulli-distributed problem behind this demonstration
+We then used the small Bernoulli-distributed problem behind this demonstration
 to present a small numerical simulation, comparing some algorithms using our Python open-source library SMPyBandits, that is presented in details in the next Chapter~\ref{chapter:3}.
 % The next chapter also includes simulations of the most important MAB algorithms that we presented above, on Bernoulli distributed problems of various sizes and durations.
 
-We presented the simplest MAB model studied in this chapter, by focussing on one agent playing a stationary game.
-Both hypotheses are removed or weaken in the rest of this manuscript,
+% We take another approach in Chapter~\ref{chapter:4}, where the
+We generalize this MAB model in Chapter~\ref{chapter:4}, by studying decentralized learning of a large set of independent players, all having different activation times.
+This extension is significantly harder than the two previously evoked ones, and we were unfortunately unable to obtain any strong theoretical results under these loose hypotheses.
+This model is however more generic and as such it was found suitable for applications to Internet of Things (IoT) networks, where arms model orthogonal wireless channels, players model communicating devices (\ie, IoT end-devices) and rewards model successes or failures of a wireless packet sent by a device.
+
+We take a more formal approach in the rest of the thesis,
+% We presented the simplest MAB model studied in this chapter, by focussing on one agent playing a stationary game.
+% Both hypotheses are removed or weaken in the rest of this manuscript,
 % first in Chapter~\ref{chapter:4} where we consider many XXX
 first by considering players facing a stationary problem in a decentralized way in Chapter~\ref{chapter:5},
 and then by considering a single player facing a non-stationary or a piece-wise stationary problem in Chapter~\ref{chapter:6}.
@@ -1849,16 +1918,12 @@ and then by considering a single player facing a non-stationary or a piece-wise 
 For both directions, we present natural extensions of the base model, and we detail our contributions that obtained state-of-the-art results for the two problems
 of stationary multi-players and piece-wise stationary bandits.
 
-We take another approach in Chapter~\ref{chapter:4}, where the MAB model is generalized to study decentralized learning of a large set of independent players, all having different activation times.
-This extension is significantly harder than the two previously evoked ones, and we were unfortunately unable to obtain any strong theoretical results under these loose hypotheses.
-This model is however more generic and as such it was found suitable for applications to Internet of Things (IoT) networks, where arms model orthogonal wireless channels, players model communicating devices (\ie, IoT end-devices) and rewards model successes or failures of a wireless packet sent by a device.
 
-
-\paragraph{Possible future works.}
-%
-We focus in this thesis on finite-arms and one-dimensional bandit problems,
-and therefore, two possible directions of future works could be to extend our works
-to MAB models with either multidimensional rewards, like contextual bandits \cite{Li10,Luo18,ChenLeeLuoWei2019}, or infinite arms \cite{valko2016bandits,Combes17}, like Lipschitz bandits.
+% \paragraph{Possible future works.}
+% %
+% We focus in this thesis on finite-arms and one-dimensional bandit problems,
+% and therefore, two possible directions of future works could be to extend our works
+% to MAB models with either multidimensional rewards, like contextual bandits \cite{Li10,Luo18,ChenLeeLuoWei2019}, or infinite arms \cite{valko2016bandits,Combes17}, like Lipschitz bandits.
 
 
 % % % ----------------------------------------------------------------------------

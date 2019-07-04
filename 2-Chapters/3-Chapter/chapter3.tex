@@ -174,14 +174,13 @@ We give another example for \emph{truncated} Gaussian distributions on $[0,1]$, 
 \begin{listing}[h!]
     \begin{minted}[linenos=true,numbersep=5pt,frame=lines,framesep=2mm]{python}
 from SMPyBandits.Arms import *
-arm1 = Bernoulli(0.1)
-arm2 = Bernoulli(0.5)
-arm3 = Bernoulli(0.9)
-
-means = [0.1, 0.5, 0.9]
 from SMPyBandits.Environment import MAB
+
+arm1 = Bernoulli(0.1) ; arm2 = Bernoulli(0.5) ; arm3 = Bernoulli(0.9)
 bernoulli_problem = MAB([arm1, arm2, arm3])
+
 # but also
+means = [0.1, 0.5, 0.9]
 bernoulli_problem = MAB({'arm_type': Bernoulli, 'params': means})
 
 gaussian_problem = MAB({'arm_type': Gaussian, 'params': means})
@@ -195,7 +194,7 @@ gaussian_problem.plotHistogram()  # display the histogram shown below
 
 \begin{figure}[h!]  % [htbp]
 	\centering
-	\includegraphics[width=0.75\linewidth]{exampleOfRewards.pdf}
+	\includegraphics[width=0.82\linewidth]{exampleOfRewards.pdf}
 	\caption{Histogram of $10000$ \iid{} rewards obtained from three arms with a Gaussian distribution truncated to $[0,1]$, of respective means $0.1$ (in \textcolor{red}{red}), $0.5$ (in \textcolor{green}{green}) and $0.9$ (in \textcolor{blue}{blue}).}
 	\label{fig:3:exampleOfRewards}
 \end{figure}
@@ -382,7 +381,7 @@ Since $2017$ and $2018$, SMPyBandits is using two online continuous integration 
 %
 These CI services are free for open-source works, and are both triggered whenever a modification of the codebase is sent to the hosting platform GitHub.
 
-\textbf{Read the Docs.}
+\paragraph{Read the Docs.}
 Since $2017$, we have been using the free web service provided by Read the Docs (\href{https://readthedocs.org/}{\texttt{ReadTheDocs.org}}).
 Read the Docs allows to automatically build the documentation after every commit. This allows to regularly check that the library is well formatted and can be imported correctly, as well as keeping the online documentation up-to-date.
 Moreover, they offer to host the documentation online, at \href{https://smpybandits.rtfd.io/}{\texttt{SMPyBandits.ReadTheDocs.io}}.
@@ -394,7 +393,7 @@ I have also been building the documentation manually on a weekly basis, to also 
 In the last two years, the documentation saw about 11000 unique visits, while the GitHub project have been visited about 4500 unique visits.
 
 
-\textbf{Travis CI.}
+\paragraph{Travis CI.}
 Since $2018$, we use the free web service provided by Travis CI (\href{https://travis-ci.org/}{\texttt{Travis-CI.org}}).
 It allows to automatically run short numerical simulations after every commit,
 in order to check that each modification on any part of the codebase does not break anything, as well as giving an up-to-date example of log files that shows online the results of different examples of experiments. The tests covers all the main models and almost all the algorithms implemented in SMPyBandits, and it has been proven very useful to quickly find and fix new bugs.
@@ -480,7 +479,7 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
 
     \item
     %  Algorithm 2 is
-    Explore-then-Commit \cite{GarivierETC2016} (\texttt{ETC\_KnownGap}),
+    Explore-then-Commit (\texttt{ETC\_KnownGap}),
     % shown in Algorithm~\ref{algo:2:naiveStrategies} above,
     that knows the horizon, and a lower-bound on the gap between arms (chosen arbitrarily as $\delta=0.01$, valid for all problems).
     Similarly to $\varepsilon$-greedy, it has a very small footprint in terms of time and memory, but most of the times it only obtains large (linear) regret.
@@ -488,7 +487,7 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
     \item
     %  Algorithm 3 is
     $\mathrm{Exp}3^{++}$ from \cite{Seldin17} (\texttt{Exp3PlusPlus}), using $\alpha=3$ and $\beta=256$ as advised.
-    It is a recent anytime variant of the $\mathrm{Exp3}$ algorithm, which was proven to obtain good ``best of both world'' performances.
+    % It is a recent anytime variant of the $\mathrm{Exp3}$ algorithm, which was proven to obtain good ``best of both world'' performances.
     % meaning that it achieves $\cO(K\log(T)/\Delta^2)$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
 
     \item
@@ -501,8 +500,10 @@ For reproducibility, we also give in ``\texttt{typewriter font}'' the name of th
     \klUCB{} from \cite{KLUCBJournal} (\texttt{klUCB}), also shown in Algorithm~\ref{algo:2:indexPolicy} above, using the Bernoulli KL divergence and the corresponding \klUCB{} indexes (coded as \texttt{kullback.klucbBern}).
     % It achieves asymptotical optimal problem-dependent bounds with a $\cO(\log(T))$ regret.
     % with the scaling factor matching Lai and Robbins' lower-bound \cite{LaiRobbins85}.
-    It is computationally more costly that \UCB, as at each time step $t$ and for each arm $k$, a convex optimization problem must be solved approximately, in order to compute the $K$ indexes.
-    In practice, a few steps of a simple bisection search method are enough to obtain a good numerical precision, and empirically we found that even in the worst cases \klUCB{} is no more than one order of magnitude slower than \UCB.
+    It is computationally more costly that \UCB,
+    % as at each time step $t$ and for each arm $k$, a convex optimization problem must be solved approximately, in order to compute the $K$ indexes.
+    % In practice, a few steps of a simple bisection search method are enough to obtain a good numerical precision,
+    even if empirically we found that even in the worst cases \klUCB{} is no more than one order of magnitude slower than \UCB.
     % of more than 10 digits
     % \TODOL{Si on en pas parlé avant, ou après dans une annexe, je peux dire un mot ici à propos de l'implémentation en Cython ou en C des fonctions kl et indices kl-UCB !}
 
@@ -828,7 +829,7 @@ On the other hand, if one is more interested in the mathematical developments an
 \label{sec:3:conclusion}
 
 
-We chose to present our Python library SMPyBandits in this chapter, before the rest of this thesis, instead of including this chapter in the Appendix of the thesis, because all the numerical experiments on multi-player bandits in Chapter~\ref{chapter:25}, and on more sophisticated models in the last two Chapters~\ref{chapter:5} and \ref{chapter:6} are built on our library.
+We chose to present here our Python library SMPyBandits in this chapter rather than in the Appendix, because all the numerical experiments on single-player multi-arm bandits in Chapter~\ref{chapter:25}, and on more sophisticated models in the last two Chapters~\ref{chapter:5} and \ref{chapter:6} are built on our library.
 %
 We detailed three main points of SMPyBandits:
 $(i)$ its purpose and qualities,
@@ -849,7 +850,7 @@ One of the main qualities of the library is that it is quite exhaustive, as all 
 More than $65$ algorithms or variants of algorithms are implemented for the single-player case, $5$ for the expert aggregation problem, about $15$ for the multi-players case, and about $20$ for the piece-wise stationary problem.
 All the codebase is fully documented, and the library is using continuous integration to run automated tests on the code after every modification.
 %
-When comparing algorithms on a problem, the main performance measure is the regret, but the library also computes, stores and visualizes other measures, such as best-arm selection rate or mean cumulated reward, as well as real time and memory costs.
+When comparing algorithms on a problem, the main performance measure is the regret, but the library also computes, stores and visualizes other measures, such as best-arm selection rate, mean cumulated reward, real time or memory costs.
 
 $(iii)$
 Finally, we presented how to use SMPyBandits, if one wants to run some pre-designed simulations or design new simulations.
@@ -1625,7 +1626,7 @@ We detail both below:
 % \end{itemize}
 
 
-\textbf{About the measurement protocol.}
+\paragraph{About the measurement protocol.}
 %
 To be precise, we used the two following approaches to measure the real time and memory costs of the different algorithms.
 
@@ -1649,7 +1650,7 @@ In both cases, the ``for'' loop takes some time and stores many variables, but t
 % sys.getsizeof(pickle.dumps(policy))
 % return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
 
-\textbf{Comparing measurements.}
+\paragraph{Comparing measurements.}
 %
 But what is important in these simulation results is not the exact values, but rather to compare the costs of the different algorithms, and thus only the relative difference in terms of time and memory costs are important.
 Relative difference for costs do not depend much on the code and the machine used for the simulation.
@@ -1663,7 +1664,7 @@ All the considered algorithms in this Chapter are efficient in this aspect, but 
 We can also check that efficient algorithms have a running time and a memory cost linear in the number of arms $K$, while more complex algorithms like BESA suffer from an exponential blow-up of their complexity when $K$ increases.
 
 
-\textbf{Normalizing data.}
+\paragraph{Normalizing data.}
 %
 The two figures below regret normalized data, in the following way.
 For each algorithm, we ran simulations to obtain its (empirical) regret, computation time and space requirement, for different problems with different values of $K$ and $T$.
