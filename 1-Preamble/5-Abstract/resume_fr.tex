@@ -2,11 +2,13 @@
 
 % Résumé de la thèse en français.
 
-\TODOL{Je ne sais pas quelle longueur ni quel niveau de détail il faut viser ici. Est-ce que ces 3/4 pages suffisent ? Est-ce qu'il faut donner des maths en français pour CHAQUE CHAPITRE ? J'ai peur de ne pas réussir à écrire 20 pages avec des maths en français juste pour pouvoir citer tel théorème ou tel résultat.}
-
-\TODOL{En fait, maintenant que le ch1 est écrit, je peux traduire (et couper un peu) ce chapitre 1, et ça ira !}
-
 % ----------------------------------------------------------------------------
+
+Ce manuscrit conclut ma thèse de doctorat, qui a débuté en octobre $2016$ et s'est terminée en novembre $2019$.
+Mes recherches se sont déroulées au laboratoire de l'IETR à Rennes (France), dans l'équipe SCEE hébergée sur le campus de Rennes de l'école d'ingénieurs CentraleSupélec.
+J'étais supervisé par le professeur Christophe Moy, à Rennes,
+et j'étais également co-encadré par le Docteur Emilie Kaufmann, que j'ai visité plusieurs fois à l'Inria Lille Nord Europe à Lille (France).
+
 
 % Chapitre 1
 Dans cette thèse de doctorat, nous étudions les réseaux sans fil et les appareils reconfigurables qui peuvent accéder à des réseaux de radio sans fil de manière intelligente, dans des bandes non licenciées et sans supervision centrale.
@@ -29,6 +31,438 @@ Nous détaillons également une autre contribution, la bibliothèque Python open
 \section*{Contexte}
 
 FIXME 0.5 à 2 pages de contexte, historique, technique, humain, etc.
+
+% Problème principal
+%
+La racine des problèmes qui motivent cette thèse sont les questions du réchauffement climatique et de l'augmentation de la population mondiale.
+% https://en.wikipedia.org/wiki/History_of_radio
+Au cours des $150$ dernières années, l'humanité a développé de nombreuses technologies de communication différentes, et depuis la fin des années $1890$, les communications sans fil entre les appareils fabriqués ont été rendues possibles, et de plus en plus fréquentes dans nos vies.
+Avec l'avènement des réseaux Internet des objets (IdO), des milliards de dispositifs autonomes basse consommation devraient être déployés dans le monde entier, pour un large éventail d'applications différentes.
+Il existe aujourd'hui un consensus mondial sur le fait qu'avec la tendance actuelle à l'accroissement démographique et la crise énergétique actuelle, toute nouvelle technologie déployée doit être à la fois bon marché et efficace sur le plan énergétique,
+ainsi qu'adaptés pour desservir un grand nombre de personnes et d'appareils.
+%
+Ces technologies de l'IdO devraient pouvoir s'adapter automatiquement à différents environnements et contextes d'application, et être aussi efficaces que possible.
+%
+En plus de l'effort habituel de recherche et développement pour concevoir de nombreux systèmes d'accès radio efficaces, pour tous les cas possibles,
+le moment est venu de le combiner avec un apprentissage machine bon marché et prometteur pour (essayer d') atteindre le niveau de gain de performance nécessaire pour que les promesses de l'IdO deviennent réalité.
+
+
+C'est pourquoi nous nous intéressons à cette thèse sur
+l'amélioration de la durée de vie des batteries des équipements terminaux IoT et la réduction du coût énergétique des réseaux IoT.
+Nous proposons d'atteindre ces deux objectifs conjointement, en intégrant la prise de décision décentralisée à faible coût directement dans les futurs dispositifs IdO.
+%
+Notre thèse de doctorat porte donc sur les applications possibles de l'intégration d'un certain type d'algorithmes d'apprentissage machine (Multi-Armed Bandit algorithms), afin de permettre aux appareils IoT d'optimiser leurs communications sans fil et d'apprendre à s'organiser automatiquement et sans contrôle central ni coordination.
+
+
+\paragraph{Des anciens téléviseurs aux normes de l'IdO.}
+%
+Historiquement, trois grandes familles de systèmes de communication sans fil ont été déployées dans les grands réseaux commerciaux : d'abord, la radiodiffusion centralisée (\eg, radio ou télédiffusion), puis les systèmes bidirectionnels centralisés (\eg, 4G ou WiFi), et aujourd'hui la collecte décentralisée de données pour les réseaux Internet des objets (\eg, réseaux capteurs).
+%
+Ce troisième type de systèmes peut être conçu comme décentralisé :
+même si une station de base centrale est
+toujours en charge de nombreux appareils,
+les appareils déclenchent l'envoi de paquets de liaison montante, et les seules données de liaison descendante qu'ils peuvent recevoir sont de courts accusés de réception, envoyés par la station de base pour indiquer le succès ou l'échec de chaque paquet de liaison montante.
+Cette famille de systèmes sans fil est appelée Internet des objets (IoT),
+et un exemple typique d'application de tels réseaux IoT est celui des réseaux sans fil de capteurs.
+
+Pour le développement futur des ``réseaux intelligents'', des ``villes intelligentes'', des ``maisons intelligentes'' ou de l'''agriculture intelligente'', les réseaux de capteurs devraient être largement déployés.
+Deux exemples d'applications futures qui sont déjà en cours de déploiement, en France ou à l'étranger, sont les ``bâtiments connectés'' et l'''agriculture connectée''.
+Pour les bâtiments, l'objectif principal est de réduire le coût de chauffage des bâtiments vides et d'utiliser des réseaux de capteurs pour obtenir des données précises et régulières sur la température dans toutes les pièces et tous les étages, et de permettre au contrôle centralisé de la chaleur d'optimiser son coût et sa consommation énergétique.
+Pour l'agriculture, un exemple peut être d'équiper chaque vache (dans les grandes exploitations) d'un capteur qui émet régulièrement des informations biologiques, telles que la température corporelle ou le niveau de stress, afin d'optimiser le temps de traite, de surveiller la santé des animaux, etc.
+
+
+Ce troisième type de systèmes sans fil se caractérise par leur nature décentralisée,
+où les communications sont initialisées et régulées par les appareils, et non par un système de contrôle centralisé.
+%
+En effet, une commande centrale nécessite la signalisation de paquets qui ont été identifiés comme trop lourds pour ce type de systèmes.
+Dans les réseaux IdO actuels et futurs, de nombreux dispositifs de nature hétérogène utilisent la même antenne pour des applications différentes.
+Un problème commun est que ces appareils IoT ont une forte contrainte sur leur consommation d'énergie, car la plupart d'entre eux seront déployés sans accès direct à l'alimentation et fonctionneront sur une batterie minuscule, dont la durée de vie devrait être maximisée.
+Par exemple, la plupart des entreprises commerciales d'IdO vendent aujourd'hui une durée de vie de plus de $10$ ans, comme SIGFOX \cite{Centenaro16}.
+Une autre contrainte commune aux dispositifs IoT est leur faible rapport cyclique, car la plupart des applications ciblent un ou quelques messages à envoyer chaque jour, en opposition avec le débit de données élevé recherché pour les systèmes centralisés (tels que 4G/5G et WiFi).
+%
+De nombreuses normes différentes pour les réseaux IdO ont été proposées ces dernières années,
+et ils consistent en une spécification à la fois pour le \emph{PHY}sical
+et le calque \emph{M}edium \emph{A}access \emph{C}ontrol (\emph{MAC}).
+Pour citer quelques exemples de normes, ZigBee, Z-Wave ou Bluetooth visent les communications à courte portée, tandis que LoRaWAN, SIGFOX, Ingenu ou Weightless sont destinés aux communications à longue portée.
+Nous nous référons à l'enquête \cite{Centenaro16} pour plus de détails, et des références dans \cite{Azari18} ou notre récent article \cite{MoyBesson2019}.
+
+
+\paragraph{Pénurie du spectre radio.}
+%
+Un problème majeur des technologies sans fil actuelles est la question de la pénurie du spectre radio :
+dans la plupart des bandes de fréquences, la totalité du spectre RF est désormais attribuée et les bandes libres n'existent plus, ce qui limite la possibilité d'ajouter tout nouvel usage.
+Tel qu'illustré dans la Figure~\ref{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum} ci-dessous,
+presque tout le spectre
+est affecté à divers usages, qui vont de la radionavigation maritime (historiquement le premier usage des radiocommunications, \eg, dans le Titanic), à la recherche spatiale, l'inter-satellite, la téléphonie mobile et de nombreuses autres applications.
+%
+Les organismes de réglementation dans le monde, comme le
+\href{https://www.itu.int/en/Pages/default.aspx}{International Telecommunication Union} (voir \href{https://www.itu.int/}{\texttt{www.ITU.int}}),
+la \href{https://www.fcc.gov/}{Federal Communications Commission} aux États-Unis (voir \href{https://www.fcc.gov/}{\texttt{FCC.gov}})
+ou la \href{https://cept.org}{ Conférence européenne des administrations des postes et des télécommunications} en Europe (voir \href{https://www.CEPT.org/}{\texttt{CEPT.org}}),
+ainsi que différentes campagnes de mesure indépendantes, ont montré que la plupart des fréquences du spectre des fréquences radioélectriques sont utilisées de manière inefficace.
+Cela signifie qu'une bande peut être attribuée à un certain usage unique, mais qu'elle peut être libre de tout utilisateur à certains moments et/ou endroits.
+Nous nous référons à \cite{patil2011survey} pour une étude sur l'utilisation mondiale du spectre, et à \cite{valenta2010survey} pour la situation en Europe.
+
+
+Les bandes des réseaux cellulaires sont surchargées dans la plupart des régions du monde, mais d'autres bandes de fréquences (comme les fréquences militaires ou de radioamateurs) sont moins utilisées.
+Des études indépendantes réalisées dans certains pays ont confirmé cette observation et conclu que l'utilisation du spectre dépend fortement du moment et du lieu, comme le montre \cite{Lopez2009spectral}.
+En outre, l'attribution fixe du spectre empêche
+l'introduction de nouveaux services, en particulier pour les équipements à bas prix ou pour les petits marchés.
+%
+Donc, au cours des $15$ dernières années, grâce à un lobbying actif de la communauté de la radio intelligente,
+les organismes de réglementation dans le monde se sont demandé s'il fallait permettre à l
+un nouveau paradigme de communication sans fil :
+permettre aux utilisateurs non titulaires d'une licence d'utiliser des bandes sous licence s'ils ne causent pas d'interférence aux utilisateurs (payants) titulaires d'une licence.
+Ces initiatives sont examinées par le \textbf{Radio Cognitive},
+que nous détaillons ci-dessous, et en particulier pour \textbf{Dynamic Spectrum Access (DSA)},
+pour lesquelles nous renvoyons aux enquêtes \cite{akyildiz2006next,garhwal2012survey} pour plus de détails.
+
+
+
+\section*{Radio Intelligente et Bandits Multi-Bras}
+
+Dans cette thèse, nous étudions les réseaux Internet des Objets à longue portée, caractérisés principalement par trois contraintes essentielles :
+faible consommation d'énergie (ou longue durée de vie des piles),
+à long terme
+et un cycle d'utilisation réduit.
+%
+Plus précisément, nous étudions les interconnexions possibles entre \textbf{Radio Intelligente} et \textbf{l'apprentissage statistique} appliquées aux réseaux IdO.
+Définissons et détaillons les deux concepts.
+
+
+\paragraph{Des TIC à la Radio Intelligente (CR).}
+%
+Nous pouvons affiner le premier champ d'étude de cette thèse, étape par étape :
+des technologies de l'information et communication (TIC), aux télécommunications, aux communications sans fil, puis à la radio intelligente (RC),
+et enfin à la radio logicielle (Software Defined Radio, SDR).
+%
+La transition de l'approche historique de la radio matérielle aux architectures SDR est un processus graduel, qui a commencé au début des années 1990 et s'est accéléré dans les années 2000.
+% https://en.wikipedia.org/wiki/Software-defined_radio
+Un SDR est un système de radiocommunication où les composants qui ont été traditionnellement implémentés dans le matériel (\eg, mélangeurs, filtres, modulateurs/démodulateurs, détecteurs, etc) sont de plus en plus implémentés au moyen de logiciels sur un processeur.
+%
+Même si le paradigme de la RRL a été initié par la recherche américaine en matière de défense dans les années 1980, au cours des 20 dernières années, l'industrie civile a commencé à s'intéresser à la RRL, et la RRL a également suscité beaucoup d'intérêt de la part du milieu universitaire et de l'industrie.
+%
+Comme la RC n'est pas une technologie standard, elle n'a pas de définition unique, commençons donc par citer la définition de deux chercheurs dont les travaux ont été à l'origine du développement de la RC, qui vient de paraître il y a $20$ il y a quelques années.
+%
+\begin{itemize}
+    \item
+    J. Mittola, en $1999$, a proposé que
+    \emph{``une radio vraiment intelligente qui serait autonome, sensible aux RF et à l'utilisateur, et qui inclurait la technologie logicielle et les capacités d'apprentissage machine ainsi qu'une grande connaissance de l'environnement radio haute-fidélité''} \cite{Mitola99}.
+
+    \item
+    Puis S. Haykin en $2005$ a aussi dit que
+    \emph{``une radio intelligente (CR) est un système de communication sans fil intelligent qui est capable de connaître son environnement, d'apprendre et d'adapter ses paramètres de fonctionnement (puissance d'émission et fréquence porteuse) à la volée dans le but de fournir une communication fiable à tout moment, en tout lieu et efficace sur le plan spectral''} \cite{Haykin05}.
+
+    \item
+    La \href{https://en.wikipedia.org/wiki/Cognitive_radio}{Wikipedia encyclopedia} dit ceci
+    \emph{``une CR est une radio qui peut être programmée et configurée dynamiquement pour utiliser les meilleurs canaux sans fil à proximité afin d'éviter les interférences et la congestion des utilisateurs. Une telle radio détecte automatiquement les canaux disponibles dans le spectre sans fil, puis modifie en conséquence ses paramètres de transmission ou de réception pour permettre plus de communications sans fil simultanées dans une bande de spectre donnée à un endroit donné''}.
+\end{itemize}
+
+L'une des façons possibles d'envisager la flexibilité du spectre est la suivante.
+%
+Dans les bandes sous licence, il y a des utilisateurs primaires (PU) qui paient pour accéder au réseau, par exemple n'importe qui doit payer pour avoir un numéro de téléphone mobile et utiliser le réseau.
+Comme nous l'avons vu dans la définition ci-dessus de la philosophie de la CR, nous pouvons imaginer que si le réseau n'est pas utilisé par une UP à un certain endroit et à une certaine heure, les utilisateurs non licenciés, appelés utilisateurs secondaires (UD), pourraient l'utiliser en payant un loyer à l'UP.
+%
+La réglementation stipule que le PU a une priorité stricte,
+mais même si les bandes RF sont attribuées, les mesures dans le monde réel montrent souvent que certaines bandes ne sont pas utilisées de manière intensive, et donc si une UD était équipée d'une capacité de détection efficace, elle pourrait analyser son environnement, et utiliser une bande sous licence si elle est exempte de toute PU.
+Ceci définit le concept de \textbf{Opportunistic Spectrum Access} (OSA), pour lequel nous nous référons à l'enquête \cite{Zhao07} pour plus de détails.
+
+
+\paragraph{De la statistique ou de l'apprentissage machine aux bandits multi-bras.}
+%
+Nous sommes intéressés par l'apprentissage des Bandits Multi-Bras (MAB),
+qui est apparu comme un problème intéressant dans la communauté statistique et parmi les chercheurs intéressés par l'apprentissage séquentiel, comme le montrent les travaux antérieurs de \cite{Thompson33,Robbins52,LaiRobbins85}.
+Il est également inclus dans le concept plus général d'apprentissage du renforcement (RL), lui-même un des domaines de l'apprentissage machine (ML).
+ML > RL > MAB
+%
+Le livre de référence sur RL est \cite{SuttonBarto2018}, citons donc la définition de RL donnée par R. Sutton et A. Barto :
+\emph{``l'apprentissage par renforcement, c'est apprendre quoi faire - comment faire le lien entre les situations et les actions -
+pour maximiser un signal de récompense numérique. L'apprenant n'est pas informé des mesures à prendre pour
+mais doit plutôt découvrir quelles actions sont les plus gratifiantes en les essayant''}.
+% apprentissage statistique > séquentiel > par renforcement > information partielle (bandits)
+
+
+Nous illustrons ci-dessous l'idée d'un cycle d'apprentissage, alternant entre l'action et le feedback,
+dans la Figure~\ref{fig:1:RenforcementLearningCycle}.
+Un joueur (ou un apprenant) interagit avec son environnement en prenant une action $A(t)$ (\eg, un choix dans un ensemble fini, $A(t)\in\{1,\dots,K\}$, ou un vecteur $A(t)\in\R^d$), et ensuite en observant une récompense $r(t)$, qui est une certaine mesure du succès de l'environnement (\eg, $r(t)\in\{0,1\}$ pour échec/succès binaire, ou $r(t)\in\R$).
+Le but du joueur est de maximiser ses récompenses, par des essais et des erreurs (@@ie, actions et récompenses).
+De nombreux problèmes du monde réel peuvent être présentés comme des problèmes d'apprentissage de renforcement, comme l'illustrent l'enquête \cite{bouneffouf2019survey} et la section~\ref{sec:2:applicationsdeStochasticMAB}, par exemple apprendre à marcher ou à conduire, apprendre à jouer à un jeu vidéo, ou découvrir quel traitement est efficace pour guérir une certaine maladie (essai clinique), etc.
+
+
+% Il faut expliquer ce que c'est que les bandits, rapidement, et leur application à l'OSA
+Comme cette thèse se concentre sur les modèles d'apprentissage de renforcement,
+il est important de souligner que dans de tels modèles de prise de décision, l'apprenant n'a pas accès à l'ensemble de la réaction de l'environnement après avoir pris ses mesures.
+%
+En d'autres termes, le joueur ne voit que la récompense donnée par son action à chaque tour, et non la récompense qui aurait été donnée si elle avait choisi une autre action.
+Ce genre de rétroaction limitée s'appelle \emph{information sur les bandits}, et nous discutons de l'histoire et du concept des \emph{Multi-Armed Bandits}. (MAB) en détail dans le prochain chapitre~\ref{chapitre:2}.
+Les essais cliniques et la découverte de traitements ont été historiquement la première application du MAB depuis les $1930$, avec les premiers travaux de W. Thompson \cite{Thompson33}.
+%
+Le MAB est un exemple simple mais puissant du dilemme bien connu de l'exploration/exploitation :
+lorsqu'il est confronté à un ensemble d'actions de $K$ dont les effets sur l'environnement sont inconnus, l'apprenant doit trouver un équilibre entre
+explorer les actions inconnues, afin de recueillir plus d'informations à leur sujet,
+et en exploitant la meilleure action, selon ses connaissances actuelles.
+%
+Le problème du MAB a été étudié à la fois dans la communauté de l'apprentissage machine et de la statistique, depuis les $1950$ avec des pionniers comme H. Robbins \cite{Robbins52}, et plus récemment c'est un domaine de recherche actif, depuis les $1990$ \cite{Anantharam87a,Anantharam87b,auer1995gambling,Agrawal95}.
+La recherche sur le MAB a produit une vaste littérature dans le domaine des $2000$s \cite{Auer02,Auer02NonStochastic,Audibert2009minimax} et continue d'être un sujet de grand intérêt, comme l'illustrent les enquêtes et livres \cite{Bubeck12,LattimoreBanditAlgorithmsBook,Slivkins2019} et la large gamme des applications du MAB dans les récentes années \cite{bouneffouf2019survey}.
+
+\paragraph{Accès Opportuniste au Spectre (OSA).}
+%
+Les deux communautés de l'OSA et du MAB ont commencé à interagir, et les travaux qui en ont résulté ont suscité un grand intérêt de la part des deux communautés, depuis la fin des $2000$ et le début des $2010$, avec des travaux pionniers comme \cite{Liu08,Zhao10,Jouini09,Jouini10}.
+L'accent est mis sur une UD accédant à un spectre sous licence, occupé par une UD, qui a une priorité stricte sur l'UD, qui doit suivre un schéma d'accès " écoute avant conversation ".
+%
+Les hypothèses suivantes sont bonnes :
+l'UD est équipée d'une capacité de détection,
+et considère un ensemble fixe et fini de canaux orthogonaux, c'est-à-dire différentes bandes de fréquences dans un spectre sous licence.
+Par exemple, il peut s'agir d'un ensemble de trois canaux Wi-Fi à fréquence différente, émis par la même station Wi-Fi.
+Une autre hypothèse est que PU et SU sont synchronisés dans le temps, en subdivisant le temps en pas de temps discrets (ou ronds).
+%
+Ainsi, si l'unité de station de base passe peu de temps au début de chaque plage horaire pour effectuer la détection, elle peut rechercher la présence ou l'absence d'une UP avant de transmettre, pendant le reste de la plage horaire, sans entrer en collision avec l'UP.
+Si l'UD était capable de détecter toutes les bandes de fréquences $K$, elle pouvait simplement émettre dans l'un des canaux libres s'il y en avait, ou ne pas émettre si tous les canaux sont utilisés à un pas de temps donné.
+Cependant, on sait que la détection est coûteuse en termes de consommation d'énergie, en particulier pour la détection à large bande, comme le montrent les enquêtes \cite{yucek2009survey,subhedar2011spectrum}, de sorte que la plupart des travaux sur l'OSA limitent la capacité de détection de l'UD à une seule chaîne à la fois.
+Cette hypothèse, ainsi que l'hypothèse selon laquelle la PU ne peut pas être perturbée (sans laquelle aucune régulation ne sera jamais acceptée pour l'OSA), impose à l'UU de transmettre dans le canal qu'elle a détecté, à chaque pas de temps, si et seulement si elle a été détectée sans PU quelconque.
+coût non négligeable de la reconfiguration radio
+
+En se concentrant sur un SU dans un réseau OSA, il doit décider séquentiellement d'un canal à détecter (dans l'ensemble des canaux, $[K]=\{1,\dots,K\}$), puis il effectue la détection, et enfin il transmet dans ce canal si il a été détecté libre.
+Le but de l'UD est de minimiser sa consommation d'énergie (nous rappelons que nous nous concentrons sur la radio intelligente ``écologique'', \emph{green radio}) et de maximiser son débit de données sur la liaison montante, ou l'équivalent, pour maximiser son nombre de transmissions réussies.
+%
+Si les différents canaux ne sont pas uniformément utilisés par la PU, et si l'on suppose une hypothèse stationnaire sur le trafic de la PU, alors l'objectif de la SU se résume à explorer les différents canaux et à exploiter les meilleurs.
+Le problème de l'accès opportuniste au spectre est donc un problème d'exploration/exploitation, avec un ensemble fini d'actions (les canaux, également appelés \emph{arms}),
+dans un cycle séquentiel d'action puis de rétroaction (les pas de temps sont $t\in\N^*$),
+sous la rétroaction partielle d'information (\ie, environ un canal de plus de $K$ à chaque pas de temps).
+Ces trois hypothèses sont celles qui limitent le cadre général du blanchiment d'argent au cas spécifique du bandit multibras (voir Figure~\ref{fig:1:ReinforcementLearningCycle}).
+
+
+\paragraph{MAB pour l'OSA, et une brève présentation de l'historique de cette recherche dans l'équipe SCEE.}
+%
+Les travaux antérieurs de notre équipe SCEE ont montré que le MAB peut être utilisé pour modéliser le problème de l'AOS :
+les bandes de fréquences orthogonales (ou canaux) sont des modèles par bras $k\in\{1,\dots,K\}$,
+et le feedback obtenu par le dispositif équipé de CR après avoir détecté le canal $k$ au temps $t$ est modélisé par une récompense de $r(t) \in \in \{0,1\}$.
+En effet, $r(t) = 1$ indique qu'aucun utilisateur primaire n'a été détecté (et donc qu'un message SU peut être envoyé), alors qu'une récompense de $r(t)=0$ indique que le canal $k$ est occupé au moment $t$ et qu'aucun message SU ne doit être envoyé, jusqu'à la fin de cet intervalle.
+%
+Ce modèle a d'abord été étudié par W. Jouini lors de sa thèse de doctorat avec C. Moy \cite{Jouini12PhD}, il y a dix ans, d'abord avec \cite{Jouini09} et ensuite avec \cite{Jouini10,Jouini12}.
+
+Leurs travaux ont été parmi les premiers à proposer l'utilisation de Reinforcement Learning for Cognitive Radio et le problème OSA, notamment le modèle MAB et l'algorithme $\UCB_1$,
+ainsi que les premiers travaux de Q. Zhao et de son équipe, par exemple avec les travaux \cite{Liu08,Zhao10}.
+%
+Peu de temps après, en $2014$, C. Moy et son étudiant C. Robert \cite{RobertSDR2014,MoyWSR2014,MoyWSR2014} ont développé des preuves de concept utilisant le matériel radio et la radio logicielle du monde réel en utilisant des cartes USRP et le logiciel MATLAB/Simulink.
+Dans une deuxième thèse de doctorat \cite{Modi17PhD}, N. Modi a étudié de $2014$ à $2017$ l'impact de l'utilisation des algorithmes MAB pour optimiser la sélection des canaux, sur la durée de vie des piles d'un appareil sans fil.
+D'une part, l'utilisation d'un algorithme MAB tel que les algorithmes de type UCB s'est avérée utile et pourrait apporter des améliorations significatives en termes de taux de transmission, augmentant directement la durée de vie de la batterie du dispositif.
+D'autre part, les algorithmes MAB classiques ont tendance à changer souvent de bras, surtout au début du processus d'apprentissage, ce qui induit beaucoup de reconfigurations matérielles dynamiques pour le dispositif sans fil, car la sélection d'un canal différent nécessite un changement dans le matériel radio utilisé par le dispositif.
+Chaque reconfiguration matérielle coûte de l'énergie à l'appareil et les algorithmes de commutation rapide entraînent une réduction de l'autonomie de la batterie.
+Le compromis entre les deux aspects est étudié de façon empirique dans les études suivantes
+\cite{modiDemo2016}.
+
+
+En $2017$, C. Moy a continué à travailler dans cette direction, avec un étudiant postdoctoral, S. Darak, qui a mené à des publications telles que
+\cite{darak2016bayesian,Darak16}.
+%
+Par exemple, des preuves de concepts comme \cite{kumar2016two} ont prouvé la capacité de telles approches sur des signaux radio réels pour l'OSA.
+%
+Certaines analyses des mesures radio réelles effectuées pour les canaux ionosphériques HF ont également prouvé que les solutions basées sur l'apprentissage MAB sont appropriées et résolvent efficacement ce type de problèmes de prise de décision sur les signaux sans fil du monde réel \cite{Melian15}.
+%
+Depuis $2017$, S. Darak et son équipe à l'IIIT Delhi en Inde, ont travaillé activement dans la recherche sur la radio intelligente à l'aide de bandits à armes multiples.
+Héritage de son travail au sein de l'équipe SCEE,
+certains de leurs travaux récents sont également illustrés par des démos du monde réel utilisant USRP et le système MATLAB/Simulink
+\cite{KumarYadav2018,SawantKumar2018,JoshiKumar2018}.
+%
+Pour plus de détails sur l'état de la recherche sur la radio intelligente, nous renvoyons aux enquêtes \cite{garhwal2012survey,marinho2012cognitive}.
+
+
+\paragraph{Limitations et spécificités des réseaux IdO.}
+%
+La littérature susmentionnée a essentiellement montré que les algorithmes MAB peuvent être appliqués avec succès au problème de l'AOS.
+Toutefois, si l'on considère les dispositifs prêts à l'emploi qui ne peuvent pas effectuer la détection, tels que les dispositifs finaux à faible coût et à faible consommation d'énergie conçus pour les futurs réseaux Internet des objets, le modèle MAB qui utilise la détection pour détecter le PU dans le cas de l'OSA ne peut plus être appliqué.
+En outre, dans la plupart des cas, les réseaux IdO utilisent des bandes sans licence et il n'y a donc plus de distinction entre PU et SU.
+En d'autres termes, il n'y a plus de priorité entre les utilisateurs des réseaux IdO.
+(plus de PU, tous sont SU).
+%
+Les spécificités des réseaux IdO peuvent être énumérées comme suit,
+et nous nous référons à l'enquête \cite{Centenaro16} pour plus de détails.
+%
+\begin{itemize}\tightlist
+    \item
+    nous considérons ici les réseaux IdO qui fonctionnent dans des bandes sans licence (plus de distinction entre PU et SU),
+    \item
+    la plupart des dispositifs IoT sont des dispositifs à très faible coût, fonctionnant éventuellement sur du matériel de mauvaise qualité et ayant des capacités logicielles et d'alimentation limitées (c'est-à-dire de minuscules batteries).
+    Cela signifie que même s'ils ne sont pas équipés de capacités de détection particulières,
+    ils sont équipés d'un émetteur ainsi que d'un récepteur (Tx et Rx, \ie, un émetteur-récepteur).
+    et ils ont des capacités de stockage et de calcul peu complexes (petits processeurs embarqués),
+    \item
+    une seule station de base IoT devra gérer un très grand nombre d'appareils,
+    et ne peut leur envoyer des ordres de coordination afin d'optimiser le réseau,
+    \item
+    Les dispositifs IoT ont des cycles de fonctionnement faibles (seulement quelques messages par minute) à très faibles cycles de fonctionnement (seulement quelques messages par mois).
+\end{itemize}
+
+Une coordination centrale des appareils avec leur station de base est impossible car il faudrait communiquer en permanence avec la station de base, ce qui viole les deux dernières contraintes.
+%
+De plus, en raison de leur matériel limité (Rx/Tx), de leur puissance de calcul limitée et de la durée de vie limitée de la batterie, les dispositifs IoT sont capables d'utiliser leur antenne reçue pour détecter un canal occasionnellement (généralement, pendant quelques intervalles de temps après chaque message de liaison montante), mais ils ne peuvent pas effectuer de détection de spectre comme cela est envisagé pour OSA et CR (\ie, au début de chaque intervalle, dans un schéma " écoute avant conversation ").
+
+On pourrait penser qu'en l'absence de détection, l'apprentissage du renforcement n'est plus possible, mais tout appareil IoT réel reçoit encore des informations sur son environnement après certaines ou toutes les transmissions.
+Dans la plupart des normes IoT, un message de liaison montante envoyé à une station de base peut être suivi d'un message de liaison descendante renvoyé par la station de base pour indiquer si le message de liaison montante a été bien reçu et compris.
+%
+En utilisant cette rétroaction, ça consiste en un \emph{acknowledgement} (\Ack) reçu peu après chaque transmission réussie, ou en l'absence de \Ack{} après une transmission échouée, il est possible qu'un terminal IoT puisse également utiliser un algorithme RL bien conçu afin d'optimiser ses communications.
+
+
+
+% ----------------------------------------------------------------------------
+\section*{Nos contributions}
+\label{sec:1:contributions}
+
+Nous commençons par formuler le problème étudié dans cette thèse, puis nous développons notre approche.
+%
+Si nous résumons les problèmes étudiés et les résumons en une seule question, ce pourrait être la suivante :
+\Insister sur le fait que l'on peut adapter les outils de prise de décision déjà appliqués avec succès à la radio intelligente pour l'accès opportuniste au spectre aux besoins spécifiques de la CR pour les (futurs) réseaux de l'Internet des objets ?
+%
+Nous répondons partiellement à cette problématique par les étapes de recherche suivantes.
+
+
+
+\subsection*{Explorer la jungle des algorithmes MAB}
+
+\paragraph{Chapter~\ref{chapter:2}.}
+%
+Nous avons commencé par explorer la riche littérature des bandits aux armes multiples,
+car il existe de nombreux algorithmes différents, avec de nombreuses variantes sur le problème simple présenté ci-dessus.
+Nous commençons donc la première partie~\ref{part:Introduction} de cette thèse par le chapitre~\ref{chapitre:2}, qui présente le modèle MAB et passe en revue les algorithmes les plus importants conçus pour résoudre les problèmes stochastiques et stationnaires du MAB.
+%
+Afin de bien comprendre quels algorithmes pourraient être adaptés aux contraintes susmentionnées de la RC pour les réseaux IdO,
+nous n'étions pas seulement intéressés par la mesure habituelle des performances d'un algorithme MAB (son regret, voir ci-dessous dans Section~\ref{sec:2:lowerUpperBoundsRegret}),
+mais aussi par leurs performances empiriques en termes de complexité de calcul et d'exigences de stockage, tant du point de vue des analyses théoriques que des mesures en temps réel et des empreintes mémoire.
+
+
+\paragraph{Chapter~\ref{chapter:3}.}
+%
+Notre exploration du grand nombre d'algorithmes et de modèles MAB développés dans la littérature récente.
+nous a donné l'ambition d'écrire un seul logiciel permettant à chacun d'implémenter facilement de nouveaux modèles et algorithmes, afin de comparer les modèles existants et d'explorer empiriquement les performances des nouveaux algorithmes proposés.
+Pour atteindre cet objectif, nous avons produit une bibliothèque Python de simulation des problèmes MAB.
+%
+Nous avons écrit la bibliothèque de simulation open-source la plus exhaustive pour les problèmes MAB, appelée SMPyBandits, qui est publiée en ligne sous licence open-source \cite{SMPyBanditsJMLR,SMPyBandits} et hébergée sur \href{https://GitHub.com/SMPyBandits}{\texttt{GitHub.com/SMPyBandits}}.
+Nous présentons en détail son architecture et ses fonctionnalités dans le chapitre~\ref{chapitre:3}, ainsi que différents exemples de son utilisation.
+Une documentation complète est disponible en ligne, ainsi que des instructions exhaustives pour reproduire les simulations discutées dans la suite de cette thèse.
+
+
+\paragraph{Chapter~\ref{chapter:25}.}
+%
+Étant donné le grand nombre d'algorithmes MAB différents, nous nous intéressons aussi à la question de savoir comment un praticien peut choisir l'algorithme à mettre en œuvre, dans un objet IdO donné, afin de doter cet objet de la capacité de s'adapter de manière robuste à tout environnement.
+Pour répondre à cette question, nous présentons deux approches.
+La première est une comparaison empirique des algorithmes existants les plus efficaces et les mieux connus, dans Section~\ref{sec:3:reviewSPAlgorithms} et \ref{sec:3:timeAndMemoryCosts}.
+Nous confirmons que les algorithmes largement utilisés et pas trop sophistiqués, tels que \UCB{} \cite{Auer02}, Thompson sampling \cite{Thompson33} and \klUCB{} \cite{KLUCBJournal}, sont les plus efficaces en termes de regret, et offrent un bon équilibre entre regret et complexité (temps et mémoire).
+La seconde approche est une sélection d'algorithmes en ligne, consistant à agréger un ensemble (fini) d'algorithmes et à découvrir automatiquement lequel est le plus efficace, contre un problème donné, avec notre contribution \Aggr{} que nous détaillons dans Chapitre~\ref{chapitre:25}.
+Ce travail sur l'agrégation des algorithmes MAB a été motivé pour le cas OSA de la radio cognitive, où de nombreux travaux de recherche antérieurs ne prenaient en compte que l'algorithme $\UCB_1$ sans vraiment justifier ce choix.
+Cette contribution a été présentée à la conférence WCNC de l'IEEE à Barcelone, Espagne, en avril 2010.
+
+
+% FIXME VRAIMENT BEAUCOUP raccourcir la suite !
+
+\subsection*{Nos modèles de réseaux d'IdO et de MAB décentralisé}
+
+Dans la deuxième partie~\ref{part:MABIOT} de cette thèse, nous commençons par proposer et étudier différents modèles de réseaux d'IdO, avec des simulations et une validation de concept réelle, puis nous étudions des questions intéressantes sur deux modèles mathématiques du MAB, issues de la simplification de notre premier modèle.
+
+
+\paragraph{Chapter~\ref{chapter:4}.}
+%
+Nous étudions deux modèles de réseaux IdO dans le chapitre~\ref{chapitre:4}.
+Le premier modèle considère les dispositifs IdO qui ont simplement des données à envoyer régulièrement à une station de base (à des moments imprévisibles ou aléatoires).
+De tels dispositifs utilisent les acquittements comme un retour d'information, afin d'optimiser leurs communications sur la liaison montante, en accédant aux meilleurs canaux (c'est-à-dire le canal le moins occupé par le trafic qui les entoure).
+L'objectif de ce premier modèle est d'améliorer la qualité de service (QoS) de l'application de ce réseau IoT, en appliquant une RL décentralisée côté appareil afin de réduire le taux d'échec de transmission.
+La station de base recevra donc plus de paquets de liaison montante des appareils desservis, si elle peut apprendre à utiliser un système efficace d'accès au spectre.
+Cela implique que le réseau peut accepter plus d'équipements finaux tout en maintenant la même QoS.
+%
+Notre deuxième modèle considère ensuite les retransmissions de paquets, et bien que les deux concepts soient similaires, l'application d'un algorithme d'apprentissage décentralisé efficace permet d'augmenter la durée de vie des piles de chacun des appareils, ainsi que la QoS de l'ensemble du réseau, puisque moins de retransmissions réduisent la charge locale du spectre.
+
+Le premier modèle constitue le premier article écrit au cours de cette thèse, et a initié une collaboration avec R. Bonnefoi, un autre doctorant de notre équipe SCEE.
+Nous l'avons présenté à la conférence EAI CROWNCOM à Lisbonne, au Portugal, en septembre 2010, où il a obtenu le "prix du meilleur papier" \cite{Bonnefoi17}.
+%
+La preuve de concept (PoC) a continué notre collaboration fructueuse avec R. Bonnefoi, et a été démontrée pendant trois jours à la conférence ICT de l'IEEE à Saint-Malo, France, en juin $2018$ \cite{Besson2018ICT}, et ensuite présentée à la conférence IEEE WCNC à Marrakech, Maroc, en avril $2019$ \cite{Besson2019WCNC}.
+%
+Notre deuxième modèle, avec retransmissions, correspond à notre dernière collaboration avec R. Bonnefoi, qui a été présentée à l'atelier $1^{\text{st}}$ MoTION, également pendant la conférence IEEE WCNC $2019$ \cite{Bonnefoi2019WCNC}.
+
+
+\paragraph{Chapter~\ref{chapter:5}.}
+%
+Dans les deux modèles présentés ci-dessus, le concept de base est de laisser chaque dispositif dynamique d'un réseau IdO exécuter un algorithme d'apprentissage de manière totalement décentralisée, afin d'optimiser le système complet.
+Il est important de noter que chaque dispositif ne communique, et donc n'apprend, qu'à quelques tours et non à toutes les étapes, en suivant son propre processus d'activation (aléatoire) (nous nous limitons à un processus d'activation de Bernoulli purement aléatoire de probabilité $p$).
+Cela signifie que chacun d'eux vise son propre objectif local, qui est de maximiser sa récompense cumulée (d'une manière égoïste).
+Il est bien connu dans la littérature sur la théorie des jeux que le jeu égoïste peut être désastreux pour la mesure centralisée de la performance, on peut penser aux "dilemmes" populaires, tels que le \href{https://fr.wikipedia.org/wiki/Dilemme_du_prisonnier}{dilemme du prisonnier}.
+Il était donc assez surprenant que nos simulations numériques, ainsi que le PoC réaliste, aient montré que l'apprentissage MAB décentralisé et égoïste conduisait à une coordination efficace entre les dispositifs dans tous les scénarios considérés, malgré le fait que ces objets IoT ne peuvent communiquer directement entre eux, et reçoivent seulement un retour de collision depuis la station de base à laquelle ils sont associés.
+
+Nous avons d'abord essayé d'analyser la performance de cet algorithme décentralisé, que nous appelons \Selfish, dans le modèle de Section~\ref{sec:4:firstModel},
+mais en raison du nombre aléatoire de dispositifs actifs à chaque pas de temps (@@ie, dès que la probabilité $p$ d'activation est $p < 1$), nous n'avons pas pu développer une analyse propre.
+%
+C'est pourquoi dans le chapitre~\ref{chapitre:5}, nous relâchons l'hypothèse d'avoir $M \gg K$ (ou même simplement $M > K$) dans un réseau avec un canal sans fil orthogonal $K$, qui est équivalent à avoir $p < 1$, et nous considérons le cas des dispositifs IoT communiquant à chaque étape de temps (\ie, $p=1$), et nous limitons donc à $M \leq K$ dispositifs à jour.
+Le modèle que nous avons étudié comporte différentes variantes, selon le niveau de rétroaction, et couvre à la fois le cas OSA (\ie, avec détection) ou le cas IoT (\ie, sans détection).
+L'objectif était de comprendre l'heuristique de Chapter~\ref{chapter:4}, \Selfish, dans le cadre plus simple du multi-player MAB, qui a été étudié auparavant pour le cas de l'OSA, comme étudié par exemple par \cite{Zhao10,Anandkumar10,Anandkumar11}.
+%
+Le cas OSA couvert par notre modèle est en fait légèrement différent de celui considéré par \cite{Jouini10} et d'autres travaux antérieurs,
+car notre modèle exige qu'un \Ack{} soit renvoyé par la station de base si la transmission a réussi, même dans le cas où l'information de détection est disponible.
+Il diffère des modèles précédemment étudiés d'application du MAB pour l'AOS, puisqu'ils ne prennent en compte que les dispositifs synchronisés, une unité de base et une unité centrale de traitement, et donc si la détection indique qu'un canal est libre à un intervalle de temps, le message de liaison montante envoyé par l'unité de base sera certainement reçu avec succès par la base (dans le modèle idéal), donc il n'y aura aucun risque de collision, donc pas besoin de \Ack.
+
+
+D'une part, dans le cadre de la LVMO, nous n'avons pas réussi à obtenir un résultat positif pour la politique égoïste, car nous avons prouvé que dans certains contextes limités (\eg, $K=3$ et $M=2$), \Selfish-\UCB{} peut présenter un regret linéaire avec une faible probabilité, et donc souffre de regret moyen linéaire.
+Ce résultat a ensuite été confirmé et analysé par \cite{BoursierPerchet18}.
+%
+D'autre part, nous avons été en mesure de proposer de nouveaux algorithmes pour ce problème de bandit multi-joueurs avec des informations de détection, et nous avons analysé notre proposition \MCTopM-\klUCB, pour montrer qu'elle atteint une limite supérieure de regret logarithmique à temps fini, améliorant considérablement les résultats précédents.
+Notre algorithme atteint également un nombre logarithmique de collisions et de commutateurs de bras, et permet à un groupe fixe de dispositifs $M$ d'apprendre efficacement à utiliser les meilleurs canaux $M$ orthogonalement pour presque toutes leurs communications montantes.
+%
+Ce résultat théorique solide dépend fortement de la présence d'une rétroaction de détection et, par conséquent, nos résultats ne sont pas (encore) applicables au modèle IdO sans détection.
+
+
+Comme expliqué plus haut, le modèle de Chapitre~\ref{chapitre:4} s'est révélé insoluble à analyser, principalement parce que nous considérons un réseau d'IdO avec de nombreux équipements finaux, tous suivant des modèles d'activation aléatoires.
+La difficulté ne réside pas dans le fait que nous essayons d'analyser des algorithmes MAB, conçus pour résoudre des problèmes stationnaires, sur un problème non stationnaire,
+mais plutôt que nous analysons des algorithmes qui jouent tous dans différents sous-ensembles (aléatoires) des pas de temps synchronisés globaux.
+Généraliser à différentes probabilités d'activation conduirait à un modèle encore plus difficile à analyser, et appliquer au maximum $M \leq K$ aux dispositifs n'est pas vraiment réaliste pour les réseaux IdO, même si cela conduit au modèle du Chapitre~\ref{chapitre:5}.
+
+D'une part, si le modèle d'activation de tous les périphériques peut être corrigé, par exemple en se basant sur une affectation centralisée des périphériques à différents créneaux horaires, alors le modèle de bandit multi-joueurs du Chapitre~\ref{chapitre:5} peut être utilisé pour permettre à chaque groupe de périphériques $M \leq K$ d'apprendre une affectation orthogonale optimale dans les canaux $K$ (\eg, groupes peuvent être le jeu des périphériques que tous émettent au même instant).
+%
+Cependant, même si nous continuons à supposer un temps synchronisé dans tout le reste de la thèse,
+il est difficile de soutenir que cette hypothèse d'un calendrier centralisé pour les équipements finaux peut être réaliste, car nous étudions le cas de l'apprentissage décentralisé pour l'AOS et l'IdO précisément afin d'éviter la signalisation et tout contrôle central des équipements par la station de base, comme nous l'avons expliqué ci-dessus.
+
+D'autre part, une autre façon de relâcher l'hypothèse non stationnaire est de prendre le point de vue d'un dispositif, comme dans le cas de l'AOS mentionné ci-dessus, où l'accent est mis sur une unité de soins entourée de plusieurs PU ayant des comportements fixes.
+Si nous nous concentrons sur un dispositif IoT, son environnement (\ie, les dispositifs environnants) est non stationnaire, ce qui signifie que ses propriétés moyennes peuvent fluctuer dans le temps, mais les environnements réalistes donnent généralement une certaine structure sur cette non-stationnalité.
+Par exemple, l'application de la stationnarité à certains intervalles de temps conduit à la dernière contribution et au dernier chapitre de cette thèse.
+
+
+\paragraph{Chapter~\ref{chapter:6}.}
+%
+Afin de comprendre également avec précision comment les algorithmes MAB se comportent dans un environnement non stationnaire, nous avons étudié la littérature sur le MAB accusatoire et sur le MAB non stationnaire, pour les deux cas d'environnements variant lentement et changeant brusquement.
+Nous commençons notre dernier Chapitre~\ref{chapitre:6} en passant en revue les travaux existants,
+et nous avons choisi de nous concentrer sur le problème des pièces stationnaires,
+ce qui signifie que le problème de bandit sous-jacent est stationnaire à certains intervalles, séparés par des points de changement situés à des moments inconnus.
+Supposer que l'environnement est stationnaire au niveau de la pièce est en effet logique pour les applications aux réseaux sans fil, où un point de changement peut par exemple correspondre à l'arrivée d'un nouveau groupe d'équipements terminaux dans le réseau. Des exemples d'une telle situation peuvent être une nouvelle entreprise arrivant sur le marché dans une ville (par exemple, les comptoirs Linky qui sont installés aujourd'hui en France), ou l'agriculteur voisin installant des capteurs sur son propre troupeau de vaches, etc.
+%
+Deux grandes familles d'algorithmes ont été proposées pour le problème stationnaire par pièce,
+qui consistent généralement à combiner une politique efficace conçue pour le problème stationnaire du MAB (\eg, Thompson Sampling ou \klUCB) et un moyen de s'adapter aux changements dans la distribution des armes.
+Les politiques passivement adaptatives utilisent une fenêtre de taille fixe ou évolutive \cite{Garivier11UCBDiscount}, ou un facteur d'actualisation, pour oublier les observations passées \cite{Kocsis06,Gupta11thompson},
+tandis que les politiques activement adaptatives utilisent un test statistique pour détecter les points de changement \cite{MellorShapiro13,Allesiardo15}.
+%
+Comme la littérature récente a montré que cette dernière approche est généralement plus compétitive, en obtenant de meilleurs résultats tant sur le plan empirique que théorique, nous avons choisi de développer notre propre algorithme activement adaptatif.
+
+Suite à deux travaux précédents récents \cite{LiuLeeShroff17,CaoZhenKvetonXie18}, nous combinons une politique d'index efficace (\klUCB) et un test efficace de détection des points de changement, dans l'hypothèse de récompenses limitées.
+Nous nous appuyons sur des résultats très récents du test du rapport de vraisemblance généralisé (TRGL) pour les variables gaussiennes et sous-gaussiennes \cite{Maillard2018GLR}, mais nous nous concentrons plutôt sur les récompenses limitées et les distributions de Bernoulli.
+Les récompenses limitées sont en effet généralement plus appropriées pour les applications de radio cognitive, comme indiqué ci-dessus.
+En utilisant le fait que les variables bornées en $[0,1]$ ne sont pas seulement sous-Gaussiennes à $1/4$ mais aussi sous-Bernoulli, nous prouvons les premières garanties à temps fini pour le GLRT pour les variables bornées.
+Nous montrons d'abord des limites temporelles finies à la fois sur la probabilité de fausse alarme de notre test, et sur son délai de détection, sous de légères hypothèses sur la longueur des séquences stationnaires.
+Notre algorithme, noté \GLRklUCB, est alors présenté en deux variantes, que les points de changement soient locaux (\ie, une seule moyenne de bras change à chaque point de changement) ou globaux (\ie, peut-être tous les moyens de bras changent à la fois).
+%
+Nous prouvons qu'en combinant la politique \klUCB, asymptotiquement optimale pour les problèmes stationnaires, et notre nouvelle analyse du GLRT pour les récompenses limitées, nous obtenons des garanties de pointe sur le regret de notre algorithme proposé.
+Nous considérons la même hypothèse que nos concurrents, en supposant que la longueur des intervalles stationnaires est " assez longue " pour que les points de changement soient détectables.
+La limite supérieure du meilleur regret est obtenue lorsque l'algorithme connaît à l'avance l'horizon et le nombre de points de changement, mais notre algorithme n'a pas besoin d'avoir d'autres connaissances sur la difficulté du problème pour être accordé de manière optimale.
+%
+La performance de \GLRklUCB{} est également illustrée par des expériences numériques sur des données synthétiques, où il est démontré qu'elle surpasse toutes les politiques passivement adaptatives ainsi que les précédentes politiques activement adaptatives.
+%
+Ce dernier chapitre est basé sur notre dernier travail, qui a mené à une publication à la conférence du GRETSI à Lille, France, en août $2019$ \cite{Besson2019Gretsi}.
+Notre travail a aussi mené à l'article de la version longue \cite{Besson2019GLRT}, qui sera partiellement réécrit et complété avec des résultats plus récents, afin de le soumettre bientôt à une revue (probablement le Journal of Machine Learning Research) avant décembre $2019$.
+
+
+\paragraph{Annexe.}
+%
+Ce manuscrit se termine par
+une liste d'abréviations et de notations, puis des listes de figures, d'algorithmes, d'échantillons de code et de tableaux,
+et enfin la liste des références bibliographiques.
+
+
+% FIXME VRAIMENT BEAUCOUP raccourcir ce qui précéde !
 
 
 % ----------------------------------------------------------------------------
@@ -78,7 +512,7 @@ Nous signalons le chapitre, ainsi que les conférences nationales ou internation
     \item
     Nous donnons également une revue détaillée de la littérature sur les différentes extensions du modèle MAB multi-joueurs, qui a été particulièrement active ces deux dernières années.
     % qui, selon nous, n'a jamais été écrit auparavant.
-    % (ALT 2018, et 4-8 travaux inspirés de notre article depuis lors). Etat de l'art avec notre algorithme MCTopM + klUCB pour les bandits multi-joueurs "avec détection", état de l'art empirique avec notre approche simple (mais erronée) "égoïste" en cas de "non détection".
+    % (ALT 2018, et 4-8 travaux inspirés de notre article depuis lors). Etat de l'art avec notre algorithme MCTopM + klUCB pour les bandits multi-joueurs ``avec détection'', état de l'art empirique avec notre approche simple (mais erronée) ``égoïste'' en cas de ``non détection''.
 
     \item
     Nous présentons ensuite le modèle de bandits multi-bras stationnaire par morceaux, dans le chapitre~\ref{chapter:6}, et une vue détaillée de l'état de l'art de la recherche sur ce modèle \cite{Besson2019GLRT,Besson2019Gretsi} (publié à GRETSI 2019).
@@ -114,7 +548,7 @@ la thèse est organisée en deux parties, correspondant aux deux lignes intermé
         \node[align=center] (chapter5) at (0,1) [rectangle,draw,fill=green!15] {\textbf{Chapitre~\ref{chapter:5}}\\Modèle MAB\\Multi-joueurs};
         \node[align=center] (chapter6) at (2.5,1) [rectangle,draw,fill=green!20] {\textbf{Chapitre~\ref{chapter:6}}\\Modèle MAB\\Non-stationnaire};
         \node[align=center] (conclusion) at (0,-0.25) [rectangle,draw,fill=blue!20] {\textbf{Chapitre~\ref{chapter:conclusion}}\\Conclusion générale};
-        \node[align=center] (appendix) at (2.5,-0.25) [rectangle,draw,fill=yellow!10] {Annexes};
+        % \node[align=center] (appendix) at (2.5,-0.25) [rectangle,draw,fill=yellow!10] {Annexes};
         %
         \draw [color=black,thick,->] (introduction) to (chapter2);
         \draw [color=black,thick,<->] (chapter2) to (chapter3);
@@ -129,7 +563,7 @@ la thèse est organisée en deux parties, correspondant aux deux lignes intermé
         \draw [color=black,thick,->] (chapter4) to (conclusion);
         \draw [color=black,thick,->] (chapter5) to (conclusion);
         \draw [color=black,thick,->] (chapter6) to (conclusion);
-        \draw [color=black,thick,->] (conclusion) to (appendix);
+        % \draw [color=black,thick,->] (conclusion) to (appendix);
         %
     \end{tikzpicture}
     }
