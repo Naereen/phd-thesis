@@ -42,6 +42,10 @@ bib2html:
 bib2txt:	bib2html
 	html2text all-phd-thesis.html | head -n-2 > all-phd-thesis.txt
 
+bib2bib:
+	bibtex_beautifier.py all-phd-thesis.bib > all-phd-thesis.bib~
+	mv -v all-phd-thesis.bib~ all-phd-thesis.bib
+
 stats:
 	-echo "\nCommit stats :" | tee ./complete-stats.txt
 	+git-complete-stats.sh   | tee -a ./complete-stats.txt
