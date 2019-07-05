@@ -56,36 +56,42 @@ Our focus in this PhD thesis is thus on the possible applications of embedding a
 
 \paragraph{From old TV to the IoT standards.}
 %
-Historically, three main families of wireless communication systems have been deployed: first, centralized broadcasting (\eg, old TV or radio), then centralized bi-directional systems (\eg, 4G or WiFi), and nowadays decentralized broadcasting for the Internet of Things (IoT) networks (\eg, sensor networks).
-
-% Central broadcasting
-Starting from FM radio music and news, then old black-and-white TV and color TV, the first systems were purely made for centralized broadcasting of information. In a large area, one well located antenna emits continuously in a fixed Radio Frequency (RF) band, and many devices can listen to this RF traffic and decode it, for instance to listen to some music.
-Different standards have been developed, and some of them are still in use today, and their nature requires a central authority that allocates RF bands to different usages (\eg, TV or FM radio channels etc).
-For example, in the city of Cesson-Sévigné where my campus of CentraleSupélec is located, a high RF tower emits on many standards, and in particular the \SI{92.3}{\mega\hertz} band is allocated to a French classical music radio (\emph{Radio Classique}).
-Broadcast-based systems are not only used for TV or radio:
-two other famous and worldwide deployed examples of mono-directional radio systems are the long-range global navigation satellite systems (such as USA's GPS or European Union's Galileo), and short-range infrared remote controllers.
-% https://en.wikipedia.org/wiki/Satellite_navigation
-
-% Two ways communications
-However, this kind of mono-directional wireless communications were soon found to not be satisfactory for many applications, and thus bi-directional standards were defined from the $1910$s.
-First developed by and for the military and the navy (\eg, the Titanic sent the first ``SOS'' signal over radio in $1912$),
-such applications have reached general public usage since the $1950$s.
-The greatest achievement of this long-running R\&D domain was the avent of mobile telephony in the $1990$s, which has continued to be more and more present in people's lives in the richer countries in the world, with the booming of personal cellphones since the $2000$s and smartphones since the $2010$s.
-In most systems, there is still a base station (with one or more antenna) in charge of a large area (or cell), and many devices are able to receive and transmit data to the base station.
-Nowadays, the most well-known systems include WiFi, and systems deployed for mobile phone communications, with a long list of standards from 1G, 2G, 3G, 4G and now 5G, still in development in $2019$.
-Even if both systems initially differed in usage, as 1G was designed to exchange only voice, and WiFi to link wireless devices at home to an Internet-connected box, they are conceptually very close.
-As the systems are cellular, any device knows the base station it is associated with, and the bi-directional nature of their exchanges makes a centralized control possible.
-In order to optimize the efficiency of the network, the base station is equipped with decision making algorithms that affects the devices in the cell to the available resources (time slots, RF bands, transmission power etc).
-To be able to communicate with the base station without interfering with each others, such affectation should be orthogonal, and led to systems based on Time Division Multiple Access (TDMA) and Frequency Division Multiple Access (FDMA).
-%  and Non-Orthogonal techniques only started to emerge recently (\eg, NOMA).
-Traditionally, the base station aimed only at maximizing the Quality of Service (QoS), that englobes the data rate, latency, availability and other measures of performance, of the wireless communications to and from the devices.
-More recently, ``green radio'' has emerged as a solution to the tradeoff between maximizing the QoS of the system, and minimizing the power consumption of the base station and the devices it serves.
-
-
+Historically, three main families of wireless communication systems have been deployed in massive commercial networks: first, centralized broadcasting (\eg, radio or TV broadcasting), then centralized bi-directional systems (\eg, 4G or WiFi), and nowadays decentralized data harvesting for the Internet of Things (IoT) networks (\eg, sensor networks).
+%
+% % Central broadcasting
+% Starting from FM radio music and news, then old black-and-white TV and color TV, the first systems were purely made for centralized broadcasting of information. In a large area, one well located antenna emits continuously in a fixed Radio Frequency (RF) band, and many devices can listen to this RF signal and demodulate it, for instance to listen to some music.
+% Different standards have been developed, and some of them are still in use today, and their nature requires a central authority that allocates RF bands to different usages (\eg, TV or FM radio channels etc).
+% For example, in the city of Cesson-Sévigné where the campus of CentraleSupélec is located, a high RF tower emits on many standards, and in particular the \SI{92.3}{\mega\hertz} band is allocated to a French classical music radio (\emph{Radio Classique}).
+% Broadcast-based systems are not only used for TV or radio:
+% another famous and worldwide deployed example of mono-directional radio systems are the long-range global navigation satellite systems (such as USA's GPS or European Union's Galileo).
+% %  and short-range infrared remote controllers.
+% % https://en.wikipedia.org/wiki/Satellite_navigation
+%
+% % Two ways communications
+% However, this kind of mono-directional wireless communications were soon found to not be satisfactory for many applications, and thus bi-directional standards were defined from the $1910$s.
+% First developed by and for the military and the navy (\eg, the Titanic sent the first ``SOS'' signal over radio in $1912$),
+% such applications have reached general public usage since the $1950$s.
+% The greatest achievement of this long-running R\&D domain was the avent of mobile telephony in the $1990$s, which has continued to be more and more present in people's lives in all over the world, with the booming of personal cellphones since the $2000$s and smartphones since the $2010$s.
+% In most systems, there is still a base station (with one or more antenna) in charge of a large area (or cell), and many devices are able to receive and transmit data to the base station.
+% Nowadays, the most well-known systems include WiFi, and systems deployed for mobile phone communications, with a long list of standards from 2G, 3G, 4G and now 5G, still in development in $2019$.
+% Even if both systems initially differed in usage, as 2G was designed to exchange only voice, and WiFi to link wireless devices at home to an Internet-connected box, they are conceptually very close.
+% As the systems are cellular, any device knows the base station it is associated with, and the bi-directional nature of their exchanges makes a centralized control possible.
+% In order to optimize the efficiency of the network, the base station is equipped with decision making algorithms that affects the devices in the cell to the available resources (time slots, RF bands, transmission power etc).
+% To be able to communicate with the base station without interfering with each others, such affectation should be orthogonal, and led to systems based on Time (TDMA), Frequency (FDMA) and Code Division Multiple Access (CDMA).
+% %  and Non-Orthogonal techniques only started to emerge recently (\eg, NOMA).
+% Traditionally, the base station aimed only at maximizing the Quality of Service (QoS), that englobes the data rate, latency, availability and other measures of performance, of the wireless communications to and from the devices.
+% More recently, ``green radio'' has emerged as a solution to the tradeoff between maximizing the QoS of the system, and minimizing the power consumption of the base station and the devices it serves.
+%
+%
 % The opposite: decentralized broadcasting, and the age of IoT
-Finally, a third kind of systems are of the opposite kind, and could be designed as decentralized broadcasting: one antenna is still in charge of many devices, but such devices can only send up-link packets, and the only down-link data they can receive are short acknowledgements, sent from the base-station to indicate success or failure of every up-link packet.
+% Finally, a third kind of systems are of the opposite kind,
+This third kind of systems can be designed as decentralized:
+even if a central base station is
+% one antenna is still
+still in charge of many devices,
+the devices initiate the sending of up-link packets, and the only down-link data they can receive are short acknowledgements, sent from the base-station to indicate success or failure of every up-link packet.
 This family of wireless systems are referred to as Internet of Things (IoT),
-and a typical example of application of such IoT networks is for sensor networks.
+and a typical example of application of such IoT networks is for sensor wireless networks.
 
 For the future development of ``smart grids'', ``smart cities'', ``smart homes'', or ``smart agriculture'', sensor networks are promised to be widely deployed.
 Two examples of future applications that are already in deployment, in France or other countries, are ``connected buildings'' and ``connected agriculture''.
@@ -94,7 +100,9 @@ For agriculture, one example can be to equip every cow (in large farms) with a s
 %
 % OK commencer par un paragraphe qui explique qu'on étudie les télécom dans le but de les rendre automatiquement plus efficace, plus verte, plus adaptative
 
-This third kind of wireless systems are characterized by their decentralized nature: due to the really limited information that the base station can send to the devices (in downlink), it is no longer possible to optimize the efficiency of the network from the centralized point-of-view of the base station.
+This third kind of wireless systems are characterized by their decentralized nature,
+where communications are initialized and regulated by the devices, not a centralized control systems
+% due to the really limited information that the base station can send to the devices (in downlink), it is no longer possible to optimize the efficiency of the network from the centralized point-of-view of the base station.
 Indeed, a central control requires signaling packets that have been identified as too heavy for these kinds of systems.
 In the present and future IoT networks, many devices of heterogeneous natures are using the same antenna for different applications.
 A common problem is that such IoT devices have a strong constraint on their power consumption, as most of them will be deployed without a direct power access and will run on a tiny battery, which lifespan should be maximized.
@@ -114,12 +122,20 @@ We refer to the survey \cite{Centenaro16} for more details, and references in \c
 %
 A major problem of current wireless technologies is the issue of spectrum scarcity:
 in most kinds of frequency bands, the entire RF spectrum is now allocated and free bands no longer exist, and this limits the possibility of adding any new usage.
-As illustrated in Figure~\ref{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum} below, only a very small portion of the RF spectrum in the USA is not yet allocated, from $0$ to \SI{9}{\kilo\hertz}, while the rest of the displayed portion of the spectrum, from \SI{9}{\kilo\hertz} to \SI{300}{\giga\hertz}, is allocated to various usages, that goes from maritime radionavigation (historically the first usage of radio telecommunication, \eg, in the Titanic), to space research, inter-satellite, mobile telephony and many other applications.
+As illustrated in Figure~\ref{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum} below,
+% only a very small portion of the RF spectrum in the USA is not yet allocated, from $0$ to \SI{9}{\kilo\hertz},
+% while the rest of the displayed portion of the spectrum, from \SI{9}{\kilo\hertz} to \SI{300}{\giga\hertz},
+almost the entire spectrum
+is allocated to various usages, that goes from maritime radionavigation (historically the first usage of radio telecommunication, \eg, in the Titanic), to space research, inter-satellite, mobile telephony and many other applications.
 %
 % Traditional regulatory structures have been built for an analog model and are not optimized for cognitive radio.
-Regulatory bodies in the world, like the \href{https://www.fcc.gov/}{Federal Communications Commission} in the USA (see \href{https://www.fcc.gov/}{\texttt{FCC.gov}})
-or \href{http://www.tdf.fr/}{TDF} in France (see \href{https://www.TDF.fr/}{\texttt{TDF.fr}}), as well as different independent measurement campaigns, found that most radio frequency spectrum are inefficiently utilized,
-meaning that while a band can be allocated to a certain unique usage, it can be free from any user in certain times and/or places.
+Regulatory bodies in the world, like the
+\href{https://www.itu.int/en/Pages/default.aspx}{International Telecommunication Union} (see \href{https://www.itu.int/}{\texttt{www.ITU.int}}),
+the \href{https://www.fcc.gov/}{Federal Communications Commission} in the USA (see \href{https://www.fcc.gov/}{\texttt{FCC.gov}})
+or the \href{https://cept.org}{European Conference of Postal and Telecommunications Administrations} in Europe (see \href{https://www.CEPT.org/}{\texttt{CEPT.org}}),
+% or \href{http://www.tdf.fr/}{TDF} in France (see \href{https://www.TDF.fr/}{\texttt{TDF.fr}}),
+as well as different independent measurement campaigns, found that most radio frequency spectrum are inefficiently utilized.
+This means that while a band can be allocated to a certain unique usage, it can be free from any user in certain times and/or places.
 We refer to \cite{patil2011survey} for a survey on the worldwide spectrum utilization, and to \cite{valenta2010survey} for the situation in Europe.
 
 
@@ -127,18 +143,24 @@ We refer to \cite{patil2011survey} for a survey on the worldwide spectrum utiliz
     \centering
     % \includegraphics[width=0.65\textwidth,angle=90]{United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum.pdf}
     \includegraphics[width=0.95\textwidth]{United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum_3.pdf}
-    \caption[A chart representing the allocation of radio spectrum in the USA in $2016$]{A chart representing the allocation of radio spectrum in the USA in $2016$. Only a small share of the spectrum is not yet allocated, the top-left corner in white and indicated by \textcolor{red}{\textbf{Free} in red} (it is in logarithmic scale from \SI{0}{\kilo\hertz} to \SI{300}{\giga\hertz}). \copyright{} United States Department of Commerce, \href{https://www.ntia.doc.gov/files/ntia/publications/january_2016_spectrum_wall_chart.pdf}{\texttt{www.ntia.doc.gov/files/ntia/publications/january\_2016\_spectrum\_wall\_chart.pdf}}.}
+    \caption[A chart representing the allocation of radio spectrum in the USA in $2016$]{A chart representing the allocation of radio spectrum in the USA in $2016$. \copyright{} United States Department of Commerce, \href{https://www.ntia.doc.gov/files/ntia/publications/january_2016_spectrum_wall_chart.pdf}{\texttt{www.ntia.doc.gov/files/ntia/publications/january\_2016\_spectrum\_wall\_chart.pdf}}.}
+    % Only a small share of the spectrum is not yet allocated, the top-left corner in white and indicated by \textcolor{red}{\textbf{Free} in red} (it is in logarithmic scale from \SI{0}{\kilo\hertz} to \SI{300}{\giga\hertz})
     % https://commons.wikimedia.org/wiki/File:United_States_Frequency_Allocations_Chart_2016_-_The_Radio_Spectrum.pdf
     % https://upload.wikimedia.org/wikipedia/commons/c/c7/United_States_Frequency_Allocations_Chart_2016_-_The_Radio_Spectrum.pdf?uselang=fr
     \label{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum}
 \end{figure}
 
-Cellular network bands are overloaded in most parts of the world, but other frequency bands (such as military, amateur radio and paging frequencies) are insufficiently utilized.
-Independent studies performed in some countries confirmed that observation, and concluded that spectrum usage highly depends on time and place.
-Moreover, the fixed spectrum allocation prevents rarely used frequencies, like those assigned to specific services, from being used, even when any unlicensed users would not cause noticeable interference to the assigned service.
-Therefore, in the last $15$ years, regulatory bodies in the world have been considering whether to allow unlicensed users in licensed bands, if they would not cause any interference to the (paying) licensed users.
-These initiatives have initiated the research on \textbf{Cognitive Radio},
-and especially on a field that we detail below, \textbf{Dynamic Spectrum Access (DSA)}.
+Cellular network bands are overloaded in most parts of the world, but other frequency bands (such as military, amateur radio and paging frequencies) are less utilized.
+Independent studies performed in some countries confirmed that observation, and concluded that spectrum usage highly depends on time and place, as shown by \cite{Lopez2009spectral}.
+Moreover, the fixed spectrum allocation prevents
+the introduction of new services, especially for low-cost or small markets equipments.
+% rarely used frequencies, like those assigned to specific services, from being used, even when any unlicensed users would not cause noticeable interference to the assigned service.
+Therefore, in the last $15$ years, thanks to an active lobbying by the cognitive radio community,
+regulatory bodies in the world have been considering whether to allow
+a new wireless communication paradigm:
+enable unlicensed users in licensed bands, if they would not cause any interference to the (paying) licensed users.
+These initiatives are considered by the \textbf{Cognitive Radio},
+field that we detail below, and especially for \textbf{Dynamic Spectrum Access (DSA)}.
 
 
 % \TODOL{Je peux améliorer (ou enlever) ce passage qui site J.Toledano, ou alors le commenter en plus de détails ? J'aime bien son rapport en fait (j'aurai du le lire au début de ma thèse !)}
@@ -179,7 +201,11 @@ and especially on a field that we detail below, \textbf{Dynamic Spectrum Access 
 
 \section{Cognitive Radio and Multi-Armed Bandits}
 
-In this thesis, we study Internet of Things networks, and the two constraints of low power consumption (or long battery life) and low duty cycle are essential.
+In this thesis, we study long-range Internet of Things networks, characterized by mainly three essential constraints:
+low power consumption (or long battery life),
+long-range
+and low duty cycle.
+%
 More precisely, we study the possible interconnections between \textbf{Cognitive Radio} and \textbf{Machine Learning} applied for IoT networks.
 Let us define and detail both concepts.
 
@@ -199,16 +225,17 @@ Let us define and detail both concepts.
 \paragraph{From IT to Cognitive Radio.}
 %
 We can narrow down the first field of study of this thesis, steps by steps:
-from Information Technologies (IT), to Telecommunications, to Wireless Communications, then to Software Defined Radio (SDR),
-and finally to Cognitive Radio (CR).
+from Information Technologies (IT), to Telecommunications, to Wireless Communications, then to Cognitive Radio (CR),
+and finally to Software Defined Radio (SDR).
 %
 The transition from the historical approach of hardware-based radio to SDR architectures is a gradual process, that started in the early $1990$s and has accelerated in the $2000$s.
 % https://en.wikipedia.org/wiki/Software-defined_radio
-A SDR is a radio communication system where components that have been traditionally implemented in hardware (\eg, mixers, filters, amplifiers, modulators/demodulators, detectors, etc) are all instead implemented by means of software on a personal computer or an embedded system, with the exception of a unique pair of receiver/transmitter antennas.
-Even though the SDR paradigm was initiated by the USA defense research, over the past $20$ years the industry has started to be interested by SDR, and CR have got significant attention from the academia and industry as well.
+A SDR is a radio communication system where components that have been traditionally implemented in hardware (\eg, mixers, filters, modulators/demodulators, detectors, etc) are more and more implemented by means of software on a processor.
+%  with the exception of a unique pair of receiver/transmitter antennas.
+Even though the SDR paradigm was initiated by the USA defense research in the $1980$s, over the past $20$ years the civil industry has started to be interested by SDR, and CR has got significant attention from the academia and industry as well.
 % CR has been the first answer to solve spectrum scarcity issue which collected a huge attention in early 21st century.
 %
-As CR is not a standard technology, it does not have a single definition, so let us start by quoting the definition of two researchers whose works were the roots of the development of CR, in the last $20$ years.
+As CR is not a standard technology, it does not have a single definition, so let us start by quoting the definition of two researchers whose works were the roots of the development of CR, that just appeared $20$ years ago.
 % - technologies de l'information > télécommunications > communications sans fil > radio intelligente > DSA > OSA
 %
 % je peux faire comme Navik, donner des définitions de la CR, citant d'autres travaux
@@ -220,7 +247,7 @@ As CR is not a standard technology, it does not have a single definition, so let
     \item
     Then Simon Haykin in $2005$ also said that
     \emph{``a CR is an intelligent wireless communication system that is capable of being aware of its surroundings, learning, and adapting its operating parameters (\eg, transmit power and carrier frequency) on the fly with an objective of providing reliable anytime, anywhere, and spectrally efficient communication''} \cite{Haykin05}.
-    He was the first to propose to use CR for Dynamic Spectrum Access.
+    % He was the first to propose to use CR for Dynamic Spectrum Access.
 
     \item
     The \href{https://en.wikipedia.org/wiki/Cognitive_radio}{Wikipedia encyclopedia} states
@@ -923,10 +950,10 @@ The following publications are ordered historically, from the most recent to the
 
 \item
     \emph{SMPyBandits: an Open-Source Research Framework for Single and Multi-Players Multi-Arms Bandits (MAB) Algorithms in Python},
-    by \textbf{Lilian Besson}, active development between October $2016$ and March $2019$,
+    by \textbf{Lilian Besson}, active development since October $2016$,
     \href{https://HAL.Inria.fr/hal-01840022}{\texttt{HAL.Inria.fr/hal-01840022}}.
-    It currently consists in about $40000$ lines of code, hosted on \href{https://GitHub.com/SMPyBandits}{\texttt{GitHub.com/SMPyBandits}},
-    and a complete documentation on \href{https://SMPyBandits.rtfd.io}{\texttt{SMPyBandits.rtfd.io}} and \href{https://SMPyBandits.GitHub.io}{\texttt{SMPyBandits.GitHub.io}}.
+    It currently consists in about $45000$ lines of code, hosted on \href{https://GitHub.com/SMPyBandits}{\texttt{GitHub.com/SMPyBandits}},
+    and a complete documentation accessible on \href{https://SMPyBandits.rtfd.io}{\texttt{SMPyBandits.rtfd.io}} or \href{https://SMPyBandits.GitHub.io}{\texttt{SMPyBandits.GitHub.io}}.
     See Chapter~\ref{chapter:3}.
     \cite{SMPyBanditsJMLR,SMPyBandits}
 

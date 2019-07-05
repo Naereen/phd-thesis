@@ -6,10 +6,10 @@ OUT  = $(FILE).pdf
 
 all:	clean pdf evince clean
 quick:	pdf
-bib:	bib2txt
+bib:	allbib
 pdf:	$(OUT)
 
-.PHONY:	quick all pdf evince compress clean send_zamok latexstats lint proselint
+.PHONY:	quick all pdf evince compress clean send_zamok latexstats lint proselint bib allbib cleanbib bib2html bib2txt
 
 .SUFFIXES:
 .SUFFIXES: .tex .pdf
@@ -36,13 +36,15 @@ send_zamok:
 	CP $(IN) besson@zamok.crans.org:~/www/phd/articles/.$(IN)
 	CP $(OUT) besson@zamok.crans.org:~/www/phd/articles/.$(OUT)
 
-bib2html:
+bibtex:	cleanbib	bib2txt bib2html
+
+bib2html:	all-phd-thesis.bib all-phd-thesis.html
 	bibtex2html -s mybibstyle.bst -u -charset utf-8 -linebreak *.bib
 
-bib2txt:	bib2html
+bib2txt:	all-phd-thesis.bib all-phd-thesis.txt bib2html
 	html2text all-phd-thesis.html | head -n-2 > all-phd-thesis.txt
 
-bib2bib:
+cleanbib:	all-phd-thesis.bib
 	bibtex_beautifier.py all-phd-thesis.bib > all-phd-thesis.bib~
 	mv -v all-phd-thesis.bib~ all-phd-thesis.bib
 
