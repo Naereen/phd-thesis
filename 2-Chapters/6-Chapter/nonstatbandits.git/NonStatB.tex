@@ -426,7 +426,7 @@ If the samples $(X_t)$ were all drawn from a Bernoulli distribution, this change
 $\cH_0 : (\exists \mu_0: \forall t\in\N^*, X_t \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_0))$,
 against the alternative
 $\cH_1 : (\exists \mu_0 \neq \mu_1, \tau \in \N^*: \ \  X_1, \dots, X_\tau \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_0) \ \ \text{and} \ \ X_{\tau+1}, X_{\tau+2}, \dots \ \overset{\text{i.i.d.}}{\sim} \ \cB(\mu_1))$.
-%
+
 The Generalized Likelihood Ratio statistic for this test is defined by
 
 \begin{equation}\label{eq:6:firstDefGLRT}
@@ -811,7 +811,7 @@ A consequence of this forced exploration is given in Proposition~\ref{prop:6:Eno
         \geq \left\lfloor \frac{\omega}{K} (t - s) \right\rfloor.
     \end{align*}
     % Hence we have the result of Proposition~\ref{prop:6:EnoughSamples}.
-    \vspace*{-30pt}% FIXME
+    % \vspace*{-30pt}% FIXME
 \end{smallproof}
 
 
@@ -1029,11 +1029,13 @@ Recall that in this Chapter, the regret is defined as $R_T \eqdef \bE\left[\sum_
 First, we introduce $\cD(T,\omega)$ the (deterministic) set of time steps at which the forced exploration is performed before time $T$ (see lines $3$-$4$ in Algorithm~\ref{algo:6:GLRklUCB}),
 and as we observe that $\mu_{k_t^*} - \mu_{A(t)} \leq 1$ because rewards are assumed to be bounded in $[0,1]$,
 we can write a first decomposition of the regret, first without the expectation defining the mean regret:
+\begin{small}
 \begin{align*}
     & \sum_{t=1}^T (\mu_{k_t^*}(t) - \mu_{A(t)}(t)) \\
     & \hspace{1cm} \leq  \sum_{t=1}^{T} \indic(t \in \cD(T,\omega)) + \sum_{t=1}^T (\mu_{k_t^*}(t) - \mu_{A(t)}(t))\indic\left(t \notin\cD(T,\omega), \UCB_{A(t)}(t) \geq \UCB_{k_t^*}(t)\right) \\
     & \hspace{1cm}\leq  \omega T + \sum_{t=1}^T \indic\left(\UCB_{k_t^*}(t) \leq \mu_{k_t^*}(t)\right) + \sum_{k=1}^K\sum_{t=1}^T (\mu_{k_t^*}(t) - \mu_k(t))\indic\left(A(t) = k, \UCB_k(t) \geq \mu_{k_t^*}(t)\right).
 \end{align*}
+\end{small}
 %
 Introducing some \emph{good event} $\cE_T$, to be specified in each case, and its complementary $\cE_T^c$, one can write the following decomposition, that highlights two important terms $(A)$ and $(B)$
 %
@@ -1333,7 +1335,7 @@ More precisely, we found that $\gamma\leq0.95$ gives better performances for sho
 %
 % \TODOE{Tu confirmes bien que $\gamma=0.75$ ne marchait sur AUCUN problème ? Car ta phrase actuelle n'exclut pas que ce choix marche pour les probèmes courts}
 %
-Additionally, we include the \ExpThreeS{} algorithm from \cite{Auer02NonStochastic}, setting its parameters as in their Corollary~8.3: $\omega=1/T$ and $\gamma = \min(1, \sqrt{K (\Upsilon_T \log(KT) + \e) / ((\e-1)T)})$, based on a prior knowledge of $T$ and $\Upsilon_T$.
+Additionally, we include the \ExpThreeS{} algorithm from \cite{Auer02NonStochastic}, setting its parameters as in the Corollary~8.3 of the paper: $\omega=1/T$ and $\gamma = \min(1, \sqrt{K (\Upsilon_T \log(KT) + \e) / ((\e-1)T)})$, based on a prior knowledge of $T$ and $\Upsilon_T$.
 
 
 Our main goal is to compare against \emph{actively adaptive algorithms}. We include \CUSUMklUCB, tuned with $M=150$ and $\varepsilon=0.1$ for easy problems ($1,2,4$) and $\varepsilon=0.001$ for hard problems ($3,5$),
@@ -1388,12 +1390,12 @@ We validated the two bounds experimentally, with results presented in Tables~2 a
 Before giving larger results that compare our approach against other algorithms, we consider the two problems $1$ and $2$ presented above in Figures~\ref{fig:6:Problem_1} and \ref{fig:6:Problem_2} (for $T=5000$).
 \emph{For one (random) simulation}, we give below examples of the efficiency of the change-point detection algorithm used by \GLRklUCB{} as well as \CUSUMklUCB{} and \MklUCB,
 by showing the times at which they detect a change and reinitialize their memory of observations of one or all the arms.
-We also display the number of observations (since the last restart) of the arm on which the change was detected.
-As shown below, in the experiments summary, the three change-point detection algorithm give similar performances in terms of regret, but they have different behaviors.
+% We also display the number of observations (since the last restart) of the arm on which the change was detected.
+As shown below, in the experiments summary, the three algorithms based on change-point detection obtain sublinear regret, but they have different behaviors.
 The test in \MUCB{} usually detects less changes, while the test in \CUSUMUCB{} usually detects more changes and even unnecessary changes.
 %
-On the examples presented below as well as large scale examples, all the tests appear to have no false alarm, and always a small detection delay for changes that are ``easy enough'' to be efficiently detected.
-The four algorithms are presented in the order of decreasing performance (\ie, the first one is empirically the most efficient, that is, it obtains a smaller regret in average).
+On the examples presented below as well as large scale examples, all the tests appear to have no (or a small number of) false alarm, and always a small detection delay for changes that are ``easy enough'' to be efficiently detected.
+% The four algorithms are presented in the order of decreasing performance (\ie, the first one is empirically the most efficient, that is, it obtains a smaller regret in average).
 
 % \TODOL{Je ne suis pas sur que cette forme soit la meilleure pour présenter ces exemples, mais je n'aime vraiment pas la forme graphique qu'on avait suggéré ensemble avec Emilie, en fait on voit rien si on met plus d'un algo...}
 
@@ -1404,12 +1406,12 @@ Other changes concern arm $1$ at $t=1000$ and $t=4000$.
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=1.00\linewidth]{2-Chapters/6-Chapter/Images/Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1.pdf}
+    \includegraphics[width=0.96\linewidth]{2-Chapters/6-Chapter/Images/Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1.pdf}
     \caption{Locations of the detected change-points for four algorithms on Problem 1.}
     \label{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1}
 \end{figure}
 
-Figure~\ref{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1} above displays the locations of the successively detected change-points by four algorithms,
+Figure~\ref{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb1} displays the locations of the successively detected change-points by four algorithms,
 $1)$ \MklUCB,
 $2)$ \CUSUMklUCB,
 $3)$ \GLRklUCB{} with \emph{local restart},
@@ -1417,7 +1419,7 @@ $4)$ \GLRklUCB{} with \emph{global restart}.
 In this ``easy'' problem, all algorithms correctly detect the important changes, except \CUSUM{} which detected a change on arm $1$ (\textcolor{red}{in red}) twice after the change-point located at $t=3000$.
 The three other algorithms have a very small delay, for instance only $9$ samples from arm $0$ (\textcolor{blue}{in blue}) after its change at time $t=2000$ are enough for the \GLR{} test to detect a change.
 Very small delays are possible only after having collected a lot of samples of the arm which changed, and for instance the same algorithm obtains a delay of $32$ samples from \textcolor{red}{arm $1$} for the next change at $t=3000$, because this arm was sampled less.
-On this problem, while \MklUCB{} detects the same changes as \GLRklUCB, with larger but comparable delays, it is seen to obtain a larger regret than the two \GLR{} variants, because the tuning of its forced exploration probability makes it explore suboptimal arms more often.
+On this problem, while \MklUCB{} detects the same changes as \GLRklUCB, with larger but comparable delays, it is seen to obtain a larger regret than the two \GLR{} variants, simply because the tuning of its forced exploration probability (\ie, $\omega$) makes it explore suboptimal arms more often.
 
 % \begin{itemize}
 %     \item
@@ -1453,18 +1455,18 @@ On this problem, while \MklUCB{} detects the same changes as \GLRklUCB, with lar
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=1.00\linewidth]{2-Chapters/6-Chapter/Images/Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2.pdf}
+    \includegraphics[width=0.96\linewidth]{2-Chapters/6-Chapter/Images/Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2.pdf}
     \caption{Locations of the detected change-points for four algorithms on Problem 2.}
     \label{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2}
 \end{figure}
 
-Like for the first problem, we illustrate the behavior of the same four algorithms in Figure~\ref{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2} above.
+Like for the first problem, we illustrate the behavior of the same four algorithms in Figure~\ref{fig:6:Visualizing_locations_of_change_points_for_different_algorithms__4algs_Pb2}.
 In this other problem, the difference between \MklUCB{} and \CUSUMklUCB{} is clear:
 the first algorithm fails to detect any change, leading to a large regret,
 while the second one detects the changes that happen on the currently optimal arm and some other changes.
-Drawing conclusions on their behavior from a single simulation is tricky, as this example of behavior is counter intuitive:
+Drawing conclusions on their behavior from a single simulation is meaningless, as this example of behavior is counter intuitive:
 On the one hand, \CUSUM{} uses local restarts, and it should be less efficient than global restarts for this problem, as changes are all global.
-On the other hand, \MklUCB{} uses global restarts, but here it fails to detect any changes.
+On the other hand, \MklUCB{} uses global restarts, but here it fails to detect any change.
 %
 The two \GLRklUCB{} variants correctly detect the important changes, and we observe that their delays to detect a change can vary, mainly due to the randomness (we remind that we illustrate only one repetition of the simulation here).
 For instance, after the change on arm $1$ (\textcolor{red}{in red}), the \emph{local restart} detects it at time $t=2376$ and the \emph{global restart} detects it at time $t=2701$.
@@ -1502,13 +1504,13 @@ In these two examples, we compare the two variants of our proposal with the two 
 that are all based on combining \klUCB{} with a change-point detection algorithm.
 The results given above should be taken carefully, they only have the purpose of being an illustration of the possible behaviors of these algorithms, as they are the results of \emph{only one (random) simulation}!
 But it is still interesting to compare the final regret in one run, as given above, with the mean regret for $1000$ independent runs, as given below in Table~\ref{table:6:totalResults1}.
-The values are not the same, but the ranking is: our proposal outperforms both \CUSUMklUCB{} and \MklUCB, and the test based on \CUSUM{} seems more efficient than the test based of \MklUCB{} in the problems at hand.
+The values change, but the ranking stays the same: our proposal outperforms both \CUSUMklUCB{} and \MklUCB, and the test based on \CUSUM{} seems more efficient than the test based of \MklUCB{} in the problems at hand.
 
 
 % -----------------------------------------------------------------
 \paragraph{Illustrations of the rest of the benchmark.}\label{par:6:benchmark2}
 
-We continue here the presentation of the other problems of our benchmark, see Figures~\ref{fig:6:Problem_1} and \ref{fig:6:Problem_2} above for the two problems $1$ and $2$.
+We continue here the presentation of the other problems of our benchmark, after Figures~\ref{fig:6:Problem_1} and \ref{fig:6:Problem_2} above for the two problems $1$ and $2$.
 
 \textbf{Problem 3.} (see Figure~\ref{fig:6:Problem_5}) This problem is harder, with $K=6$, $\Upsilon_T=8$ and $T=20000$.
 At every break-points, almost all arms change,
@@ -1516,10 +1518,12 @@ and means are bounded in $[0.01, 0.07]$.
 The gaps $\Delta$ are much smaller than for the first problems, with amplitudes ranging from $0.02$ to $0.001$.
 Note that the assumptions of the regret upper bounds for \GLRklUCB{} are violated, as well as the assumptions for the analysis of \MUCB{} and \CUSUMUCB.
 It is interesting to say that this problem is inspired from Figure~3 of \cite{CaoZhenKvetonXie18}, where the synthetic data was obtained from manipulations on a real-world database of clicks from \emph{Yahoo!}.
+%
+The details fall outside of the scope of this section, and are well explained in the paper \cite{CaoZhenKvetonXie18}.
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=1.00\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_5.pdf}
+    \includegraphics[width=1.05\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_5.pdf}
     \caption{Problem $3$: $K=6$, $T=20000$, $C=19$ changes occur on most arms at $\Upsilon=8$ break-points.}
     \label{fig:6:Problem_5}
 \end{figure}
@@ -1530,12 +1534,12 @@ It is interesting to say that this problem is inspired from Figure~3 of \cite{Ca
 %
 Like problem $1$, it uses $K=3$ arms, $\Upsilon=4$ change-points and $T=5000$,
 but the stationary sequences between successive change-points no longer have the same length, as illustrated in Figure~\ref{fig:6:Problem_4}.
-Classical (stationary) algorithms such as \klUCB{} can be ``tricked'' by large enough stationary sequences, as they learn with a large confidence the optimal arm, and then fail to adapt to a new optimal arm after a change-point.
-We observe below in Table~\ref{table:6:totalResults2} that they can suffer higher regret when the change-points are more spaced out, as this problem starts with a longer stationary sequence of length $T/2$.
+Classical (stationary) algorithms such as \klUCB{} can be ``tricked'' by large enough stationary sequences, as they start by learning with a large confidence the optimal arm, and then fail to adapt to a new optimal arm after a change-point.
+We observe below in Table~\ref{table:6:totalResults2} that they can suffer higher regret when the change-points are more spaced out, like for instance for this problem starting with a longer stationary sequence of length $T/2$.
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=1.00\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_4.pdf}
+    \includegraphics[width=1.05\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_4.pdf}
     \caption{Problem $4$: $K=3$, $T=5000$, $C=12$ changes occur on all arms at $\Upsilon=4$ break-points.}
     % \caption{\textbf{Problem 4}: $K=3$ arms with $T=5000$, $\Upsilon=4$ changes occur on all arms at a time (\ie, $C=12$).}
     \label{fig:6:Problem_4}
@@ -1547,15 +1551,16 @@ We observe below in Table~\ref{table:6:totalResults2} that they can suffer highe
 %
 Like problem $3$, this harder problem is inspired from synthetic data obtained from a real-world database of clicks from \emph{Yahoo!}, but from another competitor paper, see Figure~3 from \cite{LiuLeeShroff17}.
 %
-It is much harder, with $\Upsilon=81$ change-points on $K=5$ arms for a longer horizon of $T=100000$.
+It is a much harder piece-wise stationary problem, with $\Upsilon=81$ change-points on $K=5$ arms for a longer horizon of $T=100000$.
 Some arms change at almost every time steps, for a total number of break-points $C=179$, but the optimal arm is almost always the same one (\textcolor{red}{arm $0$, with $\bullet$}).
 It is a good benchmark to see if the actively adaptive policies do not detect \emph{too many changes}, as the Oracle-Restart policy suffers higher regret in comparison to \klUCB.
 Means are also bounded in $[0.01, 0.07]$, with small gaps of amplitude in $[0.001, 0.02]$,
 as shown in Figure~\ref{fig:6:Problem_6}.
+% In practice, this problem is very hard and and
 
 \begin{figure}[h!]  % [htbp]
     \centering
-    \includegraphics[width=1.00\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_6.pdf}
+    \includegraphics[width=1.05\linewidth]{2-Chapters/6-Chapter/nonstatbandits.git/figures/6_Problems/Problem_6.pdf}
     \caption{Pb $5$: $K=5$, $T=100000$, $C=179$ changes occur on some arms at $\Upsilon=81$ break-points.}
     % \caption{\textbf{Problem 5}: $K=5$, $T=100000$, $\Upsilon=81$ changes occurring on some arms at every time ($C=179$).}
     \label{fig:6:Problem_6}
@@ -1577,14 +1582,14 @@ as shown in Figure~\ref{fig:6:Problem_6}.
 % In our numerical experiments, we are indeed comparing the two variants of our approach to *modified* versions of M-UCB and CUSUM-UCB, that are based on klUCB instead of UCB. As we explained, klUCB is known to perform uniformly better than UCB in stochastic bandits with bounded rewards, and so we are actually helping our competitors by allowing them to use klUCB. The reason for this is that we don’t want the paper to be another illustration of "klUCB is better than UCB". Our comparison therefore gives a better idea of which change-point detector should be used in combination with a good bandit algorithm.
 
 Similarly to what is presented in Chapter~\ref{chapter:5} in Table~\ref{table:5:comparisonUCB_klUCB}, we start by some experiments that justify the focus on the \klUCB{} index policy.
-The purpose of this work is not to optimize on the index policy, but rather propose new ways of using indices for piece-wise stationary problems.
+Indeed, the purpose of this work is not to optimize on the index policy, but rather propose new ways of using indices for piece-wise stationary problems.
 %
-Consider two experiments on \textbf{problems 1} and \textbf{2}, with a horizon of $T=20000$ and $1000$ independent repetitions,
-for which we compare \CUSUMUCB{} against \CUSUMklUCB, \MUCB{} against \MklUCB, and the oracle policy using \UCB{} against \klUCB.
+We run two experiments on \textbf{problems 1} and \textbf{2}, with a horizon of $T=20000$ and $1000$ independent repetitions,
+for which we compare \UCB{} against \klUCB, for \CUSUM-, M-, \GLR{} and the oracle policy.
 We report in Table~\ref{table:6:comparisonUCB_klUCB} below the results (in terms of mean regret),
 and we observe that using \klUCB{} rather than \UCB{} indices always yields better practical performance.
-%
-Thus it is fair to compare our proposal against the modified versions of the two algorithms \CUSUM{} and $\mathrm{M}$- that use the \klUCB{} index policy instead of \UCB, as they perform uniformly better with \klUCB{} than with \UCB{} (the same tendency was observed on all other problems).
+
+Thus it is fair to compare our proposal against the modified versions of the two algorithms \CUSUM- and $\mathrm{M}$- that use the \klUCB{} index policy instead of \UCB, as they perform uniformly better with \klUCB{} than with \UCB{} (the same tendency was observed on all other problems).
 We also note that, without surprise, the oracle policy also performs (much) better with \klUCB{} than with \UCB.
 Consequently, from now on we only report results for \klUCB.
 
