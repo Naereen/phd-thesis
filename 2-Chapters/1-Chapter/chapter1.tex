@@ -37,13 +37,15 @@ and I was also co-supervised by Doctor Emilie Kaufmann, whom I visited many time
 %
 The root of the problems motivating this thesis are the questions of global warming and the increase of the world population.
 % https://en.wikipedia.org/wiki/History_of_radio
-During the last $150$ years, mankind has developed many different communication technologies, and since the late $1890$s, wireless communications between man-made manufactured devices have been made possible, and more and more frequent in our lives.
+In the last $150$ years, mankind has developed many different communication technologies, and since the late $1890$s, wireless communications between manufactured devices have been made possible, and more and more frequent in our lives.
 With the avent of Internet of Things networks (IoT), billions of autonomous low-power devices are expected to be deployed worldwide, for a large range of different applications.
 It is now a world-wide consensus that with the current trend of population increase and with the ongoing energy crisis, any newly deployed technology should be both cheap and energy efficient,
 as well as adapted to serve a large number of people and devices.
 %
 Such IoT technologies should be able to adapt automatically to different environments and application contexts, and be as efficient as possible.
-Instead of devoting a lot of time, energy and funding on Research and Development to design many different efficient radio access schemes, for all possible cases, a cheap and promising direction is to use Machine Learning to (try to) attain the same performance gain automatically.
+%
+In addition to the usual Research and Development effort to design many different efficient radio access schemes, for all the possible cases,
+now the time has come to combine it with cheap and promising Machine Learning in order to (try to) attain the level of performance gain necessary for the IoT promises to become reality.
 
 That is why we are interested in this thesis about
 improving the battery life of IoT end-devices and reduce the energy cost of IoT networks.
@@ -447,17 +449,17 @@ but also by their empirical performances in terms of computational complexity an
 \paragraph{Chapter~\ref{chapter:3}.}
 %
 Our exploration of the large number of MAB algorithms and models developed in the recent literature
-has given us the ambition to write a single piece of software allowing anyone to easily implement new models and algorithms, in order to compare the existing ones and empirically explores the performances of newly proposed algorithms.
+has given us the ambition to write a single piece of software allowing anyone to easily implement new models and algorithms, in order to compare the existing ones and empirically explore the performances of newly proposed algorithms.
 To tackle this goal, we produced a Python library of simulation of MAB problems.
 %
 We wrote the most exhaustive open-source simulation library for MAB problems, called SMPyBandits, which is published online under an open-source licence \cite{SMPyBanditsJMLR,SMPyBandits} and hosted on \href{https://GitHub.com/SMPyBandits}{\texttt{GitHub.com/SMPyBandits}}.
 We present in details its architecture and its features in Chapter~\ref{chapter:3}, along with different examples of its usage.
-A full documentation is available online, as well as exhaustive instructions to reproduce the experiments used in the rest of this thesis.
+A full documentation is available online, as well as exhaustive instructions to reproduce the simulations discussed in the rest of this thesis.
 
 
 \paragraph{Chapter~\ref{chapter:25}.}
 %
-Because there are so many different MAB algorithms, we are also interested by the question of how a practitioner can chose the one she will implement, in a given IoT object, in order to equip this object with the capacity to adapt robustly to any environment.
+Because there are so many different MAB algorithms, we are also interested by the question of how a practitioner can chose the algorithm to implement, in a given IoT object, in order to equip this object with the capacity to adapt robustly to any environment.
 To answer this question, we present two approaches.
 The first one is an empirical comparison of the most efficient and well known existing algorithms, in Section~\ref{sec:3:reviewSPAlgorithms} and \ref{sec:3:timeAndMemoryCosts}.
 We confirm that widely used and not too sophisticated algorithms, such as \UCB{} \cite{Auer02}, Thompson sampling \cite{Thompson33} and \klUCB{} \cite{KLUCBJournal}, are the most efficient in terms of regret, and offer a good balance between regret and (time and memory) complexity.
@@ -475,42 +477,43 @@ In the second Part~\ref{part:MABIOT} of this thesis, we start by proposing and s
 \paragraph{Chapter~\ref{chapter:4}.}
 %
 We study two models of IoT networks in Chapter~\ref{chapter:4}.
-The first model considers IoT devices that simply have data to send to a base station, at a regular frequency (but random times), and that use acknowledgements as feedback, in order to optimize their uplink communications, by accessing more the best channels (\ie, the channel less occupied by the surrounding traffic).
+The first model considers IoT devices that simply have data to regularly send to a base station (at unpredictable or random times).
+Such devices use acknowledgements as feedback, in order to optimize their uplink communications, by accessing more the best channels (\ie, the channel less occupied by the surrounding traffic).
 The goal of this first model is to increase the Quality of Service (QoS) of the application of such IoT network, by applying decentralized RL on the device side in order to reduce the rate of failed transmission.
 The base station will thus receive more up-link packets from the devices being served, if they can successfully learn an efficient spectrum access scheme.
 It implies that the network can accept more end-devices while maintaining the same QoS.
 %
-Our second model then considers packet retransmissions, and while the two concepts are similar, the application of an efficient decentralized learning algorithm now results in both an increased battery life for each of the devices, as well as an increased QoS for the entire network.
+Our second model then considers packet retransmissions, and while the two concepts are similar, the application of an efficient decentralized learning algorithm now results in both an increased battery life for each of the devices, as well as an increased QoS for the entire network, as less retransmissions reduce the local spectrum load.
 
-We present in Section~\ref{sec:4:firstModel} a first model of an IoT network, that is made of thousands (or more) of end-devices and a single base station.
-We consider an ALOHA-based protocol, slotted in both time and frequency, by assuming a simple pre-agreed synchronization between all devices and the base station. This synchronization is the only aspect of the network that requires central control from the base station, and it only requires one downlink packet when a new device joins the network operated by this base station \cite{Centenaro16}.
+% We present in Section~\ref{sec:4:firstModel} a first model of an IoT network, that is made of thousands (or more) of end-devices and a single base station.
+% We consider an ALOHA-based protocol, slotted in both time and frequency, by assuming a simple pre-agreed synchronization between all devices and the base station. This synchronization is the only aspect of the network that requires central control from the base station, and it only requires one downlink packet when a new device joins the network operated by this base station \cite{Centenaro16}.
+% %
+% Our IoT network model contains two types of devices: \emph{static devices} that use only one channel (fixed in time), and \emph{dynamic devices} that can choose the channel for each of their transmissions.
+% Static devices form an interfering traffic, which could be generated by devices using other standards as well.
+% Dynamic devices can use RL, and especially MAB algorithms, to optimize their sequential choice of channels, in order to maximize the number of successful up-link transmissions, thanks to the success/failure feedback that is the presence/absence of acknowledgement (\Ack) received from the base station.
+% %
+% We first detail three base-lines, a naive approach and two centralized ``oracle'' approaches,
+% that are used to evaluate the performance of the considered MAB algorithms (\UCB{} and TS), in terms of the centralized system-wide successful communications rate.
+% We show that our approach is interesting, as these low-cost MAB algorithms have near-optimal performance, even when the proportion of end-devices increases and the interfering traffic from the other devices becomes more and more fluctuating and unpredictable.
+% %
+% Even without changing anything on the level of the considered IoT standard (neither the PHY nor the MAC layers), our proposal is just an add-on capability, that can be set-up on each device, on a unit-per-unit basis.
+The first model constitutes the first article written during this thesis, and initiated a collaboration with R. Bonnefoi, another PhD student of our team SCEE.
+We presented it at the EAI CROWNCOM conference in Lisboa, Portugal in September $2017$, where it obtained the ``best paper award'' \cite{Bonnefoi17}.
 %
-Our IoT network model contains two types of devices: \emph{static devices} that use only one channel (fixed in time), and \emph{dynamic devices} that can choose the channel for each of their transmissions.
-Static devices form an interfering traffic, which could be generated by devices using other standards as well.
-Dynamic devices can use RL, and especially MAB algorithms, to optimize their sequential choice of channels, in order to maximize the number of successful up-link transmissions, thanks to the success/failure feedback that is the presence/absence of acknowledgement (\Ack) received from the base station.
+% Verifying the potential gain of performance brought by these MAB algorithms in numerical simulations was a first step, but it is satisfactory to also verify our results on a real-world proof-of-concept (PoC).
+% In Section~\ref{sec:4:firstModel}, we detail what we believe to be the first PoC of using decentralized MAB learning in a simplified IoT-like wireless network.
+% We implemented a network with a base station, which receives incoming messages from different end-devices and replies with acknowledgements.
+% % , that are used as feedback by the devices and let them learn an efficient spectrum access scheme.
+% % Verify this first model empirically: proof of concept
+The proof-of-concept (PoC) continued our fruitful collaboration with R. Bonnefoi, and was demonstrated during three days at the IEEE ICT conference in Saint-Malo, France, in June $2018$ \cite{Besson2018ICT}, and later presented at the IEEE WCNC conference in Marrakech, Morocco, in April $2019$ \cite{Besson2019WCNC}.
 %
-We first detail three base-lines, a naive approach and two centralized ``oracle'' approaches,
-that are used to evaluate the performance of the considered MAB algorithms (\UCB{} and TS), in terms of the centralized system-wide successful communications rate.
-We show that our approach is interesting, as these low-cost MAB algorithms have near-optimal performance, even when the proportion of end-devices increases and the interfering traffic from the other devices becomes more and more fluctuating and unpredictable.
-%
-Even without changing anything on the level of the considered IoT standard (neither the PHY nor the MAC layers), our proposal is just an add-on capability, that can be set-up on each device, on a unit-per-unit basis.
-This model constitutes the first article written during this thesis, and initiated a collaboration with R. Bonnefoi, another PhD student of our team SCEE.
-We presented this first work at the EAI CROWNCOM conference in Lisboa, Portugal in September $2017$, where it obtained the ``best paper award'' \cite{Bonnefoi17}.
-
-Verifying the potential gain of performance brought by these MAB algorithms in numerical simulations was a first step, but it is satisfactory to also verify our results on a real-world proof-of-concept (PoC).
-In Section~\ref{sec:4:firstModel}, we detail what we believe to be the first PoC of using decentralized MAB learning in a simplified IoT-like wireless network.
-We implemented a network with a base station, which receives incoming messages from different end-devices and replies with acknowledgements.
-% , that are used as feedback by the devices and let them learn an efficient spectrum access scheme.
-% Verify this first model empirically: proof of concept
-This is a second result of a fruitful collaboration with R. Bonnefoi, and this work was demonstrated during three days at the IEEE ICT conference in Saint-Malo, France, in June $2018$ \cite{Besson2018ICT}, and later presented at the IEEE WCNC conference in Marrakech, Morocco, in April $2019$ \cite{Besson2019WCNC}.
-
-We then consider an extension of our first model, following the idea of packet retransmissions, that is at the root of the famous ALOHA protocol \cite{Abramson1970,Roberts75}.
-The idea is that when a device sends an uplink message but does not receive its \Ack{} (before a certain delay), instead of going back to sleep mode in order to wait for its next activation (\eg, following the Bernoulli random activation pattern, or waiting for the application to need to send some data), the device will try again to send the same packet, a few times (\eg, up-to $m \leq 10$ times), after some small random waiting times.
-%
-We propose to also use decision making, that is to also use RL and MAB algorithms, for this other model, at the second layer of the MAC protocol, in order to learn the best channels to use for retransmitting the packets that suffered from a collision at their first transmissions.
-We present the model in Section~\ref{sec:4:retransmissions}, along with mathematical justifications of the potential of using this second-stage MAB learning for retransmissions, and numerical illustrations.
-This shows that using learning in a decentralized way on the devices' side is again a powerful idea under this model with retransmissions, and we show as well that the simplest of the different heuristics we compared is efficient, and allows the devices to learn to behave almost optimally.
-This third contribution concluded our collaboration with R. Bonnefoi, and was presented at the $1^{\text{st}}$ MoTION workshop, also during the IEEE WCNC $2019$ conference \cite{Bonnefoi2019WCNC}.
+% We then consider an extension of our first model, following the idea of packet retransmissions, that is at the root of the famous ALOHA protocol \cite{Abramson1970,Roberts75}.
+% The idea is that when a device sends an uplink message but does not receive its \Ack{} (before a certain delay), instead of going back to sleep mode in order to wait for its next activation (\eg, following the Bernoulli random activation pattern, or waiting for the application to need to send some data), the device will try again to send the same packet, a few times (\eg, up-to $m \leq 10$ times), after some small random waiting times.
+% %
+% We propose to also use decision making, that is to also use RL and MAB algorithms, for this other model, at the second layer of the MAC protocol, in order to learn the best channels to use for retransmitting the packets that suffered from a collision at their first transmissions.
+% We present the model in Section~\ref{sec:4:retransmissions}, along with mathematical justifications of the potential of using this second-stage MAB learning for retransmissions, and numerical illustrations.
+% This shows that using learning in a decentralized way on the devices' side is again a powerful idea under this model with retransmissions, and we show as well that the simplest of the different heuristics we compared is efficient, and allows the devices to learn to behave almost optimally.
+Our second model, with retransmissions, corresponds to our last collaboration with R. Bonnefoi, which was presented at the $1^{\text{st}}$ MoTION workshop, also during the IEEE WCNC $2019$ conference \cite{Bonnefoi2019WCNC}.
 
 
 \paragraph{Chapter~\ref{chapter:5}.}
@@ -543,26 +546,26 @@ Our algorithm also achieves a logarithmic number of collisions and arm switches,
 %
 This strong theoretical result heavily depends on the presence of sensing feedback, and as such our results are not (yet) applicable to the IoT model without sensing.
 
-Our work on multi-player bandit was presented at the ALT conference in Lanzarote, Spain, in April $2019$ \cite{Besson2018ALT},
-%
-and since then, some works have studied extensions of our framework or alternative algorithms, as a few independent teams started to work on different questions shortly after its publication.
-%
-Since last year, it was proven that the ``no sensing'' case (\ie, IoT) is essentially not harder that the ``sensing'' (\ie, OSA) case, from a theoretical point-of-view, by E. Boursier and V. Perchet \cite{BoursierPerchet18}.
-Even if their approach is costly empirically, the result is surprising and very interesting.
-They showed that even under the strong hypothesis of no direct communication between players and no central coordination (in the same model as the one of our paper), the players can actually use the collision feedback (\ie, receiving or not an \Ack) as an indirect way to communicate bits of information with each other.
-This idea requires that devices coordinate at least a little bit, by an initial pre-agreement (which is simply the fact that the IoT devices run the same algorithms).
-As they showed, the players can start by a ``musical chair'' phase, to reach an orthogonal allocation, and then they can alternate exploration, communication and exploitation phases until the end of the game at horizon $T$.
-Because they all follow the same algorithm, the devices are able to split the time steps between ``listening'' and ``talking'' phases, and the authors denote it the ``communication trick''.
-The communication trick is used by each player to send and receive observations about all arms from the other players, using one forced collision to send one bit at a time.
-They use about $T-\bigO{\log(T)}$ rounds in exploitation of the best arms, and only $\bigO{\log(T)}$ rounds in exploration and communication, yielding a logarithmic regret.
-% As they showed, after a long enough initialization period, the $M$ players have elected a ``master'' player and $M-1$ ``followers'' players (with high probability),
-Another direction, as followed by \cite{Bistritz18}, is to use this communication trick and reduce the problem to a centralized multiple-play (MP) MAB, which can be solved efficiently with the MP generalization of \klUCB{} \cite{Luedtke16} or Thompson sampling \cite{Komiyama15}.
+% Our work on multi-player bandit was presented at the ALT conference in Lanzarote, Spain, in April $2019$ \cite{Besson2018ALT},
+% %
+% and since then, some works have studied extensions of our framework or alternative algorithms, as a few independent teams started to work on different questions shortly after its publication.
+% %
+% Since last year, it was proven that the ``no sensing'' case (\ie, IoT) is essentially not harder that the ``sensing'' (\ie, OSA) case, from a theoretical point-of-view, by E. Boursier and V. Perchet \cite{BoursierPerchet18}.
+% Even if their approach is costly empirically, the result is surprising and very interesting.
+% They showed that even under the strong hypothesis of no direct communication between players and no central coordination (in the same model as the one of our paper), the players can actually use the collision feedback (\ie, receiving or not an \Ack) as an indirect way to communicate bits of information with each other.
+% This idea requires that devices coordinate at least a little bit, by an initial pre-agreement (which is simply the fact that the IoT devices run the same algorithms).
+% As they showed, the players can start by a ``musical chair'' phase, to reach an orthogonal allocation, and then they can alternate exploration, communication and exploitation phases until the end of the game at horizon $T$.
+% Because they all follow the same algorithm, the devices are able to split the time steps between ``listening'' and ``talking'' phases, and the authors denote it the ``communication trick''.
+% The communication trick is used by each player to send and receive observations about all arms from the other players, using one forced collision to send one bit at a time.
+% They use about $T-\bigO{\log(T)}$ rounds in exploitation of the best arms, and only $\bigO{\log(T)}$ rounds in exploration and communication, yielding a logarithmic regret.
+% % As they showed, after a long enough initialization period, the $M$ players have elected a ``master'' player and $M-1$ ``followers'' players (with high probability),
+% Another direction, as followed by \cite{Bistritz18}, is to use this communication trick and reduce the problem to a centralized multiple-play (MP) MAB, which can be solved efficiently with the MP generalization of \klUCB{} \cite{Luedtke16} or Thompson sampling \cite{Komiyama15}.
 
-We discuss more in details this interesting follow-up of our article \cite{BoursierPerchet18}, along with other recent research works such as \cite{LugosiMehrabian18}, in Section~\ref{sec:5:literatureReviewOtherModels}.
-%
-Moreover, the case of different means of arms for the different players was studied in \cite{Bistritz18,KaufmannAbbas19}, and this generalization of our model is very interested for CR applications, as the mean of an arm is the average quality (\eg, availability) of a radio channel, and as such it has no reason to be uniform among end-devices (\ie, players).
-%
-Finally the adversarial case of multi-player bandit has started to be studied, independently by \cite{bande2019adversarial} and \cite{AlaturLevyKrause19}.
+% We discuss more in details this interesting follow-up of our article \cite{BoursierPerchet18}, along with other recent research works such as \cite{LugosiMehrabian18}, in Section~\ref{sec:5:literatureReviewOtherModels}.
+% %
+% Moreover, the case of different means of arms for the different players was studied in \cite{Bistritz18,KaufmannAbbas19}, and this generalization of our model is very interested for CR applications, as the mean of an arm is the average quality (\eg, availability) of a radio channel, and as such it has no reason to be uniform among end-devices (\ie, players).
+% %
+% Finally the adversarial case of multi-player bandit has started to be studied, independently by \cite{bande2019adversarial} and \cite{AlaturLevyKrause19}.
 
 
 As explained above, the model of Chapter~\ref{chapter:4} was found intractable to analyze, mainly because we consider an IoT network with many end-devices, all following random activation patterns.
@@ -639,61 +642,65 @@ and finally the list of the bibliographical references.
 
 % \newpage % WARNING
 
-% % ----------------------------------------------------------------------------
-% \subsection{Summary of the contributions}
-% \label{sec:1:summaryOfContributions}
+% ----------------------------------------------------------------------------
+\subsection{Summary of the contributions}
+\label{sec:1:summaryOfContributions}
 
-% To summarize the main contributions of this thesis, we can list the following points:
+We can list the following points to summarize the main contributions of this thesis.
 
-% \begin{itemize}
-%     % \item
-%     % We present the concepts and the notations of the multi-armed bandit problem in Chapter~\ref{chapter:2}, from a mathematical point-of-view.
-%     % But we also follow a didactic approach as we use an online interactive demonstration designed to let anyone play against a small bandit problem from his/her browser, in Section~\ref{par:2:interactiveDemoDiscoverMAB}.
+\begin{itemize}
+    % \item
+    % We present the concepts and the notations of the multi-armed bandit problem in Chapter~\ref{chapter:2}, from a mathematical point-of-view.
+    % But we also follow a didactic approach as we use an online interactive demonstration designed to let anyone play against a small bandit problem from his/her browser, in Section~\ref{par:2:interactiveDemoDiscoverMAB}.
 
-%     % \item
-%     % We give a short literature review of stochastic bandit algorithms in Section~\ref{sec:2:famousMABalgorithms}.
+    % \item
+    % We give a short literature review of stochastic bandit algorithms in Section~\ref{sec:2:famousMABalgorithms}.
 
-%     \item
-%     We developed SMPyBandits, the most exhaustive open-source simulation library for MAB problems, that we published on-line under an open-source licence (MIT) \cite{SMPyBanditsJMLR,SMPyBandits}.
-%     We present it in details in Chapter~\ref{chapter:3}.
+    \item
+    We developed SMPyBandits, the most exhaustive open-source simulation library for MAB problems, that we published on-line under an open-source licence (MIT) \cite{SMPyBanditsJMLR,SMPyBandits}.
+    We present it in details in Chapter~\ref{chapter:3}.
 
-%     \item
-%     % We present the problem of choosing which algorithm a practitioner should use, or algorithm selection from the rich collection of different MAB available, in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}.
-%     We present in Chapter~\ref{chapter:25} an algorithm called \Aggr{} for aggregation of algorithms as an online solution to the algorithm selection problem, and numerical simulations to illustrate that it achieves state-of-the-art empirical performances
-%     \cite{Besson2018WCNC}.
-%     % with \textbf{Aggregator} (WCNC 2018)
+    \item
+    % We present the problem of choosing which algorithm a practitioner should use, or algorithm selection from the rich collection of different MAB available, in Section~\ref{sec:2:chooseYourPreferredBanditAlgorithm}.
+    We present in Chapter~\ref{chapter:25} an algorithm called \Aggr{} for aggregation of algorithms as an online solution to the algorithm selection problem, and numerical simulations to illustrate that it achieves state-of-the-art empirical performances
+    \cite{Besson2018WCNC}.
+    % with \textbf{Aggregator} (WCNC 2018)
 
-%     \item
-%     We propose different models for IoT networks, in Chapter~\ref{chapter:4}, where end-devices with cognitive radio capabilities can implement MAB algorithms on their side, to automatically increase their battery life and allow more devices to use the same network while maintaining a high Quality of Service
-%     \cite{Bonnefoi17,Besson2019WCNC,Bonnefoi2019WCNC,MoyBesson2019}.
-%     % (CROWNCOM 2017, ICT demo 2018, WCNC 2019 and MOTIoN 2019)
+    \item
+    We propose different models for IoT networks, in Chapter~\ref{chapter:4}, where end-devices with cognitive radio capabilities can implement MAB algorithms on their side, to automatically increase their battery life and allow more devices to use the same network while maintaining a high Quality of Service
+    \cite{Bonnefoi17,Besson2019WCNC,Bonnefoi2019WCNC,MoyBesson2019,MoyBesson2019Annales}.
+    % (CROWNCOM 2017, ICT demo 2018, WCNC 2019 and MOTIoN 2019)
 
-%     \item
-%     We implemented a proof-of-concept of the aforementioned model \cite{Besson2018ICT}, and we present it in details in Section~\ref{sec:4:gnuradio}. We made a video showcasing our demonstration, hosted at \texttt{\href{https://youtu.be/HospLNQhcMk}{youtu.be/HospLNQhcMk}}.
+    \item
+    We implemented a proof-of-concept of the aforementioned model \cite{Besson2018ICT}, and we present it in Section~\ref{sec:4:gnuradio},
+    % We made a video showcasing our demonstration, hosted at
+    and in a video, hosted at
+    \texttt{\href{https://youtu.be/HospLNQhcMk}{youtu.be/HospLNQhcMk}}.
 
-%     % \item
-%     % The source code for the two previously mentioned contributions are all published online, along with clear instructions for reproducing our work.
+    % \item
+    % The source code for the two previously mentioned contributions are all published online, along with clear instructions for reproducing our work.
 
-%     \item
-%     We present the multi-players bandit model, for which we introduce three variants, in Chapter~\ref{chapter:5}.
-%     For the case with sensing information, we propose two new algorithms, and we give an analysis for our algorithm \MCTopM{} to show it is order-optimal,
-%     as well as extensive numerical experiments to demonstrate its excellent performance in comparison with the rest of the literature.
-%     Our work \cite{Besson2018ALT} also gave a new impulse on research on multi-players bandits, as some recent research works heavily built up on our results.
+    \item
+    We present three variants of the multi-players bandit model in Chapter~\ref{chapter:5}.
+    For the case with sensing information, we propose two new algorithms, and we give an analysis for our algorithm \MCTopM{} to show it is order-optimal,
+    as well as extensive numerical experiments to demonstrate its excellent performance in comparison with the rest of the literature.
+    Our work \cite{Besson2018ALT} also gave a new impulse on research on multi-players bandits, as some recent research works heavily built up on our results.
 
-%     % \item
-%     % We also give a detailed literature review of the different extensions of the multi-players MAB model, which we believe was never written before.
-%     % % were  (ALT 2018, and 4-8 works inspired by our article since then). State-of-the-art with our algorithm MCTopM + klUCB for multi-players bandits "with sensing", empirical state-of-the-art with our simple (but wrong) "selfish" approach in case of "no sensing"
+    % \item
+    % We also give a detailed literature review of the different extensions of the multi-players MAB model, which we believe was never written before.
+    % % were  (ALT 2018, and 4-8 works inspired by our article since then). State-of-the-art with our algorithm MCTopM + klUCB for multi-players bandits "with sensing", empirical state-of-the-art with our simple (but wrong) "selfish" approach in case of "no sensing"
 
-%     \item
-%     We also present the piece-wise stationary MAB model, in Chapter~\ref{chapter:6}, and a detailed literature review of the research on non-stationary MAB \cite{Besson2019GLRT,Besson2019Gretsi}.
-%     Following two recent works, we propose a new actively adaptive algorithm for the piece-wise stationary problem, \GLRklUCB, that achieves state-of-the-art performance.
-%     % - Literature review on non stationary models and algorithms, state-of-the-art for piece-wise stationary with our algorithm, GLR test + klUCB
+    \item
+    We also present the piece-wise stationary MAB model, in Chapter~\ref{chapter:6}, and a detailed literature review of the research on non-stationary MAB \cite{Besson2019GLRT,Besson2019Gretsi}.
+    Following two recent works, we propose a new actively adaptive algorithm for the piece-wise stationary problem, \GLRklUCB, that achieves state-of-the-art performance.
+    % - Literature review on non stationary models and algorithms, state-of-the-art for piece-wise stationary with our algorithm, GLR test + klUCB
 
-%     \item
-%     The last contribution of this thesis is a literature review of the possible use cases of the sequentially doubling horizon trick technique for MAB problems,
-%     and a unified and more generic analysis of two families of doubling tricks.
-%     This lead to the article \cite{Besson2018DoublingTricks}, which is quickly presented in Appendix~\ref{app:2:DoublingTricks}.
-% \end{itemize}
+    \item
+    The last contribution of this thesis is a literature review of the possible use cases of the sequentially doubling horizon trick technique for MAB problems,
+    and a unified and more generic analysis of two families of doubling tricks.
+    This lead to the article \cite{Besson2018DoublingTricks}.
+    % which is quickly presented in Appendix~\ref{app:2:DoublingTricks}.
+\end{itemize}
 
 
 % \newpage  % WARNING
@@ -703,11 +710,11 @@ and finally the list of the bibliographical references.
 \label{sec:1:organization}
 
 The reading order of the manuscript can be any top-down path between the Introduction in the current Chapter~\ref{chapter:1}, and the Conclusion in the last Chapter~\ref{chapter:conclusion}.
-As the graph in Figure~\ref{fig:1:organization} shows, the thesis is organized in two parts.
+The thesis is organized in two parts, corresponding to the two intermediate lines of the following Figure~\ref{fig:1:organization}.
 
 \begin{figure}[h!]
     \centering
-    \resizebox{0.95\textwidth}{!}{
+    \resizebox{1.00\textwidth}{!}{
     \begin{tikzpicture}[>=latex',line join=bevel,scale=2.25]
         %
         \node[align=center] (introduction) at (0,3.25) [rectangle,draw,fill=blue!15] {\textbf{Chapter~\ref{chapter:1}}\\Introduction};
@@ -745,7 +752,7 @@ As the graph in Figure~\ref{fig:1:organization} shows, the thesis is organized i
     % \item
 \textcolor{darkred}{First, in Part~\ref{part:Introduction}} (second line), we start by the next Chapter~\ref{chapter:2}, required for the rest of the document, as we introduce the MAB models and the notations used in this thesis.
 Conversely, even if Chapters~\ref{chapter:2}, \ref{chapter:5} and \ref{chapter:6} use numerical simulations based on our simulation library SMPyBandits, the Chapter~\ref{chapter:3} where we present it is not required to understand them.
-We conclude this part with Chapter~\ref{chapter:25}, which is also not mandatory for the rest of this thesis, and which details one of the first contributions of this thesis, a new algorithm for online MAB algorithms selection.
+We conclude this part with Chapter~\ref{chapter:25}, where we detail one of the first contributions of this thesis, a new algorithm for online MAB algorithms selection.
 
     % \item
 \textcolor{darkgreen}{Then, the second Part~\ref{part:MABIOT}} contain three chapters (third line), that are included in both the logical and chronological orders, but can be read almost independently.

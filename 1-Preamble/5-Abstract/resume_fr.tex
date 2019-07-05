@@ -9,26 +9,35 @@
 % ----------------------------------------------------------------------------
 
 % Chapitre 1
-Dans cette thèse de doctorat, nous étudions les réseaux sans fil et les appareils reconfigurables qui peuvent accéder à des réseaux de radio intelligente, dans des bandes non licenciées et sans supervision centrale.
-Plus spécifiquement, nous considérons des réseaux de l'Internet des Objets (IoT), avec l'objectif d'augmenter la durée de vie de la batterie des appareils, en les équipant d'algorithmes d'apprentissage machine peu coûteux mais efficaces, qui leur permettent d'améliorer automatiquement l'efficacité de leurs communications sans fil (Chapitre~\ref{chapter:1}).
+Dans cette thèse de doctorat, nous étudions les réseaux sans fil et les appareils reconfigurables qui peuvent accéder à des réseaux de radio sans fil de manière intelligente, dans des bandes non licenciées et sans supervision centrale.
+Plus spécifiquement, nous considérons des réseaux de l'Internet des Objets (IdO), avec l'objectif d'augmenter la durée de vie de la batterie des appareils, en les équipant d'algorithmes d'apprentissage machine peu coûteux mais efficaces, qui leur permettent d'améliorer automatiquement l'efficacité de leurs communications sans fil (Chapitre~\ref{chapter:1}).
 % Chapitre 4
-Nous proposons différents modèles de réseaux IoT, et nous montrons empiriquement, par des simulations numériques et une validation expérimentale réaliste, le gain que peuvent apporter nos méthodes, qui utilisent l'apprentissage par renforcement (Chapitre~\ref{chapter:4}).
+Nous proposons différents modèles de réseaux IdO, et nous montrons empiriquement, par des simulations numériques et une validation expérimentale réaliste, le gain que peuvent apporter nos méthodes, qui utilisent l'apprentissage par renforcement (Chapitre~\ref{chapter:4}).
 % Chapitre 2
-Les différents problèmes d'accès au réseau sont modélisés avec des Bandits Multi-Bras (MAB, Chapitre~\ref{chapter:2}), mais leur analyse est difficile à réaliser,
+Les différents problèmes d'accès au réseau sont modélisés avec des Bandits Multi-Bras (MAB, Chapitre~\ref{chapter:2}), mais leur analyse est complexe,
 % , Chapitre~\ref{chapter:2}
-car il est difficile de prouver la convergence de nombreux appareils jouant à un jeu collaboratif sans communication aucune coordination, lorsque les appareils suivent tous un modèle d'activation aléatoire.
+notamment si l'on veut prouver la convergence de nombreux appareils jouant à un jeu collaboratif sans aucune coordination, lorsque les appareils suivent tous un modèle d'activation aléatoire.
 % En effet, même le nombre de périphériques actifs à chaque instant est hautement imprévisible, rendant l'environnement non pas stationnaire et évoluant rapidement.
 % Chapitres 5 et 6
-Le reste de ce manuscrit étudie donc deux modèles restreints, d'abord des bandits multi-joueurs dans des problèmes stationnaires (Chapitre~\ref{chapter:5}), puis des bandits mono-joueurs non stationnaires (Chapitre~\ref{chapter:6}).
+Le reste de ce manuscrit étudie donc deux modèles restreints, afin de pouvoir en faire une analyse théorique exhaustive.
+Nous considérons d'abord des bandits multi-joueurs dans des problèmes stationnaires (Chapitre~\ref{chapter:5}), puis des bandits mono-joueurs non stationnaires (Chapitre~\ref{chapter:6}).
 % Chapitre 3
 Nous détaillons également une autre contribution, la bibliothèque Python open-source SMPyBandits pour des simulations numériques de problèmes MAB, qui couvre tous les modèles étudiés et d'autres (Chapitre~\ref{chapter:3}).
+
+
+% ----------------------------------------------------------------------------
+\section*{Contexte}
+
+FIXME 0.5 à 2 pages de contexte, historique, technique, humain, etc.
 
 
 % ----------------------------------------------------------------------------
 \section*{Contributions}
 
 Nous pouvons énumérer les points suivants pour résumer les principales contributions de cette thèse.
-Nous signalons le chapitre correspondant, ainsi que les conférences nationales ou internationales auxquelles ont été publié certains résultats.
+Elles se situent à trois niveaux : des modèles MAB pour plusieurs contextes radio liés à la radio intelligente ; des preuves théoriques associées aux problèmes d'apprentissages correspond ; et enfin des implémentations d'algorithmes à but de simulations, de partage avec la communauté, et de validation par des démonstrations radio réalistes.
+
+Nous signalons le chapitre, ainsi que les conférences nationales ou internationales dans lesquelles ont été publiés les résultats correspondants.
 
 \begin{itemize}
     % \item
@@ -41,20 +50,21 @@ Nous signalons le chapitre correspondant, ainsi que les conférences nationales 
     \item
     Nous avons écrit la plus complète bibliothèque de simulation pour les problèmes MAB, appelée SMPyBandits, qui est écrite en Python et publiée en ligne sous une licence open-source \cite{SMPyBanditsJMLR,SMPyBandits}.
     Nous présentons en détail son architecture et ses fonctionnalités dans le Chapitre~\ref{chapter:3}, ainsi que différents exemples de son utilisation.
-    Une documentation complète est disponible en ligne, ainsi que des instructions exhaustives pour reproduire les expériences et simulations numériques utilisées dans cette thèse.
+    Une documentation complète est disponible en ligne, ainsi que des instructions exhaustives pour reproduire les expériences et simulations numériques utilisées tout au long de thèse.
 
     \item
-    Nous présentons le problème du choix de l'algorithme qu'un-e ingénieur-e devrait utiliser, ou de la sélection d'algorithme parmi la riche collection de différents algorithmes MAB disponibles, dans le Chapitre~\ref{chapter:25}.
+    Nous présentons le problème du choix de l'algorithme qu'un-e ingénieur-e devrait utiliser, ou de la sélection d'algorithme parmi la riche collection des différents algorithmes de bandits dans la litérature, dans le Chapitre~\ref{chapter:25}.
     Nous présentons un algorithme, appelé \Aggr, pour l'agrégation d'algorithmes, comme une solution en ligne au problème de sélection d'algorithmes, et nous montrons par des simulations numériques qu'il peut atteindre de bonnes performances empiriques
     (publié à WCNC 2018) \cite{Besson2018WCNC}.
 
     \item
-    Nous proposons différents modèles pour les réseaux IdO (IoT), dans le Chapitre~\ref{chapter:4}, où les appareils dotés de capacités de radio intelligente peuvent implémenter de leur côté des algorithmes MAB, pour augmenter automatiquement la durée de vie de leur batterie. Cela permet à davantage de périphériques d'utiliser le même réseau tout en maintenant une haute qualité de service
+    Nous proposons différents modèles pour les réseaux IdO (IoT), dans le Chapitre~\ref{chapter:4}, où les appareils dotés de capacités de radio intelligente peuvent mettre en œuvre de leur côté des algorithmes MAB, pour augmenter automatiquement la durée de vie de leur batterie.
+    Cela permet également à davantage d'objets d'utiliser le même réseau tout en maintenant un taux élevé d'accès au spectre sans souffrir de collisions radio
     (publiés à CROWNCOM 2017, démonstration ICT 2018, WCNC 2019 et MOTIoN 2019)
     \cite{Bonnefoi17,Besson2018ICT,Besson2019WCNC,Bonnefoi2019WCNC}.
 
     \item
-    Nous avons implémenté une démonstration réaliste du modèle susmentionné \cite{Besson2018ICT,Besson2019WCNC}, présentée à ICT 2018, et nous la détaillons en Section~\ref{sec:4:gnuradio}. Nous avons aussi réalisé une courte vidéo présentant notre démonstration, hébergée sur \texttt{\href{https://youtu.be/HospLNQhcMk}{youtu.be/HospLNQhcMk}}.
+    Nous avons réalisé une démonstration réaliste du modèle proposé ci-dessus \cite{Besson2018ICT,Besson2019WCNC}, présentée à ICT 2018, et nous la détaillons en Section~\ref{sec:4:gnuradio}. Nous avons aussi réalisé une courte vidéo présentant notre démonstration, hébergée sur \texttt{\href{https://youtu.be/HospLNQhcMk}{youtu.be/HospLNQhcMk}}.
 
     % \item
     % Le code source des deux contributions susmentionnées est publié en ligne, ainsi que des instructions pour la reproduction de nos travaux (avec GNU Octave ou MATLAB).
@@ -78,14 +88,18 @@ Nous signalons le chapitre correspondant, ainsi que les conférences nationales 
     \item
     La dernière contribution de cette thèse est notre article \cite{Besson2018DoublingTricks}.
     % , résumé en Annexe~\ref{app:2:DoublingTricks}.
-    Nous donnes une revue de la littérature sur l'utilisation de la technique de doublements successifs de l'horizon (``doubling trick'') pour les problèmes de bandits,
+    Cet article donne une revue de la littérature sur l'utilisation de la technique de doublements successifs de l'horizon (``doubling trick'') pour les problèmes de bandits,
     ainsi qu'une analyse unifiée et plus générique de deux familles de doublements.
 \end{itemize}
 
 % ----------------------------------------------------------------------------
 \section*{Organisation du manuscrit}
 
-Ce manuscrit est organisé comme suit.
+% Ce manuscrit est organisé comme suit.
+%
+L'ordre de lecture du manuscrit peut suivre n'importe quel chemin, entre l'introduction donnée dans le Chapitre~\ref{chapter:1}, et la conclusion générale qui constitue le dernier Chapitre~\ref{chapter:conclusion}.
+Comme le montre le graphique de la Figure~\ref{fig:1:organization_fr} ci-dessus,
+la thèse est organisée en deux parties, correspondant aux deux lignes intermédiaires de la figure suivante.
 
 \begin{figure}[h!]
     \centering
@@ -96,7 +110,7 @@ Ce manuscrit est organisé comme suit.
         \node[align=center] (chapter2) at (0,2.25) [rectangle,draw,fill=red!15] {\textbf{Chapitre~\ref{chapter:2}}\\Modèle bandits multi-bras\\stochastique et stationnaire};
         \node[align=center] (chapter3) at (-2.5,2.25) [rectangle,draw,fill=red!10] {\textbf{Chapitre~\ref{chapter:3}}\\SMPyBandits : bibliothèque\\de simulations pour MAB};
         \node[align=center] (chapter25) at (2.5,2.25) [rectangle,draw,fill=red!20] {\textbf{Chapitre~\ref{chapter:25}}\\Sélection séquentielle\\d'algorithme MAB};
-        \node[align=center] (chapter4) at (-2.5,1) [rectangle,draw,fill=green!10] {\textbf{Chapitre~\ref{chapter:4}}\\Deux modèles MAB\\pour les réseaux IoT};
+        \node[align=center] (chapter4) at (-2.5,1) [rectangle,draw,fill=green!10] {\textbf{Chapitre~\ref{chapter:4}}\\Deux modèles MAB\\pour les réseaux IdO};
         \node[align=center] (chapter5) at (0,1) [rectangle,draw,fill=green!15] {\textbf{Chapitre~\ref{chapter:5}}\\Modèle MAB\\Multi-joueurs};
         \node[align=center] (chapter6) at (2.5,1) [rectangle,draw,fill=green!20] {\textbf{Chapitre~\ref{chapter:6}}\\Modèle MAB\\Non-stationnaire};
         \node[align=center] (conclusion) at (0,-0.25) [rectangle,draw,fill=blue!20] {\textbf{Chapitre~\ref{chapter:conclusion}}\\Conclusion générale};
@@ -123,21 +137,23 @@ Ce manuscrit est organisé comme suit.
     \label{fig:1:organization_fr}
 \end{figure}
 
-L'ordre de lecture du manuscrit peut être n'importe quel chemin, entre l'introduction donnée dans Chapitre~\ref{chapter:1}, et la conclusion générale qui constitue le dernier Chapitre~\ref{chapter:conclusion}.
-Comme le montre le graphique de la Figure~\ref{fig:1:organization_fr} ci-dessus,
-la thèse est organisée en deux parties :
-
 \begin{itemize}
     \item
 \textcolor{darkred}{Dans la Partie~\ref{part:Introduction}}, nous commençons par le Chapitre~\ref{chapter:2} qui présente les modèles de bandits multi-bras (MAB), les concepts et les notations utilisés dans tout ce document. Ce premier chapitre est nécessaire à la lecture du reste du manuscrit.
-Le Chapitre~\ref{chapter:3} présente notre bibliothèque de simulations SMPyBandits, et même si les Chapitres~\ref{chapter:2}, \ref{chapter:25}, \ref{chapter:5} et \ref{chapter:6} utilisent la bibliothèque pour leurs simulations numériques, lire ce chapitre n'est pas obligatoire pour comprendre la suite du document.
-Nous terminons cette première partie par le Chapitre~\ref{chapter:25}, qui n'est pas non plus nécessaire à la compréhension globale du manuscrit, mais qui détaille la première contribution : un nouvel algorithme pour la sélection séquentielle d'algorithmes MAB.
+Le Chapitre~\ref{chapter:3} présente notre bibliothèque de simulations SMPyBandits, qui est utilisées par les Chapitres~\ref{chapter:2}, \ref{chapter:25}, \ref{chapter:5} et \ref{chapter:6} pour leurs simulations numériques.
+%  lire ce chapitre n'est pas obligatoire pour comprendre la suite du document.
+Nous terminons cette première partie par le Chapitre~\ref{chapter:25},
+% qui n'est pas non plus nécessaire à la compréhension globale du manuscrit, mais
+qui détaille la première contribution : un nouvel algorithme pour la sélection séquentielle d'algorithmes MAB.
 
     \item
 \textcolor{darkgreen}{La deuxième Partie~\ref{part:MABIOT}} contient ensuite trois chapitres, qui sont inclus à la fois dans l'ordre logique et chronologique, mais peuvent être lus quasiment indépendamment.
 Le Chapitre~\ref{chapter:4} commence par proposer et étudier différents modèles de réseaux IdO, dans lesquels les algorithmes MAB ont été utilisés avec succès. Nos deux modèles sont intéressants et proches de la réalité, mais ils se sont révélés trop complexes pour proposer une analyse mathématique de la bonne performance empirique des solutions envisagées.
-Pour cette raison, nous affaiblissons les modèles pour le reste du document,
-et les deux Chapitres~\ref{chapter:5} et \ref{chapter:6} étudient chacun un modèle intermédiaire, situé entre le modèle MAB stationnaire à un joueur du chapitre~\ref{chapter:2} et les modèles de réseaux IdO du chapitre~\ref{chapter:4}.
+Pour cette raison, nous simplifions les modèles précédents dans la suite du document,
+afin d'établir des preuves mathématiques garantissant la convergence, ainsi que les gains en performance apportés par ces algorithmes de bandit.
+Les deux Chapitres~\ref{chapter:5} et \ref{chapter:6} étudient chacun un modèle intermédiaire, situé entre le modèle MAB stationnaire à un joueur du chapitre~\ref{chapter:2} et les modèles de réseaux IdO du chapitre~\ref{chapter:4}.
+Ces deux études ont chacune donné des résultats théoriques à la pointe de la recherche sur les modèles de bandits multi-joueurs et de bandits stationnaires par morceaux, que nous avons aussi validé par des expériences numériques.
+
 \end{itemize}
 
 
