@@ -879,20 +879,21 @@ With such numerical optimization, \GLRklUCB{} is not significantly slower than \
 %
 % This is already coded, see https://smpybandits.github.io/docs/Policies.GLR_UCB.html?highlight=glr#Policies.GLR_UCB.threshold_BernoulliGLR
 
-We compare different threshold functions, $\beta(n,\delta)$ for $n\in\N^*$ and $\delta>0$, that can be used in the B-GLRT test used for the \GLRklUCB{} algorithm (see the details in equation \eqref{eq:whenDoesGLRklUCBrestart} and in Algorithm~\ref{algo:6:GLRklUCB}).
+We compare different threshold functions, $\beta_i(n,\delta)$ for $i\in\{1,2,3,4\}$, that can be used in the B-GLRT test used for the \GLRklUCB{} algorithm (see the details in equation \eqref{eq:whenDoesGLRklUCBrestart} and in Algorithm~\ref{algo:6:GLRklUCB}).
 %
 In the B-GLRT test, there is a $\sup$ optimization problem on $s\in[n-1]$, and this $\sup$ is compared with the threshold $\beta(n,\delta)$. The threshold function given in \eqref{def:6:beta} was chosen to obtain Lemma~\ref{lem:6:FalseAlarm}, that is a false alarm probability bounded by $\delta$.
 %
 We note that we also considered the possibility of using a threshold that could be a function of both $n$ the sample size as well as $s\in[n-1]$ the ``splitting index'' between means $\widehat{\mu}_{1:s}$ and $\widehat{\mu}_{s+1:n}$.
 We did some preliminary experiments to explore this direction and did not find a significant difference, in terms of numerical efficient of the resulting \GLRklUCB{} algorithm, and mathematically the analysis presented in Section~\ref{subsec:6:PropGLR} is simpler to follow if the threshold are uniform on $s$.
 
-\begin{enumerate}%\tightlist
+% \begin{enumerate}%\tightlist
+\begin{enumerate}[label=$\beta_{\arabic*}$]
     \item
     The first variant is the one we advised to use in practice for \GLRklUCB,
     it is very simple to compute numerically: $\beta_1(n, \delta) \eqdef \log\left(\frac{3 n^{3/2}}{\delta}\right) = -\log(\delta) + \log(3) + 3/2 \log(n)$.
 
     \item
-    The second variant is smaller and does not use this power $3/2$: $\beta_2(n, \delta) \eqdef \log\left(\frac{1}{\delta}\right) + \log(1 + \log(n))$.
+    The second variant is smaller without this power $3/2$: $\beta_2(n, \delta) \eqdef \log\left(\frac{1}{\delta}\right) + \log(1 + \log(n))$.
 
     \item
     The third variant is using the function $\cT$, as introduced by \eqref{def:6:function_T}.
@@ -926,7 +927,7 @@ and with the deterministic exploration scheme.
 \end{table}
 % \end{small} %XXX WARNING
 
-As we could expect, the two choices $\beta_1$ and $\beta_2$ give similar results, as well as $\beta_3$ and $\beta_4$. The first two choices give better performance in most cases, and they are computationally less costly.
+As we could expect, the four choices give comparable results, as well as $\beta_3$ and $\beta_4$. The first two choices give better performance in most cases, and they are computationally less costly.
 The threshold $\beta_1$ is closer mathematically to the threshold $\beta_3$, that was used in the analysis, and thus it is the one we advise to use in practice.
 The sum-up of these experiments is that a practitioner should use the simplest and most explicit threshold $\beta_1$, instead of the more complicated one that was used for the analysis.
 Therefore, the choice of threshold function $\beta_1(n, \delta) \eqdef \log\left(3 n^{3/2} / \delta\right)$ for our proposal \GLRklUCB{} presented in Algorithm~\ref{algo:6:GLRklUCB} is validated by these experiments.
@@ -985,11 +986,11 @@ We include the two variants of \GLRklUCB, based on \textbf{Local restarts} or \t
         \multirow{2}{*}{Deterministic exploration}
         & Local   & $\mathbf{68 \pm 33}$ & $116 \pm 36$ & $99 \pm 33$ \\
         & Global  & $97 \pm 28$ & $134 \pm 36$ & $131 \pm 32$ \\
-        % \hline
+        \hline
         \multirow{2}{*}{Uniform random exploration}
         & Local  & $74 \pm 30$ & $\mathbf{108 \pm 33}$ & $106 \pm 31$ \\
         & Global & $91 \pm 30$ & $134 \pm 33$ & $129 \pm 33$ \\
-        % \hline
+        \hline
         \multirow{2}{*}{Tracking-based exploration}
         & Local  & $73 \pm 32$ & $104 \pm 33$ & $\mathbf{89 \pm 29}$ \\
         & Global & $96 \pm 26$ & $133 \pm 32$ & $120 \pm 30$
@@ -1001,7 +1002,8 @@ We include the two variants of \GLRklUCB, based on \textbf{Local restarts} or \t
 % \end{small} %XXX WARNING
 
 As expected, all options give similar results, and each of the three options was found to outperform the two others in one of the three problems considered for this experiments (problems $1$, $2$ and $4$).
-The result highlighted in \textbf{bold} in Table~\ref{table:6:exploringDifferentForcedExplorationMechanisms} shows the best algorithm in each problem (\ie, the algorithm and its option that obtains the smaller mean regret in the considered column).
+The result highlighted in \textbf{bold} in Table~\ref{table:6:exploringDifferentForcedExplorationMechanisms} shows the best algorithm in each problem.
+% (\ie, the algorithm and its option that obtains the smaller mean regret in the considered column).
 We note that in terms of its average regret on the different problems, the tracking-based exploration is the best choice.
 %
 The sum-up of these experiments is that it is sufficient to use the simplest exploration scheme based on a deterministic exploration,
