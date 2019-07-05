@@ -87,7 +87,6 @@ Historically, three main families of wireless communication systems have been de
 % Finally, a third kind of systems are of the opposite kind,
 This third kind of systems can be designed as decentralized:
 even if a central base station is
-% one antenna is still
 still in charge of many devices,
 the devices initiate the sending of up-link packets, and the only down-link data they can receive are short acknowledgements, sent from the base-station to indicate success or failure of every up-link packet.
 This family of wireless systems are referred to as Internet of Things (IoT),
@@ -160,7 +159,8 @@ regulatory bodies in the world have been considering whether to allow
 a new wireless communication paradigm:
 enable unlicensed users in licensed bands, if they would not cause any interference to the (paying) licensed users.
 These initiatives are considered by the \textbf{Cognitive Radio},
-field that we detail below, and especially for \textbf{Dynamic Spectrum Access (DSA)}.
+field that we detail below, and especially for \textbf{Dynamic Spectrum Access (DSA)},
+for which we refer to the surveys \cite{akyildiz2006next,garhwal2012survey} for more details.
 
 
 % \TODOL{Je peux améliorer (ou enlever) ce passage qui site J.Toledano, ou alors le commenter en plus de détails ? J'aime bien son rapport en fait (j'aurai du le lire au début de ma thèse !)}
@@ -256,23 +256,29 @@ As CR is not a standard technology, it does not have a single definition, so let
 
 
 % explain PU and SU in a few sentences
+One possible way of considering spectrum flexibility is the following.
+%
 In licensed bands, there are Primary Users (PU) paying to access the network, for instance anybody has to pay to have a mobile phone number and use the network.
-As exposed in the definition above, the CR philosophy suggests that if the network is not used by any PU in a certain location and time, then non-paying users, referred to as Secondary User (SU), could use it.
-Regulations state that PU have a strict priority over any other SU,
-but even though the RF bands are allocated, real world measurements often show that some bands are not densely used, and thus if a SU is equipped with an efficient sensing capacity, it can analyze its environment, and use a licensed band if it is free of any PU.
+As exposed in the definition above of the CR philosophy, we could imagine that if the network is not used by any PU in a certain location and time, then non licensed users, referred to as Secondary User (SU), could use it, by paying some rent to the PU.
+%
+Regulation states that PU have a strict priority,
+but even though the RF bands are allocated, real world measurements often show that some bands are not densely used, and thus if a SU was equipped with an efficient sensing capacity, it could analyze its environment, and use a licensed band if it is free of any PU.
 % explain DSA
-This defines the concept of DSA, proposed in the early $2000$s, and we refer to the surveys \cite{akyildiz2006next,Zhao07,garhwal2012survey} for more details.
-After a short paragraph on Reinforcement Learning, we then focus on one example, the \textbf{Opportunistic Spectrum Access} (OSA) problem.
+This defines the concept of \textbf{Opportunistic Spectrum Access} (OSA), for which we refer to the survey \cite{Zhao07} for more details.
+% After a short paragraph on Reinforcement Learning, we then focus on the OSA problem.
 
 
 
 \paragraph{From Statistics or Machine Learning to Multi-Armed Bandits.}
 %
-Similarly, we can narrow down the second field of study of this thesis, steps by steps.
+% Similarly, we can narrow down the second field of study of this thesis, steps by steps.
 % Stats > sequential learning > bandits
-A first point-of-view is the historical one, as Multi-Armed Bandits (MAB) learning emerged as an interesting problem in the statistics community and among researchers interested by sequential learning, as shown by the earlier works of \cite{Thompson33,Robbins52,LaiRobbins85}.
+% A first point-of-view is the historical one, as
+We are interested by Multi-Armed Bandits (MAB) learning,
+which emerged as an interesting problem in the statistics community and among researchers interested by sequential learning, as shown by the earlier works of \cite{Thompson33,Robbins52,LaiRobbins85}.
+It is also included in the more general concept of Reinforcement Learning (RL), itself one of the field of Machine Learning (ML).
 % ML > RL > MAB
-We can also expose another point-of-view, which starts from the general concept of Machine Learning (ML), and focus on Reinforcement Learning (RL), then on MAB learning.
+% We can also expose another point-of-view, which starts from the general concept of Machine Learning (ML), and focus on , then on MAB learning.
 % As illustrated in Figure~\ref{fig:1:MainTypesOfMachineLearning}, there are other types of ML, that we do not focus on in this thesis.
 %
 The reference book on RL is \cite{SuttonBarto2018}, so let us quote the definition of RL given by R. Sutton and A. Barto:
@@ -352,26 +358,28 @@ Research on MAB has produced a vast literature in the $2000$s \cite{Auer02,Auer0
 
 \paragraph{Opportunistic Spectrum Access.}
 %
-In OSA, the focus is on one SU accessing a licensed spectrum, occupied by PU that have a strict priority over the SU, which has to follow a ``listen-before-talk'' access scheme.
+The two communities of OSA and MAB have started to interact, and the resulting works have received a great interest from both communities, since the late $2000$s and early $2010$s, with pioneers works like \cite{Liu08,Zhao10,Jouini09,Jouini10}.
+The focus is on one SU accessing a licensed spectrum, occupied by PU that have a strict priority over the SU, which has to follow a ``listen-before-talk'' access scheme.
 %
 The following hypotheses are maid:
 the SU is equipped with a sensing capability,
-and we consider a fixed and finite set of orthogonal channels, \ie, different frequency bands in a licensed spectrum.
+and considers a fixed and finite set of orthogonal channels, \ie, different frequency bands in a licensed spectrum.
 For instance, it can be a set of three Wi-Fi channels at different frequency, emitted by the same Wi-Fi station.
-Another hypothesis is that both PU and SU are synchronized in times, by sub-dividing the time in discrete time steps (or rounds).
+Another hypothesis is that both PU and SU are synchronized in time, by sub-dividing the time in discrete time steps (or rounds).
 %
-Thus if the SU spends a short time in the beginning of each time slot to perform sensing, it can scan for the presence or absence of any PU before transmitting.
+Thus if the SU spends a short time in the beginning of each time slot to perform sensing, it can scan for the presence or absence of any PU before transmitting, during the rest of the time slot without colliding with the PU.
 If the SU was able to sense for all the $K$ frequency bands, it could simply transmit in one of the free channels if any, or not transmit if all channels are used at a given time step.
-However, sensing is known to be error-prone and costly, especially for wide-band sensing, as detailed in the surveys \cite{yucek2009survey,subhedar2011spectrum}, thus most works on OSA limit the sensing capacity of SU to sensing only one channel at a time. This assumption, along with the regulation that PU cannot be disturbed, enforces the SU to transmit in the channel that it sensed, in each time step, if and only if it was sensed free from any PU.
+However, sensing is known to be costly, in terms of energy consumption, especially for wide-band sensing, as detailed in the surveys \cite{yucek2009survey,subhedar2011spectrum}, thus most works on OSA limit the sensing capacity of SU to sensing only one channel at a time.
+This assumption, along with the hypothesis that PU cannot be disturbed (without which no regulation will never be accepted for OSA), enforces the SU to transmit in the channel that it sensed, in each time step, if and only if it was sensed free from any PU.
 % non negligible cost of radio reconfiguration
 
-Focussing on one SU in an OSA network, it has to sequentially decide a channel to sense (in the set of $K\geq2$ channels), then it performs sensing, and finally it transmits in this channel if it was sensed free.
+Focussing on one SU in an OSA network, it has to sequentially decide a channel to sense (in the set of channels, $[K]=\{1,\dots,K\}$), then it performs sensing, and finally it transmits in this channel if it was sensed free.
 The goal of the SU is to minimize its energy consumption (we remind that we focus on ``green'' cognitive radio) and to maximize its uplink data rate, or equivalently, to maximize its number of successful transmission.
 %
 If the different channels are not uniformly used by the PU, and if we assume a stationary hypothesis on the PU traffic, then the goal of the SU boils down to exploring the different channels and exploiting the best ones.
 This frames the Opportunistic Spectrum Access problem as an exploration/exploitation problem, with a finite set of actions (the channels, also called \emph{arms}),
 in a sequential action-then-feedback cycle (time steps are $t\in\N^*$),
-under partial information feedback.
+under partial information feedback (\ie, about one channel over $K$ at each time step).
 These three hypotheses are the ones that restrict from the general ML framework to the specific Multi-Armed Bandit case (see Figure~\ref{fig:1:ReinforcementLearningCycle}).
 
 
@@ -380,16 +388,16 @@ These three hypotheses are the ones that restrict from the general ML framework 
 Previous works of our SCEE team showed that MAB can be used to model the OSA problem:
 orthogonal frequency bands (or channels) are models by arms $k\in\{1,\dots,K\}$,
 and the feedback obtained by the CR-equipped device after sensing the channel $k$ at time $t$ is modeled by a reward of $r(t) \in \{0,1\}$.
-Indeed, $r(t) = 1$ indicates that no Primary User was sensed (and thus an uplink message can be sent), while a reward of $r(t)=0$ indicates that the channel $k$ is busy at time $t$ and no uplink message should be sent.
+Indeed, $r(t) = 1$ indicates that no Primary User was sensed (and thus a SU message can be sent), while a reward of $r(t)=0$ indicates that the channel $k$ is busy at time $t$ and no SU message should be sent, until the end of that slot.
 %
 This model was first studied by W. Jouini during his PhD thesis with C. Moy \cite{Jouini12PhD}, ten years ago, first with \cite{Jouini09} and later with \cite{Jouini10,Jouini12}.
 
 Their works were among the first ones to propose to use Reinforcement Learning for Cognitive Radio and the OSA problem, especially the MAB model and the $\UCB_1$ algorithm,
-along the early works of Q. Zhao and her team, for instance with the works \cite{Liu08,Zhao10}.
+along with the early works of Q. Zhao and her team, for instance with the works \cite{Liu08,Zhao10}.
 %
-Shortly after in $2014$, proof-of-concepts using real-world radio hardware and Software Defined Radio were developed by C. Moy and his student C. Robert \cite{RobertSDR2014,MoyWSR2014}.
+Shortly after in $2014$, proof-of-concepts using real-world radio hardware and Software Defined Radio were developed by C. Moy and his student C. Robert \cite{RobertSDR2014,MoyWSR2014}, using USRP boards and the MATLAB/Simulink software.
 In a second PhD thesis \cite{Modi17PhD}, N. Modi studied from $2014$ to $2017$ the impact of using MAB algorithms to optimize channel selections, on the battery life of a wireless device.
-On the one hand, running a MAB algorithm such as UCB-like algorithms was proven to be useful and can bring significant improvement in terms of successful transmission rates, directly increasing the battery life of the device.
+On the one hand, running a MAB algorithm such as UCB-like algorithms was proven to be useful and could bring significant improvement in terms of successful transmission rates, directly increasing the battery life of the device.
 On the other hand, classical MAB algorithms tend to switch arms a lot of times, especially in the beginning of the learning process, and this induces a lot of dynamical hardware reconfigurations for the wireless device, as selecting a different channel requires a change in the radio hardware used by the device.
 Each hardware reconfiguration costs energy for the device, and quickly-switching algorithms lead to a reduction of the battery life.
 The tradeoff between the two aspects is studied empirically in
@@ -402,7 +410,9 @@ For example, proof-of-concepts like \cite{kumar2016two} have proven the capabili
 %
 Some analysis on real radio measurements made for HF ionospheric channels have also proven that solutions based on MAB learning are appropriate, and solve efficiently this kind of decision-making problems on real-world wireless signals \cite{Melian15}.
 %
-Since $2017$, S. Darak, and his team at IIIT Delhi in India, have actively worked in the research on cognitive radio using multi-armed bandits, and some of their recent works are illustrated with real-world demo using USRP and the MATLAB/Simulink system
+Since $2017$, S. Darak, and his team at IIIT Delhi in India, have actively worked in the research on cognitive radio using multi-armed bandits.
+Inheriting from his work with the SCEE team,
+some of their recent works are also illustrated with real-world demo using USRP and the MATLAB/Simulink system
 \cite{KumarYadav2018,SawantKumar2018,JoshiKumar2018}.
 %
 For more details on the state of research on Cognitive Radio, we refer to the surveys \cite{garhwal2012survey,marinho2012cognitive}.
@@ -413,29 +423,34 @@ For more details on the state of research on Cognitive Radio, we refer to the su
 \paragraph{Limitations and specifities of IoT networks.}
 %
 The aforementioned literature have essentially shown that MAB algorithms can be applied with success for the OSA problem.
-But if we consider CR-ready devices that cannot perform sensing, such as low-cost and low energy-consumption end-devices designed for the future Internet of Things networks, the MAB model that uses sensing to detect PU in the OSA case can no longer be applied.
+However, if we consider CR-ready devices that cannot perform sensing, such as low-cost and low energy-consumption end-devices designed for the future Internet of Things networks, the MAB model that uses sensing to detect PU in the OSA case can no longer be applied.
 Moreover, in most cases, the IoT networks use unlicensed bands, and as such there are no longer a distinction between PU and SU.
+In other words, there is no longer any priority between users in IoT networks.
+%  (no more PU, all are SU).
 %
 The specificities of IoT networks can be listed as follows,
 and we refer to the survey \cite{Centenaro16} for more details.
 \begin{itemize}\tightlist
     \item
-    most IoT networks run in unlicensed bands (no more distinction between PU and SU),
+    we consider here IoT networks that run in unlicensed bands (no more distinction between PU and SU),
     \item
-    most IoT devices are very low-cost devices, with low material and computational capacities,
-    meaning that they are not equipped with any sensing capabilities.
-    However, they are equipped with a transceiver as well as with a receiver,
-    and with low-complexity storage and computation capacities,
+    most IoT devices are very low-cost devices, possibly running on low-quality hardware, and having limited software and power capabilities (\ie, tiny batteries).
+    It means that they even if they are not equipped with particular sensing capabilities,
+    they are equipped with a transmitter as well as with a receiver (Tx and Rx, \ie, a transceiver).
+    and they have low-complexity storage and computation capabilities (\ie, small embedded processors),
     \item
     a single IoT base station will have to handle a very large number of devices,
     and cannot send coordination orders to them in order to optimize the network,
     \item
-    IoT devices have low duty cycles (only a few messages every minute) to very low duty cycles (only a few messages every day).
+    IoT devices have low duty cycles (only a few messages every minute) to very low duty cycles (only a few messages every month).
 \end{itemize}
-\TODOL{FIXME more specificities? Est-ce que je dois mentionner d'autres contraintes }
+
+A central coordination of the devices with their base station is impossible as it would require to communicate continuously with the base station, which violates the two last constraints.
+%
+Moreover, due to both their limited hardware (Rx/Tx), limited computational power and limited battery life, the IoT devices are able to use their received antenna to sense one channel occasionally (typically, for a few time slots after every single up-link message), but they cannot perform spectrum sensing like it is considers for OSA and CR (\ie, at the beginning of a time slot, in a ``listen-before-talk'' scheme).
 
 One could think that in the absence of sensing, Reinforcement Learning is no longer possible, but any real IoT device still receives some information about its environment after some or every transmissions.
-In most IoT standards an up-link message sent to a base station is usually followed by a down-link message sent back by the base station, to indicate if the up-link message was successfully received and understood.
+In most IoT standards an up-link message sent to a base station can be followed by a down-link message sent back by the base station, to indicate if the up-link message was successfully received and understood.
 %
 By using this feedback, that consists in an \emph{acknowledgement} (\Ack) message received shortly after every successful transmission, or in an absence of \Ack{} after a failed transmission, it is possible that an IoT end-device can also use a well-designed RL algorithm in order to optimize its communications.
 %
