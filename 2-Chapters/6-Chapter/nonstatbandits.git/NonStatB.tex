@@ -1628,7 +1628,7 @@ Consequently, from now on we only report results for \klUCB.
 
 
 % -----------------------------------------------------------------
-\paragraph{Results.}
+\paragraph{Results on the entire benchmark.}
 \label{sub:6:NumericalResults}
 
 % \subsubsection{Results in terms of final regret $R_T$}
@@ -1712,11 +1712,11 @@ thus the experiments confirm that an efficient bandit algorithm (\eg, \klUCB) co
 \label{subsub:6:regretPlots}
 
 We show below on Figure~\ref{fig:6:meanRegretPb1} and additional in Appendix~\ref{app:6:moreFigures} the simulation results for the five problems.
-The results in terms of mean regret $R_T$ are given above in Tables~\ref{table:6:totalResults1} and \ref{table:6:totalResults2}, but it is also interesting to observe two plots for each experiment.
+The results of Tables~\ref{table:6:totalResults1} and \ref{table:6:totalResults2} focus on the value of $R_T$ at the end of each bandit game, but it is also interesting to observe two plots for each experiment.
 %
-First, we show the mean regret as a function of time (\ie, $R_t$ for $1 \leq t \leq T$), for $9$ of the considered algorithms (as they are outperformed by the others, \ExpThreeS{} and Discounted-\klUCB{} are not included to avoid clutter).
+First, we show the mean regret as a function of time (\ie, $R_t$ for $t \in [T]$), for $9$ of the considered algorithms (as they are outperformed by the others, \ExpThreeS{} and Discounted-\klUCB{} are not included in order to avoid clutter).
 %
-Efficient stationary algorithms, like TS and \klUCB, typically suffer a linear regret after a change on the optimal arm changes if they had ``too'' many samples before the change-points (\eg, on Figure~\ref{fig:6:meanRegretPb1} and even more on Figures~\ref{fig:6:meanRegretPb4} and \ref{fig:6:meanRegretPb5}).
+Efficient stationary algorithms, like TS and \klUCB, typically suffer a linear regret after a change on the optimal arm, if they had ``too'' many samples before the change-points (\eg, on Figure~\ref{fig:6:meanRegretPb1} and even more on Figures~\ref{fig:6:meanRegretPb4} and \ref{fig:6:meanRegretPb5}).
 This illustrates the conjecture that classical algorithms can suffer linear regret even on simple piece-wise stationary problems.
 
 
@@ -1735,7 +1735,7 @@ This illustrates the conjecture that classical algorithms can suffer linear regr
     \label{fig:6:meanRegretPb2}
 \end{figure}
 
-On simple problems, like problem $1$, all the algorithms being designed for piece-wise stationary environments perform similarly, but as soon as the gaps are smaller or there are more changes, we clearly observe that our approach \GLRklUCB{} can outperform the two other actively adaptive algorithms \CUSUMklUCB{} and \MklUCB{} (\eg, on Figure~\ref{fig:6:meanRegretPb2}), and performs much better than passively adaptive algorithms DTS and SW-\klUCB{}  (\eg, on Figure~\ref{fig:6:meanRegretPb3}).
+On simple problems, like problem $1$, all the algorithms being designed for piece-wise stationary environments perform similarly, but as soon as the gaps are smaller or there are more changes, we observe that our approach \GLRklUCB{} can outperform the two other actively adaptive algorithms \CUSUMklUCB{} and \MklUCB{} (\eg, on Figure~\ref{fig:6:meanRegretPb2}), and performs much better than passively adaptive algorithms DTS and SW-\klUCB{}  (\eg, on Figure~\ref{fig:6:meanRegretPb3}).
 % Our approach, with the two options of \textbf{Local} or \textbf{Global} restarts, performs very closely to the oracle for problem $4$.
 Our approach is the algorithm which performs the closer to the oracle for problem $4$.
 
@@ -1744,7 +1744,9 @@ Indeed the oracle policy is suboptimal as it restarts as soon as one arm change 
 We note that, sadly, all actively adaptive policies fail to outperform stationary policies on such hard problems, because they do not observe enough rewards from each arm between two restarts (\ie, the Assumptions~\ref{ass:6:LongPeriodsGlobal} and \ref{ass:6:LongPeriods} for the two Theorems~\ref{thm:6:mainRegretBoundGlobal} and \ref{thm:6:mainRegretBound} are not satisfied).
 We can also verify that the two options, \textbf{Local} and \textbf{Global} restart, for \GLRklUCB, give close results, and that the \textbf{Local} option is always better.
 
-We also show the empirical distribution of the regret $R_T$, on Figure~\ref{fig:6:histogramRegretPb1}. It shows that all algorithms have a rather small variance on their regret, except Thompson Sampling which has a large tail due to its large mean regret on this (easy) non-stationary problems.
+We also show the empirical distribution of the regret $R_T$, on Figure~\ref{fig:6:histogramRegretPb1} below.
+It shows that algorithms efficient in terms of regret also have a small variance on their regret.
+% , except Thompson Sampling which has a large tail due to its large mean regret on this (easy) non-stationary problems.
 
 % -----------------------------------------------------------------
 \begin{figure}[h!]  % [htbp]
