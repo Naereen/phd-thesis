@@ -93,20 +93,24 @@
 	% \input{4-Listofpublications/Listofpublications}
 	% **************** Listes *****************
 	% \emptycolorpage{yellow!40}
-	\begin{spacing}{1.00}
-	{
+	\begin{spacing}{1.00}%
+	{% group, to change the \cleardoublepage
 		% FIXME force to not have a blank (even numbered) page between lists
 		% https://tex.stackexchange.com/questions/69184/remove-blank-page-between-list-of-figures-and-list-of-tables#69218
-		\let\cleardoublepage\clearpage
+		\let\cleardoublepage\clearpage%
 		\listoffigures
-		\let\cleardoublepage\clearpage
+		\let\cleardoublepage\clearpage%
 		\listofalgorithms
-		\let\cleardoublepage\clearpage
+		\let\cleardoublepage\clearpage%
 			\addcontentsline{toc}{chapter}{List of Algorithms}
-		\let\cleardoublepage\clearpage
-		\listoflistings
-			\addcontentsline{toc}{chapter}{List of Listings}
-		\let\cleardoublepage\clearpage
+		\let\cleardoublepage\clearpage%
+		% \vspace*{-50pt}%WARNING
+		\begin{spacing}{1.50}%
+			% \vspace*{-50pt}%WARNING
+			\listoflistings
+		\end{spacing}
+			\addcontentsline{toc}{chapter}{List of Code Examples}
+		\let\cleardoublepage\clearpage%
 		\listoftables
 	}
 	\end{spacing}
