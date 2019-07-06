@@ -603,10 +603,9 @@ The following result shows that term \ref{eq:5:term2} can be related to the numb
   Recall that we want to upper bound
   $ \ref{eq:5:term2} : = \sum_{k \in \Mbest} (\mu_k - \mu_{M*}) \left(T - \E_{\mu}[N_k(T)]\right)$.
   First, we observe that, for all $k\in \Mbest$,
-  \begin{eqnarray*}
-    T - \E_{\mu}[N_k(T)] & \leq T - \E_{\mu}\left[\sum_{t=1}^T \indic(\exists j : A^j(t) = k)\right] \\
-    & = \E_{\mu}\left[\sum_{t=1}^T \indic(\forall j, A_j(t) \neq k)\right] = \E_{\mu}\left[\sum_{t=1}^T \indic(k \notin \widehat{S}_t)\right],
-  \end{eqnarray*}
+  % \begin{eqnarray*}
+    $T - \E_{\mu}[N_k(T)] \leq T - \E_{\mu}\left[\sum_{t=1}^T \indic(\exists j : A^j(t) = k)\right] = \E_{\mu}\left[\sum_{t=1}^T \indic(\forall j, A_j(t) \neq k)\right] = \E_{\mu}\left[\sum_{t=1}^T \indic(k \notin \widehat{S}_t)\right]$,
+  % \end{eqnarray*}
   where we denote by $\widehat{S}_t = \{A^j(t), j \in [M]\}$ the set of selected arms at time $t$ (with no repetition). With this notation one can write
   \begin{eqnarray*}
   \ref{eq:5:term2} & \leq & (\mu_1 - \mu_{M^*})  \sum_{k \in \Mbest} \left(T - \E_{\mu}[N_k(T)]\right) \leq  (\mu_1 - \mu_{M^*})  \E_{\mu}\left[\sum_{k \in \Mbest} \sum_{t = 1}^T \indic(k \notin \widehat{S}_t)\right] \\
@@ -743,7 +742,7 @@ then $\widehat{\mu}_k^j(t) \eqdef S_k^j(t)/N_k^j(t)$ (if $N_k^j(t)\neq 0$) is th
       &\text{for } \klUCB,
   \end{cases}
 \end{equation}
-where $f(t)$ is some \emph{exploration function}, usually taken to be $\log(t)$ in practice, and slightly larger in theory, which ensures that  $\Pr(U_k^j(t) \geq \mu_k) \gtrsim 1 - 1/t$ (see \cite{KLUCBJournal}).
+where $f(t)$ is some \emph{exploration function}, usually taken to be $\log(t)$ in practice, and slightly larger in theory (\eg, $f(t)=\log(t)+3\log(\log(t))$), which ensures that  $\Pr(U_k^j(t) \geq \mu_k) \gtrsim 1 - 1/t$ (see \cite{KLUCBJournal}).
 A classical (single-player) UCB algorithm aims at the arm with largest index, as presented above in Section~\ref{sub:2:IndexPolicies}.
 However, if each of the $M$ players selects the arm with largest UCB, all the players will end up colliding most of the time on the best arm.
 To circumvent this problem, several coordination mechanisms have emerged, that rely on \emph{ordering} the indices and targeting \emph{one of} the $M$-best indices.
@@ -962,9 +961,9 @@ We now focus on obtaining positive results for the algorithms we proposed in Sec
 Section~\ref{sub:5:UpperBoundSelections} gives
 an asymptotically optimal analysis of the expected number of sub-optimal draws
 for our two proposals \RandTopM{} and \MCTopM{} as well as for \rhoRand{}, when they are combined with \klUCB{} indices,
-and then we restrict to the most efficient algorithm \MCTopM, by proving in Section~\ref{sub:5:UpperBoundCollisions} that the number of collisions are logarithmic, and hence the regret of \MCTopM{} is also logarithmic.
+and then we restrict to the most efficient algorithm \MCTopM, by proving in Section~\ref{sub:5:UpperBoundCollisions} that it achieves a logarithmic number of collisions and regret.
 %
-Finally, Section~\ref{sub:5:SelfishFails} shortly discusses a disappointing result regarding \Selfish.
+Finally, Section~\ref{sub:5:SelfishFails} shortly discusses a negative result regarding \Selfish.
 %  with more insights provided in Appendix~\ref{app:5:SelfishFails}.
 
 
@@ -1055,12 +1054,14 @@ It is important to notice that the leading constant in front of $\log(T)$ is the
   \begin{lemma}\label{lem:5:Fact2KLUCB}
   \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
     For any arms $k$ and $k'$ such that $\mu_{k'} > \mu_{k}$, if $U_k^{j}(t)$ is the kl-UCB index with exploration function $f(t)$,
-    \begin{small} % XXX
-      \begin{align*}
-        &\sum_{t=1}^T\Pr_{\bm{\mu}} \left( A^j(t) = k, \mu_{k'} \leq U_k^{j}(t) \right) & \leq  \frac{f(T)}{\kl(\mu_k,\mu_{k'})}
-        + \sqrt{2\pi} \sqrt{\frac{\kl'(\mu_k,\mu_{k'})^2}{\kl(\mu_k,\mu_{k'})^3}}\sqrt{f(T)} + 2\left(\frac{\kl'(\mu_k,\mu_{k'})}{\kl(\mu_k,\mu_{k'})}\right)^2 + 1.
-      \end{align*}
-    \end{small} % XXX
+    % \begin{small} % XXX
+      \begin{align}
+        \sum_{t=1}^T\Pr_{\bm{\mu}} \left( A^j(t) = k, \mu_{k'} \leq U_k^{j}(t) \right)
+        & \leq  \frac{f(T)}{\kl(\mu_k,\mu_{k'})}
+        + \sqrt{2\pi} \sqrt{\frac{\kl'(\mu_k,\mu_{k'})^2}{\kl(\mu_k,\mu_{k'})^3}}\sqrt{f(T)} \nonumber\\
+        & + 2\left(\frac{\kl'(\mu_k,\mu_{k'})}{\kl(\mu_k,\mu_{k'})}\right)^2 + 1.
+      \end{align}
+    % \end{small} % XXX
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
@@ -1107,11 +1108,12 @@ happen a logarithmic number of times. The proof of this result is given below.
   \RandTopM- or \MCTopM-\klUCB,
   and any arm $k$,
   it holds that
-  \begin{equation*}
-    \sum_{t=1}^T
-    \Pr\left(A^j(t)=k, k\notin \TopM(t)\right)
-    = \left(\sum_{k', \mu_{k'} < \mu_k}\frac{1}{\kl(\mu_k,\mu_{k'})} + \sum_{k', \mu_{k'} > \mu_k}\frac{1}{\kl(\mu_{k'},\mu_{k})}\right) \log(T) + o(\log(T)).
-  \end{equation*}
+  \begin{align}
+    \sum_{t=1}^T \Pr\left(A^j(t)=k, k\notin \TopM(t)\right) =
+    & \left( \sum_{k', \mu_{k'} < \mu_k}\frac{1}{\kl(\mu_k,\mu_{k'})} \right) \log(T) \nonumber\\
+    & \left( \sum_{k', \mu_{k'} > \mu_k}\frac{1}{\kl(\mu_{k'},\mu_{k})}\right ) \log(T)
+    + o(\log(T)).
+  \end{align}
 \end{leftbar}  % XXX leftbar lemmabar, comment if needed
 \end{lemma}
 
@@ -1155,7 +1157,7 @@ happen a logarithmic number of times. The proof of this result is given below.
 % -----------------------------------------------------------------
 \subsection{Regret analysis of \MCTopM{} with \klUCB{} indexes}\label{sub:5:UpperBoundCollisions}
 
-For the proposal \MCTopM, we are furthermore able to obtain a logarithmic regret upper bound, by proposing an original approach to control the number of collisions under this algorithm.
+For \MCTopM, we are furthermore able to obtain a logarithmic regret upper bound, by proposing an original approach to control the number of collisions under this algorithm.
 First, we can bound the number of collisions by the number of collisions for players not yet ``fixed on their arms'' ($\overline{s^j(t)}$),
 that we can then bound by the number of changes of arms.
 
@@ -1179,8 +1181,8 @@ that we can then bound by the number of changes of arms.
 Note that this bound is in $\bigO{M^3}$,
 which significantly improves over the $\bigO{M{2M-1 \choose M}}$ bound, proven by \cite{Anandkumar11} for \rhoRand.
 The obtained bound is worse than the $\bigO{M^2}$ proven by \cite{Rosenski16} for \MusicalChair{}. %, due to our trick of focusing on collisions for non-sitted players.
-However, unlike \MusicalChair, our algorithm does not need any prior knowledge on the problem complexity.
-The \MusicalChair{} algorithm is indeed not very satisfying from an applicative point of view, as it requires a prior knowledge of $\mu^*_{M}-\mu^*_{M+1}$.
+However, unlike \MusicalChair, our algorithm does not need any prior knowledge on the problem complexity,
+at it is indeed not very satisfying from an applicative point of view to require a prior knowledge of $\mu^*_{M}-\mu^*_{M+1}$.
 
 \begin{smallproof}
   A key feature of both the \RandTopM{} and \MCTopM{} algorithms is Lemma~\ref{lem:5:elementaryLemma_RandTopM_MCTopM}, that states that the probability of switching from some arm because this arm leaves $\TopM(t)$ is small.
@@ -1390,9 +1392,10 @@ another consequence of our proof is that we have also bounded
 the (expected) number of \emph{switches of arms}, $\mathrm{SC}^{\cA}(T) = \sum_{t=1}^{T-1} \Pr(A^j(t+1) \neq A^j(t))$.
 %
 We controlled the total number of transitions $(2)$, $(3)$ and $(5)$ (see Figure~\ref{fig:5:StateMachineAlgorithm_MCTopM}),
-which are the only transitions when a player can switch from arm $k$ to arm $k'\neq k$.
-Thus, the total number of arm switches is also proven to be logarithmic, if all players uses the \MCTopM-\klUCB{} algorithm.
-This additional guarantee was never clearly stated for previous state-of-the-art works, like \rhoRand.
+which are the only transitions when a player can change its arm.
+%  switch from arm $k$ to arm $k'\neq k$.
+Thus, the total number of arm switches is also logarithmic, if the $M$ players use \MCTopM-\klUCB.
+This additional guarantee was never clearly stated for previous works, like \rhoRand.
 %
 Even though minimizing the number of arms switching was not a goal,
 this guarantee is appealing, in particular for Cognitive Radio applications,
@@ -1686,7 +1689,7 @@ We also include the \emph{asymptotic} lower bound from Theorem~\ref{thm:5:Better
   % \end{subfigure}
   % % ~
   % \begin{subfigure}[!h]{0.49\textwidth}
-    \includegraphics[width=0.95\textwidth]{MP__K9_M6_T5000_N500__4_algos/all_RegretCentralized____env1-1_8318947830261751207.pdf}
+    \includegraphics[width=1.05\textwidth]{MP__K9_M6_T5000_N500__4_algos/all_RegretCentralized____env1-1_8318947830261751207.pdf}
   % \end{subfigure}
   \caption[Regret for $M=6$ players, $K=9$ arms, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled.]{Regret for $M=6$ players, $K=9$ arms, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled in $[0,1]^K$. \textcolor{blue}{\rhoRand{} (top blue)} is outperformed by the other algorithms (and the gain increases with $M$). \textcolor{gold}{\MCTopM{} (bottom yellow)} outperforms all the other algorithms in most cases.}
   % \label{fig:5:MP__K9_M2-6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems}
