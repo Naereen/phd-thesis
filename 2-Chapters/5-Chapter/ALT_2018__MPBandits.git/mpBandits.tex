@@ -72,8 +72,9 @@ and a \emph{downlink} phase (during which it waits for an \Ack{} from the gatewa
 In this first model, the binary reward is $1$ only if the channel was sensed to be free of background traffic \textbf{and} if \Ack{} was received, and the device has access to both information.
 We present two algorithms, \RandTopM{} and \MCTopM, based on the combination of an efficient MAB index policy (we chose \klUCB) and a smart orthogonalization procedure, based on a random hoping procedure called Musical Chair.
 Like in previous works, we consider the centralized system regret (multi-players regret), or simply referred to as regret.
-We start by showing an improved asymptotical regret lower-bound for any algorithm of a certain class, including previous solutions such as \rhoRand{} and our two solutions.
-We then analyze the \MCTopM{} algorithm and we show that its regret upper-bound is logarithmic and order-optimal, improving over the previous state-of-the-art.
+We start by showing an improved asymptotical regret lower-bound for any algorithm of a certain class.
+% , including previous solutions such as \rhoRand{} and our two solutions.
+We then analyze the \MCTopM{} algorithm and we show that its regret upper-bound is logarithmic, improving over the previous state-of-the-art.
 %  with a regret bounded by $\bigO{\log(T)}$ for a game at horizon $T$.
 We also present extensive numerical simulations that show that our proposal outperforms all previous solutions and is much more efficient in this easier model of sensing feedback with a fixed and known number of players $M$ accessing $K \geq M$ channels.
 
@@ -156,8 +157,9 @@ of horizon $T \geq 2$,
 in which arm $k$ is a Bernoulli distribution with mean $\mu_k\in[0,1]$.
 We denote $(Y_{k,t})_{t\in[T]}$ the \iid{} (binary) \emph{reward stream} for arm $k$, that satisfies $\Pr(Y_{k,t}=1) = \mu_k$ and that is independent from the other rewards streams.
 
-\textbf{Only Bernoulli.}
-However we mention that our lower bound and all our algorithms (and their analysis) can be easily extended to one-dimensional exponential families (just like for the \klUCB{} algorithm of \cite{KLUCBJournal}). For simplicity, we focus on the Bernoulli case, that is also the most relevant for Cognitive Radio problems, by considering channel availability.
+\textbf{Generalization to other distributions.}
+However we mention that our lower bound and all our algorithms (and their analysis) could be extended to one-dimensional exponential families (just like for the \klUCB{} algorithm of \cite{KLUCBJournal}).
+For simplicity, we focus on the Bernoulli case, that is also the most relevant for Cognitive Radio problems, by considering channels' availabilities as a source of binary rewards.
 
 
 % stochastic bandit model in which each arm distribution is assumed to belong to a one-dimensional canonical exponential family. That is, arm $k$ has a density with respect to a reference measure that takes the form
@@ -221,7 +223,7 @@ But for Bernoulli distributions, one may consider the following three observatio
     with a device from the background traffic $(Y_{A^j(t),t}=0)$,
     or to a collision with one of the others players ($C^j(t)$).
     However, the sensing and collision information are censored.
-    Recently, our work presented in Chapter~\ref{chapter:4} \cite{Bonnefoi17} presented the first (bandit-based) algorithmic solutions under this (harder) feedback model, in a slightly different setup, more suited to large scale IoT applications. As explained above, this third model was found to be too general to analyze mathematically, and we did not present theoretical results of convergence in Chapter~\ref{chapter:4}.
+    Recently, our work presented in Chapter~\ref{chapter:4} \cite{Bonnefoi17} presented the first (bandit-based) algorithmic solutions under this (harder) feedback model, in a slightly different setup, more suited to large scale IoT applications. As explained above, this third model was found to be too general to analyze mathematically, and we did not present theoretical results of convergence of the algorithms considered in Chapter~\ref{chapter:4}.
     %\footnote{\cite{Bonnefoi17} considers a different setting, more suited for large-scale IoT networks, and a future work will be to extend our work to this setting with more than $K$ players but small probability of activations.}.
 \end{itemize}
 
@@ -239,7 +241,7 @@ More formally, $A^j(t)$ is assumed to be $\cF^j_{t-1}$-measurable.
   Similarly, \Mworst{} denotes the set of indices of the $K-M$ arms with smallest means (\emph{worst arms}),
   $[K] \setminus \Mbest$.
 
-  Note that they are both uniquely defined if $\mu_M^* > \mu_{M+1}^*$.
+  Note that they are both uniquely defined whenever $\mu_M^* > \mu_{M+1}^*$.
 \end{leftbar}  % XXX leftbar defnbar, comment if needed
 \end{definition}
 
@@ -274,10 +276,12 @@ In this section, we provide a useful decomposition of the regret (Lemma~\ref{lem
   \textbf{\textcolor{red}{Warning}.}
   %
   The regret lower bound that we gave in \cite{Besson2018ALT} is not applicable to any algorithm,
-  as it was discovered by V. Boursier and E. Perchet, as they explain in Section~2.4 in \cite{BoursierPerchet18}.
-  The proof we gave in the Appendix of our paper \cite{Besson2018ALT} was wrong in just one step,
-  but the results stated in this section are now correct,
-  thanks to the modifications proposed by E. Kaufmann and A. Mehrabian in Appendix~E of \cite{KaufmannAbbas19}.
+  as it was discovered by V. Boursier and E. Perchet.
+  As they explain in Section~2.4 in \cite{BoursierPerchet18},
+  the proof we gave in the Appendix of our paper \cite{Besson2018ALT} was wrong in just one step.
+  The results stated in this section are now correct,
+  thanks to the modifications that we added here, that is, to consider this information term $\cI_{\bm{\mu},\bm{\lambda}}(\cA_j,T)$.
+  % thanks to the modifications proposed by E. Kaufmann and A. Mehrabian in Appendix~E of \cite{KaufmannAbbas19}.
   The cost for this modification is to restrict the lower-bound to a smaller class of algorithms, which \emph{should} contain \RhoRand, \RandTopM{} and \MCTopM, but not the two algorithms proposed SIC-MMAB from \cite{BoursierPerchet18} and Multiplayer Explore-then-Commit (M-ETC) from \cite{KaufmannAbbas19}.
   Proving that the proposed algorithms are in this class is left as an open question.
 \end{leftbar}  % XXX leftbar warningbar, comment if needed
@@ -440,8 +444,8 @@ The Figure~6 in Appendix~F of \cite{Besson2018ALT} illustrates two cases of $M<K
 \label{sub:5:betterLowerBound}
 
 Similarly to what we present above in Section~\ref{sec:2:lowerUpperBoundsRegret},
-we use the Kullback-Leibler divergence to express this lower bound.
-We remind that $\kl(x,y) \eqdef x\log(x/y) + (1-x)\log((1-x)/(1-y))$ is the KL divergence between the Bernoulli distributions of means $x$ and $y$.
+we use the Kullback-Leibler divergence $\kl$ to express this lower bound.
+% We remind that $\kl(x,y) \eqdef x\log(x/y) + (1-x)\log((1-x)/(1-y))$ is the KL divergence between the Bernoulli distributions of means $x$ and $y$.
 %
 We first introduce the assumption under which we derive a regret lower bound, that generalizes the assumption of uniform efficiency given in Definition~\ref{def:2:uniformlyEfficientAlgorithm},
 a classical assumption made by \cite{LaiRobbins85} in single-player bandit models.
@@ -516,7 +520,8 @@ Then we introduce the \emph{collision information term} as:
 
 For a \emph{decentralized strategy} $\cA$ that has access to the sensing information (\ie, ruling out model \modeltrois), and satisfies $\cI_{\bm{\mu},\bm{\lambda}}(\cA_j,T) = \smallO{\log(T)}$,
 we now state a problem-dependent asymptotic lower bound on the number of sub-optimal arms selections.
-The additional hypothesis on $\cI_{\bm{\mu},\bm{\lambda}}(\cA,T)$ essentially says that ``the collisions do not bring too much information on the arm means'', as stated in \cite{KaufmannAbbas19}.
+The additional hypothesis on $\cI_{\bm{\mu},\bm{\lambda}}(\cA,T)$ essentially says that ``the collisions do not bring too much information on the arm means''.
+% as stated in \cite{KaufmannAbbas19}.
 The theorem stated below is proven in the Appendix of \cite{Besson2018ALT},
 % \ref{proof:5:BetterLowerBound},
 and it also yields an asymptotic logarithmic lower bound on the regret.
@@ -541,8 +546,7 @@ and it also yields an asymptotic logarithmic lower bound on the regret.
 \end{theorem}
 
 
-Observe that the regret lower bound \eqref{eq:5:ourLowerBound} is tighter than the state-of-the-art lower bound in this setup
-given by \cite{Zhao10}, that states that
+Observe that the regret lower bound \eqref{eq:5:ourLowerBound} is tighter than the state-of-the-art lower bound in this setup, given by \cite{Zhao10}, that states that
 \begin{equation}\label{eq:5:Zhao10LowerBound}
   \mathop{\lim\inf}\limits_{T \to +\infty} \frac{R_T^{\cA}(\boldsymbol{\mu}, M)}{\log(T)}
   \geq \sum_{k \in \Mworst} \left( \sum_{j=1}^{M} \frac{(\mu_M^* -  \mu_k)}{\kl(\mu_k, \mu_{j}^*)} \right),
@@ -552,6 +556,8 @@ as for every $k \in \Mworst$ and $j \in [M]$, $\kl(\mu_k, \mu_j^*) \geq \kl(\mu_
 %
 It is worth mentioning that \cite{Zhao10} considered the more general assumption for $\cA$ that there exists some numbers $(a_{k}^j)$ such that $a_{k}^j T - \E_{\mu}[N_k^j(T)] = o(T^\alpha)$ whereas in Definition~\ref{def:5:DecentralizedUniformEfficiency} we make the choice $a_{k}^j = 1/M$.
 Our result could be extended to this case, but we chose to keep the notation simple and focus on \emph{fair allocation} of the optimal arms between players.
+%
+We also highlight that the proof of the bound of \cite{Zhao10} contained the same mistake as our proof in \cite{Besson2018ALT}, but by using the same hypothesis and modification in the proof, it is applicable to the same class of algorithms as our Theorem~\ref{thm:5:BetterLowerBound} (\ie, algorithms $\cA$ such that $\cI_{\bm{\mu},\bm{\lambda}}(\cA_j,T) = \smallO{\log(T)}$).
 
 
 \paragraph{Price of decentralized learning.}
@@ -561,11 +567,13 @@ However, to establish this regret bound, we lower bounded the number of collisio
 %
 Indeed, for an algorithm to attain the lower bound \eqref{eq:5:ourLowerBound}, the number of selections of each sub-optimal arm should match the lower bound \eqref{eq:5:LBDraws} \emph{and} term \ref{eq:5:term2} and term \ref{eq:5:term3} in the regret decomposition of Lemma~\ref{lem:5:DecompositionRegret} should be negligible compared to  $\log(T)$.
 
-To the best of the authors' knowledge, no algorithm has been shown to experience only $o(\log(T))$ collisions so far,
+To the best of the authors' knowledge, no algorithm has been shown to experience only $o(\log(T))$ collisions in expectation so far,
 for every $M \in \{2,\dots,K\}$ and $\boldsymbol{\mu} \in \cP_M$.
+The best candidate would be the \textsc{Sic-MMAB} algorithm \cite{BoursierPerchet18}, whose number of collisions is proven to be $\bigO{(\log(T))^2} = o(\log(T))$ in high probability (Lemma~8), but not $o(\log(T))$ in expectation.
 %
-Since our article \cite{Besson2018ALT}, we kept as a future work the following question.
-A lower bound on the minimal number of collisions experienced by any strongly uniformly efficient decentralized algorithm would thus be a nice complement to our Theorem~\ref{thm:5:BetterLowerBound}.
+Since our article \cite{Besson2018ALT}, we kept as a future work the question
+of finding a lower bound on the minimal number of collisions experienced by any strongly uniformly efficient decentralized algorithm.
+Such result would thus be a nice complement to our Theorem~\ref{thm:5:BetterLowerBound}.
 
 
 % -----------------------------------------------------------------
@@ -630,8 +638,8 @@ while ensuring that the number of sub-optimal selections is matching the lower b
 
 
 Regardless of whether sensing is or not possible, we start by presenting formally in Section~\ref{sub:5:Selfish} the \Selfish{} heuristic, as it was used by all the IoT devices in the first model presented in Chapter~\ref{chapter:4}.
-It does not use an orthogonalization strategy as the collisions are directly accounted for in the \UCB-like indices that are used by each device to select its channel.
-\Selfish{} can also be used under observation model \modeltrois{} --\emph{without sensing}--, and without the knowledge of $M$.
+It does not use an orthogonalization strategy as the collisions are directly accounted for in the \UCB-like indices that are used by each device to select its channel (\ie, by each player to select its arm, in the bandit vocabulary).
+\Selfish{} can also be used under observation model \modeltrois{} --\emph{without sensing}, and without the knowledge of $M$.
 It was conjectured in \cite{Besson2018ALT} that \Selfish{} can suffer linear regret, and later confirmed in \cite{LugosiMehrabian18,BoursierPerchet18}.
 %
 When sensing is possible, that is under observation models \modelun{} and \modeldeux, most existing strategies build on a \emph{single-player bandit algorithm} (usually an \emph{index policy}) that relies on the sensing information, together with an \emph{orthogonalization strategy} to deal with collisions.
@@ -639,7 +647,7 @@ Following this approach, we introduce two new algorithms, \RandTopM{} and \MCTop
 
 
 \begin{leftbar}[warningbar]  % XXX leftbar warningbar, comment if needed
-  \textcolor{red}{\textbf{Warning.}}
+  \textcolor{red}{\textbf{Remark.}}
   We want to strengthen the fact that in all the proposed algorithms,
   the players do \emph{not} know their numbers $j\in[M]$,
   and they do not need to know it to achieve low regret.
@@ -1438,10 +1446,10 @@ to be uniformly efficient, as $\log(T)$ is $\smallO{T^{\alpha}}$ for any $\alpha
 %
 And as justified after Definition~\ref{def:5:DecentralizedUniformEfficiency} (page~\pageref{def:5:DecentralizedUniformEfficiency}), uniform efficiency and invariance under permutations of the users implies strong uniform efficiency, and so \MCTopM{} satisfies Definition~\ref{def:5:DecentralizedUniformEfficiency}.
 %
-This is a sanity check: the lower-bound of
-Theorem~\ref{thm:5:BetterLowerBound} indeed applies to our algorithm \MCTopM,
-and finally this highlights that it is order-optimal for the regret, in the sense that it matches the lower-bound up-to a multiplicative constant,
-and optimal for the term \ref{eq:5:term1}.
+% This is a sanity check: the lower-bound of
+% Theorem~\ref{thm:5:BetterLowerBound} indeed applies to our algorithm \MCTopM,
+% and finally this highlights that it is order-optimal for the regret, in the sense that it matches the lower-bound up-to a multiplicative constant,
+% and optimal for the term \ref{eq:5:term1}.
 
 
 % -----------------------------------------------------------------
