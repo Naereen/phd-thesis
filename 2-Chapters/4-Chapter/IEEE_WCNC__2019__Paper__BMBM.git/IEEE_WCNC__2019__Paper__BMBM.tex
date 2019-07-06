@@ -111,7 +111,7 @@ Indeed, the objective of each device is to \emph{maximize its battery life by mi
 %
 We address the problem of channel selection taking into account the described Markov model for the retransmissions of end-devices.
 % It motivates our present work for which we consider the retransmissions in the analysis of MAB algorithms.
-It motivates our present work for which we consider the number of retransmissions, carried out by each device.
+It motivates this section for which we consider the number of retransmissions, carried out by each device.
 % to address several MAB algorithms.
 %
 
@@ -125,7 +125,7 @@ When such an IoT device experiments a collision, it goes in a back-off state to 
 If all devices remain in the same channel for retransmissions, it is a well-known result that it could result in a sequence of successive collisions with the same packets' devices that previously collided.
 %
 Thus, it seems interesting to consider in the decision making policy the possibility for a device to retransmit in a different channel.
-One of our motivations to develop new MAB algorithms for our problem is this option of using a different communication channel between the first transmission and the next retransmissions.
+One of our motivations to develop new MAB algorithms for the considered problem is this option of using a different communication channel between the first transmission and the next retransmissions.
 
 By considering this possibility, the device will have to learn more, thus, we expect the learning time to be longer, but it could be possible that the final performance gain increases too, in terms of network performance.
 We present in Section~\ref{sub:43:numExp} an analysis to check this performance gain, for various heuristics based on the \UCB{} algorithm.
@@ -163,7 +163,7 @@ We consider $N > 0$ active devices following the same policy.
 %
 %{\color{red}Considering one device and a channel, we denote $x_t^i$ the transmission probability for the $i+1$ time, with $i\in \llbracket 0, \mathrm{MaxBackOff}-1 \rrbracket$, in a given time slot $t$}
 
-We assume to be in the steady state \cite{Norris98}, in our Markov chain model depicted in Figure~\ref{fig:43:Markov_model}, and thus the probabilities no longer depend on the slot number $t$ (\ie, $\forall t, x_t=x$).
+We assume to be in the steady state \cite{Norris98}, in the Markov chain model depicted in Figure~\ref{fig:43:Markov_model}, and thus the probabilities no longer depend on the slot number $t$ (\ie, $\forall t, x_t=x$).
 Therefore, the probability that this device has a collision at the first transmission is $p_c$, and has the following expression
 %
 \begin{equation}\label{eq:43:1}
@@ -249,7 +249,7 @@ We simulate an ALOHA protocol with a maximum number of retransmissions $\mathrm{
 %
 In Figure~\ref{fig:43:Approximation_m10}, we show the collision probabilities for different number of devices $N$ (from $N=50$ to $N=400$), for both $p_{c}$ and $p_{c1}$.
 %
-We can verify that our approximation is very precise for lower values $p_{c1} \leq 30 \%$ (\ie, \textcolor{red}{red} and \textcolor{gold}{orange} curves are quite close).
+We can verify that the obtained approximation is very precise for lower values $p_{c1} \leq 30 \%$ (\ie, \textcolor{red}{red} and \textcolor{gold}{orange} curves are quite close).
 Moreover, a significant gap between $p_{c1}$ and $p_c$,
 of up-to $10\%$, can be observed,
 which suggests us to resort to MAB algorithms for the channel selection for both the first transmission and next retransmissions.
@@ -279,7 +279,7 @@ We interpret this fact in two different situations:
 	\item
 	On the one hand, in a congested network, when devices suffer from a large probability of collision on their first transmission (\ie, $p_c$ is not so small), then $p_{c1}\simeq p_c$ and so devices cannot really hope to reduce their collision probabilities even if the use a different channel for retransmission.
 	\item
-	On the other hand, if $p_c$ is small enough, \ie, in a network not yet too congested, then our derivation shows that $p_{c1} > p_c$, meaning that the possible gain of retransmitting in a different channel that the one used for the first transmission can be large, in terms of collision probability (\eg, up-to $10\%$ in this experimental setting).
+	On the other hand, if $p_c$ is small enough, \ie, in a network not yet too congested, then the derivation above shows that $p_{c1} > p_c$, meaning that the possible gain of retransmitting in a different channel that the one used for the first transmission can be large, in terms of collision probability (\eg, up-to $10\%$ in this experimental setting).
 	In other words, when learning can be useful (small $p_c$), learning to retransmit in a different channel can have a large impact on the global collision rate,
 	thus justifying our approach.
 \end{itemize}
@@ -536,7 +536,7 @@ Each of these algorithms are denoted using the subscript $({}^{j})$, for $j\in[K
 % \end{small} % XXX remove if needed
 
 Although, this approach increases the complexity and storage requirements (now, of order $\mathcal{O}(K^2)$).
-For our LPWA networks of interest, such as LoRaWAN, the cost of its implementation is still affordable, since a small number of channels is used.
+For the LPWA networks of interest, such as LoRaWAN, the cost of its implementation is still affordable, since a small number of channels is used.
 For instance, for $K=4$ channels,
 the memory to store $K+1=5$ algorithms is of the order of the requirements to store one.
 
@@ -641,10 +641,10 @@ It is also worth mentioning that the employment of the same \UCB{} algorithm for
 	\label{fig:43:mainExperiment1}
 \end{figure}
 
-We also consider in our experiment the case of an ALOHA protocol using $\mathrm{MaxBackOff}=5$, and $m=10$, a statistic distribution of the devices about $40\%, 30\%, 20\%, 10\%$ for the four channels, and $N=2000$ IoT devices.
+We also consider in these experiment the case of an ALOHA protocol using $\mathrm{MaxBackOff}=5$, and $m=10$, a statistic distribution of the devices about $40\%, 30\%, 20\%, 10\%$ for the four channels, and $N=2000$ IoT devices.
 The corresponding results are depicted in Figure~\ref{fig:43:mainExperiment2}.
 In this case the successful transmission rate is degraded compared with achieved results in Figure~\ref{fig:43:mainExperiment1}.
-We can explain this by the fact that we are considering in our network more devices, which increases the collision probability.
+We can explain this by the fact that we are considering in this network an increased number of devices, which increases the collision probability.
 It is important to highlight, that the ``Random'' retransmission heuristic shows a poor performance in comparison to the other heuristics, and it can be attributed to the fact that the number of retransmission is increased, and consequently a
 learning approach is able to take advantage of it.
 Furthermore, the ``\UCB'', ``$K$ \UCB'' and ``Delayed \UCB'' heuristics behave similarly to ``Only \UCB'', after a similar convergence time.

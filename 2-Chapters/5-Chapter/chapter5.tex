@@ -98,7 +98,7 @@ These works assume a prior knowledge of $\Delta$, or other measures of the diffi
 
 \paragraph{Two ideas to estimate $M$.}
 
-Some works studied the same model as our model \modeldeux{} ``with sensing'', under the hypothesis that players do not know in the value of $M$.
+Some works studied the same model as model \modeldeux{} ``with sensing'', under the hypothesis that players do not know in the value of $M$.
 As illustrated above, if we consider algorithms building on the same ideas as \RhoRand{} or \MCTopM, it seems mandatory to first build an estimate of the value of $M$ then run the initial algorithm that assumed a perfect knowledge of $M$.
 Two possible directions exist to estimate $M$ on the fly.
 
@@ -168,7 +168,8 @@ Then we compare the \RhoRand, \RandTopM{} and \MCTopM{} algorithms, using \klUCB
 \end{table}
 
 One can observe in Table~\ref{table:5:meanRegretSimulationsEstimatingM} the empirical performances of different algorithms in an example problem, in each case of low, medium and maximum number of players ($M=3,6,9$ for $K=9$ arms).
-The three algorithms \RhoRand, \RandTopM{} and \MCTopM{} all suffer from similar increase on their regret when they have to estimate $M$ on the fly (written ``Estimate $M$'' in red, in Table~\ref{table:5:meanRegretSimulationsEstimatingM}). Our proposals are still much more efficient than \RhoRand{} when using the procedure to estimate $M$ described from \cite{Anandkumar11}.
+The three algorithms \RhoRand, \RandTopM{} and \MCTopM{} all suffer from similar increase on their regret when they have to estimate $M$ on the fly (written ``Estimate $M$'' in red, in Table~\ref{table:5:meanRegretSimulationsEstimatingM}).
+Our proposals are still much more efficient than \RhoRand{} when using the procedure to estimate $M$ described from \cite{Anandkumar11}.
 For the two non-extreme cases ($M=3,6$), the performance drop when having to estimate $M$ is quite large,
 % (on the three algorithms and two cases, about $\times 3.4$),
 and consistent on the different algorithms.
@@ -191,7 +192,7 @@ If the arrival or departures of players is not random, but determined in advance
     R_T^{\text{dyn}} \eqdef \sum_{t=1}^T \sum_{k=1}^{M(t)} \mu^*_{k} - \E\left[ \sum_{t=1}^T \sum_{j=1}^{M(t)} r^j(t) \right].
 \end{equation}
 
-In \cite{Rosenski16}, the authors explain that if the model allows arrival or departures of players at \emph{any time step}, then the game is much harder, and sub-linear regret is most likely un-achievable, if we consider the natural extension of the definition of regret as in our model presented in Section~\ref{sec:5:model} above.
+In \cite{Rosenski16}, the authors explain that if the model allows arrival or departures of players at \emph{any time step}, then the game is much harder, and sub-linear regret is most likely un-achievable, if we consider the natural extension of the definition of regret as in the model presented in Section~\ref{sec:5:model} above.
 But this negative results depends on how arrival of players are modeled:
 if an arriving player has no prior memory of the previous observations, \ie, if it model a new device, then if there is no restriction on the number or frequency of arrival or departures, we can most likely prove that sub-linear regret is not achievable in general.
 A simple but extreme example shows that regret has to be linear for any bandit strategy (in the observation model with sensing).
@@ -300,7 +301,7 @@ We found empirically no difference when using different values of the constant $
 % for T in 10000; do for K in 9; do for N in 4 100; do for M in 3 6 9; do DEBUG=False N_JOBS=4 N=$N K=$K M=$M T=$T make --noFreeSMS moremulti && cp logs/main_multiplayers_more_py3_log.txt logs/main_multiplayers_more_py3_log__K${K}_N${N}_M${M}_T${T}_$(date +"%d-%m-%Y_%H-%M-%S").txt && FreeSMS.py "Done for simulations for $K arms, $M players, T=$T N=$N and lots algorithms for experiments for Chapter 5 of my PhD. Love from Rennes."; done; done; done; done
 
 We give in Table~\ref{table:5:meanRegretSimulationsNoSensing} the mean regret obtained for these different algorithms, and we observe a drastic difference between the unrealistic centralized algorithm, which achieves a very small regret, the heuristic \Selfish-\klUCB{} which achieve small mean regret (but is small to fail in theory and in some instances), and the two other algorithms.
-We were unable to find any bug in our implementation of Improved \MusicalChair{} from \cite{LugosiMehrabian18} and all the different tuning of $c$ (or $g$) explored gave the same disappointing result (linear regret).
+We were unable to find any bug in our implementation of Improved \MusicalChair{} from \cite{LugosiMehrabian18} and all the different tuning of $c$ (or $g$) explored gave the same disappointing result (\ie, linear regret).
 The \textsc{Sic-MMAB} algorithm performs better than the \Selfish{} heuristic for the extreme case of $M=K$, but its large regret in this case shows that the orthogonalization protocol developed by \cite{BoursierPerchet18} is not fast to converge (for illustration, for the same problem for $M=K=9$ for the ``sensing'' case, \MCTopM-\klUCB{} achieves a mean regret of about $40$, two orders of magnitude smaller!).
 %
 Further empirical evaluation would be needed to fully understand the situation, and a first future work would be to either fix our implementation of the algorithm proposed by \cite{LugosiMehrabian18} or propose an efficient modification, and illustrate in some problems that it can indeed achieve sub-linear regret (maybe it does but only for large horizons, even if we did try larger values of $T$ like up-to $T=200000$).
@@ -510,15 +511,16 @@ They prove a regret upper-bound of the order $R_T = \bigO{\log(T)}$, with no spe
 \subsection{Can MAB learning also be used to learn the rank for \RhoRand{} ?}
 \label{sub:5:USRPdemos}
 
-Similarly to our demonstration of MAB learning in an IoT network that we presented in the previous Chapter~\ref{chapter:4} in Section~\ref{sec:4:gnuradio},
-we list here some related works, dating back from $2016$, who proposed a similar approach for OSA.
-All the similar works that we are aware of also used USRP boards, and implemented the demonstration using either the Simulink and MATLAB softwares, or the GNU Radio software like we did \cite{Besson2018ICT}.
+Similarly to the proof-of-concept of applying MAB learning in an IoT network that we presented in Section~\ref{sec:4:gnuradio},
+% we list here some related works, dating back from $2016$, which proposed a similar approach for OSA.
+% All the similar works that we are aware of also used USRP boards, and implemented the demonstration using either MATLAB/Simulink or GNU Radio software like we did \cite{Besson2018ICT}.
 %
-Indeed, the demonstrations and the works presented below are coming from our team experiments, and have been extended by the team of S. Darak at IIIT Delhi after his postdoctoral fellowship in our SCEE team.
+% Indeed, the demonstrations and the works presented below are coming from our team experiments, and have been extended by the team of S. Darak at IIIT Delhi after his postdoctoral fellowship in our SCEE team.
 %
-In \cite{darak2016bayesian,Darak16}, the authors study the same model and focused on the \RhoRand{} policy, which was the state-of-the-art back in $2016$, combined with \UCB{} or \klUCB, as well as an extension using Bayes-UCB from \cite{Kaufmann12BUCB}.
-
-Their idea is to use the same skeleton as \RhoRand{} \cite{darak2016bayesian}, that is to assign a \emph{rank} to each player, and make players change their rank after any collision. But instead of selecting a new rank uniformly at random among $[M]$, they proposed to use a ``second-stage'' learning policy, based on Bayes-UCB, to (try to) learn the best rank while still exploring each rank from time to time.
+in \cite{darak2016bayesian,Darak16}, the authors study the same model and focused on the \RhoRand{} policy, for the OSA case.
+It was the state-of-the-art back in $2016$, and the authors combine it with \UCB{} or \klUCB, as well as an extension using Bayes-UCB from \cite{Kaufmann12BUCB}.
+%
+Their idea is to use the same skeleton as \RhoRand, that is to assign a \emph{rank} to each player, and make players change their rank after any collision. But instead of selecting a new rank uniformly at random among $[M]$, they proposed to use a ``second-stage'' learning policy, based on Bayes-UCB, to (try to) learn the best rank while still exploring each rank from time to time.
 This is a very natural idea: use a bandit algorithm to balance the exploration/exploitation aspect of rank selection, instead of a random hoping.
 This algorithm is named \rhoLearn, and it is implemented in SMPyBandits,
 % \footnote{See \href{https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoLearn.html}{\texttt{SMPyBandits.github.io/docs/PoliciesMultiPlayers.rhoLearn.html}} for its documentation.},

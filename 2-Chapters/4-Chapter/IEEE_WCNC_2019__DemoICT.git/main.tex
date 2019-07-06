@@ -69,7 +69,7 @@ and enhance intelligent device battery lifetime if they do retransmissions.
 \label{sub:42:implementation}
 % ----------------------------------------------------------------------
 
-In this section, we present our implementation of MAB algorithms in the model of IoT networks presented in Section~\ref{sub:41:systemModel}.
+In this section, we present the implementation of MAB algorithms in the model of IoT networks presented in Section~\ref{sub:41:systemModel}.
 We first describe the simplified physical layer of this demo, then we present our GNU Radio implementation.
 
 
@@ -78,7 +78,7 @@ We first describe the simplified physical layer of this demo, then we present ou
 We implement a simple PHY/MAC layers solution, in order to demonstrate the possibility of improvement of the performance of IoT communications in unlicensed bands. We could have used any physical layer and any ALOHA-based protocol.
 We choose to implement our own physical layer and protocol, for both clarity and conciseness, and because developing a complete IoT network protocol stack is no more my research work and would have fall outside of the scope of this thesis.
 
-Regarding the physical layer, we consider a QPSK constellation (\emph{Quadrature Phase-Shift Keying}). Moreover, we use simplified packets composed of two parts.
+Regarding the physical layer, we consider a QPSK constellation (\emph{Quadrature Phase-Shift Keying}, \eg, see references in \cite{Bodinier17}). Moreover, we use simplified packets composed of two parts.
 The first part is the \emph{preamble} which is used for the purpose of synchronization (phase correction).
 Then, we have the \emph{index} of the user, which is a sequence of QPSK symbols.
 For example, this index can be a simple QPSK symbol ($\pm1\pm1j$), or a sequence of QPSK symols if the PoC has to consider more users.
@@ -101,7 +101,7 @@ In this case, the \emph{Ack} was sent for him, and it knows that its packet has 
 % Boards and versions
 We use USRP N210 boards \cite{USRPDocumentation}, from Ettus Research (National Instrument),
 with version $4$ of their FPGA system and version $5.1$ of the RBX system.
-As illustrated in Figure~\ref{fig:42:our_demo}, our implementation is composed of at least $3$ USRP:
+As illustrated in Figure~\ref{fig:42:our_demo}, the implementation is composed of at least $3$ USRP:
 the base station,
 a traffic generator which emulates the interfering traffic (made by surrounding static devices),
 and at least one dynamic device.
@@ -146,7 +146,7 @@ Illustrations of the flow-graph for the three components of the presented demons
 
 \paragraph{User Interface.}
 
-We have designed a user interface in order to visualize the results obtained  with our experimental demonstration. This user interface is shown in Figure~\ref{fig:42:UI}.
+We have designed a user interface in order to visualize the results obtained  with the experimental demonstration. This user interface is shown in Figure~\ref{fig:42:UI}.
 We can see that it is made of three parts, one for each USRP, as highlighted in \textcolor{darkred}{circled red numbers}.
 
 \begin{figure}[!h]
@@ -199,7 +199,7 @@ For one dynamic device, three algorithms are compared by their mean successful c
 In Figure~\ref{fig:42:plot_datafile_append_Uniform_vs_UCB_vs_TS} below, we show the results averaged on $10$ repetitions using the same conditions.
 %
 Each experiment has been done on a duration of about half a day,
-due to the IoT sporadic transmission mode that we want to respect (like in our model of Section~\ref{sec:4:firstModel}).
+due to the IoT sporadic transmission mode that we want to respect (like in the model of Section~\ref{sec:4:firstModel}).
 However, we make devices generate one message every $5$ seconds, in order to artificially speed up the process and with no loss of generality (as we are using real hardware).
 Learning can be useful only when there is a large enough difference between ``good'' and ``bad'' channels,
 Each device was learning to access $4$ different non-overlapping channels, that we chose to have occupancy rates of $(\mu_k)_k = [15\%, 10\%, 2\%, 1\%]$.
@@ -214,7 +214,7 @@ We obtain an improvement in terms of successful communications rate from $40\%$ 
 In stationary environments, both the TS and \UCB{} algorithms are efficient and converge quickly, resulting in a strong decrease in collisions and failed communication slots. \UCB{} is faster to learn but eventually TS gives a (slightly) better average performance.
 
 Similar results are obtained for overlapping channels, when dynamic devices are learning in the presence of multiple devices, all using the same learning algorithm.
-However, our experimental testbed can not run hundreds of intelligent devices.
+However, our experimental testbed cannot run hundreds of intelligent devices.
 Empirical results confirm the simulations presented in Section~\ref{sec:4:firstModel} (see Figure~\ref{fig:41:perf_learning}).
 Such results are very encouraging, and illustrate well the various strong possibilities of MAB learning applied to IoT networks.
 

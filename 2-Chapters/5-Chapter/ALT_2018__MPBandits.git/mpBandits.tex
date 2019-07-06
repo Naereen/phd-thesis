@@ -48,7 +48,7 @@ Mainly for these two reasons, for this Chapter~\ref{chapter:5} we prefer to only
 Note that in the model of Chapter~\ref{chapter:4}, this hypothesis $M \leq K$ corresponds to choosing a probability of activation of $p=1$, as we assumed that (in average) no more than $K$ devices should be active at the same step.
 %
 We start by reviewing previous works on multi-players MAB models, which all considered the easier case of \emph{sensing feedback}.
-But in our model in this chapter, each device also uses a Multi-Armed Bandit algorithm, to maximize its number of successful communications, by using the received acknowledgement \Ack{} as a (random) binary reward after each uplink message (\ie, at each time step).
+But in the model studied in this chapter, each device also uses a Multi-Armed Bandit algorithm, to maximize its number of successful communications, by using the received acknowledgement \Ack{} as a (random) binary reward after each uplink message (\ie, at each time step).
 %
 With the presence of a central controller that can assign the devices to different channels, this amounts to choosing at each time step \emph{several} arms of a MAB in order to maximize the global rewards, and can thus be viewed as an application of the multiple-play bandit, introduced by \cite{Anantharam87a} and recently studied by \cite{Komiyama15}.
 They essentially proved that existing algorithms can be easily extended to the multiple-play case, with provable guarantees on their regret.
@@ -73,7 +73,7 @@ In this first model, the binary reward is $1$ only if the channel was sensed to 
 We present two algorithms, \RandTopM{} and \MCTopM, based on the combination of an efficient MAB index policy (we chose \klUCB) and a smart orthogonalization procedure, based on a random hoping procedure called Musical Chair.
 Like in previous works, we consider the centralized system regret (multi-players regret), or simply referred to as regret.
 We start by showing an improved asymptotical regret lower-bound for any algorithm of a certain class, including previous solutions such as \rhoRand{} and our two solutions.
-We then analyze our \MCTopM{} algorithm and we show that its regret upper-bound is logarithmic and order-optimal, improving over the previous state-of-the-art.
+We then analyze the \MCTopM{} algorithm and we show that its regret upper-bound is logarithmic and order-optimal, improving over the previous state-of-the-art.
 %  with a regret bounded by $\bigO{\log(T)}$ for a game at horizon $T$.
 We also present extensive numerical simulations that show that our proposal outperforms all previous solutions and is much more efficient in this easier model of sensing feedback with a fixed and known number of players $M$ accessing $K \geq M$ channels.
 
@@ -95,7 +95,7 @@ Our article \cite{Besson2018ALT} was the first to study this other model of mult
 % Our article \cite{Besson2018ALT} was the first to propose this ``no sensing'' model,
 for which we only proposed an heuristic, the naive \Selfish{} strategy as it was already used in Chapter~\ref{chapter:4}.
 Even if empirical simulations showed that \Selfish-\klUCB{} performs very well, it is a mistake to only consider mean regret, as we found on numerical simulations as well as formal derivation on a simple example of $K=M=2$ that the \Selfish{} heuristic can have a linear regret with a low probability (and so asymptotically it has linear expected regret and fails to solve ``no sensing'' multi-players MAB problems).
-We do not propose any other efficient algorithm, but our work presented in April~$2018$ has strongly inspired two articles shortly after \cite{LugosiMehrabian18,BoursierPerchet18}.
+We do not propose any other efficient algorithm, but our work presented in April~$2018$ has strongly inspired two articles published shortly after \cite{LugosiMehrabian18,BoursierPerchet18}.
 They confirmed our findings that \Selfish{} can have a linear regret, and they both proposed new algorithms.
 We include some numerical simulations to compare some of them, and we present in details the current state-of-the-art of research on multi-players MAB models without sensing.
 
@@ -132,8 +132,8 @@ We first introduce the multi-players bandit model with three feedback levels in 
 We define the regret, and then present a useful decomposition in Section~\ref{sec:5:lowerbound}.
 % and illustrate it in the Appendix~\ref{sec:5:appendix}.
 The \Selfish, \RandTopM{} and \MCTopM{} algorithms are introduced in Section~\ref{sec:5:algorithms},
-for which we present our theoretical analysis in Section~\ref{sec:5:upperbounds}.
-We report the results of our experimental study in Section~\ref{sec:5:experiments}.
+for which we present a theoretical analysis in Section~\ref{sec:5:upperbounds}.
+We report the results of an experimental study in Section~\ref{sec:5:experiments}.
 Finally, we present in Section~\ref{sec:5:literatureReviewOtherModels} a review of the recent literature which studies variants of the model presented in this Chapter.
 For some extensions, we discuss how to adapt our proposals and illustrate the empirical performances of such modification of \MCTopM-\klUCB{}, leaving theoretical analyses as future works.
 % and finally Section~\ref{sec:5:conclusion} concludes.
@@ -221,7 +221,7 @@ But for Bernoulli distributions, one may consider the following three observatio
     with a device from the background traffic $(Y_{A^j(t),t}=0)$,
     or to a collision with one of the others players ($C^j(t)$).
     However, the sensing and collision information are censored.
-    Recently, our work presented in Chapter~\ref{chapter:4} \cite{Bonnefoi17} presented the first (bandit-based) algorithmic solutions under this (harder) feedback model, in a slightly different setup, more suited to large scale IoT applications, but as explained above we did not present theoretical results for this third model (yet).
+    Recently, our work presented in Chapter~\ref{chapter:4} \cite{Bonnefoi17} presented the first (bandit-based) algorithmic solutions under this (harder) feedback model, in a slightly different setup, more suited to large scale IoT applications. As explained above, this third model was found to be too general to analyze mathematically, and we did not present theoretical results of convergence in Chapter~\ref{chapter:4}.
     %\footnote{\cite{Bonnefoi17} considers a different setting, more suited for large-scale IoT networks, and a future work will be to extend our work to this setting with more than $K$ players but small probability of activations.}.
 \end{itemize}
 
@@ -274,10 +274,10 @@ In this section, we provide a useful decomposition of the regret (Lemma~\ref{lem
   \textbf{\textcolor{red}{Warning}.}
   %
   The regret lower bound that we gave in \cite{Besson2018ALT} is not applicable to any algorithm,
-  as it was discovered by Boursier and Perchet, as they explain in Section~2.4 in \cite{BoursierPerchet18}.
+  as it was discovered by V. Boursier and E. Perchet, as they explain in Section~2.4 in \cite{BoursierPerchet18}.
   The proof we gave in the Appendix of our paper \cite{Besson2018ALT} was wrong in just one step,
   but the results stated in this section are now correct,
-  thanks to the modifications proposed by Kaufmann and Mehrabian in Appendix~E of \cite{KaufmannAbbas19}.
+  thanks to the modifications proposed by E. Kaufmann and A. Mehrabian in Appendix~E of \cite{KaufmannAbbas19}.
   The cost for this modification is to restrict the lower-bound to a smaller class of algorithms, which \emph{should} contain \RhoRand, \RandTopM{} and \MCTopM, but not the two algorithms proposed SIC-MMAB from \cite{BoursierPerchet18} and Multiplayer Explore-then-Commit (M-ETC) from \cite{KaufmannAbbas19}.
   Proving that the proposed algorithms are in this class is left as an open question.
 \end{leftbar}  % XXX leftbar warningbar, comment if needed
@@ -440,7 +440,7 @@ The Figure~6 in Appendix~F of \cite{Besson2018ALT} illustrates two cases of $M<K
 \label{sub:5:betterLowerBound}
 
 Similarly to what we present above in Section~\ref{sec:2:lowerUpperBoundsRegret},
-we use the Kullback-Leibler divergence to express our lower bound.
+we use the Kullback-Leibler divergence to express this lower bound.
 We remind that $\kl(x,y) \eqdef x\log(x/y) + (1-x)\log((1-x)/(1-y))$ is the KL divergence between the Bernoulli distributions of means $x$ and $y$.
 %
 We first introduce the assumption under which we derive a regret lower bound, that generalizes the assumption of uniform efficiency given in Definition~\ref{def:2:uniformlyEfficientAlgorithm},
@@ -556,11 +556,12 @@ Our result could be extended to this case, but we chose to keep the notation sim
 
 \paragraph{Price of decentralized learning.}
 %
-Interestingly, our lower bound is exactly a multiplicative constant factor $M$ away from the lower bound given by \cite{Anantharam87a} for centralized algorithms (which is clearly a simpler setting). This intuitively suggests the number of players $M$ as the (multiplicative) \emph{``price of decentralized learning''}. However, to establish our regret bound, we lower bounded the number of collisions by zero, which may be too optimistic.
+Interestingly, our lower bound is exactly a multiplicative constant factor $M$ away from the lower bound given by \cite{Anantharam87a} for centralized algorithms (which is clearly a simpler setting). This intuitively suggests the number of players $M$ as the (multiplicative) \emph{``price of decentralized learning''}.
+However, to establish this regret bound, we lower bounded the number of collisions by zero, which may be too optimistic.
 %
 Indeed, for an algorithm to attain the lower bound \eqref{eq:5:ourLowerBound}, the number of selections of each sub-optimal arm should match the lower bound \eqref{eq:5:LBDraws} \emph{and} term \ref{eq:5:term2} and term \ref{eq:5:term3} in the regret decomposition of Lemma~\ref{lem:5:DecompositionRegret} should be negligible compared to  $\log(T)$.
 
-To the best of our knowledge, no algorithm has been shown to experience only $o(\log(T))$ collisions so far,
+To the best of the authors' knowledge, no algorithm has been shown to experience only $o(\log(T))$ collisions so far,
 for every $M \in \{2,\dots,K\}$ and $\boldsymbol{\mu} \in \cP_M$.
 %
 Since our article \cite{Besson2018ALT}, we kept as a future work the following question.
@@ -719,7 +720,7 @@ Thus we propose next our main contribution, the \MCTopM{} algorithm, proved to b
 
 % \textbf{Index policies.}
 % %
-The approaches we now describe for multi-players bandits can be used in combination with any index policy (see Algorithm~\ref{algo:2:indexPolicy}), but we restrict our presentation to UCB algorithms, for which strong theoretical guarantees can be obtained. In particular, we focus on two types of indices:
+The approaches we now describe for multi-players bandits can be used in combination with any index policy (see Algorithm~\ref{algo:2:indexPolicy}), but we restrict our presentation to \UCB{} algorithms, for which strong theoretical guarantees can be obtained. In particular, we focus on two types of indices:
 $\UCB_1$ \citep{Auer02}
 and \klUCB{} \citep{KLUCBJournal}.
 For player $j\in[M]$
@@ -767,7 +768,7 @@ We now propose two alternatives to this strategy, that do not rely on ranks and 
 
 \paragraph{The \RandTopM{} algorithm.}
 %
-We precisely state our first proposal below in Algorithm~\ref{algo:5:RandTopM}.
+We precisely state the first proposal below in Algorithm~\ref{algo:5:RandTopM}.
 %
 \RandTopM{} is essentially a refinement over \RhoRand, to not use the indirection of ranks, and a simpler version of \MCTopM.
 The difference with \MCTopM{} is that the later introduces a concept of a ``Chair'', by considering a binary ``being fixed'' state $s^j(t)$, as presented in Algorithm~\ref{algo:5:MCTopM} below.
@@ -827,7 +828,7 @@ and a \emph{collision always forces a uniform sampling of the next arm} from $\T
 
 \paragraph{The \MCTopM{} algorithm.}
 %
-Our second proposal \MCTopM{} is stated below as Algorithm~\ref{algo:5:MCTopM},
+The second proposal \MCTopM{} is stated below as Algorithm~\ref{algo:5:MCTopM},
 it is a slightly more complex extension of the \RandTopM{} algorithm.
 From there on, we focus on \MCTopM{} as it is easier to analyze and performs better.
 %
@@ -1146,7 +1147,7 @@ happen a logarithmic number of times. The proof of this result is given below.
 % -----------------------------------------------------------------
 \subsection{Regret analysis of \MCTopM{} with \klUCB{} indexes}\label{sub:5:UpperBoundCollisions}
 
-For our proposal \MCTopM, we are furthermore able to obtain a logarithmic regret upper bound, by proposing an original approach to control the number of collisions under this algorithm.
+For the proposal \MCTopM, we are furthermore able to obtain a logarithmic regret upper bound, by proposing an original approach to control the number of collisions under this algorithm.
 First, we can bound the number of collisions by the number of collisions for players not yet ``fixed on their arms'' ($\overline{s^j(t)}$),
 that we can then bound by the number of changes of arms.
 
@@ -1169,7 +1170,7 @@ that we can then bound by the number of changes of arms.
 
 Note that this bound is in $\bigO{M^3}$,
 which significantly improves over the $\bigO{M{2M-1 \choose M}}$ bound, proven by \cite{Anandkumar11} for \rhoRand.
-Our bound is worse than the $\bigO{M^2}$ proven by \cite{Rosenski16} for \MusicalChair{}. %, due to our trick of focusing on collisions for non-sitted players.
+The obtained bound is worse than the $\bigO{M^2}$ proven by \cite{Rosenski16} for \MusicalChair{}. %, due to our trick of focusing on collisions for non-sitted players.
 However, unlike \MusicalChair, our algorithm does not need any prior knowledge on the problem complexity.
 The \MusicalChair{} algorithm is indeed not very satisfying from an applicative point of view, as it requires a prior knowledge of $\mu^*_{M}-\mu^*_{M+1}$.
 
@@ -1529,7 +1530,7 @@ Performance is measured with the \emph{expected} regret up to horizon $T=10000$,
 
 We report in Table~\ref{table:5:comparisonUCB_klUCB} above the results in terms of mean regret, plus or minus one standard deviation.
 The conclusions are three fold: first we observe for any of the compared algorithms, using \klUCB{} is always (much) better than using \UCB.
-Second we observe that our proposal \MCTopM{} is outperforming the state-of-the-art \RhoRand{} policy, and performs closely to the centralized (unrealistic) approach.
+Second, we observe that our proposal \MCTopM{} is outperforming the state-of-the-art \RhoRand{} policy, and performs closely to the centralized (unrealistic) approach.
 Third we observe in the last column, when $M=K=9$, that \MCTopM{} is achieving constant regret, as we proved that the regret upper-bound of Theorem~\ref{thm:5:LogarithmicRegret_MCTopMklUCB} is indeed $\cO(1)$ if there is no arms in \Mworst{}, and it shows that the orthogonalization scheme proposed for \MCTopM{} is very efficient, especially in comparison to previous state-of-the-art approaches using ranks.
 %
 Additional experiments and illustrations are given below.
@@ -1560,7 +1561,7 @@ We now present more results for two bandit instances.
 We also include histograms showing the \emph{distribution} of the final regret $R_T$,
 as this allows to check if the regret is indeed small for \emph{each} run of the simulation.
 %
-We also include our \emph{asymptotic} lower bound from Theorem~\ref{thm:5:BetterLowerBound} on regret plots.
+We also include the \emph{asymptotic} lower bound from Theorem~\ref{thm:5:BetterLowerBound} on regret plots.
 
 
 %
