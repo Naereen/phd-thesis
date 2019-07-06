@@ -438,10 +438,9 @@ And following our model of interest, maximizing the rewards corresponds to maxim
     % \item
     MAB can also be applied to a broader setting of \textbf{online content recommandation}.
     % with two options (A/B testing), or more than two options.
-    The seminal work of \cite{Li10} studies the application of contextual bandit to online advertisement
-    or news articles recommendation, as it is used in practice on platforms such as Microsoft's Bing news website,
-    or in video streaming platform like YouTube or Netflix.
-    In such models, the arms correspond to items to recommend (\eg, articles or movies), and the contexts contain features about each user of the system.
+    The seminal work of \cite{Li10} studies the application of contextual bandit to news articles recommendation, as it is used in practice on platforms such as Microsoft's Bing news website.
+    Other famous examples include online advertisement or in other kinds of content recommendation, such as for video streaming platforms like YouTube or Netflix.
+    In such models, the arms correspond to items to recommend (\eg, ads, articles or movies), and the contexts contain features about each user of the system.
     An interesting work is \cite{Louedec16}, who studies slowly-varying non-stationary models applied to recommender systems.
 
     % \item
@@ -644,11 +643,15 @@ where the ``constant'' $c_I$ can depend on the problem instance $I$ (\eg, on its
 
 
 \paragraph{Problem-dependent lower-bound in $\Omega(\log T)$.}
+\label{par:2:def_optimal_orderoptimal}
 %
 The following two theorems were proven in \cite{LaiRobbins85}.
 These lower-bounds are of highest interest to design efficient algorithms,
-and a significant part of the research on MAB algorithms has focused on finding algorithms that matches the Lai and Robbins' lower-bound asymptotically.
-This means that a finite-time or an asymptotic upper-bound is proven on the regret of algorithm $\cA$, that asymptotically matches the lower-bound, with the same constant in the big-$\cO$ notation (in which case we say that the algorithm is asymptotically \emph{optimal}), or with a larger constant (the algorithm is said to be \emph{order-optimal} in such case).
+and a significant part of the research on MAB algorithms has focused on finding algorithms that matches the Lai and Robbins' lower-bound asymptotically \cite{LaiRobbins85}.
+%
+This means that a finite-time or an asymptotic upper-bound is proven on the regret of algorithm $\cA$, that asymptotically matches the lower-bound.
+When the regret upper-bound matches the lower-bound with the same constant as in the big-$\cO$ notation, we say that the algorithm is asymptotically \emph{optimal},
+otherwise the algorithm is said to be \emph{order-optimal} if it matches the lower-bound with with a larger constant.
 
 
 \begin{theorem}\label{thm:2:firstLogTLowerBound}
@@ -688,6 +691,7 @@ Now we can state the second logarithmic lower-bound, for algorithms in this fami
 \end{theorem}
 
 Theorem~2.12 from \cite{Slivkins2019} specifies a possible value for the constant $C_I$.
+Note that the lower-bound of Lai and Robbins, proved in \cite{LaiRobbins85}, is more general and applies to any one-dimensional exponential family $\cE$, by replacing the Bernoulli Kullback-Leibler divergence $\kl$ with the KL divergence of this family, $\kl_{\cE}$.
 
 \begin{theorem}\label{thm:2:forSecondLogTLowerBound}
 \begin{leftbarnospace}[theorembar]  % XXX leftbar theorembar, comment if needed
@@ -711,14 +715,15 @@ Theorem~2.12 from \cite{Slivkins2019} specifies a possible value for the constan
 \end{leftbarnospace}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 
-Moreover, it is interesting to note that the first lower-bound of Theorem~\ref{thm:2:forSecondLogTLowerBound} can be directly used to design efficient algorithms\footnote{~Tracking this quantity, by using empirical estimates of the means, is used for instance in the OSSB algorithm proposed in \cite{Combes17}, which is proven to attain the lower-bound for a wider range of problems (for problems called structured stochastic bandits).}, as thanks to the regret decomposition given in Proposition~\ref{prop:2:RegretDecomposition} above, the expression of $C_I$ essentially says that any efficient algorithm
+It is interesting to note that the first lower-bound of Theorem~\ref{thm:2:forSecondLogTLowerBound} can be directly used to design efficient algorithms\footnote{~Tracking this quantity, by using empirical estimates of the means, is used for instance in the OSSB algorithm proposed in \cite{Combes17}, which is proven to attain the lower-bound for a wider range of problems (for problems called structured stochastic bandits).}, as thanks to the regret decomposition given in Proposition~\ref{prop:2:RegretDecomposition} above, the expression of $C_I$ essentially says that any efficient algorithm
 should sample each sub-optimal arm $k$ about $\log(T)/\kl(\mu_k,\mu^*)$ times in the total of $T$ time steps.
 %
 Many algorithms have been proven to achieve logarithmic regret in the stochastic case,
-and in particular it is the case of the algorithms used in this thesis, $\UCB_1$ from \cite{Auer02}, Thompson sampling from \cite{Thompson33} and analyzed in \cite{AgrawalGoyal11,Kaufmann12Thompson}, and \klUCB{} from \cite{Garivier11KL,KLUCBJournal}.
+and in particular it is the case of the algorithms used in the rest of thesis, $\UCB_1$ from \cite{Auer02}, Thompson sampling from \cite{Thompson33} and analyzed in \cite{AgrawalGoyal11,Kaufmann12Thompson}, and \klUCB{} from \cite{Garivier11KL,KLUCBJournal}.
 %
-Such bounds are valid in different settings, and in particular $\UCB_1$ is order-optimal for bounded rewards or one-dimensional exponential families,
-while Thompson sampling is optimal for bounded rewards, and \klUCB{} have been proven to be optimal for both cases.
+Such bounds are valid in different settings:
+$\UCB_1$ is order-optimal for bounded rewards or one-dimensional exponential families (\ie, it matches the asymptotic lower-bound of \cite{LaiRobbins85}),
+while Thompson sampling is optimal for binary rewards, and \klUCB{} and \KLUCB{} have been proven to be optimal respectively for both cases.
 %
 Chapter~16 of \cite{LattimoreBanditAlgorithmsBook} contains more details.
 
@@ -1100,7 +1105,7 @@ It proves that the ``explore-then-exploit'' strategy can also obtain an order-op
 An extension of this strategy is to consider not a fixed time $T_0$ but a random time $\tau$ at which exploration stops.
 This time $\tau$ must be a \emph{stopping time}\footnote{See Chapter~3 of \cite{LattimoreBanditAlgorithmsBook}, and we use this notion again in Section~\ref{sec:6:GLRklUCB_Algorithm}.},
 in the sense that it is a measurable random variable, dependent of the past observations. The strategy is then referred to as ``explore-then-commit'' (ETC), and the idea is to use a statistical test at every time step $t$, and stop as soon as enough samples were collected to effectively identify the best arm with a certain confidence level $\delta$.
-Choosing $\delta \propto 1/T$ and using a lower-bound $d$ on the gaps typically lead to an order-optimal algorithm as shown in \cite{GarivierETC2016}.
+Choosing $\delta \propto 1/T$ and using a lower-bound $d$ on the gaps typically lead to an order-optimal algorithm, as shown in \cite{GarivierETC2016}.
 
 
 For both cases, the strategy obtains sub-optimal regret if it is tuned independently of the problem at hand, but can be tuned to be efficient (\ie, with logarithmic regret) if a lower-bound on the gaps $\Delta_k$ is known.
@@ -1172,7 +1177,8 @@ Note that for the rest of the manuscript, we use the \klUCB{} algorithm (and mor
 but we think the simpler proof of $\UCB_1$ is enlightening for the reader.
 % but we preferred to start with a simpler proof in the single-player stationary case.
 %
-This theorem shows that $\UCB_1$ achieves an order-optimal problem-dependent regret, bounded by $\cO(K\log(T)/\Delta^2)$ (if $\Delta \eqdef \min\limits_{k: \Delta_k>0} \Delta$), and the result also has the advantage of being non asymptotic.
+% This theorem shows that $\UCB_1$ achieves an order-optimal problem-dependent regret, bounded by $\cO(K\log(T)/\Delta^2)$ (if $\Delta \eqdef \min\limits_{k: \Delta_k>0} \Delta$), and the result also has the advantage of being non asymptotic.
+This has the advantage of being non asymptotic.
 
 \begin{theorem}[Regret bound for $\UCB_1$]\label{thm:2:UCBregretBound}
 \begin{leftbar}[theorembar]  % XXX leftbar theorembar, comment if needed
@@ -1274,7 +1280,8 @@ This theorem shows that $\UCB_1$ achieves an order-optimal problem-dependent reg
     \end{align*}
 \end{smallproof}
 
-We see in this Theorem~\ref{thm:2:UCBregretBound} that $\UCB_1$ has the advantage of not relying on any prior knowledge of the problem difficulty, of being anytime and computationally simple, for both memory and time aspects, and it achieves an order-optimal problem-dependent regret upper bound in $\cO((\sum_{k: \Delta_k>0} \frac{1}{\Delta_k})\log(T))$.
+We see in this Theorem~\ref{thm:2:UCBregretBound} that $\UCB_1$ has the advantage of not relying on any prior knowledge of the problem difficulty, of being anytime and computationally simple, for both memory and time aspects.
+Moreover, $\UCB_1$ achieves an order-optimal problem-dependent regret upper bound in $\cO((\sum_{k: \Delta_k>0} \frac{1}{\Delta_k})\log(T))$, meaning that it matches the asymptotic regret lower-bound of Lai and Robbins up-to a constant factor \cite{LaiRobbins85} (see the definition above in page \pageref{par:2:def_optimal_orderoptimal}).
 %
 $\UCB_1$ requires a constant storage capacity for each arm (storing $X_k(t)$ and $N_k(t)$ require two integers or a \texttt{float} and an integer, \ie, $\bigO{1}$), giving a storage capacity of $\bigO{K}$, independently of the horizon $T$.
 It also needs to perform some mathematical operations, but a square-root and a logarithm are cheap, thus it costs a $\bigO{1}$ constant time for each arm and time step, thus a time $\bigO{K T}$ for the $T$ time steps.
@@ -1311,8 +1318,8 @@ For Bernoulli distributions, \klUCB{} builds tighter confidence intervals than $
 but with the same probability coverage.
 This is justified by Pinkser's inequality, which gives $\kl(x,y) \geq 2(x-y)^2$.
 %
-The \KLUCB{} and \klUCB{} algorithms achieve finite-time regret logarithmic upper-bounds on their regret, and have been proven to be asymptotically optimal, respectively for one-dimensional exponential families and for bounded rewards distributions \cite{Garivier11KL,KLUCBJournal}.
-% FIXME
+The \KLUCB{} and \klUCB{} algorithms achieve finite-time regret logarithmic upper-bounds on their regret, and have been proven to be asymptotically optimal, respectively for one-dimensional exponential families and for binary rewards \cite{Garivier11KL,KLUCBJournal}.
+In particular, we highlight that \klUCB{} achieves a finite-time regret upper-bound, that matches the asymptotical lower-bound of Lai and Robbins \cite{LaiRobbins85} for Bernoulli distributed problems, which is our main focus of interest in both Chapters~\ref{chapter:5} and \ref{chapter:6}.
 
 
 \textbf{A note about the implementation of \klUCB{} algorithms.}
@@ -1377,9 +1384,9 @@ as $X_k(t)$ counts the number of successes observed on arm $k$, and $N_k(t)-X_k(
 %
 We detail the Thompson sampling algorithm in this case, below in Algorithm~\ref{algo:2:ThompsonSampling}, as it corresponds to the case used in Chapter~\ref{chapter:4} in Section~\ref{sub:41:numericalResults}.
 %
-In this setting, as well as any one-dimensional exponential families,
+In this setting, as well as for one-dimensional exponential families,
 % for Gaussian distributions,
-Thompson sampling was proven to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12Thompson,AgrawalGoyal11}.
+Thompson sampling was proven to achieve finite-time and asymptotical optimal problem-dependent bounds \cite{Kaufmann12Thompson,AgrawalGoyal11}.
 
 
 % \begin{small} % XXX remove if needed
@@ -1405,7 +1412,7 @@ Thompson sampling was proven to achieve asymptotical optimal problem-dependent b
 
 Bayes-UCB from \cite{Kaufmann12BUCB} also uses the Bayesian point of view, updated like for Thompson sampling, but used in a different way.
 Instead of sampling from the posteriors and playing the arms with maximum sample, Bayes-UCB computes the $(1-1/(t (\log(t))^5)$ quantile of each arm, at time $t$, and plays the arm with the largest quantile.
-It was also proven to achieve asymptotical optimal problem-dependent bounds \cite{Kaufmann12BUCB}.
+It was also proven to achieve an asymptotical optimal problem-dependent bound for binary (Bernoulli) bandits \cite{Kaufmann12BUCB}.
 %
 Bayes-UCB is comparable to Thompson sampling in terms of memory complexity, but it can be slower, as computing a quantile is generally more costly than just sampling from a distribution.
 % a Beta prior and posterior, initially uniform (\ie, $\mathrm{Beta}(1,1)$) (\texttt{BayesUCB}).
@@ -1445,7 +1452,7 @@ We can briefly mention other families of policies.
 if arm $1$ has $100$ samples and arm $2$ has $50$ samples, it should make more sense to only use $50$ samples of arm $1$ to compute and compare their empirical means.
 Based on this idea, the BESA algorithm for $K=2$ arms is quite simple: at each time step, if arms $1$ and $2$ have respectively $n_1$ and $n_2$ samples, and if $n_1>n_2$ (for instance), first it sub-samples $n_2$ observations from $n_1$, then it computes the mean of these observations, and play the arm maximizing this mean (now that there is the same number of observations for both arms, it makes more sense to compare these quantities).
 It was analyzed partially, for the two-armed case it was proven to be asymptotically optimal for one-dimensional exponential families, and the authors illustrated that it can be very efficient empirically.
-Analyzing it in the generic case was found to be difficult, and it is still an open problem.
+However, analyzing it in the generic case was found to be difficult, and it is still an open problem.
 % We implemented it using a binary tournament implement in a naive but efficient way (not using recursive functions, \ie, using the \texttt{BESA} class with \texttt{''non\_recursive''=True}).
 % By using such binary tournament, the extension $K>2$ arms is costly in terms of both time and memory, as illustrated below, and suffers from an exponential blow-up when $K$ increases.
 
@@ -1499,7 +1506,7 @@ For any $K$, $T$, and problem instances $I$ in a certain family $\cI$ (\eg, with
 they enjoy regret bounds like the following, for two constants $c_{\cA} \geq 1$ and $c'_{\cA} \geq 1$, that depend on the algorithm, and a constant $C_I$ that depend on the problem instance only: $R_T^{\cA} \leq \min( c_{\cA} \sqrt{K T}, c'_{\cA} C_I \log(T))$.
 
 More recently, the \klUCB-switch from \cite{GarivierHadiji2018} is the first algorithm to be proven to
-enjoy simultaneously a distribution-free regret bound of optimal order $\sqrt{KT}$, and a distribution-dependent regret bound of optimal order as well, that is, matching the $C_I \ln(T)$ lower bound by \cite{LaiRobbins85}.
+enjoy simultaneously a distribution-free regret bound of optimal order $\sqrt{KT}$, and a distribution-dependent regret bound of optimal order as well, by matching the $C_I \ln(T)$ asymptotic lower-bound by \cite{LaiRobbins85}.
 It is an index policy that uses modified versions of the indexes of \klUCB$^+$ for arms that are not sampled much (see \cite{Honda2019} for more details), and of MOSS$^+$ for the other arms.
 If the two indexes
 % $U^{\KLUCB+}_k(t)$ and $U^{\mathrm{MOSS}+}_k(t)$
@@ -1766,7 +1773,7 @@ both $\varepsilon$-greedy and Explore-then-Commit starts as pure exploration, re
 %
 We gave an overview of the most well known families of algorithms for multi-armed bandits,
 focussing on algorithms designed and analyzed for the single-player stationary and stochastic MAB model.
-Except the naive and simple strategies given as introductory examples, most of the policies presented above are order-optimal for Bernoulli distributed problems or bounded rewards (or one-dimensional exponential families),
+Except the naive and simple strategies given as introductory examples, most of the policies presented above are order-optimal for at least one of the model of Bernoulli distributed problems, bounded rewards or one-dimensional exponential families,
 and some of them are known to be optimal in different settings.
 %
 To clearly understand the difference in their empirical behaviors, we illustrated the performance of two naive and two simple strategies against three efficient ones, on the example of Bernoulli-distributed problem used for the online demonstration from Section~\ref{sec:2:notations} (see Figures~\ref{fig:2:example_of_a_5_arm_bandit_problem} and \ref{fig:2:example_of_a_5_arm_bandit_problem__step100}).
