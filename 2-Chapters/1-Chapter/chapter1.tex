@@ -477,7 +477,7 @@ We answer partially to this problematic by the following research steps.
 % \subsection{Exploring the literature of MAB algorithms}
 \subsection{Exploring the Jungle of MAB algorithms}
 
-\paragraph{Chapter~\ref{chapter:2}.}
+% \paragraph{Chapter~\ref{chapter:2}.}
 %
 We started by exploring the rich literature of multi-armed bandits,
 as many different algorithms exist, with lots of variants on the simple problem presented above.
@@ -490,7 +490,7 @@ but also by their empirical performances in terms of computational complexity an
 %  on time and memory footprints.
 
 
-\paragraph{Chapter~\ref{chapter:3}.}
+% \paragraph{Chapter~\ref{chapter:3}.}
 %
 Our exploration of the large number of MAB algorithms and models developed in the recent literature
 has given us the ambition to write a single piece of software allowing anyone to easily implement new models and algorithms, in order to compare the existing ones and empirically explore the performances of newly proposed algorithms.
@@ -501,7 +501,7 @@ We present in details its architecture and its features in Chapter~\ref{chapter:
 A full documentation is available online, as well as exhaustive instructions to reproduce the simulations discussed in the rest of this thesis.
 
 
-\paragraph{Chapter~\ref{chapter:25}.}
+% \paragraph{Chapter~\ref{chapter:25}.}
 %
 Because there are so many MAB algorithms available, we are also interested by the question of how a practitioner can chose the algorithm to implement, in a given IoT object, in order to equip this object with the capacity to adapt robustly to any environment.
 To answer this question, we present two approaches.
@@ -518,13 +518,13 @@ This contribution was presented at the IEEE WCNC conference in Barcelona, Spain,
 In the second Part~\ref{part:MABIOT} of this thesis, we start by proposing and studying different models of IoT networks, with simulations and a real-world proof-of-concept, and then we study interesting questions on two mathematical models of MAB, arising from simplification of our first model.
 
 
-\paragraph{Chapter~\ref{chapter:4}.}
+% \paragraph{Chapter~\ref{chapter:4}.}
 %
 We study two models of IoT networks in Chapter~\ref{chapter:4}.
 The first model considers IoT devices that simply have data to regularly send to a base station (at unpredictable or random times).
 Such devices use acknowledgements as feedback, in order to optimize their uplink communications, by accessing more the best channels (\ie, the channel less occupied by the surrounding traffic).
 The goal of this first model is to increase the Quality of Service (QoS) of the application of such IoT network, by applying decentralized RL on the device side in order to reduce the rate of failed transmission.
-The base station will thus receive more up-link packets from the devices being served, if they can successfully learn an efficient spectrum access scheme.
+The base station will thus receive more up-link packets from the devices being served, if they can successfully learn by themselves an efficient spectrum access scheme.
 It implies that the network can accept more end-devices while maintaining the same QoS.
 %
 Our second model then considers packet retransmissions, and while the two concepts are similar, the application of an efficient decentralized learning algorithm now results in both an increased battery life for each of the devices, as well as an increased QoS for the entire network, as less retransmissions reduce the local spectrum load.
@@ -541,7 +541,7 @@ Our second model then considers packet retransmissions, and while the two concep
 % We show that our approach is interesting, as these low-cost MAB algorithms have near-optimal performance, even when the proportion of end-devices increases and the interfering traffic from the other devices becomes more and more fluctuating and unpredictable.
 % %
 % Even without changing anything on the level of the considered IoT standard (neither the PHY nor the MAC layers), our proposal is just an add-on capability, that can be set-up on each device, on a unit-per-unit basis.
-The first model constitutes the first article written during this thesis, and initiated a collaboration with R. Bonnefoi, another PhD student of our team SCEE.
+The first model comes from the first article written during this thesis, which initiated a collaboration with R. Bonnefoi, another PhD student of our team SCEE.
 We presented it at the EAI CROWNCOM conference in Lisboa, Portugal in September $2017$, where it obtained the ``best paper award'' \cite{Bonnefoi17}.
 %
 % Verifying the potential gain of performance brought by these MAB algorithms in numerical simulations was a first step, but it is satisfactory to also verify our results on a real-world proof-of-concept (PoC).
@@ -560,30 +560,30 @@ The proof-of-concept (PoC) continued the fruitful collaboration, and was demonst
 The second model with retransmissions concluded our collaboration with R. Bonnefoi, and resulted to a paper presented at the $1^{\text{st}}$ MoTION workshop, also during the IEEE WCNC $2019$ conference \cite{Bonnefoi2019WCNC}.
 
 
-\paragraph{Chapter~\ref{chapter:5}.}
+% \paragraph{Chapter~\ref{chapter:5}.}
 %
-In both models presented above, the core concept is to let every dynamic device of an IoT network run a learning algorithm in a fully decentralized way, in order to optimize the complete system.
-It is important to note that each devices communicates, and thus learns, only at some rounds and not at all the time steps, by following its own (random) activation process (we restrict to a purely random Bernoulli activation process of probability $p$).
-It means that each of them target its own local objective, which is to maximize its cumulated reward (in a selfish way).
+In both models of IoT networks presented above, the core concept is to let every dynamic device of such network run a learning algorithm in a fully decentralized way, in order to optimize the complete system.
+It is important to note that each devices communicates, and thus learns, only at some rounds and not at all the time steps, by following its own random activation process (we restrict to a purely random Bernoulli activation process of probability $p$).
+It means that each of them target its own local objective, which is to maximize its cumulated reward, in a selfish way and by being agnostic to the other devices following the same objective.
 It is well known in the game theory literature that playing selfishly can be disastrous for the centralized performance measure, one can think of popular ``dilemmas'', such as the \href{https://en.wikipedia.org/wiki/Prisoner%27s_dilemma}{prisoner dilemma}.
 % , and for more examples we refer to the book \cite{CesaLugosi06}.
 % https://www.ii.uni.wroc.pl/~lukstafi/pmwiki/uploads/AGT/Prediction_Learning_and_Games.pdf
 So it was quite surprising that the numerical simulations, as well as the realistic PoC, showed that decentralized selfish MAB learning lead to efficient coordination between devices in all the considered scenarios, despite the fact that these IoT objects cannot communicate directly with each other, and receive only a collision feedback from the base station they are associated to.
 
-We first tried to analyze the performance of this decentralized algorithm, that we refer to as \Selfish, in the model of Section~\ref{sec:4:firstModel},
+That is why we first tried to analyze the performance of this decentralized algorithm, that we refer to as \Selfish, in the model of Section~\ref{sec:4:firstModel},
 but due to the random number of active devices at each time step (\ie, as soon as the probability $p$ of activation is $p < 1$), we were unable to develop a clean analysis.
 %
-That is why in Chapter~\ref{chapter:5}, we relax the hypothesis of having $M \gg K$ (or even simply $M > K$) devices in a network with $K$ orthogonal wireless channel, that is equivalent to having $p < 1$, and we consider the case of IoT devices communicating at every time step (\ie, $p=1$), and so we restrict to only up-to $M \leq K$ devices.
-The model we studied comes with different variants, depending on the feedback level, and covers both the OSA case (\ie, with sensing) or the IoT case (\ie, without sensing).
+That is the reason why we relax the hypothesis of having $M \gg K$ (or even simply $M > K$) devices in a network with $K$ orthogonal wireless channel in Chapter~\ref{chapter:5}, that is equivalent to having $p < 1$, and we consider the case of IoT devices communicating at every time step (\ie, $p=1$), and so we restrict to only up-to $M \leq K$ devices.
+The model we studied comes with different variants, depending on the feedback level, and covers both the OSA case (\ie, with sensing of PU) or the IoT case (\ie, without sensing).
 The goal was to understand the heuristic of Chapter~\ref{chapter:4}, \Selfish, in the simpler framework of multi-player MAB, which has been studied before for the case of OSA, as studied for instance by \cite{Zhao10,Anandkumar10,Anandkumar11}.
 %
-The OSA case covered by the studied model is actually slightly different as the one considered by \cite{Jouini10} and other previous works,
+The OSA case covered by the studied model can seem to slightly differ with the one considered by \cite{Jouini10} and other previous works,
 as our model requires that an \Ack{} is sent back by the base station if the transmission was successful, even in the case where sensing information is available.
-It differs from the previously studied models of applying MAB for OSA, as they only considered synchronized devices, one SU and PU, and thus if the sensing indicates that one channel is free at one time slot, the up-link message sent by the SU device is sure to be successfully received by the base station (in the ideal model), so there is no risk of collision, and thus no need for an \Ack.
+It is actually equivalent to the previously studied models of applying MAB for OSA, as they only considered synchronized devices, one SU and PU, and thus if the sensing indicates that one channel is free at one time slot, the up-link message sent by the SU device is sure to be successfully received by the base station (in the ideal model), so there is no risk of collision, and thus no need for an \Ack.
 
 
-On the one hand, in the OSA setting, we failed to obtain positive result for the Selfish policy, as we proved that in some limited settings (\eg, $K=3$ and $M=2$), \Selfish-\UCB{} can suffer from linear regret with a small probability, and thus suffers from linear mean regret.
-This result was later confirmed and analyzed by \cite{BoursierPerchet18}.
+On the one hand, in the OSA setting, we failed to obtain positive result for the \Selfish{} policy, as we proved that in some limited settings (\eg, $K=3$ and $M=2$), \Selfish-\UCB{} can suffer from linear regret with a small probability, and thus suffers from linear mean regret.
+This result was later confirmed and analyzed by \cite{BoursierPerchet18} (Appendix~F).
 %
 On the other hand, we were able to propose new algorithms for this multi-player bandit problem with sensing information, and we analyzed our proposal \MCTopM-\klUCB, to show that it achieves a finite-time logarithmic regret upper bound, improving significantly over previous state-of-the-art results.
 Our algorithm also achieves a logarithmic number of collisions and arm switches, and allows a fixed group of $M$ devices to efficiently learn to use the $M$ best channels orthogonally for almost all their up-link communications.
@@ -614,21 +614,21 @@ This strong theoretical result heavily depends on the presence of sensing feedba
 
 As explained above, the model of Chapter~\ref{chapter:4} was found intractable to analyze, mainly because we consider an IoT network with many end-devices, all following random activation patterns.
 The difficulty does not reside in the fact that we are trying to analyze MAB algorithms, designed to tackle stationary problems, on a non-stationary problem,
-but rather that we are analyzing algorithms which are all playing in different (random) subsets of the global synchronized time steps.
-Generalizing to different activation probabilities would lead to a model even harder to analyze, and enforcing at most $M \leq K$ devices is not really realistic for IoT networks, even though this lead to the model of Chapter~\ref{chapter:5}.
+but rather that we are analyzing algorithms which are all playing in different (random) activation times, subsets of the global synchronized time steps.
+Generalizing to different activation probabilities would lead to a model even harder to analyze, and enforcing at most $M \leq K$ devices is in fact not really realistic for IoT networks, even though this lead to the interesting model of Chapter~\ref{chapter:5}.
 
 On the one hand, if the activation pattern of all devices could be fixed, for instance based on a centralized affectation of the devices to different time slots, then the model of multi-player bandit from Chapter~\ref{chapter:5} can be used to let every group of $M \leq K$ devices learn an optimal orthogonal affectation in the $K$ channels (\eg, groups can be the set of devices that all emit at the same time).
 %
 However, even if we continue to assume a synchronized time in all the rest of the thesis,
 it is hard to argue that this hypothesis of a centralized time schedule for the end-devices can be realistic, because we study the case of decentralized learning for OSA and IoT precisely in order to avoid signaling and any central control of the devices by the base station, as we explained above.
 
-On the other hand, another way to relax the non-stationary hypothesis is to take the point-of-view of one device, like in the OSA case mentioned above, where the focus is on one SU surrounded by many PU having stationary behaviors.
-If we focus on one IoT device, its environment (\ie, the surrounding devices) is non-stationary, meaning that its average properties can fluctuate with time, but realistic environments usually yield a certain structure on this non-stationarity.
+On the other hand, another way to relax the non-stationary hypothesis is to take the point-of-view of a single device, like in the OSA case mentioned above, where the focus is on one SU surrounded by many PU having stationary behaviors.
+If we focus on one IoT device, its environment (\ie, the surrounding devices) is non-stationary, meaning that its average properties can fluctuate with time, but real environments usually present non-stationarities with certain structures.
 For instance, enforcing stationarity on some time intervals leads to the last contribution and the last chapter of this thesis.
 % DONE explain why is it interesting to study piece-wise stationary problems from the point-of-view of one player...
 
 
-\paragraph{Chapter~\ref{chapter:6}.}
+% \paragraph{Chapter~\ref{chapter:6}.}
 %
 In order to also understand precisely how MAB algorithms behave under non-stationary environment, we studied the literature on adversarial and on non-stationary MAB, for the two cases of slowly-varying and abruptly-changing environments.
 We begin the last Chapter~\ref{chapter:6} by reviewing the existing works,
@@ -656,11 +656,11 @@ The best regret upper-bound is obtained when the algorithm knows before-hand the
 %
 The performance of \GLRklUCB{} is also illustrated on numerical experiments on synthetic data, where it is shown to outperform all the passively adaptive policies as well as the previous actively adaptive policies.
 %
-This last chapter is based on our last work, which lead to a publication at the GRETSI conference in Lille, France, in August $2019$ \cite{Besson2019Gretsi}.
+This last chapter is based on our last work, published at the GRETSI conference in Lille, France, in August $2019$ \cite{Besson2019Gretsi}.
 This work also lead to the long version article \cite{Besson2019GLRT}, that will be partially rewritten and completed with more recent results, in order to submit it soon to a journal (probably the Journal of Machine Learning Research) before December $2019$.
 
 
-\paragraph{Appendix.}
+% \paragraph{Appendix.}
 %
 % We conclude this thesis in Chapter~\ref{chapter:conclusion}, to give some perspectives and directions about possible future works.
 % Most of the contributions that we present in this thesis call for more developments, on both directions of providing more mathematical analysis and implementing new proof-of-concepts, using real wireless hardware and realistic IoT networks.
