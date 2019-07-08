@@ -579,6 +579,7 @@ and thus we can write the following decomposition on the regret.
 \end{leftbar}  % XXX leftbar propositionbar, comment if needed
 \end{proposition}
 %
+% \begin{small}
 \begin{smallproof}\label{proof:2:RegretDecomposition}
     We use the chain rule of expectation and a conditioning on $O_t$,
     because the expectation is taken on the randomness of the (\iid) samples $(Y_{k,t})_t$ and on the decisions of the player $(A(t))_t$, which are measurable wrt to the past observations $O_t = (U_0, Y_{A(1),1}, U_1, \dots, Y_{A(t-1),t-1}, U_{t-1})$.
@@ -602,6 +603,7 @@ and thus we can write the following decomposition on the regret.
     as $\sum_{k=1}^K  \E[ N_k(T) ] = T$.
     The sum is then simplified to only count sub-optimal arms.
 \end{smallproof}
+% \end{small}
 
 
 \paragraph{Consequences.}
@@ -1055,6 +1057,7 @@ It proves that the ``explore-then-exploit'' strategy can also obtain an order-op
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 %
+% \begin{small}
 \begin{smallproof}\label{proof:2:tuningExploreThenCommit}
     %
     If $p$ denotes the probability that the chosen arm is not optimal,
@@ -1078,6 +1081,7 @@ It proves that the ``explore-then-exploit'' strategy can also obtain an order-op
     Optimizing the right hand-side on $T_0$ gives $T_0 = ((2K)/d^2) \log(d^2 T / (2K))$.
     % This gives the announced bound.
 \end{smallproof}
+% \end{small}
 %
 \begin{lemma}\label{lem:2:HoeffdingInequality}
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
@@ -1195,6 +1199,7 @@ This has the advantage of being non asymptotic.
 %
 \footnotetext{~For simplicity we present the theorem and its prove in the restricted case of $\alpha=2$. More details on this proof can be found for instance in Section~1.3 of \cite{Slivkins2019}, while for instance Chapter~2 of \cite{Bubeck12} Theorem~2.1) and Chapter~7 of \cite{LattimoreBanditAlgorithmsBook} (Theorem~7.2) both give more general proofs, in particular for any value of $\alpha\geq\frac{1}{2}$.}%
 %
+% \begin{small}
 \begin{smallproof}\label{proof:2:UCBregretBound}
     We focus on bounded distributions in $[0,1]$, for which Hoeffding's inequality gives the inequality \eqref{eq:2:HoeffdingInequality}, as stated above in Lemma~\ref{lem:2:HoeffdingInequality}.
     Thanks to the regret decomposition from Proposition~\ref{prop:2:RegretDecomposition}, we can focus on bounding $\E[N_k(T)]$ for any sub-optimal arm $k$.\\
@@ -1279,6 +1284,7 @@ This has the advantage of being non asymptotic.
         = \sum_{k: \Delta_k>0} \frac{8}{\Delta_k} \log(T) + \smallO{\log(T)}.
     \end{align*}
 \end{smallproof}
+% \end{small}
 
 We see in this Theorem~\ref{thm:2:UCBregretBound} that $\UCB_1$ has the advantage of not relying on any prior knowledge of the problem difficulty, of being anytime and computationally simple, for both memory and time aspects.
 Moreover, $\UCB_1$ achieves an order-optimal problem-dependent regret upper bound in $\cO((\sum_{k: \Delta_k>0} \frac{1}{\Delta_k})\log(T))$, meaning that it matches the asymptotic regret lower-bound of Lai and Robbins up-to a constant factor \cite{LaiRobbins85} (see the definition above in page \pageref{par:2:def_optimal_orderoptimal}).
@@ -1319,7 +1325,7 @@ but with the same probability coverage.
 This is justified by Pinkser's inequality, which gives $\kl(x,y) \geq 2(x-y)^2$.
 %
 The \KLUCB{} and \klUCB{} algorithms achieve finite-time regret logarithmic upper-bounds on their regret, and have been proven to be asymptotically optimal, respectively for one-dimensional exponential families and for binary rewards \cite{Garivier11KL,KLUCBJournal}.
-In particular, we highlight that \klUCB{} achieves a finite-time regret upper-bound, that matches the asymptotical lower-bound of Lai and Robbins \cite{LaiRobbins85} for Bernoulli distributed problems, which is our main focus of interest in both Chapters~\ref{chapter:5} and \ref{chapter:6}.
+In particular, we highlight that \klUCB{} achieves a finite-time regret upper-bound, that matches the asymptotical lower-bound of Lai and Robbins \cite{LaiRobbins85} for Bernoulli distributed problems, which is our main focus in both Chapters~\ref{chapter:5} and \ref{chapter:6}.
 
 
 \textbf{A note about the implementation of \klUCB{} algorithms.}
@@ -1494,6 +1500,7 @@ We present here some solutions that are index-based (see Algorithm~\ref{algo:2:i
 The first example is MOSS from \cite{Audibert2009minimax}, or \KLUCBpp{} in \cite{Menard17}.
 If we denote $g(t, T, K) = \log^+(y(t) (1 + \log^+(y(t))^2))$, and $y(t) = \frac{T}{K t}$, with $\log^+(x) = \max(0, \log(x))$,
 then they use the following indexes:
+\vspace*{-5pt} % FIXME
 \begin{align*}\label{eq:2:indexes_for_MOSS_klUCBpp}
     U^{\mathrm{MOSS}}_k(t) & \eqdef \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \frac{\log\left(\frac{t}{K N_k(t)}\right)}{N_k(t)} } \right). \\
 % \end{align*}
@@ -1511,9 +1518,9 @@ It is an index policy that uses modified versions of the indexes of \klUCB$^+$ f
 If the two indexes
 % $U^{\KLUCB+}_k(t)$ and $U^{\mathrm{MOSS}+}_k(t)$
 are defined by
-$U^{\mathrm{MOSS}+}_k(t) \eqdef \frac{X_k(t)}{N_k(t)} + \max\left(0, \sqrt{ \log\left(T / (K N_k(t))\right) / N_k(t)} \right)$
+$U^{\mathrm{MOSS}+}_k(t) \eqdef \frac{X_k(t)}{N_k(t)} + \max (0, \sqrt{ \log\left(\frac{T}{K N_k(t)}\right) / N_k(t)} )$
 and
-$U^{\KLUCB+}_k(t) \eqdef \sup\limits_{q \in [0,1]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \log(T / (K N_k(t))) / N_k(t) \right\}$,
+$U^{\KLUCB+}_k(t) \eqdef \sup\limits_{q \in [0,1]} \left\{ q : \kl\left(\frac{X_k(t)}{N_k(t)}, q\right) \leq \log(\frac{T}{K N_k(t)}) / N_k(t) \right\}$,
 and if $f(T, K) = \lfloor (T/K)^{\gamma}\rfloor$ for $\gamma=1/5$,
 then \klUCB-switch uses the index defined as follows:
 \begin{align*}
@@ -1619,7 +1626,7 @@ It shows that the performance can \textcolor{red}{fluctuate a lot}, as on both c
 %         (last regret = 44.054,  total regret = 44.2,    total reward = 6949,    total weighted selection = 6955.8).
 
 \begin{table}[!h]
-    % \begin{small}  % WARNING
+    \begin{small}  % WARNING
         \centering
         \begin{tabular}{c|cc|cc}
         \textbf{Algorithms}
@@ -1657,7 +1664,7 @@ It shows that the performance can \textcolor{red}{fluctuate a lot}, as on both c
         \end{tabular}
         \caption{Cumulated rewards and regret, for horizons $T=100$ and $T=10000$, \emph{for only one run of the simulation}, for different algorithms.}
         \label{table:2:oneShotResult}
-    % \end{small}  % WARNING
+    \end{small}  % WARNING
 \end{table}
 
 Then in Table~\ref{table:2:meanResults} we show the \emph{results of the average on $N=1000$ independent runs}.
@@ -1671,13 +1678,24 @@ of the average rewards
 (\ie, $\frac{1}{t} (r(1) + \dots + r(t))$),
 % (\ie, $\frac{1}{t} \sum\limits_{s=1}^t r(s)$),
 which should converge to $\mu^*$ when $t\to\infty$ for efficient algorithms.
-Conversely, we also add the Lai \& Robbins' logarithmic \emph{lower-bound} on regret ($C_I \log(t)$ from Theorem~\ref{thm:2:forSecondLogTLowerBound}) on the regret plot in Figure~\ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}. It should not be surprising that the black line of the lower-bound is \emph{above} the values of the regret as the lower-bound is only asymptotic.
+Conversely, we also add the Lai \& Robbins' logarithmic \emph{lower-bound} on regret ($C_I \log(t)$ from Theorem~\ref{thm:2:forSecondLogTLowerBound}) on the regret plots in Figure~\ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}.
+It should not be surprising that the black line of the lower-bound is \emph{above} the values of the regret as the lower-bound is only asymptotic.
 %
 We can clearly identify the behavior of the different strategies:
-the three efficient strategies indeed achieve a sub-linear regret, that looks logarithmic as supported by the theory,
+the three efficient strategies indeed achieve a sub-linear regret (see Figure~\ref{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000_3_algos}), that looks logarithmic, as supported by the theory,
 while the naive strategies achieve linear regret.
 The two simple strategies also achieve sub-linear regret but are less efficient:
-both $\varepsilon$-greedy and Explore-then-Commit starts as pure exploration, respectively until $\varepsilon_0/t$ becomes smaller than $1$ and until $t > T_0$, then they usually identify correctly the best arm and start to catch up with the best policies.
+both $\varepsilon$-greedy and E-t-C starts as pure exploration, respectively until $\varepsilon_0/t$ becomes smaller than $1$ and until $t > T_0$, then they usually identify correctly the best arm and start to catch up with the best policies.
+
+
+
+\begin{figure}[h!]  % [htbp]
+	% \centering
+    % \includegraphics[width=1.05\linewidth]{SP__K5_T10000_N1000__7_algos/main_MeanRewards____env1-1_2506036032481767447.pdf}
+    \includegraphics[width=1.10\linewidth]{SP__K5_T10000_N1000__7_algos/main_MeanRewards____env1-1_3198350886837790844.pdf}
+	\caption{Average of the cumulated rewards, as function of $t$, for $T=10000$ and $N=1000$.}
+	\label{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}
+\end{figure}
 
 
 % Final ranking for this environment #0 : (using more accurate estimate of the regret)
@@ -1713,7 +1731,7 @@ both $\varepsilon$-greedy and Explore-then-Commit starts as pure exploration, re
 %         (last regret = 49.366,  total regret = 49.402,  total reward = 6951.4,  total weighted selection = 6950.6).
 
 \begin{table}[ht]
-    % \begin{small}  % WARNING
+    \begin{small}  % WARNING
         \centering
         \begin{tabular}{c|cc|cc}
         \textbf{Algorithms}
@@ -1750,8 +1768,30 @@ both $\varepsilon$-greedy and Explore-then-Commit starts as pure exploration, re
         \end{tabular}
         \caption{Cumulated rewards and regret, for horizons $T=100$ and $T=10000$, \emph{averaged over $N=1000$ independent simulations} ($j=1,\dots,N$), for different algorithms.}
         \label{table:2:meanResults}
-    % \end{small}  % WARNING
+    \end{small}  % WARNING
 \end{table}
+
+
+
+\begin{figure}[h!]  % [htbp]
+    \centering
+    % [][$7$ algorithms, including unefficient ones]
+    \subfloat{
+        % \includegraphics[width=0.84\linewidth]{SP__K5_T10000_N1000__7_algos/main____env1-1_2506036032481767447.pdf}
+        \includegraphics[width=0.92\linewidth]{SP__K5_T10000_N1000__7_algos/main____env1-1_3198350886837790844.pdf}
+        \label{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000_7_algos}
+    }
+    \newline
+    \vspace*{-20pt}%FIXME
+    % [][$3$ algorithms, only the most efficient]
+    \subfloat{
+        \includegraphics[width=0.92\linewidth]{SP__K5_T10000_N1000__3_algos/main____env1-1_776571591054077529.pdf}
+        \label{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000_3_algos}
+    }
+	% \caption{Mean regret $R_t$ as function of $t$ for $T=10000$ and $N=1000$.}
+	\caption{Mean regret $R_t$ as function of $t$ for $T=10000$ and $N=1000$. The 3 most efficient algorithms: $\UCB_1$, \klUCB{} and Thompson Sampling achieve logarithmic regret.}
+	\label{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}
+\end{figure}
 
 % \begin{figure}[h!]  % [htbp]
 % 	% \centering
@@ -1769,40 +1809,23 @@ both $\varepsilon$-greedy and Explore-then-Commit starts as pure exploration, re
 
 
 
-\paragraph{Summary of this review of MAB algorithms.}
+\subsection{Summary of this review of MAB algorithms}
 %
-We gave an overview of the most well known families of algorithms for multi-armed bandits,
+We gave an overview of the most well known families of MAB algorithms,
 focussing on algorithms designed and analyzed for the single-player stationary and stochastic MAB model.
 Except the naive and simple strategies given as introductory examples, most of the policies presented above are order-optimal for at least one of the model of Bernoulli distributed problems, bounded rewards or one-dimensional exponential families,
 and some of them are known to be optimal in different settings.
 %
 To clearly understand the difference in their empirical behaviors, we illustrated the performance of two naive and two simple strategies against three efficient ones, on the example of Bernoulli-distributed problem used for the online demonstration from Section~\ref{sec:2:notations} (see Figures~\ref{fig:2:example_of_a_5_arm_bandit_problem} and \ref{fig:2:example_of_a_5_arm_bandit_problem__step100}).
-This also serves as a first example of numerical simulation performed with our library SMPyBandits, before the large-scale experiments of Section~\ref{sec:3:reviewSPAlgorithms} below.
+This also serves as a first example of simulation performed with our library SMPyBandits, before the large-scale experiments of Section~\ref{sec:3:reviewSPAlgorithms} below.
 %
-In the rest of this thesis, we mainly use the $\UCB_1$ or Thompson sampling algorithms when simplicity and realistic deployment is favored (in Chapter~\ref{chapter:4}), and the \klUCB{} algorithm when we give mathematical developments (in Chapters~\ref{chapter:5} and \ref{chapter:6}).
+In the rest of this thesis, we mainly use $\UCB_1$ or Thompson sampling when simplicity and realistic deployment is favored (in Chapter~\ref{chapter:4}), and \klUCB{} when we give mathematical developments (in Chapters~\ref{chapter:5} and \ref{chapter:6}).
 
-
-
-\begin{figure}[h!]  % [htbp]
-	% \centering
-    \includegraphics[width=1.20\linewidth]{SP__K5_T10000_N1000__7_algos/main_MeanRewards____env1-1_2506036032481767447.pdf}
-	\caption{Average of the cumulated rewards, as function of $t$, for $T=10000$ and $N=1000$.}
-	\label{fig:2:meanRewardsAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}
-\end{figure}
-
-\begin{figure}[h!]  % [htbp]
-	% \centering
-	\includegraphics[width=1.12\linewidth]{SP__K5_T10000_N1000__7_algos/main____env1-1_2506036032481767447.pdf}
-	\caption{Mean regret $R_t$ as function of $t$ for $T=10000$ and $N=1000$.}
-	\label{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000}
-\end{figure}
-
-\begin{figure}[h!]  % [htbp]
-	% \centering
-	\includegraphics[width=1.12\linewidth]{SP__K5_T10000_N1000__3_algos/main____env1-1_776571591054077529.pdf}
-	\caption{Mean regret $R_t$ as function of $t$ for $T=10000$ and $N=1000$, for the 3 most efficient algorithms: $\UCB_1$, \klUCB{} and Thompson Sampling.}
-	\label{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000__FIXME}
-\end{figure}
+% \begin{figure}[h!]  % [htbp]
+% 	% \centering
+% 	\caption{Mean regret $R_t$ as function of $t$ for $T=10000$ and $N=1000$, for the 3 most efficient algorithms: $\UCB_1$, \klUCB{} and Thompson Sampling.}
+% 	\label{fig:2:meanRegretAsFunctionOfTimeForDifferentAlgorithmsT10000N1000_onlyLogarithic}
+% \end{figure}
 
 
 % % FIXME
