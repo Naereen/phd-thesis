@@ -10,14 +10,14 @@
 \abstractStartChapter{}%
 %
 After detailing in Part~\ref{part:Introduction} the MAB model, we now come back to our main question of interest.
-In this chapter, we focus on wireless networks following the hypotheses of common to the present and future Internet of Things (IoT) networks exposed in Chapter~\ref{chapter:1}.
-Our goal is to show that the IoT devices can automatically learn to increase their battery life as well as their successful transmission rates, without changing anything on the IoT standard.
+In this chapter, we focus on wireless networks following the hypotheses common to present and future Internet of Things (IoT) networks exposed in Chapter~\ref{chapter:1}.
+Our goal is to show that the IoT devices can automatically learn to increase their battery life and their successful transmission rates, without changing anything on the IoT standard side.
 %
-We propose two models of IoT networks, composed of many independent IoT end-devices, that can use low-cost RL (Reinforcement Learning) algorithms to learn to improve their spectrum access.
+We propose two models of IoT networks, composed of many independent IoT end-devices, that can use low-cost Reinforcement Learning (RL) algorithms to learn to improve their spectrum access.
 %
-Decentralized RL for IoT lets the devices use acknowledgements sent by their Base Station as a reward, instead of sensing feedback like for OSA.
-We consider many independent ``dynamic'' devices, communicating with a small probability at every instant.
-Simulations show that dynamic devices can improve their spectrum efficiency,
+Decentralized RL for IoT lets the devices use acknowledgements sent back by their Base Station as a reward, instead of sensing feedback like for OSA.
+We consider many independent ``dynamic'' devices, each communicating with a small probability at every instant.
+Simulations show that dynamic devices can greatly improve their spectrum efficiency,
 by using MAB algorithms like \UCB.
 % in the case of a non-uniform repartition of the static devices in the channels
 We also developed a proof-of-concept using USRP platforms, for a real-world validation of this approach.
@@ -30,8 +30,8 @@ We also developed a proof-of-concept using USRP platforms, for a real-world vali
 % is interesting for its simplicity,
 % and because considering no retransmission can improve the battery life of IoT devices, at the cost of a lower Quality of Service (QoS).
 %
-However, in case of failed transmission of a message, a dynamic device can also retransmit it up-to a fixed number of retransmission.
-We compare different heuristics, based on \UCB, and numerical simulations confirm that the non-naive heuristics significantly also improve the network efficiency.
+However, our second model considers that in case of failed transmission of a message, a dynamic device can also retransmit it up-to a fixed number of retransmission.
+We compare different heuristics, based on \UCB, and numerical simulations confirm that the non-naive heuristics also significantly improve the network efficiency.
 % Interestingly, the simplest heuristic is found to be the most efficient one, as its simplicity implies a faster learning and convergence time.
 %
 % The second model is more interesting if the main target is an improvement of the QoS, rather than a longer battery life.
@@ -224,15 +224,15 @@ This chapter is mainly based on our articles \cite{Bonnefoi17,Besson2018ICT,Bess
 
 % \subsection*{Summary of this chapter}
 
-To sum-up, we focused in this chapter on models of IoT networks, and we proposed to use classical stationary multi-armed bandit learning algorithms implemented in a selfish and decentralized manner by each of the dynamic devices of the IoT network.
-We presented two models of wireless IoT network without sensing, inspired by the ALOHA protocol, and with or without retransmission of uplink packages in case of collisions.
+To sum-up, we focused in this chapter on models of IoT networks, and we proposed to use classical stationary multi-armed bandit learning algorithms implemented in a selfish and decentralized manner by each of the dynamic devices in the IoT network.
+We presented two models of wireless IoT networks, without relying on the feedback provided by spectrum sensing, and inspired by the ALOHA protocol. We proposed two versions, with or without retransmissions of uplink packages in case of collisions.
 % In both cases, we try to model the existing standards, like the LoRa standard, and we demonstrated the efficiency of the proposed MAB-based approach in both numerical simulations and empirical measurements on real wireless radio signals.
 %
 We conclude that this learning-based approach is efficient, as it allows the IoT devices to automatically and independently increase their successful transmission rates.
 
 It is also quite surprising that stochastic MAB algorithms can be of any use in such non-stationary applications.
-Unfortunately, analyzing the considered model with thousands of independent devices, all communicating and learning in their own (random) time scales, turned out to be of extreme difficulty.
-That is why we focus on two different simplifications of this model in the next chapters, for which we are able to provide clean theoretical analyses.
+Unfortunately, it turned out to be of extreme difficulty to analyze the considered model with thousands of independent devices, all communicating and learning in their own (random) time scales.
+That is why we focus on two different simplifications of this model in the next chapters, for which we are able to provide a clean theoretical analysis.
 % %
 % We can also highlight that the two models we studied are complementary:
 % the first model (without retransmission of packets), is interesting for its simplicity, and focused on improving the battery life of IoT devices,
@@ -247,12 +247,12 @@ That is why we focus on two different simplifications of this model in the next 
 On the one hand, we are actually able to analyze a simpler model, if we assume to have at most $M \leq K$ devices with a transmission probability of $p=1$.
 Instead of the experiment-driven direction pursued in this chapter, another possibility is to consider a \emph{multi-players MAB} model to describe our problem.
 %
-The main difference between the two models is the fact that in this chapter, devices do not transmit their messages at every time step, but following a random activation process (with a fixed transmission probability $p < 1$).
+The main difference between the two models is the fact that in Chapter~\ref{chapter:4}, $M \gg K$ devices transmit their messages at every time step, by following a random activation process (with a fixed transmission probability $p < 1$).
 If static and dynamic devices that have to transmit at a fixed time are denoted \emph{active devices},
 then their random activation patter makes the number of active devices an (unpredictable) random variable.
 Analyzing multi-players MAB models under this hypothesis is much harder, and is left as a future work.
 %
-We study this first direction in the next Chapter~\ref{chapter:5}.
+We study the case of $M \leq K$ devices learning independently to play a $K$-armed bandit in the next Chapter~\ref{chapter:5}.
 
 % In that case, the static and dynamic devices effect is decoupled, and arms only model the availability of the channels in the absence of dynamic devices: they are \iid{} with mean $\mu_i = 1 - p S_i$.
 % Moreover, dynamic devices are usually assumed to be able to \emph{sense} a channel before sending \cite{Zhao10}, and so communicate only if no static device is detected on the channel.
@@ -262,10 +262,10 @@ We study this first direction in the next Chapter~\ref{chapter:5}.
 
 \paragraph{Non-stationary MAB.}
 %
-On the other hand, while it is hard to analyze the models of this chapter due to their non-stationary behaviors, we are also able to analyze a simpler model, if we focus on a single player accessing a network which is assumed to be \emph{piece-wise stationary}
-(MAB problems which are stationary on ``long enough'' intervals, of unknown locations and lengths).
+On the other hand, while it is hard to analyze the models of this chapter because of the unpredictable behaviors of the IoT devices' activation patterns and the evolving number of active devices, we are also able to analyze a simpler model, if we focus on a single player accessing a network which is assumed to be \emph{piece-wise stationary},
+that are bandit problems which are stationary on ``long enough'' intervals, of unknown locations and lengths.
 %
-We also study this second direction in Chapter~\ref{chapter:6}.
+We then study this second direction in Chapter~\ref{chapter:6}.
 
 
 \newpage

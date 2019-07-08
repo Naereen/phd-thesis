@@ -8,15 +8,15 @@
 
 \abstractStartChapter{}%
 %
-As explained in Chapter~\ref{chapter:1}, we focus on decision-making models with a finite number of resources, called arms, and on stochastic models, where an arm is associated to a binary or real-valued distribution.
+As explained in Chapter~\ref{chapter:1}, we focus in this thesis on Reinforcement Learning (RL), and especially on decision-making models with a finite number of resources, called arms, and under a stochastic hypothesis: an arm being associated to a binary or real-valued distribution.
 In this chapter, we present the common base of all the more sophisticated mathematical models studied in this thesis: the stochastic multi-armed bandit (MAB) model, by restricting to the single-player and stationary stochastic case.
 %
-We motivate this model and discuss its application to and beyond cognitive radio.
+We motivate this model and discuss its application to and beyond Cognitive Radio (CR).
 %
-We formalize this MAB model, then we quote some of its important applications.
-We define the notion of regret of an algorithm, and present important results from the literature.
+% We formalize this MAB model, then we quote some of its important applications.
+We define the notion of regret of an algorithm, and present important results of regret lower-bound from the literature, which quantify what no algorithm can achieve.
 A short review of the most important families of MAB algorithms is then given,
-and we highlight some algorithms that are crucially used in the rest of this thesis, like \UCB, \klUCB{} and Thompson sampling.
+and we highlight some algorithms that are crucially used in the rest of this thesis, like \UCB, \klUCB{} and Thompson sampling, which all achieve logarithmic regret upper-bounds for our main target of interest, that are binary distributed problems.
 %
 % We conclude this chapter by discussing the question of online algorithm selection.
 
@@ -1812,14 +1812,17 @@ both $\varepsilon$-greedy and E-t-C starts as pure exploration, respectively unt
 \subsection{Summary of this review of MAB algorithms}
 %
 We gave an overview of the most well known families of MAB algorithms,
-focussing on algorithms designed and analyzed for the single-player stationary and stochastic MAB model.
-Except the naive and simple strategies given as introductory examples, most of the policies presented above are order-optimal for at least one of the model of Bernoulli distributed problems, bounded rewards or one-dimensional exponential families,
-and some of them are known to be optimal in different settings.
+designed and analyzed for the single-player case of the stationary and stochastic bandit model.
+Except the naive and simplest strategies given as introductory examples, most of the policies presented above are order-optimal for at least one of the models of binary or bounded rewards, or one-dimensional exponential families,
+and some of them are known to be asymptotically optimal in different settings.
 %
-To clearly understand the difference in their empirical behaviors, we illustrated the performance of two naive and two simple strategies against three efficient ones, on the example of Bernoulli-distributed problem used for the online demonstration from Section~\ref{sec:2:notations} (see Figures~\ref{fig:2:example_of_a_5_arm_bandit_problem} and \ref{fig:2:example_of_a_5_arm_bandit_problem__step100}).
-This also serves as a first example of simulation performed with our library SMPyBandits, before the large-scale experiments of Section~\ref{sec:3:reviewSPAlgorithms} below.
+% To clearly understand the difference in their empirical behaviors,
+We illustrated the performance of two naive, two simple and three efficient strategies, on the example of Bernoulli-distributed problem used for the online demonstration from Section~\ref{sec:2:notations}.
+%  (see Figures~\ref{fig:2:example_of_a_5_arm_bandit_problem} and \ref{fig:2:example_of_a_5_arm_bandit_problem__step100}).
+This also serves as a first example of simulation performed with our library SMPyBandits, before its presentation in the next chapter.
+% the large-scale experiments of Section~\ref{sec:3:reviewSPAlgorithms} below.
 %
-In the rest of this thesis, we mainly use $\UCB_1$ or Thompson sampling when simplicity and realistic deployment is favored (in Chapter~\ref{chapter:4}), and \klUCB{} when we give mathematical developments (in Chapters~\ref{chapter:5} and \ref{chapter:6}).
+In the rest of this thesis, we mainly use $\UCB_1$ or Thompson sampling when simplicity and realistic deployment is favored in Chapter~\ref{chapter:4}, and \klUCB{} when we focus on mathematical developments in Chapters~\ref{chapter:5} and \ref{chapter:6}.
 
 % \begin{figure}[h!]  % [htbp]
 % 	% \centering
@@ -1927,9 +1930,9 @@ In the rest of this thesis, we mainly use $\UCB_1$ or Thompson sampling when sim
 \section{Conclusion}
 \label{sec:2:conclusion}
 
-In this chapter, we presented the multi-armed bandit model, focussing on a finite number of arms, and real-valued rewards.
-Our main focus is on one-dimensional exponential families of distributions, and on stochastic and stationary problems.
-By showcasing an interactive demonstration made available online,
+In this chapter, we presented the multi-armed bandit model, by restricting to a finite number of arms and real-valued rewards.
+Our main focus is on binary or bounded rewards, or one-dimensional exponential families of distributions, and on stochastic and stationary problems.
+By showcasing a small interactive demonstration made available online,
 % XXX ?
 % (\href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}),
 we presented the notations used in all this thesis.
@@ -1940,24 +1943,24 @@ we presented the notations used in all this thesis.
 % Instead of always choosing a fixed algorithm, or running costly benchmarks before real-world deployment of the chosen algorithm, we advise to select a few candidate algorithms, where at least one is expected to be very efficient for the given problem, and use online algorithm selection to automatically and dynamically decide the best candidate.
 % We proposed an extension of the \ExpFour{} algorithm for this problem, \Aggr, and illustrate its performance on some bandit problems.
 % %
-We then used the small Bernoulli-distributed problem behind this demonstration
+We then used the small Bernoulli-distributed problem underlying this demonstration
 to present a small numerical simulation, comparing some algorithms using our Python open-source library SMPyBandits, that is presented in details in the next Chapter~\ref{chapter:3}.
 % The next chapter also includes simulations of the most important MAB algorithms that we presented above, on Bernoulli distributed problems of various sizes and durations.
 
 % We take another approach in Chapter~\ref{chapter:4}, where the
-We generalize this MAB model in Chapter~\ref{chapter:4}, by studying decentralized learning of a large set of independent players, all having different activation times.
-This extension is significantly harder than the two previously evoked ones, and we were unfortunately unable to obtain any strong theoretical results under these loose hypotheses.
-This model is however more generic and as such it was found suitable for applications to Internet of Things (IoT) networks, where arms model orthogonal wireless channels, players model communicating devices (\ie, IoT end-devices) and rewards model successes or failures of a wireless packet sent by a device.
-
+We generalize this MAB model in Chapter~\ref{chapter:4}, by studying decentralized learning of a large set of independent players, all having different random activation times.
+This extension is significantly too complicated to analyze, and we were unfortunately unable to obtain any strong theoretical results under such loose hypotheses.
+This model is however realistic, and as such it was found suitable for applications to Internet of Things (IoT) networks, where arms model orthogonal wireless channels, players model communicating devices (\ie, IoT end-devices) and rewards model successes or failures of a wireless packet sent by a device.
+%
 We take a more formal approach in the rest of the thesis,
 % We presented the simplest MAB model studied in this chapter, by focussing on one agent playing a stationary game.
 % Both hypotheses are removed or weaken in the rest of this manuscript,
 % first in Chapter~\ref{chapter:4} where we consider many XXX
-first by considering players facing a stationary problem in a decentralized way in Chapter~\ref{chapter:5},
-and then by considering a single player facing a non-stationary or a piece-wise stationary problem in Chapter~\ref{chapter:6}.
+first by considering $M \leq K$ devices facing a stationary environment, that is an IoT network of $K$ orthogonal frequency channels, in a decentralized way in Chapter~\ref{chapter:5},
+and then by considering a single device facing a non-stationary (piece-wise stationary) problem in Chapter~\ref{chapter:6}.
 %
 For both directions, we present natural extensions of the base model, and we detail our contributions that obtained state-of-the-art results,
-for the two problems of stationary multi-players and piece-wise stationary bandits.
+for the two problems of stationary multi-players and single-player piece-wise stationary bandits.
 
 
 % \paragraph{Possible future works.}
