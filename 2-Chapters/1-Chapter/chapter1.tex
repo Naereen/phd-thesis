@@ -220,7 +220,7 @@ Let us define and detail both concepts.
 % }
 
 
-\textbf{From IT to Cognitive Radio.}
+\paragraph{From IT to Cognitive Radio.}
 %
 We can narrow down the first field of study of this thesis, steps by steps:
 from Information Technologies (IT), to Telecommunications, to Wireless Communications, then to Cognitive Radio (CR),
@@ -267,7 +267,7 @@ This defines the concept of \textbf{Opportunistic Spectrum Access} (OSA), for wh
 
 
 
-\textbf{From Statistics or Machine Learning to Multi-Armed Bandits.}
+\paragraph{From Statistics or Machine Learning to Multi-Armed Bandits.}
 %
 % Similarly, we can narrow down the second field of study of this thesis, steps by steps.
 % Stats > sequential learning > bandits
@@ -354,7 +354,7 @@ The MAB problem have been studied in both the machine learning and the statistic
 The research on MAB has produced a vast literature in the $2000$s \cite{Auer02,Auer02NonStochastic,Audibert2009minimax} and continues to be a topic of high interest, as illustrated by the surveys and books \cite{Bubeck12,LattimoreBanditAlgorithmsBook,Slivkins2019}, and the wide range of applications of MAB in the recent years \cite{bouneffouf2019survey}.
 
 
-\textbf{Opportunistic Spectrum Access.}
+\paragraph{Opportunistic Spectrum Access.}
 %
 The two communities of OSA and MAB have started to interact, and the resulting works have received a great interest from both communities, since the late $2000$s and early $2010$s, with pioneers works like \cite{Liu08,Zhao10,Jouini09,Jouini10}.
 The focus is on one SU accessing a licensed spectrum, occupied by PU that have a strict priority over the SU, which has to follow a ``listen-before-talk'' access scheme.
@@ -382,7 +382,7 @@ under partial information feedback (\ie, the player receives sensing feedback ab
 These three hypotheses are the ones that restrict from the general sequential learning framework to the specific MAB case (see Figure~\ref{fig:1:ReinforcementLearningCycle}).
 
 
-\textbf{MAB for OSA, and a short history of these researches at the SCEE team.}
+\paragraph{MAB for OSA, and a short history of these researches at the SCEE team.}
 %
 Previous works of our SCEE team showed that MAB can be used to model the OSA problem:
 orthogonal frequency bands (or channels) are modeled by arms $k\in\{1,\dots,K\}$,
@@ -396,11 +396,10 @@ along with the early works of Q. Zhao and her team, for instance with \cite{Liu0
 %
 Shortly after in $2014$, proof-of-concepts using real-world radio hardware and Software Defined Radio were developed by C. Moy and his student C. Robert, using USRP boards and the MATLAB/Simulink software \cite{RobertSDR2014,MoyWSR2014}.
 In a second PhD thesis, N. Modi studied from $2014$ to $2017$ the impact on the battery life of a wireless device of using MAB algorithms to optimize channel selections \cite{Modi17PhD}.
-On the one hand, running a MAB algorithm such as UCB-like algorithms was proven to be useful and could bring significant improvement in terms of successful transmission rates, directly increasing the battery life of the device.
-On the other hand, classical MAB algorithms tend to switch arms a lot of times, especially in the beginning of their learning process, and this induces a lot of dynamical hardware reconfigurations for the wireless device, as selecting a different channel requires a change in the radio hardware used by the device.
-Each hardware reconfiguration costs energy for the device, and so quickly-switching algorithms lead to a reduction of the battery life.
-The trade-off between the two aspects is studied empirically in
-\cite{modiDemo2016}.
+% On the one hand, running a MAB algorithm such as UCB-like algorithms was proven to be useful and could bring significant improvement in terms of successful transmission rates, directly increasing the battery life of the device.
+% On the other hand, classical MAB algorithms tend to switch arms a lot of times, especially in the beginning of their learning process, and this induces a lot of dynamical hardware reconfigurations for the wireless device, as selecting a different channel requires a change in the radio hardware used by the device.
+% Each hardware reconfiguration costs energy for the device, and so quickly-switching algorithms lead to a reduction of the battery life.
+The trade-off between rapid software reconfigurations that cost energy but allow to learn quickly is studied empirically in \cite{modiDemo2016}.
 
 In $2017$, C. Moy continued to work on this direction, with a post-doctoral student, S. Darak, leading to publications such as
 \cite{darak2016bayesian,Darak16}.
@@ -419,7 +418,7 @@ For more details on the state of research on Cognitive Radio, we refer to the su
 % \TODOL{Raccourcir toutes les fois où je parle des travaux sur l'OSA après dans la suite de la thèse !}
 
 
-\textbf{Limitations and specifities of IoT networks.}
+\paragraph{Limitations and specifities of IoT networks.}
 %
 The aforementioned literature have essentially shown that MAB algorithms can be applied successfully on the SU side for the OSA problem.
 However, if we consider CR-ready devices that cannot perform spectrum sensing, such as low-cost and low energy-consumption end-devices designed for the future Internet of Things networks, the MAB model that uses sensing to detect PU in the OSA case can no longer be applied.
@@ -480,19 +479,19 @@ We answer partially to this problematic by the following steps.
 We started by exploring the rich literature of multi-armed bandits,
 as many different algorithms exist, with lots of variants on the simple problem presented above.
 % (see \cite{LattimoreBanditAlgorithmsBook,Slivkins2019} for surveys).
-We thus start the first Part~\ref{part:Introduction} of this thesis with Chapter~\ref{chapter:2}, which presents the MAB model and gives a review of the most important algorithms designed to solve stochastic and stationary MAB problems.
+We thus start the first part of this thesis with Chapter~\ref{chapter:2}, which presents the MAB model and reviews the most important algorithms designed to solve stochastic and stationary MAB problems.
 %
 In order to clearly understand which algorithms could be adapted to the aforementioned constraints of CR for IoT networks,
 we were not only interested by the usual measure of performance of any MAB algorithm (its regret, see below in Section~\ref{sec:2:lowerUpperBoundsRegret}),
-but also by their empirical performances in terms of computational complexity and storage requirements, from the point of view of both theoretical analyses and real-world measurements.
+but also by their empirical performances in terms of computational complexity and storage requirements, from the points of view of both theoretical analyses and real-world measurements.
 %  on time and memory footprints.
 
 
 % \paragraph{Chapter~\ref{chapter:3}.}
 %
 Our exploration of the large number of MAB algorithms and models developed in the recent literature
-has given us the ambition to write a single piece of software allowing anyone to easily implement new models and algorithms, in order to compare the existing ones and empirically explore the performances of newly proposed algorithms.
-To tackle this goal, we developed a Python library of simulation of MAB problems.
+has given us the ambition to write a single software allowing anyone to easily implement new models and algorithms, in order to compare the existing ones and empirically explore the performances of newly proposed algorithms.
+To tackle this goal, we developed a library of simulation of MAB problems, in the Python language.
 %
 To the best of our knowledge, we wrote the most exhaustive open-source library for bandits. Our library SMPyBandits is published online, under an open-source licence \cite{SMPyBanditsJMLR,SMPyBandits}, and hosted on \href{https://GitHub.com/SMPyBandits}{\texttt{GitHub.com/SMPyBandits}}.
 We present in details its architecture and its features in Chapter~\ref{chapter:3}, along with different examples of its usage.
@@ -501,19 +500,19 @@ A full documentation is available online, as well as exhaustive instructions to 
 
 % \paragraph{Chapter~\ref{chapter:25}.}
 %
-Because there are so many MAB algorithms available, we are also interested by the question of how a practitioner can chose the algorithm to implement, in a given IoT object, in order to equip this object with the capacity to adapt robustly to any environment.
+Because there are so many MAB algorithms available, we are also interested by the question of how an engineer can chose the algorithm to implement, in a given IoT object, in order to equip this object with the capacity to adapt robustly to any environment.
 To answer this question, we present two approaches.
 The first one is an empirical comparison of the most efficient and well known existing algorithms, in Section~\ref{sec:3:reviewSPAlgorithms} and \ref{sec:3:timeAndMemoryCosts}.
 We confirm that widely used and not too sophisticated algorithms, such as \UCB{} \cite{Auer02}, Thompson sampling \cite{Thompson33} and \klUCB{} \cite{KLUCBJournal}, are the most efficient in terms of regret, and offer a good balance between regret and (time and memory) complexity.
-The second approach is an online algorithm selection, consisting in aggregating a (finite) set of algorithms and automatically discovering which one performs the most efficiently, against a given problem, with our contribution \Aggr{} that we detail in Chapter~\ref{chapter:25}.
-This work on aggregating MAB algorithms was motivated for the OSA case of Cognitive Radio, where many previous research works only considered the $\UCB_1$ algorithm without really justifying this choice.
+The second approach is online algorithm selection, consisting in aggregating a (finite) set of algorithms and automatically discovering which one performs the most efficiently, against a given problem, with our contribution \Aggr{} that we detail in Chapter~\ref{chapter:25}.
+This work on aggregating MAB algorithms was motivated for the OSA case of CR, where many previous research works only considered the $\UCB_1$ algorithm without really justifying their choice.
 This contribution was presented at the IEEE WCNC conference in Barcelona, Spain, in April $2018$.
 
 
 % \subsection{Focusing on IoT networks.}
 \subsection{Two models of IoT networks and decentralized MAB}
 
-In the second Part~\ref{part:MABIOT} of this thesis, we start by proposing and studying different models of IoT networks, with simulations and a real-world proof-of-concept, and then we study interesting questions on two mathematical models of MAB, arising from simplification of our first model.
+In the second part of this thesis, we start by proposing and studying different models of IoT networks, with simulations and a real-world proof-of-concept, and then we study interesting questions on two mathematical models of MAB, arising from simplification of our first model.
 
 
 % \paragraph{Chapter~\ref{chapter:4}.}
@@ -521,11 +520,11 @@ In the second Part~\ref{part:MABIOT} of this thesis, we start by proposing and s
 We study two models of IoT networks in Chapter~\ref{chapter:4}.
 The first model considers IoT devices that simply have data to regularly send to a base station (at unpredictable or random times).
 Such devices use acknowledgements as feedback, in order to optimize their up-link communications, by accessing more the best channels (\ie, the channel less occupied by the surrounding traffic).
-The goal of this first model is to increase the Quality of Service (QoS) of the application of such IoT network, by applying decentralized RL on the device side in order to reduce the rate of failed transmission.
+The goal of this first model is to increase the Quality of Service (QoS) of such IoT network, by applying decentralized RL on the device side in order to reduce the rate of failed transmissions.
 The base station will thus receive more up-link packets from the devices being served, if they can successfully learn by themselves an efficient spectrum access scheme.
-It implies that the network can accept more end-devices while maintaining the same QoS.
+It implies that the network can serve more end-devices while maintaining the same QoS.
 %
-Our second model then considers packet retransmissions, and while the two concepts are similar, the application of an efficient decentralized learning algorithm now results in both an increased battery life for each of the devices, as well as an increased QoS for the entire network, as less retransmissions reduce the local spectrum load.
+Our second model then considers packet retransmissions, and while the two models are similar, the application of an efficient decentralized learning algorithm now results in both an increased battery life for each of the devices, as well as an increased QoS for the entire network, as less retransmissions reduce the local spectrum load.
 
 % We present in Section~\ref{sec:4:firstModel} a first model of an IoT network, that is made of thousands (or more) of end-devices and a single base station.
 % We consider an ALOHA-based protocol, slotted in both time and frequency, by assuming a simple pre-agreed synchronization between all devices and the base station. This synchronization is the only aspect of the network that requires central control from the base station, and it only requires one downlink packet when a new device joins the network operated by this base station \cite{Centenaro16}.
@@ -539,7 +538,7 @@ Our second model then considers packet retransmissions, and while the two concep
 % We show that our approach is interesting, as these low-cost MAB algorithms have near-optimal performance, even when the proportion of end-devices increases and the interfering traffic from the other devices becomes more and more fluctuating and unpredictable.
 % %
 % Even without changing anything on the level of the considered IoT standard (neither the PHY nor the MAC layers), our proposal is just an add-on capability, that can be set-up on each device, on a unit-per-unit basis.
-The first model comes from the first article written during this thesis, which initiated a collaboration with R. Bonnefoi, another PhD student of our team SCEE.
+The model without retransmission comes from the first article written during this thesis, which initiated a collaboration with R. Bonnefoi, another PhD student of our team SCEE.
 We presented it at the EAI CROWNCOM conference in Lisboa, Portugal in September $2017$, where it obtained the ``best paper award'' \cite{Bonnefoi17}.
 %
 % Verifying the potential gain of performance brought by these MAB algorithms in numerical simulations was a first step, but it is satisfactory to also verify our results on a real-world proof-of-concept (PoC).
@@ -547,7 +546,7 @@ We presented it at the EAI CROWNCOM conference in Lisboa, Portugal in September 
 % We implemented a network with a base station, which receives incoming messages from different end-devices and replies with acknowledgements.
 % % , that are used as feedback by the devices and let them learn an efficient spectrum access scheme.
 % % Verify this first model empirically: proof of concept
-The proof-of-concept (PoC) continued the fruitful collaboration, and was demonstrated during three days at the IEEE ICT conference in Saint-Malo, France, in June $2018$ \cite{Besson2018ICT}, and later presented at the IEEE WCNC conference in Marrakech, Morocco, in April $2019$ \cite{Besson2019WCNC}.
+The proof-of-concept (PoC) continued the fruitful collaboration, and was demonstrated during three days at the IEEE ICT conference in Saint-Malo, France, in June $2018$ \cite{Besson2018ICT}, and later at the IEEE WCNC conference in Marrakech, Morocco, in April $2019$ \cite{Besson2019WCNC}.
 %
 % We then consider an extension of our first model, following the idea of packet retransmissions, that is at the root of the famous ALOHA protocol \cite{Abramson1970,Roberts75}.
 % The idea is that when a device sends an uplink message but does not receive its \Ack{} (before a certain delay), instead of going back to sleep mode in order to wait for its next activation (\eg, following the Bernoulli random activation pattern, or waiting for the application to need to send some data), the device will try again to send the same packet, a few times (\eg, up-to $m \leq 10$ times), after some small random waiting times.
@@ -560,9 +559,9 @@ The second model with retransmissions concluded our collaboration with R. Bonnef
 
 % \paragraph{Chapter~\ref{chapter:5}.}
 %
-In both models of IoT networks presented above, the core concept is to let every dynamic device run a learning algorithm in a fully decentralized way, in order to optimize the complete system.
+In both models of IoT networks presented above, the core idea is to let every dynamic device run a learning algorithm in a fully decentralized way, in order to optimize the entire system.
 It is important to note that each devices communicates, and thus learns, only at some rounds and not at all the time steps, by following its own random activation process (we restrict to a purely random Bernoulli activation process of probability $p$).
-It means that each of them target its own local objective, which is to maximize its cumulated reward, in a selfish way and by being agnostic to the other devices following the same objective.
+It means that each of them target its own local objective, which is to maximize its cumulated reward, in a selfish way and by being agnostic about the other devices following the same objective.
 It is well known in game theory that playing selfishly can be disastrous for the centralized performance measure, one can think of popular ``dilemmas'', such as the \href{https://en.wikipedia.org/wiki/Prisoner%27s_dilemma}{prisoner dilemma}.
 % , and for more examples we refer to the book \cite{CesaLugosi06}.
 % https://www.ii.uni.wroc.pl/~lukstafi/pmwiki/uploads/AGT/Prediction_Learning_and_Games.pdf
@@ -573,17 +572,17 @@ but due to the random number of active devices at each time step (\ie, as soon a
 %
 That is the reason why we relax the hypothesis of having $M \gg K$ (or even simply $M > K$) devices in a network with $K$ orthogonal wireless channel in Chapter~\ref{chapter:5}, that is equivalent to having $p < 1$, and we consider the case of IoT devices communicating at every time step (\ie, $p=1$), and so we restrict to only up-to $M \leq K$ devices.
 The model we studied comes with different variants, depending on the feedback level, and covers both the OSA case (\ie, with sensing of PU) or the IoT case (\ie, without sensing).
-The goal was to understand the heuristic of Chapter~\ref{chapter:4}, \Selfish, in the simpler framework of multi-player MAB, which has been studied before for the case of OSA, as studied for instance by \cite{Zhao10,Anandkumar10,Anandkumar11}.
+The goal was to understand the heuristic of Chapter~\ref{chapter:4}, \Selfish, in the simpler framework of multi-player MAB, which has been studied before for the case of OSA, for instance by \cite{Zhao10,Anandkumar10,Anandkumar11}.
 %
-The OSA case covered by the studied model can seem to slightly differ with the one considered by \cite{Jouini10} and other previous works,
+The OSA case covered by the studied model can seem to slightly differ with the one exposed above, from \cite{Jouini10} and other previous works,
 as our model requires that an \Ack{} is sent back by the base station if the transmission was successful, even in the case where sensing information is available.
-It is actually equivalent to the previously studied models of applying MAB for OSA, as they only considered synchronized devices, one SU and PU, and thus if the sensing indicates that one channel is free at one time slot, the up-link message sent by the SU device is sure to be successfully received by the base station (in the ideal model), so there is no risk of collision, and thus no need for an \Ack.
+It is actually equivalent to the previously studied models of applying MAB for OSA, as they only considered synchronized devices, only one SU and PU, and thus if the sensing indicates that one channel is free at one time slot, the up-link message sent by the SU device is sure to be successfully received by the base station (in the ideal model), so there is no risk of collision, and thus no need for an \Ack.
 
 
-On the one hand, in the OSA setting, we failed to obtain positive result for the \Selfish{} policy, as we proved that in some limited settings (\eg, $K=3$ and $M=2$), \Selfish-\UCB{} can suffer from linear regret with a small probability, and thus suffers from linear mean regret.
+On the one hand, in the OSA setting, we failed to obtain positive result for the \Selfish{} policy, as we proved that in some limited settings (\eg, $K=3$ channels and $M=2$ devices), \Selfish-\UCB{} can suffer from linear regret with a small probability, and thus suffers from linear mean regret.
 This result was later confirmed and analyzed by other researchers in \cite{BoursierPerchet18} (Appendix~F).
 %
-On the other hand, we were able to propose new algorithms for this multi-player bandit problem with sensing information, and we analyzed our proposal \MCTopM-\klUCB, to show that it achieves a finite-time logarithmic regret upper bound, improving significantly over previous state-of-the-art results.
+On the other hand, we were able to propose new algorithms for this multi-player bandit problem with sensing information, and we analyzed our proposal \MCTopM{} to show that it achieves a finite-time logarithmic regret upper bound, and improves significantly over previous state-of-the-art results.
 Our algorithm also achieves a logarithmic number of collisions and arm switches, and allows a fixed group of $M$ devices to efficiently learn to use the $M$ best channels orthogonally for almost all their up-link communications.
 %
 This strong theoretical result heavily depends on the presence of sensing feedback, and as such our results are not (yet) applicable to the IoT model without sensing.
@@ -611,18 +610,19 @@ This strong theoretical result heavily depends on the presence of sensing feedba
 
 
 As explained above, the model of Chapter~\ref{chapter:4} was found intractable to analyze, mainly because we consider an IoT network with many end-devices, all following random activation patterns.
-The difficulty does not reside in the fact that we are trying to analyze MAB algorithms, designed to tackle stationary problems, on a non-stationary problem,
-but rather that we are analyzing algorithms which are all playing in different (random) activation times, subsets of the global synchronized time steps.
+The difficulty does not reside in the fact that we are trying to analyze MAB algorithms, designed to tackle stationary problems, applied on a non-stationary problem,
+but rather that we consider algorithms which are all playing in different (random) activation times, subsets of the global synchronized time steps.
 Generalizing to different activation probabilities would lead to a model even harder to analyze, and enforcing at most $M \leq K$ devices is in fact not really realistic for IoT networks, even though this lead to the interesting model of Chapter~\ref{chapter:5}.
 
 On the one hand, if the activation pattern of all devices could be fixed, for instance based on a centralized affectation of the devices to different time slots, then the model of multi-player bandit from Chapter~\ref{chapter:5} can be used to let every group of $M \leq K$ devices learn an optimal orthogonal affectation in the $K$ channels (\eg, groups can be the set of devices that all emit at the same time).
 %
 However, even if we continue to assume a synchronized time in all the rest of the thesis,
-it is hard to argue that this hypothesis of a centralized time schedule for the end-devices can be realistic, because we study the case of decentralized learning for OSA and IoT precisely in order to avoid signaling and any central control of the devices by the base station, as we explained above.
+it is hard to argue that this hypothesis of a centralized time schedule for the end-devices can be realistic, because we study the case of decentralized learning for OSA and IoT precisely in order to avoid signaling and any central control of the devices by the base station, as we explained before.
 
 On the other hand, another way to relax the non-stationary hypothesis is to take the point-of-view of a single device, like in the OSA case mentioned above, where the focus is on one SU surrounded by many PU having stationary behaviors.
 If we focus on one IoT device, its environment (\ie, the surrounding devices) is non-stationary, meaning that its average properties can fluctuate with time, but real environments usually present non-stationarities with certain structures.
-For instance, enforcing stationarity on some time intervals leads to the last contribution and the last chapter of this thesis.
+%
+It is thus interesting and realistic to enforce stationarity on some time intervals, and this leads to the last contribution and the last chapter of this thesis.
 % DONE explain why is it interesting to study piece-wise stationary problems from the point-of-view of one player...
 
 
@@ -630,9 +630,9 @@ For instance, enforcing stationarity on some time intervals leads to the last co
 %
 In order to also understand precisely how MAB algorithms behave under non-stationary environment, we studied the literature on adversarial and on non-stationary MAB, for the two cases of slowly-varying and abruptly-changing environments.
 We begin the last Chapter~\ref{chapter:6} by reviewing the existing works,
-and we chose to focus on the piece-wise stationary problem,
-meaning that the underlying bandit problem is stationary on some intervals, separated by change-points located at unknown times.
-Assuming the environment to be piece-wise stationary indeed makes sense for applications to wireless networks, where a change-point can for instance correspond to the arrival of a new group of end-devices in the network. Examples of such situation can be a new company arriving on the market in one city (\eg, the Linky counters being set-up nowadays in France), or the neighbor farmer installing sensors on his own herd of cows, etc.
+and we chose to focus on the piece-wise stationary problem (\ie, abruptly-changing),
+meaning that the underlying bandit problem is stationary on consecutive intervals, separated by change-points located at unknown times.
+Assuming the environment to be piece-wise stationary indeed makes sense for applications to wireless networks, where a change-point can for instance corresponds to the arrival of a new group of end-devices in the network. Examples of such situation can be a new company arriving on the market in one city (\eg, the Linky counters being set-up nowadays in France), or the neighbor farmer installing sensors on his own herd of cows, etc.
 %
 Two main families of algorithms have been proposed for the piece-wise stationary problem,
 that usually consist in combining an efficient policy designed for the stationary MAB problem (\eg, Thompson Sampling or \klUCB) and a way to adapt to changes in the arms distributions.
@@ -646,9 +646,9 @@ We build on very recent results on the Generalized Likelihood Ratio test (GLRT) 
 Bounded rewards are indeed usually more appropriate for Cognitive Radio applications, as shown above.
 Using the fact that bounded variables in $[0,1]$ are not only $1/4$ sub-Gaussian but also sub-Bernoulli, we prove the first finite-time guarantees for the GLRT for bounded variables.
 We first show finite-time bounds on both the false alarm probability of the test, and its detection delay, under mild assumptions on the lengths of the stationary sequences.
-Our algorithm, denoted \GLRklUCB, is then presented in two variants, whether change-points are local (\ie, only one arm mean changes at each change-point) or global (\ie, possibly all the arm means change at a time).
+Our algorithm is then presented in two variants, whether change-points are local (\ie, only one arm mean changes at each change-point) or global (\ie, possibly all the arm means change at a time).
 %
-We prove that by combining the policy \klUCB, asymptotically optimal for stationary problems, and our new analysis of the GLRT for bounded rewards, we obtain state-of-the-art guarantees on the regret of the proposed algorithm.
+We prove that by combining the policy \klUCB, efficient for stationary problems, and our new analysis of the GLRT for bounded rewards, we obtain state-of-the-art guarantees on the regret of the proposed algorithm, denoted \GLRklUCB.
 We consider the same hypothesis as our competitors, by assuming that the length of the stationary intervals to be ``long enough'' for the change-points to be detectable.
 The best regret upper-bound is obtained when the algorithm knows before-hand the horizon and the number of change-points, but our algorithm does not need to have any other knowledge of the problem difficulty to be tuned optimally.
 %
@@ -667,7 +667,7 @@ This manuscript ends with
 % the appendixes, first with a short overview of another contribution, in Appendix~\ref{app:2:DoublingTricks}.
 % We discuss about our work on doubling-trick, in order to remove the need for an algorithm to know the horizon of the bandit game before starting to play it.
 % The rest of the appendix
-a list of abbreviations and notations, then lists of figures, algorithms, code samples and tables,
+a list of abbreviations and notations, then with lists of figures, algorithms, code samples and tables,
 and finally the list of the bibliographical references.
 
 
@@ -716,7 +716,7 @@ We can list the following points to summarize the main contributions of this the
     \item
     We implemented a proof-of-concept of the aforementioned model \cite{Besson2018ICT}, and we present it in Section~\ref{sec:4:gnuradio},
     % We made a video showcasing our demonstration, hosted at
-    and in a video, hosted at
+    and in a $6$-minute video, hosted at
     \texttt{\href{https://youtu.be/HospLNQhcMk}{youtu.be/HospLNQhcMk}}.
 
     % \item
@@ -726,7 +726,7 @@ We can list the following points to summarize the main contributions of this the
     We present three variants of the multi-players bandit model in Chapter~\ref{chapter:5}.
     For the case with sensing information, we propose two new algorithms, and we give an analysis for our algorithm \MCTopM{} to show it is order-optimal,
     as well as extensive numerical experiments to demonstrate its excellent performance in comparison with the rest of the literature.
-    Some recent research works heavily built up on our results, and the research on multi-players bandits has been quite active since its publication \cite{Besson2018ALT}.
+    Some recent research works built up on our results, and the research on multi-players bandits has been quite active since its publication \cite{Besson2018ALT}.
 
     % \item
     % We also give a detailed literature review of the different extensions of the multi-players MAB model, which we believe was never written before.
@@ -760,12 +760,12 @@ The thesis is organized in two parts, corresponding to the two intermediate line
     \begin{tikzpicture}[>=latex',line join=bevel,scale=2.25]
         %
         \node[align=center] (introduction) at (0,3.25) [rectangle,draw,fill=blue!15] {\textbf{Chapter~\ref{chapter:1}}\\Introduction};
-        \node[align=center] (chapter2) at (0,2.25) [rectangle,draw,fill=red!15] {\textbf{Chapter~\ref{chapter:2}}\\Stochastic and Stationary\\Multi-Armed Bandit models};
+        \node[align=center] (chapter2) at (0,2.25) [rectangle,draw,fill=red!15] {\textbf{Chapter~\ref{chapter:2}}\\The Stochastic\\Multi-Armed Bandit models};
         \node[align=center] (chapter3) at (-2.5,2.25) [rectangle,draw,fill=red!10] {\textbf{Chapter~\ref{chapter:3}}\\SMPyBandits: simulation\\library for MAB};
         \node[align=center] (chapter25) at (+2.5,2.25) [rectangle,draw,fill=red!20] {\textbf{Chapter~\ref{chapter:25}}\\Online selection\\of the best algorithm};
         \node[align=center] (chapter4) at (-2.5,1) [rectangle,draw,fill=green!10] {\textbf{Chapter~\ref{chapter:4}}\\Two MAB models\\for IoT networks};
         \node[align=center] (chapter5) at (0,1) [rectangle,draw,fill=green!15] {\textbf{Chapter~\ref{chapter:5}}\\Multi-players\\Multi-Armed Bandits};
-        \node[align=center] (chapter6) at (2.5,1) [rectangle,draw,fill=green!20] {\textbf{Chapter~\ref{chapter:6}}\\Non-stationary\\Multi-Armed Bandits};
+        \node[align=center] (chapter6) at (2.5,1) [rectangle,draw,fill=green!20] {\textbf{Chapter~\ref{chapter:6}}\\Piece-Wise Stationary\\Multi-Armed Bandits};
         \node[align=center] (conclusion) at (0,-0.25) [rectangle,draw,fill=blue!20] {\textbf{Chapter~\ref{chapter:conclusion}}\\General Conclusion};
         % \node[align=center] (appendix) at (2.5,-0.25) [rectangle,draw,fill=yellow!10] {Appendix};
         %
@@ -793,7 +793,7 @@ The thesis is organized in two parts, corresponding to the two intermediate line
 % \begin{itemize}
     % \item
 \textcolor{darkred}{First, in Part~\ref{part:Introduction}} (second line), we start by the next Chapter~\ref{chapter:2}, required for the rest of the document, as we introduce the MAB models and the notations used in this thesis.
-Conversely, even if Chapters~\ref{chapter:2}, \ref{chapter:5} and \ref{chapter:6} use numerical simulations based on our simulation library SMPyBandits, the Chapter~\ref{chapter:3} where we present it is not required to understand them.
+Conversely, even if Chapters~\ref{chapter:2}, \ref{chapter:5} and \ref{chapter:6} use numerical simulations based on our simulation library SMPyBandits, the Chapter~\ref{chapter:3} where we present SMPyBandits is not required to understand them.
 We conclude this part with Chapter~\ref{chapter:25}, where we detail one of the first contributions of this thesis, a new algorithm for online MAB algorithms selection.
 
     % \item
@@ -801,7 +801,7 @@ We conclude this part with Chapter~\ref{chapter:25}, where we detail one of the 
 Chapter~\ref{chapter:4} starts by presenting different models of IoT networks where we show that MAB algorithms can be used with success.
 Our two models are interesting and close to reality, but they appeared to be too general to propose a mathematical analysis of the good empirical performance of the considered solutions.
 For this reason, we weaken the models for the rest of the document,
-and both Chapters~\ref{chapter:5} and \ref{chapter:6} studies an intermediate model, lying between the stationary single-player MAB model from Chapter~\ref{chapter:2} and the IoT networks models from Chapter~\ref{chapter:4}.
+and both Chapters~\ref{chapter:5} and \ref{chapter:6} studies an intermediate model, lying between the stationary single-player MAB model from Chapter~\ref{chapter:2} and the intractable IoT networks models from Chapter~\ref{chapter:4}.
 % \end{itemize}
 
 
@@ -815,7 +815,7 @@ and both Chapters~\ref{chapter:5} and \ref{chapter:6} studies an intermediate mo
 
 \TODOL{Guy Carrault me dit : Sinon les publications du doctorant sont indiquées en début de document, je ne me rappelle plus si elles ne doivent pas figurées à la fin}
 
-We conclude this chapter with a list of works published during this PhD.
+We conclude this chapter with a list of works published during my PhD.
 All the following works are published entirely and freely, on the HAL platform (on \href{https://hal.archives-ouvertes.fr/}{\texttt{HAL.Archives-Ouvertes.fr}}).
 The complete list can be found on
 \href{https://cv.archives-ouvertes.fr/lilian-besson/}{\texttt{CV.Archives-Ouvertes.fr/lilian-besson}}.
