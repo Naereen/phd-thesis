@@ -23,7 +23,7 @@
 % \textbf{Where and when?}
 %
 This manuscript concludes my doctoral thesis, which started in October $2016$ and finished in November $2019$.
-My research took place at the IETR laboratory in Rennes (France), in the SCEE team hosted on the Rennes campus of the engineering school CentraleSupélec.
+My research took place at the IETR laboratory in Rennes (France), in the SCEE team, hosted on the Rennes campus of the engineering school CentraleSupélec.
 I was supervised by Professor Christophe Moy, in Rennes,
 and I was also co-supervised by Doctor Emilie Kaufmann, whom I visited many times at Inria Lille Nord Europe in Lille (France).
 
@@ -48,7 +48,7 @@ In addition to the usual Research and Development effort to design many differen
 now the time has come to combine it with cheap and promising Machine Learning in order to (try to) attain the level of performance gain necessary for the IoT promises to become reality.
 
 That is why we are interested in this thesis about
-improving the battery life of IoT end-devices and reduce the energy cost of IoT networks.
+improving the battery life of IoT end-devices and reducing the energy cost of IoT networks.
 We propose to attain these two goals jointly, by embedding low-cost decentralized decision making on directly into the future IoT devices.
 %
 Our focus in this PhD thesis is thus on the possible applications of embedding a certain kind of Machine Learning algorithms (Multi-Armed Bandit algorithms), in order to let the IoT devices optimize their wireless communications and learn to be self-organized automatically and without central control nor coordination.
@@ -86,8 +86,7 @@ Historically, three main families of wireless communication systems have been de
 % The opposite: decentralized broadcasting, and the age of IoT
 % Finally, a third kind of systems are of the opposite kind,
 This third kind of systems can be designed as decentralized:
-even if a central base station is
-still in charge of many devices,
+because even if a central base station is still in charge of many devices,
 the devices initiate the sending of up-link packets, and the only down-link data they can receive are short acknowledgements, sent from the base-station to indicate success or failure of every up-link packet.
 This family of wireless systems are referred to as Internet of Things (IoT),
 and a typical example of application of such IoT networks is for sensor wireless networks.
@@ -100,24 +99,24 @@ For agriculture, one example can be to equip every cow (in large farms) with sen
 % OK commencer par un paragraphe qui explique qu'on étudie les télécom dans le but de les rendre automatiquement plus efficace, plus verte, plus adaptative
 
 This third kind of wireless systems are characterized by their decentralized nature,
-where communications are initialized and regulated by the devices, not a centralized control systems
+where communications are initialized and regulated by the devices, not by a centralized control systems.
 % due to the really limited information that the base station can send to the devices (in downlink), it is no longer possible to optimize the efficiency of the network from the centralized point-of-view of the base station.
 Indeed, a central control requires signaling packets that have been identified as too heavy for these kinds of systems.
 In the present and future IoT networks, many devices of heterogeneous natures are using the same antenna for different applications.
 A common problem is the strong constraint that such such IoT devices have on their power consumption, as most of them will be deployed without a direct power access and will run on a tiny battery, which lifespan should be maximized.
 Most commercial IoT companies nowadays indeed sell a lifespan larger than $10$ years, like SIGFOX \cite{Centenaro16}.
-Another common constraint for IoT devices is their low duty cycles, as most applications target one or a few messages to send every day, in strike opposition to the high data-rate pursued for centralized systems (such as 4G/5G and WiFi).
+Another common constraint for IoT devices is their low duty cycles, as most applications target a need for one or a few messages to send every day, in strike opposition to the high data-rate pursued for centralized systems (such as 4G/5G and WiFi).
 %
 Many different standards for IoT networks have been proposed in the recent years,
 and they consist in a specification for both the \emph{PHY}sical
-and the \emph{M}edium \emph{A}ccess \emph{C}ontrol (\emph{MAC}) layer.
-To quote some examples of IoT standards, ZigBee, Z-Wave or Bluetooth are targeting for short-range communications (up-to \SI{2}{\meter}), while LoRaWAN, SIGFOX, Ingenu or Weightless are designed for long-range communications (up-to \SI{50}{\kilo\meter}).
-We refer to the survey \cite{Centenaro16} for more details, and \cite{Azari18} or our recent article \cite{MoyBesson2019}, and references therein.
+and the \emph{M}edium \emph{A}ccess \emph{C}ontrol (\emph{MAC}) layers.
+To quote some examples of IoT standards, ZigBee, Z-Wave or Bluetooth are targeting short-range communications (up-to \SI{2}{\meter}), while LoRaWAN, SIGFOX, Ingenu or Weightless are designed for long-range communications (up-to \SI{50}{\kilo\meter}).
+We refer to the survey \cite{Centenaro16} and references in our recent articles \cite{MoyBesson2019,MoyBesson2019Annales} for more details.
 
 % OK commencer par décrire ce sur quoi porte la thèse, en deux phrases qui réduisent le cadre
 
 
-\textbf{Spectrum Scarcity.}
+\paragraph{Spectrum Scarcity.}
 %
 A major problem of current wireless technologies is the issue of spectrum scarcity:
 in most kinds of frequency bands, the entire RF spectrum is now allocated and free bands no longer exist, and this limits the possibility of adding any new usage.
@@ -141,25 +140,24 @@ We refer to \cite{patil2011survey} for a survey on the worldwide spectrum utiliz
 \begin{figure}[h!]
     \centering
     % \includegraphics[width=0.65\textwidth,angle=90]{United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum.pdf}
-    \includegraphics[width=0.95\textwidth]{United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum_3.pdf}
-    \caption[A chart representing the allocation of radio spectrum in the United States of North America in $2016$]{A chart representing the allocation of radio spectrum in the United States of North America in $2016$. \copyright{} United States Department of Commerce, published online at \href{https://www.ntia.doc.gov/files/ntia/publications/january_2016_spectrum_wall_chart.pdf}{\texttt{www.ntia.doc.gov/files/ntia/publications/january\_2016\_spectrum\_wall\_chart.pdf}}.}
+    \includegraphics[width=0.92\textwidth]{United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum_3.pdf}
+    \caption[A chart representing the allocation of radio spectrum in the United States of North America in $2016$]{A chart representing the allocation of radio spectrum in the United States of North America in $2016$. \copyright{} United States of North America, Department of Commerce, published online at \href{https://www.ntia.doc.gov/files/ntia/publications/january_2016_spectrum_wall_chart.pdf}{\texttt{www.ntia.doc.gov/files/ntia/publications/january\_2016\_spectrum\_wall\_chart.pdf}}.}
     % Only a small share of the spectrum is not yet allocated, the top-left corner in white and indicated by \textcolor{red}{\textbf{Free} in red} (it is in logarithmic scale from \SI{0}{\kilo\hertz} to \SI{300}{\giga\hertz})
     % https://commons.wikimedia.org/wiki/File:United_States_Frequency_Allocations_Chart_2016_-_The_Radio_Spectrum.pdf
     % https://upload.wikimedia.org/wikipedia/commons/c/c7/United_States_Frequency_Allocations_Chart_2016_-_The_Radio_Spectrum.pdf?uselang=fr
     \label{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum}
 \end{figure}
 
-Cellular network bands are overloaded in most parts of the world, but other frequency bands (such as military, amateur radio and paging frequencies) are less utilized.
+Cellular network bands are overloaded in most parts of the world (2G/3G/4G/5G), but other frequency bands (such as military, amateur radio and paging frequencies) are less utilized.
 Independent studies performed in some countries confirmed that observation, and concluded that spectrum usage highly depends on both time and place, as shown by \cite{Lopez2009spectral} for instance.
 Moreover, the fixed spectrum allocation prevents
 the introduction of new services, especially for low-cost or small markets equipment.
 % rarely used frequencies, like those assigned to specific services, from being used, even when any unlicensed users would not cause noticeable interference to the assigned service.
 Therefore, in the last $15$ years, thanks to an active lobbying by the cognitive radio community,
-regulatory bodies in the world have been considering whether to allow
+regulatory bodies all over the world have been considering whether to allow
 a new wireless communication paradigm:
 enable unlicensed users in licensed bands, if they would not cause any interference to the (paying) licensed users.
-These initiatives are considered by the \textbf{Cognitive Radio},
-field that we detail below, and especially for \textbf{Dynamic Spectrum Access (DSA)},
+These initiatives are considered by the \textbf{Cognitive Radio} field that we detail below, and especially for \textbf{Dynamic Spectrum Access (DSA)},
 for which we refer to the surveys \cite{akyildiz2006next,garhwal2012survey} for more details.
 
 
@@ -201,9 +199,9 @@ for which we refer to the surveys \cite{akyildiz2006next,garhwal2012survey} for 
 
 \section{Cognitive Radio and Multi-Armed Bandits}
 
-In this thesis, we study long-range Internet of Things networks, characterized by mainly three essential constraints:
+In this thesis, we study Internet of Things networks characterized by mainly three essential constraints:
 low power consumption (or long battery life),
-long-range
+long-range communications,
 and low duty cycle.
 %
 More precisely, we study the possible interconnections between \textbf{Cognitive Radio} and \textbf{Machine Learning} applied for IoT networks.
@@ -222,7 +220,7 @@ Let us define and detail both concepts.
 % }
 
 
-\paragraph{From IT to Cognitive Radio.}
+\textbf{From IT to Cognitive Radio.}
 %
 We can narrow down the first field of study of this thesis, steps by steps:
 from Information Technologies (IT), to Telecommunications, to Wireless Communications, then to Cognitive Radio (CR),
@@ -232,10 +230,10 @@ The transition from the historical approach of hardware-based radio to SDR archi
 % https://en.wikipedia.org/wiki/Software-defined_radio
 A SDR is a radio communication system where components that have been traditionally implemented in hardware (\eg, mixers, filters, modulators/demodulators, detectors, etc) are more and more implemented by means of software on a processor.
 %  with the exception of a unique pair of receiver/transmitter antennas.
-Even though the SDR paradigm was initiated by the United States of North America defense research in the $1980$s, over the past $20$ years the civil industry has started to be interested by SDR, and CR has got significant attention from the academia and industry as well.
+Even though the SDR paradigm was initiated by the United States of North America defense research in the $1980$s, over the past $20$ years the civil industry has started to be interested by SDR, and CR has got significant attention from the academia as well.
 % CR has been the first answer to solve spectrum scarcity issue which collected a huge attention in early 21st century.
 %
-As CR is not a standard technology, it does not have a single definition, so let us start by quoting the definition of two researchers whose works were the roots of the development of CR, that just appeared $20$ years ago.
+As CR is not a standard technology, it does not have a single definition, so let us start by quoting the definition of two researchers whose works constitutes the roots of the development of CR, the first one having appeared just $20$ years ago.
 % - technologies de l'information > télécommunications > communications sans fil > radio intelligente > DSA > OSA
 %
 % je peux faire comme Navik, donner des définitions de la CR, citant d'autres travaux
@@ -258,24 +256,24 @@ As CR is not a standard technology, it does not have a single definition, so let
 % explain PU and SU in a few sentences
 One possible way of considering spectrum flexibility is the following.
 %
-In licensed bands, there are Primary Users (PU) paying to access the network, for instance anybody has to pay to have a mobile phone number and use the network.
-As exposed in the definition above of the CR philosophy, we could imagine that if the network is unused by any PU in a certain location and time, then non licensed users, referred to as Secondary User (SU), could use it, possibly by paying some rent to the network operator.
+In licensed bands, there are Primary Users (PU) paying to access the network, for instance anybody has to pay to have a mobile phone number and use cellular networks.
+As exposed in the definition above of the CR philosophy, we could imagine that if the network is unused by any PU in a certain location and time, then non licensed users, referred to as Secondary User (SU), could use it, possibly by also paying some rent to the network operator.
 %
 Regulation states that PU have a strict priority,
-but even though the RF bands are allocated, real world measurements often show that some bands are not densely used, and thus if a SU was equipped with an efficient sensing capacity, it could analyze its environment, and use a licensed band if and only if it is free of any PU.
+but even though the RF bands are allocated, real world measurements often show that some bands are not densely used, and thus if a SU was equipped with an efficient \emph{spectrum sensing} capacity, it could analyze its environment, and use a licensed band if and only if it is free of any PU.
 % explain DSA
 This defines the concept of \textbf{Opportunistic Spectrum Access} (OSA), for which we refer to the survey \cite{Zhao07} for more details.
 % After a short paragraph on Reinforcement Learning, we then focus on the OSA problem.
 
 
 
-\paragraph{From Statistics or Machine Learning to Multi-Armed Bandits.}
+\textbf{From Statistics or Machine Learning to Multi-Armed Bandits.}
 %
 % Similarly, we can narrow down the second field of study of this thesis, steps by steps.
 % Stats > sequential learning > bandits
 % A first point-of-view is the historical one, as
 We are interested by Multi-Armed Bandits (MAB) learning,
-which emerged as an interesting problem in the statistics community and among researchers interested by sequential learning, as shown by the earlier works of \cite{Thompson33,Robbins52,LaiRobbins85}.
+which emerged as an interesting problem in the statistics community and among researchers interested by sequential learning, as shown by the pioneer works of \cite{Thompson33,Robbins52,LaiRobbins85}.
 It is also included in the more general concept of Reinforcement Learning (RL), itself one of the field of Machine Learning (ML).
 % ML > RL > MAB
 % We can also expose another point-of-view, which starts from the general concept of Machine Learning (ML), and focus on , then on MAB learning.
@@ -343,60 +341,60 @@ Many real-world problems can be framed as Reinforcement Learning problems, as il
 As this thesis focus on Reinforcement Learning models,
 it is important to highlight that in such decision making models, the learner does not have access to the entire reaction of the environment after taking its action.
 %
-In other words, the player only sees the reward given by its action at every round, and not the reward that would have been given if she chose any other action.
-This kind of limited feedback is called \emph{bandit information}, and we discuss the history and the concept of \emph{Multi-Armed Bandits} (MAB) in details in the next Chapter~\ref{chapter:2}.
-Clinical trials and treatment discovery were historically the first application of MAB since the $1930$s, with the early work of W. Thompson \cite{Thompson33}.
+In other words, the player only sees the reward generated by playing its action at every round, and not the reward that would have been given if she chose any other action.
+This kind of limited feedback is called \emph{bandit information}, and we discuss the history and the concept of MAB in details in the next Chapter~\ref{chapter:2}.
+Clinical trials and treatment discovery were historically the first application of MAB since the $1930$s, with the early work of W. Thompson \cite{Thompson33},
 %
-MAB are a simple yet powerful example of the well-known \emph{exploration vs exploitation dilemma}:
-when facing a set of $K$ actions whose effects on the environment are unknown, a learner must balance between
+as MAB are indeed a simple yet powerful example of the well-known \emph{exploration vs exploitation dilemma}.
+When facing a set of $K$ actions whose effects on the environment are unknown, a learner must balance between
 exploring the unknown actions, in order to collect more information about them,
 and exploiting the best action, according to its current knowledge.
 %
 The MAB problem have been studied in both the machine learning and the statistics community, since the $1950$s with pioneers like H. Robbins \cite{Robbins52}, and more recently it is an active field of research, since the late $1990$s \cite{Anantharam87a,Anantharam87b,auer1995gambling,Agrawal95}.
-Research on MAB has produced a vast literature in the $2000$s \cite{Auer02,Auer02NonStochastic,Audibert2009minimax} and continues to be a topic of high interest, as illustrated by the surveys and books \cite{Bubeck12,LattimoreBanditAlgorithmsBook,Slivkins2019}, and the wide range of applications of MAB in the recent years \cite{bouneffouf2019survey}.
+The research on MAB has produced a vast literature in the $2000$s \cite{Auer02,Auer02NonStochastic,Audibert2009minimax} and continues to be a topic of high interest, as illustrated by the surveys and books \cite{Bubeck12,LattimoreBanditAlgorithmsBook,Slivkins2019}, and the wide range of applications of MAB in the recent years \cite{bouneffouf2019survey}.
 
 
-\paragraph{Opportunistic Spectrum Access.}
+\textbf{Opportunistic Spectrum Access.}
 %
 The two communities of OSA and MAB have started to interact, and the resulting works have received a great interest from both communities, since the late $2000$s and early $2010$s, with pioneers works like \cite{Liu08,Zhao10,Jouini09,Jouini10}.
 The focus is on one SU accessing a licensed spectrum, occupied by PU that have a strict priority over the SU, which has to follow a ``listen-before-talk'' access scheme.
 %
 The following hypotheses are maid:
-the SU is equipped with a sensing capability,
+the SU is equipped with a spectrum sensing capability,
 and considers a fixed and finite set of $K$ orthogonal channels, \ie, different frequency bands in a licensed spectrum.
 For instance, it can be a set of $K=3$ Wi-Fi channels at different frequency, emitted by the same Wi-Fi station.
 Another hypothesis is that both PU and SU are synchronized in time, by sub-dividing the time in discrete time steps (or rounds).
 %
-Thus if the SU spends a short time in the beginning of each time slot to perform sensing, it can scan for the presence or absence of any PU before transmitting, during the rest of the time slot without colliding with the PU.
+Thus if the SU spends a short time in the beginning of each time slot to perform sensing, it can scan for the presence or absence of any PU before transmitting, without colliding with the PU during the rest of the time slot.
 If the SU was able to sense for all the $K$ frequency bands, it could simply transmit in one of the free channels if any, or not transmit if all channels are used at a given time step.
 However, sensing is known to be costly, in terms of energy consumption, especially for wide-band sensing, as detailed in the surveys \cite{yucek2009survey,subhedar2011spectrum}, thus most works on OSA limit the sensing capacity of SU to sensing only one channel at a time.
-This assumption, along with the hypothesis that PU cannot be disturbed (without which no regulation will never be accepted for OSA), enforces the SU to transmit in the channel that it sensed, if and only if it was sensed free from any PU.
+This assumption, along with the hypothesis that PU cannot be disturbed (without which no regulation will ever be accepted for OSA), enforces the SU to transmit in the channel that it sensed, if and only if it was sensed free from any PU.
 % non negligible cost of radio reconfiguration
 
-Focusing on one SU in an OSA network, it has to sequentially decide a channel to sense (in the set of channels, $[K]=\{1,\dots,K\}$), then it performs sensing, and finally it transmits in this channel if it was sensed free.
+Focusing on one SU in an OSA network, it has to sequentially decide a channel to sense (in the set of channels, $[K]=\{1,\dots,K\}$), then it performs spectrum sensing, and finally it transmits in this channel if it was sensed free.
 The goal of the SU is to minimize its energy consumption (we remind that we focus on ``green'' cognitive radio) and to maximize its up-link data rate, or equivalently, to maximize its number of successful transmission.
 %
 If the different channels are not uniformly used by the PU, and if we assume a stationary hypothesis on the PU traffic, then the goal of the SU boils down to exploring the different channels and exploiting the best ones.
 This frames the Opportunistic Spectrum Access problem as an exploration/exploitation problem,
 with a finite set of actions (the channels, also called \emph{arms}),
 in a sequential action-then-feedback cycle (time steps are $t\in\N^*$),
-under partial information feedback (\ie, the player receives feedback about only one channel over $K$).
-These three hypotheses are the ones that restrict from the general ML framework to the specific MAB case (see Figure~\ref{fig:1:ReinforcementLearningCycle}).
+under partial information feedback (\ie, the player receives sensing feedback about only one channel over $K$).
+These three hypotheses are the ones that restrict from the general sequential learning framework to the specific MAB case (see Figure~\ref{fig:1:ReinforcementLearningCycle}).
 
 
-\paragraph{MAB for OSA, and a short history of these researches at the SCEE team.}
+\textbf{MAB for OSA, and a short history of these researches at the SCEE team.}
 %
 Previous works of our SCEE team showed that MAB can be used to model the OSA problem:
 orthogonal frequency bands (or channels) are modeled by arms $k\in\{1,\dots,K\}$,
 and the feedback obtained by the CR-equipped device after sensing the channel $k$ at time $t$ is modeled by a reward of $r(t) \in \{0,1\}$.
-Indeed, $r(t) = 1$ indicates that no Primary User was sensed (and thus a SU message can be sent), while a reward of $r(t)=0$ indicates that the channel $k$ is busy at during the time slot $t$, and no SU message should be sent, until the end of that slot.
+Indeed, $r(t) = 1$ indicates that no Primary User was sensed (and thus the SU can send a message), while a reward of $r(t)=0$ indicates that the channel $k$ is busy at during the time slot $t$, and no message should be sent, until the end of that slot.
 %
-This model was first studied by W. Jouini during his PhD thesis with C. Moy \cite{Jouini12PhD}, ten years ago, first in the article \cite{Jouini09} and later in \cite{Jouini10,Jouini12}.
+This model was first studied by W. Jouini during his PhD thesis with C. Moy \cite{Jouini12PhD}, about ten years ago, first in the article \cite{Jouini09} and later in \cite{Jouini10,Jouini12}.
 
 Their works were among the first ones to propose to use Reinforcement Learning for Cognitive Radio and the OSA problem, especially the MAB model and the $\UCB_1$ algorithm,
 along with the early works of Q. Zhao and her team, for instance with \cite{Liu08,Zhao10}.
 %
-Shortly after in $2014$, proof-of-concepts using real-world radio hardware and Software Defined Radio were developed by C. Moy and his student C. Robert \cite{RobertSDR2014,MoyWSR2014}, using USRP boards and the MATLAB/Simulink software.
+Shortly after in $2014$, proof-of-concepts using real-world radio hardware and Software Defined Radio were developed by C. Moy and his student C. Robert, using USRP boards and the MATLAB/Simulink software \cite{RobertSDR2014,MoyWSR2014}.
 In a second PhD thesis, N. Modi studied from $2014$ to $2017$ the impact on the battery life of a wireless device of using MAB algorithms to optimize channel selections \cite{Modi17PhD}.
 On the one hand, running a MAB algorithm such as UCB-like algorithms was proven to be useful and could bring significant improvement in terms of successful transmission rates, directly increasing the battery life of the device.
 On the other hand, classical MAB algorithms tend to switch arms a lot of times, especially in the beginning of their learning process, and this induces a lot of dynamical hardware reconfigurations for the wireless device, as selecting a different channel requires a change in the radio hardware used by the device.
@@ -421,11 +419,11 @@ For more details on the state of research on Cognitive Radio, we refer to the su
 % \TODOL{Raccourcir toutes les fois où je parle des travaux sur l'OSA après dans la suite de la thèse !}
 
 
-\paragraph{Limitations and specifities of IoT networks.}
+\textbf{Limitations and specifities of IoT networks.}
 %
-The aforementioned literature have essentially shown that MAB algorithms can be applied with success for the OSA problem.
-However, if we consider CR-ready devices that cannot perform sensing, such as low-cost and low energy-consumption end-devices designed for the future Internet of Things networks, the MAB model that uses sensing to detect PU in the OSA case can no longer be applied.
-Moreover, in most cases, the IoT networks use unlicensed bands, and as such there are no longer a distinction between PU and SU.
+The aforementioned literature have essentially shown that MAB algorithms can be applied successfully on the SU side for the OSA problem.
+However, if we consider CR-ready devices that cannot perform spectrum sensing, such as low-cost and low energy-consumption end-devices designed for the future Internet of Things networks, the MAB model that uses sensing to detect PU in the OSA case can no longer be applied.
+Moreover, in most cases, the IoT networks use unlicensed bands, and as such there is no longer a distinction between PU and SU.
 In other words, there is no longer any priority between users in IoT networks.
 %  (no more PU, all are SU).
 %
@@ -436,7 +434,7 @@ and we refer to the survey \cite{Centenaro16} for more details.
     % we consider here IoT networks that run in unlicensed bands (no more distinction between PU and SU),
     \item
     most IoT devices are very low-cost devices, run on low-quality hardware, and have limited software and power capabilities (\ie, tiny batteries).
-    It means that even if they are not equipped with particular sensing capabilities,
+    It means that even if they are not equipped with particular spectrum sensing capabilities,
     they are equipped with a transmitter as well as with a receiver (Tx and Rx, \ie, a transceiver),
     and they have low-complexity storage and computation capabilities (\ie, small embedded processors),
     \item
