@@ -30,34 +30,34 @@ The main problem we studied was \emph{``Can we adapt the decision making tools a
 %
 We started by detailing the historical, scientific and technical contexts of the problems we considered for our research, and presented the main contributions produced during the last three years.
 
-% \begin{itemize}
-    % \item
-The first half, Part~\ref{part:Introduction}, started by motivating our work and situating the context of this research.
-% Chapter 2
-In Chapter~\ref{chapter:2}, we presented the multi-armed bandit (MAB) models, the hypotheses we usually make on such models, and the most important algorithms that solve different kinds of MAB problems.
-% Chapter 3
-Then in Chapter~\ref{chapter:3} we showcased our open-source Python library SMPyBandits in details, developed to run numerical simulations of MAB problems.
-%
-Finally, we presented in Chapter~\ref{chapter:25} a first mathematical contribution, our algorithm \Aggr, as an empirically efficient answer to the online algorithm selection problem.
+% % \begin{itemize}
+%     % \item
+% The first half, Part~\ref{part:Introduction}, started by motivating our work and situating the context of this research.
+% % Chapter 2
+% In Chapter~\ref{chapter:2}, we presented the multi-armed bandit (MAB) models, the hypotheses we usually make on such models, and the most important algorithms that solve different kinds of MAB problems.
+% % Chapter 3
+% Then in Chapter~\ref{chapter:3} we showcased our open-source Python library SMPyBandits in details, developed to run numerical simulations of MAB problems.
+% %
+% Finally, we presented in Chapter~\ref{chapter:25} a first mathematical contribution, our algorithm \Aggr, as an empirically efficient answer to the online algorithm selection problem.
 
-    % \item
-The second half of this thesis, Part~\ref{part:MABIOT}, presented the main contributions.
-% Chapter 4
-In Chapter~\ref{chapter:4}, we first proposed models for realistic IoT wireless networks, in a discrete time and with no central coordination between end-devices.
-In two different models, with or without retransmissions, we showed that end-devices can independently learn favor the less occupied radio channels, in order to increase their successful transmission rates in the network, by embedding low-cost decentralized MAB algorithms.
-We also presented a proof-of-concept that implements such network on real radio hardware and validates the proposed model and algorithms.
-% Chapter 5
-Because the models proposed for realistic IoT networks were found to be too general to analyze from a theoretical point of view, mainly due to the large number of algorithms interacting at random times in an unpredictable environment,
-we started to study a weaker but still interesting model in Chapter~\ref{chapter:5}.
-We presented different variants of the multi-players MAB model, and we proposed the state-of-the-art algorithm for the variant with collision and spectrum sensing information (\MCTopM).
-% Chapter 6
-Finally, in Chapter~\ref{chapter:6}, we relaxed the stationary hypothesis on the single-player MAB problem, and we analyzed a new actively adaptive algorithm, for which we also proved state-of-the-art results (\GLRklUCB).
-%
-For the last two chapters, the proposed algorithms attain state-of-the-art performances both on numerical simulations and on the regret upper bounds obtained in their theoretical analyses.
-% \end{itemize}
+%     % \item
+% The second half of this thesis, Part~\ref{part:MABIOT}, presented the main contributions.
+% % Chapter 4
+% In Chapter~\ref{chapter:4}, we first proposed models for realistic IoT wireless networks, in a discrete time and with no central coordination between end-devices.
+% In two different models, with or without retransmissions, we showed that end-devices can independently learn favor the less occupied radio channels, in order to increase their successful transmission rates in the network, by embedding low-cost decentralized MAB algorithms.
+% We also presented a proof-of-concept that implements such network on real radio hardware and validates the proposed model and algorithms.
+% % Chapter 5
+% Because the models proposed for realistic IoT networks were found to be too general to analyze from a theoretical point of view, mainly due to the large number of algorithms interacting at random times in an unpredictable environment,
+% we started to study a weaker but still interesting model in Chapter~\ref{chapter:5}.
+% We presented different variants of the multi-players MAB model, and we proposed the state-of-the-art algorithm for the variant with collision and spectrum sensing information (\MCTopM).
+% % Chapter 6
+% Finally, in Chapter~\ref{chapter:6}, we relaxed the stationary hypothesis on the single-player MAB problem, and we analyzed a new actively adaptive algorithm, for which we also proved state-of-the-art results (\GLRklUCB).
+% %
+% For the last two chapters, the proposed algorithms attain state-of-the-art performances both on numerical simulations and on the regret upper bounds obtained in their theoretical analyses.
+% % \end{itemize}
 
 
-\paragraph{Summary of each chapter.}
+% \paragraph{Summary of each chapter.}
 % A more precise summary of each chapter is given below.
 
 
@@ -212,8 +212,8 @@ We also gave numerical evidence of the efficiency of our proposal, which perform
 % ----------------------------------------------------------------------------
 \section{Perspectives}
 
-As discussed at the end of each chapter,
-our works suggest possible directions of future studies.
+% As discussed at the end of each chapter,
+The works presented in each chapter suggest possible directions of future studies.
 
 
 % ----------------------------------------------------------------------------
@@ -265,34 +265,36 @@ In this whole Chapter~\ref{chapter:4}, we prefer to consider that all the device
 %
 Moreover, for the sake of simplicity we supposed that all devices use the same standard.
 Future works could consider more realistic interference scenarios and IoT networks, with, \eg, non-slotted time, more than one base station etc.
-
+\\
+\indent
 Another extension could be to consider not a Bernoulli activation process (or any random process), but a fixed rate of transmission, \eg, one transmission a day.
 In this case, additionally to deciding the channel for communication (\ie, \emph{where} to communicate), each device could thus also have to decide \emph{when} to communicate.
 % This is another direction of research, that we will investigate in the future.
 However, this clearly leads to a much larger action space, as there are many time slots in one day (for example), and thus we believe that as soon as the action space becomes too large in this extension, the simple MAB-based learning approach could be no longer appropriate.
 It is well-known in the MAB literature that the larger the action space, the slower is the convergence speed of any stationary MAB algorithms.
 Thus, it could be exciting to study the possible application of \emph{contextual} MAB \cite{Li10,Luo18} or structured MAB \cite{Combes17} models and algorithms for this extension.
-
+%
 % We will investigate this behavior in order to understand it better theoretically.
 % We will also experiment more with adversarial algorithms, to confirm that they work less efficiently than stochastic bandit algorithms in our non-stochastic setting.
-
+%
 % \paragraph{Extensions of the demonstration.}
-
+%
 % Possible future extensions of our demonstration include the following points.
 % We could consider more dynamic devices (\eg, $100$) but it would either cost more in terms of equipment, or in terms of software engineering to simulation more devices with the same card.
 % We could also implement a real-world IoT communication protocol (like the LoRaWAN standard), which we prefer not to do as it would cost a significant effort of development.
 % Finally, we could also study the interference in case of other gateways located nearby, and this could be done without needing a lot of new hardware (using one extra USRP card to simulate another gateway).
-
-
+%
+%
 % \paragraph{Possible extensions for the second model.}
-
+%
 % Finally, the utility and impact of the proposed approaches for LPWA networks motivates us to address several subjects as future works. Among them, the non-stationarity of the channel occupancy caused by the learning policy employed by the IoT devices.
 % %
 % For that end, modifications of MAB algorithms have been proposed, such as Sliding-Window-\UCB{} or Discounted-\UCB{} \cite{Garivier11UCBDiscount}
 % or more recently M-\UCB{} \cite{CaoZhenKvetonXie18},
 % or more recently GLR-\UCB{} \cite{Besson2019GLRT} which is presented in Chapter~\ref{chapter:6},
 % that nevertheless have not been explored for the targeted problem.
-
+\\
+\indent
 In order to validate our results in a realistic experimental setting and not only with simulations, future works should include a hardware implementation of the analyzed models, in order to complete our demonstration presented in Section~\ref{sec:4:gnuradio} \cite{Besson2018ICT,Besson2019WCNC}.
 %
 A hardware demonstrator could be also benefit to study other settings by relaxing some hypotheses, for instance by studying a similar model in non-slotted time.
@@ -306,7 +308,8 @@ First, one could want to investigate the notion of \emph{optimal algorithms} in 
 So far we provided the first matching upper and lower bound on the expected number of sub-optimal arms selections, which suggests some form of (asymptotic) optimality.
 However, sub-optimal draws turn out not be the dominant terms in the regret, both in our upper bounds and in practice, thus a promising future work is to identify some notion of \emph{minimal number of collisions}, similarly to what a recent work \cite{wang2019distributed} studied for the minimal amount of communication needed to achieve logarithmic regret, in a similar model that authorizes direct communications between players.
 % Similarly to what was done very recently in \cite{wang2019distributed} for the communications between players who collaborate with each other, it would be interesting to characterize the number of collisions needed to achieve logarithmic regret.
-
+\\
+\indent
 We also presented many extensions of the multi-players bandit model in Section~\ref{sec:5:literatureReviewOtherModels},
 and even if some have already been implemented, a major future work is to implement the most interesting ones in SMPyBandits
 (see tickets \href{https://github.com/SMPyBandits/SMPyBandits/issues/120}{120}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{124}, \href{https://github.com/SMPyBandits/SMPyBandits/issues/185}{185}), as well as extending our theoretical analyses for such extensions of the models considered in this thesis.
@@ -319,8 +322,12 @@ We believe that the new proof technique of Chapter~\ref{chapter:6} could be used
 This promising research direction is left for future work,  but the hope is that the regret would be expressed in term of the number of such meaningful changes, instead of the number of break-points $\Upsilon_T$.
 We shall also investigate whether actively adaptive approaches can attain a $\cO(\sqrt{\Upsilon_T T})$ regret upper-bound without the knowledge of $\Upsilon_T$.
 We also believe that combining change-point \emph{localization} with an efficient change-point detection algorithm, such as \GLRklUCB, could lead to an interesting class of more efficient algorithms, as suggested by \cite{Maillard2018GLR}.
-
+\\
+\indent
 We would also like to study in the future possible extension of our approach to the slowly-varying model, as studied in \cite{Besbes14stochastic,Louedec16,WeiSrivastava18Abruptly}, or also to the rotting bandit model \cite{Seznec2018}, which is interesting for many applications even if it does not seem appropriate for the cognitive radio setting.
+
+% ----------------------------------------------------------------------------
+\subsection*{Other directions of future works}
 
 Another interesting direction of future work is to study non-stationary distributed multi-players bandits, to unify the models from Chapter~\ref{chapter:5} and~\ref{chapter:6}.
 A natural extension of the non-stationary model is to consider non-communicating players cooperating in a decentralized way to play the same bandit game, as it was proposed recently in \cite{WeiSrivastava18Distributed}.
@@ -343,9 +350,6 @@ analyzing this strategy that combine \MCTopM, \GLR{} and \klUCB{} is left as a c
 %     - and incorporate also the detected change-points by B-\GLR{} test in the orthogonalization procedure: after any change-point, the player is not sitting anymore.
 %     - Modification: only a change-point on the arm on which player is sitting can make him move? It's already the case: the \GLR{} test can only detect change-point on an arm that was played, and the \MCTopM{} orthogonalization procedure forces to play the same arm as long as the player is sitting.
 % }
-
-% ----------------------------------------------------------------------------
-\paragraph{Other directions of future works.}
 
 Another question of highest interest is to look for a unique ``unified'' algorithm that can be used in all the different settings studied in this thesis, and automatically adapt to the setting at hand.
 For instance, even if \GLRklUCB{} is very efficient for piece-wise stationary problems, its forced exploration makes it sub-optimal for stationary problems.
