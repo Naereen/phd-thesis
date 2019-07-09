@@ -1770,16 +1770,26 @@ and the instructions to reproduce them are given on \href{https://SMPyBandits.Gi
 \section{Conclusion}
 \label{sub:6:conclusion}
 
-In this chapter, we studied and presented the piece-wise stationary bandit model, and reviewed existing work.
+In this chapter, we studied and presented the piece-wise stationary bandit model, starting by reviewing existing works.
 %
-We proposed a new algorithm for this problem, \GLRklUCB, which combines the \klUCB{} algorithm with the Bernoulli GLR change-point detector. This actively adaptive method attains state-of-the-art regret upper-bounds when tuned with a prior knowledge of the number of changes $\Upsilon_T$, but \emph{without any other prior knowledge on the problem}, unlike \CUSUMUCB{} and \MUCB{} that require to know a lower bound on the smallest magnitude of a change. We also gave numerical evidence of the efficiency of our proposal.
+We proposed a new algorithm for this problem, \GLRklUCB, which combines the \klUCB{} algorithm with the Bernoulli GLR change-point detector. This actively adaptive method attains state-of-the-art regret upper-bounds when tuned with a prior knowledge of the number of changes $\Upsilon_T$, but \emph{without any other prior knowledge on the problem}, unlike its best two competitors, \CUSUMUCB{} and \MUCB, that require to know a lower bound on the smallest magnitude of a change. We also gave numerical evidence of the efficiency of our proposal.
 
 % We believe that our new proof technique could be used to analyze \GLRklUCB{} under less stringent assumptions than the one made in this chapter (and in previous work), that would require only a few ``meaningful'' changes to be detected. This interesting research direction is left for future work,  but the hope is that the regret would be expressed in term of this number of meaningful changes instead of $\Upsilon_T$. We shall also investigate whether actively adaptive approaches can attain a $\cO(\sqrt{\Upsilon_T T})$ regret upper-bound without the knowledge of $\Upsilon_T$.
 % We also believe that combining change-point \emph{localization} with an efficient change-point detection algorithm, such as \GLRklUCB, could lead to an interesting class of algorithms, as suggested by \cite{Maillard2018GLR}.
 % Finally, we would like to study in the future possible extension of our approach to the slowly varying model, as studied in \cite{Besbes14stochastic,WeiSrivastava18Abruptly}.
 
-As mentioned at the end of Chapter~\ref{chapter:5}, an interesting direction of future work is to study non-stationary distributed multi-players bandits.
-A natural extension of the non-stationary model presented in this Chapter is to consider non-communicating players cooperating in a decentralized way to play the same bandit game, as it was proposed recently in \cite{WeiSrivastava18Distributed}.
+This chapter was an interesting direction of analysis of the intractable model from Chapter~\ref{chapter:4}, of independent end-devices running embedded MAB learning algorithms to improve their spectrum access in an IoT network.
+Instead of dealing with the multi-players aspect, as we did in the previous Chapter~\ref{chapter:5}, we dealt in Chapter~\ref{chapter:6} about the non-stationary aspect.
+Different kinds of non-stationary bandit models have been considered in the literature, including adversarial, slowly-varying or abruptly-changing bandits, and as found the later to be the most appropriate to model non-stationarity of cognitive radio networks, we focus on abruptly-changing or piece-wise stationary bandit problems.
+%
+Our proposed algorithm achieves state-of-the-art results for this model, by requiring a weaker prior knowledge on the problem difficulty when compared with its best competitors.
+An important future work is to investigate whether actively adaptive approaches can attain an order-optimal $\cO(\sqrt{\Upsilon_T T})$ regret upper-bound without the knowledge of $\Upsilon_T$ the number of break-point.
+%
+Another possible future work is to propose an algorithm that could blindly adapt to both the slowly-varying and the abruptly-changing models, as well as being efficient against stationary models.
+
+
+As suggested by the ``dynamic case'' of multi-players bandits presented in Chapter~\ref{chapter:5}, another promising direction of future work is to study non-stationary distributed multi-players bandits.
+A natural extension of the model presented in this chapter is to consider non-communicating players cooperating in a decentralized way to play the same bandit game, as it was proposed recently in \cite{WeiSrivastava18Distributed}.
 The authors build on their recent work \cite{WeiSrivastava18Abruptly} and show that a regret bounded by $\cO(\sqrt{T^{\frac{1+\nu}{2}} \log(T)})$ can still be achieved by $M$ players, in the number of breaking points is $\Upsilon_T = \cO(T^{\nu})$.
 Their algorithm assume that player $j$ knows its ID $j\in[M]$ as well as $\nu$, and removing these hypotheses is an interesting direction of future work.
 % \TODOL{Evoke here the possibility of study the piece-wise stationary distributed multi-players bandit model introduced in \cite{WeiSrivastava18Distributed} by using \MCTopM{} and \GLRklUCB{} with each other? }
