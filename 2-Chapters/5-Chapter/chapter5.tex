@@ -43,10 +43,10 @@ Another example is the model with different arm means among players, who was ini
 % By following actively the research on multi-players bandit models since the last three years, we believe to be able to give an exhaustive literature review, but it is of course possible that we missed an important research work. In this case, it is our mistake and not an intentional choice as we included all the different extensions of our models that we were aware of.
 
 Many extensions of the simpler model of multi-players bandits have been considered.
-The number of players $M$ can be fixed but initially unknown to the players, the sensing information can be absent (like the model \modeltrois{} presented above), there could be communications between players (happening at each time step or only occasionally), or $M$ could evolve over time to model the possibility of arrivals or departures of players (\ie, connexions and disconnections of devices in a wireless networks).
+The number of players $M$ can be fixed but initially unknown to the players, the sensing information can be absent (like the model \modeltrois{} presented above), there could be communications between players (happening at each time step or only occasionally), or $M$ could evolve over time to model the possibility of arrivals or departures of players (\ie, connection's and disconnections of devices in a wireless networks).
 Also inspired by real-world wireless networks, the arm means may vary among players, for instance to model players located at different distance of the gateway, and we can also consider networks with some ``jammers'' whose purpose is not to communicate to the gateway in a collaborative way, like the $M$ devices, but to interfere with the communications of the $M$ devices.
 
-Finally, we can also be interested by models where $M$ stays fixed, but the environment evolves, for instance with abrupt changes in the means of arms. This last model makes a good connexion between this chapter and the next one, and an exciting future work is to further study this model in order to tackle this kind of problems by merging our contributions for stationary multi-players bandits and for non-stationary single-player bandits.
+Finally, we can also be interested by models where $M$ stays fixed, but the environment evolves, for instance with abrupt changes in the means of arms. This last model makes a good connection between this chapter and the next one, and an exciting future work is to further study this model in order to tackle this kind of problems by merging our contributions for stationary multi-players bandits and for non-stationary single-player bandits.
 
 % \TODOL{
 %     Pour les extension présentées ici, je veux suivre la même organisation :
@@ -74,16 +74,16 @@ Our proposals, \RandTopM{} and \MCTopM, both assume to know $M$ beforehand, like
 We can start by asking whether the most efficient algorithm, \MCTopM-\klUCB, is still efficient if it uses a value $M'$ different than the real number of players $M$.
 Even though we did not include numerical simulations for this case in Section~\ref{sec:5:experiments} above, we did some tests, which confirmed two disappointing results that were also proven analytically.
 First, the three algorithms (\RhoRand, \RandTopM{} and \MCTopM) give linear regret if they are using a value $M'$ strictly smaller than $M$ (and if $\mu^*_{M-1} > \mu^*_M$), as players will converge to play about $T-\bigO{\log(T)}$ times the $M-1$ best arms, leading to at least one collision most of the time, and thus a linear regret.
-Second, if the $M$ players falsely use a value $M' > M$, then there is also a certain (fixed) probability to achieve a linear regret. Indeed, imagine one player ($M=1$) running \MCTopM{} with the false knowledge of $M'=2$, and if it learned to accurately identify the set of the $2$ best arms, then the \MCTopM{} orthogonalization scheme can make it play the worst of the two arms, and as $M=1$ this player will never encounter any collision, thus playing this suboptimal arm for about $T-\bigO{\log(T)}$ times, also leading to linear regret.
+Second, if the $M$ players falsely use a value $M' > M$, then there is also a certain (fixed) probability to achieve a linear regret. Indeed, imagine one player ($M=1$) running \MCTopM{} with the false knowledge of $M'=2$, and if it learned to accurately identify the set of the $2$ best arms, then the \MCTopM{} orthogonalization scheme can make it play the worst of the two arms, and as $M=1$ this player will never encounter any collision, thus playing this sub-optimal arm for about $T-\bigO{\log(T)}$ times, also leading to linear regret.
 
 
-\paragraph{Interpretation of the hypothesis of knowning $M$ for real-world networks.}
+\paragraph{Interpretation of the hypothesis of knowing $M$ for real-world networks.}
 \label{par:5:knowingYourIDinMPBanditsGame}
 %
 One could criticize our approach if we study a wireless networks with no central coordination from the gateway,
 in particular where the devices cannot be assigned to a channel or be assigned a unique ID by the gateway when they first log in the network.
 Then in such networks, if one wants to apply an algorithm like \MCTopM-\klUCB,
-the $M$ devices need to know their number $M$, and have to receive it from the gateway, as it is the only part of this example of network which knowns $M$.
+the $M$ devices need to know their number $M$, and have to receive it from the gateway, as it is the only part of this example of network which known $M$.
 It seems unrealistic to ask the gateway to send the fixed value $M$ to each device, and not a unique ID to each device, for instance $\mathrm{id}^j\in[K]$.
 
 % \TODOL{Expliquer pourquoi ce n'est pas très réaliste ? Le paragraphe ci dessous n'est pas très simple à comprendre, je peux faire mieux!}
@@ -92,7 +92,7 @@ If the $M$ players each have a unique ID, then a simple explore-then-commit algo
 If the players know the time horizon $T$, then they can fix a confidence level $\delta$. For the first $T_0$ time steps, the $M$ players will use a simple round-Robin game, using their (unique) ID to stay orthogonal: player $j$ starts at arm $j$, then $j+1$, then cycle in $[K]$. They encounter no collision in these time steps, and then user $j$ targets the $j$-th best arm among the set of $M$-best arm.
 If $T_0$ is large enough, all players have built the same estimate of the ranking of the arms (and not only correctly identified the set of $M$-best arms), with high probability (at least $\delta$), and thus they will also encounter no collision and no regret from after time $T_0$.
 The mean regret of such approach is easily bounded by $R_T \leq M T_0 + (1 - \delta) (T - T_0)$, so by using $\delta = 1-1/T$, $R_T = \bigO{T_0}$.
-By calibrating $T_0$ based on $\delta$ (which needs prior knowledge of $T$, see the proof we gave in Section~\ref{proof:2:tuningExploreThenCommit}) and the minimal gap $\Delta$ between \Mbest{} and \Mworst, one can show, using similar arguments as used by \cite{Rosenski16} for the Musical Chair policy, that with large probability a constant regret is obtained. A logarithmic regret can be obtained from the same bound, proving the order-optimality of this simple approach, if we assume that user $j$ knows it is user number $j$.
+By calibrating $T_0$ based on $\delta$ (which needs prior knowledge of $T$, see the proof we gave in Section~\ref{proof:2:tuningExploreThenCommit}) and the minimal gap $\Delta$ between \Mbest{} and \Mworst, one can show, using similar arguments as used by \cite{Rosenski16} for the Musical Chair policy, that with large probability a constant regret is obtained. A logarithmic regret can be obtained from the same bound, proving the order-optimist of this simple approach, if we assume that user $j$ knows it is user number $j$.
 %
 Without giving more details, we let the interested refer to what is explained for the algorithms presented in \cite{DarakHanawal18,JoshiKumar2018,KumarDarak2019}.
 %
@@ -288,7 +288,7 @@ Their argument is essentially to prove that for \Selfish-powered players using t
 They prove that it is unlikely to encounter any of these ``tie breaking points'', in theory if the \UCB{} indexes are real-valued number (that can be rational or irrational).
 
 
-\paragraph{Additionnal numerical simulations.}
+\paragraph{Additional numerical simulations.}
 
 To illustrate the difficulty of the ``no sensing'' case, we illustrate here the performances of different algorithms designed specifically for this setting.
 As above, we consider a bandit problem with $K=9$ arms, of means $0.1,\dots,0.9$, and three different cases of $M=3,6,9$ players, for $N=100$ independent repetitions, and horizon $T=10000$.
@@ -494,7 +494,7 @@ Another interesting directions are to study the possible extension of this model
 We simply quote here three recent articles which proposed a similar approach of using decentralized reinforcement learning algorithms on the device-side on wireless networks,
 but proposed models closer to the reality of wireless networks.
 %
-The first work is \cite{NaparstekCohen17}, which proposes to use a decentralized learning based on deep learning, in the ``no sensing'' case, but in a model where the users have to learn not only the channels to use for their uplink messages (only from the feedback through the acknowledgements, like in Section~\ref{sec:4:firstModel}), but where they have to learn the whole ``spectrum access actions''.
+The first work is \cite{NaparstekCohen17}, which proposes to use a decentralized learning based on deep learning, in the ``no sensing'' case, but in a model where the users have to learn not only the channels to use for their up-link messages (only from the feedback through the acknowledgements, like in Section~\ref{sec:4:firstModel}), but where they have to learn the whole ``spectrum access actions''.
 % Deep Multi-User Reinforcement Learning for Dynamic Spectrum Access in Multichannel Wireless Networks
 % FIXME continue!
 %
@@ -503,8 +503,8 @@ The work of \cite{AvnerMannor18} is discussed above for the case with communicat
 
 Finally, the very recent work of \cite{Zafaruddin2019} is the first one to present experiments of reinforcement learning done on simulated LTE and 5G channels.
 The mathematics behind their model are actually quite close to the model, but they explain it in terms of OFDMA and Quality-of-Service (QoS).
-Their algorithm is essentially based on a pre-agreement of the $M$ players, that will deterministically run an alternance of exploration phase, auction phase and exploitation phase, of (exponentially) increasing durations.
-By diving into the details of the modulation and giving explicitly the form of the uplink messages sent by the devices, the authors are able to set-up two different uplink packets, to efficiently perform the auction phase (see Figure~2).
+Their algorithm is essentially based on a pre-agreement of the $M$ players, that will deterministically run an alternation of exploration phase, auction phase and exploitation phase, of (exponentially) increasing durations.
+By diving into the details of the modulation and giving explicitly the form of the up-link messages sent by the devices, the authors are able to set-up two different up-link packets, to efficiently perform the auction phase (see Figure~2).
 They prove a regret upper-bound of the order $R_T = \bigO{\log(T)}$, with no special care regarding the constants, but we can also note that their algorithm require a prior knowledge of $\Delta_{\min}$ a problem-dependent constant (Theorem~3).
 
 
@@ -572,14 +572,14 @@ and we include both the centralized multiple-play version of \klUCB{} and \MCTop
 \label{sub:5:withMaliciousJammers}
 
 In all this chapter and the previous research literature, another common hypothesis is that all the $M$ players are pursuing the same goal, and are all behaving nicely by following the same algorithm.
-% Efficient utilization of licensed spectrum in the cognitive radio network is challenging due to lack of coordination among the Secondary Users (SUs).
-Distributed algorithms proposed in the literature aim to maximize the network throughput by ensuring orthogonal channel allocation for the SUs.
-However, these algorithms work under the assumption that all the SUs faithfully follow the algorithms which may not always hold due to the decentralized nature of the network.
+% Efficient utilization of licensed spectrum in the cognitive radio network is challenging due to lack of coordination among the Secondary Users (SU).
+Distributed algorithms proposed in the literature aim to maximize the network throughput by ensuring orthogonal channel allocation for the SU.
+However, these algorithms work under the assumption that all the SU faithfully follow the algorithms which may not always hold due to the decentralized nature of the network.
 In the paper \cite{SawantKumar2018}, the authors study for the first time distributed algorithms that are robust against malicious behavior, also called \emph{jamming attack}.
 They consider both the cases of \emph{jammers} launching coordinated and uncoordinated attacks, and consider a set of $J$ jammers.
-In the coordinated attack, the jammers select non-overlapping channels to attack in each time slot and can significantly increase the number of collisions for SUs.
+In the coordinated attack, the jammers select non-overlapping channels to attack in each time slot and can significantly increase the number of collisions for SU.
 They setup the problem in each scenario as a multi-players bandit and develop algorithm,
-and their analysis shows that when the SUs faithfully implement proposed algorithms, the regret is constant with high probability.
+and their analysis shows that when the SU faithfully implement proposed algorithms, the regret is constant with high probability.
 They validate their claims through extensive synthetic experiments and also through a realistic USRP.
 Their synthetic experiments consider different cases, for different values of $K$ the number of channels, $M$ the number of players and $J$ the number of jammers.
 

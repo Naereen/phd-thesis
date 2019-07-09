@@ -193,7 +193,7 @@ They prove that tuning its window-size to $\tau = 2 \sqrt{T\log(T)/\Upsilon_T}$,
 Both D-UCB and SW-UCB build on a stationary policy, but for example \ExpThreeS{} from \cite{Auer02NonStochastic}
 builds on the \ExpThree{} policy, which is designed for the adversarial case.
 \ExpThreeS{} actually achieves a good regret upper-bound, of the form $\cO(\sqrt{K \Upsilon_T T})$, with no additional prior knowledge except that of $T$ and $\Upsilon_T$.
-It constitues a good baseline for the numerical experiments in Section~\ref{sec:6:NumericalExperiments},
+It constitutes a good baseline for the numerical experiments in Section~\ref{sec:6:NumericalExperiments},
 even if we did find that \ExpThreeS{} performs worse that the most of the other approaches based on extending stationary bandit algorithms (\eg, SW-UCB).
 % , so we do not include it in .
 Similarly, previous works showed that older algorithms have no or weaker regret guarantees, and have been proven to be less efficient empirically, or are designed for more specific settings.
@@ -221,7 +221,7 @@ The Adapt-EVE algorithm from \cite{Hartland06} used a Page-Hikley (PH) Test and 
 %
 The Windowed-Mean Shift algorithm from \cite{YuMannor09} is more generic and combines any efficient bandit policy with a CD test based on a sliding window, but their approach is not applicable to the bandit setting of interest in this chapter, as they consider side observations.
 %
-The \ExpThreeR{} algorithm from \cite{Allesiardo15,Allesiardo17} combines a CD algorithm with \ExpThree, and the history of all arms are reset as soon as a suboptimal arm is detecting to become optimal.
+The \ExpThreeR{} algorithm from \cite{Allesiardo15,Allesiardo17} combines a CD algorithm with \ExpThree, and the history of all arms are reset as soon as a sub-optimal arm is detecting to become optimal.
 A regret bound of $\cO(\Upsilon_T \sqrt{T \log(T)})$ was proven, even when $\Upsilon_T$ is known.
 
 Two recent and related works use
@@ -237,7 +237,7 @@ it has no theoretical guarantee, so we do not include \PHT-\UCB{} in the experim
 %
 In comparison, \MUCB{} uses a much simpler test, based on the $w$ most recent observations on one arm (for a fixed and even number $w\in 2\N^*$), and compares with a fixed threshold $h$ the difference of the sum of rewards for the first half and the second half. It is numerically much simpler, and has the advantage of using only a bounded memory (of order $\bigO{K w}$ for $K$ arms).
 %
-Both approaches also introduced a mechanism to force a uniform exploration of each arm, parametrized by $\omega\in(0,1)$ (note that it is called $\alpha$ in both papers, but we rename it $\omega$ in this chapter to avoid clutter with $\alpha$ of $\UCB_1$ in \eqref{eq:2:UCB_index}).
+Both approaches also introduced a mechanism to force a uniform exploration of each arm, parameterized by $\omega\in(0,1)$ (note that it is called $\alpha$ in both papers, but we rename it $\omega$ in this chapter to avoid clutter with $\alpha$ of $\UCB_1$ in \eqref{eq:2:UCB_index}).
 % \CUSUMUCB{} uses a randomized exploration, by sampling arm $k$ with probability $\omega/K$ at each time step,
 % and \MUCB{} uses a more deterministic scheme, to force exploring the $K$ arms (when the time since the last restart, $t - \tau$, is found to be in $[K]$ modulo $\left\lceil 1/\omega \right\rceil$).
 % Both solutions ensure that all arms are sampled enough on each stationary sequence, in order for the CD algorithm to have enough \iid{} samples to detect changes.
@@ -346,7 +346,7 @@ so we prefer to not include it in the experiments presented later.
 
 
 
-\paragraph{Positionning of our results.}
+\paragraph{Positioning of our results.}
 %
 The two algorithms \CUSUMUCB{} and \MUCB{} are both analyzed under some reasonable assumptions on the problem parameters --the means $(\mu_k(t))$-- mostly saying that the break-points are sufficiently far away from each other.
 %
@@ -1392,7 +1392,7 @@ Before giving larger results that compare our approach against other algorithms,
 \emph{For one (random) simulation}, we give below examples of the efficiency of the change-point detection algorithm used by \GLRklUCB{} as well as \CUSUMklUCB{} and \MklUCB,
 by showing the times at which they detect a change and reinitialize their memory of observations of one or all the arms.
 % We also display the number of observations (since the last restart) of the arm on which the change was detected.
-As shown below, in the experiments summary, the three algorithms based on change-point detection obtain sublinear regret, but they have different behaviors.
+As shown below, in the experiments summary, the three algorithms based on change-point detection obtain sub-linear regret, but they have different behaviors.
 The test in \MUCB{} usually detects less changes, while the test in \CUSUMUCB{} usually detects more changes and even unnecessary changes.
 %
 On the examples presented below as well as large scale examples, all the tests appear to have no (or a small number of) false alarm, and always a small detection delay for changes that are ``easy enough'' to be efficiently detected.
@@ -1420,7 +1420,7 @@ $4)$ \GLRklUCB{} with \emph{global restart}.
 In this ``easy'' problem, all algorithms correctly detect the important changes, except \CUSUM{} which detected a change on arm $1$ (\textcolor{red}{in red}) twice after the change-point located at $t=3000$.
 The three other algorithms have a very small delay, for instance only $9$ samples from arm $0$ (\textcolor{blue}{in blue}) after its change at time $t=2000$ are enough for the \GLR{} test to detect a change.
 Very small delays are possible only after having collected a lot of samples of the arm which changed, and for instance the same algorithm obtains a delay of $32$ samples from \textcolor{red}{arm $1$} for the next change at $t=3000$, because this arm was sampled less.
-On this problem, while \MklUCB{} detects the same changes as \GLRklUCB, with larger but comparable delays, it is seen to obtain a larger regret than the two \GLR{} variants, simply because the tuning of its forced exploration probability (\ie, $\omega$) makes it explore suboptimal arms more often.
+On this problem, while \MklUCB{} detects the same changes as \GLRklUCB, with larger but comparable delays, it is seen to obtain a larger regret than the two \GLR{} variants, simply because the tuning of its forced exploration probability (\ie, $\omega$) makes it explore sub-optimal arms more often.
 
 % \begin{itemize}
 %     \item
@@ -1741,7 +1741,7 @@ On simple problems, like problem $1$, all the algorithms being designed for piec
 Our approach is the algorithm which performs the closer to the oracle for problem $4$.
 
 Finally, in the case of hard problems, like problems $3$ and $5$, that have a lot of changes but where the optimal arm barely changes, we verify in Figure~\ref{fig:6:meanRegretPb5} that \klUCB{} and TS can outperform the oracle policy.
-Indeed the oracle policy is suboptimal as it restarts as soon as one arm change but is unaware of the meaningful changes, and stationary policies which quickly identify the best arm will play it most of the times, achieving a smaller regret.
+Indeed the oracle policy is sub-optimal as it restarts as soon as one arm change but is unaware of the meaningful changes, and stationary policies which quickly identify the best arm will play it most of the times, achieving a smaller regret.
 We note that, sadly, all actively adaptive policies fail to outperform stationary policies on such hard problems, because they do not observe enough rewards from each arm between two restarts (\ie, the Assumptions~\ref{ass:6:LongPeriodsGlobal} and \ref{ass:6:LongPeriods} for the two Theorems~\ref{thm:6:mainRegretBoundGlobal} and \ref{thm:6:mainRegretBound} are not satisfied).
 We can also verify that the two options, \textbf{Local} and \textbf{Global} restart, for \GLRklUCB, give close results, and that the \textbf{Local} option is always better.
 
