@@ -586,7 +586,7 @@ Using this inequality twice in the right hand side of \eqref{eq:6:Preparation} c
 % Passively adaptive algorithms should intuitively be more efficient, but as they use a non-constant storage, they are actually as costly as the oracle.
 % For instance SW-UCB uses a storage of $\bigO{K \tau}$, increasing as $T$ increases, and similarly for other passively adaptive algorithms.
 % We highlight that to the best of our knowledge, the Discounted Thompson sampling algorithm (DTS) is the only algorithm tailored for abruptly changing problems that could be efficient in terms of regret (see the simulations results, even though it has no theoretical guarantee), and optimal in terms of both computational and storage costs. Indeed, it simply needs a storage proportional to the number of arms, $\bigO{K}$, and a time complexity of $\bigO{KT}$ for a horizon $T$ (see the pseudo-code in \cite{RajKalyani17}).
-% % Note that the discounting scheme in Discounted-\UCB{} (D-UCB) from \cite{Kocsis06} requires to store the whole history, and not only empirical rewards of each arm, as after observing a reward, all previous rewards must be multiplied by $\gamma^n$ if that arm was not seen for $n>0$ times. So the storage cannot be simply proportional to $K$, but needs to grows as $t$ grows. Therefore, D-UCB costs $\bigO{K T}$ in memory and $\bigO{K T^2}$ in time.
+% % Note that the discounting scheme in Discounted-\UCB{} (D-UCB) from \cite{Kocsis06} requires to store the whole history, and not only empirical rewards of each arm, as after observing a reward, all previous rewards must be multiplied by $\gamma^n$ if that arm was not seen for $n>0$ times. So the storage cannot be simply proportional to $K$, but needs to grow as $t$ grows. Therefore, D-UCB costs $\bigO{K T}$ in memory and $\bigO{K T^2}$ in time.
 
 
 % \textbf{Actively adaptive algorithms.}
@@ -928,7 +928,7 @@ and with the deterministic exploration scheme.
 % \end{small} %XXX WARNING
 
 As we could expect, the four choices give comparable results, as well as $\beta_3$ and $\beta_4$. The first two choices give better performance in most cases, and they are computationally less costly.
-The threshold $\beta_1$ is closer mathematically to the threshold $\beta_3$, that was used in the analysis, and thus it is the one we advise to use in practice.
+We note that the threshold $\beta_1$ is closer mathematically to the threshold $\beta_3$, that was used in the analysis, and thus it is the one we advise to use in practice.
 The sum-up of these experiments is that a practitioner should use the simplest and most explicit threshold $\beta_1$, instead of the more complicated one that was used for the analysis.
 Therefore, the choice of threshold function $\beta_1(n, \delta) \eqdef \log\left(3 n^{3/2} / \delta\right)$ for \GLRklUCB{} presented in Algorithm~\ref{algo:6:GLRklUCB} is validated by these experiments.
 % and this choice gives good empirical performance.
@@ -1001,7 +1001,7 @@ We include the two variants of \GLRklUCB, based on \textbf{Local restarts} or \t
 \end{table}
 % \end{small} %XXX WARNING
 
-As expected, all options give similar results, and each of the three options was found to outperform the two others in one of the three problems considered for this experiments (problems $1$, $2$ and $4$).
+As expected, all options give similar results, and each of the three options was found to outperform the two others in one of the three problems considered for these experiments (problems $1$, $2$ and $4$).
 The result highlighted in \textbf{bold} in Table~\ref{table:6:exploringDifferentForcedExplorationMechanisms} shows the best algorithm in each problem.
 % (\ie, the algorithm and its option that obtains the smaller mean regret in the considered column).
 We note that in terms of its average regret on the different problems, the tracking-based exploration is the best choice.

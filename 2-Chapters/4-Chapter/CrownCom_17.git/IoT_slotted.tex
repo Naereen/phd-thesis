@@ -158,8 +158,7 @@ Before sending another message (\ie, at time $t+1$), the dynamic device knows if
 %
 For this reason, selecting channel (or arm) $k$ at time $t$ yields a (random) feedback, called a (binary) \emph{reward}, $r(t) \eqdef Y_{k,t} \in \{0,1\}$, being $0$ if no \Ack{} was received before the next message, or $1$ if \Ack{} was successfully received.
 The goal of the dynamic device is to minimize its packet loss ratio, or equivalently, to maximize its number of successful transmissions, or its cumulative reward,
-$\sum_{t = 1}^T r(t),$
-which is the usual objective in MAB problems (see Section~\ref{sec:2:notations}).
+$\sum_{t = 1}^T r(t)$, which is the usual objective in MAB problems (see Section~\ref{sec:2:notations}).
 
 
 This problem is a special case of the stochastic MAB with
@@ -212,7 +211,7 @@ so probability of successful transmission is computed as follows.
 All dynamic devices follow the same policy in this case, so the probability of transmitting at that time in channel $k$ for any dynamic device is $p / K$, and there are $D-1$ other dynamic devices.
 As they are independent, the probability that no other dynamic device sent in $i$
 % $\Pr(\text{no other dynamic device sent in}\;i)$,
-is $q = \Pr(\bigcap_{k=1}^{D-1} \text{device } k \text{ did not sent in } i) = \prod_{k=1}^{D-1} \Pr(\text{device } k \text{ did not sent in } i)$. And $\Pr(\text{device } k \text{ sent in } i) = p \times 1 / K$, by uniform choice on channels and the Bernoulli emission hypothesis. So $q = \prod_{k=1}^{D-1} (1 - p/K) = (1-p/K)^{D-1}$. Thus we can conclude,
+is $q = \Pr(\bigcap_{k=1}^{D-1} \text{device } k \text{ did not send in } i) = \prod_{k=1}^{D-1} \Pr(\text{device } k \text{ did not send in } i)$. And $\Pr(\text{device } k \text{ sent in } i) = p \times 1 / K$, by uniform choice on channels and the Bernoulli emission hypothesis. So $q = \prod_{k=1}^{D-1} (1 - p/K) = (1-p/K)^{D-1}$. Thus we can conclude,
 %
 \begin{align}\label{eq:41:strategynaive}
     \Pr(\text{success}|\text{sent})
@@ -413,7 +412,7 @@ as expected intuitively, the more dynamic devices, the less useful are learning 
 %
 To better assess the evolution of the optimal policy compared to the random one, we have displayed on Figure~\ref{fig:41:perf_learning} the evolution of the gain, in terms of successful transmission rate, provided by the optimal oracle and the two learning policies, after $10^6$ time slots, \ie, about $1000$ transmissions for each IoT device.
 We can see that when the proportion of end-devices is low (\eg, $1\%$ of devices are dynamic), the optimal policy provides an improvement of $16\%$ compared to random channel selection.
-The TS algorithm always provides near-optimal performance, but the \UCB{} algorithm has a lowest rate of convergence and performs consequently worse after $1000$ transmissions, for instance it only provides a gain of $12\%$ for the same proportion of dynamic devices ($1\%$),
+The TS algorithm always provides near-optimal performance, but the \UCB{} algorithm has a slower rate of convergence and performs consequently worse after $1000$ transmissions, for instance it only provides a gain of $12\%$ for the same proportion of dynamic devices ($1\%$),
 for the considered values of $S_1,\dots,S_K$.
 
 \begin{figure}[!h]

@@ -75,7 +75,7 @@ Our proposals, \RandTopM{} and \MCTopM, both assume to know $M$ beforehand, like
 \paragraph{Performance of our proposals for a wrong value of $M$.}
 \label{par:5:usingWrongValueofM}
 %
-We can start by asking whether the most efficient algorithm, \MCTopM-\klUCB, is still efficient if it uses a value $M'$ different than the real number of players $M$.
+We can start by asking whether the most efficient algorithm, \MCTopM-\klUCB, is still efficient if it uses a value $M'$ different from the real number of players $M$.
 Even though we did not include numerical simulations for this case in Section~\ref{sec:5:experiments} above, we did some tests, which confirmed two disappointing results that were also proven analytically.
 First, the three algorithms (\RhoRand, \RandTopM{} and \MCTopM) give linear regret if they are using a value $M'$ strictly smaller than $M$ (and if $\mu^*_{M-1} > \mu^*_M$), as players will converge to play about $T-\bigO{\log(T)}$ times the $M-1$ best arms, leading to at least one collision most of the time, and thus a linear regret.
 Second, if the $M$ players falsely use a value $M' > M$, then there is also a certain (fixed) probability to achieve a linear regret. Indeed, imagine one player ($M=1$) running \MCTopM{} with the false knowledge of $M'=2$, and if it learned to accurately identify the set of the $2$ best arms, then the \MCTopM{} orthogonalization scheme can make it play the worst of the two arms, and as $M=1$ this player will never encounter any collision, thus playing this sub-optimal arm for about $T-\bigO{\log(T)}$ times, also leading to linear regret.
@@ -135,7 +135,7 @@ Writing its proof and performing more simulations are left as possible future wo
 \paragraph{Simulations.}
 
 We consider a bandit problem with $K=9$ arms, of means $0.1,\dots,0.9$, and three different cases of $M=3,6,9$ players, for $100$ independent repetitions and a horizon of $T=10000$.
-As before, we include the centralized multiple-play \klUCB{} as an unachievably efficient baseline, the \Selfish-\klUCB{} algorithm as an heuristic which does not require to know $M$.
+As before, we include the centralized multiple-play \klUCB{} as an unachievably efficient baseline, the \Selfish-\klUCB{} algorithm as a heuristic which does not require to know $M$.
 Then we compare the \RhoRand, \RandTopM{} and \MCTopM{} algorithms, using \klUCB, which know $M$ beforehand, with their extensions implementing the same algorithm as \rhoRandEst, to estimate $M$ on the fly.
 
 % \TODOL{Include a simulation to show the behavior of \rhoRand{} vs \rhoRandEst, and \RandTopM{} and \MCTopM{} with prior knowledge of $M$ vs the ``estimate'' versions.}
@@ -260,9 +260,10 @@ The recent work \cite{BoursierPerchet18} proposed an idea they called the ``comm
 It essentially allow any player to send one bit to all the others, at some pre-agreed time steps, with no modification on the model.
 Thanks to this ``communication trick'', recent research efforts have been more focus on studying the basic model --without explicit communications between players--, while proposing algorithms that can rely on some communication between players.
 This trick essentially use the fact that the players share a synchronized time, thus they can use a collision as a way to directly exchange one bit of information between two players.
-This process is slow and not efficient, as all but two players must do nothing when player $i$ is sending a bit to player $j$, but it does build a communication protocol in the model without explicit communication between players.
-This ``communication trick'' is used for instance in \cite{KaufmannAbbas19}.
-We let the interested reader refer to these last two works \cite{BoursierPerchet18,KaufmannAbbas19} as they are both solid, and well explained.
+Such process is slow and not efficient, as all but two players must do nothing when player $i$ is sending a bit to player $j$, but it does build a communication protocol in the model without explicit communication between players.
+We note that this ``communication trick'' is used for instance in \cite{KaufmannAbbas19},
+and we let the interested reader refer to these two recent works \cite{BoursierPerchet18,KaufmannAbbas19}.
+%  as they are both solid, and well explained.
 
 
 \paragraph{Estimating collisions through uniform exploration.}
@@ -296,7 +297,7 @@ They prove that it is unlikely to encounter any of these ``tie breaking points''
 
 To illustrate the difficulty of the ``no sensing'' case, we illustrate here the performances of different algorithms designed specifically for this setting.
 As above, we consider a bandit problem with $K=9$ arms, of means $0.1,\dots,0.9$, and three different cases of $M=3,6,9$ players, for $N=100$ independent repetitions, and horizon $T=10000$.
-We include the \Selfish-\klUCB{} algorithm as an heuristic, as well as the Improved \MusicalChair{} algorithm from \cite{LugosiMehrabian18} and \textsc{Sic-MMAB} from \cite{BoursierPerchet18}.
+We include the \Selfish-\klUCB{} algorithm as a heuristic, as well as the Improved \MusicalChair{} algorithm from \cite{LugosiMehrabian18} and \textsc{Sic-MMAB} from \cite{BoursierPerchet18}.
 It is also interesting to add the centralized multiple-play \klUCB{} is included as an unrealistic efficient baseline, as it does not use the sensing information but only the joint information (the reward) $r^j(t)$, because it directly affects the player in an orthogonal configuration and thus never encounters any collision (thus $r^j(t)=Y_{t,A^j(t)}$ for each $j,t$).
 %
 For the two other algorithms, we use the advised tuning of their parameters:
@@ -637,7 +638,7 @@ This bound is much worse than the one obtained for the first article \cite{WeiSr
 Note that this bound in $T^{2/3}$ is of the same order as the one given in \cite{Avner15}, for the \MEGA{} algorithm.
 However, we note that the dependency in $M$ is surprisingly better for their result than for the regret upper-bound for \MCTopM-\klUCB{} (which scales in $M^3$ in Theorem~\ref{thm:5:LogarithmicRegret_MCTopMklUCB}).
 
-Moreover, at first sight, this idea of ``meta'' arms implies an exponential blow up in terms of computational and storage cost, as there is ${M \choose K}$ such ``meta arms'', but
+Moreover, at first sight, this idea of ``meta'' arms implies an exponential blowup in terms of computational and storage cost, as there is ${M \choose K}$ such ``meta arms'', but
 the authors provide in Section~4.1 and Lemma~4.1 \cite{AlaturLevyKrause19} an interesting discussion regarding the time efficiency of their proposed algorithm, and they show it can stay polynomial in $M$ and $K$ by leveraging techniques from the Determinental Point Processes (DPP, see \cite{GaBaVa18} and references therein for a good introduction).
 %
 In this second work also, we can note the poor experimental section, as the proposed algorithm is only compared against the \MusicalChair{} algorithm, in ``easy'' problems (small number of break-points $\Upsilon_T$).
