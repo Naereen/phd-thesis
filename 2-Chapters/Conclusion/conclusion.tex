@@ -27,46 +27,52 @@
 
 We started this manuscript by detailing the historical, scientific and technical contexts of our research during this PhD, which studied how decentralized low-cost machine learning technique can be used to automatically improve a certain aspect of wireless telecommunications.
 %
-We explained the problems that motivate and justify our works,
-and we presented the main contributions produced during the last three years.
+We explained the problems that motivate and justify our works.
+% and we presented the main contributions produced during the last three years.
 %
 The main question we studied was \emph{``Can we adapt the decision making tools already successfully applied to Cognitive Radio for Opportunistic Spectrum Access to the specific needs of CR for the (future) Internet of Things networks?''}
 %
 This PhD manuscript is organized in two parts.
-It first focuses on giving a strong theoretical background on the reinforcement learning model considered in this thesis, that are the multi-armed bandits models.
-The manuscript then focuses on our problems of solving the spectrum scarcity issue in unlicensed bands, in the context of the future Internet of Things networks,
-and extending to the specificities of such IoT networks the ideas underlying previously studied applications of machine learning to solve the spectrum scarcity issue in licensed networks.
+It first focused on giving a strong theoretical background on the reinforcement learning model considered in this thesis, that is the multi-armed bandit model.
+The manuscript then focused on our problems of solving the spectrum scarcity issue in unlicensed bands, in the context of the future Internet of Things networks,
+and on extending to the specificities of such IoT networks the underlying ideas of previously studied applications of machine learning to solve the spectrum scarcity issue in licensed networks.
 
 
-Our main contribution to answer the problematic is a model of Internet of Things networks, based on an ALOHA-like protocol slotted in time and frequency, and that considers one IoT base station, serving a large number of devices following the IoT constraints (low-cost, low duty cycle, long range etc).
-In such IoT network, we focused on many dynamically reconfigurable IoT end-devices, that are able to run low-cost and low-complexity decision making algorithms, embedded on each device using their limited computational and storage capacity (limited hardware)
-We proposed two models, whether the considered IoT standard asks the devices to try to retransmit a few times their up-link packet in case of a failed transmission (\ie, a collision with other devices),
-or to drop their packet after a failed transmission (\ie, without retransmission).
-Both models are realistic, and for both cases we proposed to use multi-armed bandit (MAB) algorithms, such as \UCB{} or Thompson sampling, in order for the numerous IoT devices to improve on their own their spectrum access scheme, by learning which of the $K$ frequency channels are the less occupied by the environmental traffic.
+Our main contribution to answer our problematic is a model of Internet of Things networks, based on an ALOHA-like protocol slotted in time and frequency, and that considers one IoT base station serving a large number of devices following the IoT constraints (low-cost, low duty cycle, long range etc).
+In such IoT network, we focused on many dynamically reconfigurable IoT end-devices, that are able to run low-cost and low-complexity decision making algorithms, embedded on each device using their limited computational and storage capacities.
+%  (limited hardware)
+We proposed two models, whether the considered IoT standard enforces the devices to try to retransmit a few times their up-link packet in case of a failed transmission (\ie, a collision with other devices),
+or to drop their packet after a failed transmission (\ie, with or without retransmission).
+Both models are realistic, and for both cases we proposed to use multi-armed bandit (MAB) algorithms, such as \UCB{} or Thompson sampling, in order for the numerous IoT devices to improve on their own their spectrum access scheme, by learning which of the $K$ frequency channels are the less occupied by the environmental traffic (in average).
 
-The approach we thus advocate is to use low-complexity MAB algorithms such as \UCB, or variants tuned to be robust in slowly-evolving non-stationary scenario (\eg, Discounted-\UCB{} or actively adaptive approach such as \GLR-\klUCB).
-For a given company manufacturing IoT end-devices, it is very simple and cheap in terms of both hardware and software engineering workloads to implement such MAB algorithm on the low-cost embedded processors, and equip all the produced IoT devices with this capacity of using online machine-learning for their spectrum access.
-The embedded decision-making algorithm will automatically improve the channel selection of each device, in a fully decentralized way, and will increase the total number of successful up-link transmissions, thus it will increase the Quality of Service of the considered IoT application, as well as allowing more devices to be served by the same IoT gateway.
+The approach we thus advocate is to use low-complexity MAB algorithms such as \klUCB{} or Thompson sampling, or variants tuned to be robust in slowly-evolving non-stationary scenario (\eg, Sliding-Window \UCB, Discounted-Thompson, or actively adaptive algorithm such as the one of Chapter~\ref{chapter:6}, \GLR-\klUCB).
 %
-The advocated approach also has the advantage of not requiring the change anything from the IoT standard side, as the only modification happens on the device side, by letting it actively decide the channels it uses for up-link transmissions, instead of relying on a naive uniform channel access.
+For a company that manufactures IoT end-devices, it is very simple and cheap in terms of both hardware and software costs to implement such MAB algorithms on the low-cost embedded processors, and equip all the produced IoT devices with this capacity of using online machine-learning for their spectrum access.
+The embedded decision-making algorithm automatically improves the channel selection of each device, in a fully decentralized way, and increases the total number of successful up-link transmissions, and thus this increases the Quality of Service of the considered IoT application and allow more devices to be served by the same IoT gateway.
 %
-We also note that this approach can easily be used to let the IoT devices optimize by themselves and on the fly other parameters of their wireless communications, as the multi-armed bandit framework is not restricted to be applied for the frequency channel selections but can be applied to any exploration-exploitation problem with a finite set of possible options.
-The solution we propose can thus be easily extended to use the same kinds of MAB algorithms to select dynamically parameters such as the coding rate or spreading factor of a LoRa network (\eg, \cite{KerkoucheAlami18}), the emission power in a NOMA standard, or any other discrete-valued parameters that have an impact on the successful transmission rate and can be optimized on the device's side by using reinforcement learning.
+Another consequence is a reduced energy consumption and an increased battery life for the IoT end-devices.
+% , and thus the solution studied in this thesis can also be used to reduce the global energy consumption of the IoT networks.
+% solve both the spectrum scarcity issue and the energy 
+
+The advocated approach also has the advantage of not requiring to change anything on the IoT standard, as the only modification happens on the device side, by letting it actively decide the channels it uses for up-link transmissions, instead of relying on a naive uniform channel access.
+%
+We also note that this approach can easily be used to allow the IoT devices to optimize by themselves other parameters of their wireless communications on the fly, as the multi-armed bandit framework is not restricted to be applied to the selection of frequency channel but can be applied to any exploration-exploitation problem with a finite set of possible options.
+The solution we propose can thus be easily extended to also select dynamically other parameters such as the coding rate or spreading factor of a LoRa network (\eg, \cite{KerkoucheAlami18}), the emission power in a NOMA standard, or any other discrete-valued parameters that have an impact on the successful transmissions rates and can be optimized on the device's side by using reinforcement learning.
 
 
-Moreover, from a theoretical aspect, even though it was found hard to propose a rigorous analysis of the model of IoT networks, because of the large number of end-devices having different random and unpredictable activation patterns, our contributions also include an analysis of two restricted models.
+Moreover, from a theoretical aspect, even though it was found hard to propose a rigorous analysis of our model of IoT networks, because of the large number of devices having different random and unpredictable activation patterns, our contributions also include an analysis of two restricted models.
 %
-On the one hand, we considered a model where the devices have data to transmit at each time step, relaxing the hypothesis of a random activation process (with a small probability, as IoT devices have low duty cycles), and thus by restricting to the case of at most $M \leq K$ devices in a wireless standard with $K$ orthogonal frequency channels.
-This first model is similar to the multi-player multi-armed bandits studied in the last $10$ years, and for stationary and stochastic environments we were able to propose a state-of-the-art algorithm, \MCTopM.
+On the one hand, we considered a model where the devices have data to transmit at each time step, relaxing the hypothesis of a random activation process (with a small probability, as IoT devices have low duty cycles), and thus by restricting to the case of at most $M \leq K$ devices using a wireless standard with $K$ orthogonal frequency channels.
+This first model is similar to the multi-player bandit model studied in the last $10$ years, and for stationary and stochastic environments we were able to propose a state-of-the-art algorithm, \MCTopM.
 Our proposed algorithm performs very well in practice and obtains interesting guarantees on its regret, as well as on the number of radio collisions and on radio reconfigurations that the devices will suffer if they all implement our solution.
 %
-On the other hand, we studied a model that focuses on only one device but relaxes the hypothesis of stationarity for the surrounding radio traffic, and considers that is can be stationary in consecutive intervals of time, of unknown durations. This second model is similar to the piece-wise stationary (or abruptly-changing) multi-armed bandits studied since the $2000$s, and we solved it by proposing a new actively adaptive bandit policy, for which we obtained state-of-the-art results, in terms of its regret but also its false alarm probability and delay of detection.
+On the other hand, we studied a model that focuses on only one device but relaxes the hypothesis of stationarity on the surrounding radio traffic, and considers that is can be stationary in consecutive intervals of time, of unknown durations. This second model is similar to the piece-wise stationary (or abruptly-changing) bandit model studied since the $2000$s, and we solved it by proposing a new actively adaptive bandit policy, for which we obtained state-of-the-art results, in terms of its regret and its false alarm probability and delay of detection.
 
 Finally, from an application point-of-view, we also presented a realistic implementation of a proof-of-concept of our first model of IoT network, that was used to validate empirically the proposed approach.
 We showed that the IoT devices can effectively use a multi-armed bandit algorithm to automatically learn to favor certain frequency channels over others, in order to optimize their spectrum access, to reduce their number of failed transmissions.
 %
 Our proposed approach is to use decentralized reinforcement learning algorithms, directly embedded on the IoT end-devices, in order to improve their spectrum access and channel selection schemes.
-We confirmed from both a numerical simulations and an validation on real radio traffic and hardware that our proposal is an excellent candidate to start to solve the spectrum scarcity issue for unlicensed bands, that is cheap and easy to deploy, and requires .
+We confirmed from both numerical simulations and a validation on real radio traffic and real hardware that our proposal is an excellent candidate to start to solve the spectrum scarcity issue for unlicensed bands, that is cheap and easy to deploy.
 
 
 
@@ -253,9 +259,9 @@ We confirmed from both a numerical simulations and an validation on real radio t
 % \section{Perspectives}
 \subsection*{Future works}
 
-% As discussed at the end of each chapter,
-% All the models, simulations,
-What we presented above in each chapter suggest the following directions of future studies.
+% % As discussed at the end of each chapter,
+% % All the models, simulations,
+% What we presented above in each chapter suggest the following directions of future studies.
 
 
 % ----------------------------------------------------------------------------
@@ -282,8 +288,9 @@ What we presented above in each chapter suggest the following directions of futu
 A few tasks are left on our library SMPyBandits, a first one could be to implement new variants of the single-player stochastic models, as well as variants for the multi-players or the non-stationary cases.
 For more details, see the issue tickets at \href{https://github.com/SMPyBandits/SMPyBandits/issues/}{\texttt{GitHub.com/SMPyBandits /SMPyBandits/issues/}}.
 %
-A second interesting task could be to extend the library for problems with non-finite arms, such as linear or contextual bandits (\href{https://github.com/SMPyBandits/SMPyBandits/issues/117}{ticket 117}),
-or to add support for the ``dynamic case'' of multi-players bandits to allow arrivals or departures of players (\href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{ticket 124}).
+A second interesting task could be
+% to extend the library for problems with non-finite arms, such as linear or contextual bandits (\href{https://github.com/SMPyBandits/SMPyBandits/issues/117}{ticket 117}),
+to add support for the ``dynamic case'' of multi-players bandits to allow arrivals or departures of players (\href{https://github.com/SMPyBandits/SMPyBandits/issues/124}{ticket 124}).
 %
 A third task that I would have liked to complete is to interface the library with a web-based interactive demonstration, in order to allow anyone to launch simulations without any knowledge of programming.
 It is already possible to reproduce some of the experiments presented in this thesis,
@@ -303,10 +310,10 @@ by using the Jupyter notebooks \cite{jupyter} made available%
 
 The first model presented in Section~\ref{sec:4:firstModel} could easily be generalized with two probabilities $p_S$ and $p_D$, if the $S$ static and $D$ dynamic devices have different transmission patterns, and less easily with a different probability per device.
 Also, other emission patterns could be considered, instead of a Bernoulli process for each user.
-In this whole Chapter~\ref{chapter:4}, we prefer to consider that all the devices have the same activation probability, to keep the notations and the model as simple as possible.
+In this entire Chapter~\ref{chapter:4}, we prefer to consider that all the devices have the same activation probability, to keep the notations and the model as simple as possible.
 %
 Moreover, for the sake of simplicity we supposed that all devices use the same standard.
-Future works could consider more realistic interference scenarios and IoT networks, with, \eg, non-slotted time, more than one base station etc.
+Future works could consider more realistic interference scenarios and IoT networks, with non-slotted time, more than one base station etc.
 % \\
 % \indent
 Another extension could be to consider not a Bernoulli activation process (or any random process), but a fixed rate of transmission, \eg, one transmission a day.
@@ -368,7 +375,8 @@ From the point-of-view of the theoretical analysis, we are especially interestin
 Regarding non-stationary bandits, we believe that the new proof technique of Chapter~\ref{chapter:6} could be used to analyze \GLRklUCB{} under less stringent assumptions than the one made in this chapter (and in previous works), that would require only a few ``meaningful'' changes to be detected.
 This promising research direction is left for future work,  but the hope is that the regret would be expressed in terms of the number of such meaningful changes, instead of the number of break-points $\Upsilon_T$.
 We shall moreover investigate whether actively adaptive approaches can attain a $\cO(\sqrt{\Upsilon_T T})$ regret upper-bound without the knowledge of $\Upsilon_T$.
-We also believe that combining change-point \emph{localization} with an efficient change-point detection algorithm, such as \GLRklUCB, could lead to an interesting class of more efficient algorithms, as suggested by \cite{Maillard2018GLR}.
+We also believe that combining change-point \emph{localization} with an efficient change-point detection algorithm, such as \GLRklUCB, could lead to an interesting class of more efficient algorithms.
+% as suggested by \cite{Maillard2018GLR}.
 % \\
 % \indent
 Another very interesting future work is to study possible extensions of our approach, especially to the slowly-varying model, as studied in \cite{Besbes14stochastic,Louedec16,WeiSrivastava18Abruptly}, or to other models such as the rotting bandit model \cite{Seznec2018}, which is interesting for many applications even if it does not seem directly usable for the cognitive radio setting.
@@ -378,7 +386,7 @@ Another very interesting future work is to study possible extensions of our appr
 \subsection*{Unifying multi-player and non-stationary bandits.}
 %
 %
-Another interesting direction of future work is to study non-stationary distributed multi-players bandits, to unify the models from Chapter~\ref{chapter:5} and~\ref{chapter:6}.
+Finally, another interesting direction of future work is to study non-stationary distributed multi-players bandits, to unify the models from Chapter~\ref{chapter:5} and~\ref{chapter:6}.
 A natural extension of the non-stationary model is to consider non-communicating players cooperating in a decentralized way to play the same bandit game, as it was proposed recently in \cite{WeiSrivastava18Distributed}.
 %
 We could also build on the proof technique used in this paper, even if we are interested in removing the hypothesis that player $j$ knows its ID $j\in[M]$ before starting to play.
@@ -387,8 +395,8 @@ A promising direction is to directly try to join our contributions from Chapter~
 \klUCB{} indexes for arm selection,
 \MCTopM{} for orthogonalization (\ie, dealing with collisions),
 and the Bernoulli GLR break-point detector for non-stationarity (\ie, dealing with abrupt changes).
-The three parts should be connected, the same way we built \MCTopM-\klUCB{} and \GLRklUCB, by connecting two of the three components together.
-We propose the idea of incorporating the detected change-points by B-\GLR{} test in the orthogonalization procedure \MCTopM: after any change-point is detected, the player is not sitting anymore.
+The three parts should be inter-connected, the same way we built \MCTopM-\klUCB{} and \GLRklUCB, by connecting two of the three components together.
+We propose a simple idea to incorporate the detected change-points by B-\GLR{} test in the orthogonalization procedure \MCTopM: whenever a change-point is detected, the player is no longer ``fixed'' on its chosen arm.
 %
 Even if preliminary numerical simulations showed promising results,
 analyzing this strategy that combine \MCTopM, \GLR{} and \klUCB{} is left as a challenging future work.
@@ -400,12 +408,12 @@ analyzing this strategy that combine \MCTopM, \GLR{} and \klUCB{} is left as a c
 %     - Modification: only a change-point on the arm on which player is sitting can make him move? It's already the case: the \GLR{} test can only detect change-point on an arm that was played, and the \MCTopM{} orthogonalization procedure forces to play the same arm as long as the player is sitting.
 % }
 
-Another question of highest interest is to look for a unique ``unified'' algorithm that can be used in all the different settings studied in this thesis, and automatically adapt to the setting at hand.
+Another question of highest interest is to look for a unique ``unified'' algorithm that can be used in all the different settings studied in this thesis, and maybe others, and automatically adapt to the setting at hand.
 For instance, even if \GLRklUCB{} is very efficient for piece-wise stationary problems, its forced exploration makes it sub-optimal for stationary problems.
 Another example is for multi-players bandits, where \MCTopM-\klUCB{} performs sub-optimally on piece-wise stationary problems.
 % if we consider the proposed extension of \MCTopM-\klUCB{} that estimates the number $M$ of players, i
-One approach to obtain a unified ``master'' algorithm could be to use expert aggregation on the different state-of-the-art algorithms presented in this thesis, and as each one is efficient in a different setting, the resulting aggregated algorithm could also be efficient in each of the different settings.
-As this approach does not seem theoretically promising, as we illustrated in Section~\ref{sec:25:theory},
+One approach to obtain a unified ``master'' algorithm could be to use expert aggregation on the different state-of-the-art algorithms presented in this thesis, and as each one was proven to be efficient in one setting, the resulting aggregated algorithm would also be efficient in each of the different settings.
+As this approach does not seem theoretically promising, as illustrated in Section~\ref{sec:25:theory},
 a preferred approach could be to design a ``unified'' algorithm which adapts automatically to the kind of problem it is facing.
 
 
@@ -416,6 +424,17 @@ a preferred approach could be to design a ``unified'' algorithm which adapts aut
 
 % I would like to highlight that from a personal point of view, this thesis was awesome blabla.
 
+
+\hr{}
+
+\vfill{}
+
+% https://fr.wikipedia.org/wiki/Liste_des_%C3%A9pisodes_de_Kaamelott
+
+\begin{center}
+    Merci d'avoir lu cette thèse.
+    Thanks for reading this document.
+\end{center}
 
 \hr{}
 
