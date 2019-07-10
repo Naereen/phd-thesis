@@ -20,189 +20,229 @@
 
 % ----------------------------------------------------------------------------
 % ----------------------------------------------------------------------------
-\section{General Conclusion}
+% \section{General Conclusion}
+\subsection*{General Conclusion}
 
 \TODOL{Je dois faire quelques phrases résumant la thèse, mais plus court}
 
-This manuscript was organized in two parts.
+We started this manuscript by detailing the historical, scientific and technical contexts of our research during this PhD, which studied how decentralized low-cost machine learning technique can be used to automatically improve a certain aspect of wireless telecommunications.
 %
-The main problem we studied was \emph{``Can we adapt the decision making tools already successfully applied to Cognitive Radio for Opportunistic Spectrum Access to the specific needs of CR for the (future) Internet of Things networks?''}
+We explained the problems that motivate and justify our works,
+and we presented the main contributions produced during the last three years.
 %
-We started by detailing the historical, scientific and technical contexts of the problems we considered for our research, and presented the main contributions produced during the last three years.
-
-% % \begin{itemize}
-%     % \item
-% The first half, Part~\ref{part:Introduction}, started by motivating our work and situating the context of this research.
-% % Chapter 2
-% In Chapter~\ref{chapter:2}, we presented the multi-armed bandit (MAB) models, the hypotheses we usually make on such models, and the most important algorithms that solve different kinds of MAB problems.
-% % Chapter 3
-% Then in Chapter~\ref{chapter:3} we showcased our open-source Python library SMPyBandits in details, developed to run numerical simulations of MAB problems.
-% %
-% Finally, we presented in Chapter~\ref{chapter:25} a first mathematical contribution, our algorithm \Aggr, as an empirically efficient answer to the online algorithm selection problem.
-
-%     % \item
-% The second half of this thesis, Part~\ref{part:MABIOT}, presented the main contributions.
-% % Chapter 4
-% In Chapter~\ref{chapter:4}, we first proposed models for realistic IoT wireless networks, in a discrete time and with no central coordination between end-devices.
-% In two different models, with or without retransmissions, we showed that end-devices can independently learn favor the less occupied radio channels, in order to increase their successful transmission rates in the network, by embedding low-cost decentralized MAB algorithms.
-% We also presented a proof-of-concept that implements such network on real radio hardware and validates the proposed model and algorithms.
-% % Chapter 5
-% Because the models proposed for realistic IoT networks were found to be too general to analyze from a theoretical point of view, mainly due to the large number of algorithms interacting at random times in an unpredictable environment,
-% we started to study a weaker but still interesting model in Chapter~\ref{chapter:5}.
-% We presented different variants of the multi-players MAB model, and we proposed the state-of-the-art algorithm for the variant with collision and spectrum sensing information (\MCTopM).
-% % Chapter 6
-% Finally, in Chapter~\ref{chapter:6}, we relaxed the stationary hypothesis on the single-player MAB problem, and we analyzed a new actively adaptive algorithm, for which we also proved state-of-the-art results (\GLRklUCB).
-% %
-% For the last two chapters, the proposed algorithms attain state-of-the-art performances both on numerical simulations and on the regret upper bounds obtained in their theoretical analyses.
-% % \end{itemize}
+The main question we studied was \emph{``Can we adapt the decision making tools already successfully applied to Cognitive Radio for Opportunistic Spectrum Access to the specific needs of CR for the (future) Internet of Things networks?''}
+%
+This PhD manuscript is organized in two parts.
+It first focuses on giving a strong theoretical background on the reinforcement learning model considered in this thesis, that are the multi-armed bandits models.
+The manuscript then focuses on our problems of solving the spectrum scarcity issue in unlicensed bands, in the context of the future Internet of Things networks,
+and extending to the specificities of such IoT networks the ideas underlying previously studied applications of machine learning to solve the spectrum scarcity issue in licensed networks.
 
 
-% \paragraph{Summary of each chapter.}
-% A more precise summary of each chapter is given below.
+Our main contribution to answer the problematic is a model of Internet of Things networks, based on an ALOHA-like protocol slotted in time and frequency, and that considers one IoT base station, serving a large number of devices following the IoT constraints (low-cost, low duty cycle, long range etc).
+In such IoT network, we focused on many dynamically reconfigurable IoT end-devices, that are able to run low-cost and low-complexity decision making algorithms, embedded on each device using their limited computational and storage capacity (limited hardware)
+We proposed two models, whether the considered IoT standard asks the devices to try to retransmit a few times their up-link packet in case of a failed transmission (\ie, a collision with other devices),
+or to drop their packet after a failed transmission (\ie, without retransmission).
+Both models are realistic, and for both cases we proposed to use multi-armed bandit (MAB) algorithms, such as \UCB{} or Thompson sampling, in order for the numerous IoT devices to improve on their own their spectrum access scheme, by learning which of the $K$ frequency channels are the less occupied by the environmental trafic.
+
+The approach we thus advocate is to use low-complexity MAB algorithms such as \UCB, or variants tuned to be robust in slowly-evolving non-stationary scenario (\eg, Discounted-\UCB{} or actively adaptive approach such as \GLR-\klUCB).
+For a given company manufacturing IoT end-devices, it is very simple and cheap in terms of both hardware and software engineering workloads to implement such MAB algorithm on the low-cost embedded processors, and equip all the produced IoT devices with this capacity of using online machine-learning for their spectrum access.
+The embedded decision-making algorithm will automatically improve the channel selection of each device, in a fully decentralized way, and will increase the total number of successful up-link transmissions, thus it will increase the Quality of Service of the considered IoT application, as well as allowing more devices to be served by the same IoT gateway.
+%
+The advocated approach also has the advantage of not requiring the change anything from the IoT standard side, as the only modification happens on the device side, by letting it actively decide the channels it uses for up-link transmissions, instead of relying on a naive uniform channel access.
+%
+We also note that this approach can easily be used to let the IoT devices optimize by themselves and on the fly other parameters of their wireless communications, as the multi-armed bandit framework is not restricted to be applied for the frequency channel selections but can be applied to any exploration-exploitation problem with a finite set of possible options.
+The solution we propose can thus be easily extended to use the same kinds of MAB algorithms to select dynamically parameters such as the coding rate or spreading factor of a LoRa network (\eg, \cite{KerkoucheAlami18}), the emission power in a NOMA standard, or any other discrete-valued parameters that have an impact on the successful transmission rate and can be optimized on the device's side by using reinforcement learning.
+
+
+Moreover, from a theoretical aspect, even though it was found hard to propose a rigorous analysis of the model of IoT networks, because of the large number of end-devices having different random and unpredictable activation patterns, our contributions also include an analysis of two restricted models.
+%
+On the one hand, we considered a model where the devices have data to transmit at each time step, relaxing the hypothesis of a random activation process (with a small probability, as IoT devices have low duty cycles), and thus by restricting to the case of at most $M \leq K$ devices in a wireless standard with $K$ orthogonal frequency channels.
+This first model is similar to the multi-player multi-armed bandits studied in the last $10$ years, and for stationary and stochastic environments we were able to propose a state-of-the-art algorithm, \MCTopM.
+Our proposed algorithm performs very well in practice and obtains interesting guarantees on its regret, as well as on the number of radio collisions and on radio reconfigurations that the devices will suffer if they all implement our solution.
+%
+On the other hand, we studied a model that focuses on only one device but relaxes the hypothesis of stationarity for the surrounding radio trafic, and considers that is can be stationary in consecutive intervals of time, of unknown durations. This second model is similar to the piece-wise stationary (or abruptly-changing) multi-armed bandits studied since the $2000$s, and we solved it by proposing a new actively adaptive bandit policy, for which we obtained state-of-the-art results, in terms of its regret but also its false alarm probability and delay of detection.
+
+Finally, from an applicative point-of-view, we also presented a realistic implementation of a proof-of-concept of our first model of IoT network, that was used to validate empirically the proposed approach.
+We showed that the IoT devices can effectively use a multi-armed bandit algorithm to automatically learn to favor certain frequency channels over others, in order to optimize their spectrum access, to reduce their number of failed transmissions.
+%
+Our proposed approach is to use decentralized reinforcement learning algorithms, directly embedded on the IoT end-devices, in order to improve their spectrum access and channel selection schemes.
+We confirmed from both a numerical simulations and an validation on real radio trafic and hardware that our proposal is an excellent candidate to start to solve the spectrum scarcity issue for unlicensed bands, that is cheap and easy to deploy, and requires .
+
+
+
+% % % \begin{itemize}
+% %     % \item
+% % The first half, Part~\ref{part:Introduction}, started by motivating our work and situating the context of this research.
+% % % Chapter 2
+% % In Chapter~\ref{chapter:2}, we presented the multi-armed bandit (MAB) models, the hypotheses we usually make on such models, and the most important algorithms that solve different kinds of MAB problems.
+% % % Chapter 3
+% % Then in Chapter~\ref{chapter:3} we showcased our open-source Python library SMPyBandits in details, developed to run numerical simulations of MAB problems.
+% % %
+% % Finally, we presented in Chapter~\ref{chapter:25} a first mathematical contribution, our algorithm \Aggr, as an empirically efficient answer to the online algorithm selection problem.
+
+% %     % \item
+% % The second half of this thesis, Part~\ref{part:MABIOT}, presented the main contributions.
+% % % Chapter 4
+% % In Chapter~\ref{chapter:4}, we first proposed models for realistic IoT wireless networks, in a discrete time and with no central coordination between end-devices.
+% % In two different models, with or without retransmissions, we showed that end-devices can independently learn favor the less occupied radio channels, in order to increase their successful transmission rates in the network, by embedding low-cost decentralized MAB algorithms.
+% % We also presented a proof-of-concept that implements such network on real radio hardware and validates the proposed model and algorithms.
+% % % Chapter 5
+% % Because the models proposed for realistic IoT networks were found to be too general to analyze from a theoretical point of view, mainly due to the large number of algorithms interacting at random times in an unpredictable environment,
+% % we started to study a weaker but still interesting model in Chapter~\ref{chapter:5}.
+% % We presented different variants of the multi-players MAB model, and we proposed the state-of-the-art algorithm for the variant with collision and spectrum sensing information (\MCTopM).
+% % % Chapter 6
+% % Finally, in Chapter~\ref{chapter:6}, we relaxed the stationary hypothesis on the single-player MAB problem, and we analyzed a new actively adaptive algorithm, for which we also proved state-of-the-art results (\GLRklUCB).
+% % %
+% % For the last two chapters, the proposed algorithms attain state-of-the-art performances both on numerical simulations and on the regret upper bounds obtained in their theoretical analyses.
+% % % \end{itemize}
+
+
+% % \paragraph{Summary of each chapter.}
+% % A more precise summary of each chapter is given below.
+
+
+% % % ----------------------------------------------------------------------------
+% % \paragraph{Conclusion about \textbf{Chapter~\ref{chapter:1}}.}
 
 
 % % ----------------------------------------------------------------------------
-% \paragraph{Conclusion about \textbf{Chapter~\ref{chapter:1}}.}
+% % \paragraph{Conclusion about \textbf{Chapter~\ref{chapter:2}}.}
+
+% We started in Chapter~\ref{chapter:2} by presenting the multi-armed bandit model, with a finite number of arms and real-valued rewards.
+% Our focus is on one-dimensional exponential families of distributions, and on stochastic and stationary problems.
+% The notations used in the manuscript were introduced by showcasing an interactive demonstration.
+% % \footnote{See \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}}.
 
 
-% ----------------------------------------------------------------------------
-% \paragraph{Conclusion about \textbf{Chapter~\ref{chapter:2}}.}
+% % ----------------------------------------------------------------------------
+% % \paragraph{Conclusion about \textbf{Chapter~\ref{chapter:3}}.}
 
-We started in Chapter~\ref{chapter:2} by presenting the multi-armed bandit model, with a finite number of arms and real-valued rewards.
-Our focus is on one-dimensional exponential families of distributions, and on stochastic and stationary problems.
-The notations used in the manuscript were introduced by showcasing an interactive demonstration.
-% \footnote{See \href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}}.
-
-
-% ----------------------------------------------------------------------------
-% \paragraph{Conclusion about \textbf{Chapter~\ref{chapter:3}}.}
-
-Then we presented in Chapter~\ref{chapter:3} our Python library SMPyBandits \cite{SMPyBanditsJMLR,SMPyBandits}, by detailing
-its purpose and qualities, its organization, and an overview of its usage.
-%
-This library allows any researcher to easily implement numerical simulations of stochastic or piece-wise stochastic problems of single- or multi-players multi-armed bandits.
-SMPyBandits is distributed on GitHub and Pypi freely, under an open-source license (MIT License), and it is extensively documented (at \href{https://SMPyBandits.GitHub.io}{\texttt{SMPyBandits.GitHub.io}}).\\
-% Our library allows any researcher to easily run numerical simulations of different kinds of multi-armed bandit problems, requiring only a small knowledge of Python thanks to its documentation, its well-designed API, and many examples of simulation scripts and configuration files included.\\
-\indent
-We detailed how SMPyBandits is implementing arms, problems, algorithms, and how the library uses these components to implement a simulation loop, with various visualizations being performed after a simulation.
-Even if SMPyBandits is still restricted to the finite-arm case, it supports a wide range of arm distributions (and rested/restless Markov models).
-Different kinds of models are implemented, from stationary single-player to piece-wise stationary multi-players with different collision models.
-One of the main qualities of our library is that it is quite exhaustive, as all the main families of algorithms covering these different models have been implemented, even very recent algorithms from the literature.
-% We indeed followed actively the state-of-the-art research, since December $2016$ to June $2019$.
-More than $65$ algorithms (or variants) are implemented for the single-player case, $5$ for the experts aggregation problem, about $15$ for the multi-players case, and about $20$ for the piece-wise stationary case.
-The entire codebase is fully documented, and the library is using continuous integration to run automated tests on the code after every modification.
-%
-When comparing algorithms on a problem, the main performance measure is the regret, but the library also computes, stores and visualizes other measures, such as best-arm selection rate or mean cumulated reward, as well as real time and memory costs.
-%
-Our library is used to run numerical simulations in Chapters~\ref{chapter:2}, \ref{chapter:3}, \ref{chapter:5} and \ref{chapter:6}, and in other contributions such as our article \cite{Besson2018DoublingTricks}.
+% Then we presented in Chapter~\ref{chapter:3} our Python library SMPyBandits \cite{SMPyBanditsJMLR,SMPyBandits}, by detailing
+% its purpose and qualities, its organization, and an overview of its usage.
+% %
+% This library allows any researcher to easily implement numerical simulations of stochastic or piece-wise stochastic problems of single- or multi-players multi-armed bandits.
+% SMPyBandits is distributed on GitHub and Pypi freely, under an open-source license (MIT License), and it is extensively documented (at \href{https://SMPyBandits.GitHub.io}{\texttt{SMPyBandits.GitHub.io}}).\\
+% % Our library allows any researcher to easily run numerical simulations of different kinds of multi-armed bandit problems, requiring only a small knowledge of Python thanks to its documentation, its well-designed API, and many examples of simulation scripts and configuration files included.\\
+% \indent
+% We detailed how SMPyBandits is implementing arms, problems, algorithms, and how the library uses these components to implement a simulation loop, with various visualizations being performed after a simulation.
+% Even if SMPyBandits is still restricted to the finite-arm case, it supports a wide range of arm distributions (and rested/restless Markov models).
+% Different kinds of models are implemented, from stationary single-player to piece-wise stationary multi-players with different collision models.
+% One of the main qualities of our library is that it is quite exhaustive, as all the main families of algorithms covering these different models have been implemented, even very recent algorithms from the literature.
+% % We indeed followed actively the state-of-the-art research, since December $2016$ to June $2019$.
+% More than $65$ algorithms (or variants) are implemented for the single-player case, $5$ for the experts aggregation problem, about $15$ for the multi-players case, and about $20$ for the piece-wise stationary case.
+% The entire codebase is fully documented, and the library is using continuous integration to run automated tests on the code after every modification.
+% %
+% When comparing algorithms on a problem, the main performance measure is the regret, but the library also computes, stores and visualizes other measures, such as best-arm selection rate or mean cumulated reward, as well as real time and memory costs.
+% %
+% Our library is used to run numerical simulations in Chapters~\ref{chapter:2}, \ref{chapter:3}, \ref{chapter:5} and \ref{chapter:6}, and in other contributions such as our article \cite{Besson2018DoublingTricks}.
 
 
-% ----------------------------------------------------------------------------
-% \paragraph{Conclusion about \textbf{Chapter~\ref{chapter:25}}.}
-%
-This first part ends with Chapter~\ref{chapter:25} by presenting one of our first contributions \cite{Besson2018WCNC}.
-We tackle the question of how to select a particular bandit algorithm when a practitioner is facing a particular (unknown) bandit problem.
-Instead of always choosing her favorite algorithm, or running costly benchmarks before real-world deployment of the chosen algorithm, a third solution for a practitioner can be to select a few candidate algorithms, where at least one is expected to be very efficient for the given problem, and use online algorithm selection to automatically and dynamically decide the best candidate.
-We proposed an extension of the \ExpFour{} algorithm for this problem, that we named \Aggr, and illustrate its performance on some bandit problems.
+% % ----------------------------------------------------------------------------
+% % \paragraph{Conclusion about \textbf{Chapter~\ref{chapter:25}}.}
+% %
+% This first part ends with Chapter~\ref{chapter:25} by presenting one of our first contributions \cite{Besson2018WCNC}.
+% We tackle the question of how to select a particular bandit algorithm when a practitioner is facing a particular (unknown) bandit problem.
+% Instead of always choosing her favorite algorithm, or running costly benchmarks before real-world deployment of the chosen algorithm, a third solution for a practitioner can be to select a few candidate algorithms, where at least one is expected to be very efficient for the given problem, and use online algorithm selection to automatically and dynamically decide the best candidate.
+% We proposed an extension of the \ExpFour{} algorithm for this problem, that we named \Aggr, and illustrate its performance on some bandit problems.
 
 
-% ----------------------------------------------------------------------------
-% \paragraph{Conclusion about \textbf{Chapter~\ref{chapter:4}}.}
+% % ----------------------------------------------------------------------------
+% % \paragraph{Conclusion about \textbf{Chapter~\ref{chapter:4}}.}
 
-Chapter~\ref{chapter:4} started the second part of the manuscript, Part~\ref{part:MABIOT}, and presents three main contributions.
-%
-First in Section~\ref{sec:4:firstModel}, we proposed a model of IoT networks,
-and an evaluation of the performance of applying low-cost and low-complexity decentralized MAB learning algorithms in such, directly on the end-devices sides.
-Our focus is the convergence of such algorithms, and the gain they can provide for the IoT devices, in terms of successful transmission rates.
-We restrict to the case of a protocol slotted in both time and frequency, and we assume a certain clock pre-agreement and time synchronisation between devices and the base station.
-We studied the behavior of the network when the proportion of intelligent dynamic devices changes.
-Concretely, increasing their successful transmission rates allows to insert more devices in the same network, while maintaining a good Quality of Service.
-Another way of viewing this result is the opposite point-of-view: if the number of devices remains constant, increasing the successful transmission rate directly improves the network QoS.
-%  as the base station receives more accurately the data sent by the end-devices since less transmissions failed.
-We show that \UCB{} and Thompson sampling algorithms both have near-optimal performance, even when their underlying \iid{} assumption (see Chapter~\ref{chapter:2}) is violated by the presence of many ``intelligent'' end-devices which all follow a random activation process.
-%
-This was both surprising and encouraging, as it shows that applying bandit algorithms tailored for a stochastic model is still useful in our broader setting.
-The fully \emph{decentralized} application of classic stochastic MAB algorithms are almost as efficient as the best possible centralized policy in this setting, after a short learning period, even though the dynamic devices \emph{cannot} communicate with each other, and \emph{do not} know the system parameters.
-\\
-%
-\indent
-We presented in Section~\ref{sec:4:gnuradio} a proof-of-concept, demonstrated in $2018$ at the ICT conference \cite{Besson2018ICT}, and further detailed in the companion paper \cite{Besson2019WCNC}.
-We gave all the necessary details on both the PHY and the MAC layer, as well as details on the User Interface developed for the demo.
-We discussed results obtained in practice, to highlight the interest of using learning algorithms for cognitive radio online optimization problems, and especially multi-armed bandit learning algorithms for IoT networks.
-%
-By using such low-cost algorithms, we confirmed empirically that a dynamically re-configurable device can learn on its own to favor a certain channel, if the environment traffic is not uniform between the $K$ different channels, by using only the acknowledgement (\Ack) feedback as a collision binary indicator sent from the base station.
-\\
-%
-\indent
-Finally in Section~\ref{sec:4:retransmissions}, we presented an extension of the previous model of Low-Power Wide-Area (LPWA) networks based on an ALOHA protocol, again under the hypothesis of a protocol slotted in time and frequency, and assuming a perfect synchronisation.
-% , in which dynamic IoT devices can again use machine learning algorithms, to improve their Packet Loss Ratio (PLR) when accessing the network.
-If the priority is the Quality of Service (QoS), for instance with renewable energy capabilities, this second model is more appropriate.
-We presented and evaluated heuristics that learn how to transmit and retransmit in a smarter way, by using the \UCB{} algorithm for channel selection for the first transmission (first-stage), and different proposals based on \UCB{} for the retransmissions upon collisions (second-stage).
-The main novelty of this model is to also learn the most efficient way to retransmit packets upon radio collision, by also using a MAB algorithm for this second-stage optimization problem.
-%
-Like for the first model, we showed that incorporating learning for the first transmissions allows to achieve optimal performance, with significant gains in terms of successful transmission rate in networks with a large number of devices (up-to $30\%$ in the example network).
-Our simulations showed that the proposed heuristics greatly outperform a naive random access scheme.
-Surprisingly, we showed that a simple \UCB{} learning approach, that simply retransmits in the same channel, turns out to perform almost as well as more complicated heuristics, that can change the channel used for retransmissions.
-\\
-%
-\indent
-Thus in Chapter~\ref{chapter:4}, we proposed two models of Internet of Things (IoT) networks, composed of many independent IoT end-devices,
-that can all use embedded low-cost RL (Reinforcement Learning) algorithms to learn to improve their spectrum access.
-%
-Decentralized RL for IoT lets the devices use the acknowledgement sent by their Base Station as a reward, instead of requiring some spectrum sensing capacity, like in the OSA case.
-We consider many independent ``dynamic'' devices, communicating with a small probability at every instant.
-The first model (without retransmission of packets),
-is interesting for its simplicity, and because considering no retransmission can improve the battery life of the IoT devices.
-% , at the cost of a lower Quality of Service (QoS).
-%
-However, in case of failed transmission of a message, a dynamic device can also retransmit it up-to a fixed number of retransmission.
-%
-The second model is more interesting if the main target is an improvement of the QoS, rather than a longer battery life.
-%
-\TODOL{Je dois clarifier les conclusions des deux modèles, est-ce que l'un est vraiment mieux pour améliorer la QoS mais coûte en batterie, et l'autre améliore la batterie mais coûte en QoS ? Pas très clair en ayant la tête dans le guidon là !...}
-%
-%
-To sum-up, we focused in this chapter on models of IoT networks, and we proposed to use classical stationary multi-armed bandit learning algorithms implemented in a selfish and decentralized manner by each of the dynamic devices in the IoT network.
-We presented two models of wireless IoT networks, without relying on the feedback provided by spectrum sensing, and inspired by the ALOHA protocol.
-% In both cases, we try to model the existing standards, like the LoRa standard, and we demonstrated the efficiency of the proposed MAB-based approach in both numerical simulations and empirical measurements on real wireless radio signals.
-%
-It was also quite surprising to be able to conclude that this learning-based approach can be as efficient as we showed,
-% , as it allows the IoT devices to automatically and independently increase their successful transmission rates.
-because it is based on applying stochastic MAB algorithms in a non-stationary environment.
-Unfortunately, it turned out to be of extreme difficulty to analyze the considered model with thousands of independent devices, all communicating and learning in their own (random) time scales.
-That is why we focus on two different simplifications of this model in the next two chapters, for which we are able to provide a clean theoretical analysis,
-either by restricting to $M \leq K$ devices with a transmission probability of $p=1$, or by restricting to a single player accessing a network which is assumed to be \emph{piece-wise stationary}.
-
-
-% ----------------------------------------------------------------------------
-% \paragraph{Conclusion about \textbf{Chapter~\ref{chapter:5}}.}
-
-The second chapter of Part~\ref{part:MABIOT} of this manuscript studied Multi-Players Multi-Arm Bandits models (Chapter~\ref{chapter:5}).
-%
-We present three variants of this model,
-with different level of feedback being available to the decentralized players, under which we proposed efficient algorithms.
-For the two easiest models (\ie, with sensing), our theoretical contribution \MCTopM-\klUCB{} improves the state-of-the-art regret upper-bounds.
-In the absence of sensing, we also provide some motivation for the practical use of the \Selfish{} heuristic, a simple index policy based on hybrid indices that are directly taking  into account the collision information.
-\Selfish{} corresponds to the heuristic used in the first model studied in Chapter~\ref{chapter:4}.
-%
-We also reviewed various variants of this model, and for some interesting variants we discussed the related literature, which has proven to be very active in the last two years.
-For some of these variants, we explained why our approach does not work efficiently without modifications, but we detailed and illustrated how to adapt \MCTopM{} to other settings.
-For example, it assumes to know the number of players $M$ before-hand, but we illustrated that a previously introduced technique to estimate $M$ can also be applied successfully to our proposal.
-%  and give satisfactory empirical performances.
-% Further works would be required to adapt the theoretical analysis to these various extensions.
+% Chapter~\ref{chapter:4} started the second part of the manuscript, Part~\ref{part:MABIOT}, and presents three main contributions.
+% %
+% First in Section~\ref{sec:4:firstModel}, we proposed a model of IoT networks,
+% and an evaluation of the performance of applying low-cost and low-complexity decentralized MAB learning algorithms in such, directly on the end-devices sides.
+% Our focus is the convergence of such algorithms, and the gain they can provide for the IoT devices, in terms of successful transmission rates.
+% We restrict to the case of a protocol slotted in both time and frequency, and we assume a certain clock pre-agreement and time synchronisation between devices and the base station.
+% We studied the behavior of the network when the proportion of intelligent dynamic devices changes.
+% Concretely, increasing their successful transmission rates allows to insert more devices in the same network, while maintaining a good Quality of Service.
+% Another way of viewing this result is the opposite point-of-view: if the number of devices remains constant, increasing the successful transmission rate directly improves the network QoS.
+% %  as the base station receives more accurately the data sent by the end-devices since less transmissions failed.
+% We show that \UCB{} and Thompson sampling algorithms both have near-optimal performance, even when their underlying \iid{} assumption (see Chapter~\ref{chapter:2}) is violated by the presence of many ``intelligent'' end-devices which all follow a random activation process.
+% %
+% This was both surprising and encouraging, as it shows that applying bandit algorithms tailored for a stochastic model is still useful in our broader setting.
+% The fully \emph{decentralized} application of classic stochastic MAB algorithms are almost as efficient as the best possible centralized policy in this setting, after a short learning period, even though the dynamic devices \emph{cannot} communicate with each other, and \emph{do not} know the system parameters.
+% \\
+% %
+% \indent
+% We presented in Section~\ref{sec:4:gnuradio} a proof-of-concept, demonstrated in $2018$ at the ICT conference \cite{Besson2018ICT}, and further detailed in the companion paper \cite{Besson2019WCNC}.
+% We gave all the necessary details on both the PHY and the MAC layer, as well as details on the User Interface developed for the demo.
+% We discussed results obtained in practice, to highlight the interest of using learning algorithms for cognitive radio online optimization problems, and especially multi-armed bandit learning algorithms for IoT networks.
+% %
+% By using such low-cost algorithms, we confirmed empirically that a dynamically re-configurable device can learn on its own to favor a certain channel, if the environment traffic is not uniform between the $K$ different channels, by using only the acknowledgement (\Ack) feedback as a collision binary indicator sent from the base station.
+% \\
+% %
+% \indent
+% Finally in Section~\ref{sec:4:retransmissions}, we presented an extension of the previous model of Low-Power Wide-Area (LPWA) networks based on an ALOHA protocol, again under the hypothesis of a protocol slotted in time and frequency, and assuming a perfect synchronisation.
+% % , in which dynamic IoT devices can again use machine learning algorithms, to improve their Packet Loss Ratio (PLR) when accessing the network.
+% If the priority is the Quality of Service (QoS), for instance with renewable energy capabilities, this second model is more appropriate.
+% We presented and evaluated heuristics that learn how to transmit and retransmit in a smarter way, by using the \UCB{} algorithm for channel selection for the first transmission (first-stage), and different proposals based on \UCB{} for the retransmissions upon collisions (second-stage).
+% The main novelty of this model is to also learn the most efficient way to retransmit packets upon radio collision, by also using a MAB algorithm for this second-stage optimization problem.
+% %
+% Like for the first model, we showed that incorporating learning for the first transmissions allows to achieve optimal performance, with significant gains in terms of successful transmission rate in networks with a large number of devices (up-to $30\%$ in the example network).
+% Our simulations showed that the proposed heuristics greatly outperform a naive random access scheme.
+% Surprisingly, we showed that a simple \UCB{} learning approach, that simply retransmits in the same channel, turns out to perform almost as well as more complicated heuristics, that can change the channel used for retransmissions.
+% \\
+% %
+% \indent
+% Thus in Chapter~\ref{chapter:4}, we proposed two models of Internet of Things (IoT) networks, composed of many independent IoT end-devices,
+% that can all use embedded low-cost RL (Reinforcement Learning) algorithms to learn to improve their spectrum access.
+% %
+% Decentralized RL for IoT lets the devices use the acknowledgement sent by their Base Station as a reward, instead of requiring some spectrum sensing capacity, like in the OSA case.
+% We consider many independent ``dynamic'' devices, communicating with a small probability at every instant.
+% The first model (without retransmission of packets),
+% is interesting for its simplicity, and because considering no retransmission can improve the battery life of the IoT devices.
+% % , at the cost of a lower Quality of Service (QoS).
+% %
+% However, in case of failed transmission of a message, a dynamic device can also retransmit it up-to a fixed number of retransmission.
+% %
+% The second model is more interesting if the main target is an improvement of the QoS, rather than a longer battery life.
+% %
+% \TODOL{Je dois clarifier les conclusions des deux modèles, est-ce que l'un est vraiment mieux pour améliorer la QoS mais coûte en batterie, et l'autre améliore la batterie mais coûte en QoS ? Pas très clair en ayant la tête dans le guidon là !...}
+% %
+% %
+% To sum-up, we focused in this chapter on models of IoT networks, and we proposed to use classical stationary multi-armed bandit learning algorithms implemented in a selfish and decentralized manner by each of the dynamic devices in the IoT network.
+% We presented two models of wireless IoT networks, without relying on the feedback provided by spectrum sensing, and inspired by the ALOHA protocol.
+% % In both cases, we try to model the existing standards, like the LoRa standard, and we demonstrated the efficiency of the proposed MAB-based approach in both numerical simulations and empirical measurements on real wireless radio signals.
+% %
+% It was also quite surprising to be able to conclude that this learning-based approach can be as efficient as we showed,
+% % , as it allows the IoT devices to automatically and independently increase their successful transmission rates.
+% because it is based on applying stochastic MAB algorithms in a non-stationary environment.
+% Unfortunately, it turned out to be of extreme difficulty to analyze the considered model with thousands of independent devices, all communicating and learning in their own (random) time scales.
+% That is why we focus on two different simplifications of this model in the next two chapters, for which we are able to provide a clean theoretical analysis,
+% either by restricting to $M \leq K$ devices with a transmission probability of $p=1$, or by restricting to a single player accessing a network which is assumed to be \emph{piece-wise stationary}.
 
 
-% ----------------------------------------------------------------------------
-% \paragraph{Conclusion about \textbf{Chapter~\ref{chapter:6}}.}
+% % ----------------------------------------------------------------------------
+% % \paragraph{Conclusion about \textbf{Chapter~\ref{chapter:5}}.}
 
-In the last Chapter~\ref{chapter:6}, we were interested in relaxing the stationary hypothesis made on the bandit model presented in Chapter~\ref{chapter:2}.
-%
-We first describe the break-point (or change-point) detection problem, that we solve by the Bernoulli GLR change-point detector, and by analyzing its properties at finite-time.
-This sequential break-point detection test can be applied for bounded rewards, and we bound its false alarm probability as well as its detection delay.
-For the piece-wise stationary bandit model,
-we proposed a new efficient algorithm, \GLRklUCB, which combines the \klUCB{} algorithm with the Bernoulli GLR change-point detector.
-This actively adaptive method attains state-of-the-art regret upper-bounds when tuned with a prior knowledge of the number of changes $\Upsilon_T$, but without any other prior knowledge on the problem, unlike its two competitors \CUSUMUCB{} and \MUCB, that require to know a lower bound on the smallest magnitude of a change.
-We also gave numerical evidence of the efficiency of our proposal, which performs usually much better than all the passively adaptive approaches as well as better or comparably to the previous actively adaptive ones.
+% The second chapter of Part~\ref{part:MABIOT} of this manuscript studied Multi-Players Multi-Arm Bandits models (Chapter~\ref{chapter:5}).
+% %
+% We present three variants of this model,
+% with different level of feedback being available to the decentralized players, under which we proposed efficient algorithms.
+% For the two easiest models (\ie, with sensing), our theoretical contribution \MCTopM-\klUCB{} improves the state-of-the-art regret upper-bounds.
+% In the absence of sensing, we also provide some motivation for the practical use of the \Selfish{} heuristic, a simple index policy based on hybrid indices that are directly taking  into account the collision information.
+% \Selfish{} corresponds to the heuristic used in the first model studied in Chapter~\ref{chapter:4}.
+% %
+% We also reviewed various variants of this model, and for some interesting variants we discussed the related literature, which has proven to be very active in the last two years.
+% For some of these variants, we explained why our approach does not work efficiently without modifications, but we detailed and illustrated how to adapt \MCTopM{} to other settings.
+% For example, it assumes to know the number of players $M$ before-hand, but we illustrated that a previously introduced technique to estimate $M$ can also be applied successfully to our proposal.
+% %  and give satisfactory empirical performances.
+% % Further works would be required to adapt the theoretical analysis to these various extensions.
+
+
+% % ----------------------------------------------------------------------------
+% % \paragraph{Conclusion about \textbf{Chapter~\ref{chapter:6}}.}
+
+% In the last Chapter~\ref{chapter:6}, we were interested in relaxing the stationary hypothesis made on the bandit model presented in Chapter~\ref{chapter:2}.
+% %
+% We first describe the break-point (or change-point) detection problem, that we solve by the Bernoulli GLR change-point detector, and by analyzing its properties at finite-time.
+% This sequential break-point detection test can be applied for bounded rewards, and we bound its false alarm probability as well as its detection delay.
+% For the piece-wise stationary bandit model,
+% we proposed a new efficient algorithm, \GLRklUCB, which combines the \klUCB{} algorithm with the Bernoulli GLR change-point detector.
+% This actively adaptive method attains state-of-the-art regret upper-bounds when tuned with a prior knowledge of the number of changes $\Upsilon_T$, but without any other prior knowledge on the problem, unlike its two competitors \CUSUMUCB{} and \MUCB, that require to know a lower bound on the smallest magnitude of a change.
+% We also gave numerical evidence of the efficiency of our proposal, which performs usually much better than all the passively adaptive approaches as well as better or comparably to the previous actively adaptive ones.
 
 
 % ----------------------------------------------------------------------------
@@ -335,7 +375,7 @@ Another very interesting future work is to study possible extensions of our appr
 
 % ----------------------------------------------------------------------------
 % \subsection*{Other directions of future works}
-\paragraph{Unifying multi-player and non-stationary bandits.}
+\subsection*{Unifying multi-player and non-stationary bandits.}
 %
 %
 Another interesting direction of future work is to study non-stationary distributed multi-players bandits, to unify the models from Chapter~\ref{chapter:5} and~\ref{chapter:6}.
