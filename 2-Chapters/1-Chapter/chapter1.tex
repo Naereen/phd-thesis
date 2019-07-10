@@ -103,7 +103,7 @@ where communications are initialized and regulated by the devices, not by a cent
 % due to the really limited information that the base station can send to the devices (in down-link), it is no longer possible to optimize the efficiency of the network from the centralized point-of-view of the base station.
 Indeed, a central control requires signaling packets that have been identified as too heavy for these kinds of systems.
 In the present and future IoT networks, many devices of heterogeneous natures are using the same antenna for different applications.
-A common problem is the strong constraint that such such IoT devices have on their power consumption, as most of them will be deployed without a direct power access and will run on a tiny battery, which lifespan should be maximized.
+A common problem is the strong constraint that such IoT devices have on their power consumption, as most of them will be deployed without a direct power access and will run on a tiny battery, which lifespan should be maximized.
 Most commercial IoT companies nowadays indeed sell a lifespan larger than $10$ years, like SIGFOX \cite{Centenaro16}.
 Another common constraint for IoT devices is their low duty cycles, as most applications target a need for one or a few messages to send every day, in strike opposition to the high data-rate pursued for centralized systems (such as 4G/5G and WiFi).
 %
@@ -500,13 +500,13 @@ A full documentation is available online, as well as exhaustive instructions to 
 
 % \paragraph{Chapter~\ref{chapter:25}.}
 %
-Because there are so many MAB algorithms available, we are also interested by the question of how an engineer can chose the algorithm to implement, in a given IoT object, in order to equip this object with the capacity to adapt robustly to any environment.
+Because there are so many MAB algorithms available, we are also interested by the question of how an engineer can choose the algorithm to implement, in a given IoT object, in order to equip this object with the capacity to adapt robustly to any environment.
 To answer this question, we present two approaches.
 The first one is an empirical comparison of the most efficient and well known existing algorithms, in Section~\ref{sec:3:reviewSPAlgorithms} and \ref{sec:3:timeAndMemoryCosts}.
 We confirm that widely used and not too sophisticated algorithms, such as \UCB{} \cite{Auer02}, Thompson sampling \cite{Thompson33} and \klUCB{} \cite{KLUCBJournal}, are the most efficient in terms of regret, and offer a good balance between regret and (time and memory) complexity.
 The second approach is online algorithm selection, consisting in aggregating a (finite) set of algorithms and automatically discovering which one performs the most efficiently, against a given problem, with our contribution \Aggr{} that we detail in Chapter~\ref{chapter:25}.
 This work on aggregating MAB algorithms was motivated for the OSA case of CR, where many previous research works only considered the $\UCB_1$ algorithm without really justifying their choice.
-This contribution was presented at the IEEE WCNC conference in Barcelona, Spain, in April $2018$.
+This contribution was presented in the IEEE WCNC conference in Barcelona, Spain, in April $2018$.
 
 
 % \subsection{Focusing on IoT networks.}
@@ -524,7 +524,7 @@ The goal of this first model is to increase the Quality of Service (QoS) of such
 The base station will thus receive more up-link packets from the devices being served, if they can successfully learn by themselves an efficient spectrum access scheme.
 It implies that the network can serve more end-devices while maintaining the same QoS.
 %
-Our second model then considers packet retransmissions, and while the two models are similar, the application of an efficient decentralized learning algorithm now results in both an increased battery life for each of the devices, as well as an increased QoS for the entire network, as less retransmissions reduce the local spectrum load.
+Our second model then considers packet retransmissions, and while the two models are similar, the application of an efficient decentralized learning algorithm now results in both an increased battery life for each of the devices, and an increased QoS for the entire network, as less retransmissions reduce the local spectrum load.
 
 % We present in Section~\ref{sec:4:firstModel} a first model of an IoT network, that is made of thousands (or more) of end-devices and a single base station.
 % We consider an ALOHA-based protocol, slotted in both time and frequency, by assuming a simple pre-agreed synchronization between all devices and the base station. This synchronization is the only aspect of the network that requires central control from the base station, and it only requires one down-link packet when a new device joins the network operated by this base station \cite{Centenaro16}.
@@ -554,14 +554,14 @@ The proof-of-concept (PoC) continued the fruitful collaboration, and was demonst
 % We propose to also use decision making, that is to also use RL and MAB algorithms, for this other model, at the second layer of the MAC protocol, in order to learn the best channels to use for retransmitting the packets that suffered from a collision at their first transmissions.
 % We present the model in Section~\ref{sec:4:retransmissions}, along with mathematical justifications of the potential of using this second-stage MAB learning for retransmissions, and numerical illustrations.
 % This shows that using learning in a decentralized way on the devices' side is again a powerful idea under this model with retransmissions, and we show as well that the simplest of the different heuristics we compared is efficient, and allows the devices to learn to behave almost optimally.
-The second model with retransmissions concluded our collaboration with R. Bonnefoi, and resulted to a paper presented at the $1^{\text{st}}$ MoTION workshop, also during the IEEE WCNC $2019$ conference \cite{Bonnefoi2019WCNC}.
+The second model with retransmissions concluded our collaboration with R. Bonnefoi, and resulted to a paper presented in the $1^{\text{st}}$ MoTION workshop, also during the IEEE WCNC $2019$ conference \cite{Bonnefoi2019WCNC}.
 
 
 % \paragraph{Chapter~\ref{chapter:5}.}
 %
 In both models of IoT networks presented above, the core idea is to let every dynamic device run a learning algorithm in a fully decentralized way, in order to optimize the entire system.
-It is important to note that each devices communicates, and thus learns, only at some rounds and not at all the time steps, by following its own random activation process (we restrict to a purely random Bernoulli activation process of probability $p$).
-It means that each of them target its own local objective, which is to maximize its cumulated reward, in a selfish way and by being agnostic about the other devices following the same objective.
+We highlight that each devices communicates, and thus learns, only at some rounds and not at all the time steps, by following its own random activation process (we restrict to a purely random Bernoulli activation process of probability $p$).
+This means that each of them target its own local objective, which is to maximize its cumulated reward, in a selfish way and by being agnostic about the other devices following the same objective.
 It is well known in game theory that playing selfishly can be disastrous for the centralized performance measure, one can think of popular ``dilemmas'', such as the \href{https://en.wikipedia.org/wiki/Prisoner%27s_dilemma}{prisoner dilemma}.
 % , and for more examples we refer to the book \cite{CesaLugosi06}.
 % https://www.ii.uni.wroc.pl/~lukstafi/pmwiki/uploads/AGT/Prediction_Learning_and_Games.pdf
@@ -587,7 +587,7 @@ Our algorithm also achieves a logarithmic number of collisions and arm switches,
 %
 This strong theoretical result heavily depends on the presence of sensing feedback, and as such our results are not (yet) applicable to the IoT model without sensing.
 
-% Our work on multi-player bandit was presented at the ALT conference in Lanzarote, Spain, in April $2019$ \cite{Besson2018ALT},
+% Our work on multi-player bandit was presented in the ALT conference in Lanzarote, Spain, in April $2019$ \cite{Besson2018ALT},
 % %
 % and since then, some works have studied extensions of our framework or alternative algorithms, as a few independent teams started to work on different questions shortly after its publication.
 % %
@@ -902,7 +902,7 @@ The following publications are ordered historically, from the most recent to the
 \item
     \emph{MALIN: ``Multi-Arm bandit Learning for Iot Networks'' with GRC: A TestBed Implementation and Demonstration that Learning Helps},
     by \textbf{Lilian Besson}, Rémi Bonnefoi, Christophe Moy.
-    Demonstration presented at \emph{International Conference on Communication},
+    Demonstration presented in \emph{International Conference on Communication},
     % \footnote{~ICT 2018, see \href{http://ict-2018.org/demos}{\texttt{ict-2018.org/demos}}},
     Saint-Malo, France in June $2018$.
     See \href{https://YouTu.be/HospLNQhcMk}{\texttt{YouTu.be/HospLNQhcMk}} for a $6$-minutes presentation video.

@@ -71,7 +71,7 @@ Finally, in Appendix~\ref{sec:3:appendix} we include some small files showing ho
 
 \paragraph{References.}
 %
-The code for \SMPyBandits{} is hosted at \texttt{\href{https://GitHub.com/SMPyBandits/SMPyBandits/}{GitHub.com/SMPyBandits/SMPyBandits}}, its documentation is at \texttt{\href{https://SMPyBandits.GitHub.io/}{SMPyBandits.GitHub.io}}, and all the library is freely publicly released under the MIT open-source License.
+The code for \SMPyBandits{} is hosted at \texttt{\href{https://GitHub.com/SMPyBandits/SMPyBandits/}{GitHub.com/SMPyBandits/SMPyBandits}}, its documentation is at \texttt{\href{https://SMPyBandits.GitHub.io/}{SMPyBandits.GitHub.io}}, and all the library is freely publicly released under the MIT open-source license.
 This chapter is based on the article \cite{SMPyBanditsJMLR}.
 
 
@@ -112,7 +112,7 @@ reward distributions, MAB algorithms, and a simulation loop that essentially loo
     % \item
     First, initialize the MAB problem and one or more algorithms,
     % \item
-    Then, for $t=1$ to $t=T$ (known before hand), repeat the following block (for each algorithm). Ask algorithm $\cA$ her chosen arm $A(t)$, then sample a (random) reward $r(t)$ (\iid) from distribution $\nu_{A(t)}$, and finally feeds the observation $(A(t), r(t))$ to the algorithm.
+    Then, for $t=1$ to $t=T$ (known beforehand), repeat the following block (for each algorithm). Ask algorithm $\cA$ her chosen arm $A(t)$, then sample a (random) reward $r(t)$ (\iid) from distribution $\nu_{A(t)}$, and finally feeds the observation $(A(t), r(t))$ to the algorithm.
     % \item
     At the end, compute the cumulated reward, the regret, then plot visualizations etc.
 % \end{itemize}
@@ -157,7 +157,7 @@ a simulation loop that essentially looks like this.
     % \item
     First, initialize the MAB problem with $M$ players, and one or more cohorts of $M$ players (one player is one algorithm, usually $M$ times the same one),
     % \item
-    For $t=1$ to $t=T$ (known before hand), repeat the following block (for each cohort). Ask each player $\cA^j$ her chosen arm $A^j(t)$, then query the collision model to know which player will get a zero reward (for a collision) and which player will get a random reward from the environment.
+    For $t=1$ to $t=T$ (known beforehand), repeat the following block (for each cohort). Ask each player $\cA^j$ her chosen arm $A^j(t)$, then query the collision model to know which player will get a zero reward (for a collision) and which player will get a random reward from the environment.
     Then, sample (random) feedback $Y_{k,t}$ (\iid) from distributions $\nu_{k}$, and compute the rewards $r^j(t)$ from the random feedback using the collision model.
     Finally, feed the observation $(A^j(t), Y_{A^j(t),t}, r^j(t))$ to player $j$, for all the $M$ players,
     %
@@ -200,8 +200,8 @@ bernoulli_problem = MAB({'arm_type': Bernoulli, 'params': means})
 gaussian_problem = MAB({'arm_type': Gaussian, 'params': means})
 gaussian_problem.plotHistogram()  # display the histogram shown below
     \end{minted}
-    \caption{Example of Python code to create Bernoulli and Gaussian arms, a MAB problem with $K=3$ arms, a plot a histogram of rewards, with \SMPyBandits.}
-    % \captionof{listing}{Example of Python code to create Bernoulli and Gaussian arms, a MAB problem with $K=3$ arms, a plot a histogram of rewards, with SMPyBandits. \label{lst:3:pythonCodeCreateProblem}}
+    \caption{Example of Python code to create Bernoulli and Gaussian arms, a MAB problem with $K=3$ arms, and to plot a histogram of rewards, with \SMPyBandits.}
+    % \captionof{listing}{Example of Python code to create Bernoulli and Gaussian arms, a MAB problem with $K=3$ arms, and to plot a histogram of rewards, with SMPyBandits. \label{lst:3:pythonCodeCreateProblem}}
     \label{lst:3:pythonCodeCreateProblem}
 \end{listing}
 \end{small}
@@ -307,7 +307,7 @@ $ pip install -r requirements.txt
     \end{listing}
 \end{small}
 
-Simulations are easily executed, \eg, Code~\ref{lst:3:howToRunBasicLibrary} shows how to start $N=1000$ repetitions of a simple non-Bayesian Bernoulli-distributed problem, for $K=9$ arms, an horizon of $T=10000$ and on $4$ CPU.
+Simulations are easily executed, \eg, Code~\ref{lst:3:howToRunBasicLibrary} shows how to start $N=1000$ repetitions of a simple non-Bayesian Bernoulli-distributed problem, for $K=9$ arms, a horizon of $T=10000$ and on $4$ CPU.
 It takes about $20$ min, on a $4$-core $64$-bit GNU/Linux laptop.
 Environment variables (\texttt{N=1000} etc) in the command line are not required, but they are convenient.
 
@@ -410,7 +410,7 @@ In the last two years, the documentation saw about 20000 unique visits, while \h
 \paragraph{Travis CI.}
 Since $2018$, we use the free web service provided by Travis CI (\href{https://travis-ci.org/}{\texttt{Travis-CI.org}}).
 It allows to automatically run short numerical simulations after every commit,
-in order to check that each modification on any part of the codebase does not break anything, as well as giving an up-to-date example of log files that shows online the results of different examples of experiments. The tests covers all the main models and almost all the algorithms implemented in \SMPyBandits, and it has been proven very useful to quickly find and fix new bugs.
+in order to check that each modification on any part of the codebase does not break anything, as well as giving an up-to-date example of log files that shows online the results of different examples of experiments. The tests cover all the main models and almost all the algorithms implemented in \SMPyBandits, and it has been proven very useful to quickly find and fix new bugs.
 For more details, see \href{https://travis-ci.org/SMPyBandits/SMPyBandits}{\texttt{Travis-CI.org/SMPyBandits/SMPyBandits}}.
 %
 Since its first use, the service did about $190$ builds, and about $30\%$ of them were useful to detect newly introduced issues or bugs in the code.
@@ -440,7 +440,7 @@ Similarly, see the page \texttt{\href{https://SMPyBandits.GitHub.io/MultiPlayers
 In \cite{Besson2018DoublingTricks}, we used \SMPyBandits{} to illustrate and compare different "doubling trick" schemes.
 \texttt{\href{https://SMPyBandits.GitHub.io/DoublingTrick.html}{SMPyBandits.GitHub.io/DoublingTrick.html}}
 % (see Appendix~\ref{app:2:DoublingTricks})
-% In sequential learning, an algorithm is said to be ``anytime'' if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any ``non-anytime'' algorithm to an ``anytime'' variant is the ``Doubling Trick'': start with an horizon $T_0\in\mathbb{N}^*$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to keep minimax regret bounds (in $R_T = \mathcal{O}(\sqrt{T})$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to keep a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to keep logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can keep minimax bounds, or "weak" minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
+% In sequential learning, an algorithm is said to be ``anytime'' if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any ``non-anytime'' algorithm to an ``anytime'' variant is the ``Doubling Trick'': start with a horizon $T_0\in\mathbb{N}^*$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to keep minimax regret bounds (in $R_T = \mathcal{O}(\sqrt{T})$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to keep a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to keep logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can keep minimax bounds, or "weak" minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
 
     \item
 In \cite{Besson2019GLRT} and \cite{Besson2019Gretsi}, and in Chapter~\ref{chapter:6} below, we used \SMPyBandits{} for piece-wise stationary MAB models (only for the single-player case). We illustrate and compare different algorithms designed for this family of non-stationary problems.
@@ -1028,7 +1028,7 @@ This Appendix section starts by describing $7$ more algorithms that are also com
     (\texttt{klUCBswitchAnytime}),
     is a very recent variant of \KLUCB{} \cite{KLUCBJournal}.
     It mimics the \KLUCB{} algorithm but uses a much more complicated function to compute the upper confidence bounds, and uses more storage.
-    It is anytime, and was prove to obtain good ``best of both world'' performances, meaning that it achieves an asymptotically optimal $\cO(\log(T))$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
+    It is anytime, and was proven to obtain good ``best of both world'' performances, meaning that it achieves an asymptotically optimal $\cO(\log(T))$ regret for problem-dependent bounds, and $\cO(\sqrt{KT})$ for problem-independent bounds.
     Empirically, it usually outperforms (slightly) \klUCB{} in terms of regret, and costs about the same memory, but it is slower.
 
     \item
@@ -1036,7 +1036,7 @@ This Appendix section starts by describing $7$ more algorithms that are also com
     \textsc{Tsallis-Inf} from \cite{Zimmert2018} (\texttt{TsallisInf}), using $\alpha=1/2$ (it seems to be the most efficient of the algorithms described in the article).
     It is based on the online mirror descent algorithm with a Tsallis entropy regularizer, and it is anytime.
     It was also proven to obtain good ``best of both world'' performances.
-    Empirically, we were unable to find any problem were it performs as well as \UCB{} (or any other efficient algorithm), and we are confident that our implementation is correct\footnote{~Despite a serious amount of time spent on this implementation, maybe it has some bug which explains the poor empirical performance obtained by \textsc{Tsallis-Inf} in our simulations. Exploring in more details this kind of algorithms is very interesting, as algorithms based on online mirror descent make a rich connection between multi-armed bandit and online convex optimization \cite{Hazan2016introduction}, and a short-term future work in \SMPyBandits{} will be to explore different values of $\alpha$ for Tsallis entropy regularization, or other families of regularization.}.
+    Empirically, we were unable to find any problem where it performs as well as \UCB{} (or any other efficient algorithm), and we are confident that our implementation is correct\footnote{~Despite a serious amount of time spent on this implementation, maybe it has some bug which explains the poor empirical performance obtained by \textsc{Tsallis-Inf} in our simulations. Exploring in more details this kind of algorithms is very interesting, as algorithms based on online mirror descent make a rich connection between multi-armed bandit and online convex optimization \cite{Hazan2016introduction}, and a short-term future work in \SMPyBandits{} will be to explore different values of $\alpha$ for Tsallis entropy regularization, or other families of regularization.}.
     \textsc{Tsallis-Inf} is also slower than \UCB{} (about as slow as \KLUCBswitch), and costs an-order-of-magnitude more memory.
 
     \item
@@ -1751,7 +1751,7 @@ On the other hand, when we plot a quantity ($R_T$, $\cT_T$, $\cM_T$) as a functi
 
 % \textbf{Effect of the number of jobs.}
 % %
-% As long as the number of jobs (\texttt{N\_JOBS} here) is less then or equal to the number of physical cores in the CPU of the computer, the final speed-up in terms of total computation runtime is almost optimal.
+% As long as the number of jobs (\texttt{N\_JOBS} here) is less than or equal to the number of physical cores in the CPU of the computer, the final speed-up in terms of total computation runtime is almost optimal.
 % %  dividing the running time by \texttt{N\_JOBS}.
 % But jobs are implemented as threads, so the speed-up cannot be more than the number of cores, and using for instance $20$ jobs on $4$-cores for the $20$ repetitions is sub-optimal, as the CPU will essentially spend all its time (and memory) managing the different jobs, and not actually doing the simulations.
 % Using the above example, we illustrate the effect of using multi-jobs and multi-cores on the time efficiency of simulations using SMPyBandits. We consider three values of \texttt{N\_JOBS}, $1$ to use only one core and one job, $4$ to use all the $4$ cores of my $i5$ Intel CPU, and $100$ jobs.
@@ -1831,7 +1831,7 @@ On the other hand, when we plot a quantity ($R_T$, $\cT_T$, $\cM_T$) as a functi
 % % % Explain why I didn't try more on parallelisation (eg on Grid5000 or other large scale computer).
 % % \paragraph{Approaches we did not try.}
 % % %
-% % The two other approaches we could have consider is parallel computations running on not multiple cores but multiple machines, in a computer cluster, or parallel computations running in a Graphical Processing Unit (GPU).
+% % The two other approaches we could have considered is parallel computations running on not multiple cores but multiple machines, in a computer cluster, or parallel computations running in a Graphical Processing Unit (GPU).
 
 % % $(i)$ I did not try to add in \SMPyBandits{} the possibility to run simulations using a GPU, or any general purpose computation libraries offering a GPU-backend.
 % % Initially designed for graphical simulations and mainly for video-games applications, the use of GPU for scientific computations have been gaining attention for numerical simulation in the research world since the last $15$ years, and NVidia CUDA for GPGPU (General Purpose GPU) started to become popular in $2011$.

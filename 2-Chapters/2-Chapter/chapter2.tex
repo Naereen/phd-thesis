@@ -306,7 +306,7 @@ The cumulant function $A(\eta)$ is entirely determined by $\eta$ and $h$,
 as $A(\eta) = \log \left( \int h(x) \exp(\eta x) \lambda(\mathrm{d} x) \right)$.
 %
 The natural parameter space is the set of values of $\eta$ such that this integral $A(\eta)$ is finite,
-and usually the literature focuses on regular and minimal exponential families (\ie, when the natural parameter space is an non-empty open set in $\R$).
+and usually the literature focuses on regular and minimal exponential families (\ie, when the natural parameter space is a non-empty open set in $\R$).
 
 We mention two important results on exponential families:
 
@@ -407,7 +407,7 @@ Such hypothesis is also proposed for other families of distributions, for instan
 %
 % Markov models: we do not present it in this thesis.
 Finally, we note that Markov bandit models have also been considered for Cognitive Radio applications \cite{Liu08}.
-They are not studied in this thesis, even though we did implemented them in SMPyBandits.
+They are not studied in this thesis, even though we did implement them in SMPyBandits.
 They were introduced in the $1980$s, by Whittle in \cite{Whittle1988} and Anantharam and others in \cite{Anantharam87b}.
 A Markov MAB model maps an arm to a Markov chain \cite{Norris98}, instead of a distribution, and thus they are no longer stochastic.
 A Markov model exists in two flavors: rested or restless.
@@ -531,7 +531,7 @@ To define the regret, we first need to distinguish between \emph{optimal} and \e
 \end{definition}
 
 If the goal of the player is to maximize $\E\left[\sum_{t=1}^T r(t)\right]$,
-the optimal strategy for this bandit problem is to always pull one of the optimal arms (it can be not unique), but it is unrealistic as the player does not know the true means, nor the optimal arms (as long as they are not all optimal, \ie, in non trivial problems).
+the optimal strategy for this bandit problem is to always pull one of the optimal arms (it can be not unique), but it is unrealistic as the player does not know the true means, nor the optimal arms (as long as they are not all optimal, \ie, in nontrivial problems).
 %
 Comparing the difference between the performance of a fixed baseline and that of the player is a common approach in machine learning research,
 and here we can compare with the oracle strategy that always obtains an (expected) reward of $\mu^*$.
@@ -665,7 +665,7 @@ and a significant part of the research on MAB algorithms has focused on finding 
 %
 This means that a finite-time or an asymptotic upper-bound is proven on the regret of algorithm $\cA$, that asymptotically matches the lower-bound.
 When the regret upper-bound matches the lower-bound with the same constant as in the big-$\cO$ notation, we say that the algorithm is asymptotically \emph{optimal},
-otherwise the algorithm is said to be \emph{order-optimal} if it matches the lower-bound with with a larger constant.
+otherwise the algorithm is said to be \emph{order-optimal} if it matches the lower-bound with a larger constant.
 
 
 \begin{theorem}\label{thm:2:firstLogTLowerBound}
@@ -799,7 +799,7 @@ First, when doing numerical experiments about bandits, if one studies the regret
 Indeed, by only visualizing the mean of $1000$ values, it is possible that we miss some ``bad runs'': if $1$ run out of the $1000$ gives linear regret (\ie, $R_T^{\cA} \propto T$) and the $999$ other give logarithmic regret, then the mean will appear logarithmic.
 This is the case of the \Selfish{} algorithm that is defined and explored in Chapter~\ref{chapter:5}.
 On the contrary, for efficient algorithms,
-we can visualize the entire \emph{distribution} as an histogram, or the variance of the values of $R_T^{\cA}$, and if the number $N$ is reasonably large, we can verify that the regret appears logarithmic for all runs.
+we can visualize the entire \emph{distribution} as a histogram, or the variance of the values of $R_T^{\cA}$, and if the number $N$ is reasonably large, we can verify that the regret appears logarithmic for all runs.
 
 % DONE on s'en fout !
 % % - Best Arm Identification?
@@ -817,7 +817,7 @@ It has recently gained interest in the literature, for instance the authors of \
 Indeed, in single-player models it is easy to show that achieving logarithmic regret directly implies a logarithmic upper-bound on the switching cost, and conversely the lower-bound from \cite{LaiRobbins85} also gives an asymptotic logarithmic lower-bound.
 Even if $\mathrm{SC}^{\cA}(T) = \Theta(\log T)$ for an efficient algorithm, it can be interesting to numerically evaluate this quantity, as a large value might indicate an algorithm that is alternating too much between the optimal arm and other arms.
 %
-It is relevant for cognitive radio applications, as a hardware reconfiguration costs energy, and so changing channel from two consecutive time steps has a non trivial energy cost, as highlighted in \cite{modiDemo2016}.
+It is relevant for cognitive radio applications, as a hardware reconfiguration costs energy, and so changing channel from two consecutive time steps has a nontrivial energy cost, as highlighted in \cite{modiDemo2016}.
 We also find interesting to study $\mathrm{SC}^{\cA_1,\dots,\cA_M}(T)$, the sum of the switching costs of the $M$ players in a multi-players bandit game (if player $j$ uses algorithm $\cA_j$ for $j=1,\dots,M$), as studied in Chapter~\ref{chapter:5}.
 Our proposed algorithm, \MCTopM, achieves order-optimal logarithmic regret as well as a logarithmic number of switches.
 % Indeed in this case it is possible that the players attain a logarithmic centralized regret, by following an efficient centralized or decentralized algorithm, while still suffering from a linear switching cost.
@@ -879,9 +879,9 @@ The estimated means, or empirical averages, are $\widehat{\mu_k}(t) \eqdef X_k(t
 -- The uniform strategy always plays the $K$ arms uniformly at random,
 $\forall t\in[T], A(t) \sim \cU([K])$, where $\cU(S)$ denotes the uniform distribution on a set $S$, and $\cU([K])$ the uniform distribution on $[K] = \{1,\dots,K\}$ (\ie, $\forall t, \forall k\in[K], \Pr(A(t) = k) = \frac{1}{K}$).
 %
-The player \textcolor{darkgreen}{\emph{only explores}} without using the collected information, and this strategy fails dramatically for any non trivial problem (\ie, linear regret).
+The player \textcolor{darkgreen}{\emph{only explores}} without using the collected information, and this strategy fails dramatically for any nontrivial problem (\ie, linear regret).
 Indeed it obtains a linear (mean) regret $R_T = \frac{1}{K} \sum_{k=1}^K \Delta_k T$
-which gives $R_T \propto T$ for any problem with at least one sub-optimal arms (\ie, all non trivial problems, ruling out the case where $\mu_1=\mu_2=\dots=\mu_K$).
+which gives $R_T \propto T$ for any problem with at least one sub-optimal arms (\ie, all nontrivial problems, ruling out the case where $\mu_1=\mu_2=\dots=\mu_K$).
 
 % Why Follow-the-Leader (EmpiricalMeans https://smpybandits.github.io/docs/Policies.EmpiricalMeans.html) don't work, example.
 -- The ``\emph{Follow-the-Leader}'' strategy consists in first playing once each arm, then always playing $A(t)\in\argmax \widehat{\mu_k}(t)$.
@@ -1209,7 +1209,7 @@ This has the advantage of being non asymptotic.
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
 %
-\footnotetext{~For simplicity we present the theorem and its prove in the restricted case of $\alpha=2$. More details on this proof can be found for instance in Section~1.3 of \cite{Slivkins2019}, while for instance Chapter~2 of \cite{Bubeck12} Theorem~2.1) and Chapter~7 of \cite{LattimoreBanditAlgorithmsBook} (Theorem~7.2) both give more general proofs, in particular for any value of $\alpha\geq\frac{1}{2}$.}%
+\footnotetext{~For simplicity we present the theorem and its proof in the restricted case of $\alpha=2$. More details on this proof can be found for instance in Section~1.3 of \cite{Slivkins2019}, while for instance Chapter~2 of \cite{Bubeck12} Theorem~2.1) and Chapter~7 of \cite{LattimoreBanditAlgorithmsBook} (Theorem~7.2) both give more general proofs, in particular for any value of $\alpha\geq\frac{1}{2}$.}%
 %
 % \begin{small}
 \begin{smallproof}\label{proof:2:UCBregretBound}
@@ -1319,7 +1319,7 @@ and then the \klUCB{} algorithm was introduced in \cite{KLUCBJournal} for bounde
 In all this thesis, we either restrict to exponential families or to bounded rewards in $[0,1]$, for which we use the fact that they are sub-Bernoulli, thus we prefer to only present \klUCB.
 
 Instead of using a confidence radius $\xi_k(t)$ based on Hoeffding's inequality,
-the \klUCB{} algorithm rather uses the Chernoff's concentration inequality for the considered exponential family \cite{chernoff1952measure,chernoff1981note}.
+the \klUCB{} algorithm rather uses Chernoff's concentration inequality for the considered exponential family \cite{chernoff1952measure,chernoff1981note}.
 % such as Chernoff-Hoeffding for Gaussian (or sub-Gaussian) rewards.
 % It yields improved upper confidence bounds (\ie, with smaller $\xi_k(t)$) that are based on Kullback-Leibler divergence.
 We remind that we consider rewards bounded in $[0,1]$.
@@ -1484,7 +1484,7 @@ which is an example of the well-known \emph{multiplicative weights update algori
 % on Wikipedia \href{https://en.wikipedia.org/wiki/Multiplicative_weight_update_method}{\texttt{en.wikipedia.org/wiki/Multiplicative\_weight\_update\_method}},
 this article by J. Kun, \href{https://jeremykun.com/2017/02/27/the-reasonable-effectiveness-of-the-multiplicative-weights-update-algorithm/}{\texttt{JeremyKun.com/2017/02/27/the-reasonable-effectiveness-}}\\
 \href{https://jeremykun.com/2017/02/27/the-reasonable-effectiveness-of-the-multiplicative-weights-update-algorithm/}{\texttt{of-the-multiplicative-weights-update-algorithm}}. The survey \cite{Arora2012multiplicative} gives more details.},
-% which comes with an interactive online demonstration to help understanding the behavior of the algorithm, hosted at \href{https://j2kun.github.io/mwua/index.html}{\texttt{j2kun.GitHub.io/mwua/}} (accessed the 24th of May 2019)
+% which comes with an interactive online demonstration in order to better understand the behavior of the algorithm, hosted at \href{https://j2kun.github.io/mwua/index.html}{\texttt{j2kun.GitHub.io/mwua/}} (accessed the 24th of May 2019)
 a family of algorithms developed since the 1950s, and applied to a wide range of different domains.
 % https://smpybandits.github.io/docs/Policies.Exp3.html
 %
@@ -1581,7 +1581,7 @@ It is anytime, and it was also proven to obtain good ``best-of-both-world'' perf
 % \TODOL{Si je dois gagner de la place, je peux ne pas inclure cette section...}
 
 We finish this Section~\ref{sec:2:famousMABalgorithms} by illustrating the performance of different algorithms, on the small MAB problem used in the online demonstration shown above (see Figures~\ref{fig:2:example_of_a_5_arm_bandit_problem} and \ref{fig:2:example_of_a_5_arm_bandit_problem__step100}).
-We consider $K=5$ arms following Bernoulli distributions, of means $\mu_1=0.6,\mu_2=0.2,\mu_3=0.55,\mu_4=0.7,\mu_5=0.5$ (unknown to the algorithms), and first an horizon $T=100$ (like in the online demo) then a larger value of $T=10000$.
+We consider $K=5$ arms following Bernoulli distributions, of means $\mu_1=0.6,\mu_2=0.2,\mu_3=0.55,\mu_4=0.7,\mu_5=0.5$ (unknown to the algorithms), and first a horizon $T=100$ (like in the online demo) then a larger value of $T=10000$.
 The best arm is $\mu_4$ and the smallest gap is $\Delta = 0.1$, thus a lower-bound on the gaps is taken as $d=\Delta$.
 % (used to tune the two algorithms from Section~\ref{sub:2:naiveSimpleStrategies}).
 
@@ -1593,7 +1593,7 @@ then the $\varepsilon$-greedy (with $\varepsilon_t=\varepsilon_0/t$ and $\vareps
 Explore-then-Commit (with $T_0=K4/d^2 \log(d^2T/4)=2000\log(T/400)$) algorithms
 from Section~\ref{sub:2:naiveSimpleStrategies}, which both uses a tuning based on a prior knowledge of $\Delta$ (that gives large values of $\varepsilon_0$ and $T_0$ yielding linear regret for small horizon).
 %
-We then include efficient algorithms, that do not need prior knowledge of the $T$ (they are anytime) nor $\Delta$ (their are robust and efficient on unknown problems):
+We then include efficient algorithms, that do not need prior knowledge of the $T$ (they are anytime) nor $\Delta$ (they are robust and efficient on unknown problems):
 $\UCB_1$ (with $\alpha=1$),
 \klUCB{} (with Bernoulli $\kl = \KL_{\cB}$),
 and Thompson sampling (with Beta posteriors and flat uniform priors).
@@ -1876,7 +1876,7 @@ In the rest of this thesis, we mainly use $\UCB_1$ or Thompson sampling when sim
 
 % \textbf{Naive approaches:}
 % %
-% On the one hand, a practitioner can decide to pick one algorithm, maybe because it seems efficient on other problems, or maybe because it is simple enough to be used in its application. It might be unrealistic to implement complicated algorithms on limited hardware such as embedded chips in a very low-cost IoT end-device, and for instance a practitioner could chose to only consider the $\UCB_1$ algorithm (or other low-cost algorithms).
+% On the one hand, a practitioner can decide to pick one algorithm, maybe because it seems efficient on other problems, or maybe because it is simple enough to be used in its application. It might be unrealistic to implement complicated algorithms on limited hardware such as embedded chips in a very low-cost IoT end-device, and for instance a practitioner could choose to only consider the $\UCB_1$ algorithm (or other low-cost algorithms).
 % %
 % On the other hand, if prior knowledge on the application at hand is available, one could implement some benchmarks, and compare a set of algorithms on different problems. If a leader appears clearly, it is then possible to choose it for the application.
 
@@ -1965,7 +1965,6 @@ This extension is significantly harder than the base model presented in this cha
 % and we were unfortunately unable to obtain any strong theoretical results under such loose hypotheses.
 This model is more generic and realistic, and as such more suitable for applications to Internet of Things (IoT) networks, where arms model orthogonal wireless channels, players model communicating devices (\ie, IoT end-devices) and rewards model successes or failures of a wireless packet sent by a device.
 %
-John is very unique.
 We take a more formal approach in the rest of the thesis,
 % We presented the simplest MAB model studied in this chapter, by focussing on one agent playing a stationary game.
 % Both hypotheses are removed or weaken in the rest of this manuscript,
