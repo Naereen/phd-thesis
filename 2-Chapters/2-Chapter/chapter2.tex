@@ -10,7 +10,7 @@
 \abstractStartChapter{}%
 %
 As explained in Chapter~\ref{chapter:1}, we focus in this thesis on Reinforcement Learning (RL), and especially on decision-making models with a finite number of resources, called arms, and under a stochastic hypothesis: an arm being associated to a binary or real-valued distribution.
-In this chapter, we present the common base of all the more sophisticated mathematical models studied in this thesis: the stochastic multi-armed bandit (MAB) model, by restricting to the single-player and stationary stochastic case.
+In this chapter, we present the common base of the more sophisticated mathematical models studied in this thesis: the stochastic multi-armed bandit (MAB) model, by restricting to the single-player and stationary stochastic case.
 %
 We motivate this model and discuss its application to and beyond Cognitive Radio (CR).
 %
@@ -1522,10 +1522,10 @@ then they use the following indexes:
 
 Both algorithms are index policies, but they are not anytime.
 For any $K$, $T$, and problem instances $I$ in a certain family $\cI$ (\eg, with Bernoulli distributions),
-they enjoy regret bounds like the following, for two constants $c_{\cA} \geq 1$ and $c'_{\cA} \geq 1$, that depend on the algorithm, and a constant $C_I$ that depend on the problem instance only: $R_T^{\cA} \leq \min( c_{\cA} \sqrt{K T}, c'_{\cA} C_I \log(T))$.
+they satisfy regret bounds like the following, for two constants $c_{\cA} \geq 1$ and $c'_{\cA} \geq 1$, that depend on the algorithm, and a constant $C_I$ that depend on the problem instance only: $R_T^{\cA} \leq \min( c_{\cA} \sqrt{K T}, c'_{\cA} C_I \log(T))$.
 
 More recently, the \klUCB-switch from \cite{GarivierHadiji2018} is the first algorithm to be proven to
-enjoy simultaneously a distribution-free regret bound of optimal order $\sqrt{KT}$, and a distribution-dependent regret bound of optimal order as well, by matching the $C_I \ln(T)$ asymptotic lower-bound by \cite{LaiRobbins85}.
+obtain simultaneously a distribution-free regret bound of optimal order $\sqrt{KT}$, and a distribution-dependent regret bound of optimal order as well, by matching the $C_I \ln(T)$ asymptotic lower-bound by \cite{LaiRobbins85}.
 It is an index policy that uses modified versions of the indexes of \klUCB$^+$ for arms that are not sampled much (see \cite{Honda2019} for more details), and of MOSS$^+$ for the other arms.
 If the two indexes
 % $U^{\KLUCB+}_k(t)$ and $U^{\mathrm{MOSS}+}_k(t)$
@@ -1943,7 +1943,7 @@ In the rest of this thesis, we mainly use $\UCB_1$ or Thompson sampling when sim
 \label{sec:2:conclusion}
 
 In this chapter, we presented the multi-armed bandit model, by restricting to a finite number of arms and real-valued rewards.
-Our main focus is on binary or bounded rewards, or one-dimensional exponential families of distributions, and on stochastic and stationary problems.
+Our main focus is binary or bounded rewards, or one-dimensional exponential families of distributions, and stochastic and stationary problems.
 By showcasing a small interactive demonstration made available online,
 % XXX ?
 % (\href{https://perso.crans.org/besson/phd/MAB\_interactive\_demo/}{\texttt{perso.crans.org/besson/phd/MAB\_interactive\_demo/}}),
@@ -1955,15 +1955,17 @@ we presented the notations used in all this thesis.
 % Instead of always choosing a fixed algorithm, or running costly benchmarks before real-world deployment of the chosen algorithm, we advise to select a few candidate algorithms, where at least one is expected to be very efficient for the given problem, and use online algorithm selection to automatically and dynamically decide the best candidate.
 % We proposed an extension of the \ExpFour{} algorithm for this problem, \Aggr, and illustrate its performance on some bandit problems.
 % %
-We then used the small Bernoulli-distributed problem underlying this demonstration
-to present a small numerical simulation, comparing some algorithms using our Python open-source library SMPyBandits, that is presented in details in the next Chapter~\ref{chapter:3}.
+We then used the Bernoulli-distributed problem underlying this demonstration
+to present numerical simulations, comparing some algorithms using our Python open-source library SMPyBandits, that is presented in details in the next Chapter~\ref{chapter:3}.
 % The next chapter also includes simulations of the most important MAB algorithms that we presented above, on Bernoulli distributed problems of various sizes and durations.
 
 % We take another approach in Chapter~\ref{chapter:4}, where the
 We generalize this MAB model in Chapter~\ref{chapter:4}, by studying decentralized learning of a large set of independent players, all having different random activation times.
-This extension is significantly too complicated to analyze, and we were unfortunately unable to obtain any strong theoretical results under such loose hypotheses.
-This model is however realistic, and as such it was found suitable for applications to Internet of Things (IoT) networks, where arms model orthogonal wireless channels, players model communicating devices (\ie, IoT end-devices) and rewards model successes or failures of a wireless packet sent by a device.
+This extension is significantly harder than the base model presented in this chapter, and it is too complicated to analyze.
+% and we were unfortunately unable to obtain any strong theoretical results under such loose hypotheses.
+This model is more generic and realistic, and as such more suitable for applications to Internet of Things (IoT) networks, where arms model orthogonal wireless channels, players model communicating devices (\ie, IoT end-devices) and rewards model successes or failures of a wireless packet sent by a device.
 %
+John is very unique.
 We take a more formal approach in the rest of the thesis,
 % We presented the simplest MAB model studied in this chapter, by focussing on one agent playing a stationary game.
 % Both hypotheses are removed or weaken in the rest of this manuscript,
