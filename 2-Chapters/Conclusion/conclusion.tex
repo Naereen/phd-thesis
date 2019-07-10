@@ -42,7 +42,7 @@ Our main contribution to answer the problematic is a model of Internet of Things
 In such IoT network, we focused on many dynamically reconfigurable IoT end-devices, that are able to run low-cost and low-complexity decision making algorithms, embedded on each device using their limited computational and storage capacity (limited hardware)
 We proposed two models, whether the considered IoT standard asks the devices to try to retransmit a few times their up-link packet in case of a failed transmission (\ie, a collision with other devices),
 or to drop their packet after a failed transmission (\ie, without retransmission).
-Both models are realistic, and for both cases we proposed to use multi-armed bandit (MAB) algorithms, such as \UCB{} or Thompson sampling, in order for the numerous IoT devices to improve on their own their spectrum access scheme, by learning which of the $K$ frequency channels are the less occupied by the environmental trafic.
+Both models are realistic, and for both cases we proposed to use multi-armed bandit (MAB) algorithms, such as \UCB{} or Thompson sampling, in order for the numerous IoT devices to improve on their own their spectrum access scheme, by learning which of the $K$ frequency channels are the less occupied by the environmental traffic.
 
 The approach we thus advocate is to use low-complexity MAB algorithms such as \UCB, or variants tuned to be robust in slowly-evolving non-stationary scenario (\eg, Discounted-\UCB{} or actively adaptive approach such as \GLR-\klUCB).
 For a given company manufacturing IoT end-devices, it is very simple and cheap in terms of both hardware and software engineering workloads to implement such MAB algorithm on the low-cost embedded processors, and equip all the produced IoT devices with this capacity of using online machine-learning for their spectrum access.
@@ -60,13 +60,13 @@ On the one hand, we considered a model where the devices have data to transmit a
 This first model is similar to the multi-player multi-armed bandits studied in the last $10$ years, and for stationary and stochastic environments we were able to propose a state-of-the-art algorithm, \MCTopM.
 Our proposed algorithm performs very well in practice and obtains interesting guarantees on its regret, as well as on the number of radio collisions and on radio reconfigurations that the devices will suffer if they all implement our solution.
 %
-On the other hand, we studied a model that focuses on only one device but relaxes the hypothesis of stationarity for the surrounding radio trafic, and considers that is can be stationary in consecutive intervals of time, of unknown durations. This second model is similar to the piece-wise stationary (or abruptly-changing) multi-armed bandits studied since the $2000$s, and we solved it by proposing a new actively adaptive bandit policy, for which we obtained state-of-the-art results, in terms of its regret but also its false alarm probability and delay of detection.
+On the other hand, we studied a model that focuses on only one device but relaxes the hypothesis of stationarity for the surrounding radio traffic, and considers that is can be stationary in consecutive intervals of time, of unknown durations. This second model is similar to the piece-wise stationary (or abruptly-changing) multi-armed bandits studied since the $2000$s, and we solved it by proposing a new actively adaptive bandit policy, for which we obtained state-of-the-art results, in terms of its regret but also its false alarm probability and delay of detection.
 
-Finally, from an applicative point-of-view, we also presented a realistic implementation of a proof-of-concept of our first model of IoT network, that was used to validate empirically the proposed approach.
+Finally, from an application point-of-view, we also presented a realistic implementation of a proof-of-concept of our first model of IoT network, that was used to validate empirically the proposed approach.
 We showed that the IoT devices can effectively use a multi-armed bandit algorithm to automatically learn to favor certain frequency channels over others, in order to optimize their spectrum access, to reduce their number of failed transmissions.
 %
 Our proposed approach is to use decentralized reinforcement learning algorithms, directly embedded on the IoT end-devices, in order to improve their spectrum access and channel selection schemes.
-We confirmed from both a numerical simulations and an validation on real radio trafic and hardware that our proposal is an excellent candidate to start to solve the spectrum scarcity issue for unlicensed bands, that is cheap and easy to deploy, and requires .
+We confirmed from both a numerical simulations and an validation on real radio traffic and hardware that our proposal is an excellent candidate to start to solve the spectrum scarcity issue for unlicensed bands, that is cheap and easy to deploy, and requires .
 
 
 
@@ -405,8 +405,8 @@ For instance, even if \GLRklUCB{} is very efficient for piece-wise stationary pr
 Another example is for multi-players bandits, where \MCTopM-\klUCB{} performs sub-optimally on piece-wise stationary problems.
 % if we consider the proposed extension of \MCTopM-\klUCB{} that estimates the number $M$ of players, i
 One approach to obtain a unified ``master'' algorithm could be to use expert aggregation on the different state-of-the-art algorithms presented in this thesis, and as each one is efficient in a different setting, the resulting aggregated algorithm could also be efficient in each of the different settings.
-But as we illustrated in Section~\ref{sec:25:theory}, this approach does not seem theoretically promising.
-Thus a preferred approach could be to design a ``unified'' algorithm which adapts automatically to the kind of problem it is facing.
+As this approach does not seem theoretically promising, as we illustrated in Section~\ref{sec:25:theory},
+a preferred approach could be to design a ``unified'' algorithm which adapts automatically to the kind of problem it is facing.
 
 
 
