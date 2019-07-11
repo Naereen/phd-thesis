@@ -866,7 +866,7 @@ When a collision occurs for a player implementing the \RandTopM{} algorithm, tha
           % XXX Algorithm
               Let $A^j(0) \sim \cU([K])$ and $C^j(0)=\mathrm{False}$ and $s^j(1)=\mathrm{False}$ \\
               \For{$t = 1, \dots, T$}{
-                   \uIf(\tcp*[f]{transition $(3)$ or $(5)$}){
+                   \uIf(\tcp*[f]{\textcolor{red}{transition $(3)$ or $(5)$}}){
                       $A^j(t-1) \notin \TopM(t)$}
                     {
                       $A^j(t) \sim \cU \left(\TopM(t) \cap \left\{k : U_k^j(t-1) \leq U^j_{A^j(t)}(t-1)\right\}\right)$
@@ -879,10 +879,10 @@ When a collision occurs for a player implementing the \RandTopM{} algorithm, tha
                         $C^j(t-1)$ \emph{and} $\overline{s^j(t-1)}$}
                       {
                         $A^j(t) \sim \cU \left(\TopM(t)\right)$
-                        \tcp*[f]{transition $(2)$} \\
+                        \tcp*[f]{\textcolor{blue}{transition $(2)$}} \\
                         $s^j(t) = \mathrm{False}$
                     }
-                    \uElse(\tcp*[f]{transition $(1)$ or $(4)$}){
+                    \uElse(\tcp*[f]{transition \textcolor{cyan}{$(1)$} or \textcolor{darkgreen}{$(4)$}}){
                       $A^j(t) = A^j(t-1)$ \tcp*[f]{stay on the previous arm} \\
                       $s^j(t) = \mathrm{True}$ \tcp*[f]{become or stay fixed on a ``chair''}
                     }
@@ -1621,7 +1621,7 @@ We also include the \emph{asymptotic} lower bound from Theorem~\ref{thm:5:Better
   % \begin{subfigure}[!h]{0.85\textwidth}
     \includegraphics[width=1.10\textwidth]{MP__K9_M6_T10000_N1000__4_algos/all_HistogramsRegret____env1-1_8200873569864822246.pdf}
   % \end{subfigure}
-  \caption[Regret for $M=6$ players for $K=9$ arms, horizon $T=5000$, for $1000$ repetitions on a fixed problem.]{Regret (in log-log scale), for $M=6$ players for $K=9$ arms, horizon $T=5000$, for $1000$ repetitions on problem $\boldsymbol{\mu}=[0.1,\dots,0.9]$. \textcolor{gold}{\RandTopM{} (in yellow)} outperforms \textcolor{darkgreen}{\Selfish{} (in green)}, both clearly outperform \rhoRand. The regret of \MCTopM{} is logarithmic, empirically with the same slope as the lower bound. The $x$ axis on the regret histograms have different scale for each algorithm.}
+  \caption[Regret for $M=6$ players for $K=9$ arms, horizon $T=5000$, for $1000$ repetitions on a fixed problem.]{Regret (in log-log scale), for $M=6$ players for $K=9$ arms, horizon $T=5000$, for $1000$ repetitions on problem $\boldsymbol{\mu}=[0.1,\dots,0.9]$. \textcolor{lightgreen}{\RandTopM{} (in light green)} outperforms \textcolor{darkgreen}{\Selfish{} (in green)}, both clearly outperform \rhoRand. The regret of \MCTopM{} is logarithmic, empirically with the same slope as the lower bound. The $x$ axis on the regret histograms have different scale for each algorithm.}
   \label{fig:5:MP__K9_M6_T10000_N1000__4_algos}
 \end{figure}
 
@@ -1639,7 +1639,7 @@ We also include the \emph{asymptotic} lower bound from Theorem~\ref{thm:5:Better
   % \begin{subfigure}[!h]{1.00\textwidth}
       \includegraphics[width=1.10\textwidth]{MP__K9_M9_T10000_N200__4_algos/all_RegretCentralized_loglog____env1-1_2306423191427933958.pdf}
   % \end{subfigure}
-  \caption[Regret for $M=2$ and $9$ players for $K=9$ arms, horizon $T=5000$, for a fixed problem.]{Regret (in log-log scale), for $M=2$ and $9$ players for $K=9$ arms, horizon $T=5000$, for problem $\boldsymbol{\mu}=[0.1,\dots,0.9]$] for problem $\boldsymbol{\mu}=[0.1,\dots,0.9]$. In different settings, \textcolor{gold}{\RandTopM{} (in yellow)} and \textcolor{darkgreen}{\Selfish{} (in green)} can outperform each other, and always outperform \rhoRand. \MCTopM{} is always among the best algorithms, and for $M$ not too small, its regret seems logarithmic with a constant matching the lower bound.}
+  \caption[Regret for $M=2$ and $9$ players for $K=9$ arms, horizon $T=5000$, for a fixed problem.]{Regret (in log-log scale), for $M=2$ and $9$ players for $K=9$ arms, horizon $T=5000$, for problem $\boldsymbol{\mu}=[0.1,\dots,0.9]$] for problem $\boldsymbol{\mu}=[0.1,\dots,0.9]$. In different settings, \textcolor{lightgreen}{\RandTopM{} (in light green)} and \textcolor{darkgreen}{\Selfish{} (in green)} can outperform each other, and always outperform \rhoRand. \MCTopM{} is always among the best algorithms, and for $M$ not too small, its regret seems logarithmic with a constant matching the lower bound.}
   \label{fig:5:MP__K9_M2-6-9_T10000_N200__4_algos}
 \end{figure}
 
@@ -1673,7 +1673,7 @@ We also include the \emph{asymptotic} lower bound from Theorem~\ref{thm:5:Better
   % \begin{subfigure}[!h]{0.85\textwidth}
       \includegraphics[width=1.00\textwidth]{MP__K9_M3_T123456_N100__8_algos/all_RegretCentralized_semilogy____env1-1_7803645526012310577.pdf}
   % \end{subfigure}
-  \caption[Regret for $M=3$ players for $K=9$ arms, horizon $T=123456$, for $100$ repetitions on a fixed problem.]{Regret for $M=3$ players for $K=9$ arms, horizon $T=123456$, for $100$ repetitions on problem $\mu=[0.1,\dots,0.9]$. With a perfect knowledge on the horizon and the gap ($\Delta=0.1$ here) and by using the parameters suggested from their respective articles, \MEGA{} and \MusicalChair{} perform badly, even in this simple setting. The first two \MusicalChair{} instances use the optimal $T_0$ value from \cite{Rosenski16}, with $\varepsilon$ taken slightly smaller than the gap $\Delta$ ($\varepsilon=0.99 \Delta$), and respectively with $\delta=0.5$ and $\delta=0.1$, for which the regret can be bounded with probability $0.5$ and $0.9$ respectively. The third instance uses the optimal $T_0$ corresponding to $\delta=1/T$, that is guaranteed to have an expected regret of order $\log(T)$. The log-$y$ scale is used to easily differentiate between the different algorithms, and highlight that our proposal (in \textcolor{gold}{yellow $\nabla$}) outperform both \MEGA{} and \MusicalChair{} by three orders of magnitudes!}
+  \caption[Regret for $M=3$ players for $K=9$ arms, horizon $T=123456$, for $100$ repetitions on a fixed problem.]{Regret for $M=3$ players for $K=9$ arms, horizon $T=123456$, for $100$ repetitions on problem $\mu=[0.1,\dots,0.9]$. With a perfect knowledge on the horizon and the gap ($\Delta=0.1$ here) and by using the parameters suggested from their respective articles, \MEGA{} and \MusicalChair{} perform badly, even in this simple setting. The first two \MusicalChair{} instances use the optimal $T_0$ value from \cite{Rosenski16}, with $\varepsilon$ taken slightly smaller than the gap $\Delta$ ($\varepsilon=0.99 \Delta$), and respectively with $\delta=0.5$ and $\delta=0.1$, for which the regret can be bounded with probability $0.5$ and $0.9$ respectively. The third instance uses the optimal $T_0$ corresponding to $\delta=1/T$, that is guaranteed to have an expected regret of order $\log(T)$. The log-$y$ scale is used to easily differentiate between the different algorithms, and highlight that our proposal (in \textcolor{lightgreen}{light green $\nabla$}) outperform both \MEGA{} and \MusicalChair{} by three orders of magnitudes!}
   \label{fig:5:MP__K9_M3_T123456_N100__8_algos}
 \end{figure}
 
@@ -1691,7 +1691,7 @@ We also include the \emph{asymptotic} lower bound from Theorem~\ref{thm:5:Better
   % \begin{subfigure}[!h]{0.49\textwidth}
     \includegraphics[width=1.05\textwidth]{MP__K9_M6_T5000_N500__4_algos/all_RegretCentralized____env1-1_8318947830261751207.pdf}
   % \end{subfigure}
-  \caption[Regret for $M=6$ players, $K=9$ arms, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled.]{Regret for $M=6$ players, $K=9$ arms, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled in $[0,1]^K$. \textcolor{blue}{\rhoRand{} (top blue)} is outperformed by the other algorithms (and the gain increases with $M$). \textcolor{gold}{\MCTopM{} (bottom yellow)} outperforms all the other algorithms in most cases.}
+  \caption[Regret for $M=6$ players, $K=9$ arms, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled.]{Regret for $M=6$ players, $K=9$ arms, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled in $[0,1]^K$. \textcolor{blue}{\rhoRand{} (top blue)} is outperformed by the other algorithms (and the gain increases with $M$). \textcolor{lightgreen}{\MCTopM{} (bottom green)} outperforms all the other algorithms in most cases.}
   % \label{fig:5:MP__K9_M2-6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems}
   \label{fig:5:MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized__BayesianProblems}
   % \vspace*{-15pt}  % XXX remove if problem
@@ -1746,7 +1746,7 @@ We also include the \emph{asymptotic} lower bound from Theorem~\ref{thm:5:Better
   % \begin{subfigure}[!h]{1.00\textwidth}
       \includegraphics[width=1.10\textwidth]{MP__K9_M9_T5000_N500__4_algos/all_HistogramsRegret____env1-1_3892966382091165662.pdf}
   % \end{subfigure}
-  \caption[Regret for $M=K=9$, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled.]{Regret for $M=K=9$, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled in $[0,1]^K$. This extreme case $M=K$ shows the drastic difference of behavior between \textcolor{red}{\RandTopM{} (red)} and \textcolor{gold}{\MCTopM{} (yellow)}, with constant regret, and \textcolor{blue}{\rhoRand{} (blue)} and \textcolor{darkgreen}{\Selfish{} (green)}, with large regret.}
+  \caption[Regret for $M=K=9$, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled.]{Regret for $M=K=9$, horizon $T=5000$, against $500$ problems $\boldsymbol{\mu}$ uniformly sampled in $[0,1]^K$. This extreme case $M=K$ shows the drastic difference of behavior between \textcolor{red}{\RandTopM{} (red)} and \textcolor{lightgreen}{\MCTopM{} (light green)}, with constant regret, and \textcolor{blue}{\rhoRand{} (blue)} and \textcolor{darkgreen}{\Selfish{} (green)}, with large regret.}
   \label{fig:5:MP__K9_M9_T5000_N500__4_algos__all_HistogramsRegret}
   % \vspace*{-15pt}  % XXX remove if problem
 \end{figure}

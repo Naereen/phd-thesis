@@ -11,8 +11,8 @@ class UCB(IndexPolicy):
 
         .. math:: U_k(t) = \frac{X_k(t)}{N_k(t)} + \sqrt{\frac{2 \log(t)}{N_k(t)}}.
         """
-        if self.pulls[arm] < 1:    # forced exploration
-            return float('+inf')     # in the first steps
+        if self.pulls[arm] < 1:    # forced exploration in the first steps
+            return float('+inf')
         else:                      # or compute UCB index
             estimated_mean = self.rewards[arm] / self.pulls[arm]
             exploration_bias = sqrt((2 * log(self.t)) / self.pulls[arm])

@@ -870,7 +870,7 @@ and the $\Delta^{(i)}$ terms expressing the hardness of the change-point detecti
     For $\omega$ and $\delta$ for which Assumption~\ref{ass:6:LongPeriodsGlobal} is satisfied, the regret of \GLRklUCB{} with parameters $\omega$ and $\delta$ based on \textbf{Global} Restart satisfies the following \emph{finite-time} regret bound
     \begin{align}
         R_T \;\; \leq \;\; & 2\sum_{i=1}^{\Upsilon_T} \frac{4K}{\omega \left(\Delta^{(i)}\right)^2}\beta(T,\delta) +\omega T + \delta (K+1)\Upsilon_T \\
-        & + \sum_{k=1}^{K}\sum_{\substack{i = 1,\dots,Y_T\\\mu_k^{(i)} \neq \mu_{k^*}^{(i)}}} \frac{\left( \mu_{k^*}^{(i)}-\mu_k^{(i)}\right)}{\kl\left(\mu_k^{(i)},\mu_{k^*}^{(i)}\right)}\ln(T) + \textcolor{red}{\bigO{\sqrt{\ln(T)}}}. \nonumber
+        & + \sum_{k=1}^{K}\sum_{\substack{i = 1,\dots,Y_T\\\mu_k^{(i)} \neq \mu_{k^*}^{(i)}}} \frac{\left( \mu_{k^*}^{(i)}-\mu_k^{(i)}\right)}{\kl\left(\mu_k^{(i)},\mu_{k^*}^{(i)}\right)}\ln(T) + \textcolor{red}{\underline{\cO}\left(\sqrt{\ln(T)}\right)}. \nonumber
     \end{align}
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
 \end{theorem}
@@ -878,8 +878,8 @@ and the $\Delta^{(i)}$ terms expressing the hardness of the change-point detecti
 
 \textbf{\textcolor{red}{Warning}:}
 %
-We highlight that \emph{this result is finite-time} and not asymptotic, but if it uses the notation $\textcolor{red}{\bigO{\sqrt{\ln(T)}}}$ for simplicity.
-This last term $\bigO{\dots}$ does not mean the whole inequality is only valid for $T\to\infty$, but it rather means that at finite time, the inequality is valid with the last term being a function $g(T)$, which is upper-bounded by a certain $c_0 \times \sqrt{\ln(T)}$, from a certain time $T_0$ (\ie, $\forall T \geq T_0$).
+We highlight that \emph{this result is finite-time} and not asymptotic, but if it uses the notation $\textcolor{red}{\underline{\cO}\left(\sqrt{\ln(T)}\right)}$ for simplicity.
+This last term $\underline{\cO}\left(\dots)$ does not mean the whole inequality is only valid for $T\to\infty$, but it rather means that at finite time, the inequality is valid with the last term being a function $g(T)$, which is upper-bounded by a certain $c_0 \times \sqrt{\ln(T)}$, from a certain time $T_0$ (\ie, $\forall T \geq T_0$).
 It is also the case of the next Theorem~\ref{thm:6:mainRegretBound}.
 
 % \vspace*{-20pt}  % FIXME
@@ -935,7 +935,7 @@ It requires that any two consecutive change-points \emph{on a given arm} are suf
     For $\omega$ and $\delta$ for which Assumption~\ref{ass:6:LongPeriods} is satisfied, the regret of \GLRklUCB{} with parameters $\omega$ and $\delta$ based on Local Restart satisfies the following \emph{finite-time} regret bound
     %
     \begin{equation}
-        R_T \leq 2\sum_{k=1}^K\sum_{\ell=1}^{\NCk} \frac{4K}{\omega \left(\Delta_k^{(\ell)}\right)^2}\beta(T,\delta) +\omega T + 2 \delta \EffChange  + \sum_{k=1}^K\sum_{\ell=1}^{\NCk} \frac{\ln(T)}{\kl(\overline{\mu}_k^{(\ell)},{\mu}^*_{i,\ell})} + \textcolor{red}{\bigO{\sqrt{\ln(T)}}},
+        R_T \leq 2\sum_{k=1}^K\sum_{\ell=1}^{\NCk} \frac{4K}{\omega \left(\Delta_k^{(\ell)}\right)^2}\beta(T,\delta) +\omega T + 2 \delta \EffChange  + \sum_{k=1}^K\sum_{\ell=1}^{\NCk} \frac{\ln(T)}{\kl(\overline{\mu}_k^{(\ell)},{\mu}^*_{i,\ell})} + \textcolor{red}{\underline{\cO}\left(\sqrt{\ln(T)}\right)},
     \end{equation}
     where ${\mu}^*_{i,\ell} \eqdef \inf \left\{ \mu_{k_t^*}(t) : \mu_{k_t^*}(t) \neq \overline{\mu}_k^{(\ell)}, t \in [\tau_k^{(\ell)}+1, \tau_k^{(\ell+1)}]\right\}$.
 \end{leftbar}  % XXX leftbar theorembar, comment if needed
@@ -1156,7 +1156,7 @@ Thus, introducing $\widehat{\mu}_s$ as a sequence of \iid{} random variables wit
 \end{align*}
 %
 where the last but one inequality relies on the concentration inequality given in Lemma~2 of \cite{KLUCBJournal}, for the choice $f(t) = \ln(t) + 3 \ln(\ln(t))$.
-The last inequality comes from a sum-integral comparison, as $\int\limits_{1}^T \frac{1}{t \ln(t)} \mathrm{d}t = \ln(\ln(T))$.
+The last inequality comes from a sum-integral comparison, as $\int_{1}^T \frac{1}{t \ln(t)} \mathrm{d}t = \ln(\ln(T))$.
 Finally, the law of total expectation gives
 \begin{equation}\label{eq:6:TermAFinalGlobal}
     (A) \leq \sum_{i=1}^{\Upsilon_T}\left[d^{(i)} + \ln(\ln(T))\right].
