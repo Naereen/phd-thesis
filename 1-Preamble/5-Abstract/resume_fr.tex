@@ -18,7 +18,7 @@ et j'étais également co-encadré par le docteur Emilie Kaufmann, que j'ai visi
 % % Chapitre 2
 % Les différents problèmes d'accès au réseau sont modélisés avec des Bandits Multi-Bras (BMB, ou \emph{Multi-Armed Bandits}, MAB, en Chapitre~\ref{chapter:2}), mais leur analyse est complexe,
 % % , Chapitre~\ref{chapter:2}
-% notamment si l'on veut prouver la convergence de nombreux objets jouant à un jeu collaboratif sans aucune coordination, lorsque les objets suivent tous un modèle d'activation aléatoire.
+% notamment si l'on veut prouver la convergence de nombreux objets jouant à un jeu collaboratif sans aucune coordination, lorsque les objets suivent tous un profil d'activation aléatoire.
 % % En effet, même le nombre de périphériques actifs à chaque instant est hautement imprévisible, rendant l'environnement non pas stationnaire et évoluant rapidement.
 % % Chapitres 5 et 6
 % Le reste de ce manuscrit étudie donc deux modèles restreints, afin de pouvoir en faire une analyse théorique exhaustive.
@@ -43,11 +43,11 @@ ainsi qu'adaptée pour desservir un grand nombre de personnes et d'appareils.
 %
 Ces technologies de l'IdO devraient pouvoir s'adapter automatiquement à différents environnements et différents contextes d'application, et être aussi efficaces que possible.
 %
-C'est pourquoi en plus de l'effort habituel de recherche et développement pour concevoir de nombreux systèmes d'accès radio efficaces, couvrant tous les cas possibles,
+C'est pourquoi, en plus de l'effort habituel de recherche et développement pour concevoir de nombreux systèmes d'accès radio efficaces, couvrant tous les cas possibles,
 le moment est venu de le combiner avec un apprentissage machine bon marché et prometteur pour (essayer d') atteindre le niveau de gain de performance nécessaire pour que les promesses de l'IdO deviennent réalité.
 
 
-C'est pourquoi nous nous intéressons dans cette thèse à
+C'est ainsi que nous avons décidé de nous intéresser dans cette thèse à
 l'amélioration de la durée de vie des batteries des objets de l'IdO et la réduction du coût énergétique des réseaux de l'IdO.
 Nous proposons d'atteindre ces deux objectifs conjointement, en intégrant une prise de décision décentralisée à faible coût, directement dans les futurs objets de l'IdO.
 %
@@ -81,7 +81,7 @@ Une autre contrainte commune aux objets de l'IdO est leur faible besoin en commu
 %
 De nombreuses normes différentes pour les réseaux de l'IdO ont été proposées ces dernières années,
 et elles consistent en une spécification à la fois pour la couche \emph{PHY}sique
-et la couche \emph{M}edium \emph{A}access \emph{C}ontrol (\emph{MAC}).
+et la couche \emph{M}edium \emph{A}ccess \emph{C}ontrol (\emph{MAC}).
 Pour citer quelques exemples de normes pour des réseaux de type IdO, ZigBee, Z-Wave ou Bluetooth visent des communications à courte portée (jusqu'à \SI{2}{\meter}), tandis que LoRaWAN, SIGFOX, Ingenu ou Weightless sont destinés aux communications à plus longue portée (jusqu'à \SI{50}{\kilo\meter}).
 Nous nous référons à l'article \cite{Centenaro16} pour plus de détails, et les références dans \cite{Azari18} ou notre dernier travail \cite{MoyBesson2019,MoyBesson2019Annales}.
 
@@ -181,10 +181,32 @@ mais doit plutôt découvrir quelles actions sont les plus gratifiantes en les e
 
 
 Nous illustrons ci-dessous l'idée d'un cycle d'apprentissage, alternant entre action et réaction,
-en Figure~\ref{fig:1:ReinforcementLearningCycle}.
+en Figure~\ref{fig:1:ReinforcementLearningCycle_enFr}.
 Un-e joueur-se (ou un-e apprenant-e) interagit avec son environnement en prenant une action $A(t)$ (\eg, un choix dans un ensemble fini, $A(t)\in\{1,\dots,K\}$, ou un vecteur $A(t)\in\R^d$), et ensuite en observant une récompense $r(t)$, qui est une certaine mesure du succès de cette action, fournie par l'environnement (\eg, $r(t)\in\{0,1\}$ pour échec/succès binaire, ou $r(t)\in\R$).
 Le but de la joueuse est de maximiser ses récompenses, par des essais et des erreurs (\ie, actions et récompenses).
 De nombreux problèmes du monde réel peuvent être présentés comme des problèmes d'apprentissage par renforcement, comme l'illustrent l'article \cite{bouneffouf2019survey} et la Section~\ref{sec:2:applicationsofStochasticMAB}, par exemple apprendre à marcher, à conduire, à jouer à un jeu vidéo, découvrir quel traitement est efficace pour guérir une certaine maladie, etc.
+
+
+
+\tikzstyle{block} = [align=center, draw, fill=gray!25, rectangle, minimum height=3em, minimum width=6em]
+\begin{figure}[h!]
+    \centering
+    \resizebox{0.30\textwidth}{!}{
+        \begin{tikzpicture}[auto,node distance=5cm,>=latex,scale=1.5]
+            %
+            % We start by placing the blocks
+            \node [block] (player) at (0,0) {Joueuse};
+            % We draw an edge between the player and system block to
+            \node [block] (environment) at (2,0) {Environnement};
+            % Once the nodes are placed, connecting them is easy.
+            \draw [->] (player) to[bend left=90] node[pos=0.5] {Action} (environment);
+            \draw [->] (environment) to[bend left=90] node[pos=0.5] {Récompense} (player);
+            %
+        \end{tikzpicture}
+    }
+\caption{Cycle de l'apprentissage par renforcement : une joueuse interagit avec son environnement par des actions, et observe une récompense, de façon itérative.}
+\label{fig:1:ReinforcementLearningCycle_enFr}
+\end{figure}
 
 
 % Il faut expliquer ce que c'est que les bandits, rapidement, et leur application à l'OSA
@@ -300,7 +322,7 @@ De plus, en raison de leur matériel limité (Rx/Tx), de leur puissance de calcu
 On pourrait penser qu'en l'absence de détection spectrale, l'apprentissage par renforcement n'est plus applicable, mais n'importe quel objet d'un vrai réseau de l'IdO reçoit encore des informations sur son environnement, après certaines ou toutes ses transmissions.
 Dans la plupart des normes IdO, un message (sur la voie montante) envoyé à une station de base doit être suivi d'un message (sur la voie descendante) renvoyé par la station de base pour indiquer si le message a été bien reçu, décodé et compris.
 %
-En utilisant cette rétroaction, qui consiste en un \emph{acquittement} (ou \emph{acknowledgement}, \Ack) reçu peu après chaque transmission réussie, ou en l'absence ' \Ack{} après une transmission échouée, il est possible qu'un objet de l'IdO puisse également optimiser ses communications, grâce à un algorithme d'apprentissage par renforcement bien conçu.
+En utilisant cette rétroaction, qui consiste en un \emph{acquittement} (ou \emph{acknowledgement}, \Ack) reçu peu après chaque transmission réussie, ou en l'absence ' \Ack{} après une transmission échouée, il est possible qu'un objet de l'IdO puisse également optimiser ses communications, grâce à un algorithme d'apprentissage par renforcement correctement conçu.
 
 
 
@@ -406,12 +428,12 @@ Notre algorithme atteint également un nombre logarithmique de collisions et de 
 Ce fort résultat théorique dépend fortement de la présence d'une information de détection spectrale et, par conséquent, nos résultats ne sont pas (encore) applicables au modèle IdO sans détection.
 
 
-Comme expliqué plus haut, le modèle de Chapitre~\ref{chapter:4} s'est révélé insoluble à analyser, principalement parce que nous considérons un réseau d'IdO avec de nombreux objets, chacun suivant des modèles d'activation aléatoires.
+Comme expliqué plus haut, le modèle de Chapitre~\ref{chapter:4} s'est révélé trop complexe à analyser, principalement parce que nous considérons un réseau d'IdO avec de nombreux objets, chacun suivant des profils d'activation aléatoires.
 La difficulté ne réside pas dans le fait que nous essayons d'analyser des algorithmes BMB, conçus pour résoudre des problèmes stationnaires, appliqués à un problème non stationnaire,
 mais plutôt que nous considérons des algorithmes qui jouent tous à différents instants d'activations (aléatoires), ce qui donne des sous-ensembles différents et imprédictibles des pas de temps synchronisés globaux.
 Généraliser à différentes probabilités d'activation conduirait à un modèle encore plus difficile à analyser, et imposer un maximum de $M \leq K$ objets n'est en fait pas vraiment réaliste pour les réseaux de l'IdO, même si cela conduit au modèle du Chapitre~\ref{chapter:5}.
 
-D'une part, si le modèle d'activation de tous les périphériques peut être corrigé, par exemple en se basant sur une affectation centralisée des périphériques à différents créneaux horaires, alors le modèle de bandit multi-joueurs du Chapitre~\ref{chapter:5} peut être utilisé pour permettre à chaque groupe de $M \leq K$ périphériques d'apprendre une affectation orthogonale optimale dans les $K$ canaux (\eg, les groupes peuvent être le jeu des périphériques que tous émettent au même instant).
+D'une part, si le profil d'activation de tous les périphériques peut être corrigé, par exemple en se basant sur une affectation centralisée des périphériques à différents créneaux horaires, alors le modèle de bandit multi-joueurs du Chapitre~\ref{chapter:5} peut être utilisé pour permettre à chaque groupe de $M \leq K$ périphériques d'apprendre une affectation orthogonale optimale dans les $K$ canaux (\eg, les groupes peuvent être le jeu des périphériques que tous émettent au même instant).
 %
 Cependant, même si nous continuons à supposer un temps synchronisé dans tout le reste de la thèse,
 il est difficile de soutenir que cette hypothèse d'un calendrier centralisé pour les objets peut être réaliste, car nous étudions le cas de l'apprentissage décentralisé pour l'AOS et l'IdO précisément afin d'éviter un surcoût dû à une signalisation régulière et un contrôle central des objets par la station de base, comme nous l'avons expliqué précédemment.
@@ -423,7 +445,7 @@ C'est pourquoi nous considérons l'hypothèse de stationnarité par intervalles 
 
 % \paragraph{Chapitre~\ref{chapter:6}.}
 %
-Afin de bien comprendre également comment les algorithmes BMB se comportent dans un environnement non stationnaire, nous avons étudié la littérature sur les BMB adverses ou non stationnaires, pour les deux cas d'environnements variant lentement ou changeant brusquement.
+Afin de bien comprendre également comment les algorithmes BMB se comportent dans un environnement non stationnaire, nous avons étudié la littérature sur les BMB adverses ou non stationnaires, principalement pour les deux cas d'environnements variant lentement ou changeant brusquement.
 Nous commençons notre dernier Chapitre~\ref{chapter:6} en passant en revue les travaux existants,
 et nous avons choisi de nous concentrer sur les problèmes de bandits stationnaires par morceaux,
 ce qui signifie que le problème de bandit sous-jacent est stationnaire sur certains intervalles, séparés par des points de changement situés à des moments inconnus.
@@ -437,7 +459,7 @@ tandis que les algorithmes activement adaptatifs utilisent un test statistique p
 Comme la littérature récente a montré que cette dernière approche est généralement plus compétitive, en obtenant de meilleurs résultats tant sur le plan empirique que théorique, nous avons choisi de développer notre propre algorithme activement adaptatif.
 
 Suite à deux travaux précédents récents \cite{LiuLeeShroff17,CaoZhenKvetonXie18}, nous combinons une stratégie d'indices efficace (\klUCB) et un test efficace de détection des points de changement, dans l'hypothèse de récompenses bornées.
-Nous nous appuyons sur des résultats très récents du Test du Rapport de Vraisemblance Généralisé (\emph{Generalized Likelihood Ratio Test}, GLRT) pour les variables gaussiennes et sous-gaussiennes \cite{Maillard2018GLR}, mais nous nous concentrons plutôt sur les récompenses bornées et les distributions de Bernoulli.
+Nous nous appuyons sur des résultats très récents à propos du Test du Rapport de Vraisemblance Généralisé (\emph{Generalized Likelihood Ratio Test}, GLRT) pour les variables gaussiennes et sous-gaussiennes \cite{Maillard2018GLR}, mais nous nous concentrons plutôt sur les récompenses bornées et les distributions de Bernoulli.
 Les récompenses bornées sont en effet généralement plus appropriées pour les applications de RI, comme nous l'avons discuté ci-dessus.
 En utilisant le fait que les variables bornées dans $[0,1]$ ne sont pas seulement $1/4$ sous-Gaussiennes mais aussi sous-Bernoulli, nous prouvons les premières garanties à temps fini pour le GLRT pour des variables bornées.
 Nous montrons d'abord des bornes à temps finis à la fois sur la probabilité de fausse alarme de notre test, et sur son délai de détection, sous des hypothèses raisonnables sur la longueur des séquences stationnaires.

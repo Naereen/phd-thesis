@@ -367,19 +367,21 @@ We first note that
 and those two quantities can be upper-bounded similarly using the Cram\'er-Chernoff method.
 
 Let $(X_i)$ and $(Y_i)$ be two \iid{} sequences that are $\sigma^2$-sub-Gaussian with mean $\mu_1$ and $\mu_2$ respectively. Let $n_1$ and $n_2$ be two integers and $\widehat{\mu}_{1,n_1}$ and $\widehat{\mu}_{2,n_2}$ denote the two empirical means based on $n_1$ observations from $X_i$, and $n_2$ observations from $Y_i$ respectively.
-Then for every $\lambda > 0$, as $x \mapsto \exp(\lambda x)$ is increasing, we have
-\begin{eqnarray*}
-    \bP\left(\widehat{\mu}_{1,n_1} - \widehat{\mu}_{2,n_2} \geq \mu_1 - \mu_2 + x \right)
-    & \leq & \bP\left(\frac{1}{n_1}\sum_{i=1}^{n_1} (X_i-\mu_1) - \frac{1}{n_2}\sum_{i=1}^{n_2} (Y_i - \mu_2) \geq x \right)\\
-    & = & \bP\left(\exp(\lambda \left(\frac{1}{n_1}\sum\limits_{i=1}^{n_1} (X_i-\mu_1) - \frac{1}{n_2}\sum\limits_{i=1}^{n_2} (Y_i - \mu_2)\right)) \geq \exp(\lambda x) \right).
-\end{eqnarray*}
+Then for every $\lambda > 0$, as $x \mapsto \exp(\lambda x)$ is increasing, if $p \eqdef \bP\left(\widehat{\mu}_{1,n_1} - \widehat{\mu}_{2,n_2} \geq \mu_1 - \mu_2 + x \right)$, we have
+\begin{align*}
+    % \bP\left(\widehat{\mu}_{1,n_1} - \widehat{\mu}_{2,n_2} \geq \mu_1 - \mu_2 + x \right)
+    p
+    & \leq \bP\left(\frac{1}{n_1}\sum_{i=1}^{n_1} (X_i-\mu_1) - \frac{1}{n_2}\sum_{i=1}^{n_2} (Y_i - \mu_2) \geq x \right)\\
+    & = \bP\left(\exp \left( \lambda \left(\frac{1}{n_1}\sum\limits_{i=1}^{n_1} (X_i-\mu_1) - \frac{1}{n_2}\sum\limits_{i=1}^{n_2} (Y_i - \mu_2)\right) \right) \geq \exp(\lambda x) \right).
+\end{align*}
 And so thanks to Markov's inequality, we obtain
-\begin{eqnarray*}
-    \bP\left(\widehat{\mu}_{1,n_1} - \widehat{\mu}_{2,n_2} \geq \mu_1 - \mu_2 + x \right)
-    & \leq & \exp(-\lambda x) \bE\left[\exp(\lambda \frac{1}{n_1}\sum\limits_{i=1}^{n_1} (X_i-\mu_1))\right]\bE\left[\exp(-\lambda \frac{1}{n_2}\sum\limits_{i=1}^{n_2} (Y_i-\mu_2))\right] \\
-    & = & \exp\left(- \lambda x + n_1\phi_{X_1 - \mu_1}\left(\frac{\lambda}{n_1}\right) + n_2\phi_{Y_1 - \mu_2}\left(-\frac{\lambda}{n_2}\right)\right) \\
-    & \leq & \exp\left(- \lambda x + \frac{\lambda^2\sigma^2}{2n_2} + \frac{\lambda^2\sigma^2}{2n_1}\right),
-\end{eqnarray*}
+\begin{align*}
+    % \bP\left(\widehat{\mu}_{1,n_1} - \widehat{\mu}_{2,n_2} \geq \mu_1 - \mu_2 + x \right)
+    p
+    & \leq \exp(-\lambda x) \bE\left[\exp \left(\lambda \frac{1}{n_1}\sum\limits_{i=1}^{n_1} (X_i-\mu_1) \right)\right]\bE\left[\exp \left(-\lambda \frac{1}{n_2}\sum\limits_{i=1}^{n_2} (Y_i-\mu_2) \right)\right] \\
+    & = \exp\left(- \lambda x + n_1\phi_{X_1 - \mu_1}\left(\frac{\lambda}{n_1}\right) + n_2\phi_{Y_1 - \mu_2}\left(-\frac{\lambda}{n_2}\right)\right) \\
+    & \leq \exp\left(- \lambda x + \frac{\lambda^2\sigma^2}{2n_2} + \frac{\lambda^2\sigma^2}{2n_1}\right),
+\end{align*}
 %
 where the last inequality uses the sub-Gaussian property,
 on the two centered variables $X_1-\mu_1$ and $Y_1-\mu_2$.
@@ -389,7 +391,7 @@ we can look for the value of $\lambda$ that minimizes the right-hand side of the
 By differentiating and by convexity, we find the value
 \[\lambda \eqdef \frac{1}{2} \frac{x}{\sigma^2/(2n_1) + \sigma^2/(2n_2)}\]
 which yields the tighter inequality on this probability,
-\[\bP\left(\widehat{\mu}_{1,n_1} - \widehat{\mu}_{2,n_2} \geq \mu_1 - \mu_2 + x \right) \leq \exp\left(- \frac{n_1n_2}{n_1+n_2}\frac{x^2}{2\sigma^2}\right).\]
+\[ p = \bP\left(\widehat{\mu}_{1,n_1} - \widehat{\mu}_{2,n_2} \geq \mu_1 - \mu_2 + x \right) \leq \exp\left(- \frac{n_1n_2}{n_1+n_2}\frac{x^2}{2\sigma^2}\right).\]
 %
 Using this inequality twice in the right hand side of \eqref{eq:6:Preparation} concludes the proof.
 \hfill{} $\qed$  % WARNING manually write this is a bad idea!
