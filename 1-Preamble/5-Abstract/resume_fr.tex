@@ -5,9 +5,9 @@
 % ----------------------------------------------------------------------------
 
 Ce manuscrit conclut ma thèse de doctorat, qui a débuté en octobre $2016$ et s'est terminée en novembre $2019$.
-Mes recherches se sont déroulées au laboratoire IETR à Rennes (France), dans l'équipe SCEE hébergée sur le campus de Rennes de l'école d'ingénieurs CentraleSupélec.
+Mes recherches se sont déroulées au laboratoire IETR à Rennes en France, dans l'équipe SCEE hébergée sur le campus de Rennes de l'école d'ingénieurs CentraleSupélec.
 J'étais supervisé par le professeur Christophe Moy, à Rennes,
-et j'étais également co-encadré par le docteur Emilie Kaufmann, que j'ai visité de nombreuses fois à Inria Lille Nord Europe à Lille (France).
+et j'étais également co-encadré par le docteur Émilie Kaufmann, à qui j'ai souvent rendu visite à Inria Lille Nord Europe.
 
 
 % % Chapitre 1
@@ -41,56 +41,56 @@ Avec l'avènement des réseaux de l'Internet des Objets (IdO), des milliards d'o
 Il existe aujourd'hui un consensus mondial sur le fait qu'avec la tendance actuelle à l'accroissement démographique et la crise énergétique, toute nouvelle technologie déployée doit être à la fois bon marché et efficace sur le plan énergétique,
 ainsi qu'adaptée pour desservir un grand nombre de personnes et d'appareils.
 %
-Ces technologies de l'IdO devraient pouvoir s'adapter automatiquement à différents environnements et différents contextes d'application, et être aussi efficaces que possible.
+Ces technologies des nouveaux réseaux sans fil de l'IdO devraient pouvoir s'adapter automatiquement à différents environnements et différents contextes d'application, et être aussi efficaces que possible.
 %
 C'est pourquoi, en plus de l'effort habituel de recherche et développement pour concevoir de nombreux systèmes d'accès radio efficaces, couvrant tous les cas possibles,
-le moment est venu de le combiner avec un apprentissage machine bon marché et prometteur pour (essayer d') atteindre le niveau de gain de performance nécessaire pour que les promesses de l'IdO deviennent réalité.
+le moment est venu de le combiner avec un apprentissage machine peu coûteux, dans le but d'atteindre le niveau de gain de performance nécessaire pour que les promesses de l'IdO deviennent réalité.
 
 
 C'est ainsi que nous avons décidé de nous intéresser dans cette thèse à
 l'amélioration de la durée de vie des batteries des objets de l'IdO et la réduction du coût énergétique des réseaux de l'IdO.
 Nous proposons d'atteindre ces deux objectifs conjointement, en intégrant une prise de décision décentralisée à faible coût, directement dans les futurs objets de l'IdO.
-%
-Ma thèse de doctorat porte donc sur les applications possibles de l'intégration d'un certain type d'algorithmes d'apprentissage machine (des algorithmes de types bandits multi-bras), afin de permettre aux objets de l'IdO d'optimiser leurs communications sans fil et d'apprendre à s'organiser automatiquement et sans contrôle central ni coordination.
+
+Ma thèse de doctorat porte donc sur les applications possibles de l'intégration d'un certain type d'algorithmes d'apprentissage machine (des algorithmes de type bandits multi-bras), afin de permettre aux objets de l'IdO d'optimiser leurs communications sans fil et d'apprendre à s'organiser automatiquement et sans contrôle central ni coordination.
 
 
 \paragraph{Des anciens téléviseurs aux standards de l'IdO.}
 %
-Historiquement, trois grandes familles de systèmes de communication sans fil ont été déployées dans les grands réseaux commerciaux : d'abord, la radiodiffusion centralisée (\eg, radio ou télédiffusion), puis les systèmes bidirectionnels centralisés (\eg, 4G ou WiFi), et aujourd'hui la collecte décentralisée de données pour les réseaux de l'Internet des objets (\eg, réseaux capteurs).
+Historiquement, trois grandes familles de systèmes de communication sans fil ont été déployées dans les grands réseaux commerciaux : d'abord, la radiodiffusion centralisée (\eg, radio ou télédiffusion), puis les systèmes bidirectionnels centralisés (\eg, 4G ou Wi-Fi), et aujourd'hui la collecte décentralisée de données pour les réseaux de l'Internet des objets (\eg, réseaux capteurs).
 %
 Ce troisième type de systèmes peut être désigné comme décentralisé :
 même si une station de base centrale est toujours en charge de nombreux objets (ou appareils),
-ce sont les objets qui déclenchent l'envoi de paquets radio, et les seules données descendantes qu'ils peuvent recevoir sont de courts accusés de réception (\emph{acknowledgements}, \Ack), envoyés par la station de base pour indiquer le succès ou l'échec de chaque paquet envoyé.
+ce sont les objets qui déclenchent l'envoi de paquets radio, et les seules données descendantes qu'ils peuvent recevoir sont de courts accusés de réception (ou acquittements, en anglais \emph{acknowledgements}, noté \Ack), envoyés par la station de base pour indiquer le succès ou l'échec de chaque paquet envoyé.
 Cette famille de systèmes sans fil est appelée Internet des Objets (IdO, ou \emph{Internet of Things}, IoT),
 et un exemple typique d'application de tels réseaux de l'IdO est celui des réseaux sans fil de capteurs.
 
-Pour le développement futur des \guillemotleft{} réseaux intelligents \guillemotright{} (\emph{smart grid}), des \guillemotleft{} villes intelligentes \guillemotright{} (\emph{smart cities}), des \guillemotleft{} maisons intelligentes \guillemotright{} (\emph{smart homes}) ou de l'\guillemotleft{} agriculture intelligente \guillemotright{} (\emph{smart agriculture}), des réseaux de capteurs devraient être largement déployés.
-Deux exemples d'applications futures qui sont déjà en cours de déploiement, en France ou à l'étranger, sont les \guillemotleft{} bâtiments connectés \guillemotright{} et l'\guillemotleft{} agriculture connectée \guillemotright{}.
-Pour les bâtiments, l'objectif principal est de réduire le coût de chauffage des bâtiments vides en utilisant des réseaux de capteurs afin d'obtenir des données précises et régulières sur la température dans toutes les pièces et tous les étages, pour permettre au contrôle centralisé du chauffage d'optimiser son coût et sa consommation énergétique.
+Pour le développement futur des \guillemotleft{} réseaux intelligents \guillemotright{} (\emph{smart grid}), des \guillemotleft{} villes intelligentes \guillemotright{} (\emph{smart cities}), des \guillemotleft{} maisons intelligentes \guillemotright{} (\emph{smart homes}) ou de \guillemotleft{} l'agriculture intelligente \guillemotright{} (\emph{smart agriculture}), des réseaux de capteurs devraient être largement déployés.
+Deux exemples d'applications futures qui sont déjà en cours de déploiement, en France ou à l'étranger, sont les \guillemotleft{} bâtiments connectés \guillemotright{} et \guillemotleft{} l'agriculture connectée \guillemotright{}.
+Pour les bâtiments, l'objectif principal est de réduire le coût de chauffage des bâtiments vides en utilisant des réseaux de capteurs afin d'obtenir des données précises et régulières sur la température dans toutes les pièces et tous les étages, pour permettre au contrôle centralisé du chauffage de minimiser son coût et sa consommation énergétique.
 Pour l'agriculture, un exemple peut être d'équiper chaque tête de bétail (dans les grandes fermes) de capteurs qui émettent régulièrement des informations biologiques, telles que la température corporelle ou le niveau de stress, afin d'optimiser l'heure de traite des vaches, de surveiller la santé des animaux, etc.
 
 
-Ce troisième type de systèmes sans fil est caractérisé par leur nature décentralisée,
-où les communications sont initialisées et régulées par les objets, et non par un système de contrôle centralisé.
+Ce troisième type de systèmes sans fil est caractérisé par sa nature décentralisée,
+puisque les communications sont initialisées et régulées par les objets, et non par un système de contrôle centralisé.
 %
-En effet, un contrôle centrale nécessite des paquets de signalisation très réguliers, qui ont été identifiés comme trop lourds pour ce type de systèmes.
+En effet, un contrôle central nécessite des paquets de signalisation très réguliers, qui ont été identifiés comme trop lourds pour ce type de systèmes.
 Dans les réseaux de l'IdO actuels et futurs, de nombreux objets hétérogènes utilisent la même station de base (aussi appelée point d'accès, ou \emph{base station}, \emph{access point} ou \emph{gateway}) pour des applications différentes.
 Un problème commun est la forte contrainte en terme de consommation énergétique de ces objets, car la plupart d'entre eux seront déployés sans alimentation directe et fonctionneront sur une batterie minuscule, dont la durée de vie devrait être maximisée.
 Ainsi, la plupart des entreprises promettant des solutions d'IdO vendent aujourd'hui des objets ayant une durée de vie supérieure à $10$ ans, comme SIGFOX \cite{Centenaro16}.
-Une autre contrainte commune aux objets de l'IdO est leur faible besoin en communication, car la plupart des applications n'auront besoin d'envoyer qu'un ou quelques messages chaque jour, en opposition avec le débit de données élevé recherché pour les systèmes centralisés (tels que 4G/5G et WiFi).
+Une autre contrainte commune aux objets de l'IdO est leur faible besoin en communication, car la plupart des applications n'auront besoin d'envoyer qu'un ou quelques messages chaque jour, en nette opposition avec le débit de données élevé recherché pour les systèmes centralisés (tels que 4G/5G et Wi-Fi).
 %
 De nombreuses normes différentes pour les réseaux de l'IdO ont été proposées ces dernières années,
 et elles consistent en une spécification à la fois pour la couche \emph{PHY}sique
 et la couche \emph{M}edium \emph{A}ccess \emph{C}ontrol (\emph{MAC}).
-Pour citer quelques exemples de normes pour des réseaux de type IdO, ZigBee, Z-Wave ou Bluetooth visent des communications à courte portée (jusqu'à \SI{2}{\meter}), tandis que LoRaWAN, SIGFOX, Ingenu ou Weightless sont destinés aux communications à plus longue portée (jusqu'à \SI{50}{\kilo\meter}).
-Nous nous référons à l'article \cite{Centenaro16} pour plus de détails, et les références dans \cite{Azari18} ou notre dernier travail \cite{MoyBesson2019,MoyBesson2019Annales}.
+Pour citer quelques exemples de normes pouvant être utilisées pour des réseaux de type IdO, ZigBee, Z-Wave ou Bluetooth visent des communications à courte portée (jusqu'à \SI{2}{\meter}), tandis que LoRaWAN, SIGFOX, Ingenu ou Weightless sont destinés aux communications à plus longue portée (jusqu'à \SI{50}{\kilo\meter}).
+Nous référons à l'article \cite{Centenaro16} pour plus de détails, et les références dans \cite{Azari18} ou notre dernier travail \cite{MoyBesson2019Annales}.
 
 
 \paragraph{Épuisement du spectre radio.}
 %
 Un problème majeur des technologies sans fil actuelles est la question de l'épuisement du spectre radio :
-dans la plupart des bandes de fréquences, la totalité du spectre RF est désormais attribuée et les bandes libres n'existent plus, ce qui limite la possibilité d'ajouter tout nouvel usage.
-Tel qu'illustré en Figure~\ref{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum} ci-dessous,
+dans la plupart des bandes de fréquences, la totalité du spectre de radio fréquences (RF) est désormais attribuée et les bandes libres n'existent plus, ce qui limite la possibilité d'ajouter de nouveaux usages.
+Comme le montre la Figure~\ref{fig:1:United_States_Frequency_Allocations_Chart_2016_The_Radio_Spectrum} ci-dessous,
 presque tout le spectre
 est affecté à divers usages, qui vont de la radio-navigation maritime (historiquement le premier usage des radio-communications, \eg, dans le Titanic), à la recherche spatiale, les communications inter satellitaire, la téléphonie mobile et de nombreuses autres applications.
 %
@@ -104,11 +104,11 @@ Nous nous référons à \cite{patil2011survey} pour une étude sur l'utilisation
 
 
 Les bandes des réseaux cellulaires (2G/3G/4G/5G) sont surchargées dans la plupart des régions du monde, mais d'autres bandes de fréquences (comme les fréquences militaires ou de radio amateures) sont moins utilisées.
-Des études indépendantes réalisées dans certains pays ont confirmé cette observation et conclu que l'utilisation du spectre dépend à la fois du moment et du lieu, comme le montre \cite{Lopez2009spectral} par exemple.
+Des études indépendantes réalisées dans certains pays ont confirmé cette observation et conclu que l'utilisation du spectre peut fortement dépendre à la fois du moment et du lieu, comme le montre \cite{Lopez2009spectral} par exemple.
 En outre, l'attribution fixe du spectre empêche
 l'introduction de nouveaux services, en particulier pour les objets à bas prix ou pour les marchés de niche.
 %
-C'est ainsi qu'au cours des $15$ dernières années, grâce à un lobbying actif de la communauté de la radio intelligente,
+C'est ainsi qu'au cours des quinze dernières années, grâce à un lobbying actif de la communauté de la radio intelligente,
 les organismes de réglementation dans le monde se sont demandé s'il fallait permettre un nouveau paradigme de communication sans fil :
 permettre aux utilisateurs non titulaires d'une licence d'utiliser des bandes sous licence s'ils ne causent pas d'interférence aux utilisateurs payants, titulaires d'une licence.
 Ces initiatives sont examinées par la \textbf{Radio Intelligente} (RI, ou \emph{Cognitive Radio}, CR),
@@ -154,6 +154,7 @@ Comme la RI n'est pas une technologie standard, elle n'a pas de définition uniq
     \item
     L'\href{https://en.wikipedia.org/wiki/Cognitive_radio}{encyclopédie Wikipédia} dit ceci
     \guillemotleft{} \emph{une RI est une radio qui peut être programmée et configurée dynamiquement pour utiliser les meilleurs canaux sans fil à proximité afin d'éviter les interférences et la congestion des utilisateurs. Une telle radio détecte automatiquement les canaux disponibles dans le spectre radio, puis modifie en conséquence ses paramètres de transmission ou de réception pour permettre plus de communications sans fil simultanées dans une bande de spectre donnée à un endroit donné} \guillemotright{}.
+    (\href{https://en.wikipedia.org/wiki/Cognitive_radio}{\texttt{en.Wikipedia.org/wiki/Cognitive\_radio}})
 \end{itemize}
 
 L'une des façons possibles d'envisager la flexibilité du spectre est la suivante.
@@ -162,7 +163,7 @@ Dans les bandes sous licences, il y a des utilisateurs primaires (UP) qui paient
 Comme nous l'avons vu dans la définition ci-dessus de la philosophie de la CR, nous pouvons imaginer que si le réseau n'est utilisé par aucun UP à un certain endroit et à une certaine heure, les utilisateurs non licenciés, appelés utilisateurs secondaires (US), pourraient l'utiliser aussi, éventuellement en payant un abonnement auprès de l'opérateur du réseau.
 %
 La réglementation stipule que les UP ont une priorité stricte,
-mais même si les bandes RF sont attribuées, les mesures dans le monde réel montrent souvent que certaines bandes ne sont pas utilisées de manière intensive, et donc si un US était équipé d'une capacité de détection spectrale efficace, elle pourrait analyser son environnement, et utiliser une bande sous licence si et seulement si elle est exempte de tout UP.
+mais même si les bandes RF sont attribuées, les mesures dans le monde réel montrent souvent que certaines bandes ne sont pas utilisées de manière intensive, et donc si un US était équipé d'une capacité de détection spectrale efficace, il pourrait analyser son environnement, et utiliser une bande sous licence si et seulement si elle est exempte de tout UP.
 Ceci définit le concept d'\textbf{Accès Opportuniste au Spectre} (AOS, \emph{Opportunistic Spectrum Access}, OSA), pour lequel nous nous référons à l'article \cite{Zhao07} pour plus de détails.
 
 
@@ -174,9 +175,7 @@ Les BMB sont également inclus dans le concept plus général d'apprentissage pa
 % ML > RL > MAB
 %
 Le livre de référence sur l'ApR est \cite{SuttonBarto2018}, citons donc la définition qu'en donnent R. Sutton et A. Barto :
-\guillemotleft{} \emph{l'apprentissage par renforcement, c'est apprendre quoi faire - comment faire le lien entre les situations et les actions -
-pour maximiser un signal de récompense numérique. L'apprenant n'est pas informé des mesures à prendre pour
-mais doit plutôt découvrir quelles actions sont les plus gratifiantes en les essayant} \guillemotright.
+\guillemotleft{} \emph{l'apprentissage par renforcement, c'est apprendre quoi faire -- comment faire le lien entre les situations et les actions -- pour maximiser un signal de récompense numérique. L'apprenant n'est pas informé des mesures à prendre mais doit plutôt découvrir quelles actions sont les plus gratifiantes en les essayant} \guillemotright.
 % apprentissage statistique > séquentiel > par renforcement > information partielle (bandits)
 
 
@@ -204,7 +203,7 @@ De nombreux problèmes du monde réel peuvent être présentés comme des probl�
             %
         \end{tikzpicture}
     }
-\caption{Cycle de l'apprentissage par renforcement : une joueuse interagit avec son environnement par des actions, et observe une récompense, de façon itérative.}
+\caption{Cycle de l'apprentissage par renforcement : un-e joueur-se interagit avec son environnement par des actions, et observe une récompense, de façon itérative.}
 \label{fig:1:ReinforcementLearningCycle_enFr}
 \end{figure}
 
@@ -214,8 +213,8 @@ Comme cette thèse se concentre sur les modèles d'apprentissage par renforcemen
 il est important de souligner que dans de tels modèles de prise de décision, l'apprenant n'a pas accès à l'ensemble des réactions possibles de l'environnement après avoir choisi son action.
 %
 En d'autres termes, la joueuse ne voit que la récompense donnée par son action à chaque tour, et non la récompense qui aurait été donnée si elle avait choisi une des autres actions.
-Ce genre de rétroaction limitée s'appelle l'information de type bandit (\emph{bandit feedback}), et nous discutons de l'histoire et du concept des \emph{bandits} (BMB) en détail dans le prochain Chapitre~\ref{chapter:2}.
-Les essais cliniques et la découverte de traitements ont été historiquement la première application des BMB depuis les $1930$, avec les premiers travaux de W. Thompson \cite{Thompson33},
+Ce genre de rétroaction limitée s'appelle l'information de type bandit (\emph{bandit feedback}), et nous discutons de l'histoire et du concept des \emph{bandits} (BMB) en détails dans le prochain Chapitre~\ref{chapter:2}.
+Les essais cliniques et l'identification du meilleur traitement ont été historiquement les premières applications des BMB depuis les années $1930$, avec les premiers travaux de W. Thompson \cite{Thompson33},
 %
 car les BMB sont un exemple simple mais puissant du dilemme bien connu entre \emph{exploration et exploitation}.
 Lorsqu'il est confronté à un ensemble de $K$ actions dont les effets sur l'environnement sont inconnus, l'apprenant doit trouver un équilibre entre
@@ -244,21 +243,21 @@ Cependant, on sait que la \emph{détection spectrale} est coûteuse en énergie,
 Cette hypothèse, ainsi que l'hypothèse selon laquelle les UP ne peuvent pas être perturbés (sans laquelle aucune réglementation ne sera jamais acceptée pour l'AOS), impose à l'US de transmettre dans le canal qu'il a analysé, si et seulement s'il a été détectée sans aucun UP, et ce à chaque pas de temps.
 % coût non négligeable de la reconfiguration radio
 
-En se concentrant sur un US dans un réseau AOS, il doit décider séquentiellement d'un canal à analyser (dans l'ensemble des canaux, $[K]=\{1,\dots,K\}$), puis il écoute ce canal et effectue une détection de PU, et enfin il transmet dans ce canal s'il a été détecté libre.
+En se concentrant sur un US s'insérant dans un réseau permettant l'AOS, il doit décider séquentiellement d'un canal à analyser (dans l'ensemble des canaux, $[K]=\{1,\dots,K\}$), puis il écoute ce canal et effectue une détection de PU, et enfin il transmet dans ce canal s'il a été détecté libre.
 Le but de l'US est de minimiser sa consommation d'énergie (nous rappelons que nous nous concentrons sur la radio intelligente \guillemotleft{} écologique \guillemotright{}, \emph{green radio}) et de maximiser son débit de données sur la liaison montante, ou de façon équivalente, de maximiser son nombre de transmissions réussies.
 %
 Si les différents canaux ne sont pas uniformément occupés par les UP, et si l'on suppose une certaine stationnarité sur le trafic des UP, alors l'objectif de l'US se résume à explorer les différents canaux et à exploiter les meilleurs.
 Le problème de l'AOS est donc un problème d'exploration/exploitation, avec un ensemble fini d'actions (les canaux, également appelés \emph{bras}),
 dans un cycle séquentiel d'action-réponse (les pas de temps sont $t\in\N^*$),
 sous l'information de rétroaction partielle (\ie, l'US reçoit l'information concernant un seul canal parmi $K$).
-Ces trois hypothèses sont celles qui limitent le cadre général de l'apprentissage séquentiel au cas spécifique des bandit multi-bras (voir Figure~\ref{fig:1:ReinforcementLearningCycle}).
+Ces trois hypothèses sont celles qui limitent le cadre général de l'apprentissage séquentiel au cas spécifique des bandit multi-bras (voir Figure~\ref{fig:1:ReinforcementLearningCycle_enFr}).
 
 
 \paragraph{BMB pour l'AOS, et un bref historique de ces recherches par l'équipe SCEE.}
 %
-Les travaux antérieurs de notre équipe SCEE ont montré que les BMB peuvent être utilisés pour modéliser le problème de l'AOS :
+Les travaux antérieurs de notre équipe SCEE ont montré que les BMB peuvent être utilisés pour modéliser le problème de prise de décision de l'AOS :
 les bandes de fréquences orthogonales (ou canaux) sont modélisées par des bras $k\in\{1,\dots,K\}$,
-et la récompense obtenue par l'objet équipé de RI après avoir analysé le canal $k$ au temps $t$ est modélisée par une récompense $r(t) \in \{0,1\}$.
+et la récompense obtenue par l'objet après avoir analysé le canal $k$ au temps $t$ est modélisée par une récompense $r(t) \in \{0,1\}$.
 En effet, $r(t) = 1$ indique qu'aucun utilisateur primaire n'a été détecté (et donc qu'un message d'US peut être envoyé), alors que $r(t)=0$ indique que le canal $k$ est occupé durant l'intervalle de temps $t$, et qu'aucun message d'US ne doit être envoyé, jusqu'à la fin de cet intervalle.
 %
 Ce modèle a d'abord été étudié par W. Jouini lors de sa thèse de doctorat avec C. Moy \cite{Jouini12PhD}, il y a dix ans, d'abord dans l'article \cite{Jouini09} puis avec \cite{Jouini10,Jouini12}.
@@ -292,7 +291,7 @@ Pour plus de détails sur l'état de la recherche sur la radio intelligente, nou
 \paragraph{Limitations et spécificités des réseaux de l'IdO.}
 %
 La littérature susmentionnée a essentiellement montré que les algorithmes BMB peuvent être appliqués avec succès au problème de l'AOS.
-Toutefois, si l'on considère des objets de RI qui ne peuvent pas effectuer de détection spectrale active, tels que des objets à faible coût et à faible consommation d'énergie conçus pour les futurs réseaux de l'IdO, le modèle BMB qui utilise cette détection active pour vérifier l'absence d'UP dans le cas de l'AOS ne peut plus être appliqué.
+Toutefois, si l'on considère des objets de RI qui ne peuvent pas effectuer de détection spectrale active, tels que des objets à faible coût et à faible consommation d'énergie conçus pour les futurs réseaux de l'IdO, le modèle BMB qui utilise cette détection active pour vérifier l'absence d'UP dans le cadre de l'AOS ne peut plus être appliqué.
 En outre, dans la plupart des cas, les réseaux de l'IdO utilisent des bandes non licenciées et il n'y a donc plus de distinction entre UP et US.
 En d'autres termes, il n'y a plus de priorité entre les utilisateurs des réseaux de l'IdO.
 % (plus de UP, tous sont US).
@@ -300,11 +299,11 @@ En d'autres termes, il n'y a plus de priorité entre les utilisateurs des résea
 Les autres spécificités des réseaux de l'IdO peuvent être énumérées comme suit,
 et nous nous référons à l'article \cite{Centenaro16} pour plus de détails.
 %
-\begin{itemize}%\tightlist
+\begin{itemize}\tightlist
     % \item
     % nous considérons ici les réseaux de l'IdO qui fonctionnent dans des bandes sans licence (plus de distinction entre UP et US),
     \item
-    la plupart des objets sont à faible coût, fonctionnent sur du matériel de mauvaise qualité et ont des capacités logicielles et d'alimentation limitées (c'est-à-dire de minuscules batteries).
+    La plupart des objets sont à faible coût, fonctionnent sur du matériel de mauvaise qualité et ont des capacités logicielles et d'alimentation limitées (c'est-à-dire de minuscules batteries).
     Cela signifie que même s'ils ne sont pas équipés de capacités de détection particulières,
     ils sont équipés d'un émetteur ainsi que d'un récepteur (Tx et Rx, \ie, un émetteur-récepteur),
     et ils ont des capacités de stockage et de calcul peu complexes (petits processeurs embarqués),
@@ -322,7 +321,7 @@ De plus, en raison de leur matériel limité (Rx/Tx), de leur puissance de calcu
 On pourrait penser qu'en l'absence de détection spectrale, l'apprentissage par renforcement n'est plus applicable, mais n'importe quel objet d'un vrai réseau de l'IdO reçoit encore des informations sur son environnement, après certaines ou toutes ses transmissions.
 Dans la plupart des normes IdO, un message (sur la voie montante) envoyé à une station de base doit être suivi d'un message (sur la voie descendante) renvoyé par la station de base pour indiquer si le message a été bien reçu, décodé et compris.
 %
-En utilisant cette rétroaction, qui consiste en un \emph{acquittement} (ou \emph{acknowledgement}, \Ack) reçu peu après chaque transmission réussie, ou en l'absence ' \Ack{} après une transmission échouée, il est possible qu'un objet de l'IdO puisse également optimiser ses communications, grâce à un algorithme d'apprentissage par renforcement correctement conçu.
+En utilisant cette rétroaction, qui consiste en un \emph{acquittement} (ou \emph{acknowledgement}, \Ack) reçu peu après chaque transmission réussie, ou en l'absence d'\Ack{} après une transmission échouée, il est possible qu'un objet de l'IdO puisse également optimiser ses communications, grâce à un algorithme d'apprentissage par renforcement correctement conçu.
 
 
 
@@ -332,7 +331,7 @@ En utilisant cette rétroaction, qui consiste en un \emph{acquittement} (ou \emp
 Nous commençons par formuler le problème étudié dans cette thèse, puis nous développons notre approche.
 %
 Si nous résumons les problèmes étudiés en une seule question, ce pourrait être la suivante :
-\emph{peut-on adapter les outils de prise de décision déjà appliqués avec succès à la Radio Intelligente (RI) pour l'Accès Opportuniste au Spectre (AOS) aux besoins spécifiques de la RI pour les (futurs) réseaux de l'Internet des Objets (IdO) ?}
+\guillemotleft{} \emph{peut-on adapter les outils de prise de décision déjà appliqués avec succès à la Radio Intelligente (RI) pour l'Accès Opportuniste au Spectre (AOS) aux besoins spécifiques de la RI pour les (futurs) réseaux de l'Internet des Objets (IdO) ?} \guillemotright.
 %
 Nous répondons partiellement à cette problématique par les étapes de recherche suivantes.
 
@@ -471,7 +470,7 @@ La meilleure borne supérieure de regret est obtenue lorsque l'algorithme conna�
 %
 La performance de \GLRklUCB{} est également illustrée par des expériences numériques sur des données synthétiques, où il est démontré qu'il surpasse tous les algorithmes passivement adaptatifs ainsi que les précédents algorithmes activement adaptatifs.
 %
-Ce dernier chapitre est basé sur notre dernier travail, publié à la conférence GRETSI à Lille, en août $2019$ \cite{Besson2019Gretsi}.
+Ce dernier chapitre est basé sur un de nos derniers travaux, publié à la conférence GRETSI à Lille, en août $2019$ \cite{Besson2019Gretsi}.
 Notre travail a aussi mené à une version longue \cite{Besson2019GLRT}, qui sera complétée avec des résultats plus récents, afin de le soumettre bientôt à une revue (probablement le Journal of Machine Learning Research) avant décembre $2019$.
 
 
