@@ -343,21 +343,20 @@ Nous répondons partiellement à cette problématique par les étapes de recherc
 %
 Nous avons commencé par explorer la riche littérature des bandits multi-bras,
 car il existe de nombreux algorithmes différents, avec de nombreuses variantes du problème présenté ci-dessus.
-Nous commençons donc la première Partie~\ref{part:Introduction} de cette thèse par le Chapitre~\ref{chapter:2}, qui présente le modèle BMB et passe en revue les algorithmes les plus importants conçus pour résoudre les problèmes stochastiques et stationnaires de BMB.
+Nous commençons donc la première partie de cette thèse par le Chapitre~\ref{chapter:2}, qui présente le modèle BMB et passe en revue les algorithmes les plus importants conçus pour résoudre les problèmes stochastiques et stationnaires de bandits.
 %
 Afin de bien comprendre quels algorithmes pourraient être adaptés aux contraintes susmentionnées de la RI pour les réseaux de l'IdO,
 nous ne nous sommes pas seulement intéressés par la mesure habituelle des performances d'un algorithme BMB (\ie, son regret, voir ci-dessous en Section~\ref{sec:2:lowerUpperBoundsRegret}),
-mais aussi par leurs performances empiriques en termes de complexité de calcul et de stockage, tant du point de vue des analyses théoriques que des mesures réelle.
+mais aussi par leurs performances empiriques en termes de complexité de calcul et de stockage, tant du point de vue des analyses théoriques que des mesures réelles.
 
 
 % \paragraph{Chapitre~\ref{chapter:3}.}
 %
 Notre exploration du grand nombre d'algorithmes et de modèles BMB développés dans la littérature récente
-nous a donné l'ambition d'écrire un seul logiciel permettant à n'importe quel-le chercheur-euse d'implémenter facilement de nouveaux modèles et algorithmes, afin de comparer les modèles existants et d'explorer empiriquement les performances de nouveaux algorithmes.
+nous a donné l'ambition d'écrire un seul logiciel permettant à n'importe quel-le chercheur-euse d'implanter facilement de nouveaux modèles et algorithmes, afin de comparer les modèles existants et d'explorer empiriquement les performances de nouveaux algorithmes.
 Pour atteindre cet objectif, nous avons développé une bibliothèque de simulation des problèmes BMB, dans le langage populaire Python.
 %
-D'après ce que les auteurs ont identifié,
-nous avons écrit la bibliothèque libre de simulation la plus exhaustive pour les problèmes BMB, appelée SMPyBandits, qui est publiée en ligne sous licence open-source \cite{SMPyBanditsJMLR,SMPyBandits} et hébergée sur \href{https://GitHub.com/SMPyBandits}{\texttt{GitHub.com/SMPyBandits}}.
+À notre connaissance, nous avons écrit la bibliothèque libre de simulation la plus exhaustive pour les problèmes BMB, appelée SMPyBandits \cite{SMPyBanditsJMLR,SMPyBandits}, qui est publiée en ligne sous licence libre (open-source) et qui est hébergée sur \href{https://GitHub.com/SMPyBandits}{\texttt{GitHub.com/SMPyBandits}}.
 Nous présentons en détail son architecture et ses fonctionnalités dans le Chapitre~\ref{chapter:3}.
 %  et différents exemples de son utilisation.
 Une documentation complète est disponible en ligne, ainsi que des instructions pour reproduire les simulations présentées dans la suite de cette thèse.
@@ -368,9 +367,9 @@ Une documentation complète est disponible en ligne, ainsi que des instructions 
 Étant donné le grand nombre d'algorithmes BMB disponibles, nous nous intéressons aussi à la question de savoir comment un-e ingénieur-e peut choisir l'algorithme à mettre en œuvre, dans un objet de l'IdO donné, afin de doter cet objet de la capacité de s'adapter de manière robuste à son futur environnement.
 Pour répondre à cette question, nous présentons deux approches.
 La première est une comparaison empirique d'algorithmes existants, se focalisant sur les plus efficaces et les mieux connus, en Section~\ref{sec:3:reviewSPAlgorithms} et \ref{sec:3:timeAndMemoryCosts}.
-Nous confirmons que les algorithmes largement utilisés, tels que \UCB{} \cite{Auer02}, Thompson sampling \cite{Thompson33} et \klUCB{} \cite{KLUCBJournal}, sont les plus efficaces en termes de regret, et offrent un bon équilibre entre regret et complexité (temps et mémoire).
-La seconde approche est la sélection d'algorithmes en ligne, consistant à agréger un ensemble (fini) d'algorithmes et à découvrir automatiquement lequel est le plus efficace, contre un problème donné, avec notre contribution \Aggr{} que nous détaillons en Chapitre~\ref{chapter:25}.
-Ce travail sur l'agrégation des algorithmes BMB a été motivé pour le cas AOS de la radio cognitive, où de nombreux travaux antérieurs ne considéraient que l'algorithme $\UCB_1$ sans vraiment justifier ce choix.
+Nous confirmons que les algorithmes les plus utilisés, tels que \UCB{} \cite{Auer02}, l'échantillonage de Thompson (Thompson sampling) \cite{Thompson33} et \klUCB{} \cite{KLUCBJournal}, sont les plus efficaces en termes de regret, et offrent un bon équilibre entre regret et complexité (temps et mémoire).
+La seconde approche est la sélection d'algorithme en ligne, consistant à agréger un ensemble (fini) d'algorithmes et à découvrir automatiquement lequel est le plus efficace, contre un problème donné, avec notre contribution \Aggr{} que nous détaillons en Chapitre~\ref{chapter:25}.
+Ce travail sur l'agrégation des algorithmes BMB était motivé par le cadre AOS, pour lequel les travaux antérieurs ne considéraient que l'algorithme $\UCB_1$ sans vraiment justifier ce choix.
 Cette contribution a été présentée à la conférence IEEE WCNC à Barcelone, en Espagne, en avril 2018.
 
 
@@ -382,16 +381,16 @@ Dans la deuxième partie de cette thèse, nous commençons par proposer et étud
 % \paragraph{Chapitre~\ref{chapter:4}.}
 %
 Nous étudions deux modèles de réseaux de l'IdO dans le Chapitre~\ref{chapter:4}.
-Le premier modèle considère que les objets ont simplement des données à envoyer régulièrement à une station de base (à des moments imprévisibles ou aléatoires).
-De tels objets utilisent les acquittements comme un retour d'information, afin d'optimiser leurs communications sur la liaison montante, en accédant aux meilleurs canaux (c'est-à-dire le canal le moins occupé par le trafic qui les entoure).
-L'objectif de ce premier modèle est d'améliorer la qualité de service (QdS, ou \emph{Quality of Service} QoS) de l'application de ce réseau de l'IdO, en appliquant un ApR décentralisé côté objet afin de réduire le taux d'échec de transmission.
+Le premier modèle considère que les objets ont simplement des données à envoyer régulièrement à une station de base, à des moments imprévisibles ou aléatoires.
+De tels objets utilisent les acquittements comme un retour d'information, afin d'optimiser leurs communications sur la liaison montante, en accédant aux meilleurs canaux, c'est-à-dire le canal le moins occupé par le trafic ambiant.
+L'objectif de ce premier modèle est d'améliorer la qualité de service (QdS, ou \emph{Quality of Service}, QoS) de l'application de ce réseau de l'IdO, en appliquant un ApR décentralisé (côté objet), afin de réduire le taux d'échec de transmission.
 La station de base recevra donc plus de paquets de liaison montante des objets desservis, s'ils peuvent apprendre par eux-mêmes un accès efficace au spectre.
 Cela implique aussi que le réseau peut accepter plus d'objets tout en maintenant la même QdS.
 %
-Notre deuxième modèle considère ensuite les retransmissions de paquets, et bien que les deux modèles soient similaires, l'application d'un algorithme d'apprentissage décentralisé efficace permet dans ce cas d'augmenter la durée de vie des batteries de chacun des objets, ainsi que la QdS de l'ensemble du réseau, puisque moins de retransmissions réduisent la charge locale du spectre.
+Notre deuxième modèle considère ensuite les retransmissions de paquets, et bien que les deux modèles soient similaires, l'application d'un algorithme d'apprentissage décentralisé efficace permet dans ce cas d'augmenter la durée de vie des batteries de chacun des objets, ainsi que la QdS de l'ensemble du réseau, puisque moins de retransmissions réduisent aussi la charge locale du spectre.
 
 Le premier modèle sans retransmission est issu du premier article écrit au cours de cette thèse, qui a initié une collaboration avec R. Bonnefoi, un autre doctorant de notre équipe SCEE.
-Nous l'avons présenté à la conférence EAI CROWNCOM à Lisbonne, au Portugal, en septembre 2010, où il a obtenu le \guillemotleft{} prix du meilleur papier \guillemotright{} \cite{Bonnefoi17}.
+Nous l'avons présenté à la conférence EAI CROWNCOM à Lisbonne, au Portugal, en septembre $2017$, où il a obtenu le \guillemotleft{} prix du meilleur papier \guillemotright{} \cite{Bonnefoi17}.
 %
 La preuve de concept (PdC) a continué notre collaboration fructueuse, et a été montrée pendant trois jours à la conférence IEEE ICT à Saint-Malo, France, en juin $2018$ \cite{Besson2018ICT}, et aussi à la conférence IEEE WCNC à Marrakech, Maroc, en avril $2019$ \cite{Besson2019WCNC}.
 %
@@ -415,10 +414,10 @@ L'objectif était de comprendre l'heuristique du Chapitre~\ref{chapter:4}, \Self
 %
 Le cas AOS couvert par notre modèle peut sembler légèrement différent de celui considéré par \cite{Jouini10} et d'autres travaux antérieurs,
 car notre modèle exige qu'un \Ack{} soit renvoyé par la station de base si la transmission a réussi, même dans le cas où l'information de détection est disponible.
-Il est en fait équivalent aux modèles précédemment étudiés d'applications des BMB pour l'AOS, puisqu'ils ne prennent en compte que des objets synchronisés, un US et des UP, et donc si la détection indique qu'un canal est libre pour un intervalle de temps, le message envoyé par l'US sera certainement reçu avec succès par la station de base (dans le modèle idéal), donc il n'y aura aucun risque de collision, donc pas besoin d'\Ack.
+Il est en fait équivalent aux modèles précédemment étudiés d'applications des BMB pour l'AOS, puisqu'ils ne prennent en compte que des objets synchronisés, un US et des UP, et donc si la détection indique qu'un canal est libre pour un intervalle de temps, le message envoyé par l'US sera certainement reçu avec succès par la station de base (dans le modèle idéal), donc il n'y aura aucun risque de collision, donc il n'a pas besoin d'\Ack.
 
 
-D'une part, dans le cadre de l'AOS, nous n'avons pas réussi à obtenir un résultat positif pour l'algorithme \Selfish, car nous avons prouvé que dans certains petits problèmes (\eg, $K=3$ et $M=2$), \Selfish-\UCB{} peut présenter un regret linéaire avec une faible probabilité, et donc souffre d'un regret moyen linéaire.
+D'une part, dans le cadre de l'AOS, nous n'avons pas réussi à obtenir de résultat positif pour l'algorithme \Selfish, car nous avons prouvé que dans certains petits problèmes (\eg, $K=3$ et $M=2$), \Selfish-\UCB{} peut présenter un regret linéaire avec une faible probabilité, et donc souffre d'un regret moyen linéaire.
 Ce résultat a ensuite été confirmé et analysé par d'autres chercheurs dans \cite{BoursierPerchet18} (Annexe~F).
 %
 D'autre part, nous avons été en mesure de proposer de nouveaux algorithmes pour ce problème de bandit multi-joueurs (avec informations de détection), et nous avons analysé notre proposition, appelée \MCTopM, pour montrer qu'elle atteint une borne supérieure de regret logarithmique à temps fini, qui améliore considérablement les résultats précédents.
@@ -428,7 +427,7 @@ Ce fort résultat théorique dépend fortement de la présence d'une information
 
 
 Comme expliqué plus haut, le modèle de Chapitre~\ref{chapter:4} s'est révélé trop complexe à analyser, principalement parce que nous considérons un réseau d'IdO avec de nombreux objets, chacun suivant des profils d'activation aléatoires.
-La difficulté ne réside pas dans le fait que nous essayons d'analyser des algorithmes BMB, conçus pour résoudre des problèmes stationnaires, appliqués à un problème non stationnaire,
+La difficulté ne réside pas dans le fait que nous essayons d'analyser des algorithmes de bandits, conçus pour résoudre des problèmes stationnaires, appliqués à un problème non stationnaire,
 mais plutôt que nous considérons des algorithmes qui jouent tous à différents instants d'activations (aléatoires), ce qui donne des sous-ensembles différents et imprédictibles des pas de temps synchronisés globaux.
 Généraliser à différentes probabilités d'activation conduirait à un modèle encore plus difficile à analyser, et imposer un maximum de $M \leq K$ objets n'est en fait pas vraiment réaliste pour les réseaux de l'IdO, même si cela conduit au modèle du Chapitre~\ref{chapter:5}.
 
