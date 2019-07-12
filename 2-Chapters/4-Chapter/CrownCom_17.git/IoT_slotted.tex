@@ -226,8 +226,8 @@ maybe after a long enough initial learning period.
 
 \paragraph{$2^{\text{nd}}$ - (Unachievable) Optimal oracle policy} (``\textcolor{orange}{Optimal}'')
 
-We investigate here the optimal policy that can be achieved if the dynamic devices have a perfect knowledge of the repartition of static devices $(S_k)_k$, and a fully centralized decision making\footnote{~This optimal policy needs an \emph{oracle} seeing the entire system, and affecting all the dynamic devices, once and for all, for a fixed stationary scenario, in order to avoid any signaling overhead. This is not possible in IoT contexts as several completely independent networks may operate in a single place.} is possible.
-We want to find the stationary repartition of devices into channels that maximizes the probability of having a successful transmission.
+We investigate here the optimal policy that can be achieved if the dynamic devices have a perfect knowledge of the distribution of static devices $(S_k)_k$, and a fully centralized decision making\footnote{~This optimal policy needs an \emph{oracle} seeing the entire system, and affecting all the dynamic devices, once and for all, for a fixed stationary scenario, in order to avoid any signaling overhead. This is not possible in IoT contexts as several completely independent networks may operate in a single place.} is possible.
+We want to find the stationary distribution of devices into channels that maximizes the probability of having a successful transmission.
 
 If the oracle chooses a fixed configuration of dynamic devices, it means that for each dynamic device the oracle affects it to a unique channel for all time steps.
 Then there is a number $D_k$ of devices affected to channel $k$ being fixed in time (\ie, stationary),
@@ -282,7 +282,7 @@ Moreover, condition \eqref{eq:41:eqCstr} implies that the Lagrange multiplier $\
 This single constraint can be solved numerically, with simple one-dimensional root finding algorithms.
 
 Note that solving the optimization problem provides the optimal \emph{real values} $(D_k^*)_k$, which have to be rounded to find the optimal \emph{integer} number of devices for channel $k$.
-Any rounding choice will give about the same repartition, up-to a difference of only one device by channel, and so we chose to round from below for the first channels:
+Any rounding choice will give about the same distribution, up-to a difference of only one device by channel, and so we chose to round from below for the first channels:
 %
 $\widehat{D_k} = \lfloor D_k^* \rfloor$ for $1 \leq k < K$, and $\widehat{D_{K}} = D - \sum_{k=1}^{K - 1} \widehat{D_k}$.
 
@@ -359,13 +359,13 @@ therefore we did not report results here.
 We suppose a network with $S + D = 2000$ end-devices, and one IoT gateway.
 Each device sends packets following a Bernoulli process, of probability $p = 10^{-3}$ (\eg, this is realistic: one packet sent about every $20$ minutes, for time slots of $1\mathrm{s}$).
 The RF band is divided in $K = 10$ channels.
-Each static device only uses one channel, and their uneven repartition in the $10$ channels is chosen as $(S_1,\cdots, S_{K}) = S \times (0.3, \, 0.2, \, 0.1, \, 0.1, \, 0.05, \, 0.05, \, 0.02, \, 0.08, \, 0.01,$ $0.09)$, to keep the same proportions when $S$ decreases. The dynamic devices have access to all the channels, and use learning algorithms.
+Each static device only uses one channel, and their uneven distribution in the $10$ channels is chosen as $(S_1,\cdots, S_{K}) = S \times (0.3, \, 0.2, \, 0.1, \, 0.1, \, 0.05, \, 0.05, \, 0.02, \, 0.08, \, 0.01,$ $0.09)$, to keep the same proportions when $S$ decreases. The dynamic devices have access to all the channels, and use learning algorithms.
 %to find the least loaded.
 %
 We simulate the network during $10^6$ discrete time slots, during which each device transmits on average $1000$ packets (\ie, the learning time is about $1000$ steps, for each algorithm).
-We tried similar experiments with other values for $K$ and this repartition vector, and results were similar for non-homogeneous repartitions.
+We tried similar experiments with other values for $K$ and this distribution vector, and results were similar for non-homogeneous repartitions.
 
-Clearly, the problem is less interesting for a homogeneous repartition, as all channels are equivalent for dynamic devices, and so even with $D$ small in comparison to $S$, the system behaves like in Figure~\ref{fig:41:100intelligent}, where the performance of the five approaches are very close.
+Clearly, the problem is less interesting for a homogeneous distribution, as all channels are equivalent for dynamic devices, and so even with $D$ small in comparison to $S$, the system behaves like in Figure~\ref{fig:41:100intelligent}, where the performance of the five approaches are very close.
 
 \begin{figure}[!h]
     \centering
@@ -403,7 +403,7 @@ as expected intuitively, the more dynamic devices, the less useful are learning 
 \begin{figure}[!h]
     \centering
     \includegraphics[scale=0.90]{perf_learning.eps}
-    \caption[Learning with \UCB{} and Thomson Sampling, with many dynamic devices]{Learning with \textcolor{red}{\UCB} and \textcolor{gold}{Thomson Sampling}, with many dynamic devices. The learning gain, for each device, decreases with the proportion of dynamic devices in the network. Note that the values ($16\%$ etc) depend on the repartition of static devices into the $K$ channels (\ie, $S_1,\dots,S_K$) but the general profile of this plot does \emph{not} depend much on these parameters.}
+    \caption[Learning with \UCB{} and Thomson Sampling, with many dynamic devices]{Learning with \textcolor{red}{\UCB} and \textcolor{gold}{Thomson Sampling}, with many dynamic devices. The learning gain, for each device, decreases with the proportion of dynamic devices in the network. Note that the values ($16\%$ etc) depend on the distribution of static devices into the $K$ channels (\ie, $S_1,\dots,S_K$) but the general profile of this plot does \emph{not} depend much on these parameters.}
     \label{fig:41:perf_learning}
 \end{figure}
 
@@ -429,7 +429,7 @@ for the considered values of $S_1,\dots,S_K$.
     %
     \subfloat[][100\% of intelligent devices]{\includegraphics[width=0.52\textwidth]{ch2_100.eps}
     \label{fig:41:ch2_100}}
-    \caption[Performance of the \UCB bandit algorithm for the special case of uniform repartition of the static devices, when the proportion of intelligent devices in the network increases, from $10\%$ to $100\%$.]{Performance of the \textcolor{blue}{\UCB} bandit algorithm for the special case of uniform repartition of the static devices, when the proportion of intelligent devices in the network increases, from $10\%$ to $100\%$.}
+    \caption[Performance of the \UCB bandit algorithm for the special case of uniform distribution of the static devices, when the proportion of intelligent devices in the network increases, from $10\%$ to $100\%$.]{Performance of the \textcolor{blue}{\UCB} bandit algorithm for the special case of uniform distribution of the static devices, when the proportion of intelligent devices in the network increases, from $10\%$ to $100\%$.}
     \label{fig:41:figure4appendix}
 \end{figure}
 
@@ -440,7 +440,7 @@ Hence, it is surprising to have near optimal performance with stochastic MAB alg
 
 \paragraph{A safety check.}
 %
-We include another simulation in Figure~\ref{fig:41:figure4appendix}, with a uniform repartition of static devices (\ie, $\forall k, S_k = S/K$), to check that learning approach (here, only \UCB)
+We include another simulation in Figure~\ref{fig:41:figure4appendix}, with a uniform distribution of static devices (\ie, $\forall k, S_k = S/K$), to check that learning approach (here, only \UCB)
 also gives interesting gain of performance, and achieve a close-to optimal successful transmission rate.
 Except for the limit case of $100\%$ of dynamic devices, which corresponds to Figures~\ref{fig:41:100intelligent} and \ref{fig:41:ch2_100}, where the uniform access performs as well as the optimal oracle solution, the MAB-based approach almost instantly outperforms the baseline.
 
