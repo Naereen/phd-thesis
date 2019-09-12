@@ -1,10 +1,13 @@
-# "My PhD thesis"
-## « Multi-players Bandit Algorithms for Internet of Things Networks »
+# *My PhD thesis* : « Multi-players Bandit Algorithms for Internet of Things Networks »
 This repository contains the LaTeX code of my PhD thesis, written by [Lilian Besson](https://perso.crans.org/besson/), entitled "Multi-players Bandit Algorithms for Internet of Things Networks".
 
 ## Calendar
 - I started to think about the outline in January 2019, I started to play with the template end of January, and to seriously write middle of February 2019.
-- I expect to finish in July 2019.
+- I wrote intensely in March and May 2019.
+- I finished the introduction and conclusion in June 2019.
+- I sent the thesis to the reviewers on the 12th of July 2019.
+- I received the first feedback on the 28th of August, and the second feedback on the XXXth of September 2019.
+- My defense is planned the 20th of November 2019, in CentraleSupélec campus de Rennes.
 
 ## Advisors, reviewers, jury
 - Thanks to my advisors: [Christophe Moy](https://moychristophe.wordpress.com/) and [Émilie Kaufmann](http://chercheurs.lille.inria.fr/ekaufman/research.html).
