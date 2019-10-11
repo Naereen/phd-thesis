@@ -23,6 +23,7 @@ TODO
 - HAL notice : [PhD_thesis__Lilian_Besson](https://hal.inria.fr/hal-XXX/)
 - BibTeX : [PhD_thesis__Lilian_Besson.bib](https://hal.inria.fr/hal-XXX/bibtex)
 - Source code and documentation: [SMPyBandits.GitHub.io](https://smpybandits.github.io/).
+- Slides used for the PhD defense : [PhD_thesis__Lilian_Besson__slides.pdf](https://perso.crans.org/besson/slides/2019_11__PhD_Defense__Multi-players_Bandit_Algorithms_for_Internet_of_Things_Networks/slides.pdf) ([and folder with the source](https://github.com/Naereen/slides/tree/master/2019_11__PhD_Defense__Multi-players_Bandit_Algorithms_for_Internet_of_Things_Networks))
 
 [![Published](https://img.shields.io/badge/Published%3F-work%20in%20progress-red.svg)](https://hal.inria.fr/hal-XXX)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-in%20progress-red.svg)](https://github.com/Naereen/phd-thesis/commits/master)
