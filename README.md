@@ -6,10 +6,13 @@ This repository contains the LaTeX code of my PhD thesis, written by [Lilian Bes
 - I wrote intensely in March and May 2019.
 - I finished the introduction and conclusion in June 2019.
 - I sent the thesis to the reviewers on the 12th of July 2019.
-- I received the first feedback on the 28th of August, and the second feedback on the XXXth of September 2019.
+- I received the first feedback on the 28th of August, and the second feedback on the 12th of September 2019.
+- I defended on the 20th of November 2019, and [this repository was open-sourced](https://github.com/Naereen/phd-thesis/issues/22) on the 18th of November, just because I was too impatient to wait.
 
 ## Where & when?
 - My defense is planned the 20th of November 2019, at 10h30, in [CentraleSupélec (campus de Rennes)](http://www.rennes.centralesupelec.fr/). Room UBL. [Direction to come?](http://www.rennes.centralesupelec.fr/en/acces)
+
+> See https://perso.crans.org/besson/phd/defense/ [this page](https://perso.crans.org/besson/phd/defense/) to get more details for coming to my defense!
 
 ## Advisors, reviewers, jury
 - Thanks to my advisors: [Christophe Moy](https://moychristophe.wordpress.com/) and [Émilie Kaufmann](http://chercheurs.lille.inria.fr/ekaufman/research.html).
@@ -17,7 +20,7 @@ This repository contains the LaTeX code of my PhD thesis, written by [Lilian Bes
 - Thanks to the dear member of my jury reviewers: [Patrick Maillé](http://perso.telecom-bretagne.eu/patrickmaille/), [Raphaël Féraud](https://www.researchgate.net/profile/Raphael_Feraud/) and [Richard Combes](http://rcombes.supelec.free.fr/).
 
 ## Links
-TODO
+TODO: submit the thesis on [Theses.fr](https://www.theses.fr/).
 
 - PDF : [PhD_thesis__Lilian_Besson.pdf](https://perso.crans.org/besson/phd/articles/PhD_thesis__Lilian_Besson.pdf)
 - HAL notice : [PhD_thesis__Lilian_Besson](https://hal.inria.fr/hal-XXX/)
@@ -99,6 +102,5 @@ The template is inspired from [@kks32/phd-thesis-template](https://github.com/kk
 [![Analytics](https://ga-beacon.appspot.com/UA-38514290-17/github.com/Naereen/phd-thesis/README.md?pixel)](https://https://github.com/Naereen/phd-thesis/)
 [![ForTheBadge uses-badges](http://ForTheBadge.com/images/badges/uses-badges.svg)](http://ForTheBadge.com)
 [![ForTheBadge uses-git](http://ForTheBadge.com/images/badges/uses-git.svg)](https://GitHub.com/)
-
 [![forthebadge made-with-latex](https://img.shields.io/badge/Made%20with-LaTeX-1f425f.svg)](https://www.latex-project.org/)
 [![ForTheBadge built-with-science](http://ForTheBadge.com/images/badges/built-with-science.svg)](https://perso.crans.org/besson/)
