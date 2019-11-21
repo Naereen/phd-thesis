@@ -10,7 +10,8 @@ This repository contains the LaTeX code of my PhD thesis, written by [Lilian Bes
 - I defended on the 20th of November 2019, and [this repository was open-sourced](https://github.com/Naereen/phd-thesis/issues/22) on the 18th of November, just because I was too impatient to wait.
 
 ## Where & when?
-- My defense is planned the 20th of November 2019, at 10h30, in [CentraleSupélec (campus de Rennes)](http://www.rennes.centralesupelec.fr/). Room UBL. [Direction to come?](http://www.rennes.centralesupelec.fr/en/acces)
+- My defense happened the 20th of November 2019, at 10h30, in [CentraleSupélec (campus de Rennes)](http://www.rennes.centralesupelec.fr/). Room UBL. [Direction to come?](http://www.rennes.centralesupelec.fr/en/acces)
+- It went very well, I am now proud to hold a Doctorate of Philosophy (PhD), in Telecommunications!
 
 > See https://perso.crans.org/besson/phd/defense/ [this page](https://perso.crans.org/besson/phd/defense/) to get more details for coming to my defense!
 
@@ -31,8 +32,6 @@ TODO: submit the thesis on [Theses.fr](https://www.theses.fr/).
 [![Published](https://img.shields.io/badge/Published%3F-work%20in%20progress-red.svg)](https://hal.inria.fr/hal-XXX)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-in%20progress-red.svg)](https://github.com/Naereen/phd-thesis/commits/master)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://bitbucket.org/lbesson/ama)
-
-> [I (Lilian Besson)](https://perso.crans.org/besson/) have [started my PhD](https://perso.crans.org/besson/phd/) in October 2016, and this is a part of my **on going** research in 2019.
 
 ----
 
