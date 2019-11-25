@@ -50,6 +50,9 @@ Internet of Things (IoT), Cognitive Radio, Learning Theory, Collision Mitigation
 ---
 
 ### 🇫🇷 En français
+#### Titre
+**Algorithmes de Bandits Multi-Joueurs pour les Réseaux de l'Internet des Objets**.
+
 #### Résumé
 Dans cette thèse de doctorat, nous étudions les réseaux sans fil et les appareils reconfigurables qui peuvent accéder à des réseaux de type radio intelligente, dans des bandes non licenciées et sans supervision centrale.
 Nous considérons des réseaux actuels ou futurs de l'Internet des Objets (IoT), avec l'objectif d'augmenter la durée de vie de la batterie des appareils, en les équipant d'algorithmes d'apprentissage machine peu coûteux mais efficaces, qui leur permettent d'améliorer automatiquement l'efficacité de leurs communications sans fil.
@@ -58,9 +61,6 @@ Les différents problèmes d'accès au réseau sont modélisés avec des Bandits
 car il est délicat de prouver la convergence d'un grand nombre d'appareils jouant à un jeu collaboratif sans communication ni aucune coordination, lorsque les appareils suivent tous un modèle d'activation aléatoire.
 Le reste de ce manuscrit étudie donc deux modèles restreints, d'abord des bandits multi-joueurs dans des problèmes stationnaires, puis des bandits mono-joueur non stationnaires.
 Nous détaillons également une autre contribution, la bibliothèque Python open-source SMPyBandits, qui permet des simulations numériques de problèmes MAB, qui couvre les modèles étudiés et d'autres.
-
-#### Titre
-**Algorithmes de Bandits Multi-Joueurs pour les Réseaux de l'Internet des Objets**.
 
 #### Mot clés
 Internet des Objets (IoT), Radio Intelligente, Théorie de l'apprentissage, Apprentissage séquentiel de l'atténuation des collisions, Apprentissage par renforcement, Bandits multi-bras (MAB), Apprentissage décentralisé, Bandits multi-bras multi-joueurs, Détection des points de changement, Bandits multi-bras non stationnaires.
