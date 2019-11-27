@@ -221,8 +221,8 @@ But for Bernoulli distributions, one may consider the following three observatio
     received when a communication was successful.
     A lack of acknowledgment may be due to a collision
     with a device from the background traffic $(Y_{A^j(t),t}=0)$,
-    or to a collision with one of the others players ($C^j(t)$).
-    However, the sensing and collision information are censored.
+    or to a collision with one of the other players ($C^j(t)$).
+    However, the sensing and collision information is censored.
     Recently, our work presented in Chapter~\ref{chapter:4} \cite{Bonnefoi17} presented the first (bandit-based) algorithmic solutions under this (harder) feedback model, in a slightly different setup, more suited to large scale IoT applications. As explained above, this third model was found to be too general to analyze mathematically, and we did not present theoretical results of convergence of the algorithms considered in Chapter~\ref{chapter:4}.
     %\footnote{\cite{Bonnefoi17} considers a different setting, more suited for large-scale IoT networks, and a future work will be to extend our work to this setting with more than $K$ players but small probability of activations.}.
 \end{itemize}
@@ -397,7 +397,7 @@ The regret decomposition in Lemma~\ref{lem:5:DecompositionRegret} is valid for b
 For centralized algorithms, due to the absence of collisions, \ref{eq:5:term3} is obviously zero, and \ref{eq:5:term2} is non-negative, as $N_k(T) \leq T$. For decentralized algorithms, \ref{eq:5:term3} may be significantly large, and term \ref{eq:5:term2} may be negative, as many collisions on arm $k$ may lead to $N_k(T) > T$ (which is counter intuitive with such notations).
 However, a careful manipulation of this decomposition shows that the regret is always lower bounded by term \ref{eq:5:term1}.
 % The Figure~\ref{fig:5:MP__M9_K9_T10000_N1000__9_algos__main_RegretCentralized____env6} in Appendix illustrate two cases of $M<K$ and $M=K$ and the different impact of the three terms \ref{eq:5:term1}, \ref{eq:5:term2} and \ref{eq:5:term3} on the regret.
-The Figure~6 in Appendix~F of \cite{Besson2018ALT} illustrates two cases of $M<K$ and $M=K$, and the different impact of the three terms \ref{eq:5:term1}, \ref{eq:5:term2} and \ref{eq:5:term3} on the regret.
+Figure~6 in Appendix~F of \cite{Besson2018ALT} illustrates two cases of $M<K$ and $M=K$, and the different impact of the three terms \ref{eq:5:term1}, \ref{eq:5:term2} and \ref{eq:5:term3} on the regret.
 
 \begin{lemma}\label{lem:5:1stLowerBound}
 \begin{leftbar}[lemmabar]  % XXX leftbar lemmabar, comment if needed
@@ -667,7 +667,7 @@ Under observation model \modeltrois{} no sensing information is available and th
   \ \ \ \text{and letting} \ \ \ \widetilde{\mu_k}^j(t) \eqdef \widetilde{S_k}^j(t) \;/\; N_k^j(t).
 \end{equation}
 
-Note that $\widetilde{\mu_k}^j(t)$ is no longer meant to be an unbiased estimate of $\mu_k$ as it also takes into account the collision information, that is present in the reward. Based on this empirical reward, one can similarly defined modified indices as
+Note that $\widetilde{\mu_k}^j(t)$ is no longer meant to be an unbiased estimate of $\mu_k$ as it also takes into account the collision information, that is present in the reward. Based on this empirical reward, one can similarly defined modified indices as (where $f(t)=\mathcal{O}(\log(t))$ is an exploration function)
 %
 \begin{equation}\label{eq:5:indexTilde}
   \widetilde{U_k}^j(t) \eqdef \begin{cases}
@@ -743,8 +743,8 @@ then $\widehat{\mu}_k^j(t) \eqdef S_k^j(t)/N_k^j(t)$ (if $N_k^j(t)\neq 0$) is th
   \end{cases}
 \end{equation}
 where $f(t)$ is some \emph{exploration function}, usually taken to be $\log(t)$ in practice, and slightly larger in theory (\eg, $f(t)=\log(t)+3\log(\log(t))$), which ensures that  $\Pr(U_k^j(t) \geq \mu_k) \gtrsim 1 - 1/t$ (see \cite{KLUCBJournal}).
-A classical (single-player) UCB algorithm aims at the arm with largest index, as presented above in Section~\ref{sub:2:IndexPolicies}.
-However, if each of the $M$ players selects the arm with largest UCB, all the players will end up colliding most of the time on the best arm.
+A classical (single-player) UCB algorithm aims at the arm with the largest index, as presented above in Section~\ref{sub:2:IndexPolicies}.
+However, if each of the $M$ players selects the arm with the largest UCB, all the players will end up colliding most of the time on the best arm.
 To circumvent this problem, several coordination mechanisms have emerged, that rely on \emph{ordering} the indices and targeting \emph{one of} the $M$-best indices.
 
 
@@ -778,7 +778,7 @@ We now propose two alternatives to this strategy, that do not rely on ranks and 
 We precisely state the first proposal below in Algorithm~\ref{algo:5:RandTopM}.
 %
 \RandTopM{} is essentially a refinement over \RhoRand, to not use the indirection of ranks, and a simpler version of \MCTopM.
-The difference with \MCTopM{} is that the later introduces a concept of a ``Chair'', by considering a binary ``being fixed'' state $s^j(t)$, as presented in Algorithm~\ref{algo:5:MCTopM} below.
+The difference with \MCTopM{} is that the latter introduces a concept of a ``Chair'', by considering a binary ``being fixed'' state $s^j(t)$, as presented in Algorithm~\ref{algo:5:MCTopM} below.
 %
 In \RandTopM{}, player $j$ is always considered ``not fixed'',
 and a \emph{collision always forces a uniform sampling of the next arm} from $\TopM(t)$.
@@ -1534,7 +1534,7 @@ Performance is measured with the \emph{expected} regret up to horizon $T=10000$,
           & \klUCB{} & $\mathbf{248 \pm 40}$ & $\mathbf{410 \pm 54}$ & $\mathbf{42 \pm 10}$ \\
           % \hline
       \end{tabular}
-      \caption{For all orthogonalization policies and different numbers of players, using \klUCB{} is much more efficient than using \UCB{}, for multi-players bandit (here in a simple problem with $K=9$ arms).}
+      \caption{Regret for all orthogonalization policies and different numbers of players. Using \klUCB{} is much more efficient than using \UCB{}, for multi-players bandit (here in a simple problem with $K=9$ arms).}
       \label{table:5:comparisonUCB_klUCB}
   \end{small}  % XXX
   \end{table}

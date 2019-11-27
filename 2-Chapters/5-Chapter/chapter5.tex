@@ -11,8 +11,8 @@
 % https://english.stackexchange.com/questions/35472/approach-to-or-approach-for
 % approach to ? approach for ? approach of ?
 In this chapter, we are interested in a more formal approach to the decentralized learning problem presented of many end-devices accessing the same IoT wireless network
-in the previous Chapter~\ref{chapter:4}.
-We restrict to the easier case of at most $M \leq K$ devices using a network with $K$ orthogonal frequency channels.
+than in the previous Chapter~\ref{chapter:4}.
+We restrict to the easiest case of at most $M \leq K$ devices using a network with $K$ orthogonal frequency channels.
 Each device has data to transmit at every instant, that is we restrict to the case of an activation probability of $p=1$,
 %  because it was found very hard to analyze the previously studied IoT network models,
 under the hypothesis of random activation patterns of Chapter~\ref{chapter:4}.
@@ -110,7 +110,7 @@ As illustrated above, if we consider algorithms building on the same ideas as \R
 Two possible directions exist to estimate $M$ on the fly.
 
 The first idea comes from \cite{Anandkumar11}, and the intuition behind it is quite simple, even if the mathematical derivations are not.
-All players will build an estimate $\widehat{M}^j(t)$ of the number of player, that start by $\widehat{M}^j(0)=1$. As soon as one collision is observed, a player knows that $M\geq2$, so $\widehat{M}^j(t+1) = 2$.
+All players will build an estimate $\widehat{M}^j(t)$ of the number of players, that start by $\widehat{M}^j(0)=1$. As soon as one collision is observed, a player knows that $M\geq2$, so $\widehat{M}^j(t+1) = 2$.
 Then, based on probabilistic computations on the expected number of collisions if there were $m$ players, all following the same strategy (\eg, \RhoRand{} in the case of ), and because the formula is simple to compute for different $m$, the authors proposed a statistical test of the hypothesis $M \leq \widehat{M}^j(t)$ against $M > \widehat{M}^j(t)$ which is expressed as a simple comparison of the current number of collisions (since last update of $\widehat{M}^j(t)$) against a threshold.
 If a player observed ``too many'' collisions (that are unlikely to be caused by only $\widehat{M}^j(t) - 1$ other players), then she increases her current estimate $\widehat{M}^j(t+1) = \widehat{M}^j(t) + 1$.
 
@@ -126,7 +126,7 @@ We note that all the following works assume some sort of prior knowledge on the 
 
 \paragraph{Extension of our proposals to learn the value of $M$.}
 
-Similarly to what was proposed for the \rhoRandEst{} algorithm in \cite{Anandkumar11}, we could have worked on proposing and analyzing an extension of our proposals that could efficiently learn the value of $M$ the number of player.
+Similarly to what was proposed for the \rhoRandEst{} algorithm in \cite{Anandkumar11}, we could have worked on proposing and analyzing an extension of our proposals that could efficiently learn the value of $M$ the number of players.
 We implemented this \rhoRandEst{} policy in our library SMPyBandits \cite{SMPyBandits}, as well as this mechanism for \RandTopM{} and \MCTopM.
 Building from the theoretical analysis given for \rhoRandEst{} in \cite{Anandkumar11}, and the analysis of \MCTopM-\klUCB, we believe it is possible to show that the aforementioned extension also achieves sub-linear regret without requiring players to know $M$ in the beginning of the bandit game.
 More precisely, we believe that \MCTopM-\klUCB{} can still give order-optimal logarithmic regret if $M$ players use it, and this extension of Theorem~\ref{thm:5:LogarithmicRegret_MCTopMklUCB} is not included due to space constraints.
@@ -466,7 +466,7 @@ Until the optimal solution, each epoch is alternating three phases.
 Followers start by a Round-Robin uniform exploration with no collision, then they use the ``communication trick'' to communicate their samples to the leader, and finally they start an exploitation phase until the end of the game if the leader player tells them so.
 The leader can thus collect enough samples from all arms and all players, and is able to solve iteratively the stable marriage problem, and sends back the successive estimate of the solution to the players.
 %
-In the easier case when their is a unique optimal matching, their algorithm Multiplayer Explore-Then-Commit (M-ETC) is the first one to achieve logarithmic regret, in the form of $R_T = \cO\left( M K \log(K T) + K M^3 \log(M K T) / \Delta + K M^2 (\log(M \log(K T) / \Delta))^2 \right)$, if $\Delta$ is defined as the gap between the utility of the best matching and the utility of that of the matching with second best utility.
+In the easiest case when their is a unique optimal matching, their algorithm Multiplayer Explore-Then-Commit (M-ETC) is the first one to achieve logarithmic regret, in the form of $R_T = \cO\left( M K \log(K T) + K M^3 \log(M K T) / \Delta + K M^2 (\log(M \log(K T) / \Delta))^2 \right)$, if $\Delta$ is defined as the gap between the utility of the best matching and the utility of that of the matching with second best utility.
 In the generic case, their algorithm M-ETC with Elimination achieves a regret of $\cO((\log(T))^{1+\kappa})$ for any positive constant $\kappa$.
 
 % \TODOL{Present the model, quote the main papers, explain the difficulty and how XXX algorithm solves it!}

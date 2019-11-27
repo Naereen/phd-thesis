@@ -79,7 +79,7 @@ By considering a small number of orthogonal wireless channels, and a unique PHY 
 the device can improve their usage of the network if they are able to \emph{learn} on the fly the best channels to use, that is, the most vacant one. Indeed, in this model, the \emph{quality} of the channels (\ie, the resources) are identified by their vacancy, or one minus their occupancy rates.
 
 We note that MAB learning has also started to be applied to also optimize the PHY layer parameters, see for instance \cite{KerkoucheAlami18} which followed our article \cite{Bonnefoi17},
-but in this thesis we chose to restrict to the spectrum access problem and thus we only MAB models where the arms correspond to orthogonal frequency bands.
+but in this thesis we chose to restrict to the spectrum access problem and thus we only consider MAB models where the arms correspond to orthogonal frequency bands.
 
 
 \begin{figure}[!h]
@@ -167,7 +167,7 @@ This problem is a special case of the stochastic MAB with
 % We consider only
 Bernoulli distributions.
 % , in which $r_k(t) \sim \mathrm{Bern}(\mu_k)$, that is, $r_k(t) \in \{0,1\}$ and $\mathbb{P}(r_k(t) = 1) = \mu_k \in [0,1]$.
-Contrarily to many previous work done in the CR field and for Opportunistic Spectrum Access \cite{Jouini10,Jouini12},
+Contrarily to many previous works done in the CR field and for Opportunistic Spectrum Access \cite{Jouini10,Jouini12},
 the reward $r(t)$ does \emph{not} come from a sensing phase before sending the $t$-th message, as it would do for any ``listen-before-talk'' model.
 In our model, rewards rather come from receiving or not an acknowledgement from the gateway, between the $t$-th and $t+1$-th messages. A reward of one indicates that the acknowledgement was received on time, and a reward of zero indicates the opposite.
 
@@ -209,9 +209,9 @@ so probability of successful transmission is computed as follows.
 \end{equation}
 
 All dynamic devices follow the same policy in this case, so the probability of transmitting at that time in channel $k$ for any dynamic device is $p / K$, and there are $D-1$ other dynamic devices.
-As they are independent, the probability that no other dynamic device sent in $i$
+As they are independent, the probability that no other dynamic device sent in $k$
 % $\Pr(\text{no other dynamic device sent in}\;i)$,
-is $q = \Pr(\bigcap_{k=1}^{D-1} \text{device } k \text{ did not send in } i) = \prod_{k=1}^{D-1} \Pr(\text{device } k \text{ did not send in } i)$. And $\Pr(\text{device } k \text{ sent in } i) = p \times 1 / K$, by uniform choice on channels and the Bernoulli emission hypothesis. So $q = \prod_{k=1}^{D-1} (1 - p/K) = (1-p/K)^{D-1}$. Thus we can conclude,
+is $q = \Pr(\bigcap_{j=1}^{D-1} \text{device } j \text{ did not send in } k) = \prod_{j=1}^{D-1} \Pr(\text{device } j \text{ did not send in } k)$. And $\Pr(\text{device } j \text{ sent in } k) = p \times 1 / K$, by uniform choice on channels and the Bernoulli emission hypothesis. So $q = \prod_{j=1}^{D-1} (1 - p/K) = (1-p/K)^{D-1}$. Thus we can conclude,
 %
 \begin{align}\label{eq:41:strategynaive}
     \Pr(\text{success}|\text{sent})
@@ -302,7 +302,7 @@ This is the policy that would be used by dynamic devices if they were inserted o
 While the stochastic MAB model has been used to describe some aspects of Cognitive Radio systems, it is in principle not suitable for our IoT model, due to the non-stationarity of the channels occupancy, caused partly by the learning policy used by dynamic devices, but mainly by their random activation processes.
 %
 In our model, every dynamic device implements its own learning algorithm, \emph{independently}.
-For one device, the time $t$ refers to the number of time it accessed the network (following its Bernoulli transmission process, \ie, its duty cycle), \emph{not} the total number of time slots from the beginning, as rewards are only obtained after a transmission, and IoT devices only transmit sporadically, due to low transmission duty cycles.
+For one device, the time $t$ refers to the number of times it accessed the network (following its Bernoulli transmission process, \ie, its duty cycle), \emph{not} the total number of time slots from the beginning, as rewards are only obtained after a transmission, and IoT devices only transmit sporadically, due to low transmission duty cycles.
 
 
 \paragraph{Using a bandit algorithm for IoT devices.}
@@ -390,7 +390,7 @@ Clearly, the problem is less interesting for a homogeneous distribution, as all 
 \paragraph{First results.}
 %
 Figure~\ref{fig:41:from10to100} presents the successful transmission rate as a function of time.
-The two MAB algorithms, \UCB{} and Thompson Sampling (TS), are compared against the naive random policy (which are outperformed easily by the MAB algorithms), and the two (optimal and greedy) oracle policies (which outperform slightly the MAB algorithms).
+The two MAB algorithms, \UCB{} and Thompson Sampling (TS), are compared against the naive random policy (which is outperformed easily by the MAB algorithms), and the two (optimal and greedy) oracle policies (which outperform slightly the MAB algorithms).
 The results are displayed when $10\%$, $30\%$, $50\%$ and $100\%$ of the traffic is generated by dynamic devices.
 
 
