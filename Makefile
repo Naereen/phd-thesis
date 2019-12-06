@@ -36,6 +36,8 @@ send_zamok:
 	CP $(IN) besson@zamok.crans.org:~/www/phd/articles/.$(IN)
 	CP $(OUT) besson@zamok.crans.org:~/www/phd/articles/.$(OUT)
 	CP $(OUT) besson@zamok.crans.org:~/www/phd/articles/$(OUT)
+	CP $(OUT) besson@zamok.crans.org:~/www/phd.pdf
+	CP $(OUT) besson@zamok.crans.org:~/www/these.pdf
 
 bibtex:	cleanbib	bib2txt bib2html
 
