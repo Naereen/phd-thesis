@@ -21,15 +21,15 @@ This repository contains the LaTeX code of my PhD thesis, written by [Lilian Bes
 - Thanks to the dear member of my jury reviewers: [Patrick Maillé](http://perso.telecom-bretagne.eu/patrickmaille/), [Raphaël Féraud](https://www.researchgate.net/profile/Raphael_Feraud/) and [Richard Combes](http://rcombes.supelec.free.fr/).
 
 ## Links
-TODO: submit the thesis on [Theses.fr](https://www.theses.fr/).
+I submited the thesis on [Theses.fr](https://www.theses.fr/), it's in progress (TODO update links below when done).
 
 - PDF : [PhD_thesis__Lilian_Besson.pdf](https://perso.crans.org/besson/phd/articles/PhD_thesis__Lilian_Besson.pdf)
-- HAL notice : [PhD_thesis__Lilian_Besson](https://hal.inria.fr/hal-XXX/)
-- BibTeX : [PhD_thesis__Lilian_Besson.bib](https://hal.inria.fr/hal-XXX/bibtex)
+- TEL notice : [PhD_thesis__Lilian_Besson](https://tel.inria.fr/tel-XXX/)
+- BibTeX : [PhD_thesis__Lilian_Besson.bib](https://tel.inria.fr/tel-XXX/bibtex)
 - Source code and documentation: [SMPyBandits.GitHub.io](https://smpybandits.github.io/).
 - Slides used for the PhD defense : [PhD_thesis__Lilian_Besson__slides.pdf](https://perso.crans.org/besson/slides/2019_11__PhD_Defense__Multi-players_Bandit_Algorithms_for_Internet_of_Things_Networks/slides.pdf) ([and folder with the source](https://github.com/Naereen/slides/tree/master/2019_11__PhD_Defense__Multi-players_Bandit_Algorithms_for_Internet_of_Things_Networks))
 
-[![Published](https://img.shields.io/badge/Published%3F-work%20in%20progress-red.svg)](https://hal.inria.fr/hal-XXX)
+[![Published](https://img.shields.io/badge/Published%3F-work%20in%20progress-red.svg)](https://tel.inria.fr/tel-XXX)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-in%20progress-red.svg)](https://github.com/Naereen/phd-thesis/commits/master)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://bitbucket.org/lbesson/ama)
 
@@ -85,7 +85,8 @@ $ make pdf
 - In `PhD_thesis__Lilian_Besson.tex`, add the `print` option to the `\documentclass{0-Misc/PhDThesisPSnPDF}` line.
 
 ### How to compile to get a PDF/A archivable version?
-- FIXME
+- 😭 I didn't succeed in finding the correct options to the [pdfx](https://www.ctan.org/pkg/pdfx) LaTeX package (not like [Jill-Jênn Vie](https://github.com/jilljenn/phd/)) to compile my thesis to a PDF/A archivable PDF.
+- But I managed to fix my PDF and make it a PDF/A archivable document by using the online service hosted online by [Facile.Cines.fr](https://facile.cines.fr/#correction).
 
 ----
 
