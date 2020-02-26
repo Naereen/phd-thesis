@@ -21,15 +21,16 @@ This repository contains the LaTeX code of my PhD thesis, written by [Lilian Bes
 - Thanks to the dear member of my jury reviewers: [Patrick Maillé](http://perso.telecom-bretagne.eu/patrickmaille/), [Raphaël Féraud](https://www.researchgate.net/profile/Raphael_Feraud/) and [Richard Combes](http://rcombes.supelec.free.fr/).
 
 ## Links
-I submited the thesis on [Theses.fr](https://www.theses.fr/), it's in progress (TODO update links below when done).
+I submitted my thesis on [Theses.fr](https://www.theses.fr/), it was published there on the 25th of February 2020.
 
 - PDF : [PhD_thesis__Lilian_Besson.pdf](https://perso.crans.org/besson/phd/articles/PhD_thesis__Lilian_Besson.pdf)
-- TEL notice : [PhD_thesis__Lilian_Besson](https://tel.inria.fr/tel-XXX/)
-- BibTeX : [PhD_thesis__Lilian_Besson.bib](https://tel.inria.fr/tel-XXX/bibtex)
+- TEL notice : [PhD_thesis__Lilian_Besson](https://tel.inria.fr/tel-02491380/)
+- And on [Theses.fr](https://www.theses.fr/) : [http://www.theses.fr/2019CSUP0005](http://www.theses.fr/2019CSUP0005)
+- BibTeX : [PhD_thesis__Lilian_Besson.bib](https://tel.inria.fr/tel-02491380/bibtex)
 - Source code and documentation: [SMPyBandits.GitHub.io](https://smpybandits.github.io/).
 - Slides used for the PhD defense : [PhD_thesis__Lilian_Besson__slides.pdf](https://perso.crans.org/besson/slides/2019_11__PhD_Defense__Multi-players_Bandit_Algorithms_for_Internet_of_Things_Networks/slides.pdf) ([and folder with the source](https://github.com/Naereen/slides/tree/master/2019_11__PhD_Defense__Multi-players_Bandit_Algorithms_for_Internet_of_Things_Networks))
 
-[![Published](https://img.shields.io/badge/Published%3F-work%20in%20progress-red.svg)](https://tel.inria.fr/tel-XXX)
+[![Published](https://img.shields.io/badge/Published%3F-work%20in%20progress-red.svg)](https://tel.inria.fr/tel-02491380)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-in%20progress-red.svg)](https://github.com/Naereen/phd-thesis/commits/master)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://bitbucket.org/lbesson/ama)
 
